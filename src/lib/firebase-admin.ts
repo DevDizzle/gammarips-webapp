@@ -26,6 +26,7 @@ export type Stock = z.infer<typeof StockSchema>;
 
 // This function now uses the Admin SDK and should only be called from the server (e.g., in a Server Action)
 export async function getStocksAdmin(): Promise<Stock[]> {
+  try {
     const querySnapshot = await adminDb.collection("tickers").get();
     const stocks: Stock[] = [];
     querySnapshot.forEach((doc) => {
@@ -39,10 +40,15 @@ export async function getStocksAdmin(): Promise<Stock[]> {
         if (validation.success) {
             stocks.push(validation.data);
         } else {
-            console.error("Invalid stock data from Firestore:", validation.error);
+            console.error("Invalid stock data from Firestore:", validation.error.flatten());
         }
     });
     return stocks;
+  } catch (error) {
+    console.error("Error fetching stocks from Firestore:", error);
+    // Return an empty array to allow the page to load instead of hanging.
+    return [];
+  }
 }
 
 /** Convert a gs:// URI into its bucket and object path parts. */

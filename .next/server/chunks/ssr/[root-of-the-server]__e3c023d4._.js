@@ -66,7 +66,7 @@ const StockSchema = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules
     bundle_gcs_path: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string()
 });
 async function getStocksAdmin() {
-    const querySnapshot = await adminDb.collection("stocks").get();
+    const querySnapshot = await adminDb.collection("tickers").get();
     const stocks = [];
     querySnapshot.forEach((doc)=>{
         const data = doc.data();

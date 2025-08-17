@@ -62,10 +62,8 @@ export async function getGcsFileContentAdmin(uri: string): Promise<string> {
     try {
         // Dynamically import to ensure it's only loaded on the server
         const { Storage } = await import('@google-cloud/storage');
-        // Explicitly set the project ID for the GCS client to resolve cross-project access issues.
-        const storage = new Storage({
-            projectId: 'profit-scout-data',
-        });
+        // Initialize the client without a hardcoded project ID, so it uses the default credentials.
+        const storage = new Storage();
         const { bucket, objectPath } = parseGcsUri(uri);
         const [contents] = await storage.bucket(bucket).file(objectPath).download();
         return contents.toString();

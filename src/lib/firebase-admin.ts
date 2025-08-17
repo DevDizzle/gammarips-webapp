@@ -5,14 +5,11 @@ import { getFirestore as getAdminFirestore, FieldValue } from 'firebase-admin/fi
 import { z } from 'zod';
 import type { DbUser } from './firebase';
 
+// Simplified initialization: The Admin SDK will automatically find the credentials
+// from the environment variables (like GOOGLE_APPLICATION_CREDENTIALS),
+// which is a more robust method.
 if (getAdminApps().length === 0) {
-  initializeAdminApp({
-    credential: cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    }),
-  });
+  initializeAdminApp();
 }
 const adminDb = getAdminFirestore();
 
@@ -35,7 +32,7 @@ export async function getStocksAdmin(): Promise<Stock[]> {
         const stock = {
             id: doc.id,
             company_name: data.company_name,
-            bundle_gcs_path: data.profile, // Map profile to bundle_gcs_path for legacy compatibility
+            bundle_gcs_path: data.profile, // Map profile to bundle_gcs_path for temp compatibility
             recommendation_analysis: data.recommendation_analysis,
         };
         const validation = StockSchema.safeParse(stock);

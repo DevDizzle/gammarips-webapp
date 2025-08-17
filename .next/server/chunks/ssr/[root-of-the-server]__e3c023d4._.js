@@ -105,12 +105,21 @@ async function getStocksAdmin() {
 }
 async function getGcsFileContentAdmin(uri) {
     console.log("getGcsFileContentAdmin called with uri: " + uri);
-    // Dynamically import to ensure it's only loaded on the server
-    const { Storage } = await __turbopack_context__.r("[project]/node_modules/@google-cloud/storage/build/esm/src/index.js [app-rsc] (ecmascript, async loader)")(__turbopack_context__.i);
-    const storage = new Storage();
-    const { bucket, objectPath } = parseGcsUri(uri);
-    const [contents] = await storage.bucket(bucket).file(objectPath).download();
-    return contents.toString();
+    try {
+        // Dynamically import to ensure it's only loaded on the server
+        const { Storage } = await __turbopack_context__.r("[project]/node_modules/@google-cloud/storage/build/esm/src/index.js [app-rsc] (ecmascript, async loader)")(__turbopack_context__.i);
+        const storage = new Storage();
+        const { bucket, objectPath } = parseGcsUri(uri);
+        const [contents] = await storage.bucket(bucket).file(objectPath).download();
+        return contents.toString();
+    } catch (error) {
+        console.error(`Failed to fetch GCS file at URI: ${uri}`, {
+            errorMessage: error.message,
+            errorStack: error.stack
+        });
+        // Re-throw the error to be handled by the calling function
+        throw new Error(`Could not read file from GCS: ${error.message}`);
+    }
 }
 async function getStockDataBundleAdmin(uri) {
     const contents = await getGcsFileContentAdmin(uri);

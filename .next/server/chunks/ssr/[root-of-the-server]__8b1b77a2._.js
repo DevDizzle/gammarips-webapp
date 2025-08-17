@@ -35,9 +35,10 @@ __turbopack_async_result__();
 
 var { g: global, __dirname, a: __turbopack_async_module__ } = __turbopack_context__;
 __turbopack_async_module__(async (__turbopack_handle_async_dependencies__, __turbopack_async_result__) => { try {
-/* __next_internal_action_entry_do_not_use__ [{"00943f07dbdb2c41fb583b06f835900ba2c570b32c":"getStocksAdmin","4027297886abba1586bf4d4e86ec263d72783b67df":"getRandomStocks","404cdebc2fa7159813d822f6e6e1810c25eaed53fa":"incrementUserUsageAdmin","406f6c0af679647280adb9d83f29e766a569430756":"getStockDataBundleAdmin","40860f31dbbb6de53986b32ead5bfa29f807a4ced6":"getUserByStripeCustomerIdAdmin","40d1d9159566753a150274514e8b37db4d803124dc":"getGcsFileContentAdmin","60b2a1f95dd8d0d084ea92630a2a18b5f265c0372e":"setUserSubscriptionStatusAdmin","7cacb0911c16ad04aba3b9e6961e26a6a1085cfa3d":"getOrCreateUserAdmin"},"",""] */ __turbopack_context__.s({
+/* __next_internal_action_entry_do_not_use__ [{"00324182b9ac3b577878a130ef278472991dbb2955":"getRandomBuyStockAdmin","00943f07dbdb2c41fb583b06f835900ba2c570b32c":"getStocksAdmin","4027297886abba1586bf4d4e86ec263d72783b67df":"getRandomStocks","404cdebc2fa7159813d822f6e6e1810c25eaed53fa":"incrementUserUsageAdmin","406f6c0af679647280adb9d83f29e766a569430756":"getStockDataBundleAdmin","40860f31dbbb6de53986b32ead5bfa29f807a4ced6":"getUserByStripeCustomerIdAdmin","40d1d9159566753a150274514e8b37db4d803124dc":"getGcsFileContentAdmin","60b2a1f95dd8d0d084ea92630a2a18b5f265c0372e":"setUserSubscriptionStatusAdmin","7cacb0911c16ad04aba3b9e6961e26a6a1085cfa3d":"getOrCreateUserAdmin"},"",""] */ __turbopack_context__.s({
     "getGcsFileContentAdmin": (()=>getGcsFileContentAdmin),
     "getOrCreateUserAdmin": (()=>getOrCreateUserAdmin),
+    "getRandomBuyStockAdmin": (()=>getRandomBuyStockAdmin),
     "getRandomStocks": (()=>getRandomStocks),
     "getStockDataBundleAdmin": (()=>getStockDataBundleAdmin),
     "getStocksAdmin": (()=>getStocksAdmin),
@@ -76,7 +77,8 @@ const StockSchema = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules
     id: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
     company_name: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
     bundle_gcs_path: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
-    recommendation_analysis: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string().optional()
+    recommendation_analysis: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string().optional(),
+    recommendation: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string().optional()
 });
 async function getStocksAdmin() {
     try {
@@ -89,7 +91,8 @@ async function getStocksAdmin() {
                 id: doc.id,
                 company_name: data.company_name,
                 bundle_gcs_path: data.profile,
-                recommendation_analysis: data.recommendation_analysis
+                recommendation_analysis: data.recommendation_analysis,
+                recommendation: data.recommendation
             };
             const validation = StockSchema.safeParse(stock);
             if (validation.success) {
@@ -103,6 +106,41 @@ async function getStocksAdmin() {
         console.error("Error fetching stocks from Firestore:", error);
         // Return an empty array to allow the page to load instead of hanging.
         return [];
+    }
+}
+async function getRandomBuyStockAdmin() {
+    try {
+        const q = adminDb.collection("tickers").where("recommendation", "==", "BUY");
+        const querySnapshot = await q.get();
+        if (querySnapshot.empty) {
+            console.warn("No stocks with 'BUY' recommendation found.");
+            return null;
+        }
+        const buyStocks = [];
+        querySnapshot.forEach((doc)=>{
+            const data = doc.data();
+            const stock = {
+                id: doc.id,
+                company_name: data.company_name,
+                bundle_gcs_path: data.profile,
+                recommendation_analysis: data.recommendation_analysis,
+                recommendation: data.recommendation
+            };
+            const validation = StockSchema.safeParse(stock);
+            if (validation.success) {
+                buyStocks.push(validation.data);
+            } else {
+                console.error("Invalid 'BUY' stock data from Firestore:", validation.error.flatten());
+            }
+        });
+        if (buyStocks.length === 0) {
+            return null;
+        }
+        const randomIndex = Math.floor(Math.random() * buyStocks.length);
+        return buyStocks[randomIndex];
+    } catch (error) {
+        console.error("Error fetching random 'BUY' stock:", error);
+        throw error;
     }
 }
 /**
@@ -213,6 +251,7 @@ async function getUserByStripeCustomerIdAdmin(stripeCustomerId) {
 ;
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$validate$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ensureServerEntryExports"])([
     getStocksAdmin,
+    getRandomBuyStockAdmin,
     getGcsFileContentAdmin,
     getStockDataBundleAdmin,
     getRandomStocks,
@@ -222,6 +261,7 @@ async function getUserByStripeCustomerIdAdmin(stripeCustomerId) {
     getUserByStripeCustomerIdAdmin
 ]);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getStocksAdmin, "00943f07dbdb2c41fb583b06f835900ba2c570b32c", null);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getRandomBuyStockAdmin, "00324182b9ac3b577878a130ef278472991dbb2955", null);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getGcsFileContentAdmin, "40d1d9159566753a150274514e8b37db4d803124dc", null);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getStockDataBundleAdmin, "406f6c0af679647280adb9d83f29e766a569430756", null);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getRandomStocks, "4027297886abba1586bf4d4e86ec263d72783b67df", null);
@@ -1167,6 +1207,24 @@ async function handleGetRecommendation(uid, input) {
                 msg: 'Successfully incremented user usage.'
             }));
         }
+        // AI TOP PICK FLOW: Get a random "BUY" stock
+        if (input.uris.length === 0 && !input.ticker) {
+            console.log(JSON.stringify({
+                traceId,
+                msg: 'AI Top Pick flow: fetching random BUY stock.'
+            }));
+            const stock = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2d$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getRandomBuyStockAdmin"])();
+            if (stock && stock.recommendation_analysis) {
+                const markdownContent = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2d$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getGcsFileContentAdmin"])(stock.recommendation_analysis);
+                return {
+                    markdown: markdownContent
+                };
+            } else if (stock) {
+                throw new Error(`AI Top Pick stock ${stock.id} is missing recommendation_analysis path.`);
+            } else {
+                throw new Error('No stocks with recommendation "BUY" found in the database.');
+            }
+        }
         // SINGLE STOCK FLOW: Stream markdown from recommendation_analysis
         if (input.uris.length === 1 && input.ticker) {
             const allStocks = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2d$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getStocksAdmin"])();
@@ -1182,7 +1240,7 @@ async function handleGetRecommendation(uid, input) {
                 };
             }
         }
-        // Fallback to original Genkit flow for other cases (multi-stock, AI top pick)
+        // Fallback to original Genkit flow for other cases (multi-stock, etc.)
         const flowInput = {
             ...input,
             traceId
@@ -1287,6 +1345,7 @@ var __turbopack_async_dependencies__ = __turbopack_handle_async_dependencies__([
 ;
 ;
 ;
+;
 __turbopack_async_result__();
 } catch(e) { __turbopack_async_result__(e); } }, false);}),
 "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript) <module evaluation>": ((__turbopack_context__) => {
@@ -1316,6 +1375,7 @@ __turbopack_async_result__();
 var { g: global, __dirname, a: __turbopack_async_module__ } = __turbopack_context__;
 __turbopack_async_module__(async (__turbopack_handle_async_dependencies__, __turbopack_async_result__) => { try {
 __turbopack_context__.s({
+    "00324182b9ac3b577878a130ef278472991dbb2955": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2d$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getRandomBuyStockAdmin"]),
     "004432f536753d7a29d624ff3f499f766c74f5130f": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$actions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getStocks"]),
     "00943f07dbdb2c41fb583b06f835900ba2c570b32c": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2d$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getStocksAdmin"]),
     "4000df7f07e7a6f63a895739f34f9b537bcb5c9835": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$actions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["handleFollowUp"]),
@@ -1354,6 +1414,7 @@ __turbopack_async_result__();
 var { g: global, __dirname, a: __turbopack_async_module__ } = __turbopack_context__;
 __turbopack_async_module__(async (__turbopack_handle_async_dependencies__, __turbopack_async_result__) => { try {
 __turbopack_context__.s({
+    "00324182b9ac3b577878a130ef278472991dbb2955": (()=>__TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$lib$2f$firebase$2d$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE1__$3d3e$__$225b$project$5d2f$src$2f$app$2f$actions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE2__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$initial$2d$recommendation$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE3__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$follow$2d$up$2d$questions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE4__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$feedback$2d$summarization$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__["00324182b9ac3b577878a130ef278472991dbb2955"]),
     "004432f536753d7a29d624ff3f499f766c74f5130f": (()=>__TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$lib$2f$firebase$2d$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE1__$3d3e$__$225b$project$5d2f$src$2f$app$2f$actions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE2__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$initial$2d$recommendation$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE3__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$follow$2d$up$2d$questions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE4__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$feedback$2d$summarization$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__["004432f536753d7a29d624ff3f499f766c74f5130f"]),
     "00943f07dbdb2c41fb583b06f835900ba2c570b32c": (()=>__TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$lib$2f$firebase$2d$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE1__$3d3e$__$225b$project$5d2f$src$2f$app$2f$actions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE2__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$initial$2d$recommendation$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE3__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$follow$2d$up$2d$questions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE4__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$feedback$2d$summarization$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__["00943f07dbdb2c41fb583b06f835900ba2c570b32c"]),
     "4000df7f07e7a6f63a895739f34f9b537bcb5c9835": (()=>__TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$lib$2f$firebase$2d$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE1__$3d3e$__$225b$project$5d2f$src$2f$app$2f$actions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE2__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$initial$2d$recommendation$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE3__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$follow$2d$up$2d$questions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE4__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$feedback$2d$summarization$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__["4000df7f07e7a6f63a895739f34f9b537bcb5c9835"]),

@@ -34,6 +34,148 @@ interface DashboardClientPageProps {
     initialStocks: Stock[];
 }
 
+interface SidebarContentProps {
+  isLoading: boolean;
+  authLoading: boolean;
+  stockOptions: Option[];
+  isFetchingStocks: boolean;
+  selectedTickers: Option[];
+  isSubscribed: boolean;
+  usageCount: number;
+  feedbackText: string;
+  onTickerSelectionChange: (selected: Option[]) => void;
+  onFetchStocks: () => void;
+  onGetRecommendation: () => void;
+  onGetAITopPick: () => void;
+  onFeedbackTextChange: (text: string) => void;
+  onSubmitFeedback: () => void;
+  messages: Message[];
+}
+
+const renderAnalysisControls = (
+    isAuthLoading: boolean,
+    stockOptions: Option[],
+    isFetchingStocks: boolean,
+    selectedTickers: Option[],
+    handleTickerSelection: (selected: Option[]) => void,
+    fetchStocks: () => void
+) => {
+    if (isAuthLoading && stockOptions.length === 0) {
+      return (
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Stock Tickers (Max 2)</label>
+          <Skeleton className="h-10 w-full" />
+        </div>
+      );
+    }
+    
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium">Stock Tickers (Max 2)</label>
+          <Button variant="ghost" size="icon" onClick={fetchStocks} disabled={isFetchingStocks} aria-label="Refresh stocks">
+            <RefreshCw className={`h-4 w-4 ${isFetchingStocks ? 'animate-spin' : ''}`} />
+          </Button>
+        </div>
+        <MultiSelect
+          options={stockOptions}
+          selected={selectedTickers}
+          onChange={handleTickerSelection}
+          className="w-full"
+          placeholder="Select up to 2 stocks..."
+          max={2}
+          disabled={isAuthLoading}
+        />
+      </div>
+    );
+}
+
+const SidebarContent: React.FC<SidebarContentProps> = ({
+  isLoading,
+  authLoading,
+  stockOptions,
+  isFetchingStocks,
+  selectedTickers,
+  isSubscribed,
+  usageCount,
+  feedbackText,
+  onTickerSelectionChange,
+  onFetchStocks,
+  onGetRecommendation,
+  onGetAITopPick,
+  onFeedbackTextChange,
+  onSubmitFeedback,
+  messages,
+}) => (
+    <div className="p-4 flex flex-col gap-4 h-full bg-background">
+        <h1 className="text-2xl font-bold font-headline mb-4">ProfitScout</h1>
+        
+        <Card className="flex-1 flex flex-col">
+          <CardHeader>
+            <CardTitle className="font-headline flex items-center gap-2">
+                <Settings className="text-primary" />
+                Stock Analysis
+            </CardTitle>
+            <CardDescription>Select stocks to analyze or compare</CardDescription>
+          </CardHeader>
+          <CardContent className="flex-grow flex flex-col gap-4">
+            {renderAnalysisControls(authLoading, stockOptions, isFetchingStocks, selectedTickers, onTickerSelectionChange, onFetchStocks)}
+             <p className="text-sm text-muted-foreground text-center">
+              {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`}
+            </p>
+            <Button onClick={onGetRecommendation} disabled={isLoading || authLoading || selectedTickers.length === 0} className="w-full mt-auto">
+              {isLoading && messages.length > 0 && selectedTickers.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Launch Analysis
+            </Button>
+          </CardContent>
+        </Card>
+        
+        <Card className="flex-1 flex flex-col">
+            <CardHeader>
+                <CardTitle className="font-headline flex items-center gap-2">
+                    <Sparkles className="text-primary" />
+                    AI Top Pick
+                </CardTitle>
+                <CardDescription>Let our AI find the best stock for you right now.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-grow flex flex-col justify-end gap-4">
+                 <p className="text-sm text-muted-foreground text-center">
+                   {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`}
+                </p>
+                <Button onClick={onGetAITopPick} disabled={isLoading || authLoading} className="w-full">
+                    {isLoading && selectedTickers.length === 0 && messages.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Get AI Top Pick
+                </Button>
+            </CardContent>
+        </Card>
+
+        <Card className="flex-1 flex flex-col">
+            <CardHeader>
+                <CardTitle className="font-headline flex items-center gap-2">
+                    <MessageSquare className="text-primary" />
+                    Feedback
+                </CardTitle>
+                 <CardDescription>Help us improve ProfitScout!</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-grow flex flex-col gap-4">
+                <Textarea
+                    placeholder="Tell us what you think..."
+                    value={feedbackText}
+                    onChange={(e) => onFeedbackTextChange(e.target.value)}
+                    rows={3}
+                    className="flex-grow"
+                    disabled={isLoading}
+                />
+                <Button onClick={onSubmitFeedback} className="w-full" disabled={!feedbackText.trim() || isLoading}>
+                    {isLoading && messages.length === 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Submit Feedback
+                </Button>
+            </CardContent>
+        </Card>
+      </div>
+);
+
+
 export function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   const { user, loading: authLoading } = useAuth();
   const [stockOptions, setStockOptions] = useState<Option[]>([]);
@@ -287,14 +429,23 @@ ${initialRecommendation.reasoning.map((item: string) => `- ${item}`).join('\n')}
   const submitFeedback = async () => {
     if (!feedbackText.trim()) return;
     setIsLoading(true);
-    await handleFeedback(feedbackText);
-    setFeedbackText('');
-    setIsSheetOpen(false);
-    toast({
-      title: 'Feedback Submitted',
-      description: 'Thank you for helping us improve ProfitScout!',
-    });
-    setIsLoading(false);
+    try {
+        await handleFeedback(feedbackText);
+        setFeedbackText('');
+        setIsSheetOpen(false);
+        toast({
+          title: 'Feedback Submitted',
+          description: 'Thank you for helping us improve ProfitScout!',
+        });
+    } catch (error: any) {
+        toast({
+            title: "Feedback Failed",
+            description: error.message || "Could not submit your feedback. Please try again.",
+            variant: "destructive",
+        })
+    } finally {
+        setIsLoading(false);
+    }
   };
   
   const handleSubscribeClick = async () => {
@@ -330,106 +481,24 @@ ${initialRecommendation.reasoning.map((item: string) => `- ${item}`).join('\n')}
       });
     }
   }, [messages]);
-
-  const renderAnalysisControls = () => {
-    if (authLoading && stockOptions.length === 0) {
-      return (
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Stock Tickers (Max 2)</label>
-          <Skeleton className="h-10 w-full" />
-        </div>
-      );
-    }
-    
-    return (
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-medium">Stock Tickers (Max 2)</label>
-          <Button variant="ghost" size="icon" onClick={fetchStocks} disabled={isFetchingStocks} aria-label="Refresh stocks">
-            <RefreshCw className={`h-4 w-4 ${isFetchingStocks ? 'animate-spin' : ''}`} />
-          </Button>
-        </div>
-        <MultiSelect
-          options={stockOptions}
-          selected={selectedTickers}
-          onChange={handleTickerSelection}
-          className="w-full"
-          placeholder="Select up to 2 stocks..."
-          max={2}
-          disabled={authLoading}
-        />
-      </div>
-    );
-  }
   
-  const SidebarContent = () => (
-    <div className="p-4 flex flex-col gap-4 h-full bg-background">
-        <h1 className="text-2xl font-bold font-headline mb-4">ProfitScout</h1>
-        
-        <Card className="flex-1 flex flex-col">
-          <CardHeader>
-            <CardTitle className="font-headline flex items-center gap-2">
-                <Settings className="text-primary" />
-                Stock Analysis
-            </CardTitle>
-            <CardDescription>Select stocks to analyze or compare</CardDescription>
-          </CardHeader>
-          <CardContent className="flex-grow flex flex-col gap-4">
-            {renderAnalysisControls()}
-             <p className="text-sm text-muted-foreground text-center">
-              {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`}
-            </p>
-            <Button onClick={getRecommendation} disabled={isLoading || authLoading || selectedTickers.length === 0} className="w-full mt-auto">
-              {isLoading && messages.length > 0 && selectedTickers.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Launch Analysis
-            </Button>
-          </CardContent>
-        </Card>
-        
-        <Card className="flex-1 flex flex-col">
-            <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-2">
-                    <Sparkles className="text-primary" />
-                    AI Top Pick
-                </CardTitle>
-                <CardDescription>Let our AI find the best stock for you right now.</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-grow flex flex-col justify-end gap-4">
-                 <p className="text-sm text-muted-foreground text-center">
-                   {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`}
-                </p>
-                <Button onClick={getAITopPick} disabled={isLoading || authLoading} className="w-full">
-                    {isLoading && selectedTickers.length === 0 && messages.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Get AI Top Pick
-                </Button>
-            </CardContent>
-        </Card>
-
-        <Card className="flex-1 flex flex-col">
-            <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-2">
-                    <MessageSquare className="text-primary" />
-                    Feedback
-                </CardTitle>
-                 <CardDescription>Help us improve ProfitScout!</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-grow flex flex-col gap-4">
-                <Textarea
-                    placeholder="Tell us what you think..."
-                    value={feedbackText}
-                    onChange={(e) => setFeedbackText(e.target.value)}
-                    rows={3}
-                    className="flex-grow"
-                    disabled={isLoading}
-                />
-                <Button onClick={submitFeedback} className="w-full" disabled={!feedbackText.trim() || isLoading}>
-                    {isLoading && !messages.length ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Submit Feedback
-                </Button>
-            </CardContent>
-        </Card>
-      </div>
-  );
+  const sidebarProps = {
+    isLoading,
+    authLoading,
+    stockOptions,
+    isFetchingStocks,
+    selectedTickers,
+    isSubscribed,
+    usageCount,
+    feedbackText,
+    onTickerSelectionChange: handleTickerSelection,
+    onFetchStocks: fetchStocks,
+    onGetRecommendation: getRecommendation,
+    onGetAITopPick: getAITopPick,
+    onFeedbackTextChange: setFeedbackText,
+    onSubmitFeedback: submitFeedback,
+    messages
+  };
 
   return (
     <>
@@ -441,7 +510,7 @@ ${initialRecommendation.reasoning.map((item: string) => `- ${item}`).join('\n')}
     />
     <div className="flex h-[calc(100vh-4rem)] bg-background">
       <aside className="w-[350px] flex-shrink-0 border-r border-border hidden md:flex">
-        <SidebarContent />
+        <SidebarContent {...sidebarProps} />
       </aside>
       <main className="flex-1 flex flex-col p-4">
          <header className="flex items-center justify-between md:hidden border-b border-border pb-4 mb-4">
@@ -453,7 +522,7 @@ ${initialRecommendation.reasoning.map((item: string) => `- ${item}`).join('\n')}
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-[350px]">
-              <SidebarContent />
+              <SidebarContent {...sidebarProps} />
             </SheetContent>
           </Sheet>
            <h1 className="text-xl font-bold font-headline text-primary">ProfitScout</h1>

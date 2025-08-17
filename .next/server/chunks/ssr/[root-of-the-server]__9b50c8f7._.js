@@ -991,7 +991,7 @@ async function saveFeedback(originalFeedback, summary) {
         });
     } catch (error) {
         console.error("Error writing feedback to Firestore: ", error);
-        throw new Error("Could not save feedback to the database.");
+        throw new Error("Could not save feedback to the database. Please check your Firestore security rules.");
     }
 }
 // User Management

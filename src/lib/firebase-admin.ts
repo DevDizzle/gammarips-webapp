@@ -64,12 +64,21 @@ function parseGcsUri(uri: string): { bucket: string; objectPath: string } {
 
 export async function getGcsFileContentAdmin(uri: string): Promise<string> {
     console.log("getGcsFileContentAdmin called with uri: " + uri);
-    // Dynamically import to ensure it's only loaded on the server
-    const { Storage } = await import('@google-cloud/storage');
-    const storage = new Storage();
-    const { bucket, objectPath } = parseGcsUri(uri);
-    const [contents] = await storage.bucket(bucket).file(objectPath).download();
-    return contents.toString();
+    try {
+        // Dynamically import to ensure it's only loaded on the server
+        const { Storage } = await import('@google-cloud/storage');
+        const storage = new Storage();
+        const { bucket, objectPath } = parseGcsUri(uri);
+        const [contents] = await storage.bucket(bucket).file(objectPath).download();
+        return contents.toString();
+    } catch (error: any) {
+        console.error(`Failed to fetch GCS file at URI: ${uri}`, {
+            errorMessage: error.message,
+            errorStack: error.stack,
+        });
+        // Re-throw the error to be handled by the calling function
+        throw new Error(`Could not read file from GCS: ${error.message}`);
+    }
 }
 
 export async function getStockDataBundleAdmin(uri: string): Promise<any> {

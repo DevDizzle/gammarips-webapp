@@ -26,7 +26,7 @@ export type Stock = z.infer<typeof StockSchema>;
 
 // This function now uses the Admin SDK and should only be called from the server (e.g., in a Server Action)
 export async function getStocksAdmin(): Promise<Stock[]> {
-    const querySnapshot = await adminDb.collection("stocks").get();
+    const querySnapshot = await adminDb.collection("tickers").get();
     const stocks: Stock[] = [];
     querySnapshot.forEach((doc) => {
         const data = doc.data();

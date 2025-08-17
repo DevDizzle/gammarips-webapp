@@ -19,7 +19,8 @@ const adminDb = getAdminFirestore();
 const StockSchema = z.object({
   id: z.string(), // Document ID is the ticker
   company_name: z.string(),
-  bundle_gcs_path: z.string(), // This will be mapped from one of the other fields.
+  bundle_gcs_path: z.string(), // Mapped from 'profile'
+  recommendation_analysis: z.string().optional(),
 });
 export type Stock = z.infer<typeof StockSchema>;
 
@@ -31,12 +32,11 @@ export async function getStocksAdmin(): Promise<Stock[]> {
     const stocks: Stock[] = [];
     querySnapshot.forEach((doc) => {
         const data = doc.data();
-        // The `bundle_gcs_path` is a legacy field. We'll map a real field to it.
-        // For now, let's use 'profile' as a stand-in for the general bundle path.
         const stock = {
             id: doc.id,
             company_name: data.company_name,
-            bundle_gcs_path: data.profile,
+            bundle_gcs_path: data.profile, // Map profile to bundle_gcs_path for legacy compatibility
+            recommendation_analysis: data.recommendation_analysis,
         };
         const validation = StockSchema.safeParse(stock);
         if (validation.success) {
@@ -62,14 +62,19 @@ function parseGcsUri(uri: string): { bucket: string; objectPath: string } {
   return { bucket, objectPath: objectPathParts.join('/') };
 }
 
-export async function getStockDataBundleAdmin(uri: string): Promise<any> {
-    console.log("getStockDataBundleAdmin called with uri: " + uri);
+export async function getGcsFileContentAdmin(uri: string): Promise<string> {
+    console.log("getGcsFileContentAdmin called with uri: " + uri);
     // Dynamically import to ensure it's only loaded on the server
     const { Storage } = await import('@google-cloud/storage');
     const storage = new Storage();
     const { bucket, objectPath } = parseGcsUri(uri);
     const [contents] = await storage.bucket(bucket).file(objectPath).download();
-    return JSON.parse(contents.toString());
+    return contents.toString();
+}
+
+export async function getStockDataBundleAdmin(uri: string): Promise<any> {
+    const contents = await getGcsFileContentAdmin(uri);
+    return JSON.parse(contents);
 }
 
 

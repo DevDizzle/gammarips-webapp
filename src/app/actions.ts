@@ -19,6 +19,7 @@ import {
     getStocksAdmin, 
     getOrCreateUserAdmin,
     incrementUserUsageAdmin,
+    getGcsFileContentAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock } from '@/lib/firebase';
 import { createStripeCheckoutSession } from '@/lib/stripe';
@@ -30,7 +31,7 @@ export async function getStocks(): Promise<Stock[]> {
     return getStocksAdmin();
 }
 
-export async function handleGetRecommendation(uid: string, input: InitialRecommendationInput): Promise<InitialRecommendationOutput | { error: string; required?: 'subscription' | 'auth' }> {
+export async function handleGetRecommendation(uid: string, input: InitialRecommendationInput): Promise<InitialRecommendationOutput | { error: string; required?: 'subscription' | 'auth' } | { markdown: string }> {
   const traceId = randomUUID();
   console.log(JSON.stringify({
     traceId,
@@ -55,9 +56,21 @@ export async function handleGetRecommendation(uid: string, input: InitialRecomme
       await incrementUserUsageAdmin(uid);
       console.log(JSON.stringify({ traceId, msg: 'Successfully incremented user usage.' }));
     }
-
-    const flowInput = { ...input, traceId };
     
+    // SINGLE STOCK FLOW: Stream markdown from recommendation_analysis
+    if (input.uris.length === 1 && input.ticker) {
+      const allStocks = await getStocksAdmin();
+      const stock = allStocks.find(s => s.id === input.ticker);
+
+      if (stock && stock.recommendation_analysis) {
+        console.log(JSON.stringify({ traceId, msg: 'Single stock flow: fetching markdown content.' }));
+        const markdownContent = await getGcsFileContentAdmin(stock.recommendation_analysis);
+        return { markdown: markdownContent };
+      }
+    }
+
+    // Fallback to original Genkit flow for other cases (multi-stock, AI top pick)
+    const flowInput = { ...input, traceId };
     console.log(JSON.stringify({ traceId, msg: 'Calling getInitialRecommendation flow.' }));
     const result: InitialRecommendationOutput = await getInitialRecommendation(flowInput);
     console.log(JSON.stringify({ traceId, msg: 'Successfully received result from getInitialRecommendation flow.' }));

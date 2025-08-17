@@ -41,7 +41,7 @@ export function DashboardClientPage({ initialStocks }: DashboardClientPageProps)
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingStocks, setIsFetchingStocks] = useState(false);
-  const [initialRecommendation, setInitialRecommendation] = useState<InitialRecommendationOutput | null>(null);
+  const [initialRecommendation, setInitialRecommendation] = useState<InitialRecommendationOutput | string | null>(null);
   const [feedbackText, setFeedbackText] = useState('');
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
@@ -54,7 +54,7 @@ export function DashboardClientPage({ initialStocks }: DashboardClientPageProps)
   
   useEffect(() => {
     const options = initialStocks.map((stock: Stock) => ({
-        value: stock.bundle_gcs_path,
+        value: stock.id, // Use ticker ID as value
         label: `${stock.id} - ${stock.company_name}`,
     }));
     setStockOptions(options);
@@ -74,7 +74,7 @@ export function DashboardClientPage({ initialStocks }: DashboardClientPageProps)
     try {
       const stocks = await getStocks();
       const options = stocks.map((stock: Stock) => ({
-        value: stock.bundle_gcs_path,
+        value: stock.id,
         label: `${stock.id} - ${stock.company_name}`,
       }));
       setStockOptions(options);
@@ -124,8 +124,13 @@ export function DashboardClientPage({ initialStocks }: DashboardClientPageProps)
     setMessages([{ role: 'assistant', content: <MessageSkeleton /> }]);
 
     try {
+      const uris = selectedTickers.map(t => {
+          const stock = initialStocks.find(s => s.id === t.value);
+          return stock?.bundle_gcs_path || '';
+      }).filter(Boolean);
+
       const analysisResult = await handleGetRecommendation(user.uid, {
-        uris: selectedTickers.map(t => t.value),
+        uris: uris,
         ticker: ticker,
         companyName: companyName,
       });
@@ -143,19 +148,20 @@ export function DashboardClientPage({ initialStocks }: DashboardClientPageProps)
       const dbUser = await getOrCreateUser(user.uid, user.isAnonymous);
       setUsageCount(dbUser.usageCount);
 
-
-      setInitialRecommendation(analysisResult);
-
-      let recommendationText = analysisResult.recommendation;
-      
-      const fullMessage = `
-**Recommendation:** ${recommendationText}
+      if ('markdown' in analysisResult) {
+        setInitialRecommendation(analysisResult.markdown);
+        setMessages([{ role: 'assistant', content: analysisResult.markdown }]);
+      } else {
+        setInitialRecommendation(analysisResult);
+        const fullMessage = `
+**Recommendation:** ${analysisResult.recommendation}
 
 **Reasoning:**
 ${analysisResult.reasoning.map((item: string) => `- ${item}`).join('\n')}
-      `;
+        `;
+        setMessages([{ role: 'assistant', content: fullMessage.trim() }]);
+      }
 
-      setMessages([{ role: 'assistant', content: fullMessage.trim() }]);
     } catch (error) {
       console.error("Failed to get recommendation:", error);
       toast({
@@ -197,6 +203,13 @@ ${analysisResult.reasoning.map((item: string) => `- ${item}`).join('\n')}
           }
            if ('error' in analysisResult) {
               throw new Error(analysisResult.error);
+           }
+           if ('markdown' in analysisResult) {
+              // This case should ideally not be hit by AI top pick, but handle it gracefully
+              setInitialRecommendation(analysisResult.markdown);
+              setMessages([{ role: 'assistant', content: analysisResult.markdown }]);
+              setIsLoading(false);
+              return;
            }
           
           const dbUser = await getOrCreateUser(user.uid, user.isAnonymous);
@@ -244,12 +257,17 @@ ${analysisResult.reasoning.map((item: string) => `- ${item}`).join('\n')}
       content: typeof m.content === 'string' ? m.content : '...',
     }));
 
-    const initialRecommendationText = `
+    let initialRecommendationText = '';
+    if (typeof initialRecommendation === 'string') {
+        initialRecommendationText = initialRecommendation;
+    } else if (initialRecommendation) {
+        initialRecommendationText = `
 **Recommendation:** ${initialRecommendation.recommendation}
 
 **Reasoning:**
 ${initialRecommendation.reasoning.map((item: string) => `- ${item}`).join('\n')}
-  `;
+        `;
+    }
     
     try {
       const result = await handleFollowUp({

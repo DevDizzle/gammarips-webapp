@@ -25,7 +25,8 @@ __turbopack_async_result__();
 
 var { g: global, __dirname, a: __turbopack_async_module__ } = __turbopack_context__;
 __turbopack_async_module__(async (__turbopack_handle_async_dependencies__, __turbopack_async_result__) => { try {
-/* __next_internal_action_entry_do_not_use__ [{"00943f07dbdb2c41fb583b06f835900ba2c570b32c":"getStocksAdmin","4027297886abba1586bf4d4e86ec263d72783b67df":"getRandomStocks","404cdebc2fa7159813d822f6e6e1810c25eaed53fa":"incrementUserUsageAdmin","406f6c0af679647280adb9d83f29e766a569430756":"getStockDataBundleAdmin","40860f31dbbb6de53986b32ead5bfa29f807a4ced6":"getUserByStripeCustomerIdAdmin","60b2a1f95dd8d0d084ea92630a2a18b5f265c0372e":"setUserSubscriptionStatusAdmin","7cacb0911c16ad04aba3b9e6961e26a6a1085cfa3d":"getOrCreateUserAdmin"},"",""] */ __turbopack_context__.s({
+/* __next_internal_action_entry_do_not_use__ [{"00943f07dbdb2c41fb583b06f835900ba2c570b32c":"getStocksAdmin","4027297886abba1586bf4d4e86ec263d72783b67df":"getRandomStocks","404cdebc2fa7159813d822f6e6e1810c25eaed53fa":"incrementUserUsageAdmin","406f6c0af679647280adb9d83f29e766a569430756":"getStockDataBundleAdmin","40860f31dbbb6de53986b32ead5bfa29f807a4ced6":"getUserByStripeCustomerIdAdmin","40d1d9159566753a150274514e8b37db4d803124dc":"getGcsFileContentAdmin","60b2a1f95dd8d0d084ea92630a2a18b5f265c0372e":"setUserSubscriptionStatusAdmin","7cacb0911c16ad04aba3b9e6961e26a6a1085cfa3d":"getOrCreateUserAdmin"},"",""] */ __turbopack_context__.s({
+    "getGcsFileContentAdmin": (()=>getGcsFileContentAdmin),
     "getOrCreateUserAdmin": (()=>getOrCreateUserAdmin),
     "getRandomStocks": (()=>getRandomStocks),
     "getStockDataBundleAdmin": (()=>getStockDataBundleAdmin),
@@ -63,7 +64,8 @@ const adminDb = (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2
 const StockSchema = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].object({
     id: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
     company_name: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
-    bundle_gcs_path: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string()
+    bundle_gcs_path: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
+    recommendation_analysis: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string().optional()
 });
 async function getStocksAdmin() {
     try {
@@ -71,12 +73,11 @@ async function getStocksAdmin() {
         const stocks = [];
         querySnapshot.forEach((doc)=>{
             const data = doc.data();
-            // The `bundle_gcs_path` is a legacy field. We'll map a real field to it.
-            // For now, let's use 'profile' as a stand-in for the general bundle path.
             const stock = {
                 id: doc.id,
                 company_name: data.company_name,
-                bundle_gcs_path: data.profile
+                bundle_gcs_path: data.profile,
+                recommendation_analysis: data.recommendation_analysis
             };
             const validation = StockSchema.safeParse(stock);
             if (validation.success) {
@@ -102,14 +103,18 @@ async function getStocksAdmin() {
         objectPath: objectPathParts.join('/')
     };
 }
-async function getStockDataBundleAdmin(uri) {
-    console.log("getStockDataBundleAdmin called with uri: " + uri);
+async function getGcsFileContentAdmin(uri) {
+    console.log("getGcsFileContentAdmin called with uri: " + uri);
     // Dynamically import to ensure it's only loaded on the server
     const { Storage } = await __turbopack_context__.r("[project]/node_modules/@google-cloud/storage/build/esm/src/index.js [app-rsc] (ecmascript, async loader)")(__turbopack_context__.i);
     const storage = new Storage();
     const { bucket, objectPath } = parseGcsUri(uri);
     const [contents] = await storage.bucket(bucket).file(objectPath).download();
-    return JSON.parse(contents.toString());
+    return contents.toString();
+}
+async function getStockDataBundleAdmin(uri) {
+    const contents = await getGcsFileContentAdmin(uri);
+    return JSON.parse(contents);
 }
 async function getRandomStocks(count) {
     const allStocks = await getStocksAdmin();
@@ -179,6 +184,7 @@ async function getUserByStripeCustomerIdAdmin(stripeCustomerId) {
 ;
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$validate$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ensureServerEntryExports"])([
     getStocksAdmin,
+    getGcsFileContentAdmin,
     getStockDataBundleAdmin,
     getRandomStocks,
     getOrCreateUserAdmin,
@@ -187,6 +193,7 @@ async function getUserByStripeCustomerIdAdmin(stripeCustomerId) {
     getUserByStripeCustomerIdAdmin
 ]);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getStocksAdmin, "00943f07dbdb2c41fb583b06f835900ba2c570b32c", null);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getGcsFileContentAdmin, "40d1d9159566753a150274514e8b37db4d803124dc", null);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getStockDataBundleAdmin, "406f6c0af679647280adb9d83f29e766a569430756", null);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getRandomStocks, "4027297886abba1586bf4d4e86ec263d72783b67df", null);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getOrCreateUserAdmin, "7cacb0911c16ad04aba3b9e6961e26a6a1085cfa3d", null);
@@ -1131,6 +1138,22 @@ async function handleGetRecommendation(uid, input) {
                 msg: 'Successfully incremented user usage.'
             }));
         }
+        // SINGLE STOCK FLOW: Stream markdown from recommendation_analysis
+        if (input.uris.length === 1 && input.ticker) {
+            const allStocks = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2d$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getStocksAdmin"])();
+            const stock = allStocks.find((s)=>s.id === input.ticker);
+            if (stock && stock.recommendation_analysis) {
+                console.log(JSON.stringify({
+                    traceId,
+                    msg: 'Single stock flow: fetching markdown content.'
+                }));
+                const markdownContent = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2d$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getGcsFileContentAdmin"])(stock.recommendation_analysis);
+                return {
+                    markdown: markdownContent
+                };
+            }
+        }
+        // Fallback to original Genkit flow for other cases (multi-stock, AI top pick)
         const flowInput = {
             ...input,
             traceId

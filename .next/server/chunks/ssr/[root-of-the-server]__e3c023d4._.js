@@ -71,10 +71,12 @@ async function getStocksAdmin() {
         const stocks = [];
         querySnapshot.forEach((doc)=>{
             const data = doc.data();
+            // The `bundle_gcs_path` is a legacy field. We'll map a real field to it.
+            // For now, let's use 'profile' as a stand-in for the general bundle path.
             const stock = {
                 id: doc.id,
                 company_name: data.company_name,
-                bundle_gcs_path: data.bundle_gcs_path
+                bundle_gcs_path: data.profile
             };
             const validation = StockSchema.safeParse(stock);
             if (validation.success) {

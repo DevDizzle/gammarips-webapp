@@ -66,23 +66,29 @@ const StockSchema = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules
     bundle_gcs_path: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string()
 });
 async function getStocksAdmin() {
-    const querySnapshot = await adminDb.collection("tickers").get();
-    const stocks = [];
-    querySnapshot.forEach((doc)=>{
-        const data = doc.data();
-        const stock = {
-            id: doc.id,
-            company_name: data.company_name,
-            bundle_gcs_path: data.bundle_gcs_path
-        };
-        const validation = StockSchema.safeParse(stock);
-        if (validation.success) {
-            stocks.push(validation.data);
-        } else {
-            console.error("Invalid stock data from Firestore:", validation.error);
-        }
-    });
-    return stocks;
+    try {
+        const querySnapshot = await adminDb.collection("tickers").get();
+        const stocks = [];
+        querySnapshot.forEach((doc)=>{
+            const data = doc.data();
+            const stock = {
+                id: doc.id,
+                company_name: data.company_name,
+                bundle_gcs_path: data.bundle_gcs_path
+            };
+            const validation = StockSchema.safeParse(stock);
+            if (validation.success) {
+                stocks.push(validation.data);
+            } else {
+                console.error("Invalid stock data from Firestore:", validation.error.flatten());
+            }
+        });
+        return stocks;
+    } catch (error) {
+        console.error("Error fetching stocks from Firestore:", error);
+        // Return an empty array to allow the page to load instead of hanging.
+        return [];
+    }
 }
 /** Convert a gs:// URI into its bucket and object path parts. */ function parseGcsUri(uri) {
     if (!uri.startsWith('gs://')) {

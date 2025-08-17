@@ -5,12 +5,27 @@ import { getFirestore as getAdminFirestore, FieldValue } from 'firebase-admin/fi
 import { z } from 'zod';
 import type { DbUser } from './firebase';
 
-// Simplified initialization: The Admin SDK will automatically find the credentials
-// from the environment variables (like GOOGLE_APPLICATION_CREDENTIALS),
-// which is a more robust method.
+// The user is correct, the auth issues started with cross-project access.
+// Let's restore the previous explicit initialization as the hosting environment
+// may rely on it.
 if (getAdminApps().length === 0) {
-  initializeAdminApp();
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+  
+  if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && privateKey) {
+    initializeAdminApp({
+      credential: cert({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        privateKey,
+      }),
+    });
+  } else {
+    // Fallback for environments where GOOGLE_APPLICATION_CREDENTIALS is set
+    console.log("Initializing Firebase Admin SDK with default credentials.");
+    initializeAdminApp();
+  }
 }
+
 const adminDb = getAdminFirestore();
 
 const StockSchema = z.object({
@@ -32,7 +47,7 @@ export async function getStocksAdmin(): Promise<Stock[]> {
         const stock = {
             id: doc.id,
             company_name: data.company_name,
-            bundle_gcs_path: data.profile, // Map profile to bundle_gcs_path for temp compatibility
+            bundle_gcs_path: data.profile,
             recommendation_analysis: data.recommendation_analysis,
         };
         const validation = StockSchema.safeParse(stock);
@@ -64,7 +79,10 @@ export async function getGcsFileContentAdmin(uri: string): Promise<string> {
     try {
         // Dynamically import to ensure it's only loaded on the server
         const { Storage } = await import('@google-cloud/storage');
-        const storage = new Storage();
+        // Explicitly set the project ID for the GCS client to resolve cross-project access issues.
+        const storage = new Storage({
+            projectId: 'profit-scout-data',
+        });
         const { bucket, objectPath } = parseGcsUri(uri);
         const [contents] = await storage.bucket(bucket).file(objectPath).download();
         return contents.toString();

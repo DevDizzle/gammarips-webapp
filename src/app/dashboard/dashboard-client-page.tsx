@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
@@ -108,8 +109,6 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   messages,
 }) => (
     <div className="p-4 flex flex-col gap-4 h-full bg-background">
-        <h1 className="text-2xl font-bold font-headline mb-4">ProfitScout</h1>
-        
         <Card className="flex-1 flex flex-col">
           <CardHeader>
             <CardTitle className="font-headline flex items-center gap-2">

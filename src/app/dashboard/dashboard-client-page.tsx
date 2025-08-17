@@ -187,13 +187,8 @@ ${analysisResult.reasoning.map((item: string) => `- ${item}`).join('\n')}
       setMessages([{ role: 'assistant', content: <MessageSkeleton /> }]);
 
       try {
-          const randomStocks = await getStocks();
-          if (randomStocks.length === 0) {
-              throw new Error("No stocks available in the database.");
-          }
-          
-          const uris = randomStocks.map(s => s.bundle_gcs_path);
-          const analysisResult = await handleGetRecommendation(user.uid, { uris });
+          // Pass empty uris array to trigger the AI Top Pick logic on the backend
+          const analysisResult = await handleGetRecommendation(user.uid, { uris: [] });
 
           if ('error' in analysisResult && analysisResult.required === 'subscription') {
             setShowSubscriptionDialog(true);
@@ -204,31 +199,29 @@ ${analysisResult.reasoning.map((item: string) => `- ${item}`).join('\n')}
            if ('error' in analysisResult) {
               throw new Error(analysisResult.error);
            }
-           if ('markdown' in analysisResult) {
-              // This case should ideally not be hit by AI top pick, but handle it gracefully
-              setInitialRecommendation(analysisResult.markdown);
-              setMessages([{ role: 'assistant', content: analysisResult.markdown }]);
-              setIsLoading(false);
-              return;
-           }
-          
+           
           const dbUser = await getOrCreateUser(user.uid, user.isAnonymous);
           setUsageCount(dbUser.usageCount);
 
-          setInitialRecommendation(analysisResult);
-
-          const recommendationText = `
+           if ('markdown' in analysisResult) {
+              setInitialRecommendation(analysisResult.markdown);
+              setMessages([{ role: 'assistant', content: analysisResult.markdown }]);
+           } else {
+             // This is a fallback in case the backend returns the old format
+             setInitialRecommendation(analysisResult);
+             const recommendationText = `
 **Recommendation:** ${analysisResult.recommendation}
 
 **Reasoning:**
 ${analysisResult.reasoning.map((item: string) => `- ${item}`).join('\n')}
-          `;
-          setMessages([{ role: 'assistant', content: recommendationText.trim() }]);
-      } catch (error) {
+             `;
+             setMessages([{ role: 'assistant', content: recommendationText.trim() }]);
+           }
+      } catch (error: any) {
           console.error("Failed to get AI Top Pick:", error);
           toast({
               title: "AI Top Pick Failed",
-              description: "Could not generate the AI Top Pick. Please try again.",
+              description: error.message || "Could not generate the AI Top Pick. Please try again.",
               variant: "destructive",
           });
           setMessages([]);

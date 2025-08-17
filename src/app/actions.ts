@@ -20,6 +20,7 @@ import {
     getOrCreateUserAdmin,
     incrementUserUsageAdmin,
     getGcsFileContentAdmin,
+    getRandomBuyStockAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock } from '@/lib/firebase';
 import { createStripeCheckoutSession } from '@/lib/stripe';
@@ -57,6 +58,21 @@ export async function handleGetRecommendation(uid: string, input: InitialRecomme
       console.log(JSON.stringify({ traceId, msg: 'Successfully incremented user usage.' }));
     }
     
+    // AI TOP PICK FLOW: Get a random "BUY" stock
+    if (input.uris.length === 0 && !input.ticker) {
+        console.log(JSON.stringify({ traceId, msg: 'AI Top Pick flow: fetching random BUY stock.' }));
+        const stock = await getRandomBuyStockAdmin();
+        if (stock && stock.recommendation_analysis) {
+            const markdownContent = await getGcsFileContentAdmin(stock.recommendation_analysis);
+            return { markdown: markdownContent };
+        } else if (stock) {
+             throw new Error(`AI Top Pick stock ${stock.id} is missing recommendation_analysis path.`);
+        } else {
+            throw new Error('No stocks with recommendation "BUY" found in the database.');
+        }
+    }
+
+
     // SINGLE STOCK FLOW: Stream markdown from recommendation_analysis
     if (input.uris.length === 1 && input.ticker) {
       const allStocks = await getStocksAdmin();
@@ -69,7 +85,7 @@ export async function handleGetRecommendation(uid: string, input: InitialRecomme
       }
     }
 
-    // Fallback to original Genkit flow for other cases (multi-stock, AI top pick)
+    // Fallback to original Genkit flow for other cases (multi-stock, etc.)
     const flowInput = { ...input, traceId };
     console.log(JSON.stringify({ traceId, msg: 'Calling getInitialRecommendation flow.' }));
     const result: InitialRecommendationOutput = await getInitialRecommendation(flowInput);

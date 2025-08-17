@@ -21,6 +21,7 @@ const StockSchema = z.object({
   company_name: z.string(),
   bundle_gcs_path: z.string(), // Mapped from 'profile'
   recommendation_analysis: z.string().optional(),
+  recommendation: z.string().optional(),
 });
 export type Stock = z.infer<typeof StockSchema>;
 
@@ -38,6 +39,7 @@ export async function getStocksAdmin(): Promise<Stock[]> {
             company_name: data.company_name,
             bundle_gcs_path: data.profile,
             recommendation_analysis: data.recommendation_analysis,
+            recommendation: data.recommendation,
         };
         const validation = StockSchema.safeParse(stock);
         if (validation.success) {
@@ -53,6 +55,47 @@ export async function getStocksAdmin(): Promise<Stock[]> {
     return [];
   }
 }
+
+export async function getRandomBuyStockAdmin(): Promise<Stock | null> {
+    try {
+        const q = adminDb.collection("tickers").where("recommendation", "==", "BUY");
+        const querySnapshot = await q.get();
+        if (querySnapshot.empty) {
+            console.warn("No stocks with 'BUY' recommendation found.");
+            return null;
+        }
+
+        const buyStocks: Stock[] = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const stock = {
+                id: doc.id,
+                company_name: data.company_name,
+                bundle_gcs_path: data.profile,
+                recommendation_analysis: data.recommendation_analysis,
+                recommendation: data.recommendation,
+            };
+             const validation = StockSchema.safeParse(stock);
+            if (validation.success) {
+                buyStocks.push(validation.data);
+            } else {
+                console.error("Invalid 'BUY' stock data from Firestore:", validation.error.flatten());
+            }
+        });
+        
+        if (buyStocks.length === 0) {
+            return null;
+        }
+
+        const randomIndex = Math.floor(Math.random() * buyStocks.length);
+        return buyStocks[randomIndex];
+
+    } catch (error) {
+        console.error("Error fetching random 'BUY' stock:", error);
+        throw error;
+    }
+}
+
 
 /**
  * Extracts the bucket name and file path from a gs:// URI.

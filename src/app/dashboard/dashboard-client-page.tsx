@@ -166,7 +166,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
                     disabled={isLoading}
                 />
                 <Button onClick={onSubmitFeedback} className="w-full" disabled={!feedbackText.trim() || isLoading}>
-                    {isLoading && messages.length === 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    {isLoading && !feedbackText.trim() ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     Submit Feedback
                 </Button>
             </CardContent>

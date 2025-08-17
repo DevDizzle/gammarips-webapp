@@ -1246,20 +1246,20 @@ const renderAnalysisControls = (isAuthLoading, stockOptions, isFetchingStocks, s
                     children: "Stock Tickers (Max 2)"
                 }, void 0, false, {
                     fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                    lineNumber: 66,
+                    lineNumber: 67,
                     columnNumber: 11
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
                     className: "h-10 w-full"
                 }, void 0, false, {
                     fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                    lineNumber: 67,
+                    lineNumber: 68,
                     columnNumber: 11
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-            lineNumber: 65,
+            lineNumber: 66,
             columnNumber: 9
         }, this);
     }
@@ -1274,7 +1274,7 @@ const renderAnalysisControls = (isAuthLoading, stockOptions, isFetchingStocks, s
                         children: "Stock Tickers (Max 2)"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 75,
+                        lineNumber: 76,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1287,18 +1287,18 @@ const renderAnalysisControls = (isAuthLoading, stockOptions, isFetchingStocks, s
                             className: `h-4 w-4 ${isFetchingStocks ? 'animate-spin' : ''}`
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                            lineNumber: 77,
+                            lineNumber: 78,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 76,
+                        lineNumber: 77,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 74,
+                lineNumber: 75,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$multi$2d$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["MultiSelect"], {
@@ -1311,27 +1311,19 @@ const renderAnalysisControls = (isAuthLoading, stockOptions, isFetchingStocks, s
                 disabled: isAuthLoading
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 80,
+                lineNumber: 81,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-        lineNumber: 73,
+        lineNumber: 74,
         columnNumber: 7
     }, this);
 };
 const SidebarContent = ({ isLoading, authLoading, stockOptions, isFetchingStocks, selectedTickers, isSubscribed, usageCount, feedbackText, onTickerSelectionChange, onFetchStocks, onGetRecommendation, onGetAITopPick, onFeedbackTextChange, onSubmitFeedback, messages })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "p-4 flex flex-col gap-4 h-full bg-background",
         children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                className: "text-2xl font-bold font-headline mb-4",
-                children: "ProfitScout"
-            }, void 0, false, {
-                fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 111,
-                columnNumber: 9
-            }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
                 className: "flex-1 flex flex-col",
                 children: [
@@ -1344,27 +1336,27 @@ const SidebarContent = ({ isLoading, authLoading, stockOptions, isFetchingStocks
                                         className: "text-primary"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                        lineNumber: 116,
+                                        lineNumber: 115,
                                         columnNumber: 17
                                     }, this),
                                     "Stock Analysis"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 115,
+                                lineNumber: 114,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
                                 children: "Select stocks to analyze or compare"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 119,
+                                lineNumber: 118,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 114,
+                        lineNumber: 113,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1376,7 +1368,7 @@ const SidebarContent = ({ isLoading, authLoading, stockOptions, isFetchingStocks
                                 children: isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 123,
+                                lineNumber: 122,
                                 columnNumber: 14
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1388,26 +1380,26 @@ const SidebarContent = ({ isLoading, authLoading, stockOptions, isFetchingStocks
                                         className: "mr-2 h-4 w-4 animate-spin"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                        lineNumber: 127,
+                                        lineNumber: 126,
                                         columnNumber: 81
                                     }, this) : null,
                                     "Launch Analysis"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 126,
+                                lineNumber: 125,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 121,
+                        lineNumber: 120,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 113,
+                lineNumber: 112,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -1422,27 +1414,27 @@ const SidebarContent = ({ isLoading, authLoading, stockOptions, isFetchingStocks
                                         className: "text-primary"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                        lineNumber: 136,
+                                        lineNumber: 135,
                                         columnNumber: 21
                                     }, this),
                                     "AI Top Pick"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 135,
+                                lineNumber: 134,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
                                 children: "Let our AI find the best stock for you right now."
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 139,
+                                lineNumber: 138,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 134,
+                        lineNumber: 133,
                         columnNumber: 13
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1453,7 +1445,7 @@ const SidebarContent = ({ isLoading, authLoading, stockOptions, isFetchingStocks
                                 children: isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 142,
+                                lineNumber: 141,
                                 columnNumber: 18
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1465,26 +1457,26 @@ const SidebarContent = ({ isLoading, authLoading, stockOptions, isFetchingStocks
                                         className: "mr-2 h-4 w-4 animate-spin"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                        lineNumber: 146,
+                                        lineNumber: 145,
                                         columnNumber: 89
                                     }, this) : null,
                                     "Get AI Top Pick"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 145,
+                                lineNumber: 144,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 141,
+                        lineNumber: 140,
                         columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 133,
+                lineNumber: 132,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -1499,27 +1491,27 @@ const SidebarContent = ({ isLoading, authLoading, stockOptions, isFetchingStocks
                                         className: "text-primary"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                        lineNumber: 155,
+                                        lineNumber: 154,
                                         columnNumber: 21
                                     }, this),
                                     "Feedback"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 154,
+                                lineNumber: 153,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
                                 children: "Help us improve ProfitScout!"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 158,
+                                lineNumber: 157,
                                 columnNumber: 18
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 153,
+                        lineNumber: 152,
                         columnNumber: 13
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1534,7 +1526,7 @@ const SidebarContent = ({ isLoading, authLoading, stockOptions, isFetchingStocks
                                 disabled: isLoading
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 161,
+                                lineNumber: 160,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1546,32 +1538,32 @@ const SidebarContent = ({ isLoading, authLoading, stockOptions, isFetchingStocks
                                         className: "mr-2 h-4 w-4 animate-spin"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                        lineNumber: 170,
+                                        lineNumber: 169,
                                         columnNumber: 59
                                     }, this) : null,
                                     "Submit Feedback"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 169,
+                                lineNumber: 168,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 160,
+                        lineNumber: 159,
                         columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 152,
+                lineNumber: 151,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-        lineNumber: 110,
+        lineNumber: 111,
         columnNumber: 5
     }, this);
 function DashboardClientPage({ initialStocks }) {
@@ -1661,7 +1653,7 @@ function DashboardClientPage({ initialStocks }) {
                 role: 'assistant',
                 content: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(MessageSkeleton, {}, void 0, false, {
                     fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                    lineNumber: 266,
+                    lineNumber: 265,
                     columnNumber: 48
                 }, this)
             }
@@ -1734,7 +1726,7 @@ ${analysisResult.reasoning.map((item)=>`- ${item}`).join('\n')}
                 role: 'assistant',
                 content: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(MessageSkeleton, {}, void 0, false, {
                     fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                    lineNumber: 329,
+                    lineNumber: 328,
                     columnNumber: 50
                 }, this)
             }
@@ -1812,7 +1804,7 @@ ${analysisResult.reasoning.map((item)=>`- ${item}`).join('\n')}
                     role: 'assistant',
                     content: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(MessageSkeleton, {}, void 0, false, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 388,
+                        lineNumber: 387,
                         columnNumber: 65
                     }, this)
                 }
@@ -1941,7 +1933,7 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                 loading: isCheckingOut
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 505,
+                lineNumber: 504,
                 columnNumber: 5
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1953,12 +1945,12 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                             ...sidebarProps
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                            lineNumber: 513,
+                            lineNumber: 512,
                             columnNumber: 9
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 512,
+                        lineNumber: 511,
                         columnNumber: 7
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -1981,7 +1973,7 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                                                             className: "h-6 w-6"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                                            lineNumber: 520,
+                                                            lineNumber: 519,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1989,18 +1981,18 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                                                             children: "Open controls"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                                            lineNumber: 521,
+                                                            lineNumber: 520,
                                                             columnNumber: 17
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                                    lineNumber: 519,
+                                                    lineNumber: 518,
                                                     columnNumber: 15
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                                lineNumber: 518,
+                                                lineNumber: 517,
                                                 columnNumber: 13
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$sheet$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SheetContent"], {
@@ -2010,18 +2002,18 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                                                     ...sidebarProps
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                                    lineNumber: 525,
+                                                    lineNumber: 524,
                                                     columnNumber: 15
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                                lineNumber: 524,
+                                                lineNumber: 523,
                                                 columnNumber: 13
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                        lineNumber: 517,
+                                        lineNumber: 516,
                                         columnNumber: 12
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -2029,13 +2021,13 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                                         children: "ProfitScout"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                        lineNumber: 528,
+                                        lineNumber: 527,
                                         columnNumber: 12
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 516,
+                                lineNumber: 515,
                                 columnNumber: 10
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2043,19 +2035,19 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                                 children: renderChat()
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                lineNumber: 530,
+                                lineNumber: 529,
                                 columnNumber: 10
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 515,
+                        lineNumber: 514,
                         columnNumber: 7
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 511,
+                lineNumber: 510,
                 columnNumber: 5
             }, this)
         ]
@@ -2072,12 +2064,12 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                             className: "h-12 w-12 text-primary"
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                            lineNumber: 543,
+                            lineNumber: 542,
                             columnNumber: 19
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 542,
+                        lineNumber: 541,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -2085,7 +2077,7 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                         children: "Welcome to ProfitScout"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 545,
+                        lineNumber: 544,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2093,13 +2085,13 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                         children: 'To get started, select one or two stocks and click "Launch Analysis", or let our AI find a top pick for you.'
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 546,
+                        lineNumber: 545,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 541,
+                lineNumber: 540,
                 columnNumber: 13
             }, this);
         }
@@ -2122,12 +2114,12 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                                                 className: "h-5 w-5 text-primary-foreground"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                                lineNumber: 560,
+                                                lineNumber: 559,
                                                 columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                            lineNumber: 559,
+                                            lineNumber: 558,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2136,12 +2128,12 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                                                 content: message.content
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                                lineNumber: 570,
+                                                lineNumber: 569,
                                                 columnNumber: 25
                                             }, this) : message.content
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                            lineNumber: 563,
+                                            lineNumber: 562,
                                             columnNumber: 19
                                         }, this),
                                         message.role === 'user' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2150,28 +2142,28 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                                                 className: "h-5 w-5 text-secondary-foreground"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                                lineNumber: 577,
+                                                lineNumber: 576,
                                                 columnNumber: 24
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                            lineNumber: 576,
+                                            lineNumber: 575,
                                             columnNumber: 22
                                         }, this)
                                     ]
                                 }, index, true, {
                                     fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                    lineNumber: 557,
+                                    lineNumber: 556,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                            lineNumber: 555,
+                            lineNumber: 554,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 554,
+                        lineNumber: 553,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2187,7 +2179,7 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                                     disabled: isLoading || authLoading || messages.length === 0 || initialRecommendation === null
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                    lineNumber: 586,
+                                    lineNumber: 585,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -2199,40 +2191,40 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                                         className: "h-4 w-4 animate-spin"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                        lineNumber: 593,
+                                        lineNumber: 592,
                                         columnNumber: 71
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$send$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Send$3e$__["Send"], {
                                         className: "h-4 w-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                        lineNumber: 593,
+                                        lineNumber: 592,
                                         columnNumber: 118
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                                    lineNumber: 592,
+                                    lineNumber: 591,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                            lineNumber: 585,
+                            lineNumber: 584,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                        lineNumber: 584,
+                        lineNumber: 583,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 553,
+                lineNumber: 552,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-            lineNumber: 552,
+            lineNumber: 551,
             columnNumber: 7
         }, this);
     }
@@ -2244,27 +2236,27 @@ const MessageSkeleton = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b
                 className: "h-4 w-[250px]"
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 605,
+                lineNumber: 604,
                 columnNumber: 5
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
                 className: "h-4 w-[200px]"
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 606,
+                lineNumber: 605,
                 columnNumber: 5
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
                 className: "h-4 w-[220px]"
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-                lineNumber: 607,
+                lineNumber: 606,
                 columnNumber: 5
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
-        lineNumber: 604,
+        lineNumber: 603,
         columnNumber: 3
     }, this);
 }}),

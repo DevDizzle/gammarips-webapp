@@ -1,29 +1,13 @@
 'use server';
 
-import { initializeApp as initializeAdminApp, getApps as getAdminApps, cert } from 'firebase-admin/app';
+import { initializeApp as initializeAdminApp, getApps as getAdminApps } from 'firebase-admin/app';
 import { getFirestore as getAdminFirestore, FieldValue } from 'firebase-admin/firestore';
 import { z } from 'zod';
 import type { DbUser } from './firebase';
 
-// Restore explicit initialization to solve cross-project auth issues,
-// as the hosting environment may rely on it.
+// Restore to the simplest initialization. The hosting environment provides the credentials.
 if (getAdminApps().length === 0) {
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-  
-  if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && privateKey) {
-    console.log("Initializing Firebase Admin SDK with explicit credentials.");
-    initializeAdminApp({
-      credential: cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey,
-      }),
-    });
-  } else {
-    // Fallback for environments where GOOGLE_APPLICATION_CREDENTIALS is set
-    console.log("Initializing Firebase Admin SDK with default credentials.");
-    initializeAdminApp();
-  }
+  initializeApp();
 }
 
 const adminDb = getAdminFirestore();

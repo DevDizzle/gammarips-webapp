@@ -68,6 +68,7 @@ async function getStocksAdmin() {
         const stocks = [];
         querySnapshot.forEach((doc)=>{
             const data = doc.data();
+            // The 'profile' field from Firestore is mapped to 'bundle_gcs_path'
             const stock = {
                 id: doc.id,
                 company_name: data.company_name,

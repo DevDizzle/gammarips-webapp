@@ -1,6 +1,6 @@
 'use server';
 
-import { initializeApp as initializeAdminApp, getApps as getAdminApps } from 'firebase-admin/app';
+import { initializeApp as initializeAdminApp, getApps as getAdminApps, cert } from 'firebase-admin/app';
 import { getFirestore as getAdminFirestore, FieldValue } from 'firebase-admin/firestore';
 import { z } from 'zod';
 import type { DbUser } from './firebase';
@@ -28,10 +28,11 @@ export async function getStocksAdmin(): Promise<Stock[]> {
     const stocks: Stock[] = [];
     querySnapshot.forEach((doc) => {
         const data = doc.data();
+        // The 'profile' field from Firestore is mapped to 'bundle_gcs_path'
         const stock = {
             id: doc.id,
             company_name: data.company_name,
-            bundle_gcs_path: data.profile, // Map profile to bundle_gcs_path
+            bundle_gcs_path: data.profile,
             recommendation_analysis: data.recommendation_analysis,
         };
         const validation = StockSchema.safeParse(stock);

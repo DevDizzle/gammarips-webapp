@@ -1,16 +1,20 @@
 'use server';
 
-import { initializeApp as initializeAdminApp, getApps as getAdminApps, cert } from 'firebase-admin/app';
+import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp } from 'firebase-admin/app';
 import { getFirestore as getAdminFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getStorage as getAdminStorage } from 'firebase-admin/storage';
 import { z } from 'zod';
 import type { DbUser } from './firebase';
 
-// Restore to the simplest initialization. The hosting environment provides the credentials.
-if (getAdminApps().length === 0) {
-  initializeApp();
+let adminApp: AdminApp;
+if (!getAdminApps().length) {
+  adminApp = initializeAdminApp();
+} else {
+  adminApp = getAdminApps()[0]!;
 }
 
-const adminDb = getAdminFirestore();
+const adminDb = getAdminFirestore(adminApp);
+const adminStorage = getAdminStorage(adminApp);
 
 const StockSchema = z.object({
   id: z.string(), // Document ID is the ticker
@@ -50,24 +54,33 @@ export async function getStocksAdmin(): Promise<Stock[]> {
   }
 }
 
-/** Convert a gs:// URI into its bucket and object path parts. */
-function parseGcsUri(uri: string): { bucket: string; objectPath: string } {
-  if (!uri.startsWith('gs://')) {
-    throw new Error(`Invalid GCS URI: ${uri}`);
-  }
-  const [bucket, ...objectPathParts] = uri.substring(5).split('/');
-  return { bucket, objectPath: objectPathParts.join('/') };
+/**
+ * Extracts the bucket name and file path from a gs:// URI.
+ * @param uri The GCS URI (e.g., gs://bucket-name/path/to/file.txt)
+ * @returns An object with the bucket name and file path.
+ */
+function parseGcsUri(uri: string): { bucketName: string, filePath: string } {
+    if (!uri.startsWith('gs://')) {
+        throw new Error(`Invalid GCS URI: ${uri}`);
+    }
+    const path = uri.substring(5);
+    const slashIndex = path.indexOf('/');
+    if (slashIndex === -1) {
+        throw new Error(`Invalid GCS URI format: ${uri}`);
+    }
+    const bucketName = path.substring(0, slashIndex);
+    const filePath = path.substring(slashIndex + 1);
+    return { bucketName, filePath };
 }
+
 
 export async function getGcsFileContentAdmin(uri: string): Promise<string> {
     try {
-        // Dynamically import to ensure it's only loaded on the server
-        const { Storage } = await import('@google-cloud/storage');
-        // Initialize the client without a hardcoded project ID, so it uses the default credentials.
-        const storage = new Storage();
-        const { bucket, objectPath } = parseGcsUri(uri);
-        const [contents] = await storage.bucket(bucket).file(objectPath).download();
-        return contents.toString();
+        const { bucketName, filePath } = parseGcsUri(uri);
+        const bucket = adminStorage.bucket(bucketName);
+        const file = bucket.file(filePath);
+        const [contents] = await file.download();
+        return contents.toString('utf8');
     } catch (error: any) {
         console.error(`Failed to fetch GCS file at URI: ${uri}`, {
             errorMessage: error.message,

@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/hooks/use-auth';
 
 export const metadata: Metadata = {
-  title: 'ProfitScout',
+  title: 'Profit$cout',
   description: 'Smarter Stock Picks, Simplified.',
 };
 

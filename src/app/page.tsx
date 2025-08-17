@@ -32,7 +32,7 @@ export default function LandingPage() {
     <div className="flex flex-col min-h-screen bg-background">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold font-headline text-primary">ProfitScout</h1>
+          <h1 className="text-2xl font-bold font-headline text-primary">Profit$cout</h1>
            <UserNav />
         </div>
       </header>
@@ -73,7 +73,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} ProfitScout. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Profit$cout. All rights reserved.</p>
       </footer>
     </div>
   );

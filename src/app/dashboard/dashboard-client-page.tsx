@@ -154,7 +154,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
                     <MessageSquare className="text-primary" />
                     Feedback
                 </CardTitle>
-                 <CardDescription>Help us improve ProfitScout!</CardDescription>
+                 <CardDescription>Help us improve Profit$cout!</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow flex flex-col gap-4">
                 <Textarea
@@ -434,7 +434,7 @@ ${initialRecommendation.reasoning.map((item: string) => `- ${item}`).join('\n')}
         setIsSheetOpen(false);
         toast({
           title: 'Feedback Submitted',
-          description: 'Thank you for helping us improve ProfitScout!',
+          description: 'Thank you for helping us improve Profit$cout!',
         });
     } catch (error: any) {
         toast({
@@ -524,7 +524,7 @@ ${initialRecommendation.reasoning.map((item: string) => `- ${item}`).join('\n')}
               <SidebarContent {...sidebarProps} />
             </SheetContent>
           </Sheet>
-           <h1 className="text-xl font-bold font-headline text-primary">ProfitScout</h1>
+           <h1 className="text-xl font-bold font-headline text-primary">Profit$cout</h1>
          </header>
          <div className="flex-grow flex flex-col">
             {renderChat()}
@@ -541,7 +541,7 @@ ${initialRecommendation.reasoning.map((item: string) => `- ${item}`).join('\n')}
                 <div className="bg-primary/10 p-4 rounded-full mb-4">
                   <Bot className="h-12 w-12 text-primary" />
                 </div>
-                <h2 className="text-xl font-semibold text-foreground">Welcome to ProfitScout</h2>
+                <h2 className="text-xl font-semibold text-foreground">Welcome to Profit$cout</h2>
                 <p className="max-w-md mt-2">To get started, select one or two stocks and click "Launch Analysis", or let our AI find a top pick for you.</p>
             </div>
         )

@@ -51,11 +51,24 @@ var __turbopack_async_dependencies__ = __turbopack_handle_async_dependencies__([
 ;
 ;
 ;
-// Simplified initialization: The Admin SDK will automatically find the credentials
-// from the environment variables (like GOOGLE_APPLICATION_CREDENTIALS),
-// which is a more robust method.
+// The user is correct, the auth issues started with cross-project access.
+// Let's restore the previous explicit initialization as the hosting environment
+// may rely on it.
 if ((0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$app__$5b$external$5d$__$28$firebase$2d$admin$2f$app$2c$__esm_import$29$__["getApps"])().length === 0) {
-    (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$app__$5b$external$5d$__$28$firebase$2d$admin$2f$app$2c$__esm_import$29$__["initializeApp"])();
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+    if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && privateKey) {
+        (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$app__$5b$external$5d$__$28$firebase$2d$admin$2f$app$2c$__esm_import$29$__["initializeApp"])({
+            credential: (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$app__$5b$external$5d$__$28$firebase$2d$admin$2f$app$2c$__esm_import$29$__["cert"])({
+                projectId: process.env.FIREBASE_PROJECT_ID,
+                clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+                privateKey
+            })
+        });
+    } else {
+        // Fallback for environments where GOOGLE_APPLICATION_CREDENTIALS is set
+        console.log("Initializing Firebase Admin SDK with default credentials.");
+        (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$app__$5b$external$5d$__$28$firebase$2d$admin$2f$app$2c$__esm_import$29$__["initializeApp"])();
+    }
 }
 const adminDb = (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$firestore__$5b$external$5d$__$28$firebase$2d$admin$2f$firestore$2c$__esm_import$29$__["getFirestore"])();
 const StockSchema = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].object({
@@ -105,7 +118,10 @@ async function getGcsFileContentAdmin(uri) {
     try {
         // Dynamically import to ensure it's only loaded on the server
         const { Storage } = await __turbopack_context__.r("[project]/node_modules/@google-cloud/storage/build/esm/src/index.js [app-rsc] (ecmascript, async loader)")(__turbopack_context__.i);
-        const storage = new Storage();
+        // Explicitly set the project ID for the GCS client to resolve cross-project access issues.
+        const storage = new Storage({
+            projectId: 'profit-scout-data'
+        });
         const { bucket, objectPath } = parseGcsUri(uri);
         const [contents] = await storage.bucket(bucket).file(objectPath).download();
         return contents.toString();

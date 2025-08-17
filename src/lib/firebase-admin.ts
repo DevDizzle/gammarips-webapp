@@ -5,13 +5,13 @@ import { getFirestore as getAdminFirestore, FieldValue } from 'firebase-admin/fi
 import { z } from 'zod';
 import type { DbUser } from './firebase';
 
-// The user is correct, the auth issues started with cross-project access.
-// Let's restore the previous explicit initialization as the hosting environment
-// may rely on it.
+// Restore explicit initialization to solve cross-project auth issues,
+// as the hosting environment may rely on it.
 if (getAdminApps().length === 0) {
   const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
   
   if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && privateKey) {
+    console.log("Initializing Firebase Admin SDK with explicit credentials.");
     initializeAdminApp({
       credential: cert({
         projectId: process.env.FIREBASE_PROJECT_ID,
@@ -47,7 +47,7 @@ export async function getStocksAdmin(): Promise<Stock[]> {
         const stock = {
             id: doc.id,
             company_name: data.company_name,
-            bundle_gcs_path: data.profile,
+            bundle_gcs_path: data.profile, // Map profile to bundle_gcs_path
             recommendation_analysis: data.recommendation_analysis,
         };
         const validation = StockSchema.safeParse(stock);
@@ -75,7 +75,6 @@ function parseGcsUri(uri: string): { bucket: string; objectPath: string } {
 }
 
 export async function getGcsFileContentAdmin(uri: string): Promise<string> {
-    console.log("getGcsFileContentAdmin called with uri: " + uri);
     try {
         // Dynamically import to ensure it's only loaded on the server
         const { Storage } = await import('@google-cloud/storage');

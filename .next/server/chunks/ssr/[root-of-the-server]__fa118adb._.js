@@ -51,12 +51,12 @@ var __turbopack_async_dependencies__ = __turbopack_handle_async_dependencies__([
 ;
 ;
 ;
-// The user is correct, the auth issues started with cross-project access.
-// Let's restore the previous explicit initialization as the hosting environment
-// may rely on it.
+// Restore explicit initialization to solve cross-project auth issues,
+// as the hosting environment may rely on it.
 if ((0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$app__$5b$external$5d$__$28$firebase$2d$admin$2f$app$2c$__esm_import$29$__["getApps"])().length === 0) {
     const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
     if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && privateKey) {
+        console.log("Initializing Firebase Admin SDK with explicit credentials.");
         (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$app__$5b$external$5d$__$28$firebase$2d$admin$2f$app$2c$__esm_import$29$__["initializeApp"])({
             credential: (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$app__$5b$external$5d$__$28$firebase$2d$admin$2f$app$2c$__esm_import$29$__["cert"])({
                 projectId: process.env.FIREBASE_PROJECT_ID,
@@ -114,7 +114,6 @@ async function getStocksAdmin() {
     };
 }
 async function getGcsFileContentAdmin(uri) {
-    console.log("getGcsFileContentAdmin called with uri: " + uri);
     try {
         // Dynamically import to ensure it's only loaded on the server
         const { Storage } = await __turbopack_context__.r("[project]/node_modules/@google-cloud/storage/build/esm/src/index.js [app-rsc] (ecmascript, async loader)")(__turbopack_context__.i);

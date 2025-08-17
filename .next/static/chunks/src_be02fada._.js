@@ -1581,7 +1581,7 @@ const SidebarContent = ({ isLoading, authLoading, stockOptions, isFetchingStocks
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
-                                children: "Help us improve ProfitScout!"
+                                children: "Help us improve Profit$cout!"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
                                 lineNumber: 157,
@@ -1952,7 +1952,7 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
             setIsSheetOpen(false);
             toast({
                 title: 'Feedback Submitted',
-                description: 'Thank you for helping us improve ProfitScout!'
+                description: 'Thank you for helping us improve Profit$cout!'
             });
         } catch (error) {
             toast({
@@ -2113,7 +2113,7 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                                         className: "text-xl font-bold font-headline text-primary",
-                                        children: "ProfitScout"
+                                        children: "Profit$cout"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
                                         lineNumber: 527,
@@ -2169,7 +2169,7 @@ ${initialRecommendation.reasoning.map((item)=>`- ${item}`).join('\n')}
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                         className: "text-xl font-semibold text-foreground",
-                        children: "Welcome to ProfitScout"
+                        children: "Welcome to Profit$cout"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/dashboard-client-page.tsx",
                         lineNumber: 544,

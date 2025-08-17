@@ -101,7 +101,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$auth$
 ;
 ;
 const metadata = {
-    title: 'Profit$cout',
+    title: 'ProfitScout',
     description: 'Smarter Stock Picks, Simplified.'
 };
 function RootLayout({ children }) {

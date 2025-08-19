@@ -35,11 +35,13 @@ const InitialRecommendationOutputSchema = z.object({
     .describe(
       'The recommendation (BUY, HOLD, or SELL) and a 1-sentence summary.'
     ),
-  reasoning: z
-    .array(z.string())
-    .describe(
-      'An array of 3-5 bullet points for the reasoning behind the recommendation.'
-    ),
+  reasoning: z.object({
+    chainOfThought: z.array(z.object({
+        step: z.string().describe("The name of the analysis step."),
+        analysis: z.string().describe("The detailed comparative analysis for this step, referencing specific numbers, metrics, and excerpts."),
+    })).describe("A step-by-step comparative analysis of the stocks."),
+    summary: z.array(z.string()).describe("An array of 3-5 summary bullet points based on the full analysis."),
+  }).describe("The detailed reasoning behind the recommendation, including a step-by-step analysis and a final summary."),
 });
 export type InitialRecommendationOutput = z.infer<
   typeof InitialRecommendationOutputSchema
@@ -103,29 +105,17 @@ Each data bundle contains:
 
 Your goal is to provide concise BUY/HOLD/SELL recommendations for each stock, with a comparative analysis. You MUST reference specific numbers, metrics, and excerpts from the data in every step and in the final reasoning. No vague statements—e.g., "Revenue for Stock A grew 15% YoY to $2B from financial_statements, outpacing Stock B's 5% growth to $1B."
 
-Use Chain of Thought reasoning: Step-by-step, analyze each key section comparatively, then synthesize.
+You MUST follow this Chain of Thought process and populate the final JSON object accordingly.
 
-Step 1: Load and summarize data for both stocks (tickers, company names, key metrics overview with specific extractions).
+Step 1: Business Profile & Moat - Compare core business, products, advantages. Quote specifics from each business_profile.
+Step 2: Financial Health & Earnings - Compare revenue, EPS, margins, YoY/QoQ trends from financial_statements and earnings_call_summary. Include management tones and catalysts with quotes.
+Step 3: Valuation - Compare P/E, P/S, ROE, debt ratios from ratios/key_metrics. Assess premiums/discounts (e.g., "Stock A P/E 20 vs. Stock B 30").
+Step 4: Technicals & Price Action - Compare price trends, SMAs, RSI from prices and technicals. Compute recent returns (e.g., "Stock A up 10% vs. Stock B down 2% over 90 days").
+Step 5: Risks & Opportunities - Compare risks/drivers with quotes from sec_mda and earnings_call_summary.
+Step 6: Synthesize & Summarize - Based on the full analysis, decide BUY/HOLD/SELL for each, with one potentially stronger. Provide a comparative summary sentence and then 3-5 summary bullet points. End the summary with: "To learn more, ask a follow-up question about any of these sections."
 
-Step 2: Business Profile & Moat - Compare core business, products, advantages. Quote specifics from each business_profile.
+Output strictly as JSON matching the provided schema. No other text.`;
 
-Step 3: Financial Health & Earnings - Compare revenue, EPS, margins, YoY/QoQ trends from financial_statements and earnings_call_summary. Include management tones and catalysts with quotes.
-
-Step 4: Valuation - Compare P/E, P/S, ROE, debt ratios from ratios/key_metrics. Assess premiums/discounts (e.g., "Stock A P/E 20 vs. Stock B 30").
-
-Step 5: Technicals & Price Action - Compare price trends, SMAs, RSI from prices and technicals. Compute recent returns (e.g., "Stock A up 10% vs. Stock B down 2% over 90 days").
-
-Step 6: Risks & Opportunities - Compare risks/drivers with quotes from sec_mda and earnings_call_summary.
-
-Step 7: Synthesize - Based on comparisons, decide BUY/HOLD/SELL for each, with one potentially stronger. Provide a comparative summary sentence.
-
-Structure:
-- Recommendation: "BUY/HOLD/SELL for TICKER1 (Company1) vs. BUY/HOLD/SELL for TICKER2 (Company2) - 1-sentence comparative summary."
-- Reasoning: 3-5 bullets with comparative, data-backed insights. End with: "To learn more, ask a follow-up question about any of these sections: Business Profile, Earnings Call, MD&A, Technicals, Stock Price, Financials, Ratios, and Key Metrics for either stock."
-
-Keep under 500 words.
-
-Output strictly as JSON: {"recommendation": "BUY/HOLD/SELL for TICKER1 (Company1) vs. BUY/HOLD/SELL for TICKER2 (Company2) - summary sentence", "reasoning": ["bullet point 1", "bullet point 2", ...]}. No other text.`;
 
 // Define Prompts and Flows
 const singleStockPrompt = ai.definePrompt(

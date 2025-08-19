@@ -23,6 +23,7 @@ import {
 import { Markdown } from '@/components/markdown';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SubscriptionDialog } from '@/components/auth/subscription-dialog';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -173,6 +174,31 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       </div>
 );
 
+const AnalysisResult = ({ result }: { result: InitialRecommendationOutput }) => (
+    <div>
+        <Markdown content={`**Recommendation:** ${result.recommendation}`} />
+        <Accordion type="single" collapsible className="w-full mt-4">
+            <AccordionItem value="item-1">
+                <AccordionTrigger>View Detailed Analysis</AccordionTrigger>
+                <AccordionContent>
+                    <div className="space-y-4">
+                        {result.reasoning.chainOfThought.map((step, index) => (
+                            <div key={index}>
+                                <h4 className="font-semibold text-foreground">{step.step}</h4>
+                                <Markdown content={step.analysis} className="text-muted-foreground" />
+                            </div>
+                        ))}
+                    </div>
+                </AccordionContent>
+            </AccordionItem>
+        </Accordion>
+        <div className="mt-4">
+            <h4 className="font-semibold text-foreground mb-2">Summary</h4>
+            <Markdown content={result.reasoning.summary.map(s => `- ${s}`).join('\n')} />
+        </div>
+    </div>
+);
+
 
 export function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   const { user, loading: authLoading } = useAuth();
@@ -293,13 +319,7 @@ export function DashboardClientPage({ initialStocks }: DashboardClientPageProps)
         setMessages([{ role: 'assistant', content: analysisResult.markdown }]);
       } else {
         setInitialRecommendation(analysisResult);
-        const fullMessage = `
-**Recommendation:** ${analysisResult.recommendation}
-
-**Reasoning:**
-${analysisResult.reasoning.map((item: string) => `- ${item}`).join('\n')}
-        `;
-        setMessages([{ role: 'assistant', content: fullMessage.trim() }]);
+        setMessages([{ role: 'assistant', content: <AnalysisResult result={analysisResult} /> }]);
       }
 
     } catch (error) {
@@ -349,13 +369,7 @@ ${analysisResult.reasoning.map((item: string) => `- ${item}`).join('\n')}
            } else {
              // This is a fallback in case the backend returns the old format
              setInitialRecommendation(analysisResult);
-             const recommendationText = `
-**Recommendation:** ${analysisResult.recommendation}
-
-**Reasoning:**
-${analysisResult.reasoning.map((item: string) => `- ${item}`).join('\n')}
-             `;
-             setMessages([{ role: 'assistant', content: recommendationText.trim() }]);
+             setMessages([{ role: 'assistant', content: <AnalysisResult result={analysisResult} /> }]);
            }
       } catch (error: any) {
           console.error("Failed to get AI Top Pick:", error);
@@ -387,19 +401,14 @@ ${analysisResult.reasoning.map((item: string) => `- ${item}`).join('\n')}
 
     const chatHistory = messages.map(m => ({
       role: m.role === 'user' ? 'user' : 'assistant',
-      content: typeof m.content === 'string' ? m.content : '...',
+      content: typeof m.content === 'string' ? m.content : 'Analysis was displayed.',
     }));
 
     let initialRecommendationText = '';
     if (typeof initialRecommendation === 'string') {
         initialRecommendationText = initialRecommendation;
     } else if (initialRecommendation) {
-        initialRecommendationText = `
-**Recommendation:** ${initialRecommendation.recommendation}
-
-**Reasoning:**
-${initialRecommendation.reasoning.map((item: string) => `- ${item}`).join('\n')}
-        `;
+        initialRecommendationText = `Recommendation: ${initialRecommendation.recommendation}\nSummary:\n${initialRecommendation.reasoning.summary.join('\n')}`;
     }
     
     try {

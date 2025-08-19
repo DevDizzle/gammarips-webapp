@@ -10,5 +10,15 @@
       "**/.*",
       "**/node_modules/**"
     ]
+  },
+  "apphosting": {
+    "project": {
+      "auth": {
+        "authorizedDomains": [
+          "{{ hosting.sites.Default.domains.live }}",
+          "{{ hosting.sites.Default.domains.preview }}"
+        ]
+      }
+    }
   }
 }

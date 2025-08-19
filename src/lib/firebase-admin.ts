@@ -1,20 +1,47 @@
+
 'use server';
 
-import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp } from 'firebase-admin/app';
+import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, credential } from 'firebase-admin/app';
 import { getFirestore as getAdminFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getStorage as getAdminStorage } from 'firebase-admin/storage';
 import { z } from 'zod';
 import type { DbUser } from './firebase';
 
 let adminApp: AdminApp;
-if (!getAdminApps().length) {
-  adminApp = initializeAdminApp();
-} else {
-  adminApp = getAdminApps()[0]!;
+let adminDb: ReturnType<typeof getAdminFirestore>;
+let adminStorage: ReturnType<typeof getAdminStorage>;
+
+const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+
+if (!serviceAccountKey) {
+  throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY is not set in the environment variables. Please add it to your .env file.');
 }
 
-const adminDb = getAdminFirestore(adminApp);
-const adminStorage = getAdminStorage(adminApp);
+try {
+  const serviceAccount = JSON.parse(serviceAccountKey);
+
+  // Log credential info for debugging - DO NOT log the full serviceAccount object or private_key
+  console.log('Attempting to initialize Firebase Admin SDK with:');
+  console.log(`Project ID: ${serviceAccount.project_id}`);
+  console.log(`Client Email: ${serviceAccount.client_email}`);
+
+  if (!getAdminApps().length) {
+    adminApp = initializeAdminApp({
+      credential: credential.cert(serviceAccount),
+      storageBucket: `${serviceAccount.project_id}.appspot.com`,
+    });
+  } else {
+    adminApp = getAdminApps()[0]!;
+  }
+} catch (e: any) {
+    console.error('Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY. Make sure it is a valid JSON string.', e);
+    throw new Error('Firebase Admin SDK initialization failed due to invalid service account key.');
+}
+
+
+adminDb = getAdminFirestore(adminApp);
+adminStorage = getAdminStorage(adminApp);
+
 
 const StockSchema = z.object({
   id: z.string(), // Document ID is the ticker

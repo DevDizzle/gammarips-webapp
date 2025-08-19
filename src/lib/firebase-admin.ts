@@ -29,11 +29,6 @@ const serviceAccount: ServiceAccount = {
   privateKey,
 };
 
-console.log('Attempting to initialize Firebase Admin SDK with:');
-console.log(`Project ID: ${serviceAccount.projectId}`);
-console.log(`Client Email: ${serviceAccount.clientEmail}`);
-
-
 if (!getAdminApps().length) {
   adminApp = initializeAdminApp({
     credential: admin.credential.cert(serviceAccount),

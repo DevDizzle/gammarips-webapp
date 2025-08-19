@@ -1,7 +1,8 @@
 
 'use server';
 
-import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, credential } from 'firebase-admin/app';
+import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
+import admin from 'firebase-admin';
 import { getFirestore as getAdminFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getStorage as getAdminStorage } from 'firebase-admin/storage';
 import { z } from 'zod';
@@ -11,30 +12,31 @@ let adminApp: AdminApp;
 let adminDb: ReturnType<typeof getAdminFirestore>;
 let adminStorage: ReturnType<typeof getAdminStorage>;
 
-// Updated logic to use individual environment variables
+// Updated logic to use individual environment variables from .env file
 const projectId = process.env.FIREBASE_PROJECT_ID;
 const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-// Replace escaped newlines from environment variable
+// Replace escaped newlines from environment variable, which is a common issue with .env files
 const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+
 
 if (!projectId || !clientEmail || !privateKey) {
   throw new Error('Firebase server environment variables (FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY) are not set. Please add them to your .env file.');
 }
 
-const serviceAccount = {
+const serviceAccount: ServiceAccount = {
   projectId,
   clientEmail,
   privateKey,
 };
 
-// Log credential info for debugging - DO NOT log the full serviceAccount object or private_key
 console.log('Attempting to initialize Firebase Admin SDK with:');
 console.log(`Project ID: ${serviceAccount.projectId}`);
 console.log(`Client Email: ${serviceAccount.clientEmail}`);
 
+
 if (!getAdminApps().length) {
   adminApp = initializeAdminApp({
-    credential: credential.cert(serviceAccount),
+    credential: admin.credential.cert(serviceAccount),
     storageBucket: `${serviceAccount.projectId}.appspot.com`,
   });
 } else {

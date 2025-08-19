@@ -1,9 +1,22 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read/write access to all documents for any authenticated user
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+
+    // Users can read and write to their own user document.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Authenticated users can create feedback.
+    match /feedback/{feedbackId} {
+      allow create: if request.auth != null;
+    }
+
+    // Server-side admin actions will bypass these client-side rules.
+    // Tickers collection is read-only for clients via server actions.
+    match /tickers/{ticker} {
+      allow read, write: if false; 
     }
   }
 }

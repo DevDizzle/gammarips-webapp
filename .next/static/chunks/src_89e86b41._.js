@@ -573,15 +573,11 @@ const AuthProvider = ({ children })=>{
         "AuthProvider.useEffect": ()=>{
             const unsubscribe = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$node_modules$2f40$firebase$2f$auth$2f$dist$2f$esm2017$2f$index$2d$8e6e89cb$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__z__as__onAuthStateChanged$3e$__["onAuthStateChanged"])(auth, {
                 "AuthProvider.useEffect.unsubscribe": async (user)=>{
+                    setUser(user);
                     if (user) {
-                        setUser(user);
                         // Ensure user document exists in Firestore
                         await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getOrCreateUser"])(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
-                    } else {
-                        setUser(null);
                     }
-                    // This is the critical change: ensure loading is set to false
-                    // after the auth state has been determined.
                     setLoading(false);
                 }
             }["AuthProvider.useEffect.unsubscribe"]);
@@ -645,7 +641,7 @@ const AuthProvider = ({ children })=>{
         children: children
     }, void 0, false, {
         fileName: "[project]/src/hooks/use-auth.tsx",
-        lineNumber: 101,
+        lineNumber: 97,
         columnNumber: 5
     }, this);
 };

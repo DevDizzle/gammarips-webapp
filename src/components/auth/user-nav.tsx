@@ -55,7 +55,7 @@ export function UserNav() {
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-9 w-9">
             <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? ''} />
-            <AvatarFallback>{user.isAnonymous ? 'G' : getInitials(user.displayName)}</AvatarFallback>
+            <AvatarFallback>{getInitials(user.displayName)}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -63,30 +63,20 @@ export function UserNav() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {user.isAnonymous ? 'Guest User' : user.displayName || 'User'}
+              {user.displayName || 'User'}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {!user.isAnonymous ? user.email : 'Sign in to save your history.'}
+              {user.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {!user.isAnonymous && (
-           <DropdownMenuGroup>
-             <DropdownMenuItem>
-               <UserIcon className="mr-2 h-4 w-4" />
-               <span>Profile</span>
-             </DropdownMenuItem>
-           </DropdownMenuGroup>
-        )}
-       
-        {user.isAnonymous && (
-            <DropdownMenuItem onClick={() => setShowAuthDialog(true)}>
-                <LogIn className="mr-2 h-4 w-4" />
-                <span>Sign In / Sign Up</span>
-            </DropdownMenuItem>
-        )}
-
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <UserIcon className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={signOut}>
           <LogOut className="mr-2 h-4 w-4" />

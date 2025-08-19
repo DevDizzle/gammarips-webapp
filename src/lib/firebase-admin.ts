@@ -11,33 +11,35 @@ let adminApp: AdminApp;
 let adminDb: ReturnType<typeof getAdminFirestore>;
 let adminStorage: ReturnType<typeof getAdminStorage>;
 
-const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+// Updated logic to use individual environment variables
+const projectId = process.env.FIREBASE_PROJECT_ID;
+const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+// Replace escaped newlines from environment variable
+const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
-if (!serviceAccountKey) {
-  throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY is not set in the environment variables. Please add it to your .env file.');
+if (!projectId || !clientEmail || !privateKey) {
+  throw new Error('Firebase server environment variables (FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY) are not set. Please add them to your .env file.');
 }
 
-try {
-  const serviceAccount = JSON.parse(serviceAccountKey);
+const serviceAccount = {
+  projectId,
+  clientEmail,
+  privateKey,
+};
 
-  // Log credential info for debugging - DO NOT log the full serviceAccount object or private_key
-  console.log('Attempting to initialize Firebase Admin SDK with:');
-  console.log(`Project ID: ${serviceAccount.project_id}`);
-  console.log(`Client Email: ${serviceAccount.client_email}`);
+// Log credential info for debugging - DO NOT log the full serviceAccount object or private_key
+console.log('Attempting to initialize Firebase Admin SDK with:');
+console.log(`Project ID: ${serviceAccount.projectId}`);
+console.log(`Client Email: ${serviceAccount.clientEmail}`);
 
-  if (!getAdminApps().length) {
-    adminApp = initializeAdminApp({
-      credential: credential.cert(serviceAccount),
-      storageBucket: `${serviceAccount.project_id}.appspot.com`,
-    });
-  } else {
-    adminApp = getAdminApps()[0]!;
-  }
-} catch (e: any) {
-    console.error('Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY. Make sure it is a valid JSON string.', e);
-    throw new Error('Firebase Admin SDK initialization failed due to invalid service account key.');
+if (!getAdminApps().length) {
+  adminApp = initializeAdminApp({
+    credential: credential.cert(serviceAccount),
+    storageBucket: `${serviceAccount.projectId}.appspot.com`,
+  });
+} else {
+  adminApp = getAdminApps()[0]!;
 }
-
 
 adminDb = getAdminFirestore(adminApp);
 adminStorage = getAdminStorage(adminApp);

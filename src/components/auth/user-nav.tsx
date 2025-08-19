@@ -16,11 +16,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LogOut, User as UserIcon, LogIn } from 'lucide-react';
 import { useState } from 'react';
 import { AuthDialog } from './auth-dialog';
+import { Skeleton } from '../ui/skeleton';
 
 export function UserNav() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading } = useAuth();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
 
+  if (loading) {
+    return <Skeleton className="h-9 w-9 rounded-full" />;
+  }
+  
   if (!user) {
     return (
       <>
@@ -43,6 +48,8 @@ export function UserNav() {
   };
 
   return (
+    <>
+    <AuthDialog open={showAuthDialog} onOpenChange={setShowAuthDialog} />
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -59,17 +66,27 @@ export function UserNav() {
               {user.isAnonymous ? 'Guest User' : user.displayName || 'User'}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {!user.isAnonymous ? user.email : 'Anonymous session'}
+              {!user.isAnonymous ? user.email : 'Sign in to save your history.'}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <UserIcon className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+        {!user.isAnonymous && (
+           <DropdownMenuGroup>
+             <DropdownMenuItem>
+               <UserIcon className="mr-2 h-4 w-4" />
+               <span>Profile</span>
+             </DropdownMenuItem>
+           </DropdownMenuGroup>
+        )}
+       
+        {user.isAnonymous && (
+            <DropdownMenuItem onClick={() => setShowAuthDialog(true)}>
+                <LogIn className="mr-2 h-4 w-4" />
+                <span>Sign In / Sign Up</span>
+            </DropdownMenuItem>
+        )}
+
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={signOut}>
           <LogOut className="mr-2 h-4 w-4" />
@@ -77,5 +94,6 @@ export function UserNav() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+    </>
   );
 }

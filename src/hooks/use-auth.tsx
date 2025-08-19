@@ -6,7 +6,6 @@ import {
   getAuth,
   onAuthStateChanged,
   User,
-  signInAnonymously,
   GoogleAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
@@ -38,23 +37,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
-        await getOrCreateUser(user.uid, user.isAnonymous); 
+        // Ensure user document exists in Firestore
+        await getOrCreateUser(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
       } else {
-        // Don't sign in anonymously automatically.
-        // Let the user choose to sign in.
         setUser(null);
       }
+      // This is the critical change: ensure loading is set to false
+      // after the auth state has been determined.
       setLoading(false);
     });
 
+    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      // The onAuthStateChanged listener will handle the user creation/update.
       await signInWithPopup(auth, provider);
+      // onAuthStateChanged will handle setting the user state
     } catch (error) {
       console.error("Google sign-in error", error);
       throw error;
@@ -63,8 +64,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signUpWithEmail = async (email: string, password: string) => {
     try {
-      // The onAuthStateChanged listener will handle the user creation/update.
       await createUserWithEmailAndPassword(auth, email, password);
+      // onAuthStateChanged will handle setting the user state
     } catch (error) {
         console.error("Email sign-up error", error);
         throw error;
@@ -73,8 +74,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signInWithEmail = async (email: string, password: string) => {
     try {
-      // The onAuthStateChanged listener will handle setting the user.
       await signInWithEmailAndPassword(auth, email, password);
+       // onAuthStateChanged will handle setting the user state
     } catch (error) {
         console.error("Email sign-in error", error);
         throw error;
@@ -87,6 +88,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // onAuthStateChanged will set user to null
     } catch (error) {
       console.error("Sign out error", error);
+      toast({
+        title: 'Sign Out Failed',
+        description: 'Could not sign out. Please try again.',
+        variant: 'destructive',
+      });
       throw error;
     }
   };

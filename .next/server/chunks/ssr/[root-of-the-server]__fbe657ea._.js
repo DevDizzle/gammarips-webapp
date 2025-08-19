@@ -647,21 +647,23 @@ const AuthProvider = ({ children })=>{
         const unsubscribe = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$node_modules$2f40$firebase$2f$auth$2f$dist$2f$node$2d$esm$2f$totp$2d$18137433$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__z__as__onAuthStateChanged$3e$__["onAuthStateChanged"])(auth, async (user)=>{
             if (user) {
                 setUser(user);
-                await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getOrCreateUser"])(user.uid, user.isAnonymous);
+                // Ensure user document exists in Firestore
+                await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getOrCreateUser"])(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
             } else {
-                // Don't sign in anonymously automatically.
-                // Let the user choose to sign in.
                 setUser(null);
             }
+            // This is the critical change: ensure loading is set to false
+            // after the auth state has been determined.
             setLoading(false);
         });
+        // Cleanup subscription on unmount
         return ()=>unsubscribe();
     }, []);
     const signInWithGoogle = async ()=>{
         const provider = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$node_modules$2f40$firebase$2f$auth$2f$dist$2f$node$2d$esm$2f$totp$2d$18137433$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__Y__as__GoogleAuthProvider$3e$__["GoogleAuthProvider"]();
         try {
-            // The onAuthStateChanged listener will handle the user creation/update.
             await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$node_modules$2f40$firebase$2f$auth$2f$dist$2f$node$2d$esm$2f$totp$2d$18137433$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__d__as__signInWithPopup$3e$__["signInWithPopup"])(auth, provider);
+        // onAuthStateChanged will handle setting the user state
         } catch (error) {
             console.error("Google sign-in error", error);
             throw error;
@@ -669,8 +671,8 @@ const AuthProvider = ({ children })=>{
     };
     const signUpWithEmail = async (email, password)=>{
         try {
-            // The onAuthStateChanged listener will handle the user creation/update.
             await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$node_modules$2f40$firebase$2f$auth$2f$dist$2f$node$2d$esm$2f$totp$2d$18137433$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__ab__as__createUserWithEmailAndPassword$3e$__["createUserWithEmailAndPassword"])(auth, email, password);
+        // onAuthStateChanged will handle setting the user state
         } catch (error) {
             console.error("Email sign-up error", error);
             throw error;
@@ -678,8 +680,8 @@ const AuthProvider = ({ children })=>{
     };
     const signInWithEmail = async (email, password)=>{
         try {
-            // The onAuthStateChanged listener will handle setting the user.
             await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$node_modules$2f40$firebase$2f$auth$2f$dist$2f$node$2d$esm$2f$totp$2d$18137433$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__ac__as__signInWithEmailAndPassword$3e$__["signInWithEmailAndPassword"])(auth, email, password);
+        // onAuthStateChanged will handle setting the user state
         } catch (error) {
             console.error("Email sign-in error", error);
             throw error;
@@ -691,6 +693,11 @@ const AuthProvider = ({ children })=>{
         // onAuthStateChanged will set user to null
         } catch (error) {
             console.error("Sign out error", error);
+            toast({
+                title: 'Sign Out Failed',
+                description: 'Could not sign out. Please try again.',
+                variant: 'destructive'
+            });
             throw error;
         }
     };
@@ -706,7 +713,7 @@ const AuthProvider = ({ children })=>{
         children: children
     }, void 0, false, {
         fileName: "[project]/src/hooks/use-auth.tsx",
-        lineNumber: 95,
+        lineNumber: 101,
         columnNumber: 5
     }, this);
 };

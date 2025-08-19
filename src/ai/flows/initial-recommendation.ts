@@ -85,67 +85,6 @@ const getStockDataBundle = ai.defineTool(
   }
 );
 
-// Single Stock Prompt
-const SINGLE_STOCK_PROMPT = `
-You are a financial-analysis agent that issues a concise **BUY / HOLD / SELL** recommendation for one Russell 1000 company: **{{ticker}} – {{companyName}}**.
-
-────────────────────────────────────────
-STEP 1  |  Load the data bundle
-────────────────────────────────────────
-• Begin by calling **getStockDataBundle** with the URI **{{uris.[0]}}**.  
-• Halt and report an error if the tool call fails or the JSON cannot be parsed.  
-• Verify the bundle contains *at least* these keys  
-  \`ticker, company_name, earnings_call_summary, sec_mda, prices, technicals, financial_statements, ratios, key_metrics\`  
-  – If any are missing, note the gap and adapt your analysis; do **not** fetch external data.
-
-────────────────────────────────────────
-STEP 2  |  Reason step-by-step (Chain-of-Thought)
-────────────────────────────────────────
-Think through the data internally before you answer.  
-Focus only on the bundle’s contents; external knowledge or web searches are disallowed.
-
-When reasoning, ground every claim in specific, verifiable numbers from the bundle.  
-Examples of the level of specificity expected:
-
-* “Q2 2025 revenue **$14.4 B**, up **0.4 % YoY**.”  
-* “Free cash flow turned **–$342 M → +$963 M** sequentially.”  
-* “RSI (14-day) at **73** indicates overbought.”  
-
-Key angles to consider (use only what is available from the bundle):
-1. **Growth & Profitability** – revenue, EPS, operating margin trends.  
-2. **Liquidity & Leverage** – cash, net debt, interest coverage.  
-3. **Valuation** – P/E, EV/EBITDA, P/S, PEG, etc.  
-4. **Technical Signals** – moving averages, RSI, volatility.  
-5. **Qualitative Context** – management tone in *earnings_call_summary* and risks/opportunities in *sec_mda*.  
-
-────────────────────────────────────────
-STEP 3  |  Decide & Draft the Answer (≤ 750 words)
-───────────────────────────
-• Choose **BUY**, **HOLD**, or **SELL** based on the balance of evidence.  
-• Present a short headline line followed by a structured rationale.  
-• Use bullet points or numbered reasoning; weave the concrete numbers you cited.  
-• If critical data is absent, disclose it and lower confidence accordingly.  
-• Do *not* reveal your private chain-of-thought—only the distilled reasoning.
-
-Recommended output skeleton
----------------------------
-BUY | HOLD | SELL  — *one-sentence headline*  
-**Rationale (evidence-based):**  
-1. …  
-2. …  
-3. …
-
-**Key Metrics Snapshot:**  
-- Revenue (latest qtr): …  
-- Operating margin: …  
-- Free cash flow: …  
-- P/E, EV/EBITDA, etc.: …  
-- RSI / 50-DMA crossover: …  
-
-**Ask Me More:**  
-Curious about the details?  Feel free to ask follow-up questions on **Earnings Call, MD&A, Technicals, Stock Price, Financials, Ratios, or Key Metrics**, and I’ll dive deeper using the same data bundle.
-`;
-
 // Compare Two Stocks Prompt
 const COMPARE_TWO_STOCKS_PROMPT = `You are a financial advisor providing investment recommendations for two stocks.
 
@@ -188,39 +127,13 @@ Keep under 500 words.
 
 Output strictly as JSON: {"recommendation": "BUY/HOLD/SELL for TICKER1 (Company1) vs. BUY/HOLD/SELL for TICKER2 (Company2) - summary sentence", "reasoning": ["bullet point 1", "bullet point 2", ...]}. No other text.`;
 
-// AI Top Pick Placeholder Prompt (simplified, for uris.length === 0)
-const AI_TOP_PICK_PROMPT = `You are a financial advisor in "AI Top Pick" mode. Pick a single promising stock from a well-known company, provide a concise BUY/HOLD/SELL recommendation based on public financial data knowledge.
-
-Structure:
-1. Recommendation: "BUY/HOLD/SELL for TICKER (Company) - 1-sentence summary."
-2. Reasoning: 3-5 bullets with key factors. End with: "To learn more, ask a follow-up question about this stock's data or analysis."
-
-Keep under 500 words.
-
-Output strictly as JSON: {"recommendation": "BUY/HOLD/SELL for TICKER (Company Name) - summary sentence", "reasoning": ["bullet point 1", "bullet point 2", ...]}. No other text.`;
-
-// Multi-Stock Top Pick Placeholder Prompt (for uris.length > 2)
-const MULTI_STOCK_TOP_PICK_PROMPT = `You are a financial-analysis agent scanning up to 10 JSON bundles to surface the AI Top Pick.
-
-First, use getStockDataBundle for each URI. Analyze strictly from data.
-
-Follow the analysis pipeline from your knowledge (business profile, earnings, MD&A, technicals, valuation), compute composite scores, pick the winner.
-
-Output:
-- Recommendation: "BUY/HOLD/SELL for TOP_TICKER (Company) - 1-sentence punchline."
-- Reasoning: 3-5 bullets for why #1, plus runner-ups. End with: “Ask for deeper details on any ticker!”
-
-Keep under 350 words.
-
-Output strictly as JSON: {"recommendation": "BUY/HOLD/SELL for TICKER (Company Name) - summary sentence", "reasoning": ["bullet point 1", "bullet point 2", ...]}. Include runner-ups in reasoning. No other text.`;
-
 // Define Prompts and Flows
 const singleStockPrompt = ai.definePrompt(
   {
     name: 'singleStockPrompt',
     input: { schema: InitialRecommendationInputSchema },
     output: { schema: InitialRecommendationOutputSchema },
-    prompt: SINGLE_STOCK_PROMPT,
+    prompt: "This is a placeholder prompt that should be removed.", // Removed SINGLE_STOCK_PROMPT
     tools: [getStockDataBundle],
     config: { temperature: 0.7 }
   }
@@ -270,7 +183,7 @@ const aiTopPickPrompt = ai.definePrompt(
     name: 'aiTopPickPrompt',
     input: { schema: InitialRecommendationInputSchema },
     output: { schema: InitialRecommendationOutputSchema },
-    prompt: AI_TOP_PICK_PROMPT,
+    prompt: "This is a placeholder prompt that should be removed.", // Removed AI_TOP_PICK_PROMPT
     tools: [], // No tools needed for this simplified placeholder
     config: { temperature: 0.7 }
   }
@@ -293,7 +206,7 @@ const multiStockTopPickPrompt = ai.definePrompt(
     name: 'multiStockTopPickPrompt',
     input: { schema: InitialRecommendationInputSchema },
     output: { schema: InitialRecommendationOutputSchema },
-    prompt: MULTI_STOCK_TOP_PICK_PROMPT,
+    prompt: "This is a placeholder prompt that should be removed.", // Removed MULTI_STOCK_TOP_PICK_PROMPT
     tools: [getStockDataBundle],
     config: { temperature: 0.7 }
   }

@@ -36,11 +36,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      setLoading(false); // Always set loading to false after the auth state has been determined.
+
       if (user) {
         // Ensure user document exists in Firestore
         await getOrCreateUser(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
       }
-      setLoading(false);
     });
 
     // Cleanup subscription on unmount

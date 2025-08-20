@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -46,9 +47,15 @@ export function MultiSelect({
   const [open, setOpen] = React.useState(false);
 
   const handleSelect = (option: Option) => {
+    if (max === 1) {
+      onChange([option]);
+      setOpen(false);
+      return;
+    }
+
     onChange(
-      selected.some(s => s.value === option.value)
-        ? selected.filter(s => s.value !== option.value)
+      selected.some((s) => s.value === option.value)
+        ? selected.filter((s) => s.value !== option.value)
         : [...selected, option]
     );
   };

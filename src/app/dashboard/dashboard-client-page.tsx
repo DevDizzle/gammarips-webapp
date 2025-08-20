@@ -66,7 +66,7 @@ const renderAnalysisControls = (
     if (isAuthLoading && stockOptions.length === 0) {
       return (
         <div className="space-y-2">
-          <label className="text-sm font-medium">Stock Tickers (Max 2)</label>
+          <label className="text-sm font-medium">Stock Ticker</label>
           <Skeleton className="h-10 w-full" />
         </div>
       );
@@ -75,7 +75,7 @@ const renderAnalysisControls = (
     return (
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium">Stock Tickers (Max 2)</label>
+          <label className="text-sm font-medium">Stock Ticker</label>
           <Button variant="ghost" size="icon" onClick={fetchStocks} disabled={isFetchingStocks} aria-label="Refresh stocks">
             <RefreshCw className={`h-4 w-4 ${isFetchingStocks ? 'animate-spin' : ''}`} />
           </Button>
@@ -85,8 +85,8 @@ const renderAnalysisControls = (
           selected={selectedTickers}
           onChange={handleTickerSelection}
           className="w-full"
-          placeholder="Select up to 2 stocks..."
-          max={2}
+          placeholder="Select a stock..."
+          max={1}
           disabled={isAuthLoading}
         />
       </div>
@@ -117,7 +117,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
                 <Settings className="text-primary" />
                 Stock Analysis
             </CardTitle>
-            <CardDescription>Select stocks to analyze or compare</CardDescription>
+            <CardDescription>Select a stock to analyze</CardDescription>
           </CardHeader>
           <CardContent className="flex-grow flex flex-col gap-4">
             {renderAnalysisControls(authLoading, stockOptions, isFetchingStocks, selectedTickers, onTickerSelectionChange, onFetchStocks)}
@@ -155,7 +155,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
                 <CardTitle className="font-headline flex items-center gap-2">
                     <MessageSquare className="text-primary" />
                     Feedback
-                </CardTitle>
+                </Title>
                  <CardDescription>Help us improve ProfitScout!</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow flex flex-col gap-4">
@@ -625,4 +625,5 @@ const MessageSkeleton = () => (
   </div>
 );
 
+    
     

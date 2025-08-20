@@ -3,7 +3,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/use-auth';
-import { Bot, Loader2, MessageSquare, Send, Settings, User, Sparkles, Menu, RefreshCw } from 'lucide-react';
+import { Bot, Loader2, MessageSquare, Send, Settings, User, Sparkles, Menu, RefreshCw, LogIn } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,7 @@ import {
 import { Markdown } from '@/components/markdown';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SubscriptionDialog } from '@/components/auth/subscription-dialog';
+import { AuthDialog } from '@/components/auth/auth-dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -211,6 +212,7 @@ export function DashboardClientPage({ initialStocks }: DashboardClientPageProps)
   const [feedbackText, setFeedbackText] = useState('');
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [usageCount, setUsageCount] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -273,7 +275,11 @@ export function DashboardClientPage({ initialStocks }: DashboardClientPageProps)
   }
   
   const getRecommendation = async () => {
-    if (isLoading || selectedTickers.length === 0 || !user) return;
+    if (isLoading || selectedTickers.length === 0) return;
+    if (!user) {
+      setShowAuthDialog(true);
+      return;
+    }
     if (!(await checkUsageLimit())) return;
 
     setIsLoading(true);
@@ -336,7 +342,10 @@ export function DashboardClientPage({ initialStocks }: DashboardClientPageProps)
   };
   
   const getAITopPick = async () => {
-      if (!user) return;
+      if (!user) {
+        setShowAuthDialog(true);
+        return;
+      }
       if (!(await checkUsageLimit())) return;
 
       setIsLoading(true);
@@ -509,6 +518,7 @@ export function DashboardClientPage({ initialStocks }: DashboardClientPageProps)
 
   return (
     <>
+    <AuthDialog open={showAuthDialog} onOpenChange={setShowAuthDialog} />
     <SubscriptionDialog 
         open={showSubscriptionDialog} 
         onOpenChange={setShowSubscriptionDialog}
@@ -614,3 +624,5 @@ const MessageSkeleton = () => (
     <Skeleton className="h-4 w-[220px]" />
   </div>
 );
+
+    

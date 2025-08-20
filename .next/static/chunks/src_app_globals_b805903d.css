@@ -1789,6 +1789,10 @@ body {
   padding-bottom: 1.5rem;
 }
 
+.pb-20 {
+  padding-bottom: 5rem;
+}
+
 .pb-3 {
   padding-bottom: .75rem;
 }
@@ -1835,10 +1839,6 @@ body {
 
 .pt-4 {
   padding-top: 1rem;
-}
-
-.pb-20 {
-  padding-bottom: 5rem;
 }
 
 .text-left {

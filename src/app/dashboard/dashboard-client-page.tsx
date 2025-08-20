@@ -109,7 +109,8 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   onFeedbackTextChange,
   onSubmitFeedback,
   messages,
-}) => (
+}) => {
+    return (
     <div className="p-4 flex flex-col gap-4 h-full bg-background">
         <Card className="flex-1 flex flex-col">
           <CardHeader>
@@ -173,7 +174,8 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
             </CardContent>
         </Card>
       </div>
-);
+    );
+};
 
 const AnalysisResult = ({ result }: { result: InitialRecommendationOutput }) => (
     <div>
@@ -560,7 +562,7 @@ export function DashboardClientPage({ initialStocks }: DashboardClientPageProps)
                   <Bot className="h-12 w-12 text-primary" />
                 </div>
                 <h2 className="text-xl font-semibold text-foreground">Welcome to ProfitScout</h2>
-                <p className="max-w-md mt-2">To get started, select one or two stocks and click "Launch Analysis", or let our AI find a top pick for you.</p>
+                <p className="max-w-md mt-2">To get started, select a stock and click "Launch Analysis", or let our AI find a top pick for you.</p>
             </div>
         )
     }

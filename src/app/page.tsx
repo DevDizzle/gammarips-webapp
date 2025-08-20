@@ -92,10 +92,9 @@ export default function LandingPage() {
 
         {/* Pricing */}
         <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <h3 className="text-3xl font-bold font-headline mb-4">Pricing</h3>
+          <h3 className="text-3xl font-bold font-headline mb-4">Go Unlimited</h3>
           <p className="text-lg text-muted-foreground mb-8">
-            Start free with <span className="font-bold">5 stock pulls</span>.{" "}
-            Upgrade anytime for just <span className="font-bold">$1.99 / month</span>.
+            Start free with 5 AI stock analyses. Go unlimited anytime for $1.99/month.
           </p>
           <ul className="space-y-2 text-muted-foreground mb-8">
             <li>✅ Unlimited access to AI-powered stock recommendations</li>
@@ -110,17 +109,6 @@ export default function LandingPage() {
           </Button>
           <p className="mt-2 text-sm text-muted-foreground">
             Clear calls. Smarter investing. No guesswork.
-          </p>
-        </section>
-
-        {/* Social Proof / Engagement */}
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <h3 className="text-2xl font-bold font-headline mb-4">
-            Be part of the first wave
-          </h3>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Join a community shaping the future of AI investing. Drop feedback.
-            Request features. Watch it evolve.
           </p>
         </section>
       </main>

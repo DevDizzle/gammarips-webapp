@@ -1,3 +1,4 @@
+
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import { getFirestore, collection, getDocs, doc, setDoc, getDoc, serverTimestamp, increment, addDoc, Timestamp } from "firebase/firestore";
@@ -5,14 +6,14 @@ import { getAuth } from 'firebase/auth';
 import { z } from 'zod';
 
 
-// Client-side Firebase configuration
+// Client-side Firebase configuration now read from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyCc1VeqTakW7osF-l4pB3sRw76QsYNWwI0",
-  authDomain: "profitscout-fida8.firebaseapp.com",
-  projectId: "profitscout-fida8",
-  storageBucket: "profitscout-fida8.appspot.com",
-  messagingSenderId: "406581297632",
-  appId: "1:406581297632:web:c24bda744fd33784b96b85"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 

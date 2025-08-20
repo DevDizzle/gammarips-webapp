@@ -370,7 +370,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
         {/* Right Column (Analysis) */}
         <div className="md:col-span-2 lg:col-span-3">
             {isLoading && !analysisMarkdown && (
-                <Card className="w-full">
+                <Card className="w-full h-full">
                     <CardContent className="p-6">
                         <div className="space-y-4">
                             <Skeleton className="h-8 w-1/3" />
@@ -386,7 +386,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
             )}
 
             {analysisMarkdown && (
-              <Card className="w-full">
+              <Card className="w-full h-full">
                 <CardContent className="p-6">
                   <Markdown content={analysisMarkdown} />
                 </CardContent>

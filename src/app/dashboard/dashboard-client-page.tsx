@@ -1,631 +1,85 @@
+"use client";
 
-'use client';
+import { useState } from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { Markdown } from "@/components/markdown";
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { useAuth } from '@/hooks/use-auth';
-import { Bot, Loader2, MessageSquare, Send, Settings, User, Sparkles, Menu, RefreshCw, LogIn } from 'lucide-react';
-import { loadStripe } from '@stripe/stripe-js';
+// Types for results
+interface AnalysisResult {
+  ticker: string;
+  recommendation: "BUY" | "HOLD" | "SELL";
+  score: number;
+  summary: string;
+  highlights: string[];
+}
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Textarea } from '@/components/ui/textarea';
-import { getOrCreateUser } from '@/lib/firebase';
-import type { Stock } from '@/lib/firebase';
-import { handleGetRecommendation, handleFollowUp, handleFeedback, createCheckoutSession, getStocks } from '../actions';
-import { MultiSelect, type Option } from '@/components/multi-select';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useToast } from '@/hooks/use-toast';
-import {
-  type InitialRecommendationOutput
-} from '@/ai/flows/initial-recommendation';
-import { Markdown } from '@/components/markdown';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { SubscriptionDialog } from '@/components/auth/subscription-dialog';
-import { AuthDialog } from '@/components/auth/auth-dialog';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
-type Message = {
-  role: 'user' | 'assistant' | 'system';
-  content: string | React.ReactNode;
-};
+interface Stock {
+  id: string;
+  result: AnalysisResult;
+}
 
 interface DashboardClientPageProps {
-    initialStocks: Stock[];
+  initialStocks: Stock[];
 }
 
-interface SidebarContentProps {
-  isLoading: boolean;
-  authLoading: boolean;
-  stockOptions: Option[];
-  isFetchingStocks: boolean;
-  selectedTickers: Option[];
-  isSubscribed: boolean;
-  usageCount: number;
-  feedbackText: string;
-  onTickerSelectionChange: (selected: Option[]) => void;
-  onFetchStocks: () => void;
-  onGetRecommendation: () => void;
-  onGetAITopPick: () => void;
-  onFeedbackTextChange: (text: string) => void;
-  onSubmitFeedback: () => void;
-  messages: Message[];
-}
-
-const renderAnalysisControls = (
-    isAuthLoading: boolean,
-    stockOptions: Option[],
-    isFetchingStocks: boolean,
-    selectedTickers: Option[],
-    handleTickerSelection: (selected: Option[]) => void,
-    fetchStocks: () => void
-) => {
-    if (isAuthLoading && stockOptions.length === 0) {
-      return (
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Stock Ticker</label>
-          <Skeleton className="h-10 w-full" />
-        </div>
-      );
-    }
-    
-    return (
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-medium">Stock Ticker</label>
-          <Button variant="ghost" size="icon" onClick={fetchStocks} disabled={isFetchingStocks} aria-label="Refresh stocks">
-            <RefreshCw className={`h-4 w-4 ${isFetchingStocks ? 'animate-spin' : ''}`} />
-          </Button>
-        </div>
-        <MultiSelect
-          options={stockOptions}
-          selected={selectedTickers}
-          onChange={handleTickerSelection}
-          className="w-full"
-          placeholder="Select a stock..."
-          max={1}
-          disabled={isAuthLoading}
-        />
-      </div>
-    );
-}
-
-const SidebarContent: React.FC<SidebarContentProps> = ({
-  isLoading,
-  authLoading,
-  stockOptions,
-  isFetchingStocks,
-  selectedTickers,
-  isSubscribed,
-  usageCount,
-  feedbackText,
-  onTickerSelectionChange,
-  onFetchStocks,
-  onGetRecommendation,
-  onGetAITopPick,
-  onFeedbackTextChange,
-  onSubmitFeedback,
-  messages,
-}) => {
-    return (
-    <div className="p-4 flex flex-col gap-4 h-full bg-background">
-        <Card className="flex-1 flex flex-col">
-          <CardHeader>
-            <CardTitle className="font-headline flex items-center gap-2">
-                <Settings className="text-primary" />
-                Stock Analysis
-            </CardTitle>
-            <CardDescription>Select a stock to analyze</CardDescription>
-          </CardHeader>
-          <CardContent className="flex-grow flex flex-col gap-4">
-            {renderAnalysisControls(authLoading, stockOptions, isFetchingStocks, selectedTickers, onTickerSelectionChange, onFetchStocks)}
-             <p className="text-sm text-muted-foreground text-center">
-              {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`}
-            </p>
-            <Button onClick={onGetRecommendation} disabled={isLoading || authLoading || selectedTickers.length === 0} className="w-full mt-auto">
-              {isLoading && messages.length > 0 && selectedTickers.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Launch Analysis
-            </Button>
-          </CardContent>
-        </Card>
-        
-        <Card className="flex-1 flex flex-col">
-            <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-2">
-                    <Sparkles className="text-primary" />
-                    AI Top Pick
-                </CardTitle>
-                <CardDescription>Let our AI find the best stock for you right now.</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-grow flex flex-col justify-end gap-4">
-                 <p className="text-sm text-muted-foreground text-center">
-                   {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`}
-                </p>
-                <Button onClick={onGetAITopPick} disabled={isLoading || authLoading} className="w-full">
-                    {isLoading && selectedTickers.length === 0 && messages.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Get AI Top Pick
-                </Button>
-            </CardContent>
-        </Card>
-
-        <Card className="flex-1 flex flex-col">
-            <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-2">
-                    <MessageSquare className="text-primary" />
-                    Feedback
-                </Title>
-                 <CardDescription>Help us improve ProfitScout!</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-grow flex flex-col gap-4">
-                <Textarea
-                    placeholder="Tell us what you think..."
-                    value={feedbackText}
-                    onChange={(e) => onFeedbackTextChange(e.target.value)}
-                    rows={3}
-                    className="flex-grow"
-                />
-                <Button onClick={onSubmitFeedback} className="w-full" disabled={!feedbackText.trim() || isLoading}>
-                    {isLoading && !feedbackText.trim() ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Submit Feedback
-                </Button>
-            </CardContent>
-        </Card>
-      </div>
-    );
-};
-
-const AnalysisResult = ({ result }: { result: InitialRecommendationOutput }) => (
-    <div>
-        <Markdown content={`**Recommendation:** ${result.recommendation}`} />
-        <Accordion type="single" collapsible className="w-full mt-4">
-            <AccordionItem value="item-1">
-                <AccordionTrigger>View Detailed Analysis</AccordionTrigger>
-                <AccordionContent>
-                    <div className="space-y-4">
-                        {result.reasoning.chainOfThought.map((step, index) => (
-                            <div key={index}>
-                                <h4 className="font-semibold text-foreground">{step.step}</h4>
-                                <Markdown content={step.analysis} className="text-muted-foreground" />
-                            </div>
-                        ))}
-                    </div>
-                </AccordionContent>
-            </AccordionItem>
-        </Accordion>
-        <div className="mt-4">
-            <h4 className="font-semibold text-foreground mb-2">Summary</h4>
-            <Markdown content={result.reasoning.summary.map(s => `- ${s}`).join('\n')} />
-        </div>
-    </div>
-);
-
-
-export function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
-  const { user, loading: authLoading } = useAuth();
-  const [stockOptions, setStockOptions] = useState<Option[]>([]);
-  const [selectedTickers, setSelectedTickers] = useState<Option[]>([]);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isFetchingStocks, setIsFetchingStocks] = useState(false);
-  const [initialRecommendation, setInitialRecommendation] = useState<InitialRecommendationOutput | string | null>(null);
-  const [feedbackText, setFeedbackText] = useState('');
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
-  const [usageCount, setUsageCount] = useState(0);
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-
-  const { toast } = useToast();
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  
-  useEffect(() => {
-    const options = initialStocks.map((stock: Stock) => ({
-        value: stock.id, // Use ticker ID as value
-        label: `${stock.id} - ${stock.company_name}`,
-    }));
-    setStockOptions(options);
-  }, [initialStocks]);
-
-  useEffect(() => {
-    if (user) {
-      getOrCreateUser(user.uid, user.isAnonymous).then(dbUser => {
-        setUsageCount(dbUser.usageCount);
-        setIsSubscribed(dbUser.isSubscribed);
-      });
-    }
-  }, [user]);
-
-  const fetchStocks = useCallback(async () => {
-    setIsFetchingStocks(true);
-    try {
-      const stocks = await getStocks();
-      const options = stocks.map((stock: Stock) => ({
-        value: stock.id,
-        label: `${stock.id} - ${stock.company_name}`,
-      }));
-      setStockOptions(options);
-    } catch (error) {
-      console.error("Failed to fetch stocks:", error);
-      toast({
-          title: "Error fetching stocks",
-          description: "Could not load stock data. Please try again.",
-          variant: "destructive"
-      })
-    } finally {
-      setIsFetchingStocks(false);
-    }
-  }, [toast]);
-
-  const handleTickerSelection = (selected: Option[]) => {
-    setSelectedTickers(selected);
-  };
-
-  const checkUsageLimit = async () => {
-    if (!user) return false;
-    const dbUser = await getOrCreateUser(user.uid, user.isAnonymous);
-    setUsageCount(dbUser.usageCount);
-    setIsSubscribed(dbUser.isSubscribed);
-    if (dbUser.usageCount >= 5 && !dbUser.isSubscribed) {
-      setShowSubscriptionDialog(true);
-      return false;
-    }
-    return true;
-  }
-  
-  const getRecommendation = async () => {
-    if (isLoading || selectedTickers.length === 0) return;
-    if (!user) {
-      setShowAuthDialog(true);
-      return;
-    }
-    if (!(await checkUsageLimit())) return;
-
-    setIsLoading(true);
-    setIsSheetOpen(false);
-    setMessages([]);
-
-    let ticker: string | undefined;
-    let companyName: string | undefined;
-
-    if (selectedTickers.length === 1) {
-      [ticker, companyName] = selectedTickers[0].label.split(' - ');
-    }
-
-    setMessages([{ role: 'assistant', content: <MessageSkeleton /> }]);
-
-    try {
-      const uris = selectedTickers.map(t => {
-          const stock = initialStocks.find(s => s.id === t.value);
-          return stock?.bundle_gcs_path || '';
-      }).filter(Boolean);
-
-      const analysisResult = await handleGetRecommendation(user.uid, {
-        uris: uris,
-        ticker: ticker,
-        companyName: companyName,
-      });
-
-      if ('error' in analysisResult && analysisResult.required === 'subscription') {
-         setShowSubscriptionDialog(true);
-         setMessages([]);
-         setIsLoading(false);
-         return;
-      }
-      if ('error' in analysisResult) {
-          throw new Error(analysisResult.error);
-      }
-      
-      const dbUser = await getOrCreateUser(user.uid, user.isAnonymous);
-      setUsageCount(dbUser.usageCount);
-
-      if ('markdown' in analysisResult) {
-        setInitialRecommendation(analysisResult.markdown);
-        setMessages([{ role: 'assistant', content: analysisResult.markdown }]);
-      } else {
-        setInitialRecommendation(analysisResult);
-        setMessages([{ role: 'assistant', content: <AnalysisResult result={analysisResult} /> }]);
-      }
-
-    } catch (error) {
-      console.error("Failed to get recommendation:", error);
-      toast({
-        title: "Analysis Failed",
-        description: "Could not generate the analysis. Please try again.",
-        variant: "destructive",
-      });
-      setMessages([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  const getAITopPick = async () => {
-      if (!user) {
-        setShowAuthDialog(true);
-        return;
-      }
-      if (!(await checkUsageLimit())) return;
-
-      setIsLoading(true);
-      setIsSheetOpen(false);
-      setMessages([]);
-      setSelectedTickers([]);
-
-      setMessages([{ role: 'assistant', content: <MessageSkeleton /> }]);
-
-      try {
-          // Pass empty uris array to trigger the AI Top Pick logic on the backend
-          const analysisResult = await handleGetRecommendation(user.uid, { uris: [] });
-
-          if ('error' in analysisResult && analysisResult.required === 'subscription') {
-            setShowSubscriptionDialog(true);
-            setMessages([]);
-            setIsLoading(false);
-            return;
-          }
-           if ('error' in analysisResult) {
-              throw new Error(analysisResult.error);
-           }
-           
-          const dbUser = await getOrCreateUser(user.uid, user.isAnonymous);
-          setUsageCount(dbUser.usageCount);
-
-           if ('markdown' in analysisResult) {
-              setInitialRecommendation(analysisResult.markdown);
-              setMessages([{ role: 'assistant', content: analysisResult.markdown }]);
-           } else {
-             // This is a fallback in case the backend returns the old format
-             setInitialRecommendation(analysisResult);
-             setMessages([{ role: 'assistant', content: <AnalysisResult result={analysisResult} /> }]);
-           }
-      } catch (error: any) {
-          console.error("Failed to get AI Top Pick:", error);
-          toast({
-              title: "AI Top Pick Failed",
-              description: error.message || "Could not generate the AI Top Pick. Please try again.",
-              variant: "destructive",
-          });
-          setMessages([]);
-      } finally {
-          setIsLoading(false);
-      }
-  };
-
-
-  const submitFollowUp = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const question = formData.get('question') as string;
-    if (!question || isLoading || !initialRecommendation) return;
-
-    event.currentTarget.reset();
-
-    const userMessage: Message = { role: 'user', content: question };
-    setMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
-
-    setMessages(prev => [...prev, { role: 'assistant', content: <MessageSkeleton /> }]);
-
-    const chatHistory = messages.map(m => ({
-      role: m.role === 'user' ? 'user' : 'assistant',
-      content: typeof m.content === 'string' ? m.content : 'Analysis was displayed.',
-    }));
-
-    let initialRecommendationText = '';
-    if (typeof initialRecommendation === 'string') {
-        initialRecommendationText = initialRecommendation;
-    } else if (initialRecommendation) {
-        initialRecommendationText = `Recommendation: ${initialRecommendation.recommendation}\nSummary:\n${initialRecommendation.reasoning.summary.join('\n')}`;
-    }
-    
-    try {
-      const result = await handleFollowUp({
-        question,
-        tickers: selectedTickers.map(t => t.label.split(' - ')[0]),
-        initialRecommendation: initialRecommendationText.trim(),
-        chatHistory,
-      });
-
-      setMessages(prev => [...prev.slice(0, -1), { role: 'assistant', content: result.answer }]);
-    } catch (error) {
-      console.error("Follow-up failed:", error);
-      toast({
-        title: "Follow-up Failed",
-        description: "Could not get an answer. Please try again.",
-        variant: "destructive",
-      });
-      setMessages(prev => prev.slice(0, -2));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const submitFeedback = async () => {
-    if (!feedbackText.trim()) return;
-    setIsLoading(true);
-    try {
-        await handleFeedback(feedbackText);
-        setFeedbackText('');
-        setIsSheetOpen(false);
-        toast({
-          title: 'Feedback Submitted',
-          description: 'Thank you for helping us improve ProfitScout!',
-        });
-    } catch (error: any) {
-        toast({
-            title: "Feedback Failed",
-            description: error.message || "Could not submit your feedback. Please try again.",
-            variant: "destructive",
-        })
-    } finally {
-        setIsLoading(false);
-    }
-  };
-  
-  const handleSubscribeClick = async () => {
-      if (!user) return;
-      setIsCheckingOut(true);
-      try {
-          const { sessionId } = await createCheckoutSession(user.uid);
-          const stripe = await stripePromise;
-          const { error } = await stripe!.redirectToCheckout({ sessionId });
-          if (error) {
-              toast({
-                title: "Checkout Error",
-                description: error.message,
-                variant: 'destructive',
-              });
-          }
-      } catch (error) {
-          toast({
-            title: "Subscription Error",
-            description: "Could not initiate the subscription process. Please try again.",
-            variant: 'destructive',
-          });
-      } finally {
-        setIsCheckingOut(false);
-      }
-  };
-
-  useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({
-        top: scrollAreaRef.current.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
-  }, [messages]);
-  
-  const sidebarProps = {
-    isLoading,
-    authLoading,
-    stockOptions,
-    isFetchingStocks,
-    selectedTickers,
-    isSubscribed,
-    usageCount,
-    feedbackText,
-    onTickerSelectionChange: handleTickerSelection,
-    onFetchStocks: fetchStocks,
-    onGetRecommendation: getRecommendation,
-    onGetAITopPick: getAITopPick,
-    onFeedbackTextChange: setFeedbackText,
-    onSubmitFeedback: submitFeedback,
-    messages
-  };
+function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
+  const [stocks] = useState<Stock[]>(initialStocks);
 
   return (
-    <>
-    <AuthDialog open={showAuthDialog} onOpenChange={setShowAuthDialog} />
-    <SubscriptionDialog 
-        open={showSubscriptionDialog} 
-        onOpenChange={setShowSubscriptionDialog}
-        onSubscribe={handleSubscribeClick}
-        loading={isCheckingOut}
-    />
-    <div className="flex h-[calc(100vh-4rem)] bg-background">
-      <aside className="w-[350px] flex-shrink-0 border-r border-border hidden md:flex">
-        <SidebarContent {...sidebarProps} />
-      </aside>
-      <main className="flex-1 flex flex-col p-4">
-         <header className="flex items-center justify-between md:hidden border-b border-border pb-4 mb-4">
-           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Open controls</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-[350px]">
-              <SidebarContent {...sidebarProps} />
-            </SheetContent>
-          </Sheet>
-           <h1 className="text-xl font-bold font-headline text-primary">ProfitScout</h1>
-         </header>
-         <div className="flex-grow flex flex-col">
-            {renderChat()}
-         </div>
-      </main>
+    <div className="container mx-auto px-4 py-8 space-y-8">
+      {/* Hero CTA */}
+      <section className="text-center">
+        <h2 className="text-3xl sm:text-4xl font-bold">Your AI Stock Dashboard</h2>
+        <p className="mt-2 text-muted-foreground">
+          Explore today’s strongest opportunities, updated regularly.
+        </p>
+        <div className="mt-4">
+          <Button asChild size="lg" className="font-bold">
+            <Link href="/dashboard?mode=top-pick">
+              See Today’s AI Top Picks{" "}
+              <ArrowRight className="ml-2 h-5 w-5 inline-block" />
+            </Link>
+          </Button>
+          <p className="text-sm text-muted-foreground mt-2">
+            Strong stock signals, one click away.
+          </p>
+        </div>
+      </section>
+
+      {/* Stock Cards */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {stocks.map((stock) => (
+          <Card key={stock.id} className="shadow-lg">
+            <CardHeader>
+              <CardTitle>
+                {stock.result.ticker} — {stock.result.recommendation}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-2 text-muted-foreground">{stock.result.summary}</p>
+              <Accordion type="single" collapsible>
+                <AccordionItem value="highlights">
+                  <AccordionTrigger>Key Highlights</AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                      {stock.result.highlights.map((h, idx) => (
+                        <li key={idx}>{h}</li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
-    </>
   );
-
-  function renderChat() {
-     if (messages.length === 0 && !isLoading) {
-        return (
-            <div className="flex-grow flex flex-col items-center justify-center text-center text-muted-foreground p-8">
-                <div className="bg-primary/10 p-4 rounded-full mb-4">
-                  <Bot className="h-12 w-12 text-primary" />
-                </div>
-                <h2 className="text-xl font-semibold text-foreground">Welcome to ProfitScout</h2>
-                <p className="max-w-md mt-2">To get started, select a stock and click "Launch Analysis", or let our AI find a top pick for you.</p>
-            </div>
-        )
-    }
-
-    return (
-      <Card className="flex-1 flex flex-col">
-        <CardContent className="flex-1 flex flex-col p-4">
-          <ScrollArea className="flex-grow pr-4" ref={scrollAreaRef}>
-            <div className="space-y-6">
-              {messages.map((message, index) => (
-                <div key={index} className={`flex items-start gap-3 ${message.role === 'user' ? 'justify-end' : ''}`}>
-                  {message.role === 'assistant' && (
-                    <div className="bg-primary rounded-full p-2">
-                      <Bot className="h-5 w-5 text-primary-foreground" />
-                    </div>
-                  )}
-                  <div className={`max-w-prose rounded-lg p-3 ${
-                      message.role === 'user'
-                        ? 'bg-secondary text-secondary-foreground'
-                        : 'bg-card'
-                    }`}
-                  >
-                    {typeof message.content === 'string' ? (
-                        <Markdown content={message.content} />
-                    ) : (
-                        message.content
-                    )}
-                  </div>
-                  {message.role === 'user' && (
-                     <div className="bg-secondary rounded-full p-2">
-                       <User className="h-5 w-5 text-secondary-foreground" />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-          <div className="mt-4 pt-4 border-t border-border">
-            <form onSubmit={submitFollowUp} className="flex items-center gap-2">
-              <Input
-                name="question"
-                placeholder="Ask a follow-up question..."
-                className="flex-1"
-                disabled={isLoading || authLoading || messages.length === 0 || initialRecommendation === null}
-              />
-              <Button type="submit" disabled={isLoading || authLoading || messages.length === 0 || initialRecommendation === null} size="icon" aria-label="Send message">
-                {isLoading && messages.some(m => m.role === 'user') ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-              </Button>
-            </form>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
 }
 
-const MessageSkeleton = () => (
-  <div className="space-y-2">
-    <Skeleton className="h-4 w-[250px]" />
-    <Skeleton className="h-4 w-[200px]" />
-    <Skeleton className="h-4 w-[220px]" />
-  </div>
-);
-
-    
-    
+// ✅ Default export so page.tsx can import cleanly
+export default DashboardClientPage;

@@ -1837,6 +1837,10 @@ body {
   padding-top: 1rem;
 }
 
+.pb-20 {
+  padding-bottom: 5rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -2662,6 +2666,10 @@ body {
 
   .sm\:mt-0 {
     margin-top: 0;
+  }
+
+  .sm\:hidden {
+    display: none;
   }
 
   .sm\:max-w-md {

@@ -70,6 +70,15 @@ export default function LandingPage() {
             ))}
           </div>
         </section>
+
+        <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-20 text-center sm:hidden">
+            <Button asChild size="lg" className="font-bold">
+              <Link href="/dashboard">
+                Get Started Now <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+        </section>
+
       </main>
 
       <footer className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-muted-foreground">

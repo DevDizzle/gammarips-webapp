@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/use-auth';
-import { Loader2, Settings, Sparkles, MessageSquare, Menu, RefreshCw } from 'lucide-react';
+import { Loader2, Settings, Sparkles, MessageSquare, RefreshCw } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 
 import { Button } from '@/components/ui/button';
@@ -15,10 +15,8 @@ import { handleGetRecommendation, handleFeedback, createCheckoutSession, getStoc
 import { MultiSelect, type Option } from '@/components/multi-select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { SubscriptionDialog } from '@/components/auth/subscription-dialog';
 import { AuthDialog } from '@/components/auth/auth-dialog';
-import { UserNav } from '@/components/auth/user-nav';
 import { Markdown } from '@/components/markdown';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -27,164 +25,7 @@ interface DashboardClientPageProps {
   initialStocks: Stock[];
 }
 
-// ---------- Sidebar content (unchanged behavior, no chat) ----------
-interface SidebarContentProps {
-  isLoading: boolean;
-  authLoading: boolean;
-  stockOptions: Option[];
-  isFetchingStocks: boolean;
-  selectedTickers: Option[];
-  isSubscribed: boolean;
-  usageCount: number;
-  feedbackText: string;
-  onTickerSelectionChange: (selected: Option[]) => void;
-  onFetchStocks: () => void;
-  onGetRecommendation: () => void;
-  onGetAITopPick: () => void;
-  onFeedbackTextChange: (text: string) => void;
-  onSubmitFeedback: () => void;
-}
-
-const renderAnalysisControls = (
-  isAuthLoading: boolean,
-  stockOptions: Option[],
-  isFetchingStocks: boolean,
-  selectedTickers: Option[],
-  handleTickerSelection: (selected: Option[]) => void,
-  fetchStocks: () => void
-) => {
-  if (isAuthLoading && stockOptions.length === 0) {
-    return (
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Stock Ticker</label>
-        <Skeleton className="h-10 w-full" />
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <label className="text-sm font-medium">Stock Ticker</label>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={fetchStocks}
-          disabled={isFetchingStocks}
-          aria-label="Refresh stocks"
-        >
-          <RefreshCw className={`h-4 w-4 ${isFetchingStocks ? 'animate-spin' : ''}`} />
-        </Button>
-      </div>
-      <MultiSelect
-        options={stockOptions}
-        selected={selectedTickers}
-        onChange={handleTickerSelection}
-        className="w-full"
-        placeholder="Select a stock..."
-        max={1}
-        disabled={isAuthLoading}
-      />
-    </div>
-  );
-};
-
-const SidebarContent: React.FC<SidebarContentProps> = ({
-  isLoading,
-  authLoading,
-  stockOptions,
-  isFetchingStocks,
-  selectedTickers,
-  isSubscribed,
-  usageCount,
-  feedbackText,
-  onTickerSelectionChange,
-  onFetchStocks,
-  onGetRecommendation,
-  onGetAITopPick,
-  onFeedbackTextChange,
-  onSubmitFeedback,
-}) => {
-  return (
-    <div className="p-4 flex flex-col gap-4 h-full bg-background">
-      <Card className="flex-1 flex flex-col">
-        <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-2">
-            <Settings className="text-primary" />
-            Stock Analysis
-          </CardTitle>
-          <CardDescription>Select a stock to analyze</CardDescription>
-        </CardHeader>
-        <CardContent className="flex-grow flex flex-col gap-4">
-          {renderAnalysisControls(
-            authLoading,
-            stockOptions,
-            isFetchingStocks,
-            selectedTickers,
-            onTickerSelectionChange,
-            onFetchStocks
-          )}
-          <p className="text-sm text-muted-foreground text-center">
-            {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`}
-          </p>
-          <Button
-            onClick={onGetRecommendation}
-            disabled={isLoading || authLoading || selectedTickers.length === 0}
-            className="w-full mt-auto"
-          >
-            {isLoading && selectedTickers.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            Launch Analysis
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card className="flex-1 flex flex-col">
-        <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-2">
-            <Sparkles className="text-primary" />
-            AI Top Pick
-          </CardTitle>
-          <CardDescription>Let our AI find the best stock for you right now.</CardDescription>
-        </CardHeader>
-        <CardContent className="flex-grow flex flex-col justify-end gap-4">
-          <p className="text-sm text-muted-foreground text-center">
-            {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`}
-          </p>
-          <Button onClick={onGetAITopPick} disabled={isLoading || authLoading} className="w-full">
-            {isLoading && selectedTickers.length === 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            Get AI Top Pick
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card className="flex-1 flex flex-col">
-        <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-2">
-            <MessageSquare className="text-primary" />
-            Feedback
-          </CardTitle>
-          <CardDescription>Help us improve ProfitScout!</CardDescription>
-        </CardHeader>
-        <CardContent className="flex-grow flex flex-col gap-4">
-          <Textarea
-            placeholder="Tell us what you think..."
-            value={feedbackText}
-            onChange={(e) => onFeedbackTextChange(e.target.value)}
-            rows={3}
-            className="flex-grow"
-          />
-          <Button onClick={onSubmitFeedback} className="w-full" disabled={!feedbackText.trim() || isLoading}>
-            {isLoading && !feedbackText.trim() ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            Submit Feedback
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
-
-// ---------- Main page (no chat, auto-run top-pick, render markdown) ----------
-function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
+export default function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   const { user, loading: authLoading } = useAuth();
 
   const [stockOptions, setStockOptions] = useState<Option[]>([]);
@@ -193,7 +34,6 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingStocks, setIsFetchingStocks] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [usageCount, setUsageCount] = useState(0);
@@ -265,7 +105,6 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     if (!(await checkUsageLimit())) return;
 
     setIsLoading(true);
-    setIsSheetOpen(false);
 
     let ticker: string | undefined;
     let companyName: string | undefined;
@@ -282,11 +121,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
         })
         .filter(Boolean);
 
-      const result = await handleGetRecommendation(user!.uid, {
-        uris,
-        ticker,
-        companyName,
-      });
+      const result = await handleGetRecommendation(user!.uid, { uris, ticker, companyName });
 
       if ('error' in result && result.required === 'subscription') {
         setShowSubscriptionDialog(true);
@@ -296,14 +131,14 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       if ('error' in result) {
         throw new Error(result.error);
       }
-
-      // Support both shapes: { markdown } or plain string
+      
       const md =
-        (typeof result === 'object' && 'markdown' in result && typeof result.markdown === 'string')
-          ? result.markdown
-          : typeof result === 'string'
-            ? result
-            : 'Analysis generated.';
+      (typeof result === 'object' && 'markdown' in result && typeof result.markdown === 'string')
+        ? result.markdown
+        : typeof result === 'string'
+          ? result
+          : 'Analysis generated.';
+
 
       setAnalysisMarkdown(md);
 
@@ -329,7 +164,6 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     if (!(await checkUsageLimit())) return;
 
     setIsLoading(true);
-    setIsSheetOpen(false);
 
     try {
       const result = await handleGetRecommendation(user.uid, { uris: [] });
@@ -342,13 +176,13 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       if ('error' in result) {
         throw new Error(result.error);
       }
-
+      
       const md =
-        (typeof result === 'object' && 'markdown' in result && typeof result.markdown === 'string')
-          ? result.markdown
-          : typeof result === 'string'
-            ? result
-            : 'Analysis generated.';
+      (typeof result === 'object' && 'markdown' in result && typeof result.markdown === 'string')
+        ? result.markdown
+        : typeof result === 'string'
+          ? result
+          : 'Analysis generated.';
 
       setAnalysisMarkdown(md);
 
@@ -364,9 +198,8 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     } finally {
       setIsLoading(false);
     }
-  }, [user]); // toast from deps not required here
+  }, [user]);
 
-  // Auto-run AI Top Pick on each load
   useEffect(() => {
     getAITopPick();
   }, [getAITopPick]);
@@ -377,7 +210,6 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     try {
       await handleFeedback(feedbackText);
       setFeedbackText('');
-      setIsSheetOpen(false);
       toast({
         title: 'Feedback Submitted',
         description: 'Thank you for helping us improve ProfitScout!',
@@ -418,23 +250,6 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     }
   };
 
-  const sidebarProps: SidebarContentProps = {
-    isLoading,
-    authLoading,
-    stockOptions,
-    isFetchingStocks,
-    selectedTickers,
-    isSubscribed,
-    usageCount,
-    feedbackText,
-    onTickerSelectionChange: handleTickerSelection,
-    onFetchStocks: fetchStocks,
-    onGetRecommendation: getRecommendation,
-    onGetAITopPick: getAITopPick,
-    onFeedbackTextChange: setFeedbackText,
-    onSubmitFeedback: submitFeedback,
-  };
-
   return (
     <>
       <AuthDialog open={showAuthDialog} onOpenChange={setShowAuthDialog} />
@@ -444,52 +259,140 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
         onSubscribe={handleSubscribeClick}
         loading={isCheckingOut}
       />
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
 
-      <div className="flex h-[calc(100vh-4rem)] bg-background">
-        <main className="flex-1 flex flex-col p-4">
-          <header className="flex items-center justify-between border-b border-border pb-4 mb-4">
-            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-              <SheetTrigger asChild>
-                <Button variant="default" className="gap-2">
-                  <Menu className="h-5 w-5" />
-                  <span>Select Stock</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-[350px]">
-                <SheetHeader>
-                  <SheetTitle className="sr-only">Analysis Options</SheetTitle>
-                </SheetHeader>
-                <SidebarContent {...sidebarProps} />
-              </SheetContent>
-            </Sheet>
-            <UserNav />
-          </header>
-
-          {/* Analysis Card */}
-          <div className="flex-grow flex flex-col items-start justify-start">
-            {isLoading && !analysisMarkdown && (
-              <div className="space-y-2 w-full max-w-2xl">
-                <Skeleton className="h-6 w-1/3" />
-                <Skeleton className="h-4 w-2/3" />
-                <Skeleton className="h-4 w-1/2" />
-              </div>
-            )}
-
-            {analysisMarkdown && (
-              <Card className="w-full max-w-3xl">
-                <CardContent className="p-6">
-                  <Markdown content={analysisMarkdown} />
+        {/* Left Column: Controls */}
+        <div className="md:col-span-1 space-y-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline flex items-center gap-2">
+                        <Sparkles className="text-primary h-5 w-5" />
+                        Controls
+                    </CardTitle>
+                    <CardDescription>Run a new analysis</CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-3">
+                   <div className="flex flex-col sm:flex-row gap-2">
+                        <Button
+                            onClick={getAITopPick}
+                            disabled={isLoading}
+                            className="w-full"
+                        >
+                            {isLoading && !analysisMarkdown ? <Loader2 className="animate-spin" /> : <Sparkles />}
+                            AI Top Pick
+                        </Button>
+                        <Button
+                            onClick={getRecommendation}
+                            disabled={isLoading || selectedTickers.length === 0}
+                             variant="secondary"
+                             className="w-full"
+                        >
+                             {isLoading && !!analysisMarkdown ? <Loader2 className="animate-spin" /> : <Settings />}
+                            Analyze Selected
+                        </Button>
+                   </div>
                 </CardContent>
-              </Card>
-            )}
-          </div>
-        </main>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <div className="flex items-center justify-between">
+                         <CardTitle className="font-headline flex items-center gap-2">
+                            <Settings className="text-primary h-5 w-5" />
+                            Stock Selector
+                        </CardTitle>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={fetchStocks}
+                            disabled={isFetchingStocks}
+                            aria-label="Refresh stocks"
+                            >
+                            <RefreshCw className={`h-4 w-4 ${isFetchingStocks ? 'animate-spin' : ''}`} />
+                        </Button>
+                    </div>
+                     <CardDescription>
+                        {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free pulls`}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {authLoading && stockOptions.length === 0 ? (
+                        <Skeleton className="h-10 w-full" />
+                    ) : (
+                        <MultiSelect
+                        options={stockOptions}
+                        selected={selectedTickers}
+                        onChange={handleTickerSelection}
+                        className="w-full"
+                        placeholder="Select a stock..."
+                        max={1}
+                        disabled={authLoading}
+                        />
+                    )}
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                <CardTitle className="font-headline flex items-center gap-2">
+                    <MessageSquare className="text-primary h-5 w-5" />
+                    Feedback
+                </CardTitle>
+                <CardDescription>Help us improve ProfitScout</CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-3">
+                <Textarea
+                    placeholder="Feature ideas? What would make this better for you?"
+                    value={feedbackText}
+                    onChange={(e) => setFeedbackText(e.target.value)}
+                    rows={3}
+                />
+                <Button onClick={submitFeedback} className="w-full" disabled={!feedbackText.trim() || isLoading}>
+                    {isLoading && !!feedbackText.trim() ? <Loader2 className="animate-spin" /> : <MessageSquare />}
+                    Submit Feedback
+                </Button>
+                </CardContent>
+            </Card>
+        </div>
+
+        {/* Right Column: Analysis */}
+        <div className="md:col-span-2">
+            <Card className="min-h-[600px] lg:min-h-[750px]">
+                 <CardHeader>
+                    <CardTitle className="font-headline">Analysis</CardTitle>
+                    <CardDescription>
+                        Streamed recommendations appear here. Use <span className="font-medium">AI Top Pick</span> or select a ticker.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {isLoading && !analysisMarkdown && (
+                    <div className="space-y-4 p-4">
+                        <Skeleton className="h-8 w-1/3" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-2/3" />
+                    </div>
+                    )}
+                    {analysisMarkdown ? (
+                        <div className="w-full max-w-none">
+                             <Markdown content={analysisMarkdown} />
+                             <p className="mt-4 text-xs text-muted-foreground">
+                                💡 Got ideas for new features? Use the feedback box to tell us what to build next.
+                            </p>
+                        </div>
+                    ) : (
+                    !isLoading && (
+                        <p className="text-sm text-muted-foreground p-4">
+                            Tap <span className="font-medium">AI Top Pick</span> or select a stock and run{" "}
+                            <span className="font-medium">Analyze Selected</span>.
+                        </p>
+                    )
+                    )}
+                </CardContent>
+            </Card>
+        </div>
       </div>
     </>
   );
 }
-
-// ✅ Default export so `src/app/dashboard/page.tsx` can `import DashboardClientPage from "./dashboard-client-page"`
-export default DashboardClientPage;
-
-    

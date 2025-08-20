@@ -31,6 +31,9 @@ export function Markdown({ content, className }: MarkdownProps) {
             {...props}
           />
         ),
+        img: ({node, ...props}) => (
+            <img className="rounded-md border" {...props} />
+        ),
       }}
     >
       {content}

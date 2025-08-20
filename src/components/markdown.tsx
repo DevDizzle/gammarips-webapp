@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
+import rehypeRaw from "rehype-raw";
 
 type MarkdownProps = {
   content: string;
@@ -10,6 +11,7 @@ export function Markdown({ content, className }: MarkdownProps) {
   return (
     <ReactMarkdown
       className={cn("prose prose-invert text-sm break-words", className)}
+      rehypePlugins={[rehypeRaw]}
       components={{
         h1: (props) => <h1 className="text-xl font-bold mb-2" {...props} />,
         h2: (props) => <h2 className="text-lg font-semibold mb-2" {...props} />,

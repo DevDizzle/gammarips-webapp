@@ -2776,6 +2776,14 @@ body {
     grid-column: span 2 / span 2;
   }
 
+  .md\:grid {
+    display: grid;
+  }
+
+  .md\:hidden {
+    display: none;
+  }
+
   .md\:max-w-\[420px\] {
     max-width: 420px;
   }

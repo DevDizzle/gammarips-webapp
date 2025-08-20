@@ -18,6 +18,8 @@ import { useToast } from '@/hooks/use-toast';
 import { SubscriptionDialog } from '@/components/auth/subscription-dialog';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 import { Markdown } from '@/components/markdown';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -291,6 +293,125 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       </div>
     );
   };
+  
+  const renderDesktopControls = () => (
+     <div className="col-span-1 md:col-span-1 lg:col-span-1 space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-headline flex items-center gap-2">
+              <Sparkles className="text-primary" />
+              AI Top Pick
+            </CardTitle>
+            <CardDescription>Let our AI find the best stock for you.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={getAITopPick} disabled={isLoading || authLoading} className="w-full">
+              {isLoading && selectedTickers.length === 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Get AI Top Pick
+            </Button>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-headline flex items-center gap-2">
+              <Settings className="text-primary" />
+              Stock Analysis
+            </CardTitle>
+            <CardDescription>Select a stock to analyze</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            {renderAnalysisControls()}
+            <p className="text-sm text-muted-foreground text-center">
+              {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`}
+            </p>
+            <Button
+              onClick={getRecommendation}
+              disabled={isLoading || authLoading || selectedTickers.length === 0}
+              className="w-full"
+            >
+              {isLoading && selectedTickers.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Launch Analysis
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-headline flex items-center gap-2">
+              <MessageSquare className="text-primary" />
+              Feedback
+            </CardTitle>
+            <CardDescription>Help us improve ProfitScout!</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <Textarea
+              placeholder="Tell us what you think..."
+              value={feedbackText}
+              onChange={(e) => setFeedbackText(e.target.value)}
+              rows={3}
+            />
+            <Button onClick={submitFeedback} className="w-full" disabled={!feedbackText.trim() || isLoading}>
+              Submit Feedback
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+  );
+
+  const renderMobileControls = () => (
+    <Accordion type="single" collapsible className="w-full">
+      <AccordionItem value="ai-pick">
+        <AccordionTrigger>
+           <Sparkles className="text-primary mr-2" /> AI Top Pick
+        </AccordionTrigger>
+        <AccordionContent className="flex flex-col gap-4 p-4">
+           <p className="text-sm text-muted-foreground">Let our AI find the best stock for you.</p>
+           <Button onClick={getAITopPick} disabled={isLoading || authLoading} className="w-full">
+              {isLoading && selectedTickers.length === 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Get AI Top Pick
+            </Button>
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="stock-analysis">
+        <AccordionTrigger>
+          <Settings className="text-primary mr-2" /> Stock Analysis
+        </AccordionTrigger>
+        <AccordionContent className="flex flex-col gap-4 p-4">
+          <p className="text-sm text-muted-foreground">Select a stock to analyze</p>
+          {renderAnalysisControls()}
+            <p className="text-sm text-muted-foreground text-center">
+              {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`}
+            </p>
+            <Button
+              onClick={getRecommendation}
+              disabled={isLoading || authLoading || selectedTickers.length === 0}
+              className="w-full"
+            >
+              {isLoading && selectedTickers.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Launch Analysis
+            </Button>
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="feedback">
+        <AccordionTrigger>
+          <MessageSquare className="text-primary mr-2" /> Feedback
+        </AccordionTrigger>
+        <AccordionContent className="flex flex-col gap-4 p-4">
+          <p className="text-sm text-muted-foreground">Help us improve ProfitScout!</p>
+          <Textarea
+              placeholder="Tell us what you think..."
+              value={feedbackText}
+              onChange={(e) => setFeedbackText(e.target.value)}
+              rows={3}
+            />
+            <Button onClick={submitFeedback} className="w-full" disabled={!feedbackText.trim() || isLoading}>
+              Submit Feedback
+            </Button>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
 
   return (
     <>
@@ -301,73 +422,41 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
         onSubscribe={handleSubscribeClick}
         loading={isCheckingOut}
       />
+      
+      {/* Mobile Layout: Accordion */}
+      <div className="md:hidden flex flex-col gap-4">
+        {renderMobileControls()}
+        <div className="w-full">
+           {isLoading && !analysisMarkdown && (
+                <Card className="w-full h-full">
+                    <CardContent className="p-6">
+                        <div className="space-y-4">
+                            <Skeleton className="h-8 w-1/3" />
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-2/3" />
+                             <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-3/4" />
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {/* Left Column (Controls) */}
-        <div className="col-span-1 md:col-span-1 lg:col-span-1 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline flex items-center gap-2">
-                <Sparkles className="text-primary" />
-                AI Top Pick
-              </CardTitle>
-              <CardDescription>Let our AI find the best stock for you.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={getAITopPick} disabled={isLoading || authLoading} className="w-full">
-                {isLoading && selectedTickers.length === 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Get AI Top Pick
-              </Button>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline flex items-center gap-2">
-                <Settings className="text-primary" />
-                Stock Analysis
-              </CardTitle>
-              <CardDescription>Select a stock to analyze</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-              {renderAnalysisControls()}
-              <p className="text-sm text-muted-foreground text-center">
-                {isSubscribed ? 'Premium Account' : `${Math.max(0, 5 - usageCount)} / 5 free analyses remaining.`}
-              </p>
-              <Button
-                onClick={getRecommendation}
-                disabled={isLoading || authLoading || selectedTickers.length === 0}
-                className="w-full"
-              >
-                {isLoading && selectedTickers.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Launch Analysis
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline flex items-center gap-2">
-                <MessageSquare className="text-primary" />
-                Feedback
-              </CardTitle>
-              <CardDescription>Help us improve ProfitScout!</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-              <Textarea
-                placeholder="Tell us what you think..."
-                value={feedbackText}
-                onChange={(e) => setFeedbackText(e.target.value)}
-                rows={3}
-              />
-              <Button onClick={submitFeedback} className="w-full" disabled={!feedbackText.trim() || isLoading}>
-                Submit Feedback
-              </Button>
-            </CardContent>
-          </Card>
+            {analysisMarkdown && (
+              <Card className="w-full h-full">
+                <CardContent className="p-6">
+                  <Markdown content={analysisMarkdown} />
+                </CardContent>
+              </Card>
+            )}
         </div>
+      </div>
 
-        {/* Right Column (Analysis) */}
+      {/* Desktop Layout: Grid */}
+      <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {renderDesktopControls()}
+
         <div className="md:col-span-2 lg:col-span-3">
             {isLoading && !analysisMarkdown && (
                 <Card className="w-full h-full">
@@ -399,3 +488,5 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
 }
 
 export default DashboardClientPage;
+
+    

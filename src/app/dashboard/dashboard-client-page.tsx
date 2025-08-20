@@ -43,24 +43,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const { toast } = useToast();
-
-  useEffect(() => {
-    const options = initialStocks.map((stock: Stock) => ({
-      value: stock.id,
-      label: `${stock.id} - ${stock.company_name}`,
-    }));
-    setStockOptions(options);
-  }, [initialStocks]);
-
-  useEffect(() => {
-    if (user) {
-      getOrCreateUser(user.uid, user.isAnonymous).then((dbUser) => {
-        setUsageCount(dbUser.usageCount);
-        setIsSubscribed(dbUser.isSubscribed);
-      });
-    }
-  }, [user]);
-
+  
   const fetchStocks = useCallback(async () => {
     setIsFetchingStocks(true);
     try {
@@ -81,6 +64,29 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       setIsFetchingStocks(false);
     }
   }, [toast]);
+  
+  useEffect(() => {
+    // Initially populate stocks from props (which will be empty on first load)
+    const options = initialStocks.map((stock: Stock) => ({
+      value: stock.id,
+      label: `${stock.id} - ${stock.company_name}`,
+    }));
+    setStockOptions(options);
+
+    // Fetch stocks on component mount if the initial list is empty
+    if (initialStocks.length === 0) {
+      fetchStocks();
+    }
+  }, [initialStocks, fetchStocks]);
+
+  useEffect(() => {
+    if (user) {
+      getOrCreateUser(user.uid, user.isAnonymous).then((dbUser) => {
+        setUsageCount(dbUser.usageCount);
+        setIsSubscribed(dbUser.isSubscribed);
+      });
+    }
+  }, [user]);
 
   const handleTickerSelection = (selected: Option[]) => {
     setSelectedTickers(selected);
@@ -116,9 +122,11 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     }
 
     try {
+      // Find all stocks (not just initial) to get the correct URI
+      const allStocks = await getStocks();
       const uris = selectedTickers
         .map((t) => {
-          const stock = initialStocks.find((s) => s.id === t.value);
+          const stock = allStocks.find((s) => s.id === t.value);
           return stock?.bundle_gcs_path || '';
         })
         .filter(Boolean);
@@ -288,7 +296,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
           className="w-full"
           placeholder="Select a stock..."
           max={1}
-          disabled={authLoading}
+          disabled={authLoading || isFetchingStocks}
         />
       </div>
     );
@@ -488,5 +496,3 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
 }
 
 export default DashboardClientPage;
-
-    

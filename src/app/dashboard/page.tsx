@@ -1,9 +1,8 @@
-import { getStocks } from '../actions';
+
 import DashboardClientPage from './dashboard-client-page';
-import type { Stock } from '@/lib/firebase';
 
-export default async function DashboardPage() {
-  const stocks: Stock[] = await getStocks();
-
-  return <DashboardClientPage initialStocks={stocks} />;
+export default function DashboardPage() {
+  // Pass an empty array for initialStocks.
+  // The client component will now be responsible for fetching the stocks.
+  return <DashboardClientPage initialStocks={[]} />;
 }

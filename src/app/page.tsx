@@ -11,11 +11,6 @@ const features = [
     description: "Clear Buy, Hold, or Sell guidance powered by advanced AI."
   },
   {
-    icon: <GitCompareArrows className="h-8 w-8 text-primary" />,
-    title: "Stock Comparisons",
-    description: "Side-by-side stock analysis for smarter portfolio decisions."
-  },
-    {
     icon: <Sparkles className="h-8 w-8 text-primary" />,
     title: "AI’s Top Stock Pick",
     description: "Discover today's best investment opportunity, handpicked by our AI."
@@ -56,7 +51,7 @@ export default function LandingPage() {
         </section>
 
         <section id="features" className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature) => (
               <Card key={feature.title} className="bg-card/50 border-border/50 text-center">
                 <CardContent className="p-6">

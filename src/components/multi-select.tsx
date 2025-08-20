@@ -65,7 +65,7 @@ export function MultiSelect({
     onChange(selected.filter((s) => s.value !== option.value));
   }
 
-  const isMaxReached = max !== undefined && selected.length >= max;
+  const isMaxReached = max !== undefined && selected.length >= max && max !== 1;
 
   return (
     <Popover open={open} onOpenChange={setOpen} {...props}>

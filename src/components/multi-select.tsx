@@ -53,11 +53,11 @@ export function MultiSelect({
       return;
     }
 
-    onChange(
-      selected.some((s) => s.value === option.value)
-        ? selected.filter((s) => s.value !== option.value)
-        : [...selected, option]
-    );
+    const newSelected = selected.some((s) => s.value === option.value)
+      ? selected.filter((s) => s.value !== option.value)
+      : [...selected, option];
+      
+    onChange(newSelected);
   };
   
   const handleRemove = (option: Option, e: React.MouseEvent) => {
@@ -120,10 +120,7 @@ export function MultiSelect({
                   <CommandItem
                     key={option.value}
                     onSelect={() => {
-                        handleSelect(option)
-                        if (max === 1) {
-                          setOpen(false);
-                        }
+                      handleSelect(option);
                     }}
                     disabled={!isSelected && isMaxReached}
                   >

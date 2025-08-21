@@ -35,6 +35,14 @@ export function Markdown({ content, className }: MarkdownProps) {
         ),
         // By removing the custom img renderer, we let rehype-raw handle it.
         // It will correctly render raw <img> tags with all their attributes.
+        img: ({ node, ...props }) => {
+          if (!props.src) {
+            return null;
+          }
+          // The 'style' prop might come through on its own, so we render it.
+          // All other props like src, alt, etc., are passed through with {...props}.
+          return <img {...props} />;
+        },
       }}
     >
       {content}

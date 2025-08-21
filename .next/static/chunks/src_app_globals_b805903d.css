@@ -1264,10 +1264,6 @@ body {
   min-width: var(--radix-select-trigger-width);
 }
 
-.max-w-2xl {
-  max-width: 42rem;
-}
-
 .max-w-3xl {
   max-width: 48rem;
 }

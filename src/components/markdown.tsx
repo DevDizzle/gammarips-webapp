@@ -33,9 +33,8 @@ export function Markdown({ content, className }: MarkdownProps) {
             {...props}
           />
         ),
-        img: ({node, ...props}) => (
-          props.src ? <img className="rounded-md border" {...props} /> : null
-        ),
+        // By removing the custom img renderer, we let rehype-raw handle it.
+        // It will correctly render raw <img> tags with all their attributes.
       }}
     >
       {content}

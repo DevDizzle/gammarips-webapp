@@ -1,6 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 type MarkdownProps = {
   content: string;
@@ -11,6 +12,7 @@ export function Markdown({ content, className }: MarkdownProps) {
   return (
     <ReactMarkdown
       className={cn("prose prose-invert text-sm break-words", className)}
+      remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw]}
       components={{
         h1: (props) => <h1 className="text-xl font-bold mb-2" {...props} />,
@@ -20,9 +22,7 @@ export function Markdown({ content, className }: MarkdownProps) {
         ul: (props) => <ul className="list-disc pl-5 space-y-1" {...props} />,
         ol: (props) => <ol className="list-decimal pl-5 space-y-1" {...props} />,
         li: (props) => <li className="mb-1" {...props} />,
-        a: (props) => (
-          <a className="text-primary font-medium hover:underline" {...props} />
-        ),
+        a: (props) => <a className="text-primary font-medium hover:underline" {...props} />,
         strong: (props) => <strong className="font-bold" {...props} />,
         code: (props) => (
           <code className="bg-muted px-1 py-0.5 rounded text-xs font-mono" {...props} />
@@ -33,10 +33,14 @@ export function Markdown({ content, className }: MarkdownProps) {
             {...props}
           />
         ),
-        // Render img tags only if they have a valid src. This prevents errors from empty src attributes.
-        // Pass all other props (like style, alt) through.
-        img: ({ node, ...props }) =>
-          props.src ? <img {...props} /> : null,
+        img: ({ node, ...props }) => (
+          <img
+            {...props}
+            loading="lazy"
+            decoding="async"
+            style={{ maxWidth: "100%", height: "auto", display: "block", margin: 0 }}
+          />
+        ),
       }}
     >
       {content}

@@ -30,9 +30,10 @@ const serviceAccount: ServiceAccount = {
 };
 
 if (!getAdminApps().length) {
+  // The storageBucket property is removed to allow the SDK to dynamically
+  // access the bucket specified in the GCS URI.
   adminApp = initializeAdminApp({
     credential: admin.credential.cert(serviceAccount),
-    storageBucket: `${serviceAccount.projectId}.appspot.com`,
   });
 } else {
   adminApp = getAdminApps()[0]!;

@@ -55,7 +55,8 @@ async function getStockData(ticker: string): Promise<StockSeoData | null> {
         const content = await getGcsFileContentAdmin(gcsPath);
         return JSON.parse(content) as StockSeoData;
     } catch (error) {
-        console.error(`Failed to parse SEO JSON for ${ticker}:`, error);
+        console.error(`Failed to get or parse SEO JSON for ${ticker} from ${gcsPath}:`, error);
+        // If the file doesn't exist (404) or parsing fails, we'll treat it as not found.
         return null;
     }
 }

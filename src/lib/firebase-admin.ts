@@ -48,6 +48,7 @@ const StockSchema = z.object({
   bundle_gcs_path: z.string(), // Mapped from 'profile'
   recommendation_analysis: z.string().optional(),
   recommendation: z.string().optional(),
+  pages_json: z.string().optional(),
 });
 export type Stock = z.infer<typeof StockSchema>;
 
@@ -66,6 +67,7 @@ export async function getStocksAdmin(): Promise<Stock[]> {
             bundle_gcs_path: data.profile,
             recommendation_analysis: data.recommendation_analysis,
             recommendation: data.recommendation,
+            pages_json: data.pages_json,
         };
         const validation = StockSchema.safeParse(stock);
         if (validation.success) {
@@ -81,6 +83,32 @@ export async function getStocksAdmin(): Promise<Stock[]> {
     return [];
   }
 }
+
+export async function getSeoPageGcsPathAdmin(ticker: string): Promise<string | null> {
+    try {
+        const docRef = adminDb.collection("tickers").doc(ticker.toUpperCase());
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            console.warn(`No stock found for ticker: ${ticker}`);
+            return null;
+        }
+
+        const stockData = docSnap.data();
+        const gcsPath = stockData?.pages_json;
+
+        if (typeof gcsPath === 'string' && gcsPath.startsWith('gs://')) {
+            return gcsPath;
+        } else {
+            console.warn(`No valid pages_json GCS path for ticker: ${ticker}`);
+            return null;
+        }
+    } catch (error) {
+        console.error(`Error fetching SEO page GCS path for ${ticker}:`, error);
+        throw error;
+    }
+}
+
 
 export async function getRandomBuyStockAdmin(): Promise<Stock | null> {
     try {
@@ -235,3 +263,5 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     }
     return null;
 }
+
+    

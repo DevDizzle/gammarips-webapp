@@ -3,8 +3,9 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/use-auth';
-import { Loader2, Settings, Sparkles, MessageSquare, RefreshCw } from 'lucide-react';
+import { Loader2, Settings, Sparkles, MessageSquare, RefreshCw, ArrowRight } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
+import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -118,7 +119,8 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     let companyName: string | undefined;
 
     if (selectedTickers.length === 1) {
-      [ticker, companyName] = selectedTickers[0].label.split(' - ');
+      [ticker] = selectedTickers[0].label.split(' - ');
+      companyName = selectedTickers[0].label.substring(ticker.length + 3);
     }
 
     try {
@@ -198,6 +200,8 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
             : 'Analysis generated.';
 
       setAnalysisMarkdown(md);
+      // Clear selected tickers after getting AI top pick
+      setSelectedTickers([]);
 
       const dbUser = await getOrCreateUser(user.uid, user.isAnonymous);
       setUsageCount(dbUser.usageCount);
@@ -421,6 +425,21 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     </Accordion>
   );
 
+  const renderAnalysisCard = () => (
+    <Card className="w-full h-full">
+      <CardContent className="p-6">
+        <Markdown content={analysisMarkdown} />
+        {selectedTickers.length === 1 && (
+            <Button asChild className="mt-4">
+              <Link href={`/stocks/${selectedTickers[0].value}`}>
+                View Detailed Analysis <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+        )}
+      </CardContent>
+    </Card>
+  );
+
   return (
     <>
       <AuthDialog open={showAuthDialog} onOpenChange={setShowAuthDialog} />
@@ -451,13 +470,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
                 </Card>
             )}
 
-            {analysisMarkdown && (
-              <Card className="w-full h-full">
-                <CardContent className="p-6">
-                  <Markdown content={analysisMarkdown} />
-                </CardContent>
-              </Card>
-            )}
+            {analysisMarkdown && renderAnalysisCard()}
         </div>
       </div>
 
@@ -482,13 +495,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
                 </Card>
             )}
 
-            {analysisMarkdown && (
-              <Card className="w-full h-full">
-                <CardContent className="p-6">
-                  <Markdown content={analysisMarkdown} />
-                </CardContent>
-              </Card>
-            )}
+            {analysisMarkdown && renderAnalysisCard()}
         </div>
       </div>
     </>
@@ -496,3 +503,5 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
 }
 
 export default DashboardClientPage;
+
+    

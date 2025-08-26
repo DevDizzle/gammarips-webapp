@@ -179,12 +179,10 @@ export async function getGcsFileContentAdmin(uri: string): Promise<string> {
         const [contents] = await file.download();
         return contents.toString('utf8');
     } catch (error: any) {
-        console.error(`Failed to fetch GCS file at URI: ${uri}`, {
-            errorMessage: error.message,
-            errorStack: error.stack,
-        });
-        // Re-throw the error to be handled by the calling function
-        throw new Error(`Could not read file from GCS: ${error.message}`);
+        console.error(`Failed to fetch GCS file at URI: ${uri}. Code: ${error.code}. Message: ${error.message}`);
+        // Re-throw the error to be handled by the calling function.
+        // The error.code can be useful for debugging permissions (403) vs. not found (404).
+        throw new Error(`Could not read file from GCS at ${uri}. Reason: ${error.message}`);
     }
 }
 

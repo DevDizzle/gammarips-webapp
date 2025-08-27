@@ -325,18 +325,18 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
             <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2">
                 <Sparkles className="text-primary" />
-                AI Top Picks Today
+                AI Stock Signals
                 </CardTitle>
-                <CardDescription>Discover stocks to buy or avoid.</CardDescription>
+                <CardDescription>Today's top BUY and SELL signals from our AI.</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col sm:flex-row gap-2">
                 <Button onClick={() => getAITopPick('BUY')} disabled={isLoading || authLoading} className="w-full">
                     {loadingAction === 'BUY' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Get BUY
+                    BUY
                 </Button>
                 <Button onClick={() => getAITopPick('SELL')} disabled={isLoading || authLoading} className="w-full" variant="destructive">
                     {loadingAction === 'SELL' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Get SELL
+                    SELL
                 </Button>
             </CardContent>
         </Card>
@@ -392,18 +392,18 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="ai-pick">
         <AccordionTrigger>
-           <Sparkles className="text-primary mr-2" /> AI Top Picks Today
+           <Sparkles className="text-primary mr-2" /> AI Stock Signals
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 p-4">
-           <p className="text-sm text-muted-foreground">Discover stocks to buy or avoid.</p>
+           <p className="text-sm text-muted-foreground">Today's top BUY and SELL signals from our AI.</p>
            <div className="flex flex-col sm:flex-row gap-2">
                 <Button onClick={() => getAITopPick('BUY')} disabled={isLoading || authLoading} className="w-full">
                     {loadingAction === 'BUY' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Get BUY
+                    BUY
                 </Button>
                 <Button onClick={() => getAITopPick('SELL')} disabled={isLoading || authLoading} className="w-full" variant="destructive">
                     {loadingAction === 'SELL' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Get SELL
+                    SELL
                 </Button>
             </div>
         </AccordionContent>

@@ -21,6 +21,7 @@ import {
     incrementUserUsageAdmin,
     getGcsFileContentAdmin,
     getRandomBuyStockAdmin,
+    getRandomSellStockAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock } from '@/lib/firebase';
 import { createStripeCheckoutSession } from '@/lib/stripe';
@@ -58,17 +59,20 @@ export async function handleGetRecommendation(uid: string, input: InitialRecomme
       console.log(JSON.stringify({ traceId, msg: 'Successfully incremented user usage.' }));
     }
     
-    // AI TOP PICK FLOW: Get a random "BUY" stock
+    // AI TOP PICK FLOW: Get a random "BUY" or "SELL" stock
     if (input.uris.length === 0 && !input.ticker) {
-        console.log(JSON.stringify({ traceId, msg: 'AI Top Pick flow: fetching random BUY stock.' }));
-        const stock = await getRandomBuyStockAdmin();
+        console.log(JSON.stringify({ traceId, msg: `AI Top Pick flow: fetching random ${input.recommendationType} stock.` }));
+        const stock = input.recommendationType === 'SELL' 
+            ? await getRandomSellStockAdmin() 
+            : await getRandomBuyStockAdmin();
+
         if (stock && stock.recommendation_analysis) {
             const markdownContent = await getGcsFileContentAdmin(stock.recommendation_analysis);
             return { markdown: markdownContent, ticker: stock.id };
         } else if (stock) {
              throw new Error(`AI Top Pick stock ${stock.id} is missing recommendation_analysis path.`);
         } else {
-            throw new Error('No stocks with recommendation "BUY" found in the database.');
+            throw new Error(`No stocks with recommendation "${input.recommendationType}" found in the database.`);
         }
     }
 

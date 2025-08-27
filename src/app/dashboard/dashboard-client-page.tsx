@@ -36,6 +36,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   const [analysisMarkdown, setAnalysisMarkdown] = useState<string>('');
   const [analysisTicker, setAnalysisTicker] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingAction, setLoadingAction] = useState<'BUY' | 'SELL' | 'ANALYZE' | null>(null);
   const [isFetchingStocks, setIsFetchingStocks] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
   const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
@@ -115,6 +116,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     if (!(await checkUsageLimit())) return;
 
     setIsLoading(true);
+    setLoadingAction('ANALYZE');
     setAnalysisTicker(null);
 
     let ticker: string | undefined;
@@ -144,6 +146,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       if ('error' in result && result.required === 'subscription') {
         setShowSubscriptionDialog(true);
         setIsLoading(false);
+        setLoadingAction(null);
         return;
       }
       if ('error' in result) {
@@ -154,6 +157,8 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
         setAnalysisMarkdown(result.markdown);
         if(result.ticker) {
             setAnalysisTicker(result.ticker);
+        } else if (ticker) {
+            setAnalysisTicker(ticker);
         }
       } else {
         setAnalysisMarkdown('Analysis generated.');
@@ -171,10 +176,11 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       });
     } finally {
       setIsLoading(false);
+      setLoadingAction(null);
     }
   };
 
-  const getAITopPick = useCallback(async () => {
+  const getAITopPick = useCallback(async (type: 'BUY' | 'SELL') => {
     if (!user) {
       setShowAuthDialog(true);
       return;
@@ -182,14 +188,17 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     if (!(await checkUsageLimit())) return;
 
     setIsLoading(true);
+    setLoadingAction(type);
     setAnalysisTicker(null);
+    setSelectedTickers([]);
 
     try {
-      const result = await handleGetRecommendation(user.uid, { uris: [] });
+      const result = await handleGetRecommendation(user.uid, { uris: [], recommendationType: type });
 
       if ('error' in result && result.required === 'subscription') {
         setShowSubscriptionDialog(true);
         setIsLoading(false);
+        setLoadingAction(null);
         return;
       }
       if ('error' in result) {
@@ -205,9 +214,6 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
         setAnalysisMarkdown('Analysis generated.');
       }
 
-      // Clear selected tickers after getting AI top pick
-      setSelectedTickers([]);
-
       const dbUser = await getOrCreateUser(user.uid, user.isAnonymous);
       setUsageCount(dbUser.usageCount);
     } catch (error: any) {
@@ -219,14 +225,16 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       });
     } finally {
       setIsLoading(false);
+      setLoadingAction(null);
     }
   }, [user, toast]);
 
   useEffect(() => {
     if (user && !analysisMarkdown) {
-        getAITopPick();
+        getAITopPick('BUY');
     }
-  }, [user, getAITopPick, analysisMarkdown]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, analysisMarkdown]);
 
   const submitFeedback = async () => {
     if (!feedbackText.trim()) return;
@@ -314,19 +322,23 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   const renderDesktopControls = () => (
      <div className="col-span-1 md:col-span-1 lg:col-span-1 space-y-6">
         <Card>
-          <CardHeader>
-            <CardTitle className="font-headline flex items-center gap-2">
-              <Sparkles className="text-primary" />
-              AI Top Pick
-            </CardTitle>
-            <CardDescription>Let our AI find the best stock for you.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={getAITopPick} disabled={isLoading || authLoading} className="w-full">
-              {isLoading && selectedTickers.length === 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Get AI Top Pick
-            </Button>
-          </CardContent>
+            <CardHeader>
+                <CardTitle className="font-headline flex items-center gap-2">
+                <Sparkles className="text-primary" />
+                AI Top Picks Today
+                </CardTitle>
+                <CardDescription>Discover stocks to buy or avoid.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col sm:flex-row gap-2">
+                <Button onClick={() => getAITopPick('BUY')} disabled={isLoading || authLoading} className="w-full">
+                    {loadingAction === 'BUY' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Get BUY
+                </Button>
+                <Button onClick={() => getAITopPick('SELL')} disabled={isLoading || authLoading} className="w-full" variant="destructive">
+                    {loadingAction === 'SELL' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Get SELL
+                </Button>
+            </CardContent>
         </Card>
         
         <Card>
@@ -347,7 +359,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
               disabled={isLoading || authLoading || selectedTickers.length === 0}
               className="w-full"
             >
-              {isLoading && selectedTickers.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {loadingAction === 'ANALYZE' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Launch Analysis
             </Button>
           </CardContent>
@@ -380,14 +392,20 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="ai-pick">
         <AccordionTrigger>
-           <Sparkles className="text-primary mr-2" /> AI Top Pick
+           <Sparkles className="text-primary mr-2" /> AI Top Picks Today
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 p-4">
-           <p className="text-sm text-muted-foreground">Let our AI find the best stock for you.</p>
-           <Button onClick={getAITopPick} disabled={isLoading || authLoading} className="w-full">
-              {isLoading && selectedTickers.length === 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Get AI Top Pick
-            </Button>
+           <p className="text-sm text-muted-foreground">Discover stocks to buy or avoid.</p>
+           <div className="flex flex-col sm:flex-row gap-2">
+                <Button onClick={() => getAITopPick('BUY')} disabled={isLoading || authLoading} className="w-full">
+                    {loadingAction === 'BUY' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Get BUY
+                </Button>
+                <Button onClick={() => getAITopPick('SELL')} disabled={isLoading || authLoading} className="w-full" variant="destructive">
+                    {loadingAction === 'SELL' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Get SELL
+                </Button>
+            </div>
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="stock-analysis">
@@ -405,7 +423,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
               disabled={isLoading || authLoading || selectedTickers.length === 0}
               className="w-full"
             >
-              {isLoading && selectedTickers.length > 0 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {loadingAction === 'ANALYZE' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Launch Analysis
             </Button>
         </AccordionContent>
@@ -431,15 +449,13 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   );
 
   const renderAnalysisCard = () => {
-    const tickerToShow = selectedTickers.length === 1 ? selectedTickers[0].value : analysisTicker;
-
     return (
         <Card className="w-full h-full">
         <CardContent className="p-6">
             <Markdown content={analysisMarkdown} />
-            {tickerToShow && (
+            {analysisTicker && (
                 <Button asChild className="mt-4">
-                <Link href={`/stocks/${tickerToShow}`}>
+                <Link href={`/stocks/${analysisTicker}`}>
                     View Detailed Analysis <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
                 </Button>

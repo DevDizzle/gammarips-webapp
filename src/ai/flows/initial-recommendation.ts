@@ -23,6 +23,7 @@ const InitialRecommendationInputSchema = z.object({
     ),
   ticker: z.string().optional().describe('The stock ticker.'),
   companyName: z.string().optional().describe('The name of the company.'),
+  recommendationType: z.enum(['BUY', 'SELL']).optional().describe('The type of recommendation to fetch for an AI Top Pick.'),
   traceId: z.string().optional().describe('A unique ID for tracing the request through logs.'),
 });
 export type InitialRecommendationInput = z.infer<

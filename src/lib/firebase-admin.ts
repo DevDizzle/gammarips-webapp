@@ -129,6 +129,7 @@ export async function getRandomBuyStockAdmin(): Promise<Stock | null> {
                 bundle_gcs_path: data.profile,
                 recommendation_analysis: data.recommendation_analysis,
                 recommendation: data.recommendation,
+                pages_json: data.pages_json,
             };
              const validation = StockSchema.safeParse(stock);
             if (validation.success) {
@@ -147,6 +148,47 @@ export async function getRandomBuyStockAdmin(): Promise<Stock | null> {
 
     } catch (error) {
         console.error("Error fetching random 'BUY' stock:", error);
+        throw error;
+    }
+}
+
+export async function getRandomSellStockAdmin(): Promise<Stock | null> {
+    try {
+        const q = adminDb.collection("tickers").where("recommendation", "==", "SELL");
+        const querySnapshot = await q.get();
+        if (querySnapshot.empty) {
+            console.warn("No stocks with 'SELL' recommendation found.");
+            return null;
+        }
+
+        const sellStocks: Stock[] = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const stock = {
+                id: doc.id,
+                company_name: data.company_name,
+                bundle_gcs_path: data.profile,
+                recommendation_analysis: data.recommendation_analysis,
+                recommendation: data.recommendation,
+                pages_json: data.pages_json,
+            };
+             const validation = StockSchema.safeParse(stock);
+            if (validation.success) {
+                sellStocks.push(validation.data);
+            } else {
+                console.error("Invalid 'SELL' stock data from Firestore:", validation.error.flatten());
+            }
+        });
+        
+        if (sellStocks.length === 0) {
+            return null;
+        }
+
+        const randomIndex = Math.floor(Math.random() * sellStocks.length);
+        return sellStocks[randomIndex];
+
+    } catch (error) {
+        console.error("Error fetching random 'SELL' stock:", error);
         throw error;
     }
 }

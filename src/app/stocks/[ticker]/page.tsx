@@ -2,7 +2,8 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getSeoPageGcsPathAdmin, getGcsFileContentAdmin, getStocksAdmin } from '@/lib/firebase-admin';
+import { getGcsFileContentAdmin, getStocksAdmin } from '@/lib/firebase-admin';
+import { Storage } from '@google-cloud/storage';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
@@ -46,24 +47,77 @@ interface StockSeoData {
     relatedStocks: string[];
 }
 
+const storage = new Storage();
+const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'profit-scout';
+const PREFIX = 'pages/';
+const DAYS_THRESHOLD = 7; // Only consider files from the last 7 days as recent
 
+/**
+ * Checks if a date string 'YYYY-MM-DD' is within the last N days.
+ */
+function isRecentDate(fileDateStr: string): boolean {
+  try {
+    const fileDate = new Date(fileDateStr);
+    const now = new Date();
+    // Reset time to midnight for fair comparison
+    fileDate.setUTCHours(0, 0, 0, 0);
+    now.setUTCHours(0, 0, 0, 0);
+    const diffTime = now.getTime() - fileDate.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays <= DAYS_THRESHOLD;
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Finds the latest valid SEO data file for a ticker directly from GCS.
+ * This avoids relying on a potentially stale path in Firestore.
+ */
 async function getStockData(ticker: string): Promise<StockSeoData | null> {
     try {
-        const gcsPath = await getSeoPageGcsPathAdmin(ticker);
-        if (!gcsPath) {
-            console.warn(`No GCS path found for ticker: ${ticker}`);
-            return null; // Triggers notFound in the component
+        const bucket = storage.bucket(BUCKET_NAME);
+        const [files] = await bucket.getFiles({ prefix: `${PREFIX}${ticker.toUpperCase()}_page_` });
+
+        if (files.length === 0) {
+            console.warn(`[getStockData] No GCS files found for ticker: ${ticker}`);
+            return null;
         }
-        const content = await getGcsFileContentAdmin(gcsPath);
-        return JSON.parse(content) as StockSeoData;
+
+        const recentFiles = files
+            .map(file => {
+                const fileName = file.name.replace(PREFIX, '');
+                const match = fileName.match(/^([A-Z]+)_page_(\d{4}-\d{2}-\d{2})\.json$/);
+                if (match) {
+                    const fileDate = match[2];
+                    if (isRecentDate(fileDate)) {
+                        return { name: file.name, date: fileDate };
+                    }
+                }
+                return null;
+            })
+            .filter(Boolean)
+            .sort((a, b) => new Date(b!.date).getTime() - new Date(a!.date).getTime());
+
+        if (recentFiles.length === 0) {
+            console.warn(`[getStockData] No RECENT GCS files found for ticker: ${ticker}`);
+            return null;
+        }
+
+        const latestFile = recentFiles[0];
+        if (latestFile) {
+            const content = await getGcsFileContentAdmin(`gs://${BUCKET_NAME}/${latestFile.name}`);
+            return JSON.parse(content) as StockSeoData;
+        }
+
+        return null;
+
     } catch (error: any) {
-        // If the file doesn't exist (404) or parsing fails, we'll treat it as not found.
         if (error.code === 404 || error instanceof SyntaxError) {
-             console.warn(`Could not find or parse SEO JSON for ${ticker}. Error: ${error.message}`);
+             console.warn(`[getStockData] Could not find or parse SEO JSON for ${ticker}. Error: ${error.message}`);
              return null;
         }
-        // For other errors, re-throw to trigger Next.js error boundary
-        console.error(`Failed to get SEO data for ${ticker}:`, error);
+        console.error(`[getStockData] Unexpected error for ${ticker}:`, error);
         throw error;
     }
 }
@@ -85,17 +139,29 @@ export async function generateMetadata({ params }: StockSeoPageProps): Promise<M
   };
 }
 
-export const dynamicParams = true;
 
-// Instruct Next.js to generate static pages for all tickers that have a valid pages_json file in Firestore.
+// Only prerender pages for which we can find valid, recent data in GCS.
 export async function generateStaticParams() {
-  const stocks = await getStocksAdmin();
-  // Filter for stocks that have a pages_json path
-  const validStocks = stocks.filter(stock => !!stock.pages_json);
-  return validStocks.map((stock) => ({
-    ticker: stock.id,
-  }));
+    console.log('[generateStaticParams] Starting to generate params for stock pages...');
+    const allStocks = await getStocksAdmin(); // Get all potential tickers
+    const validTickers: { ticker: string }[] = [];
+
+    for (const stock of allStocks) {
+        // Check if data exists and is recent before adding to static params
+        const hasValidData = await getStockData(stock.id);
+        if (hasValidData) {
+            validTickers.push({ ticker: stock.id });
+            console.log(`[generateStaticParams] Found valid data for ${stock.id}, adding to prerender list.`);
+        } else {
+            console.log(`[generateStaticParams] No valid/recent data for ${stock.id}, skipping.`);
+        }
+    }
+    
+    console.log(`[generateStaticParams] Finished. Prerendering ${validTickers.length} stock pages.`);
+    return validTickers;
 }
+
+export const dynamicParams = true;
 
 
 const SignalIndicator = ({ signal }: { signal: 'BUY' | 'SELL' | 'HOLD' }) => {

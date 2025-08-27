@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import React from 'react';
+import { Twitter } from 'lucide-react';
 
 const Footer = () => {
   return (
     <footer className="bg-background border-t mt-auto">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+          <div className="md:col-span-2">
             <h3 className="text-xl font-bold font-headline text-primary">ProfitScout</h3>
             <p className="text-sm text-muted-foreground mt-2">Smarter Stock Picks, Simplified.</p>
           </div>
@@ -26,9 +27,10 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-             <h4 className="font-semibold text-foreground">Contact</h4>
+             <h4 className="font-semibold text-foreground">Follow Us</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><a href="mailto:admin@profitscout.app" className="text-muted-foreground hover:text-primary">admin@profitscout.app</a></li>
+              <li><a href="https://x.com/ProfitScout1000" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><Twitter size={16} /> X / Twitter</a></li>
+              <li><a href="mailto:admin@profitscout.app" className="text-muted-foreground hover:text-primary">Contact Us</a></li>
             </ul>
           </div>
         </div>

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, TrendingUp, TrendingDown, Minus, AlertTriangle } from 'lucide-react';
 import { UserNav } from '@/components/auth/user-nav';
+import { ShareButtons } from '@/components/share-buttons';
 
 interface StockSeoPageProps {
   params: {
@@ -114,6 +115,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
   }
 
   const { fullAnalysis, teaser, relatedStocks, seo } = data;
+  const pageTitle = seo.title.split(' | ')[0]; // Remove "| ProfitScout"
 
   return (
     <>
@@ -127,11 +129,14 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
       </header>
     <div className="container mx-auto max-w-4xl py-8 px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold font-headline tracking-tight mb-2">
-            {seo.title.split(' | ')[0]}
+            {pageTitle}
         </h1>
-         <p className="text-muted-foreground mb-8">
-            AI-powered insights updated on {new Date(data.date).toLocaleDateString()}.
-        </p>
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
+            <p className="text-muted-foreground">
+                AI-powered insights updated on {new Date(data.date).toLocaleDateString()}.
+            </p>
+            <ShareButtons title={pageTitle} />
+        </div>
         
         <Card className="mb-8 bg-card/50">
             <CardHeader>

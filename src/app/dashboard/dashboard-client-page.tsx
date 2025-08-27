@@ -34,6 +34,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   const [stockOptions, setStockOptions] = useState<Option[]>([]);
   const [selectedTickers, setSelectedTickers] = useState<Option[]>([]);
   const [analysisMarkdown, setAnalysisMarkdown] = useState<string>('');
+  const [analysisTicker, setAnalysisTicker] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingStocks, setIsFetchingStocks] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
@@ -114,6 +115,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     if (!(await checkUsageLimit())) return;
 
     setIsLoading(true);
+    setAnalysisTicker(null);
 
     let ticker: string | undefined;
     let companyName: string | undefined;
@@ -147,15 +149,16 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       if ('error' in result) {
         throw new Error(result.error);
       }
+      
+      if (typeof result === 'object' && 'markdown' in result && result.markdown) {
+        setAnalysisMarkdown(result.markdown);
+        if(result.ticker) {
+            setAnalysisTicker(result.ticker);
+        }
+      } else {
+        setAnalysisMarkdown('Analysis generated.');
+      }
 
-      const md =
-        (typeof result === 'object' && 'markdown' in result && typeof result.markdown === 'string')
-          ? result.markdown
-          : typeof result === 'string'
-            ? result
-            : 'Analysis generated.';
-
-      setAnalysisMarkdown(md);
 
       const dbUser = await getOrCreateUser(user!.uid, user!.isAnonymous);
       setUsageCount(dbUser.usageCount);
@@ -179,6 +182,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     if (!(await checkUsageLimit())) return;
 
     setIsLoading(true);
+    setAnalysisTicker(null);
 
     try {
       const result = await handleGetRecommendation(user.uid, { uris: [] });
@@ -191,15 +195,16 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       if ('error' in result) {
         throw new Error(result.error);
       }
+      
+      if (typeof result === 'object' && 'markdown' in result && result.markdown) {
+        setAnalysisMarkdown(result.markdown);
+         if(result.ticker) {
+            setAnalysisTicker(result.ticker);
+        }
+      } else {
+        setAnalysisMarkdown('Analysis generated.');
+      }
 
-      const md =
-        (typeof result === 'object' && 'markdown' in result && typeof result.markdown === 'string')
-          ? result.markdown
-          : typeof result === 'string'
-            ? result
-            : 'Analysis generated.';
-
-      setAnalysisMarkdown(md);
       // Clear selected tickers after getting AI top pick
       setSelectedTickers([]);
 
@@ -425,20 +430,24 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     </Accordion>
   );
 
-  const renderAnalysisCard = () => (
-    <Card className="w-full h-full">
-      <CardContent className="p-6">
-        <Markdown content={analysisMarkdown} />
-        {selectedTickers.length === 1 && (
-            <Button asChild className="mt-4">
-              <Link href={`/stocks/${selectedTickers[0].value}`}>
-                View Detailed Analysis <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-        )}
-      </CardContent>
-    </Card>
-  );
+  const renderAnalysisCard = () => {
+    const tickerToShow = selectedTickers.length === 1 ? selectedTickers[0].value : analysisTicker;
+
+    return (
+        <Card className="w-full h-full">
+        <CardContent className="p-6">
+            <Markdown content={analysisMarkdown} />
+            {tickerToShow && (
+                <Button asChild className="mt-4">
+                <Link href={`/stocks/${tickerToShow}`}>
+                    View Detailed Analysis <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+                </Button>
+            )}
+        </CardContent>
+        </Card>
+    );
+  };
 
   return (
     <>

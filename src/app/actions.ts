@@ -32,7 +32,7 @@ export async function getStocks(): Promise<Stock[]> {
     return getStocksAdmin();
 }
 
-export async function handleGetRecommendation(uid: string, input: InitialRecommendationInput): Promise<InitialRecommendationOutput | { error: string; required?: 'subscription' | 'auth' } | { markdown: string }> {
+export async function handleGetRecommendation(uid: string, input: InitialRecommendationInput): Promise<InitialRecommendationOutput | { error: string; required?: 'subscription' | 'auth' } | { markdown: string, ticker?: string }> {
   const traceId = randomUUID();
   console.log(JSON.stringify({
     traceId,
@@ -64,7 +64,7 @@ export async function handleGetRecommendation(uid: string, input: InitialRecomme
         const stock = await getRandomBuyStockAdmin();
         if (stock && stock.recommendation_analysis) {
             const markdownContent = await getGcsFileContentAdmin(stock.recommendation_analysis);
-            return { markdown: markdownContent };
+            return { markdown: markdownContent, ticker: stock.id };
         } else if (stock) {
              throw new Error(`AI Top Pick stock ${stock.id} is missing recommendation_analysis path.`);
         } else {
@@ -81,7 +81,7 @@ export async function handleGetRecommendation(uid: string, input: InitialRecomme
       if (stock && stock.recommendation_analysis) {
         console.log(JSON.stringify({ traceId, msg: 'Single stock flow: fetching markdown content.' }));
         const markdownContent = await getGcsFileContentAdmin(stock.recommendation_analysis);
-        return { markdown: markdownContent };
+        return { markdown: markdownContent, ticker: stock.id };
       }
     }
 

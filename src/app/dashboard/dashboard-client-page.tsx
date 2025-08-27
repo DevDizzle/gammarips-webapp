@@ -327,7 +327,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
                 <Sparkles className="text-primary" />
                 AI Stock Signals
                 </CardTitle>
-                <CardDescription>Today's top BUY and SELL signals from our AI.</CardDescription>
+                <CardDescription>Clear, data-backed signals to guide your next move.</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col sm:flex-row gap-2">
                 <Button onClick={() => getAITopPick('BUY')} disabled={isLoading || authLoading} className="w-full">
@@ -395,7 +395,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
            <Sparkles className="text-primary mr-2" /> AI Stock Signals
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 p-4">
-           <p className="text-sm text-muted-foreground">Today's top BUY and SELL signals from our AI.</p>
+           <p className="text-sm text-muted-foreground">Clear, data-backed signals to guide your next move.</p>
            <div className="flex flex-col sm:flex-row gap-2">
                 <Button onClick={() => getAITopPick('BUY')} disabled={isLoading || authLoading} className="w-full">
                     {loadingAction === 'BUY' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}

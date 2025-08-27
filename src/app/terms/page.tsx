@@ -40,7 +40,7 @@ export default function TermsPage() {
       <h2>6. Modification of Terms</h2>
       <p>
         We reserve the right, at our sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Service following the posting of any changes to this Agreement constitutes acceptance of those changes.
-      p>
+      </p>
 
       <h2>7. Contact Information</h2>
       <p>

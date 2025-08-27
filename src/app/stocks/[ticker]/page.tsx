@@ -85,7 +85,9 @@ export async function generateMetadata({ params }: StockSeoPageProps): Promise<M
   };
 }
 
-// Instruct Next.js to generate static pages for all tickers at build time
+export const dynamicParams = true;
+
+// Instruct Next.js to generate static pages for all tickers that have a valid pages_json file in Firestore.
 export async function generateStaticParams() {
   const stocks = await getStocksAdmin();
   // Filter for stocks that have a pages_json path
@@ -135,7 +137,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             <p className="text-muted-foreground">
                 AI-powered insights updated on {new Date(data.date).toLocaleDateString()}.
             </p>
-            <ShareButtons title={pageTitle} />
+            <ShareButtons title={seo.title} />
         </div>
         
         <Card className="mb-8 bg-card/50">

@@ -12,10 +12,6 @@ export default function PrivacyPage() {
       <h1>Privacy Policy</h1>
       <p><em>Last updated: {new Date().toLocaleDateString()}</em></p>
 
-      <p>
-        Welcome to ProfitScout. We respect your privacy and are committed to protecting it through our compliance with this policy. This policy describes the types of information we may collect from you or that you may provide when you visit our website and our practices for collecting, using, maintaining, protecting, and disclosing that information.
-      </p>
-
       <h2>1. Information We Collect About You</h2>
       <p>
         We collect several types of information from and about users of our Website, including:

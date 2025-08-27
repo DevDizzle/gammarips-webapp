@@ -5,8 +5,13 @@ import { AuthProvider } from '@/hooks/use-auth';
 import Footer from '@/components/layout/footer';
 
 export const metadata: Metadata = {
-  title: 'ProfitScout',
-  description: 'Smarter Stock Picks, Simplified.',
+  metadataBase: new URL('https://profitscout.app'), // Replace with your actual domain
+  title: {
+    default: 'ProfitScout | AI-Powered Stock Recommendations',
+    template: `%s | ProfitScout`,
+  },
+  description: 'Get clear, AI-powered Buy, Hold, or Sell calls on the Russell 1000. Smarter stock picks, simplified.',
+  keywords: ['stock analysis', 'investment', 'AI', 'finance', 'Russell 1000', 'stock recommendations', 'fintech'],
 };
 
 export default function RootLayout({

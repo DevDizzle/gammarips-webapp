@@ -8,7 +8,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
 
 interface StockSeoPageProps {
   params: {
@@ -47,17 +46,22 @@ interface StockSeoData {
 
 
 async function getStockData(ticker: string): Promise<StockSeoData | null> {
-    const gcsPath = await getSeoPageGcsPathAdmin(ticker);
-    if (!gcsPath) {
-        return null;
-    }
     try {
+        const gcsPath = await getSeoPageGcsPathAdmin(ticker);
+        if (!gcsPath) {
+            return null; // Triggers notFound in the component
+        }
         const content = await getGcsFileContentAdmin(gcsPath);
         return JSON.parse(content) as StockSeoData;
-    } catch (error) {
-        console.error(`Failed to get or parse SEO JSON for ${ticker} from ${gcsPath}:`, error);
+    } catch (error: any) {
         // If the file doesn't exist (404) or parsing fails, we'll treat it as not found.
-        return null;
+        if (error.code === 404 || error instanceof SyntaxError) {
+             console.warn(`Could not find or parse SEO JSON for ${ticker}. Error: ${error.message}`);
+             return null;
+        }
+        // For other errors, re-throw to trigger Next.js error boundary
+        console.error(`Failed to get SEO data for ${ticker}:`, error);
+        throw error;
     }
 }
 
@@ -107,12 +111,12 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
     notFound();
   }
 
-  const { symbol, fullAnalysis, teaser, relatedStocks } = data;
+  const { fullAnalysis, teaser, relatedStocks, seo } = data;
 
   return (
     <div className="container mx-auto max-w-4xl py-8 px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold font-headline tracking-tight mb-2">
-            {symbol} Stock Analysis & Recommendation
+            {seo.title.split(' | ')[0]}
         </h1>
          <p className="text-muted-foreground mb-8">
             AI-powered insights updated on {new Date(data.date).toLocaleDateString()}.

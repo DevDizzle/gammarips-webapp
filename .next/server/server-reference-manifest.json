@@ -60,6 +60,17 @@
         "app/stocks/[ticker]/page": "rsc"
       }
     },
+    "003e1e2f0430108d6d132533ff75e9cf6dc2fd996c": {
+      "workers": {
+        "app/stocks/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/stocks/[ticker]/page": "rsc"
+      }
+    },
     "00943f07dbdb2c41fb583b06f835900ba2c570b32c": {
       "workers": {
         "app/stocks/[ticker]/page": {

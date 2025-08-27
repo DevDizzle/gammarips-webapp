@@ -243,13 +243,13 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       await handleFeedback(feedbackText);
       setFeedbackText('');
       toast({
-        title: 'Feedback Submitted',
+        title: 'Message Sent',
         description: 'Thank you for helping us improve ProfitScout!',
       });
     } catch (error: any) {
       toast({
-        title: 'Feedback Failed',
-        description: error.message || 'Could not submit your feedback. Please try again.',
+        title: 'Failed to Send',
+        description: error.message || 'Could not submit your message. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -369,7 +369,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
           <CardHeader>
             <CardTitle className="font-headline flex items-center gap-2">
               <MessageSquare className="text-primary" />
-              Feedback
+              Contact Us
             </CardTitle>
             <CardDescription>Help us improve ProfitScout!</CardDescription>
           </CardHeader>
@@ -381,7 +381,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
               rows={3}
             />
             <Button onClick={submitFeedback} className="w-full" disabled={!feedbackText.trim() || isLoading}>
-              Submit Feedback
+              Send Message
             </Button>
           </CardContent>
         </Card>
@@ -430,7 +430,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       </AccordionItem>
       <AccordionItem value="feedback">
         <AccordionTrigger>
-          <MessageSquare className="text-primary mr-2" /> Feedback
+          <MessageSquare className="text-primary mr-2" /> Contact Us
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 p-4">
           <p className="text-sm text-muted-foreground">Help us improve ProfitScout!</p>
@@ -441,7 +441,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
               rows={3}
             />
             <Button onClick={submitFeedback} className="w-full" disabled={!feedbackText.trim() || isLoading}>
-              Submit Feedback
+              Send Message
             </Button>
         </AccordionContent>
       </AccordionItem>

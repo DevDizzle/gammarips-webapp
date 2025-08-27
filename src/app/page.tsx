@@ -31,9 +31,9 @@ export default function LandingPage() {
       {/* Header */}
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold font-headline text-primary">
+          <Link href="/" className="text-2xl font-bold font-headline text-primary">
             ProfitScout
-          </h1>
+          </Link>
           <UserNav />
         </div>
       </header>
@@ -112,11 +112,6 @@ export default function LandingPage() {
           </p>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} ProfitScout. All rights reserved.</p>
-      </footer>
     </div>
   );
 }

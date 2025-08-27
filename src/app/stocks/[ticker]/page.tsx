@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { ArrowRight, TrendingUp, TrendingDown, Minus, AlertTriangle } from 'lucide-react';
+import { UserNav } from '@/components/auth/user-nav';
 
 interface StockSeoPageProps {
   params: {
@@ -49,6 +50,7 @@ async function getStockData(ticker: string): Promise<StockSeoData | null> {
     try {
         const gcsPath = await getSeoPageGcsPathAdmin(ticker);
         if (!gcsPath) {
+            console.warn(`No GCS path found for ticker: ${ticker}`);
             return null; // Triggers notFound in the component
         }
         const content = await getGcsFileContentAdmin(gcsPath);
@@ -114,6 +116,15 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
   const { fullAnalysis, teaser, relatedStocks, seo } = data;
 
   return (
+    <>
+      <header className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold font-headline text-primary">
+            ProfitScout
+          </Link>
+          <UserNav />
+        </div>
+      </header>
     <div className="container mx-auto max-w-4xl py-8 px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold font-headline tracking-tight mb-2">
             {seo.title.split(' | ')[0]}
@@ -186,6 +197,20 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardContent>
         </Card>
 
+        <Card className="mb-8 border-yellow-500/50 bg-yellow-500/10">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-yellow-400">
+                    <AlertTriangle size={20} />
+                    Disclaimer
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-yellow-200/80">
+                <p>
+                    The information provided on this page is for informational purposes only and does not constitute investment advice, financial advice, trading advice, or any other sort of advice and you should not treat any of the page's content as such. ProfitScout does not recommend that any cryptocurrency should be bought, sold, or held by you. Do conduct your own due diligence and consult your financial advisor before making any investment decisions.
+                </p>
+            </CardContent>
+        </Card>
+
         <div>
             <h3 className="text-lg font-semibold mb-2">Related Stocks</h3>
             <div className="flex gap-2">
@@ -198,5 +223,6 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
         </div>
 
     </div>
+    </>
   );
 }

@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/hooks/use-auth';
+import Footer from '@/components/layout/footer';
 
 export const metadata: Metadata = {
   title: 'ProfitScout',
@@ -20,9 +21,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased">
+      <body className="font-body antialiased flex flex-col min-h-screen">
         <AuthProvider>
-          {children}
+          <main className='flex-grow'>{children}</main>
+          <Footer />
         </AuthProvider>
         <Toaster />
       </body>

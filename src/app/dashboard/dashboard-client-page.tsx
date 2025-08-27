@@ -20,6 +20,7 @@ import { SubscriptionDialog } from '@/components/auth/subscription-dialog';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 import { Markdown } from '@/components/markdown';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { ShareButtons } from '@/components/share-buttons';
 
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -44,6 +45,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   const [usageCount, setUsageCount] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [allStocks, setAllStocks] = useState<Stock[]>([]);
 
   const { toast } = useToast();
   
@@ -51,6 +53,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     setIsFetchingStocks(true);
     try {
       const stocks = await getStocks();
+      setAllStocks(stocks);
       const options = stocks.map((stock: Stock) => ({
         value: stock.id,
         label: `${stock.id} - ${stock.company_name}`,
@@ -69,14 +72,13 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   }, [toast]);
   
   useEffect(() => {
-    // Initially populate stocks from props (which will be empty on first load)
+    setAllStocks(initialStocks);
     const options = initialStocks.map((stock: Stock) => ({
       value: stock.id,
       label: `${stock.id} - ${stock.company_name}`,
     }));
     setStockOptions(options);
 
-    // Fetch stocks on component mount if the initial list is empty
     if (initialStocks.length === 0) {
       fetchStocks();
     }
@@ -129,10 +131,12 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
 
     try {
       // Find all stocks (not just initial) to get the correct URI
-      const allStocks = await getStocks();
+      const stocksToAnalyze = allStocks.length > 0 ? allStocks : await getStocks();
+      if (allStocks.length === 0) setAllStocks(stocksToAnalyze);
+
       const uris = selectedTickers
         .map((t) => {
-          const stock = allStocks.find((s) => s.id === t.value);
+          const stock = stocksToAnalyze.find((s) => s.id === t.value);
           return stock?.bundle_gcs_path || '';
         })
         .filter(Boolean);
@@ -449,21 +453,35 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   );
 
   const renderAnalysisCard = () => {
+    const stockDetails = allStocks.find(s => s.id === analysisTicker);
+    const hasSeoPage = stockDetails && stockDetails.pages_json;
+
     return (
         <Card className="w-full h-full">
-        <CardContent className="p-6">
-            <Markdown content={analysisMarkdown} />
-            {analysisTicker && (
-                <Button asChild className="mt-4">
-                <Link href={`/stocks/${analysisTicker}`}>
-                    View Detailed Analysis <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-                </Button>
-            )}
-        </CardContent>
+            <CardHeader>
+                <div className="flex justify-between items-start gap-4">
+                    <div className="flex-grow">
+                        {analysisTicker && <CardTitle>{analysisTicker} Analysis</CardTitle>}
+                        {analysisTicker && hasSeoPage && (
+                            <CardDescription>
+                                <Button variant="link" asChild className="p-0 h-auto">
+                                    <Link href={`/stocks/${analysisTicker}`}>View full analysis page</Link>
+                                </Button>
+                            </CardDescription>
+                        )}
+                    </div>
+                    {analysisTicker && hasSeoPage && (
+                        <ShareButtons title={`${analysisTicker} Stock Analysis | ProfitScout`} />
+                    )}
+                </div>
+            </CardHeader>
+            <CardContent className="pt-2">
+                <Markdown content={analysisMarkdown} />
+            </CardContent>
         </Card>
     );
   };
+
 
   return (
     <>

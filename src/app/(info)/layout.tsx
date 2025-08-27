@@ -18,7 +18,7 @@ export default function InfoLayout({
         </div>
       </header>
       <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="prose prose-invert max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           {children}
         </div>
       </main>

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <article>
+    <article className="prose prose-invert">
       <h1>Privacy Policy</h1>
       <p><em>Last updated: {new Date().toLocaleDateString()}</em></p>
 

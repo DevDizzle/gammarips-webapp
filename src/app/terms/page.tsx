@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <article>
+    <article className="prose prose-invert">
       <h1>Terms of Service</h1>
       <p><em>Last updated: {new Date().toLocaleDateString()}</em></p>
 

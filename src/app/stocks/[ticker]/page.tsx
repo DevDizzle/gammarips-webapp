@@ -2,8 +2,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getGcsFileContentAdmin, getStocksAdmin } from '@/lib/firebase-admin';
-import { Storage } from '@google-cloud/storage';
+import { getGcsFileContentAdmin, getSeoPageGcsPathAdmin, getStocksAdmin } from '@/lib/firebase-admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
@@ -47,9 +46,6 @@ interface StockSeoData {
     relatedStocks: string[];
 }
 
-const storage = new Storage();
-const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'profit-scout';
-const PREFIX = 'pages/';
 const DAYS_THRESHOLD = 7; // Only consider files from the last 7 days as recent
 
 /**
@@ -71,46 +67,33 @@ function isRecentDate(fileDateStr: string): boolean {
 }
 
 /**
- * Finds the latest valid SEO data file for a ticker directly from GCS.
- * This avoids relying on a potentially stale path in Firestore.
+ * Gets the SEO data for a ticker by first getting the GCS path from Firestore,
+ * checking if the file is recent, and then fetching its content.
  */
 async function getStockData(ticker: string): Promise<StockSeoData | null> {
     try {
-        const bucket = storage.bucket(BUCKET_NAME);
-        const [files] = await bucket.getFiles({ prefix: `${PREFIX}${ticker.toUpperCase()}_page_` });
+        const gcsPath = await getSeoPageGcsPathAdmin(ticker);
 
-        if (files.length === 0) {
-            console.warn(`[getStockData] No GCS files found for ticker: ${ticker}`);
+        if (!gcsPath) {
+            console.log(`[getStockData] No GCS path found in Firestore for ticker: ${ticker}`);
             return null;
         }
 
-        const recentFiles = files
-            .map(file => {
-                const fileName = file.name.replace(PREFIX, '');
-                const match = fileName.match(/^([A-Z]+)_page_(\d{4}-\d{2}-\d{2})\.json$/);
-                if (match) {
-                    const fileDate = match[2];
-                    if (isRecentDate(fileDate)) {
-                        return { name: file.name, date: fileDate };
-                    }
-                }
-                return null;
-            })
-            .filter(Boolean)
-            .sort((a, b) => new Date(b!.date).getTime() - new Date(a!.date).getTime());
-
-        if (recentFiles.length === 0) {
-            console.warn(`[getStockData] No RECENT GCS files found for ticker: ${ticker}`);
+        // Extract date from a filename like 'TICKER_page_YYYY-MM-DD.json'
+        const dateMatch = gcsPath.match(/_(\d{4}-\d{2}-\d{2})\.json$/);
+        if (!dateMatch || !dateMatch[1]) {
+            console.warn(`[getStockData] Could not extract date from GCS path: ${gcsPath}`);
             return null;
         }
 
-        const latestFile = recentFiles[0];
-        if (latestFile) {
-            const content = await getGcsFileContentAdmin(`gs://${BUCKET_NAME}/${latestFile.name}`);
-            return JSON.parse(content) as StockSeoData;
+        const fileDate = dateMatch[1];
+        if (!isRecentDate(fileDate)) {
+            console.warn(`[getStockData] GCS file for ${ticker} is not recent (older than ${DAYS_THRESHOLD} days). Path: ${gcsPath}`);
+            return null;
         }
 
-        return null;
+        const content = await getGcsFileContentAdmin(gcsPath);
+        return JSON.parse(content) as StockSeoData;
 
     } catch (error: any) {
         if (error.code === 404 || error instanceof SyntaxError) {
@@ -121,6 +104,7 @@ async function getStockData(ticker: string): Promise<StockSeoData | null> {
         throw error;
     }
 }
+
 
 export async function generateMetadata({ params }: StockSeoPageProps): Promise<Metadata> {
   const data = await getStockData(params.ticker);
@@ -140,7 +124,7 @@ export async function generateMetadata({ params }: StockSeoPageProps): Promise<M
 }
 
 
-// Only prerender pages for which we can find valid, recent data in GCS.
+// Only prerender pages for which we can find valid, recent data.
 export async function generateStaticParams() {
     console.log('[generateStaticParams] Starting to generate params for stock pages...');
     const allStocks = await getStocksAdmin(); // Get all potential tickers
@@ -299,3 +283,5 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
     </>
   );
 }
+
+    

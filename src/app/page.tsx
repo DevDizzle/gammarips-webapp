@@ -73,14 +73,14 @@ export default function LandingPage() {
             Smarter Investing Starts Here
           </h2>
           <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-            AI-guided Buy, Hold, Sell ratings on every stock in the Russell 1000.
+            AI-guided Buy, Hold, Sell ratings on stocks in the Russell 1000.
             <br />
             Stop guessing. Start investing with confidence.
           </p>
           <div className="mt-8 flex flex-col items-center gap-2">
             <Button asChild size="lg" className="font-bold">
               <Link href="/dashboard?mode=top-pick">
-                See Today’s AI Top Picks{" "}
+                See Today’s Top Picks{" "}
                 <ArrowRight className="ml-2 h-5 w-5 inline-block" />
               </Link>
             </Button>

@@ -219,7 +219,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
                     {Object.entries(fullAnalysis).map(([key, value], index) => {
                          // A simple function to format the key into a readable title
                          const formatTitle = (s: string) => {
-                            if (s === 'mdAndA') return 'Management Discussion & Analysis';
+                            if (s === 'mdAndA') return 'Management Discussion';
                             const result = s.replace(/([A-Z])/g, ' $1');
                             return result.charAt(0).toUpperCase() + result.slice(1);
                         };
@@ -283,6 +283,8 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
     </>
   );
 }
+
+    
 
     
 

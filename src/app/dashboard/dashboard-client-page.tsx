@@ -329,7 +329,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
             <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2">
                 <Sparkles className="text-primary" />
-                AI Stock Signals
+                Momentum Signals
                 </CardTitle>
                 <CardDescription>Clear, data-backed signals to guide your next move.</CardDescription>
             </CardHeader>
@@ -373,7 +373,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
           <CardHeader>
             <CardTitle className="font-headline flex items-center gap-2">
               <MessageSquare className="text-primary" />
-              Contact Us
+              Feedback
             </CardTitle>
             <CardDescription>Help us improve ProfitScout!</CardDescription>
           </CardHeader>
@@ -396,7 +396,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="ai-pick">
         <AccordionTrigger>
-           <Sparkles className="text-primary mr-2" /> AI Stock Signals
+           <Sparkles className="text-primary mr-2" /> Momentum Signals
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 p-4">
            <p className="text-sm text-muted-foreground">Clear, data-backed signals to guide your next move.</p>
@@ -434,7 +434,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       </AccordionItem>
       <AccordionItem value="feedback">
         <AccordionTrigger>
-          <MessageSquare className="text-primary mr-2" /> Contact Us
+          <MessageSquare className="text-primary mr-2" /> Feedback
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 p-4">
           <p className="text-sm text-muted-foreground">Help us improve ProfitScout!</p>

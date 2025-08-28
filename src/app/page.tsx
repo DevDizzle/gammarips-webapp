@@ -1,7 +1,8 @@
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { UserNav } from "@/components/auth/user-nav";
-import { ArrowRight, Bot, Sparkles, TrendingUp, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Bot, Sparkles, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import {
   Accordion,
@@ -30,21 +31,6 @@ const features = [
     description:
       "Signals reflect what’s moving the market and what supports it—financials and fundamentals keep you grounded, not chasing noise.",
   },
-];
-
-const whoIsItFor = [
-    {
-        title: "For the Active Investor",
-        description: "Looking for clear, near-term opportunities—without digging through endless data."
-    },
-    {
-        title: "For the Watchlist Builder",
-        description: "Who wants daily, consistent ratings across a broad universe to spot new ideas."
-    },
-    {
-        title: "For the Disciplined Trader",
-        description: "Who values clarity and a systematic approach in their day-to-day workflow."
-    }
 ];
 
 const faqs = [
@@ -133,51 +119,6 @@ export default function LandingPage() {
             ))}
           </div>
         </section>
-        
-        {/* Who It's For Section */}
-        <section
-          id="who-is-it-for"
-          className="container mx-auto px-4 sm:px-6 lg:px-8 py-16"
-        >
-          <div className="text-center mb-12">
-             <h2 className="text-3xl font-bold font-headline">Who It's For</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {whoIsItFor.map((item) => (
-              <Card key={item.title} className="bg-transparent border-0 shadow-none">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-xl">
-                    <CheckCircle2 className="h-6 w-6 text-primary" />
-                    {item.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <p className="text-muted-foreground">{item.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-
-        {/* Pricing */}
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <h3 className="text-3xl font-bold font-headline mb-4">Go Unlimited</h3>
-          <p className="text-lg text-muted-foreground mb-8">
-            Start free with 5 AI stock analyses. Go unlimited anytime for $8/month.
-          </p>
-          <ul className="space-y-2 text-muted-foreground mb-8">
-            <li>✅ Unlimited access to AI-driven Buy / Hold / Sell ratings</li>
-            <li>✅ Refreshed daily across the Russell 1000</li>
-            <li>✅ Simple plan, cancel anytime</li>
-          </ul>
-          <Button asChild size="lg" className="font-bold">
-            <Link href="/dashboard">
-              Get Started Free{" "}
-              <ArrowRight className="ml-2 h-5 w-5 inline-block" />
-            </Link>
-          </Button>
-        </section>
 
         {/* FAQs Section */}
         <section
@@ -199,6 +140,25 @@ export default function LandingPage() {
                     ))}
                 </Accordion>
             </div>
+        </section>
+
+        {/* Pricing */}
+        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+          <h3 className="text-3xl font-bold font-headline mb-4">Go Unlimited</h3>
+          <p className="text-lg text-muted-foreground mb-8">
+            Start free with 5 AI stock analyses. Go unlimited anytime for $8/month.
+          </p>
+          <ul className="space-y-2 text-muted-foreground mb-8">
+            <li>✅ Unlimited access to AI-driven Buy / Hold / Sell ratings</li>
+            <li>✅ Refreshed daily across the Russell 1000</li>
+            <li>✅ Simple plan, cancel anytime</li>
+          </ul>
+          <Button asChild size="lg" className="font-bold">
+            <Link href="/dashboard">
+              Get Started Free{" "}
+              <ArrowRight className="ml-2 h-5 w-5 inline-block" />
+            </Link>
+          </Button>
         </section>
 
         {/* Final CTA */}

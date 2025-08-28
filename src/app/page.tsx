@@ -1,8 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserNav } from "@/components/auth/user-nav";
-import { ArrowRight, Bot, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, Bot, Sparkles, TrendingUp, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+
 
 const features = [
   {
@@ -24,6 +31,40 @@ const features = [
       "Signals reflect what’s moving the market and what supports it—financials and fundamentals keep you grounded, not chasing noise.",
   },
 ];
+
+const whoIsItFor = [
+    {
+        title: "For the Active Investor",
+        description: "Looking for clear, near-term opportunities—without digging through endless data."
+    },
+    {
+        title: "For the Watchlist Builder",
+        description: "Who wants daily, consistent ratings across a broad universe to spot new ideas."
+    },
+    {
+        title: "For the Disciplined Trader",
+        description: "Who values clarity and a systematic approach in their day-to-day workflow."
+    }
+];
+
+const faqs = [
+    {
+        question: "Do you rate every stock?",
+        answer: "Yes—every stock in the Russell 1000 receives a Buy / Hold / Sell rating."
+    },
+    {
+        question: "How often are ratings updated?",
+        answer: "Daily. We refresh signals to reflect new price action, news, and company updates."
+    },
+    {
+        question: "Do you show the reasoning?",
+        answer: "Yes—each page includes a Quick Take and bullet highlights from price, news, earnings, and fundamentals."
+    },
+    {
+        question: "Is this financial advice?",
+        answer: "No. ProfitScout provides research ratings and insights to support your decisions. It is not financial advice."
+    }
+]
 
 export default function LandingPage() {
   return (
@@ -92,6 +133,32 @@ export default function LandingPage() {
             ))}
           </div>
         </section>
+        
+        {/* Who It's For Section */}
+        <section
+          id="who-is-it-for"
+          className="container mx-auto px-4 sm:px-6 lg:px-8 py-16"
+        >
+          <div className="text-center mb-12">
+             <h2 className="text-3xl font-bold font-headline">Who It's For</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {whoIsItFor.map((item) => (
+              <Card key={item.title} className="bg-transparent border-0 shadow-none">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <CheckCircle2 className="h-6 w-6 text-primary" />
+                    {item.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="text-muted-foreground">{item.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
 
         {/* Pricing */}
         <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
@@ -110,10 +177,44 @@ export default function LandingPage() {
               <ArrowRight className="ml-2 h-5 w-5 inline-block" />
             </Link>
           </Button>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Clear ratings. Near-term opportunities. Less guesswork.
-          </p>
         </section>
+
+        {/* FAQs Section */}
+        <section
+          id="faq"
+          className="container mx-auto px-4 sm:px-6 lg:px-8 py-16"
+        >
+            <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold font-headline">Frequently Asked Questions</h2>
+            </div>
+            <div className="max-w-3xl mx-auto">
+                <Accordion type="single" collapsible className="w-full">
+                    {faqs.map((faq, index) => (
+                        <AccordionItem value={`item-${index}`} key={index}>
+                            <AccordionTrigger>{faq.question}</AccordionTrigger>
+                            <AccordionContent>
+                               {faq.answer}
+                            </AccordionContent>
+                        </AccordionItem>
+                    ))}
+                </Accordion>
+            </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+             <Button asChild size="lg" className="font-bold">
+                <Link href="/dashboard">
+                Get Started Free{" "}
+                <ArrowRight className="ml-2 h-5 w-5 inline-block" />
+                </Link>
+            </Button>
+             <p className="mt-2 text-sm text-muted-foreground">
+                Clear ratings. Near-term opportunities. Less guesswork.
+            </p>
+        </section>
+
+
       </main>
     </div>
   );

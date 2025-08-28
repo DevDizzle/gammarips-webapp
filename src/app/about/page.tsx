@@ -1,6 +1,6 @@
 
 import type { Metadata } from 'next';
-import { FileText, Mic, BarChart3, Calculator, Newspaper, Shield, CheckCircle2 } from 'lucide-react';
+import { FileText, Mic, BarChart3, Calculator, Newspaper, Shield, CheckCircle2, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
@@ -19,7 +19,7 @@ const features = [
   {
     icon: <Mic className="h-8 w-8 text-primary" />,
     title: 'Earnings Call Transcripts',
-    description: 'Management tone, forward-looking statements, and answers to analyst questions.',
+    description: 'Management tone, forward-looking statements, and responses to analyst questions.',
   },
   {
     icon: <BarChart3 className="h-8 w-8 text-primary" />,
@@ -29,7 +29,12 @@ const features = [
   {
     icon: <Calculator className="h-8 w-8 text-primary" />,
     title: 'Key Ratios & Metrics',
-    description: 'Valuation, profitability, and selected technical indicators for a holistic view.',
+    description: 'Valuation and profitability trends for a grounded perspective.',
+  },
+  {
+    icon: <TrendingUp className="h-8 w-8 text-primary" />,
+    title: 'Price & Technicals',
+    description: 'Trend, support/resistance, and momentum context to understand what’s moving now.',
   },
   {
     icon: <Newspaper className="h-8 w-8 text-primary" />,
@@ -51,6 +56,9 @@ export default function AboutPage() {
           <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
             ProfitScout simplifies investment research with clear, data-driven insights powered by AI. Our mission is to help investors of all levels navigate the market with confidence.
           </p>
+           <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+            Our ratings blend price action, news flow, earnings, and fundamentals—designed to highlight near-term potential without losing long-term context.
+          </p>
           <a href="#how-it-works" className="mt-6 inline-block text-sm font-semibold text-primary hover:underline">
             See how it works &darr;
           </a>
@@ -63,7 +71,7 @@ export default function AboutPage() {
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">How ProfitScout Works</h2>
             <p className="mt-3 max-w-2xl mx-auto text-muted-foreground">
-              We use state-of-the-art AI and large language models to analyze large volumes of financial information and synthesize a balanced view based on E-E-A-T principles (Experience, Expertise, Authoritativeness, Trustworthiness).
+              We use state-of-the-art AI and large language models to analyze high-volume financial information and synthesize a balanced view guided by E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness).
             </p>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -78,15 +86,6 @@ export default function AboutPage() {
                 </CardContent>
               </Card>
             ))}
-             <Card className="text-center bg-card/50 md:col-span-2 lg:col-span-1">
-                <CardContent className="p-6">
-                  <div className="flex justify-center items-center h-16 w-16 rounded-lg bg-primary/10 mx-auto">
-                    <Newspaper className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="mt-6 text-lg font-bold font-headline">News & Sentiment</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">Recent developments that may act as catalysts or introduce risks.</p>
-                </CardContent>
-              </Card>
           </div>
         </section>
 
@@ -100,14 +99,14 @@ export default function AboutPage() {
                 <CardTitle className="font-headline text-3xl">What You Receive</CardTitle>
             </CardHeader>
             <CardContent>
-                <p className="text-lg font-semibold">A clear BUY / HOLD / SELL signal.</p>
+                <p className="text-lg font-semibold">A clear Buy / Hold / Sell rating for each stock we cover in the Russell 1000, refreshed daily.</p>
                 <p className="mt-2 text-muted-foreground">
-                    This is supported by a transparent summary of the key factors that drove the decision. We focus on explainability—showing the *why* behind each recommendation without unnecessary jargon.
+                    Every rating includes a concise summary of the key factors behind the decision—so you see the why without the jargon.
                 </p>
                 <ul className="mt-4 space-y-2 text-sm">
                     <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Fundamental analysis (revenue, earnings)</li>
                     <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Valuation and key metric trends</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Price momentum and technical flags</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Price and technical context</li>
                     <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Identified risks and opportunities</li>
                 </ul>
             </CardContent>
@@ -121,7 +120,7 @@ export default function AboutPage() {
           <div className="prose prose-invert max-w-none">
             <h2 className="font-headline text-3xl text-foreground">Trust & Responsibility</h2>
             <p className="text-muted-foreground">
-              Financial content falls under “Your Money or Your Life” (YMYL). Accuracy and reliability matter. ProfitScout aims to present well-sourced, balanced information and clear explanations.
+              Financial content falls under “Your Money or Your Life” (YMYL). Accuracy and reliability matter. ProfitScout aims to present well-sourced, balanced information with clear explanations.
             </p>
           </div>
           <aside className="bg-muted/50 p-6 rounded-lg">

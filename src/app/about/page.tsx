@@ -1,9 +1,10 @@
 
 import type { Metadata } from 'next';
-import { FileText, Mic, BarChart3, Calculator, Newspaper, Shield, CheckCircle2, TrendingUp } from 'lucide-react';
+import { FileText, Mic, BarChart3, Calculator, Newspaper, Shield, CheckCircle2, TrendingUp, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
   title: 'About Us | ProfitScout',
@@ -115,12 +116,30 @@ export default function AboutPage() {
         
         <Separator className="my-12 sm:my-16" />
 
+        <section>
+             <Card className="text-center bg-primary/10 border-primary/20">
+                <CardHeader>
+                    <CardTitle className="font-headline text-2xl">Ready to Get Started?</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-muted-foreground mb-4">Explore our AI-powered dashboard and see today's top picks.</p>
+                    <Button asChild size="lg">
+                        <Link href="/dashboard">
+                            Explore the Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
+                        </Link>
+                    </Button>
+                </CardContent>
+            </Card>
+        </section>
+
+        <Separator className="my-12 sm:my-16" />
+
         {/* Trust & Responsibility Section */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="prose prose-invert max-w-none">
             <h2 className="font-headline text-3xl text-foreground">Trust & Responsibility</h2>
             <p className="text-muted-foreground">
-              Financial content falls under “Your Money or Your Life” (YMYL). Accuracy and reliability matter. ProfitScout aims to present well-sourced, balanced information with clear explanations.
+             Financial content falls under “Your Money or Your Life” (YMYL). Accuracy and reliability matter. ProfitScout aims to present well-sourced, balanced information with clear explanations.
             </p>
           </div>
           <aside className="bg-muted/50 p-6 rounded-lg">

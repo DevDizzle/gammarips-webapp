@@ -94,7 +94,7 @@ export default function LandingPage() {
         <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
           <h3 className="text-3xl font-bold font-headline mb-4">Go Unlimited</h3>
           <p className="text-lg text-muted-foreground mb-8">
-            Start free with 5 AI stock analyses. Go unlimited anytime for $9.99/month.
+            Start free with 5 AI stock analyses. Go unlimited anytime for $8/month.
           </p>
           <ul className="space-y-2 text-muted-foreground mb-8">
             <li>✅ Unlimited access to AI-powered stock recommendations</li>

@@ -160,21 +160,6 @@ export default function LandingPage() {
             </Link>
           </Button>
         </section>
-
-        {/* Final CTA */}
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-             <Button asChild size="lg" className="font-bold">
-                <Link href="/dashboard">
-                Get Started Free{" "}
-                <ArrowRight className="ml-2 h-5 w-5 inline-block" />
-                </Link>
-            </Button>
-             <p className="mt-2 text-sm text-muted-foreground">
-                Clear ratings. Near-term opportunities. Less guesswork.
-            </p>
-        </section>
-
-
       </main>
     </div>
   );

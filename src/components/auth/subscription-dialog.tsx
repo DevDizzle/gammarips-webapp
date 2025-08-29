@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -18,35 +19,45 @@ type SubscriptionDialogProps = {
   loading: boolean;
 };
 
+const features = [
+    "Unlimited Buy / Hold / Sell ratings across the Russell 1000",
+    "Daily AI Top Picks with concise reasons and a 90-day chart",
+    "Clear highlights from price action, news, earnings, and fundamentals",
+    "Priority access to new features and improvements"
+]
+
 export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }: SubscriptionDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 font-headline text-2xl">
             <Star className="text-primary" />
             Upgrade to Pro
           </DialogTitle>
           <DialogDescription>
-            You've used all your free analyses. Upgrade to get unlimited access and exclusive features.
+            You’ve used your free analyses. Unlock unlimited access and stay on top of today’s opportunities.
           </DialogDescription>
         </DialogHeader>
-        <ul className="space-y-2 text-sm text-muted-foreground my-4">
-            <li className="flex items-center gap-2">
-                <CheckIcon /> Unlimited Stock Analyses
-            </li>
-            <li className="flex items-center gap-2">
-                <CheckIcon /> Unlimited AI Top Picks
-            </li>
-            <li className="flex items-center gap-2">
-                <CheckIcon /> Priority Access to New Features
-            </li>
-        </ul>
-        <DialogFooter>
-          <Button onClick={onSubscribe} className="w-full" disabled={loading}>
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Subscribe Now
-          </Button>
+        
+        <div className="py-4">
+            <h3 className="mb-2 text-sm font-semibold uppercase text-muted-foreground">What you get</h3>
+            <ul className="space-y-2">
+                {features.map((feature, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                        <CheckIcon /> 
+                        <span className="text-sm text-foreground/90">{feature}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+        
+        <DialogFooter className="flex-col items-center gap-2">
+            <p className="text-sm text-muted-foreground">$8/month · cancel anytime</p>
+            <Button onClick={onSubscribe} className="w-full" disabled={loading} size="lg">
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Upgrade for $8/month
+            </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -54,8 +65,7 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
 }
 
 const CheckIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--primary))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-circle-2">
-        <circle cx="12" cy="12" r="10" />
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-circle-2 mt-0.5 shrink-0">
         <path d="m9 12 2 2 4-4" />
     </svg>
 )

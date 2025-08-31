@@ -984,11 +984,6 @@ body {
   margin-bottom: 3rem;
 }
 
-.my-4 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
 .-ml-4 {
   margin-left: -1rem;
 }
@@ -1033,6 +1028,10 @@ body {
   margin-right: .5rem;
 }
 
+.mt-0\.5 {
+  margin-top: .125rem;
+}
+
 .mt-12 {
   margin-top: 3rem;
 }
@@ -1059,10 +1058,6 @@ body {
 
 .mt-auto {
   margin-top: auto;
-}
-
-.mt-0\.5 {
-  margin-top: .125rem;
 }
 
 .block {
@@ -2040,6 +2035,10 @@ body {
   color: hsl(var(--foreground) / .8);
 }
 
+.text-foreground\/90 {
+  color: hsl(var(--foreground) / .9);
+}
+
 .text-gray-500 {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity, 1));
@@ -2082,10 +2081,6 @@ body {
 .text-yellow-400 {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity, 1));
-}
-
-.text-foreground\/90 {
-  color: hsl(var(--foreground) / .9);
 }
 
 .underline {

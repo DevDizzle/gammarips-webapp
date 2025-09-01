@@ -331,7 +331,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
                 <Sparkles className="text-primary" />
                 AI Signals
                 </CardTitle>
-                <CardDescription>Get top BUY/SELL (stocks) and CALL/PUT (options) signals.</CardDescription>
+                <CardDescription>Get top BUY/SELL signals for stocks.</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-2">
                 <Button onClick={() => getAITopPick('BUY')} disabled={isLoading || authLoading} className="w-full">
@@ -342,6 +342,18 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
                     {loadingAction === 'SELL' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     SELL
                 </Button>
+            </CardContent>
+        </Card>
+
+        <Card>
+            <CardHeader>
+                <CardTitle className="font-headline flex items-center gap-2">
+                <Sparkles className="text-primary" />
+                Options Signals
+                </CardTitle>
+                <CardDescription>Get top CALL/PUT signals for options.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-2">
                 <Button disabled className="w-full">
                     CALL
                 </Button>
@@ -400,12 +412,12 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
 
   const renderMobileControls = () => (
     <Accordion type="single" collapsible className="w-full">
-      <AccordionItem value="ai-pick">
+      <AccordionItem value="ai-stock-pick">
         <AccordionTrigger>
-           <Sparkles className="text-primary mr-2" /> AI Signals
+           <Sparkles className="text-primary mr-2" /> AI Stock Signals
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 p-4">
-           <p className="text-sm text-muted-foreground">Get top BUY/SELL (stocks) and CALL/PUT (options) signals.</p>
+           <p className="text-sm text-muted-foreground">Get top BUY/SELL signals for stocks.</p>
            <div className="grid grid-cols-2 gap-2">
                 <Button onClick={() => getAITopPick('BUY')} disabled={isLoading || authLoading} className="w-full">
                     {loadingAction === 'BUY' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
@@ -415,6 +427,16 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
                     {loadingAction === 'SELL' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     SELL
                 </Button>
+            </div>
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="ai-option-pick">
+        <AccordionTrigger>
+           <Sparkles className="text-primary mr-2" /> AI Options Signals
+        </AccordionTrigger>
+        <AccordionContent className="flex flex-col gap-4 p-4">
+           <p className="text-sm text-muted-foreground">Get top CALL/PUT signals for options.</p>
+           <div className="grid grid-cols-2 gap-2">
                  <Button disabled className="w-full">
                     CALL
                 </Button>

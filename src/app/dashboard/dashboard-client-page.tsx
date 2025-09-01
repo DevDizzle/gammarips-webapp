@@ -324,7 +324,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   };
   
   const renderDesktopControls = () => (
-     <div className="col-span-1 md:col-span-1 lg:col-span-1 space-y-6">
+     <div className="col-span-1 md:col-span-1 lg:col-span-1 flex flex-col h-full gap-6">
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2">
@@ -387,7 +387,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="mt-auto">
           <CardHeader>
             <CardTitle className="font-headline flex items-center gap-2">
               <MessageSquare className="text-primary" />
@@ -580,7 +580,3 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
 }
 
 export default DashboardClientPage;
-
-    
-
-    

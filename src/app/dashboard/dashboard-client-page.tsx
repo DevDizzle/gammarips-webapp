@@ -329,11 +329,11 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
             <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2">
                 <Sparkles className="text-primary" />
-                Momentum Signals
+                AI Signals
                 </CardTitle>
-                <CardDescription>Clear, data-backed signals to guide your next move.</CardDescription>
+                <CardDescription>Get top BUY/SELL (stocks) and CALL/PUT (options) signals.</CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col sm:flex-row gap-2">
+            <CardContent className="grid grid-cols-2 gap-2">
                 <Button onClick={() => getAITopPick('BUY')} disabled={isLoading || authLoading} className="w-full">
                     {loadingAction === 'BUY' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     BUY
@@ -342,6 +342,12 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
                     {loadingAction === 'SELL' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     SELL
                 </Button>
+                <Button disabled className="w-full">
+                    CALL
+                </Button>
+                <Button disabled variant="destructive" className="w-full">
+                    PUT
+                </Button>
             </CardContent>
         </Card>
         
@@ -349,7 +355,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
           <CardHeader>
             <CardTitle className="font-headline flex items-center gap-2">
               <Settings className="text-primary" />
-              Stock Analysis
+              Analyze a Stock
             </CardTitle>
             <CardDescription>Select a stock to analyze</CardDescription>
           </CardHeader>
@@ -396,11 +402,11 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="ai-pick">
         <AccordionTrigger>
-           <Sparkles className="text-primary mr-2" /> Momentum Signals
+           <Sparkles className="text-primary mr-2" /> AI Signals
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 p-4">
-           <p className="text-sm text-muted-foreground">Clear, data-backed signals to guide your next move.</p>
-           <div className="flex flex-col sm:flex-row gap-2">
+           <p className="text-sm text-muted-foreground">Get top BUY/SELL (stocks) and CALL/PUT (options) signals.</p>
+           <div className="grid grid-cols-2 gap-2">
                 <Button onClick={() => getAITopPick('BUY')} disabled={isLoading || authLoading} className="w-full">
                     {loadingAction === 'BUY' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     BUY
@@ -409,12 +415,18 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
                     {loadingAction === 'SELL' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     SELL
                 </Button>
+                 <Button disabled className="w-full">
+                    CALL
+                </Button>
+                <Button disabled variant="destructive" className="w-full">
+                    PUT
+                </Button>
             </div>
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="stock-analysis">
         <AccordionTrigger>
-          <Settings className="text-primary mr-2" /> Stock Analysis
+          <Settings className="text-primary mr-2" /> Analyze a Stock
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 p-4">
           <p className="text-sm text-muted-foreground">Select a stock to analyze</p>
@@ -546,3 +558,5 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
 }
 
 export default DashboardClientPage;
+
+    

@@ -1180,6 +1180,10 @@ body {
   height: 1px;
 }
 
+.h-\[calc\(100vh-10rem\)\] {
+  height: calc(100vh - 10rem);
+}
+
 .max-h-96 {
   max-height: 24rem;
 }
@@ -2872,6 +2876,10 @@ body {
 
   .md\:col-span-2 {
     grid-column: span 2 / span 2;
+  }
+
+  .md\:block {
+    display: block;
   }
 
   .md\:grid {

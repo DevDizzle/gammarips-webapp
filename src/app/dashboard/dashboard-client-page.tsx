@@ -324,8 +324,8 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
   };
   
   const renderDesktopControls = () => (
-     <div className="col-span-1 md:col-span-1 lg:col-span-1 flex flex-col h-full">
-        <Card className="mb-6">
+     <div className="col-span-1 md:col-span-1 lg:col-span-1 flex flex-col h-full gap-6">
+        <Card>
             <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2">
                 <Sparkles className="text-primary" />
@@ -345,7 +345,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
             </CardContent>
         </Card>
 
-        <Card className="mb-6">
+        <Card>
             <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2">
                 <Sparkles className="text-primary" />
@@ -363,7 +363,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
             </CardContent>
         </Card>
         
-        <Card className="mb-6">
+        <Card>
           <CardHeader>
             <CardTitle className="font-headline flex items-center gap-2">
               <Settings className="text-primary" />
@@ -491,7 +491,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     const hasSeoPage = stockDetails && stockDetails.pages_json;
 
     return (
-        <Card className="w-full h-full">
+        <Card className="w-full h-full flex flex-col">
             <CardHeader>
                 <div className="flex justify-between items-start gap-4">
                     <div className="flex-grow">
@@ -509,7 +509,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
                     )}
                 </div>
             </CardHeader>
-            <CardContent className="pt-2">
+            <CardContent className="pt-2 flex-grow overflow-y-auto">
                 <Markdown content={analysisMarkdown} />
             </CardContent>
         </Card>
@@ -552,27 +552,29 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       </div>
 
       {/* Desktop Layout: Grid */}
-      <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {renderDesktopControls()}
+      <div className="hidden md:block h-[calc(100vh-10rem)] overflow-hidden">
+        <div className="md:grid md:grid-cols-3 lg:grid-cols-4 gap-6 h-full">
+            {renderDesktopControls()}
 
-        <div className="md:col-span-2 lg:col-span-3">
-            {isLoading && !analysisMarkdown && (
-                <Card className="w-full h-full">
-                    <CardContent className="p-6">
-                        <div className="space-y-4">
-                            <Skeleton className="h-8 w-1/3" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-2/3" />
-                             <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-3/4" />
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
+            <div className="md:col-span-2 lg:col-span-3 h-full">
+                {isLoading && !analysisMarkdown && (
+                    <Card className="w-full h-full">
+                        <CardContent className="p-6">
+                            <div className="space-y-4">
+                                <Skeleton className="h-8 w-1/3" />
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-2/3" />
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-3/4" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
 
-            {analysisMarkdown && renderAnalysisCard()}
+                {analysisMarkdown && renderAnalysisCard()}
+            </div>
         </div>
       </div>
     </>
@@ -580,4 +582,3 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
 }
 
 export default DashboardClientPage;
-

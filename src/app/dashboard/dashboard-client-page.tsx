@@ -329,7 +329,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
             <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2">
                 <Sparkles className="text-primary" />
-                AI Signals
+                Stocks
                 </CardTitle>
                 <CardDescription>Get top BUY/SELL signals for stocks.</CardDescription>
             </CardHeader>
@@ -349,7 +349,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
             <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2">
                 <Sparkles className="text-primary" />
-                Options Signals
+                Options
                 </CardTitle>
                 <CardDescription>Get top CALL/PUT signals for options.</CardDescription>
             </CardHeader>
@@ -414,7 +414,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="ai-stock-pick">
         <AccordionTrigger>
-           <Sparkles className="text-primary mr-2" /> AI Stock Signals
+           <Sparkles className="text-primary mr-2" /> Stocks
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 p-4">
            <p className="text-sm text-muted-foreground">Get top BUY/SELL signals for stocks.</p>
@@ -432,7 +432,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
       </AccordionItem>
       <AccordionItem value="ai-option-pick">
         <AccordionTrigger>
-           <Sparkles className="text-primary mr-2" /> AI Options Signals
+           <Sparkles className="text-primary mr-2" /> Options
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 p-4">
            <p className="text-sm text-muted-foreground">Get top CALL/PUT signals for options.</p>
@@ -580,5 +580,7 @@ function DashboardClientPage({ initialStocks }: DashboardClientPageProps) {
 }
 
 export default DashboardClientPage;
+
+    
 
     

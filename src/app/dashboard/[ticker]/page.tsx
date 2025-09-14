@@ -1,6 +1,6 @@
 
 import { notFound } from 'next/navigation';
-import { getDashboardDataAdmin } from '@/app/actions';
+import { getDashboardData } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -17,7 +17,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function TickerDashboardPage({ params }: TickerDashboardPageProps) {
   const ticker = params.ticker.toUpperCase();
-  const data = await getDashboardDataAdmin(ticker);
+  const data = await getDashboardData(ticker);
 
   if (!data) {
     notFound();

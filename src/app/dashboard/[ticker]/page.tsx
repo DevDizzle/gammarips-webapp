@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 
 interface TickerDashboardPageProps {
   params: {
@@ -37,6 +38,12 @@ const sentimentColorClasses = {
   neutral: 'border-border',
 };
 
+const sentimentIcon = {
+    good: <ArrowUp className="h-4 w-4 text-green-500" />,
+    bad: <ArrowDown className="h-4 w-4 text-red-500" />,
+    neutral: null
+}
+
 export default async function TickerDashboardPage({ params }: TickerDashboardPageProps) {
   const ticker = params.ticker.toUpperCase();
   const data = await getDashboardData(ticker);
@@ -65,11 +72,17 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {Object.entries(kpis).map(([key, kpi]: [string, any]) => (
               <Card key={key} className={`text-center ${sentimentColorClasses[kpi.sentiment as keyof typeof sentimentColorClasses] || 'border-border'}`}>
-                <CardHeader className="p-4">
+                <CardHeader className="p-4 pb-2">
                   <CardTitle className="text-sm font-medium text-muted-foreground">{formatKey(key)}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
                   <p className="text-2xl font-bold">{kpi.value}</p>
+                   {kpi.comparison && (
+                    <p className={`text-xs flex items-center justify-center gap-1 ${kpi.sentiment === 'good' ? 'text-green-500' : kpi.sentiment === 'bad' ? 'text-red-500' : 'text-muted-foreground'}`}>
+                        {sentimentIcon[kpi.sentiment as keyof typeof sentimentIcon]}
+                        {kpi.comparison}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             ))}

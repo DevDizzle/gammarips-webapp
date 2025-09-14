@@ -1621,6 +1621,11 @@ body {
   border-radius: calc(var(--radius)  - 4px);
 }
 
+.rounded-b-lg {
+  border-bottom-right-radius: var(--radius);
+  border-bottom-left-radius: var(--radius);
+}
+
 .border {
   border-width: 1px;
 }

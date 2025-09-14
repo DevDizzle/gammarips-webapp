@@ -151,13 +151,13 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
                         <CardHeader>
                             <CardTitle>{formatKey(key)}</CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="p-0">
                             <div className="relative aspect-video">
                                 <Image 
                                     src={convertGcsUriToUrl(chart.uri)}
                                     alt={chart.alt}
                                     fill
-                                    className="object-contain rounded-md"
+                                    className="object-contain rounded-b-lg"
                                 />
                             </div>
                         </CardContent>
@@ -170,5 +170,3 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
     </div>
   );
 }
-
-    

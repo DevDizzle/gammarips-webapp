@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -46,12 +47,39 @@ adminStorage = getAdminStorage(adminApp);
 const StockSchema = z.object({
   id: z.string(), // Document ID is the ticker
   company_name: z.string(),
+  image_uri: z.string().optional(),
   bundle_gcs_path: z.string(), // Mapped from 'profile'
   recommendation_analysis: z.string().optional(),
   recommendation: z.string().optional(),
   pages_json: z.string().optional(),
+  dashboard_json: z.string().optional(),
+  weighted_score: z.number().optional(),
 });
 export type Stock = z.infer<typeof StockSchema>;
+
+const EconomicEventSchema = z.object({
+    id: z.string(),
+    event_name: z.string(),
+    date: z.string(),
+    country: z.string().optional(),
+    impact: z.string().optional(),
+    ticker: z.string().optional(),
+});
+export type EconomicEvent = z.infer<typeof EconomicEventSchema>;
+
+
+const OptionCandidateSchema = z.object({
+  id: z.string(),
+  symbol: z.string(),
+  options_score: z.number(),
+  type: z.enum(['CALL', 'PUT']),
+  stock_price: z.number(),
+  strike_price: z.number(),
+  expiry_date: z.string(),
+  premium: z.number(),
+  delta: z.number(),
+});
+export type OptionCandidate = z.infer<typeof OptionCandidateSchema>;
 
 
 // This function now uses the Admin SDK and should only be called from the server (e.g., in a Server Action)
@@ -69,6 +97,9 @@ export async function getStocksAdmin(): Promise<Stock[]> {
             recommendation_analysis: data.recommendation_analysis,
             recommendation: data.recommendation,
             pages_json: data.pages_json,
+            image_uri: data.image_uri,
+            dashboard_json: data.dashboard_json,
+            weighted_score: data.weighted_score,
         };
         const validation = StockSchema.safeParse(stock);
         if (validation.success) {
@@ -83,6 +114,166 @@ export async function getStocksAdmin(): Promise<Stock[]> {
     // Return an empty array to allow the page to load instead of hanging.
     return [];
   }
+}
+
+export async function getEconomicEventsAdmin(): Promise<EconomicEvent[]> {
+    try {
+        const now = new Date();
+        const thirtyDaysFromNow = new Date();
+        thirtyDaysFromNow.setDate(now.getDate() + 30);
+        
+        const nowStr = now.toISOString().split('T')[0];
+        const thirtyDaysFromNowStr = thirtyDaysFromNow.toISOString().split('T')[0];
+
+        const eventsQuerySnapshot = await adminDb.collectionGroup('events')
+            .where('date', '>=', nowStr)
+            .where('date', '<=', thirtyDaysFromNowStr)
+            .orderBy('date', 'asc')
+            .get();
+
+        const events: EconomicEvent[] = [];
+        const priorityKeywords = ['earnings', 'inflation', 'interest rate', 'fed', 'cpi', 'ppi'];
+        
+        eventsQuerySnapshot.forEach(doc => {
+            const data = doc.data();
+            const parentPath = doc.ref.parent.parent?.path; // Gives 'calendar_events/TICKER'
+            const ticker = parentPath ? parentPath.split('/')[1] : undefined;
+
+            const event = {
+                id: doc.id,
+                event_name: data.name,
+                date: data.date,
+                country: data.country,
+                impact: data.impact,
+                ticker: ticker,
+            };
+            
+            const validation = EconomicEventSchema.safeParse(event);
+            if (validation.success) {
+                events.push(validation.data);
+            } else {
+                 console.error("Invalid event data from Firestore:", validation.error.flatten());
+            }
+        });
+
+        // Prioritize events with keywords
+        events.sort((a, b) => {
+            const aIsPriority = priorityKeywords.some(keyword => a.event_name.toLowerCase().includes(keyword));
+            const bIsPriority = priorityKeywords.some(keyword => b.event_name.toLowerCase().includes(keyword));
+            if (aIsPriority && !bIsPriority) return -1;
+            if (!aIsPriority && bIsPriority) return 1;
+            return 0; // Keep original sort order (by date) otherwise
+        });
+
+        return events;
+
+    } catch (error) {
+        console.error('Error fetching economic events:', error);
+        return [];
+    }
+}
+
+
+export async function getTopStocksAdmin(type: 'BUY' | 'SELL', limit: number): Promise<Stock[]> {
+    try {
+        const order = type === 'BUY' ? 'desc' : 'asc';
+        const querySnapshot = await adminDb.collection('tickers')
+            .orderBy('weighted_score', order)
+            .limit(limit)
+            .get();
+        
+        const stocks: Stock[] = [];
+        querySnapshot.forEach(doc => {
+             const data = doc.data();
+             const stock = {
+                id: doc.id,
+                company_name: data.company_name,
+                bundle_gcs_path: data.profile,
+                recommendation_analysis: data.recommendation_analysis,
+                recommendation: data.recommendation,
+                pages_json: data.pages_json,
+                image_uri: data.image_uri,
+                dashboard_json: data.dashboard_json,
+                weighted_score: data.weighted_score,
+            };
+            const validation = StockSchema.safeParse(stock);
+            if (validation.success) {
+                stocks.push(validation.data);
+            } else {
+                console.error(`Invalid top ${type} stock data from Firestore:`, validation.error.flatten());
+            }
+        });
+
+        return stocks;
+    } catch (error) {
+        console.error(`Error fetching top ${type} stocks:`, error);
+        return [];
+    }
+}
+
+
+export async function getTopOptionsAdmin(type: 'CALL' | 'PUT', limit: number): Promise<OptionCandidate[]> {
+    try {
+        const querySnapshot = await adminDb.collection('options_candidates')
+            .where('type', '==', type)
+            .orderBy('options_score', 'desc')
+            .limit(limit)
+            .get();
+
+        const options: OptionCandidate[] = [];
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+             const option = {
+                id: doc.id,
+                symbol: data.symbol,
+                options_score: data.options_score,
+                type: data.type,
+                stock_price: data.stock_price,
+                strike_price: data.strike_price,
+                expiry_date: data.expiry_date,
+                premium: data.premium,
+                delta: data.delta,
+            };
+            const validation = OptionCandidateSchema.safeParse(option);
+            if (validation.success) {
+                options.push(validation.data);
+            } else {
+                console.error(`Invalid top ${type} option data from Firestore:`, validation.error.flatten());
+            }
+        });
+        
+        return options;
+    } catch (error) {
+        console.error(`Error fetching top ${type} options:`, error);
+        return [];
+    }
+}
+
+
+export async function getDashboardDataAdmin(ticker: string): Promise<any | null> {
+    try {
+        const docRef = adminDb.collection("tickers").doc(ticker.toUpperCase());
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            console.warn(`No stock found for ticker: ${ticker}`);
+            return null;
+        }
+
+        const stockData = docSnap.data();
+        const gcsPath = stockData?.dashboard_json;
+
+        if (typeof gcsPath === 'string' && gcsPath.startsWith('gs://')) {
+            const content = await getGcsFileContentAdmin(gcsPath);
+            return JSON.parse(content);
+        } else {
+            console.warn(`No valid dashboard_json GCS path for ticker: ${ticker}`);
+            return null;
+        }
+    } catch (error) {
+        console.error(`Error fetching dashboard data for ${ticker}:`, error);
+        return null;
+    }
 }
 
 export async function getSeoPageGcsPathAdmin(ticker: string): Promise<string | null> {
@@ -130,6 +321,9 @@ export async function getRandomBuyStockAdmin(): Promise<Stock | null> {
                 recommendation_analysis: data.recommendation_analysis,
                 recommendation: data.recommendation,
                 pages_json: data.pages_json,
+                image_uri: data.image_uri,
+                dashboard_json: data.dashboard_json,
+                weighted_score: data.weighted_score,
             };
              const validation = StockSchema.safeParse(stock);
             if (validation.success) {
@@ -171,6 +365,9 @@ export async function getRandomSellStockAdmin(): Promise<Stock | null> {
                 recommendation_analysis: data.recommendation_analysis,
                 recommendation: data.recommendation,
                 pages_json: data.pages_json,
+                image_uri: data.image_uri,
+                dashboard_json: data.dashboard_json,
+                weighted_score: data.weighted_score,
             };
              const validation = StockSchema.safeParse(stock);
             if (validation.success) {
@@ -304,3 +501,5 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     }
     return null;
 }
+
+    

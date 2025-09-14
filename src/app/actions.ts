@@ -1,3 +1,4 @@
+
 'use server';
 
 import {
@@ -22,8 +23,12 @@ import {
     getGcsFileContentAdmin,
     getRandomBuyStockAdmin,
     getRandomSellStockAdmin,
+    getEconomicEventsAdmin,
+    getTopStocksAdmin,
+    getTopOptionsAdmin,
+    getDashboardDataAdmin,
 } from '@/lib/firebase-admin';
-import type { Stock } from '@/lib/firebase';
+import type { Stock, EconomicEvent, OptionCandidate } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
@@ -32,6 +37,23 @@ import { randomUUID } from 'crypto';
 export async function getStocks(): Promise<Stock[]> {
     return getStocksAdmin();
 }
+
+export async function getEconomicEvents(): Promise<EconomicEvent[]> {
+    return getEconomicEventsAdmin();
+}
+
+export async function getTopStocks(type: 'BUY' | 'SELL', limit: number): Promise<Stock[]> {
+    return getTopStocksAdmin(type, limit);
+}
+
+export async function getTopOptions(type: 'CALL' | 'PUT', limit: number): Promise<OptionCandidate[]> {
+    return getTopOptionsAdmin(type, limit);
+}
+
+export async function getDashboardData(ticker: string): Promise<any | null> {
+    return getDashboardDataAdmin(ticker);
+}
+
 
 export async function handleGetRecommendation(uid: string, input: InitialRecommendationInput): Promise<InitialRecommendationOutput | { error: string; required?: 'subscription' | 'auth' } | { markdown: string, ticker?: string }> {
   const traceId = randomUUID();
@@ -153,3 +175,5 @@ export async function createCheckoutSession(uid: string): Promise<{ sessionId: s
 
   return { sessionId };
 }
+
+    

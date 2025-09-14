@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, ChevronsUpDown, Search } from 'lucide-react';
+import { ChevronsUpDown, Search } from 'lucide-react';
 import Image from 'next/image';
 
 import { cn } from '@/lib/utils';
@@ -27,14 +27,42 @@ import { Skeleton } from './ui/skeleton';
 import { UserNav } from './auth/user-nav';
 
 
-// Helper to convert GCS URI to a public URL
+// Helper to convert GCS URI to a public URL, correctly encoding path segments.
 const convertGcsUriToUrl = (gcsUri: string) => {
-    if (!gcsUri || !gcsUri.startsWith('gs://')) {
-        return '';
-    }
-    // Removes 'gs://' and prepends the public URL prefix.
-    return gcsUri.replace('gs://', 'https://storage.googleapis.com/');
+  if (!gcsUri?.startsWith('gs://')) return '';
+  const withoutScheme = gcsUri.slice('gs://'.length);
+  const slash = withoutScheme.indexOf('/');
+  const bucket = slash === -1 ? withoutScheme : withoutScheme.slice(0, slash);
+  const object = slash === -1 ? '' : withoutScheme.slice(slash + 1);
+  const encodedObject = object
+    .split('/')
+    .map(encodeURIComponent)
+    .join('/');
+  return `https://storage.googleapis.com/${bucket}/${encodedObject}`;
 };
+
+
+// A tiny, resilient logo component with an error fallback.
+function TinyLogo({ src, alt }: { src: string; alt: string }) {
+  const [broken, setBroken] = React.useState(false);
+  const fallback = 'https://placehold.co/24x24/1e293b/a855f7?text=?';
+  
+  // If the src is empty, immediately use the fallback.
+  const finalSrc = src && !broken ? src : fallback;
+
+  return (
+    <Image
+      src={finalSrc}
+      alt={alt}
+      width={24}
+      height={24}
+      className="rounded-full object-contain"
+      onError={() => setBroken(true)}
+      unoptimized // Optional but good for small, numerous icons.
+    />
+  );
+}
+
 
 export function TickerSearch() {
   const [open, setOpen] = React.useState(false);
@@ -46,7 +74,6 @@ export function TickerSearch() {
     const fetchStocks = async () => {
       try {
         const fetchedStocks = await getStocks();
-        // Sort stocks by ticker symbol
         fetchedStocks.sort((a, b) => a.id.localeCompare(b.id));
         setStocks(fetchedStocks);
       } catch (error) {
@@ -60,8 +87,6 @@ export function TickerSearch() {
 
   const handleSelect = (ticker: string) => {
     setOpen(false);
-    // Navigate to the new dynamic dashboard page.
-    // This route will be created in the next step.
     router.push(`/dashboard/${ticker}`);
   };
 
@@ -96,7 +121,10 @@ export function TickerSearch() {
                 <CommandEmpty>No stock found.</CommandEmpty>
                 <CommandGroup>
                 {stocks.map((stock) => {
-                    const imageUrl = stock.image_uri ? convertGcsUriToUrl(stock.image_uri) : `https://placehold.co/32x32/1e293b/a855f7?text=${stock.id[0]}`;
+                    const imageUrl = stock.image_uri 
+                      ? convertGcsUriToUrl(stock.image_uri) 
+                      : `https://placehold.co/24x24/1e293b/a855f7?text=${stock.id[0]}`;
+                    
                     return (
                         <CommandItem
                         key={stock.id}
@@ -104,15 +132,9 @@ export function TickerSearch() {
                         onSelect={() => handleSelect(stock.id)}
                         className="flex items-center gap-3"
                         >
-                        <Image
-                            src={imageUrl}
-                            alt={`${stock.company_name} logo`}
-                            width={24}
-                            height={24}
-                            className="rounded-full object-contain"
-                        />
-                        <span className="font-medium">{stock.id}</span>
-                        <span className="text-xs text-muted-foreground truncate">{stock.company_name}</span>
+                          <TinyLogo src={imageUrl} alt={`${stock.company_name} logo`} />
+                          <span className="font-medium">{stock.id}</span>
+                          <span className="text-xs text-muted-foreground truncate">{stock.company_name}</span>
                         </CommandItem>
                     )
                 })}

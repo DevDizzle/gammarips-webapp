@@ -27,6 +27,20 @@ import { Skeleton } from './ui/skeleton';
 import { UserNav } from './auth/user-nav';
 
 
+// Helper to convert GCS URI to a public URL
+const convertGcsUriToUrl = (gcsUri: string) => {
+    if (!gcsUri || !gcsUri.startsWith('gs://')) {
+        return '';
+    }
+    // Removes 'gs://' and splits bucket and path
+    const path = gcsUri.substring(5);
+    const slashIndex = path.indexOf('/');
+    if (slashIndex === -1) return '';
+    const bucket = path.substring(0, slashIndex);
+    const objectPath = path.substring(slashIndex + 1);
+    return `https://storage.googleapis.com/${bucket}/${objectPath}`;
+};
+
 export function TickerSearch() {
   const [open, setOpen] = React.useState(false);
   const [stocks, setStocks] = React.useState<Stock[]>([]);
@@ -86,24 +100,27 @@ export function TickerSearch() {
             <CommandList>
                 <CommandEmpty>No stock found.</CommandEmpty>
                 <CommandGroup>
-                {stocks.map((stock) => (
-                    <CommandItem
-                    key={stock.id}
-                    value={`${stock.id} ${stock.company_name}`}
-                    onSelect={() => handleSelect(stock.id)}
-                    className="flex items-center gap-3"
-                    >
-                    <Image
-                        src={stock.image_uri || `https://placehold.co/32x32/1e293b/a855f7?text=${stock.id[0]}`}
-                        alt={`${stock.company_name} logo`}
-                        width={24}
-                        height={24}
-                        className="rounded-full object-contain"
-                    />
-                    <span className="font-medium">{stock.id}</span>
-                    <span className="text-xs text-muted-foreground truncate">{stock.company_name}</span>
-                    </CommandItem>
-                ))}
+                {stocks.map((stock) => {
+                    const imageUrl = stock.image_uri ? convertGcsUriToUrl(stock.image_uri) : `https://placehold.co/32x32/1e293b/a855f7?text=${stock.id[0]}`;
+                    return (
+                        <CommandItem
+                        key={stock.id}
+                        value={`${stock.id} ${stock.company_name}`}
+                        onSelect={() => handleSelect(stock.id)}
+                        className="flex items-center gap-3"
+                        >
+                        <Image
+                            src={imageUrl}
+                            alt={`${stock.company_name} logo`}
+                            width={24}
+                            height={24}
+                            className="rounded-full object-contain"
+                        />
+                        <span className="font-medium">{stock.id}</span>
+                        <span className="text-xs text-muted-foreground truncate">{stock.company_name}</span>
+                        </CommandItem>
+                    )
+                })}
                 </CommandGroup>
             </CommandList>
             </Command>

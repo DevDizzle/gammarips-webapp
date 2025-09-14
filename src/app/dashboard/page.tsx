@@ -2,7 +2,6 @@
 import DashboardClientPage from './dashboard-client-page';
 
 export default function DashboardPage() {
-  // Pass an empty array for initialStocks.
-  // The client component will now be responsible for fetching the stocks.
-  return <DashboardClientPage initialStocks={[]} />;
+  // The client component is now fully responsible for fetching all its data.
+  return <DashboardClientPage />;
 }

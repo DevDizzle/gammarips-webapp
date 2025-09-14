@@ -1292,6 +1292,14 @@ body {
   width: 100%;
 }
 
+.w-64 {
+  width: 16rem;
+}
+
+.w-\[250px\] {
+  width: 250px;
+}
+
 .min-w-0 {
   min-width: 0;
 }
@@ -1563,6 +1571,12 @@ body {
   overflow-x: hidden;
 }
 
+.truncate {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .whitespace-nowrap {
   white-space: nowrap;
 }
@@ -1745,6 +1759,10 @@ body {
 
 .fill-current {
   fill: currentColor;
+}
+
+.object-contain {
+  object-fit: contain;
 }
 
 .p-0 {

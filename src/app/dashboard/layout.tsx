@@ -2,6 +2,7 @@
 import type { Metadata } from 'next';
 import { UserNav } from '@/components/auth/user-nav';
 import Link from 'next/link';
+import { TickerSearch } from '@/components/ticker-search';
 
 export const metadata: Metadata = {
   title: 'Dashboard | ProfitScout',
@@ -16,12 +17,10 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
+        <div className="container flex h-16 items-center justify-between space-x-4">
            <Link href="/" className="text-2xl font-bold font-headline text-primary">ProfitScout</Link>
           <div className="flex flex-1 items-center justify-end space-x-4">
-            <nav className="flex items-center space-x-1">
-              <UserNav />
-            </nav>
+            <TickerSearch />
           </div>
         </div>
       </header>

@@ -32,13 +32,8 @@ const convertGcsUriToUrl = (gcsUri: string) => {
     if (!gcsUri || !gcsUri.startsWith('gs://')) {
         return '';
     }
-    // Removes 'gs://' and splits bucket and path
-    const path = gcsUri.substring(5);
-    const slashIndex = path.indexOf('/');
-    if (slashIndex === -1) return '';
-    const bucket = path.substring(0, slashIndex);
-    const objectPath = path.substring(slashIndex + 1);
-    return `https://storage.googleapis.com/${bucket}/${objectPath}`;
+    // Removes 'gs://' and prepends the public URL prefix.
+    return gcsUri.replace('gs://', 'https://storage.googleapis.com/');
 };
 
 export function TickerSearch() {

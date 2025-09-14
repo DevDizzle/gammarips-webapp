@@ -47,8 +47,7 @@ function TinyLogo({ src, alt }: { src: string; alt: string }) {
   const [broken, setBroken] = React.useState(false);
   const fallback = 'https://placehold.co/24x24/1e293b/a855f7?text=?';
   
-  // If the src is empty, immediately use the fallback.
-  const finalSrc = src && !broken ? src : fallback;
+  const finalSrc = broken ? fallback : src;
 
   return (
     <Image

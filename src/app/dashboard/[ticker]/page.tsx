@@ -29,9 +29,9 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
         <h1 className="text-4xl font-bold font-headline tracking-tight">
           {data.company_name || ticker}
         </h1>
-        <p className="text-muted-foreground">
+        <div className="text-muted-foreground">
           AI-Powered Dashboard for <Badge variant="secondary">{ticker}</Badge>
-        </p>
+        </div>
       </div>
       
       {/* 

@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ArrowDown, ArrowUp } from 'lucide-react';
+import { Markdown } from '@/components/markdown';
 
 interface TickerDashboardPageProps {
   params: {
@@ -32,17 +33,23 @@ const formatKey = (key: string) => {
     .join(' ');
 };
 
-const sentimentColorClasses = {
-  good: 'border-green-500/80',
-  bad: 'border-red-500/80',
-  neutral: 'border-border',
+const getSentimentMeta = (signal?: string) => {
+    switch (signal?.toLowerCase()) {
+        case 'strong':
+        case 'positive':
+        case 'outperform':
+        case 'buy':
+            return { color: 'text-green-500', icon: <ArrowUp className="h-4 w-4" /> };
+        case 'weak':
+        case 'negative':
+        case 'underperform':
+        case 'sell':
+            return { color: 'text-red-500', icon: <ArrowDown className="h-4 w-4" /> };
+        default:
+            return { color: 'text-muted-foreground', icon: null };
+    }
 };
 
-const sentimentIcon = {
-    good: <ArrowUp className="h-4 w-4 text-green-500" />,
-    bad: <ArrowDown className="h-4 w-4 text-red-500" />,
-    neutral: null
-}
 
 export default async function TickerDashboardPage({ params }: TickerDashboardPageProps) {
   const ticker = params.ticker.toUpperCase();
@@ -52,13 +59,24 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
     notFound();
   }
 
-  const { company_name, kpis, ai_analyst_recommendation, charts } = data;
+  const { titleInfo, kpis, aiAnalystRecommendation, charts } = data;
+
+  // Helper to format KPI values
+  const formatValue = (key: string, kpi: any) => {
+    if (key === 'dailyChangePct' || key === 'thirtyDayChange' || key === 'revenueQoQ' || key === 'epsGrowth') {
+        return `${kpi.value?.toFixed(2)}%`;
+    }
+    if (typeof kpi.value === 'number') {
+        return kpi.value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    return kpi.value;
+  };
 
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
       <header className="mb-8">
         <h1 className="text-4xl font-bold font-headline tracking-tight">
-          {company_name || ticker}
+          {titleInfo?.companyName || ticker}
         </h1>
         <div className="text-muted-foreground">
           AI-Powered Dashboard for <Badge variant="secondary">{ticker}</Badge>
@@ -70,42 +88,53 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
         <section>
           <h2 className="text-2xl font-headline font-bold mb-4">Key Performance Indicators</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {Object.entries(kpis).map(([key, kpi]: [string, any]) => (
-              <Card key={key} className={`text-center ${sentimentColorClasses[kpi.sentiment as keyof typeof sentimentColorClasses] || 'border-border'}`}>
-                <CardHeader className="p-4 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">{formatKey(key)}</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 pt-0">
-                  <p className="text-2xl font-bold">{kpi.value}</p>
-                   {kpi.comparison && (
-                    <p className={`text-xs flex items-center justify-center gap-1 ${kpi.sentiment === 'good' ? 'text-green-500' : kpi.sentiment === 'bad' ? 'text-red-500' : 'text-muted-foreground'}`}>
-                        {sentimentIcon[kpi.sentiment as keyof typeof sentimentIcon]}
-                        {kpi.comparison}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+            {Object.entries(kpis).map(([key, kpi]: [string, any]) => {
+              const sentiment = getSentimentMeta(kpi.signal || (key === 'aiScore' ? kpi.recommendation : undefined));
+              
+              let comparisonText = null;
+              if (kpi.vsIndustry) {
+                  comparisonText = `vs Industry: ${kpi.vsIndustry.toFixed(2)}%`;
+              } else if (key === 'price' && kpi.dailyChangePct) {
+                  comparisonText = `${kpi.dailyChangePct > 0 ? '+' : ''}${kpi.dailyChangePct.toFixed(2)}% Today`;
+              }
+
+              return (
+                <Card key={key} className="text-center">
+                  <CardHeader className="p-4 pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{formatKey(key)}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4 pt-0">
+                    <p className="text-2xl font-bold">{formatValue(key, kpi)}</p>
+                    {comparisonText && (
+                      <p className={`text-xs flex items-center justify-center gap-1 ${sentiment.color}`}>
+                          {sentiment.icon}
+                          {comparisonText}
+                      </p>
+                    )}
+                     {key === 'aiScore' && kpi.recommendation && (
+                        <Badge className={`mt-2 ${sentiment.color === 'text-green-500' ? 'bg-green-500/20 text-green-700' : sentiment.color === 'text-red-500' ? 'bg-red-500/20 text-red-700' : 'bg-secondary'}`}>
+                            {kpi.recommendation}
+                        </Badge>
+                     )}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </section>
       )}
 
       {/* AI Analyst Recommendation */}
-      {ai_analyst_recommendation && (
+      {aiAnalystRecommendation && (
         <section>
           <h2 className="text-2xl font-headline font-bold mb-4">AI Analyst Recommendation</h2>
           <Card>
             <CardHeader>
-              <CardTitle>
-                <Badge variant={ai_analyst_recommendation.rating === 'BUY' ? 'default' : (ai_analyst_recommendation.rating === 'SELL' ? 'destructive' : 'secondary')}>
-                  {ai_analyst_recommendation.rating}
-                </Badge>
-              </CardTitle>
-              <CardDescription>{ai_analyst_recommendation.summary}</CardDescription>
+              <CardTitle>{aiAnalystRecommendation.title}</CardTitle>
             </CardHeader>
             <CardContent>
-              <ScrollArea className="h-48 w-full rounded-md border p-4">
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap">{ai_analyst_recommendation.full_analysis}</p>
+              <ScrollArea className="h-72 w-full rounded-md border p-4">
+                 <Markdown content={aiAnalystRecommendation.markdownContent} />
               </ScrollArea>
             </CardContent>
           </Card>
@@ -131,7 +160,6 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
                                     className="object-contain rounded-md"
                                 />
                             </div>
-                             <p className="text-xs text-muted-foreground mt-2">{chart.alt}</p>
                         </CardContent>
                     </Card>
                 ))}
@@ -142,3 +170,5 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
     </div>
   );
 }
+
+    

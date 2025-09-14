@@ -1180,6 +1180,10 @@ body {
   height: 12rem;
 }
 
+.h-72 {
+  height: 18rem;
+}
+
 .max-h-96 {
   max-height: 24rem;
 }
@@ -1777,6 +1781,14 @@ body {
   background-color: #eab3081a;
 }
 
+.bg-green-500\/20 {
+  background-color: #22c55e33;
+}
+
+.bg-red-500\/20 {
+  background-color: #ef444433;
+}
+
 .fill-current {
   fill: currentColor;
 }
@@ -2127,6 +2139,16 @@ body {
 .text-yellow-400 {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity, 1));
+}
+
+.text-green-700 {
+  --tw-text-opacity: 1;
+  color: rgb(21 128 61 / var(--tw-text-opacity, 1));
+}
+
+.text-red-700 {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity, 1));
 }
 
 .underline {

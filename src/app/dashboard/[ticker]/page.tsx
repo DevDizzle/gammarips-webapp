@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation';
 import { getDashboardData } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ArrowDown, ArrowUp } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { ArrowDown, ArrowUp, Calendar, Activity, Bot } from 'lucide-react';
 import { Markdown } from '@/components/markdown';
 
 interface TickerDashboardPageProps {
@@ -16,12 +16,6 @@ interface TickerDashboardPageProps {
 
 // Re-render this page on every request to ensure data is fresh
 export const dynamic = 'force-dynamic';
-
-// Helper to convert GCS URI to a public URL
-const convertGcsUriToUrl = (gcsUri: string) => {
-  if (!gcsUri?.startsWith('gs://')) return '';
-  return gcsUri.replace('gs://', 'https://storage.googleapis.com/');
-};
 
 // Helper to format keys into readable titles
 const formatKey = (key: string) => {
@@ -50,7 +44,6 @@ const getSentimentMeta = (signal?: string) => {
     }
 };
 
-
 export default async function TickerDashboardPage({ params }: TickerDashboardPageProps) {
   const ticker = params.ticker.toUpperCase();
   const data = await getDashboardData(ticker);
@@ -59,7 +52,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
     notFound();
   }
 
-  const { titleInfo, kpis, aiAnalystRecommendation, charts } = data;
+  const { titleInfo, kpis, aiAnalystRecommendation, calendar, options } = data;
 
   // Helper to format KPI values
   const formatValue = (key: string, kpi: any) => {
@@ -76,18 +69,14 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
       <header className="mb-8">
-        <h1 className="text-4xl font-bold font-headline tracking-tight">
+        <h1 className="text-4xl font-bold font-headline tracking-tight flex items-center gap-2">
           {titleInfo?.companyName || ticker}
+          <Badge variant="secondary">{ticker}</Badge>
         </h1>
-        <div className="text-muted-foreground">
-          AI-Powered Dashboard for <Badge variant="secondary">{ticker}</Badge>
-        </div>
       </header>
       
       {/* KPIs Section */}
       {kpis && (
-        <section>
-          <h2 className="text-2xl font-headline font-bold mb-4">Key Performance Indicators</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {Object.entries(kpis).map(([key, kpi]: [string, any]) => {
               const sentiment = getSentimentMeta(kpi.signal || (key === 'aiScore' ? kpi.recommendation : undefined));
@@ -124,48 +113,108 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
               );
             })}
           </div>
-        </section>
       )}
 
-      {/* AI Analyst Recommendation */}
-      {aiAnalystRecommendation && (
-        <section>
-          <h2 className="text-2xl font-headline font-bold mb-4">AI Analyst Recommendation</h2>
-          <Card>
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Economic Events */}
+        <Card className="lg:col-span-1">
             <CardHeader>
-              <CardTitle>{aiAnalystRecommendation.title}</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                    <Calendar className="text-primary" />
+                    Economic Events
+                </CardTitle>
+                <CardDescription>Upcoming events for {ticker}.</CardDescription>
             </CardHeader>
             <CardContent>
-              <ScrollArea className="h-72 w-full rounded-md border p-4">
-                 <Markdown content={aiAnalystRecommendation.markdownContent} />
-              </ScrollArea>
+                {calendar && Object.keys(calendar).length > 0 ? (
+                     <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Event</TableHead>
+                                <TableHead className="text-right">Impact</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {Object.values(calendar).map((event: any, index: number) => (
+                                <TableRow key={index}>
+                                    <TableCell>{new Date(event.date).toLocaleDateString()}</TableCell>
+                                    <TableCell className="font-medium">{event.name}</TableCell>
+                                    <TableCell className="text-right">
+                                        <Badge variant={event.impact?.toLowerCase() === 'high' ? 'destructive' : 'secondary'}>
+                                            {event.impact || 'N/A'}
+                                        </Badge>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                ) : (
+                    <p className="text-sm text-muted-foreground">No upcoming economic events found for this ticker.</p>
+                )}
             </CardContent>
-          </Card>
-        </section>
-      )}
+        </Card>
 
-      {/* Charts Section */}
-      {charts && (
-        <section>
-            <h2 className="text-2xl font-headline font-bold mb-4">Charts</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Object.entries(charts).map(([key, chart]: [string, any]) => (
-                    <Card key={key}>
-                        <CardContent className="p-0">
-                            <div className="relative aspect-video">
-                                <Image 
-                                    src={convertGcsUriToUrl(chart.uri)}
-                                    alt={chart.alt}
-                                    fill
-                                    className="object-cover rounded-lg"
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-        </section>
-      )}
+        {/* Options Trades */}
+        <Card className="lg:col-span-1">
+             <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <Activity className="text-primary" />
+                    Noteworthy Options
+                </CardTitle>
+                <CardDescription>Significant options activity for {ticker}.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 {options && Object.keys(options).length > 0 ? (
+                     <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Type</TableHead>
+                                <TableHead>Strike</TableHead>
+                                <TableHead>Expiry</TableHead>
+                                <TableHead className="text-right">Premium</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {Object.values(options).map((opt: any, index: number) => (
+                                <TableRow key={index}>
+                                    <TableCell>
+                                        <Badge variant={opt.type === 'CALL' ? 'outline' : 'destructive'} className={opt.type === 'CALL' ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50'}>
+                                            {opt.type}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>{`$${opt.strike_price?.toFixed(2)}`}</TableCell>
+                                    <TableCell>{new Date(opt.expiry_date).toLocaleDateString()}</TableCell>
+                                    <TableCell className="text-right">{`$${opt.premium?.toFixed(2)}`}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                ) : (
+                    <p className="text-sm text-muted-foreground">No noteworthy options trades found.</p>
+                )}
+            </CardContent>
+        </Card>
+        
+        {/* AI Analyst Comments */}
+        {aiAnalystRecommendation && (
+            <Card className="lg:col-span-1">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Bot className="text-primary" />
+                        AI Analyst Comments
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ScrollArea className="h-72 w-full rounded-md border p-4">
+                        <Markdown content={aiAnalystRecommendation.markdownContent} />
+                    </ScrollArea>
+                </CardContent>
+            </Card>
+        )}
+      </div>
 
     </div>
   );

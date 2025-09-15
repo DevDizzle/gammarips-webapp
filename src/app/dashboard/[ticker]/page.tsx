@@ -157,7 +157,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
                                     src={convertGcsUriToUrl(chart.uri)}
                                     alt={chart.alt}
                                     fill
-                                    className="object-contain rounded-lg"
+                                    className="object-cover rounded-lg"
                                 />
                             </div>
                         </CardContent>

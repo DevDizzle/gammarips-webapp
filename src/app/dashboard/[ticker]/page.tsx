@@ -64,7 +64,8 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
   // Helper to format KPI values
   const formatValue = (key: string, kpi: any) => {
     if (key === 'dailyChangePct' || key === 'thirtyDayChange' || key === 'revenueQoQ' || key === 'epsGrowth') {
-        return `${kpi.value?.toFixed(2)}%`;
+        const value = kpi.value ?? 0;
+        return `${value.toFixed(2)}%`;
     }
     if (typeof kpi.value === 'number') {
         return kpi.value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -93,9 +94,11 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
               
               let comparisonText = null;
               if (kpi.vsIndustry) {
-                  comparisonText = `vs Industry: ${kpi.vsIndustry.toFixed(2)}%`;
+                  const vsIndustryValue = kpi.vsIndustry ?? 0;
+                  comparisonText = `vs Industry: ${vsIndustryValue.toFixed(2)}%`;
               } else if (key === 'price' && kpi.dailyChangePct) {
-                  comparisonText = `${kpi.dailyChangePct > 0 ? '+' : ''}${kpi.dailyChangePct.toFixed(2)}% Today`;
+                  const dailyChange = kpi.dailyChangePct ?? 0;
+                  comparisonText = `${dailyChange > 0 ? '+' : ''}${dailyChange.toFixed(2)}% Today`;
               }
 
               return (
@@ -148,16 +151,13 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Object.entries(charts).map(([key, chart]: [string, any]) => (
                     <Card key={key}>
-                        <CardHeader>
-                            <CardTitle>{formatKey(key)}</CardTitle>
-                        </CardHeader>
                         <CardContent className="p-0">
                             <div className="relative aspect-video">
                                 <Image 
                                     src={convertGcsUriToUrl(chart.uri)}
                                     alt={chart.alt}
                                     fill
-                                    className="object-contain rounded-b-lg"
+                                    className="object-contain rounded-lg"
                                 />
                             </div>
                         </CardContent>

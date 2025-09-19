@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -96,7 +95,7 @@ export type Winner = z.infer<typeof WinnerSchema>;
 
 export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
     try {
-        const querySnapshot = await adminDb.collection("winners_dashboard").limit(10).get();
+        const querySnapshot = await adminDb.collection("winners_dashboard").limit(20).get();
         const winners: Winner[] = [];
         querySnapshot.forEach((doc) => {
             const data = doc.data();
@@ -118,19 +117,27 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
                 console.error("Invalid winner data from Firestore:", validation.error.flatten());
             }
         });
-        // Sort by signal strength then by 30-day change
+        
+        // Sort to get the strongest bullish and bearish signals
+        const signalOrder = ['Strongly Bullish', 'Moderately Bullish', 'Slightly Bullish', 'Neutral', 'Slightly Bearish', 'Moderately Bearish', 'Strongly Bearish'];
+        
         winners.sort((a, b) => {
-             const signalOrder = ['Strongly Bullish', 'Moderately Bullish', 'Slightly Bullish', 'Neutral', 'Slightly Bearish', 'Moderately Bearish', 'Strongly Bearish'];
              const aIndex = signalOrder.indexOf(a.outlook_signal);
              const bIndex = signalOrder.indexOf(b.outlook_signal);
+             // A "strength" score where lower index (more bullish) and higher index (more bearish) are both "strong"
+             const aStrength = Math.abs(aIndex - 3); // 3 is the index of 'Neutral'
+             const bStrength = Math.abs(bIndex - 3);
 
-             if (aIndex !== bIndex) {
-                 return aIndex - bIndex;
+             if (aStrength !== bStrength) {
+                 return bStrength - aStrength; // Sort by strength descending
              }
+             // If strength is equal, fall back to sorting by change percentage
              return b.thirty_day_change_pct - a.thirty_day_change_pct;
         });
 
-        return winners;
+        // Return the top 10 strongest signals (mix of bullish and bearish)
+        return winners.slice(0, 10);
+
     } catch (error) {
         console.error('Error fetching winners dashboard:', error);
         return [];

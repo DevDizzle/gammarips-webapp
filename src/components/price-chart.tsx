@@ -14,31 +14,30 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from 'recharts';
-import { cn } from '@/lib/utils';
 
 interface PriceChartProps {
   data: {
     candlestick: { date: string; open: number; high: number; low: number; close: number }[];
     volume: { date: string; value: number }[];
     sma50?: { date: string; value: number }[];
-    sma200?: { date:string; value: number }[];
+    sma200?: { date: string; value: number }[];
   };
 }
 
 const ChartTooltipContent = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+    const isBullish = data.close > data.open;
+    const color = isBullish ? 'text-green-500' : 'text-red-500';
+
     return (
-      <div className="p-2 bg-background/80 border rounded-lg shadow-lg backdrop-blur-sm">
-        <p className="font-bold">{label}</p>
-        <div className="text-xs">
-            <p>Open: <span className="font-mono">${data.open.toFixed(2)}</span></p>
-            <p>High: <span className="font-mono">${data.high.toFixed(2)}</span></p>
-            <p>Low: <span className="font-mono">${data.low.toFixed(2)}</span></p>
-            <p>Close: <span className="font-mono">${data.close.toFixed(2)}</span></p>
-            {data.sma50 && <p>SMA 50: <span className="font-mono">${data.sma50.toFixed(2)}</span></p>}
-            {data.sma200 && <p>SMA 200: <span className="font-mono">${data.sma200.toFixed(2)}</span></p>}
-            {data.volume && <p>Volume: <span className="font-mono">{(data.volume / 1_000_000).toFixed(2)}M</span></p>}
+      <div className="p-2 bg-background/90 border rounded-lg shadow-lg backdrop-blur-sm">
+        <p className="font-bold text-base">{new Date(label + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+        <div className="text-xs space-y-1 mt-1">
+            <p className={color}>O: <span className="font-mono">${data.open.toFixed(2)}</span> H: <span className="font-mono">${data.high.toFixed(2)}</span> L: <span className="font-mono">${data.low.toFixed(2)}</span> C: <span className="font-mono">${data.close.toFixed(2)}</span></p>
+            {data.sma20 && <p className="text-blue-400">SMA 20: <span className="font-mono">${data.sma20.toFixed(2)}</span></p>}
+            {data.sma50 && <p className="text-orange-400">SMA 50: <span className="font-mono">${data.sma50.toFixed(2)}</span></p>}
+            {data.sma200 && <p className="text-purple-400">SMA 200: <span className="font-mono">${data.sma200.toFixed(2)}</span></p>}
         </div>
       </div>
     );
@@ -54,17 +53,13 @@ const Candlestick = (props: any) => {
   const wickX = x + width / 2;
 
   return (
-    <g>
-      <path
-        d={`M${wickX},${y} L${wickX},${y + height}`}
-        stroke={color}
-        strokeWidth={1}
-      />
+    <g stroke={color} strokeWidth={1.5} className="transition-opacity duration-200">
+      <line x1={wickX} y1={y} x2={wickX} y2={y + height} />
       <rect
         x={x}
         y={isBullish ? y + (open - low) : y + (close - low)}
         width={width}
-        height={Math.max(1, Math.abs(open - close))}
+        height={Math.max(1.5, Math.abs(open - close))}
         fill={color}
       />
     </g>
@@ -76,9 +71,20 @@ export const PriceChart = ({ data }: PriceChartProps) => {
   const combinedData = React.useMemo(() => {
     const dataMap = new Map();
     data.candlestick.forEach(d => dataMap.set(d.date, { ...d, yRange: [d.low, d.high] }));
-    data.volume.forEach(d => {
-        if(dataMap.has(d.date)) dataMap.get(d.date).volume = d.value;
+    
+    // Add 20-day SMA
+    const closePrices = data.candlestick.map(d => d.close);
+    const sma20 = [];
+    if (closePrices.length >= 20) {
+      for (let i = 19; i < data.candlestick.length; i++) {
+        const sum = closePrices.slice(i - 19, i + 1).reduce((a, b) => a + b, 0);
+        sma20.push({ date: data.candlestick[i].date, value: sum / 20 });
+      }
+    }
+    sma20.forEach(d => {
+      if(dataMap.has(d.date)) dataMap.get(d.date).sma20 = d.value;
     });
+
     if (data.sma50) {
         data.sma50.forEach(d => {
             if(dataMap.has(d.date)) dataMap.get(d.date).sma50 = d.value;
@@ -99,11 +105,11 @@ export const PriceChart = ({ data }: PriceChartProps) => {
   }
 
   const yDomain = [
-    Math.min(...combinedData.map(d => d.low)) * 0.95,
-    Math.max(...combinedData.map(d => d.high)) * 1.05
+    Math.min(...combinedData.map(d => d.low)) * 0.98,
+    Math.max(...combinedData.map(d => d.high)) * 1.02
   ];
 
-  const volumeDomain = [0, Math.max(...combinedData.map(d => d.volume)) * 3]; // Give volume bars some space
+  const lastClose = combinedData[combinedData.length - 1].close;
 
   return (
     <div className="w-full h-[400px]">
@@ -112,10 +118,11 @@ export const PriceChart = ({ data }: PriceChartProps) => {
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border) / 0.5)" />
           <XAxis 
             dataKey="date" 
-            tickFormatter={(date) => new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            tickFormatter={(date) => new Date(date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
             tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
             axisLine={false}
             tickLine={false}
+            interval="preserveStartEnd"
           />
           <YAxis 
             yAxisId="price" 
@@ -126,17 +133,8 @@ export const PriceChart = ({ data }: PriceChartProps) => {
             axisLine={false}
             tickLine={false}
           />
-           <YAxis 
-                yAxisId="volume" 
-                orientation="right" 
-                domain={volumeDomain} 
-                tickFormatter={(value) => `${(value / 1_000_000).toFixed(0)}M`}
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ display: 'none' }}
-            />
           
-          <Tooltip content={<ChartTooltipContent />} />
+          <Tooltip content={<ChartTooltipContent />} cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 1, strokeDasharray: '3 3' }} />
 
           <Legend 
             verticalAlign="top"
@@ -145,43 +143,23 @@ export const PriceChart = ({ data }: PriceChartProps) => {
           />
           
           {/* Candlestick - represented by a bar for positioning */}
-          <Bar yAxisId="price" dataKey="yRange" shape={<Candlestick />} name="Price" />
+          <Bar yAxisId="price" dataKey="yRange" shape={<Candlestick />} name="Price" barSize={12} />
 
+          {combinedData.some(d => d.sma20) && (
+            <Line yAxisId="price" type="monotone" dataKey="sma20" stroke="#3b82f6" strokeWidth={2} dot={false} name="SMA 20" />
+          )}
           {data.sma50 && (
-             <Line
-                yAxisId="price"
-                type="monotone"
-                dataKey="sma50"
-                stroke="hsl(var(--chart-1))"
-                strokeWidth={2}
-                dot={false}
-                name="SMA 50"
-            />
+             <Line yAxisId="price" type="monotone" dataKey="sma50" stroke="#f97316" strokeWidth={2} dot={false} name="SMA 50" />
           )}
-
            {data.sma200 && (
-             <Line
-                yAxisId="price"
-                type="monotone"
-                dataKey="sma200"
-                stroke="hsl(var(--chart-3))"
-                strokeWidth={2}
-                dot={false}
-                name="SMA 200"
-            />
+             <Line yAxisId="price" type="monotone" dataKey="sma200" stroke="#a855f7" strokeWidth={2} dot={false} name="SMA 200" />
           )}
-          
-          <Bar yAxisId="volume" dataKey="volume" name="Volume" barSize={20}>
-            {combinedData.map((entry, index) => (
-                <rect key={`cell-${index}`} fill={entry.close > entry.open ? 'hsl(var(--chart-2) / 0.3)' : 'hsl(var(--chart-5) / 0.3)'} />
-            ))}
-          </Bar>
 
            {/* Reference line for the latest close price */}
-            <ReferenceLine yAxisId="price" y={combinedData[combinedData.length - 1].close} stroke="hsl(var(--primary))" strokeDasharray="3 3">
+            <ReferenceLine yAxisId="price" y={lastClose} stroke="hsl(var(--primary))" strokeWidth={1.5}>
                 <Legend content={
-                    <div className="text-xs text-primary font-bold bg-background/50 backdrop-blur-sm p-1 rounded">
-                       {combinedData[combinedData.length - 1].close.toFixed(2)}
+                    <div className="text-xs text-primary font-bold bg-background/80 backdrop-blur-sm p-1 rounded-sm" style={{ position: 'relative', top: '-10px', right: '10px' }}>
+                       {lastClose.toFixed(2)}
                     </div>
                 } position="insideRight" />
             </ReferenceLine>

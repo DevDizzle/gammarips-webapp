@@ -2021,6 +2021,10 @@ body {
   background-color: hsl(var(--background) / .8);
 }
 
+.bg-background\/90 {
+  background-color: hsl(var(--background) / .9);
+}
+
 .fill-current {
   fill: currentColor;
 }
@@ -2389,6 +2393,21 @@ body {
 .text-yellow-400 {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity, 1));
+}
+
+.text-blue-400 {
+  --tw-text-opacity: 1;
+  color: rgb(96 165 250 / var(--tw-text-opacity, 1));
+}
+
+.text-orange-400 {
+  --tw-text-opacity: 1;
+  color: rgb(251 146 60 / var(--tw-text-opacity, 1));
+}
+
+.text-purple-400 {
+  --tw-text-opacity: 1;
+  color: rgb(192 132 252 / var(--tw-text-opacity, 1));
 }
 
 .underline {

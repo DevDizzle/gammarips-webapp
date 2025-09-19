@@ -4,7 +4,7 @@ import { getDashboardData } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ArrowDown, ArrowUp, HelpCircle } from 'lucide-react';
+import { ArrowDown, ArrowUp, HelpCircle, Minus } from 'lucide-react';
 import { Markdown } from '@/components/markdown';
 import { PriceChart } from '@/components/price-chart';
 
@@ -26,7 +26,7 @@ const getSignalMeta = (signal?: string) => {
         case 'low':
             return { color: 'text-red-500', icon: <ArrowDown className="h-4 w-4" /> };
         default:
-            return { color: 'text-muted-foreground', icon: null };
+            return { color: 'text-muted-foreground', icon: <Minus className="h-4 w-4" /> };
     }
 };
 
@@ -97,10 +97,10 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
         {/* AI Stock Analysis */}
         <Card>
              <CardHeader>
-                <CardTitle>Stock Analysis</CardTitle>
+                <CardTitle>AI Stock Analysis</CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="prose prose-sm prose-invert max-w-none h-96 overflow-y-auto">
+                <div className="prose prose-sm prose-invert max-w-none">
                     <Markdown content={stockLevelAnalysis || "No analysis available."} />
                 </div>
             </CardContent>
@@ -113,7 +113,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
             </CardHeader>
             <CardContent className="p-2">
                 {priceChartData ? (
-                    <PriceChart data={priceChartData} />
+                    <PriceChart priceData={priceChartData} />
                 ) : (
                     <div className="h-[400px] flex items-center justify-center">
                         <p className="text-muted-foreground">Price chart data is not available.</p>

@@ -84,7 +84,7 @@ export const PriceChart: React.FC<PriceChartProps> = ({ priceData, className }) 
         wickUpColor: colors.green,
     });
     
-    const candlestickData = priceData.candlestick.map(d => ({
+    const candlestickData = priceData.candlestick.slice(-30).map(d => ({
         time: d.date,
         open: d.open,
         high: d.high,
@@ -101,7 +101,7 @@ export const PriceChart: React.FC<PriceChartProps> = ({ priceData, className }) 
             priceLineVisible: false,
             lastValueVisible: false,
         });
-        const sma50Data = priceData.sma50.map(d => ({ time: d.date, value: d.value }));
+        const sma50Data = priceData.sma50.slice(-30).map(d => ({ time: d.date, value: d.value }));
         sma50Series.setData(sma50Data);
     }
     
@@ -113,7 +113,7 @@ export const PriceChart: React.FC<PriceChartProps> = ({ priceData, className }) 
             priceLineVisible: false,
             lastValueVisible: false,
         });
-        const sma200Data = priceData.sma200.map(d => ({ time: d.date, value: d.value }));
+        const sma200Data = priceData.sma200.slice(-30).map(d => ({ time: d.date, value: d.value }));
         sma200Series.setData(sma200Data);
     }
     

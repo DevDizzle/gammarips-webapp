@@ -11,8 +11,8 @@ const getChartColors = () => {
     if (typeof window === 'undefined') {
         // Default for SSR to avoid errors.
         return {
-            background: '#0e111a',
-            line: '#444',
+            background: '#121212',
+            line: '#444444',
             text: '#C8C4C4',
             green: '#22c55e',
             red: '#ef4444',
@@ -22,11 +22,11 @@ const getChartColors = () => {
     }
     const isDark = document.documentElement.classList.contains('dark');
     return {
-        background: isDark ? 'hsl(232 15% 15%)' : '#FFFFFF',
+        background: isDark ? '#1C1C29' : '#FFFFFF',
         line: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-        text: isDark ? 'hsl(0 0% 63.9%)' : '#333333',
-        green: 'rgba(34, 197, 94, 1)', // #22c55e
-        red: 'rgba(239, 68, 68, 1)', // #ef4444
+        text: isDark ? '#A3A3A3' : '#333333',
+        green: '#22c55e',
+        red: '#ef4444',
         sma50: '#f97316', // orange-500
         sma200: '#a855f7' // purple-500
     };

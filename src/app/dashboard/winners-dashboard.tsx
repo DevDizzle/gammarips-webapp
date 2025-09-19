@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { Loader2, TrendingUp, TrendingDown, Calendar, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -13,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { getEconomicEvents, getTopStocks, getTopOptions } from '../actions';
 import type { Stock, EconomicEvent, OptionCandidate } from '@/lib/firebase-admin';
 
-function DashboardClientPage() {
+function WinnersDashboard() {
   const { user, loading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [economicEvents, setEconomicEvents] = useState<EconomicEvent[]>([]);
@@ -23,6 +24,7 @@ function DashboardClientPage() {
   const [topPutOptions, setTopPutOptions] = useState<OptionCandidate[]>([]);
 
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +55,10 @@ function DashboardClientPage() {
     };
     fetchData();
   }, [toast]);
+
+  const handleRowClick = (ticker: string) => {
+    router.push(`/dashboard/${ticker}`);
+  };
 
   const renderSkeletonTable = (rows = 5, cols = 3) => (
     <div className="space-y-2 p-4">
@@ -127,7 +133,7 @@ function DashboardClientPage() {
                         </TableHeader>
                         <TableBody>
                             {topBuyStocks.map(stock => (
-                                <TableRow key={stock.id}>
+                                <TableRow key={stock.id} onClick={() => handleRowClick(stock.id)} className="cursor-pointer">
                                     <TableCell className="font-medium">{stock.id}</TableCell>
                                     <TableCell className="text-right">{stock.weighted_score?.toFixed(2)}</TableCell>
                                 </TableRow>
@@ -158,7 +164,7 @@ function DashboardClientPage() {
                         </TableHeader>
                         <TableBody>
                             {topSellStocks.map(stock => (
-                                <TableRow key={stock.id}>
+                                <TableRow key={stock.id} onClick={() => handleRowClick(stock.id)} className="cursor-pointer">
                                     <TableCell className="font-medium">{stock.id}</TableCell>
                                     <TableCell className="text-right">{stock.weighted_score?.toFixed(2)}</TableCell>
                                 </TableRow>
@@ -190,7 +196,7 @@ function DashboardClientPage() {
                         </TableHeader>
                         <TableBody>
                             {topCallOptions.map(option => (
-                                <TableRow key={option.id}>
+                                <TableRow key={option.id} onClick={() => handleRowClick(option.symbol)} className="cursor-pointer">
                                     <TableCell className="font-medium">{option.symbol}</TableCell>
                                     <TableCell>{option.strike_price}</TableCell>
                                     <TableCell className="text-right">{option.options_score.toFixed(2)}</TableCell>
@@ -223,7 +229,7 @@ function DashboardClientPage() {
                         </TableHeader>
                         <TableBody>
                             {topPutOptions.map(option => (
-                                <TableRow key={option.id}>
+                                <TableRow key={option.id} onClick={() => handleRowClick(option.symbol)} className="cursor-pointer">
                                     <TableCell className="font-medium">{option.symbol}</TableCell>
                                     <TableCell>{option.strike_price}</TableCell>
                                     <TableCell className="text-right">{option.options_score.toFixed(2)}</TableCell>
@@ -238,6 +244,4 @@ function DashboardClientPage() {
   );
 }
 
-export default DashboardClientPage;
-
-    
+export default WinnersDashboard;

@@ -27,12 +27,17 @@ import {
     getTopStocksAdmin,
     getTopOptionsAdmin,
     getDashboardDataAdmin,
+    getWinnersDashboardAdmin
 } from '@/lib/firebase-admin';
-import type { Stock, EconomicEvent, OptionCandidate } from '@/lib/firebase-admin';
+import type { Stock, EconomicEvent, OptionCandidate, Winner } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
 
+
+export async function getWinnersDashboard(): Promise<Winner[]> {
+    return getWinnersDashboardAdmin();
+}
 
 export async function getStocks(): Promise<Stock[]> {
     return getStocksAdmin();

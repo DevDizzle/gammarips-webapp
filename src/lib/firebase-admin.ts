@@ -81,6 +81,62 @@ const OptionCandidateSchema = z.object({
 });
 export type OptionCandidate = z.infer<typeof OptionCandidateSchema>;
 
+const WinnerSchema = z.object({
+  id: z.string(),
+  company_name: z.string(),
+  image_uri: z.string().optional(),
+  industry: z.string(),
+  last_close: z.number(),
+  outlook_signal: z.string(),
+  run_date: z.string(),
+  thirty_day_change_pct: z.number(),
+  ticker: z.string(),
+});
+export type Winner = z.infer<typeof WinnerSchema>;
+
+export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
+    try {
+        const querySnapshot = await adminDb.collection("winners_dashboard").limit(10).get();
+        const winners: Winner[] = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const winner = {
+                id: doc.id,
+                company_name: data.company_name,
+                image_uri: data.image_uri,
+                industry: data.industry,
+                last_close: data.last_close,
+                outlook_signal: data.outlook_signal,
+                run_date: data.run_date,
+                thirty_day_change_pct: data.thirty_day_change_pct,
+                ticker: data.ticker,
+            };
+            const validation = WinnerSchema.safeParse(winner);
+            if (validation.success) {
+                winners.push(validation.data);
+            } else {
+                console.error("Invalid winner data from Firestore:", validation.error.flatten());
+            }
+        });
+        // Sort by signal strength then by 30-day change
+        winners.sort((a, b) => {
+             const signalOrder = ['Strongly Bullish', 'Moderately Bullish', 'Slightly Bullish', 'Neutral', 'Slightly Bearish', 'Moderately Bearish', 'Strongly Bearish'];
+             const aIndex = signalOrder.indexOf(a.outlook_signal);
+             const bIndex = signalOrder.indexOf(b.outlook_signal);
+
+             if (aIndex !== bIndex) {
+                 return aIndex - bIndex;
+             }
+             return b.thirty_day_change_pct - a.thirty_day_change_pct;
+        });
+
+        return winners;
+    } catch (error) {
+        console.error('Error fetching winners dashboard:', error);
+        return [];
+    }
+}
+
 
 // This function now uses the Admin SDK and should only be called from the server (e.g., in a Server Action)
 export async function getStocksAdmin(): Promise<Stock[]> {

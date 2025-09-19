@@ -1,16 +1,7 @@
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Bot, Sparkles, TrendingUp } from "lucide-react";
-import Link from "next/link";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { TickerSearch } from "@/components/ticker-search";
-import WinnersDashboard from "@/app/dashboard/winners-dashboard";
+import Link from "next/link";
+import TodaysWinners from "@/app/dashboard/todays-winners";
 
 export default function LandingPage() {
   return (
@@ -43,7 +34,7 @@ export default function LandingPage() {
 
         {/* Winners Dashboard Section */}
         <section id="winners-dashboard" className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 scroll-mt-20">
-            <WinnersDashboard />
+            <TodaysWinners />
         </section>
 
       </main>

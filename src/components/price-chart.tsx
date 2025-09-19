@@ -12,7 +12,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  ReferenceLine,
 } from 'recharts';
 
 interface PriceChartProps {
@@ -35,7 +34,6 @@ const ChartTooltipContent = ({ active, payload, label }: any) => {
         <p className="font-bold text-base">{new Date(label + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
         <div className="text-xs space-y-1 mt-1">
             <p className={color}>O: <span className="font-mono">${data.open.toFixed(2)}</span> H: <span className="font-mono">${data.high.toFixed(2)}</span> L: <span className="font-mono">${data.low.toFixed(2)}</span> C: <span className="font-mono">${data.close.toFixed(2)}</span></p>
-            {data.sma20 && <p className="text-blue-400">SMA 20: <span className="font-mono">${data.sma20.toFixed(2)}</span></p>}
             {data.sma50 && <p className="text-orange-400">SMA 50: <span className="font-mono">${data.sma50.toFixed(2)}</span></p>}
             {data.sma200 && <p className="text-purple-400">SMA 200: <span className="font-mono">${data.sma200.toFixed(2)}</span></p>}
         </div>
@@ -71,19 +69,6 @@ export const PriceChart = ({ data }: PriceChartProps) => {
   const combinedData = React.useMemo(() => {
     const dataMap = new Map();
     data.candlestick.forEach(d => dataMap.set(d.date, { ...d, yRange: [d.low, d.high] }));
-    
-    // Add 20-day SMA
-    const closePrices = data.candlestick.map(d => d.close);
-    const sma20 = [];
-    if (closePrices.length >= 20) {
-      for (let i = 19; i < data.candlestick.length; i++) {
-        const sum = closePrices.slice(i - 19, i + 1).reduce((a, b) => a + b, 0);
-        sma20.push({ date: data.candlestick[i].date, value: sum / 20 });
-      }
-    }
-    sma20.forEach(d => {
-      if(dataMap.has(d.date)) dataMap.get(d.date).sma20 = d.value;
-    });
 
     if (data.sma50) {
         data.sma50.forEach(d => {
@@ -108,8 +93,6 @@ export const PriceChart = ({ data }: PriceChartProps) => {
     Math.min(...combinedData.map(d => d.low)) * 0.98,
     Math.max(...combinedData.map(d => d.high)) * 1.02
   ];
-
-  const lastClose = combinedData[combinedData.length - 1].close;
 
   return (
     <div className="w-full h-[400px]">
@@ -145,24 +128,12 @@ export const PriceChart = ({ data }: PriceChartProps) => {
           {/* Candlestick - represented by a bar for positioning */}
           <Bar yAxisId="price" dataKey="yRange" shape={<Candlestick />} name="Price" barSize={12} />
 
-          {combinedData.some(d => d.sma20) && (
-            <Line yAxisId="price" type="monotone" dataKey="sma20" stroke="#3b82f6" strokeWidth={2} dot={false} name="SMA 20" />
-          )}
           {data.sma50 && (
              <Line yAxisId="price" type="monotone" dataKey="sma50" stroke="#f97316" strokeWidth={2} dot={false} name="SMA 50" />
           )}
            {data.sma200 && (
              <Line yAxisId="price" type="monotone" dataKey="sma200" stroke="#a855f7" strokeWidth={2} dot={false} name="SMA 200" />
           )}
-
-           {/* Reference line for the latest close price */}
-            <ReferenceLine yAxisId="price" y={lastClose} stroke="hsl(var(--primary))" strokeWidth={1.5}>
-                <Legend content={
-                    <div className="text-xs text-primary font-bold bg-background/80 backdrop-blur-sm p-1 rounded-sm" style={{ position: 'relative', top: '-10px', right: '10px' }}>
-                       {lastClose.toFixed(2)}
-                    </div>
-                } position="insideRight" />
-            </ReferenceLine>
 
         </ComposedChart>
       </ResponsiveContainer>

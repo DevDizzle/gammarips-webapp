@@ -48,20 +48,21 @@ const ChartTooltipContent = ({ active, payload, label }: any) => {
 
 // Custom shape for the candlestick
 const Candlestick = (props: any) => {
-  const { x, y, width, height, low, high, open, close, fill } = props;
+  const { x, y, width, height, low, high, open, close } = props;
   const isBullish = close > open;
   const color = isBullish ? 'hsl(var(--chart-2))' : 'hsl(var(--chart-5))';
+  const wickX = x + width / 2;
 
   return (
     <g>
       <path
-        d={`M${x + width / 2},${y + height - (high - Math.max(open, close))} L${x + width / 2},${y + height - (low - Math.min(open, close))}`}
+        d={`M${wickX},${y} L${wickX},${y + height}`}
         stroke={color}
         strokeWidth={1}
       />
       <rect
         x={x}
-        y={isBullish ? y + height - (close - open) : y}
+        y={isBullish ? y + (open - low) : y + (close - low)}
         width={width}
         height={Math.max(1, Math.abs(open - close))}
         fill={color}
@@ -88,11 +89,13 @@ export const PriceChart = ({ data }: PriceChartProps) => {
             if(dataMap.has(d.date)) dataMap.get(d.date).sma200 = d.value;
         });
     }
-    return Array.from(dataMap.values());
+    const fullData = Array.from(dataMap.values());
+    // Take only the last 30 days for the chart
+    return fullData.slice(-30);
   }, [data]);
   
   if (!combinedData || combinedData.length === 0) {
-    return <div className="h-96 flex items-center justify-center"><p>No data available for chart.</p></div>;
+    return <div className="h-[400px] flex items-center justify-center"><p>No data available for chart.</p></div>;
   }
 
   const yDomain = [
@@ -103,7 +106,7 @@ export const PriceChart = ({ data }: PriceChartProps) => {
   const volumeDomain = [0, Math.max(...combinedData.map(d => d.volume)) * 3]; // Give volume bars some space
 
   return (
-    <div className="w-full h-96">
+    <div className="w-full h-[400px]">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={combinedData}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border) / 0.5)" />
@@ -136,7 +139,8 @@ export const PriceChart = ({ data }: PriceChartProps) => {
           <Tooltip content={<ChartTooltipContent />} />
 
           <Legend 
-            wrapperStyle={{ fontSize: '12px' }}
+            verticalAlign="top"
+            wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
             formatter={(value, entry) => <span className="text-muted-foreground">{value}</span>}
           />
           
@@ -167,7 +171,7 @@ export const PriceChart = ({ data }: PriceChartProps) => {
             />
           )}
           
-          <Bar yAxisId="volume" dataKey="volume" name="Volume">
+          <Bar yAxisId="volume" dataKey="volume" name="Volume" barSize={20}>
             {combinedData.map((entry, index) => (
                 <rect key={`cell-${index}`} fill={entry.close > entry.open ? 'hsl(var(--chart-2) / 0.3)' : 'hsl(var(--chart-5) / 0.3)'} />
             ))}

@@ -91,11 +91,23 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
           </div>
       )}
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Main Content Stack */}
+      <div className="flex flex-col gap-6">
         
+        {/* AI Stock Analysis */}
+        <Card>
+             <CardHeader>
+                <CardTitle>Stock Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="prose prose-sm prose-invert max-w-none h-96 overflow-y-auto">
+                    <Markdown content={stockLevelAnalysis || "No analysis available."} />
+                </div>
+            </CardContent>
+        </Card>
+
         {/* Price Chart */}
-        <Card className="lg:col-span-2">
+        <Card>
             <CardHeader>
                 <CardTitle>Price Chart</CardTitle>
             </CardHeader>
@@ -109,22 +121,9 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
                 )}
             </CardContent>
         </Card>
-
-        {/* AI Stock Analysis */}
-        <Card className="lg:col-span-1">
-             <CardHeader>
-                <CardTitle>Stock Analysis</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="prose prose-sm prose-invert max-w-none h-96 overflow-y-auto">
-                    <Markdown content={stockLevelAnalysis || "No analysis available."} />
-                </div>
-            </CardContent>
-        </Card>
         
       </div>
 
     </div>
   );
 }
-

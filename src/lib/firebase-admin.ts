@@ -1,5 +1,3 @@
-
-
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -48,7 +46,7 @@ const StockSchema = z.object({
   id: z.string(), // Document ID is the ticker
   company_name: z.string(),
   image_uri: z.string().optional(),
-  bundle_gcs_path: z.string(), // Mapped from 'profile'
+  bundle_gcs_path: z.string().optional(), // Mapped from 'profile'
   recommendation_analysis: z.string().optional(),
   recommendation: z.string().optional(),
   pages_json: z.string().optional(),
@@ -721,6 +719,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 
 
 

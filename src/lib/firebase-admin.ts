@@ -91,6 +91,7 @@ const WinnerSchema = z.object({
   run_date: z.string(),
   thirty_day_change_pct: z.number(),
   ticker: z.string(),
+  weighted_score: z.number().optional(),
 });
 export type Winner = z.infer<typeof WinnerSchema>;
 
@@ -110,6 +111,7 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
                 run_date: data.run_date,
                 thirty_day_change_pct: data.thirty_day_change_pct,
                 ticker: data.ticker,
+                weighted_score: data.weighted_score,
             };
             const validation = WinnerSchema.safeParse(winner);
             if (validation.success) {
@@ -119,8 +121,8 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
             }
         });
         
-        // Sort by 30 day percentage change, descending
-        winners.sort((a, b) => b.thirty_day_change_pct - a.thirty_day_change_pct);
+        // Sort by weighted_score, descending
+        winners.sort((a, b) => (b.weighted_score ?? 0) - (a.weighted_score ?? 0));
 
         return winners;
 
@@ -552,4 +554,5 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 }
 
     
+
 

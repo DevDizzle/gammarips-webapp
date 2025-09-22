@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -100,7 +101,7 @@ function TodaysWinners() {
                 <TableHead>Company</TableHead>
                 <TableHead>Ticker</TableHead>
                 <TableHead>Last Close</TableHead>
-                <TableHead>30-Day Change</TableHead>
+                <TableHead>Industry</TableHead>
                 <TableHead>AI Outlook</TableHead>
               </TableRow>
             </TableHeader>
@@ -110,8 +111,7 @@ function TodaysWinners() {
                       ? convertGcsUriToUrl(winner.image_uri) 
                       : `https://placehold.co/24x24/1e293b/a855f7?text=${winner.ticker[0]}`;
                   const signalMeta = getSignalMeta(winner.outlook_signal);
-                  const isPositiveChange = winner.thirty_day_change_pct > 0;
-
+                  
                   return (
                     <TableRow key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer">
                         <TableCell className="font-medium">
@@ -128,9 +128,7 @@ function TodaysWinners() {
                         </TableCell>
                         <TableCell>{winner.ticker}</TableCell>
                         <TableCell>${winner.last_close.toFixed(2)}</TableCell>
-                        <TableCell className={cn(isPositiveChange ? 'text-green-500' : 'text-red-500')}>
-                            {isPositiveChange ? '+' : ''}{winner.thirty_day_change_pct.toFixed(2)}%
-                        </TableCell>
+                        <TableCell>{winner.industry}</TableCell>
                         <TableCell>
                             <div className={cn("flex items-center gap-1", signalMeta.color)}>
                                 {signalMeta.icon}

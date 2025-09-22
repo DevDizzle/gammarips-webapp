@@ -91,7 +91,7 @@ const WinnerSchema = z.object({
   run_date: z.string(),
   thirty_day_change_pct: z.number(),
   ticker: z.string(),
-  weighted_score: z.number().optional(),
+  weighted_score: z.number().optional().nullable(),
 });
 export type Winner = z.infer<typeof WinnerSchema>;
 
@@ -110,9 +110,8 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
                 run_date: data.run_date,
                 thirty_day_change_pct: data.thirty_day_change_pct,
                 ticker: data.ticker,
-                weighted_score: data.weighted_score,
+                weighted_score: isNaN(data.weighted_score) ? null : data.weighted_score,
             };
-            // The safeParse will allow the object through, but we can log if it's invalid
             const validation = WinnerSchema.safeParse(winnerData);
             if (!validation.success) {
                 console.error("Invalid winner data from Firestore:", validation.error.flatten());
@@ -120,18 +119,21 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
             return winnerData;
         });
         
-        // Sort by outlook_signal: Bullish > Neutral/Other > Bearish
+        // Sort by outlook_signal with a detailed hierarchy
         winners.sort((a, b) => {
-            const aSignal = a.outlook_signal.toLowerCase();
-            const bSignal = b.outlook_signal.toLowerCase();
-
             const score = (signal: string) => {
-                if (signal.includes('bullish')) return 2;
-                if (signal.includes('bearish')) return 0;
-                return 1;
+                const s = signal.toLowerCase();
+                if (s.includes('strongly bullish')) return 6;
+                if (s.includes('moderately bullish')) return 5;
+                if (s.includes('bullish')) return 4;
+                if (s.includes('neutral')) return 3;
+                if (s.includes('moderately bearish')) return 2;
+                if (s.includes('bearish')) return 1;
+                if (s.includes('strongly bearish')) return 0;
+                return 3; // Default for any other unclassified signal
             };
 
-            return score(bSignal) - score(aSignal);
+            return score(b.outlook_signal) - score(a.outlook_signal);
         });
 
         return winners;
@@ -570,5 +572,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 
 
 
+
+    
 
     

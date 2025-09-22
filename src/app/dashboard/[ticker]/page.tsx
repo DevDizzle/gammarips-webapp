@@ -19,19 +19,21 @@ export const dynamic = 'force-dynamic';
 
 const getSignalColor = (signal: string) => {
     const lowerSignal = signal.toLowerCase();
-    if (lowerSignal.includes('bullish') || lowerSignal.includes('strong')) {
+    if (lowerSignal.includes('bullish')) {
       return 'text-green-400';
     }
-    if (lowerSignal.includes('bearish') || lowerSignal.includes('weak')) {
+    if (lowerSignal.includes('bearish')) {
       return 'text-red-400';
     }
-    if (lowerSignal.includes('low')) {
+    // "low" can be bullish for IV, "high" can be bearish
+    if (lowerSignal === 'low') {
         return 'text-green-400';
     }
-     if (lowerSignal.includes('high')) {
+     if (lowerSignal === 'high') {
         return 'text-red-400';
     }
-    return 'text-muted-foreground';
+    // "strong" and "weak" will now use default text color which is fine
+    return 'text-foreground';
 };
 
 const OptionsTable = ({ title, description, data }: { title: string; description: string, data: OptionsSignal[] }) => {
@@ -48,6 +50,13 @@ const OptionsTable = ({ title, description, data }: { title: string; description
             </Card>
         );
     }
+    
+    const getQualityVariant = (signal: string) => {
+        const lower = signal.toLowerCase();
+        if (lower === 'strong') return 'default';
+        if (lower === 'weak') return 'destructive';
+        return 'secondary';
+    }
 
     return (
         <Card>
@@ -59,32 +68,32 @@ const OptionsTable = ({ title, description, data }: { title: string; description
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Strike</TableHead>
-                            <TableHead>Expiration</TableHead>
-                            <TableHead>Setup Quality</TableHead>
-                            <TableHead>Price Trend</TableHead>
-                            <TableHead>IV Signal</TableHead>
-                            <TableHead className="w-[40%]">AI Summary</TableHead>
+                            <TableHead className="text-left">Strike</TableHead>
+                            <TableHead className="text-left">Expiration</TableHead>
+                            <TableHead className="text-left">Setup Quality</TableHead>
+                            <TableHead className="text-left">Price Trend</TableHead>
+                            <TableHead className="text-left">IV Signal</TableHead>
+                            <TableHead className="w-[40%] text-left">AI Summary</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {data.map((option) => (
                             <TableRow key={option.contract_symbol}>
-                                <TableCell className="font-medium">${option.strike_price.toFixed(2)}</TableCell>
-                                <TableCell>{new Date(option.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</TableCell>
-                                <TableCell>
-                                    <Badge variant={option.setup_quality_signal.toLowerCase() === 'strong' ? 'default': 'secondary'} className={cn(getSignalColor(option.setup_quality_signal))}>
+                                <TableCell className="font-medium text-left">${option.strike_price.toFixed(2)}</TableCell>
+                                <TableCell className="text-left">{new Date(option.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</TableCell>
+                                <TableCell className="text-left">
+                                    <Badge variant={getQualityVariant(option.setup_quality_signal)}>
                                         {option.setup_quality_signal}
                                     </Badge>
                                 </TableCell>
-                                <TableCell className={cn("flex items-center gap-1", getSignalColor(option.stock_price_trend_signal))}>
+                                <TableCell className={cn("flex items-center gap-1 text-left", getSignalColor(option.stock_price_trend_signal))}>
                                     {option.stock_price_trend_signal.toLowerCase() === 'bullish' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
                                     {option.stock_price_trend_signal}
                                 </TableCell>
-                                <TableCell className={cn(getSignalColor(option.iv_signal))}>
+                                <TableCell className={cn("text-left", getSignalColor(option.iv_signal))}>
                                     {option.iv_signal}
                                 </TableCell>
-                                <TableCell className="text-muted-foreground text-xs">{option.summary}</TableCell>
+                                <TableCell className="text-muted-foreground text-xs text-left">{option.summary}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

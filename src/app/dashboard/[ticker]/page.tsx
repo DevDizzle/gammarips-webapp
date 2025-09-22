@@ -1,12 +1,14 @@
 
+
 import { notFound } from 'next/navigation';
-import { getOptionsSignals } from '@/app/actions';
+import { getOptionsSignals, getDashboardData } from '@/app/actions';
 import type { OptionsSignal } from '@/lib/firebase-admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { PriceChart } from '@/components/price-chart';
 
 interface TickerDashboardPageProps {
   params: {
@@ -25,14 +27,12 @@ const getSignalColor = (signal: string) => {
     if (lowerSignal.includes('bearish')) {
       return 'text-red-400';
     }
-    // "low" can be bullish for IV, "high" can be bearish
     if (lowerSignal === 'low') {
         return 'text-green-400';
     }
      if (lowerSignal === 'high') {
         return 'text-red-400';
     }
-    // "strong" and "weak" will now use default text color which is fine
     return 'text-foreground';
 };
 
@@ -105,13 +105,14 @@ const OptionsTable = ({ title, description, data }: { title: string; description
 
 export default async function TickerDashboardPage({ params }: TickerDashboardPageProps) {
   const ticker = params.ticker.toUpperCase();
-  const data = await getOptionsSignals(ticker);
+  const optionsData = await getOptionsSignals(ticker);
+  const chartData = await getDashboardData(ticker);
 
-  if (!data) {
+  if (!optionsData) {
     notFound();
   }
 
-  const { calls, puts, company_name } = data;
+  const { calls, puts, company_name } = optionsData;
 
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
@@ -121,9 +122,24 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
           <Badge variant="secondary">{ticker}</Badge>
         </h1>
         <p className="text-muted-foreground mt-1">
-            AI-Powered Options Signals
+            AI-Powered Options & Price Analysis
         </p>
       </header>
+
+      <section>
+          {chartData ? (
+                <PriceChart priceData={chartData} />
+            ) : (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Price Chart</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-muted-foreground">Price chart data is not available for this ticker.</p>
+                    </CardContent>
+                </Card>
+            )}
+      </section>
       
       <div className="flex flex-col gap-8">
         <OptionsTable 

@@ -1,3 +1,4 @@
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -299,8 +300,10 @@ export async function getEconomicEventsAdmin(): Promise<EconomicEvent[]> {
         
         eventsQuerySnapshot.forEach(doc => {
             const data = doc.data();
-            const parentPath = doc.ref.parent.parent?.path; // Gives 'calendar_events/TICKER'
-            const ticker = parentPath ? parentPath.split('/')[1] : undefined;
+            
+            // Safely get the parent path and extract the ticker
+            const parent = doc.ref.parent.parent;
+            const ticker = parent ? parent.path.split('/')[1] : undefined;
 
             const event = {
                 id: doc.id,
@@ -719,6 +722,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 
 
 

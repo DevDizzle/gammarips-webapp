@@ -98,10 +98,9 @@ export type Winner = z.infer<typeof WinnerSchema>;
 export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
     try {
         const querySnapshot = await adminDb.collection("winners_dashboard").get();
-        const winners: Winner[] = [];
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const winner = {
+        const winners = querySnapshot.docs.map(doc => {
+             const data = doc.data();
+             return {
                 id: doc.id,
                 company_name: data.company_name,
                 image_uri: data.image_uri,
@@ -113,13 +112,13 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
                 ticker: data.ticker,
                 weighted_score: data.weighted_score,
             };
+        }).filter(winner => {
             const validation = WinnerSchema.safeParse(winner);
-            if (validation.success) {
-                winners.push(validation.data);
-            } else {
-                console.error("Invalid winner data from Firestore:", validation.error.flatten());
+            if (!validation.success) {
+                 console.error("Invalid winner data from Firestore:", validation.error.flatten());
             }
-        });
+            return validation.success;
+        }) as Winner[];
         
         // Sort by weighted_score, descending
         winners.sort((a, b) => (b.weighted_score ?? 0) - (a.weighted_score ?? 0));
@@ -554,5 +553,6 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 }
 
     
+
 
 

@@ -146,6 +146,8 @@ export async function generateStaticParams() {
 }
 
 export const dynamicParams = true;
+// Revalidate this page at most once per hour (3600 seconds)
+export const revalidate = 3600;
 
 
 const SignalIndicator = ({ signal }: { signal: 'BUY' | 'SELL' | 'HOLD' }) => {

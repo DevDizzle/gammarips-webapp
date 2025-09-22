@@ -23,12 +23,10 @@ export default function LandingPage() {
         {/* Hero */}
         <section className="container mx-auto px-4 sm:px-6 lg:px-8 text-center py-20 sm:py-24">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight">
-            Find Your Next Winning Trade
+            Find Your Next Winning Options Trade
           </h2>
           <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Get AI-powered stock and options signals on the Russell 1000.
-            <br />
-            Stop chasing noise. Start acting on actionable intelligence.
+            Get AI-powered stock signals that pinpoint high-potential options setups in the Russell 1000. Stop chasing noise and start trading with confidence.
           </p>
         </section>
 

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -15,6 +14,7 @@ import { getWinnersDashboard } from '../actions';
 import type { Winner } from '@/lib/firebase-admin';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Markdown } from '@/components/markdown';
 
 // Helper to convert GCS URI to a public URL
 const convertGcsUriToUrl = (gcsUri: string) => {
@@ -88,9 +88,9 @@ function TodaysWinners() {
   return (
     <Card className="lg:col-span-2">
       <CardHeader>
-        <CardTitle>Today's Top Signals</CardTitle>
+        <CardTitle>Today's Top Opportunities</CardTitle>
         <CardDescription>
-          The strongest bullish and bearish signals from across the market, updated daily.
+          <Markdown content="The strongest bullish and bearish signals from across the market, updated daily. **Click any stock to see the full options chain and our analysis.**" />
         </CardDescription>
       </CardHeader>
       <CardContent>

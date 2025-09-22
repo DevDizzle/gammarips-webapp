@@ -95,6 +95,64 @@ const WinnerSchema = z.object({
 });
 export type Winner = z.infer<typeof WinnerSchema>;
 
+const OptionsSignalSchema = z.object({
+    contract_symbol: z.string(),
+    expiration_date: z.string(),
+    implied_volatility: z.number(),
+    iv_signal: z.string(),
+    option_type: z.enum(['call', 'put']),
+    run_date: z.string(),
+    setup_quality_signal: z.string(),
+    stock_price_trend_signal: z.string(),
+    strike_price: z.number(),
+    summary: z.string(),
+    ticker: z.string(),
+    company_name: z.string(),
+});
+export type OptionsSignal = z.infer<typeof OptionsSignalSchema>;
+
+const TickerOptionsDataSchema = z.object({
+    calls: z.array(OptionsSignalSchema),
+    puts: z.array(OptionsSignalSchema),
+    company_name: z.string(),
+    ticker: z.string(),
+});
+export type TickerOptionsData = z.infer<typeof TickerOptionsDataSchema>;
+
+export async function getOptionsSignalsAdmin(ticker: string): Promise<TickerOptionsData | null> {
+    try {
+        const docRef = adminDb.collection("options_signals").doc(ticker.toUpperCase());
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            console.warn(`No options signals found for ticker: ${ticker}`);
+            return null;
+        }
+
+        const data = docSnap.data();
+        
+        const optionsData: TickerOptionsData = {
+            calls: data?.calls ?? [],
+            puts: data?.puts ?? [],
+            company_name: data?.calls?.[0]?.company_name ?? data?.puts?.[0]?.company_name ?? ticker,
+            ticker: ticker.toUpperCase(),
+        };
+
+        const validation = TickerOptionsDataSchema.safeParse(optionsData);
+
+        if (!validation.success) {
+            console.error(`Invalid options signal data for ${ticker}:`, validation.error.flatten());
+            return null;
+        }
+        
+        return validation.data;
+    } catch (error) {
+        console.error(`Error fetching options signals for ${ticker}:`, error);
+        return null;
+    }
+}
+
+
 export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
     try {
         const querySnapshot = await adminDb.collection("winners_dashboard").get();
@@ -119,7 +177,6 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
             return winnerData;
         });
         
-        // Sort by outlook_signal with a detailed hierarchy
         winners.sort((a, b) => {
             const score = (signal: string) => {
                 const s = signal.toLowerCase();
@@ -130,7 +187,7 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
                 if (s.includes('moderately bearish')) return 2;
                 if (s.includes('bearish')) return 1;
                 if (s.includes('strongly bearish')) return 0;
-                return 3; // Default for any other unclassified signal
+                return 3; 
             };
 
             return score(b.outlook_signal) - score(a.outlook_signal);

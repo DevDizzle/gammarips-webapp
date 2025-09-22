@@ -27,13 +27,18 @@ import {
     getTopStocksAdmin,
     getTopOptionsAdmin,
     getDashboardDataAdmin,
-    getWinnersDashboardAdmin
+    getWinnersDashboardAdmin,
+    getOptionsSignalsAdmin
 } from '@/lib/firebase-admin';
-import type { Stock, EconomicEvent, OptionCandidate, Winner } from '@/lib/firebase-admin';
+import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
 
+
+export async function getOptionsSignals(ticker: string): Promise<TickerOptionsData | null> {
+    return getOptionsSignalsAdmin(ticker);
+}
 
 export async function getWinnersDashboard(): Promise<Winner[]> {
     return getWinnersDashboardAdmin();

@@ -103,6 +103,17 @@
         "app/dashboard/[ticker]/page": "rsc"
       }
     },
+    "4088e14489f23ae79f08a8dbbaa44d24ab37edfdd0": {
+      "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/dashboard/[ticker]/page": "rsc"
+      }
+    },
     "601f98e46519c012626d8451e7ca72bc064d2747d8": {
       "workers": {
         "app/dashboard/[ticker]/page": {
@@ -313,6 +324,17 @@
       }
     },
     "40d9040ad4281e872e74c84699bb37d2e707ee369c": {
+      "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/dashboard/[ticker]/page": "rsc"
+      }
+    },
+    "40f8d60fc13e8f14fcf58e1560b04bb80780499fb1": {
       "workers": {
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",

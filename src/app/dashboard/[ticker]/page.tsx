@@ -1,7 +1,7 @@
 
 
 import { notFound } from 'next/navigation';
-import { getDashboardData, getTickerEvents } from '@/app/actions';
+import { getDashboardData, getEconomicEvents, getTickerEvents } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, CalendarDays } from 'lucide-react';
@@ -10,7 +10,7 @@ import { PriceChart } from '@/components/price-chart';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Markdown } from '@/components/markdown';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { TickerEvent } from '@/lib/firebase-admin';
+import type { EconomicEvent, TickerEvent } from '@/lib/firebase-admin';
 
 interface TickerDashboardPageProps {
   params: {
@@ -74,7 +74,9 @@ const getIndicator = (signal: string, IconUp: React.ElementType, IconDown: React
     return <IconNeutral className="h-4 w-4 text-muted-foreground" />;
 };
 
-const UpcomingEvents = ({ events }: { events: TickerEvent[] }) => {
+type CombinedEvent = (TickerEvent & { date: string, name: string }) | (EconomicEvent & { date: string, name: string });
+
+const UpcomingEvents = ({ events }: { events: CombinedEvent[] }) => {
     if (!events || events.length === 0) {
         return null;
     }
@@ -93,13 +95,19 @@ const UpcomingEvents = ({ events }: { events: TickerEvent[] }) => {
                         <TableRow>
                             <TableHead>Date</TableHead>
                             <TableHead>Event</TableHead>
+                            <TableHead>Ticker</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {events.map((event) => (
                             <TableRow key={event.id}>
-                                <TableCell>{new Date(event.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</TableCell>
-                                <TableCell>{event.event_name}</TableCell>
+                                <TableCell>{new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</TableCell>
+                                <TableCell>{event.name}</TableCell>
+                                <TableCell>
+                                    {'ticker' in event && event.ticker ? (
+                                        <Badge variant="secondary">{event.ticker}</Badge>
+                                    ) : null}
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -113,7 +121,20 @@ const UpcomingEvents = ({ events }: { events: TickerEvent[] }) => {
 export default async function TickerDashboardPage({ params }: TickerDashboardPageProps) {
   const ticker = params.ticker.toUpperCase();
   const data = await getDashboardData(ticker);
-  const events = await getTickerEvents(ticker);
+  
+  // Fetch both ticker-specific and general economic events
+  const tickerEvents = await getTickerEvents(ticker);
+  const economicEvents = await getEconomicEvents();
+
+  // Combine, de-duplicate, and sort events
+  const combinedEvents: CombinedEvent[] = [
+      ...tickerEvents.map(e => ({ ...e, date: e.event_date, name: e.event_name, ticker: ticker })),
+      ...economicEvents.map(e => ({ ...e, date: e.date, name: e.event_name }))
+  ];
+
+  const uniqueEvents = Array.from(new Map(combinedEvents.map(e => [e.name + e.date, e])).values());
+  uniqueEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
 
   if (!data) {
     return (
@@ -246,7 +267,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
                     </Card>
             )}
 
-            <UpcomingEvents events={events} />
+            <UpcomingEvents events={uniqueEvents} />
         </div>
 
     </div>

@@ -103,10 +103,25 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
         // Find the best call that is at least 7 days out
         return scoredCalls.find((c: any) => c.dte >= 7) || null;
     })();
+    
+    // --- Fetch separate markdown for AI analysis ---
+    const allStocks = await getStocksAdmin();
+    const stock = allStocks.find(s => s.id === ticker.toUpperCase());
+    let stockLevelAnalysis = rawData.stockLevelAnalysis; // Use original as fallback
+
+    if (stock && stock.recommendation_analysis) {
+        try {
+            stockLevelAnalysis = await getGcsFileContentAdmin(stock.recommendation_analysis);
+        } catch (error) {
+            console.error(`Failed to fetch separate AI analysis for ${ticker}, using fallback.`, error);
+        }
+    }
+
 
     return {
         ...rawData,
-        topCallSetup: topCall
+        topCallSetup: topCall,
+        stockLevelAnalysis, // Overwrite with new content
     };
 }
 

@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import {
@@ -61,7 +62,52 @@ export async function getTopOptions(type: 'CALL' | 'PUT', limit: number): Promis
 }
 
 export async function getDashboardData(ticker: string): Promise<any | null> {
-    return getDashboardDataAdmin(ticker);
+    const rawData = await getDashboardDataAdmin(ticker);
+    if (!rawData) return null;
+
+    // --- Top Call Selection Logic ---
+    const topCall = (() => {
+        if (!rawData.optionsTable?.chains) return null;
+
+        const calls = rawData.optionsTable.chains.filter((c: any) => c.option_type === 'call');
+        const trendBonus = (rawData.kpis.trendStrength.price > rawData.kpis.trendStrength.sma50) ? 1 : 0;
+
+        const scoredCalls = calls.map((c: any) => {
+            let score = 0;
+            // Setup Quality Score
+            if (c.setup_quality_signal === 'Strong') score += 3;
+            else if (c.setup_quality_signal === 'Medium') score += 1;
+            
+            // Trend Bonus
+            score += trendBonus;
+
+            // Liquidity Bonus
+            if (c.oi > 1000) score += 1;
+            if (c.spread_bps < 50) score += 1;
+
+            // Calculate DTE (Days to Expiration)
+            const dte = (new Date(c.expiration_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24);
+
+            return { ...c, score, dte };
+        });
+
+        scoredCalls.sort((a: any, b: any) => {
+            // Highest score first
+            if (b.score !== a.score) return b.score - a.score;
+            // Tie-breakers
+            if (b.oi !== a.oi) return b.oi - a.oi; // Higher OI is better
+            if (a.implied_volatility !== b.implied_volatility) return a.implied_volatility - b.implied_volatility; // Lower IV is better
+            return a.dte - b.dte; // Nearer DTE (but >=7) is better
+        });
+        
+        // Find the best call that is at least 7 days out
+        return scoredCalls.find((c: any) => c.dte >= 7) || null;
+    })();
+
+    return {
+        ...rawData,
+        topCallSetup: topCall
+    };
 }
 
 

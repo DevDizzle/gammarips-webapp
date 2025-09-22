@@ -156,7 +156,8 @@ export async function getOptionsSignalsAdmin(ticker: string): Promise<TickerOpti
 export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
     try {
         const querySnapshot = await adminDb.collection("winners_dashboard").get();
-        const winners: Winner[] = querySnapshot.docs.map(doc => {
+        const winners: Winner[] = [];
+        querySnapshot.docs.forEach(doc => {
              const data = doc.data();
              const winnerData: Winner = {
                 id: doc.id,
@@ -171,10 +172,11 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
                 weighted_score: isNaN(data.weighted_score) ? null : data.weighted_score,
             };
             const validation = WinnerSchema.safeParse(winnerData);
-            if (!validation.success) {
+            if (validation.success) {
+                winners.push(validation.data);
+            } else {
                 console.error("Invalid winner data from Firestore:", validation.error.flatten());
             }
-            return winnerData;
         });
         
         winners.sort((a, b) => {
@@ -371,35 +373,31 @@ export async function getTopOptionsAdmin(type: 'CALL' | 'PUT', limit: number): P
 
 
 export async function getDashboardDataAdmin(ticker: string): Promise<any | null> {
-    const BUCKET_NAME = 'profit-scout';
-    const FOLDER_NAME = 'price-chart-json';
+    try {
+        const docRef = adminDb.collection("tickers").doc(ticker.toUpperCase());
+        const docSnap = await docRef.get();
 
-    // Try to fetch today's file, then yesterday's, and so on for the last 3 days.
-    for (let i = 0; i < 4; i++) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const dateString = date.toISOString().split('T')[0];
-        
-        const gcsPath = `gs://${BUCKET_NAME}/${FOLDER_NAME}/${ticker.toUpperCase()}_${dateString}.json`;
-
-        try {
-            const content = await getGcsFileContentAdmin(gcsPath);
-            console.log(`Successfully fetched chart data for ${ticker} from ${gcsPath}`);
-            return JSON.parse(content);
-        } catch (error: any) {
-            // A "Not Found" error is expected if the file for a given day doesn't exist.
-            if (error.message.includes('Could not read file from GCS')) {
-                console.log(`Chart data not found for ${ticker} at ${gcsPath}. Trying previous day.`);
-                continue; // Try the next older date
-            }
-            // For any other error (permissions, parsing, etc.), log it and stop.
-            console.error(`Error fetching dashboard data for ${ticker} from ${gcsPath}:`, error);
+        if (!docSnap.exists) {
+            console.warn(`[getDashboardDataAdmin] No document found for ticker: ${ticker}`);
             return null;
         }
-    }
+        
+        const stockData = docSnap.data();
+        const gcsPath = stockData?.dashboard_json;
 
-    console.warn(`Could not find chart data for ${ticker} in the last 4 days.`);
-    return null;
+        if (typeof gcsPath !== 'string' || !gcsPath.startsWith('gs://')) {
+             console.warn(`[getDashboardDataAdmin] No valid dashboard_json GCS path for ticker: ${ticker}. Path found: ${gcsPath}`);
+            return null;
+        }
+
+        console.log(`[getDashboardDataAdmin] Found GCS path for ${ticker}: ${gcsPath}`);
+        const content = await getGcsFileContentAdmin(gcsPath);
+        return JSON.parse(content);
+
+    } catch (error: any) {
+        console.error(`[getDashboardDataAdmin] Error fetching dashboard data for ${ticker}:`, error);
+        return null;
+    }
 }
 
 export async function getSeoPageGcsPathAdmin(ticker: string): Promise<string | null> {
@@ -639,4 +637,5 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 

@@ -70,12 +70,17 @@ export const PriceChart: React.FC<PriceChartProps> = ({ priceData, className }) 
 
 
   useEffect(() => {
-    if (!chartContainerRef.current || !priceData) return;
+    if (!chartContainerRef.current || !priceData || !priceData.candlestick || !priceData.volume) {
+        return;
+    }
+
+    // Map data and rename 'date' to 'time' for lightweight-charts
+    const candlestickData = priceData.candlestick.map(d => ({ ...d, time: d.date }));
 
     // Map volume data and add color based on price change
     const volumeData = priceData.volume.map((v, index) => {
-        const currentCandle = priceData.candlestick[index];
-        const prevCandle = priceData.candlestick[index - 1];
+        const currentCandle = candlestickData[index];
+        const prevCandle = candlestickData[index - 1];
         const color = prevCandle && currentCandle.close < prevCandle.close ? colors.volumeDown : colors.volumeUp;
         return { time: v.date, value: v.value, color };
     });
@@ -92,6 +97,7 @@ export const PriceChart: React.FC<PriceChartProps> = ({ priceData, className }) 
             height: 400,
         };
 
+        // If chart doesn't exist, create it.
         if (!chartRef.current) {
             chartRef.current = createChart(chartContainerRef.current, chartOptions);
 
@@ -99,7 +105,7 @@ export const PriceChart: React.FC<PriceChartProps> = ({ priceData, className }) 
                 upColor: colors.green, downColor: colors.red, borderDownColor: colors.red,
                 borderUpColor: colors.green, wickDownColor: colors.red, wickUpColor: colors.green,
             });
-            candlestickSeries.setData(priceData.candlestick.map(d => ({ ...d, time: d.date })));
+            candlestickSeries.setData(candlestickData);
             
             if (priceData.sma50) {
                 const sma50Series = chartRef.current.addLineSeries({ color: colors.sma50, lineWidth: 2, lineStyle: LineStyle.Dashed, priceLineVisible: false, lastValueVisible: false });
@@ -124,15 +130,17 @@ export const PriceChart: React.FC<PriceChartProps> = ({ priceData, className }) 
         } else {
             // Update existing chart
             chartRef.current.applyOptions(chartOptions);
-            // This is a simplified update. A more robust implementation would update each series individually.
-            // For now, we assume the data doesn't change after initial load for this component instance.
+            // In a real-world scenario, you might want to update series data here as well.
+            // For now, we assume data is static per component instance.
         }
     };
 
     createOrUpdateChart();
 
     const handleResize = () => {
-      chartRef.current?.applyOptions({ width: chartContainerRef.current!.clientWidth });
+      if (chartContainerRef.current) {
+         chartRef.current?.applyOptions({ width: chartContainerRef.current.clientWidth });
+      }
     };
 
     window.addEventListener('resize', handleResize);
@@ -140,7 +148,7 @@ export const PriceChart: React.FC<PriceChartProps> = ({ priceData, className }) 
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [priceData, colors]); // Rerun effect if data or colors change
+  }, [priceData, colors, isDark]); // Rerun effect if data or colors change
 
   // Effect to clean up chart on unmount
   useEffect(() => {

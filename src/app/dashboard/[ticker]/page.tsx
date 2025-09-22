@@ -1,14 +1,14 @@
 
 
 import { notFound } from 'next/navigation';
-import { getOptionsSignals, getDashboardData } from '@/app/actions';
-import type { OptionsSignal } from '@/lib/firebase-admin';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { getDashboardData } from '@/app/actions';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Calendar, Percent } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Markdown } from '@/components/markdown';
 
 interface TickerDashboardPageProps {
   params: {
@@ -19,116 +19,125 @@ interface TickerDashboardPageProps {
 // Re-render this page on every request to ensure data is fresh
 export const dynamic = 'force-dynamic';
 
-const getSignalColor = (signal: string) => {
+const getSentimentClasses = (signal: string) => {
     const lowerSignal = signal.toLowerCase();
-    if (lowerSignal.includes('bullish')) {
-      return 'text-green-400';
+    if (lowerSignal.includes('bullish') || lowerSignal.includes('strong') || lowerSignal.includes('positive') || lowerSignal === 'low') {
+        return 'text-green-500 border-green-500/20 bg-green-500/10';
     }
-    if (lowerSignal.includes('bearish')) {
-      return 'text-red-400';
+    if (lowerSignal.includes('bearish') || lowerSignal.includes('weak') || lowerSignal.includes('negative') || lowerSignal === 'high') {
+        return 'text-red-500 border-red-500/20 bg-red-500/10';
     }
-    if (lowerSignal === 'low') {
-        return 'text-green-400';
+    return 'text-muted-foreground border-border bg-card';
+}
+
+const KpiCard = ({ title, value, indicator, tooltip }: { title: string; value: string; indicator: React.ReactNode; tooltip: string }) => (
+    <Card>
+        <CardHeader className="pb-2">
+            <CardDescription className="flex items-center gap-2 text-xs">
+                {indicator}
+                <span>{title}</span>
+            </CardDescription>
+            <CardTitle className="text-2xl">{value}</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <p className="text-xs text-muted-foreground">{tooltip}</p>
+        </CardContent>
+    </Card>
+);
+
+const getIndicator = (signal: string, IconUp: React.ElementType, IconDown: React.ElementType, IconNeutral: React.ElementType) => {
+    const lowerSignal = signal.toLowerCase();
+    if (lowerSignal.includes('bullish') || lowerSignal.includes('positive') || lowerSignal.includes('strong')) {
+        return <IconUp className="h-4 w-4 text-green-500" />;
     }
-     if (lowerSignal === 'high') {
-        return 'text-red-400';
+    if (lowerSignal.includes('bearish') || lowerSignal.includes('negative') || lowerSignal.includes('weak')) {
+        return <IconDown className="h-4 w-4 text-red-500" />;
     }
-    return 'text-foreground';
+    return <IconNeutral className="h-4 w-4 text-muted-foreground" />;
 };
 
-const OptionsTable = ({ title, description, data }: { title: string; description: string, data: OptionsSignal[] }) => {
-    if (!data || data.length === 0) {
-        return (
-             <Card>
-                <CardHeader>
-                    <CardTitle>{title}</CardTitle>
-                    <CardDescription>{description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground">No options signals available for this ticker at this time.</p>
-                </CardContent>
-            </Card>
-        );
-    }
-    
-    const getQualityVariant = (signal: string) => {
-        const lower = signal.toLowerCase();
-        if (lower === 'strong') return 'default';
-        if (lower === 'weak') return 'destructive';
-        return 'secondary';
-    }
-
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle>{title}</CardTitle>
-                <CardDescription>{description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="text-left">Strike</TableHead>
-                            <TableHead className="text-left">Expiration</TableHead>
-                            <TableHead className="text-left">Setup Quality</TableHead>
-                            <TableHead className="text-left">Price Trend</TableHead>
-                            <TableHead className="text-left">IV Signal</TableHead>
-                            <TableHead className="w-[40%] text-left">AI Summary</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {data.map((option) => (
-                            <TableRow key={option.contract_symbol}>
-                                <TableCell className="font-medium text-left">${option.strike_price.toFixed(2)}</TableCell>
-                                <TableCell className="text-left">{new Date(option.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</TableCell>
-                                <TableCell className="text-left">
-                                    <Badge variant={getQualityVariant(option.setup_quality_signal)}>
-                                        {option.setup_quality_signal}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className={cn("flex items-center gap-1 text-left", getSignalColor(option.stock_price_trend_signal))}>
-                                    {option.stock_price_trend_signal.toLowerCase() === 'bullish' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
-                                    {option.stock_price_trend_signal}
-                                </TableCell>
-                                <TableCell className={cn("text-left", getSignalColor(option.iv_signal))}>
-                                    {option.iv_signal}
-                                </TableCell>
-                                <TableCell className="text-muted-foreground text-xs text-left">{option.summary}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
-    )
-}
 
 export default async function TickerDashboardPage({ params }: TickerDashboardPageProps) {
   const ticker = params.ticker.toUpperCase();
-  const optionsData = await getOptionsSignals(ticker);
-  const chartData = await getDashboardData(ticker);
+  const data = await getDashboardData(ticker);
 
-  if (!optionsData) {
-    notFound();
+  if (!data) {
+    return (
+        <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Data not available</CardTitle>
+                    <CardDescription>
+                        Could not load dashboard data for {ticker}. The data may be in the process of being generated, or the ticker may not be supported. Please check back later.
+                    </CardDescription>
+                </CardHeader>
+            </Card>
+        </div>
+    )
   }
 
-  const { calls, puts, company_name } = optionsData;
+  const { titleInfo, kpis, priceChartData, topCallSetup, stockLevelAnalysis, seo } = data;
+  const isBullish = kpis.trendStrength.price > kpis.trendStrength.sma50;
 
   return (
-    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
-      <header className="mb-6">
-        <h1 className="text-4xl font-bold font-headline tracking-tight flex items-center gap-2">
-          {company_name || ticker}
+    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
+      <header>
+        <h1 className="text-3xl font-bold font-headline tracking-tight flex items-center gap-3">
+          <span className="truncate">{titleInfo.companyName}</span>
           <Badge variant="secondary">{ticker}</Badge>
         </h1>
-        <p className="text-muted-foreground mt-1">
-            AI-Powered Options & Price Analysis
+        <p className="text-muted-foreground mt-1 text-sm">
+            AI-Powered Options & Equity Analysis as of {new Date(data.runDate).toLocaleDateString()}
         </p>
       </header>
 
+      {topCallSetup && (
+          <Card className={cn("border-2", isBullish ? "border-green-500/50 bg-green-500/10" : "border-red-500/50 bg-red-500/10")}>
+              <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                      <TrendingUp size={20} /> Top Call Setup
+                  </CardTitle>
+                  <CardDescription>{topCallSetup.summary.split('.')[0] + '.'}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                      <div className="p-2 bg-background/50 rounded-lg">
+                          <p className="text-xs font-medium text-muted-foreground">Strike</p>
+                          <p className="text-md font-semibold">${topCallSetup.strike_price.toFixed(2)}</p>
+                      </div>
+                      <div className="p-2 bg-background/50 rounded-lg">
+                          <p className="text-xs font-medium text-muted-foreground">Expiration</p>
+                          <p className="text-md font-semibold">{new Date(topCallSetup.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                      </div>
+                       <div className="p-2 bg-background/50 rounded-lg">
+                          <p className="text-xs font-medium text-muted-foreground">Implied Vol.</p>
+                          <p className="text-md font-semibold">{(topCallSetup.implied_volatility * 100).toFixed(1)}%</p>
+                      </div>
+                      <div className="p-2 bg-background/50 rounded-lg">
+                          <p className="text-xs font-medium text-muted-foreground">Setup Quality</p>
+                          <p className={cn("text-md font-semibold", getSentimentClasses(topCallSetup.setup_quality_signal))}>
+                              {topCallSetup.setup_quality_signal}
+                          </p>
+                      </div>
+                  </div>
+              </CardContent>
+              <CardFooter>
+                <p className="text-xs text-muted-foreground">{topCallSetup.contract_symbol}</p>
+              </CardFooter>
+          </Card>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <KpiCard title="Price vs. 50-Day SMA" value={`$${kpis.trendStrength.price.toFixed(2)}`} indicator={getIndicator(isBullish ? 'bullish' : 'bearish', ArrowUp, ArrowDown, Minus)} tooltip={kpis.trendStrength.tooltip} />
+        <KpiCard title="RSI (14-Day)" value={kpis.rsi.value.toFixed(1)} indicator={getIndicator(kpis.rsi.signal, TrendingUp, TrendingUp, Minus)} tooltip={kpis.rsi.tooltip} />
+        <KpiCard title="Volume Surge (vs 30D)" value={`${kpis.volumeSurge.value.toFixed(0)}%`} indicator={getIndicator(kpis.volumeSurge.signal, BarChart2, BarChart2, Minus)} tooltip={kpis.volumeSurge.tooltip} />
+        <KpiCard title="30-Day Volatility" value={`${kpis.historicalVolatility.value.toFixed(1)}%`} indicator={<Rss size={16} className="text-muted-foreground" />} tooltip={kpis.historicalVolatility.tooltip} />
+        <KpiCard title="30-Day Change" value={`${kpis.thirtyDayChange.value.toFixed(1)}%`} indicator={getIndicator(kpis.thirtyDayChange.signal, Percent, Percent, Minus)} tooltip={kpis.thirtyDayChange.tooltip} />
+      </div>
+      
       <section>
-          {chartData ? (
-                <PriceChart priceData={chartData} />
+          {priceChartData ? (
+                <PriceChart priceData={priceChartData} />
             ) : (
                 <Card>
                     <CardHeader>
@@ -141,19 +150,23 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
             )}
       </section>
       
-      <div className="flex flex-col gap-8">
-        <OptionsTable 
-            title="Bullish Call Options"
-            description="AI-identified call options that may benefit from an expected upward move in the stock price."
-            data={calls}
-        />
-        <OptionsTable 
-            title="Bearish Put Options"
-            description="AI-identified put options that may benefit from an expected downward move in the stock price."
-            data={puts}
-        />
-      </div>
-
+      {stockLevelAnalysis && (
+           <Card>
+                <CardHeader>
+                    <CardTitle>AI Analysis</CardTitle>
+                </CardHeader>
+                <CardContent>
+                     <Accordion type="single" collapsible>
+                        <AccordionItem value="item-1">
+                            <AccordionTrigger>View Full Analysis</AccordionTrigger>
+                            <AccordionContent>
+                                <Markdown content={stockLevelAnalysis} className="prose prose-sm prose-invert max-w-none" />
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                </CardContent>
+            </Card>
+      )}
     </div>
   );
 }

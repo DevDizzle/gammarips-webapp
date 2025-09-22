@@ -113,7 +113,7 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
 
     return {
         ...rawData,
-        optionsHeader, // This replaces topCallSetup
+        optionsHeader, // This will be null if no top signal is found
         topSignalSummary: topSignal?.summary, // Pass summary separately
         stockLevelAnalysis, // Overwrite with new content
     };
@@ -240,5 +240,3 @@ export async function createCheckoutSession(uid: string): Promise<{ sessionId: s
 
   return { sessionId };
 }
-
-    

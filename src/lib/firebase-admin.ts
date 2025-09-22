@@ -67,6 +67,14 @@ const EconomicEventSchema = z.object({
 });
 export type EconomicEvent = z.infer<typeof EconomicEventSchema>;
 
+const TickerEventSchema = z.object({
+    id: z.string(),
+    event_name: z.string(),
+    event_date: z.string(),
+    event_type: z.string().optional(),
+});
+export type TickerEvent = z.infer<typeof TickerEventSchema>;
+
 
 const OptionCandidateSchema = z.object({
   id: z.string(),
@@ -326,6 +334,47 @@ export async function getEconomicEventsAdmin(): Promise<EconomicEvent[]> {
 
     } catch (error) {
         console.error('Error fetching economic events:', error);
+        return [];
+    }
+}
+
+
+export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[]> {
+    try {
+        const now = new Date();
+        const nowStr = now.toISOString().split('T')[0];
+
+        const eventsCollectionRef = adminDb.collection(`calendar_events/${ticker}/events`);
+        const querySnapshot = await eventsCollectionRef
+            .where('event_date', '>=', nowStr)
+            .orderBy('event_date', 'asc')
+            .get();
+        
+        if (querySnapshot.empty) {
+            return [];
+        }
+
+        const events: TickerEvent[] = [];
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+            const event = {
+                id: doc.id,
+                event_name: data.event_name,
+                event_date: data.event_date,
+                event_type: data.event_type,
+            };
+            const validation = TickerEventSchema.safeParse(event);
+            if(validation.success) {
+                events.push(validation.data);
+            } else {
+                console.warn(`Invalid ticker event data for ${ticker}:`, validation.error.flatten());
+            }
+        });
+
+        return events;
+
+    } catch (error) {
+        console.error(`Error fetching events for ticker ${ticker}:`, error);
         return [];
     }
 }
@@ -672,6 +721,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 
 
 

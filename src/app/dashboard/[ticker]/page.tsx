@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { getDashboardData } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Calendar, Percent } from 'lucide-react';
+import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Calendar, Percent, CheckCircle, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -21,14 +21,28 @@ export const dynamic = 'force-dynamic';
 
 const getSentimentClasses = (signal: string) => {
     const lowerSignal = signal.toLowerCase();
-    if (lowerSignal.includes('bullish') || lowerSignal.includes('strong') || lowerSignal.includes('positive') || lowerSignal === 'low') {
+    if (lowerSignal.includes('bullish') || lowerSignal.includes('strong') || lowerSignal.includes('positive')) {
         return 'text-green-500 border-green-500/20 bg-green-500/10';
     }
-    if (lowerSignal.includes('bearish') || lowerSignal.includes('weak') || lowerSignal.includes('negative') || lowerSignal === 'high') {
+    if (lowerSignal.includes('bearish') || lowerSignal.includes('weak') || lowerSignal.includes('negative')) {
+        return 'text-red-500 border-red-500/20 bg-red-500/10';
+    }
+    if (lowerSignal.includes('low')) { // Special case for "low" IV
+        return 'text-green-500 border-green-500/20 bg-green-500/10';
+    }
+     if (lowerSignal.includes('high')) { // Special case for "high" IV
         return 'text-red-500 border-red-500/20 bg-red-500/10';
     }
     return 'text-muted-foreground border-border bg-card';
 }
+
+const getSignalBadgeVariant = (signal: string) => {
+    const lowerSignal = signal.toLowerCase();
+    if (lowerSignal.includes('strong')) return 'default';
+    if (lowerSignal.includes('weak')) return 'destructive';
+    return 'secondary';
+}
+
 
 const KpiCard = ({ title, value, indicator, tooltip }: { title: string; value: string; indicator: React.ReactNode; tooltip: string }) => (
     <Card>
@@ -76,7 +90,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
     )
   }
 
-  const { titleInfo, kpis, priceChartData, topCallSetup, stockLevelAnalysis, seo } = data;
+  const { titleInfo, kpis, priceChartData, optionsHeader, topSignalSummary, stockLevelAnalysis } = data;
   const isBullish = kpis.trendStrength.price > kpis.trendStrength.sma50;
 
   return (
@@ -91,38 +105,49 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
         </p>
       </header>
 
-      {topCallSetup && (
+      {optionsHeader && (
           <Card className={cn("border-2", isBullish ? "border-green-500/50 bg-green-500/10" : "border-red-500/50 bg-red-500/10")}>
               <CardHeader>
+                   {topSignalSummary && (
+                    <CardDescription className="mb-2">
+                        <Markdown content={topSignalSummary} className="prose-sm prose-invert max-w-none" />
+                    </CardDescription>
+                  )}
                   <CardTitle className="flex items-center gap-2 text-lg">
-                      <TrendingUp size={20} /> Top Call Setup
+                      <TrendingUp size={20} />
+                      Top {optionsHeader.optionType === 'call' ? 'Call' : 'Put'} Setup
                   </CardTitle>
-                  <CardDescription>{topCallSetup.summary.split('.')[0] + '.'}</CardDescription>
               </CardHeader>
               <CardContent>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
                       <div className="p-2 bg-background/50 rounded-lg">
                           <p className="text-xs font-medium text-muted-foreground">Strike</p>
-                          <p className="text-md font-semibold">${topCallSetup.strike_price.toFixed(2)}</p>
+                          <p className="text-md font-semibold">${optionsHeader.strikePrice.toFixed(2)}</p>
                       </div>
                       <div className="p-2 bg-background/50 rounded-lg">
                           <p className="text-xs font-medium text-muted-foreground">Expiration</p>
-                          <p className="text-md font-semibold">{new Date(topCallSetup.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                          <p className="text-md font-semibold">{new Date(optionsHeader.expirationDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                       </div>
                        <div className="p-2 bg-background/50 rounded-lg">
                           <p className="text-xs font-medium text-muted-foreground">Implied Vol.</p>
-                          <p className="text-md font-semibold">{(topCallSetup.implied_volatility * 100).toFixed(1)}%</p>
+                          <p className={cn("text-md font-semibold", getSentimentClasses(optionsHeader.ivSignal))}>
+                              {(optionsHeader.ivValue * 100).toFixed(1)}%
+                          </p>
+                      </div>
+                       <div className="p-2 bg-background/50 rounded-lg">
+                          <p className="text-xs font-medium text-muted-foreground">Days to Exp.</p>
+                          <p className="text-md font-semibold">{optionsHeader.dte}</p>
                       </div>
                       <div className="p-2 bg-background/50 rounded-lg">
                           <p className="text-xs font-medium text-muted-foreground">Setup Quality</p>
-                          <p className={cn("text-md font-semibold", getSentimentClasses(topCallSetup.setup_quality_signal))}>
-                              {topCallSetup.setup_quality_signal}
-                          </p>
+                           <Badge variant={getSignalBadgeVariant(optionsHeader.setupQuality)} className="mt-1">
+                                {optionsHeader.setupQuality}
+                            </Badge>
                       </div>
                   </div>
               </CardContent>
               <CardFooter>
-                <p className="text-xs text-muted-foreground">{topCallSetup.contract_symbol}</p>
+                <p className="text-xs text-muted-foreground">{optionsHeader.contractSymbol}</p>
               </CardFooter>
           </Card>
       )}
@@ -170,3 +195,4 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
     </div>
   );
 }
+

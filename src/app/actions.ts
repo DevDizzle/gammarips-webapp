@@ -29,9 +29,10 @@ import {
     getTopOptionsAdmin,
     getDashboardDataAdmin,
     getWinnersDashboardAdmin,
-    getOptionsSignalsAdmin
+    getOptionsSignalsAdmin,
+    getOptionsHeaderSignalAdmin,
 } from '@/lib/firebase-admin';
-import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData } from '@/lib/firebase-admin';
+import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
@@ -65,43 +66,35 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
     const rawData = await getDashboardDataAdmin(ticker);
     if (!rawData) return null;
 
-    // --- Top Call Selection Logic ---
-    const topCall = (() => {
-        if (!rawData.optionsTable?.chains) return null;
+    // --- Options Header Selection & Transformation ---
+    const topSignal = await getOptionsHeaderSignalAdmin(ticker);
 
-        const calls = rawData.optionsTable.chains.filter((c: any) => c.option_type === 'call');
-        const trendBonus = (rawData.kpis.trendStrength.price > rawData.kpis.trendStrength.sma50) ? 1 : 0;
+    const optionsHeader = (() => {
+        if (!topSignal) return null;
 
-        const scoredCalls = calls.map((c: any) => {
-            let score = 0;
-            // Setup Quality Score
-            if (c.setup_quality_signal === 'Strong') score += 3;
-            else if (c.setup_quality_signal === 'Medium') score += 1;
-            
-            // Trend Bonus
-            score += trendBonus;
+        const dte = Math.ceil((new Date(topSignal.expiration_date).getTime() - new Date(topSignal.run_date).getTime()) / (1000 * 60 * 60 * 24));
 
-            // Liquidity Bonus
-            if (c.oi > 1000) score += 1;
-            if (c.spread_bps < 50) score += 1;
-
-            // Calculate DTE (Days to Expiration)
-            const dte = (new Date(c.expiration_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24);
-
-            return { ...c, score, dte };
-        });
-
-        scoredCalls.sort((a: any, b: any) => {
-            // Highest score first
-            if (b.score !== a.score) return b.score - a.score;
-            // Tie-breakers
-            if (b.oi !== a.oi) return b.oi - a.oi; // Higher OI is better
-            if (a.implied_volatility !== b.implied_volatility) return a.implied_volatility - b.implied_volatility; // Lower IV is better
-            return a.dte - b.dte; // Nearer DTE (but >=7) is better
-        });
+        const header: any = {
+            companyName: topSignal.company_name,
+            ticker: topSignal.ticker,
+            runDate: topSignal.run_date,
+            optionType: topSignal.option_type,
+            contractSymbol: topSignal.contract_symbol,
+            expirationDate: topSignal.expiration_date,
+            strikePrice: topSignal.strike_price,
+            ivValue: topSignal.implied_volatility,
+            ivSignal: topSignal.iv_signal,
+            dte: dte,
+        };
         
-        // Find the best call that is at least 7 days out
-        return scoredCalls.find((c: any) => c.dte >= 7) || null;
+        if (topSignal.setup_quality_signal) {
+            header.setupQuality = topSignal.setup_quality_signal;
+        }
+        if (topSignal.stock_price_trend_signal) {
+            header.trendSignal = topSignal.stock_price_trend_signal;
+        }
+
+        return header;
     })();
     
     // --- Fetch separate markdown for AI analysis ---
@@ -120,7 +113,8 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
 
     return {
         ...rawData,
-        topCallSetup: topCall,
+        optionsHeader, // This replaces topCallSetup
+        topSignalSummary: topSignal?.summary, // Pass summary separately
         stockLevelAnalysis, // Overwrite with new content
     };
 }

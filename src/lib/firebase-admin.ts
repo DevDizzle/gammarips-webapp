@@ -119,6 +119,41 @@ const TickerOptionsDataSchema = z.object({
 });
 export type TickerOptionsData = z.infer<typeof TickerOptionsDataSchema>;
 
+
+export async function getOptionsHeaderSignalAdmin(ticker: string): Promise<OptionsSignal | null> {
+    try {
+        const docRef = adminDb.collection("options_signals").doc(ticker.toUpperCase());
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            console.warn(`No options signals found for ticker: ${ticker}`);
+            return null;
+        }
+
+        const data = docSnap.data();
+        
+        // Find the first 'call' signal to use for the header
+        const headerSignal = data?.calls?.[0] ?? null;
+        if (!headerSignal) {
+             console.warn(`No 'call' option signals found for ticker: ${ticker} to create header.`);
+             return null;
+        }
+
+        const validation = OptionsSignalSchema.safeParse(headerSignal);
+
+        if (!validation.success) {
+            console.error(`Invalid options header signal data for ${ticker}:`, validation.error.flatten());
+            return null;
+        }
+        
+        return validation.data;
+    } catch (error) {
+        console.error(`Error fetching options header signal for ${ticker}:`, error);
+        return null;
+    }
+}
+
+
 export async function getOptionsSignalsAdmin(ticker: string): Promise<TickerOptionsData | null> {
     try {
         const docRef = adminDb.collection("options_signals").doc(ticker.toUpperCase());
@@ -637,5 +672,6 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 
 

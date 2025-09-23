@@ -1,16 +1,14 @@
 
 
 import { notFound } from 'next/navigation';
-import { getDashboardData, getTickerEvents } from '@/app/actions';
+import { getDashboardData } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, CalendarDays } from 'lucide-react';
+import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Markdown } from '@/components/markdown';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { TickerEvent } from '@/lib/firebase-admin';
 
 interface TickerDashboardPageProps {
   params: {
@@ -78,54 +76,11 @@ const getIndicator = (signal: string | undefined, IconUp: React.ElementType, Ico
     return <IconNeutral className="h-4 w-4 text-muted-foreground" />;
 };
 
-const UpcomingEvents = ({ events }: { events: TickerEvent[] }) => {
-    if (!events || events.length === 0) {
-        return null;
-    }
-
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <CalendarDays size={20} />
-                    Upcoming Events
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Date</TableHead>
-                            <TableHead>Event</TableHead>
-                            <TableHead>Ticker</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {events.map((event) => (
-                            <TableRow key={event.id}>
-                                <TableCell>{new Date(event.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</TableCell>
-                                <TableCell>{event.event_name}</TableCell>
-                                <TableCell>
-                                    {event.ticker ? (
-                                        <Badge variant="secondary">{event.ticker}</Badge>
-                                    ) : null}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
-    )
-}
-
 
 export default async function TickerDashboardPage({ params }: TickerDashboardPageProps) {
   const ticker = params.ticker.toUpperCase();
   const data = await getDashboardData(ticker);
   
-  // Fetch all relevant events (ticker-specific and general)
-  const allEvents = await getTickerEvents(ticker);
 
   if (!data) {
     return (
@@ -257,8 +212,6 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
                         </CardContent>
                     </Card>
             )}
-
-            <UpcomingEvents events={allEvents} />
         </div>
 
     </div>

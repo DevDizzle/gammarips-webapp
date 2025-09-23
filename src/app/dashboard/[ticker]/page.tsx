@@ -242,6 +242,8 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
       </section>
       
         <div className="space-y-6">
+            <NoteworthyOptions ticker={ticker} />
+        
             {stockLevelAnalysis && (
                 <Card>
                         <CardHeader>
@@ -259,8 +261,6 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
                         </CardContent>
                     </Card>
             )}
-
-            <NoteworthyOptions ticker={ticker} />
         </div>
 
     </div>
@@ -271,3 +271,4 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
     
 
     
+

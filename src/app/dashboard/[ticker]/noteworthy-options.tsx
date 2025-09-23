@@ -105,9 +105,9 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Noteworthy Options</CardTitle>
+        <CardTitle>Top-Scored Options for {ticker}</CardTitle>
          <CardDescription>
-            Interesting option contracts for {ticker} that have high potential but didn't make the top cut.
+            These options are selected through our proprietary filtering and scoring model. We analyze thousands of contracts for key metrics like high liquidity, strategic strike price, time decay (Theta), and price sensitivity (Delta) to identify the most actionable setups.
         </CardDescription>
       </CardHeader>
       <CardContent>

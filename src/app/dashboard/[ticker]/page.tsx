@@ -4,12 +4,14 @@ import { notFound } from 'next/navigation';
 import { getDashboardData } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle } from 'lucide-react';
+import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Markdown } from '@/components/markdown';
 import NoteworthyOptions from './noteworthy-options';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+
 
 interface TickerDashboardPageProps {
   params: {
@@ -17,22 +19,21 @@ interface TickerDashboardPageProps {
   };
 }
 
-// Re-render this page on every request to ensure data is fresh
 export const dynamic = 'force-dynamic';
 
 const getSentimentClasses = (signal: string) => {
     if (!signal) return 'text-muted-foreground border-border bg-card';
     const lowerSignal = signal.toLowerCase();
-    if (lowerSignal.includes('bullish') || lowerSignal.includes('strong') || lowerSignal.includes('positive')) {
+    if (lowerSignal.includes('bullish') || lowerSignal.includes('strong') || lowerSignal.includes('positive') || lowerSignal.includes('strengthening')) {
         return 'text-green-500 border-green-500/20 bg-green-500/10';
     }
-    if (lowerSignal.includes('bearish') || lowerSignal.includes('weak') || lowerSignal.includes('negative')) {
+    if (lowerSignal.includes('bearish') || lowerSignal.includes('weak') || lowerSignal.includes('negative') || lowerSignal.includes('weakening') || lowerSignal.includes('underperforming')) {
         return 'text-red-500 border-red-500/20 bg-red-500/10';
     }
-    if (lowerSignal.includes('low')) { // Special case for "low" IV
+    if (lowerSignal.includes('low')) {
         return 'text-green-500 border-green-500/20 bg-green-500/10';
     }
-     if (lowerSignal.includes('high')) { // Special case for "high" IV
+     if (lowerSignal.includes('high')) {
         return 'text-red-500 border-red-500/20 bg-red-500/10';
     }
     return 'text-muted-foreground border-border bg-card';
@@ -46,43 +47,43 @@ const getSignalBadgeVariant = (signal: string | undefined) => {
     return 'secondary';
 }
 
-
-const KpiCard = ({ title, value, subValue, indicator, tooltip }: { title: string; value: string; subValue?: string; indicator: React.ReactNode; tooltip: string }) => (
-    <Card>
-        <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-2 text-xs">
-                {indicator}
-                <span>{title}</span>
-            </CardDescription>
-            <CardTitle className="text-2xl">{value}</CardTitle>
-        </CardHeader>
-        <CardContent>
-            {subValue && <p className="text-xs text-muted-foreground">{subValue}</p>}
-        </CardContent>
-         <CardFooter>
-            <p className="text-xs text-muted-foreground">{tooltip}</p>
-        </CardFooter>
-    </Card>
-);
-
 const getIndicator = (signal: string | undefined, IconUp: React.ElementType, IconDown: React.ElementType, IconNeutral: React.ElementType) => {
     if (!signal) return <IconNeutral className="h-4 w-4 text-muted-foreground" />;
     const lowerSignal = signal.toLowerCase();
-    if (lowerSignal.includes('bullish') || lowerSignal.includes('positive') || lowerSignal.includes('strong')) {
+    if (lowerSignal.includes('bullish') || lowerSignal.includes('positive') || lowerSignal.includes('strong') || lowerSignal.includes('strengthening')) {
         return <IconUp className="h-4 w-4 text-green-500" />;
     }
-    if (lowerSignal.includes('bearish') || lowerSignal.includes('negative') || lowerSignal.includes('weak')) {
+    if (lowerSignal.includes('bearish') || lowerSignal.includes('negative') || lowerSignal.includes('weak') || lowerSignal.includes('weakening') || lowerSignal.includes('underperforming')) {
         return <IconDown className="h-4 w-4 text-red-500" />;
     }
     return <IconNeutral className="h-4 w-4 text-muted-foreground" />;
 };
 
 
+const KpiCard = ({ title, value, subValue, signal, tooltip, icon }: { title: string; value: string; subValue?: string; signal?: string, tooltip: string, icon: React.ReactNode }) => (
+    <Card className="h-full">
+        <CardHeader className="pb-2">
+            <CardDescription className="flex items-center gap-2 text-xs">
+                {icon}
+                <span>{title}</span>
+            </CardDescription>
+            <CardTitle className={cn("text-2xl", getSentimentClasses(signal ?? ''))}>{value}</CardTitle>
+        </CardHeader>
+        {subValue && (
+            <CardContent className="pb-2">
+                <p className="text-xs text-muted-foreground">{subValue}</p>
+            </CardContent>
+        )}
+         <CardFooter className="pt-2">
+            <p className="text-xs text-muted-foreground leading-tight">{tooltip}</p>
+        </CardFooter>
+    </Card>
+);
+
 export default async function TickerDashboardPage({ params }: TickerDashboardPageProps) {
   const ticker = params.ticker.toUpperCase();
   const data = await getDashboardData(ticker);
   
-
   if (!data) {
     return (
         <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -99,7 +100,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
   }
 
   const { titleInfo, kpis, priceChartData, optionsHeader, topSignalSummary, stockLevelAnalysis } = data;
-  const isBullish = optionsHeader ? (kpis.trendStrength.price > kpis.trendStrength.sma50 && optionsHeader.optionType === 'call') : (kpis.trendStrength?.price > kpis.trendStrength?.sma50);
+  const isBullish = kpis?.trendStrength?.signal?.toLowerCase().includes('bullish');
 
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
@@ -172,12 +173,27 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
         </Card>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <KpiCard title="Price vs. 50-Day SMA" value={`$${kpis.trendStrength?.price?.toFixed(2) ?? 'N/A'}`} subValue={`SMA: $${kpis.trendStrength?.sma50?.toFixed(2) ?? 'N/A'}`} indicator={getIndicator(isBullish ? 'bullish' : 'bearish', ArrowUp, ArrowDown, Minus)} tooltip={kpis.trendStrength?.tooltip ?? ''} />
-        <KpiCard title="RSI (14-Day)" value={kpis.rsi?.value?.toFixed(1) ?? 'N/A'} indicator={getIndicator(kpis.rsi?.signal, TrendingUp, TrendingUp, Minus)} tooltip={kpis.rsi?.tooltip ?? ''} />
-        <KpiCard title="Volume Surge (vs 30D)" value={`${kpis.volumeSurge?.value?.toFixed(0) ?? 'N/A'}%`} indicator={getIndicator(kpis.volumeSurge?.signal, BarChart2, BarChart2, Minus)} tooltip={kpis.volumeSurge?.tooltip ?? ''} />
-        <KpiCard title="30-Day Volatility" value={`${kpis.historicalVolatility?.value?.toFixed(1) ?? 'N/A'}%`} indicator={<Rss size={16} className="text-muted-foreground" />} tooltip={kpis.historicalVolatility?.tooltip ?? ''} />
-        <KpiCard title="30-Day Change" value={`${kpis.thirtyDayChange?.value?.toFixed(1) ?? 'N/A'}%`} indicator={getIndicator(kpis.thirtyDayChange?.value > 0 ? 'bullish' : 'bearish', ArrowUp, ArrowDown, Minus)} tooltip={kpis.thirtyDayChange?.tooltip ?? ''} />
+      {/* KPI Section with Carousel */}
+      <div className="lg:hidden">
+        <Carousel opts={{ align: "start" }} className="w-full">
+            <CarouselContent>
+                {kpis?.trendStrength && <CarouselItem className="basis-3/4"><KpiCard title="Trend Strength" value={kpis.trendStrength.value} subValue={`Price: $${kpis.trendStrength.price?.toFixed(2)} vs SMA50: $${kpis.trendStrength.sma50?.toFixed(2)}`} signal={kpis.trendStrength.signal} tooltip={kpis.trendStrength.tooltip} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} /></CarouselItem>}
+                {kpis?.rsiMomentum && <CarouselItem className="basis-3/4"><KpiCard title="RSI Momentum" value={kpis.rsiMomentum.currentRsi?.toFixed(1)} subValue={`30D Ago: ${kpis.rsiMomentum.rsi30DaysAgo?.toFixed(1)}`} signal={kpis.rsiMomentum.signal} tooltip={kpis.rsiMomentum.tooltip} icon={getIndicator(kpis.rsiMomentum.signal, TrendingUp, TrendingDown, Minus)} /></CarouselItem>}
+                {kpis?.volumeSurge && <CarouselItem className="basis-3/4"><KpiCard title="Volume Surge" value={`${(kpis.volumeSurge.value * 100)?.toFixed(0)}%`} subValue={`vs 30D Avg`} signal={kpis.volumeSurge.signal} tooltip={kpis.volumeSurge.tooltip} icon={<BarChart2 size={16} className="text-muted-foreground" />} /></CarouselItem>}
+                {kpis?.historicalVolatility && <CarouselItem className="basis-3/4"><KpiCard title="30D Volatility" value={`${kpis.historicalVolatility.value?.toFixed(1)}%`} signal={kpis.historicalVolatility.signal} tooltip={kpis.historicalVolatility.tooltip} icon={<Rss size={16} className="text-muted-foreground" />} /></CarouselItem>}
+                {kpis?.thirtyDayChange && <CarouselItem className="basis-3/4"><KpiCard title="30D Change" value={`${kpis.thirtyDayChange.value?.toFixed(1)}%`} subValue={`vs Industry: ${kpis.thirtyDayChange.industryAverage?.toFixed(1)}%`} signal={kpis.thirtyDayChange.comparisonSignal} tooltip={kpis.thirtyDayChange.tooltip} icon={getIndicator(kpis.thirtyDayChange.signal, ArrowUp, ArrowDown, Minus)} /></CarouselItem>}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-[-10px]" />
+            <CarouselNext className="absolute right-[-10px]" />
+        </Carousel>
+      </div>
+
+      <div className="hidden lg:grid grid-cols-5 gap-4">
+        {kpis?.trendStrength && <KpiCard title="Trend Strength" value={kpis.trendStrength.value} subValue={`Price: $${kpis.trendStrength.price?.toFixed(2)} vs SMA50: $${kpis.trendStrength.sma50?.toFixed(2)}`} signal={kpis.trendStrength.signal} tooltip={kpis.trendStrength.tooltip} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} />}
+        {kpis?.rsiMomentum && <KpiCard title="RSI Momentum" value={kpis.rsiMomentum.currentRsi?.toFixed(1)} subValue={`30D Ago: ${kpis.rsiMomentum.rsi30DaysAgo?.toFixed(1)}`} signal={kpis.rsiMomentum.signal} tooltip={kpis.rsiMomentum.tooltip} icon={getIndicator(kpis.rsiMomentum.signal, TrendingUp, TrendingDown, Minus)} />}
+        {kpis?.volumeSurge && <KpiCard title="Volume Surge" value={`${(kpis.volumeSurge.value * 100)?.toFixed(0)}%`} subValue={`vs 30D Avg`} signal={kpis.volumeSurge.signal} tooltip={kpis.volumeSurge.tooltip} icon={<BarChart2 size={16} className="text-muted-foreground" />} />}
+        {kpis?.historicalVolatility && <KpiCard title="30D Volatility" value={`${kpis.historicalVolatility.value?.toFixed(1)}%`} signal={kpis.historicalVolatility.signal} tooltip={kpis.historicalVolatility.tooltip} icon={<Rss size={16} className="text-muted-foreground" />} />}
+        {kpis?.thirtyDayChange && <KpiCard title="30D Change" value={`${kpis.thirtyDayChange.value?.toFixed(1)}%`} subValue={`vs Industry: ${kpis.thirtyDayChange.industryAverage?.toFixed(1)}%`} signal={kpis.thirtyDayChange.comparisonSignal} tooltip={kpis.thirtyDayChange.tooltip} icon={getIndicator(kpis.thirtyDayChange.signal, ArrowUp, ArrowDown, Minus)} />}
       </div>
       
       <section>

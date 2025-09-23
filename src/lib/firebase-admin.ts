@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -305,6 +304,7 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
 
         querySnapshot.forEach(doc => {
             const data = doc.data();
+            // Filter in code to avoid composite index requirement
             if (data.entity === ticker.toUpperCase() || data.entity === null) {
                 const event: TickerEvent = {
                     id: doc.id,
@@ -417,15 +417,11 @@ export async function getTopOptionsAdmin(type: 'CALL' | 'PUT', limit: number): P
 
 export async function getOptionsCandidatesAdmin(ticker?: string): Promise<OptionCandidate[]> {
     try {
-        let q = adminDb.collection('options_candidates').orderBy('options_score', 'desc');
+        const q = adminDb.collection('options_candidates').orderBy('options_score', 'desc');
         
-        if (ticker) {
-            q = q.where('ticker', '==', ticker.toUpperCase());
-        }
-
         const querySnapshot = await q.get();
 
-        const candidates: OptionCandidate[] = [];
+        const allCandidates: OptionCandidate[] = [];
         querySnapshot.forEach(doc => {
             const data = doc.data();
             const candidate = {
@@ -444,13 +440,17 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
             };
             const validation = OptionCandidateSchema.safeParse(candidate);
             if (validation.success) {
-                candidates.push(validation.data);
+                allCandidates.push(validation.data);
             } else {
                 console.error(`Invalid options candidate data from Firestore:`, validation.error.flatten());
             }
         });
         
-        return candidates;
+        if (ticker) {
+            return allCandidates.filter(c => c.ticker === ticker.toUpperCase());
+        }
+        
+        return allCandidates;
     } catch (error) {
         console.error(`Error fetching options candidates:`, error);
         return [];
@@ -737,5 +737,6 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 
 
     
+
 
 

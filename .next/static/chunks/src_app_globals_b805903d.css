@@ -1396,6 +1396,10 @@ body {
   height: 1px;
 }
 
+.h-0\.5 {
+  height: .125rem;
+}
+
 .max-h-96 {
   max-height: 24rem;
 }
@@ -1961,6 +1965,10 @@ body {
   background-color: hsl(var(--card) / .5);
 }
 
+.bg-card\/80 {
+  background-color: hsl(var(--card) / .8);
+}
+
 .bg-destructive {
   background-color: hsl(var(--destructive));
 }
@@ -2007,10 +2015,6 @@ body {
 
 .bg-yellow-500\/10 {
   background-color: #eab3081a;
-}
-
-.bg-card\/80 {
-  background-color: hsl(var(--card) / .8);
 }
 
 .fill-current {
@@ -3139,10 +3143,6 @@ body {
 
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .md\:grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .md\:grid-cols-5 {

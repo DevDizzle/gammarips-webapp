@@ -45,6 +45,24 @@ interface PriceChartProps {
   className?: string;
 }
 
+const ChartLegend = ({ colors }: { colors: ReturnType<typeof getChartColors> }) => (
+    <div className="flex justify-center items-center gap-4 text-xs text-muted-foreground mt-2">
+        {colors.sma50 && (
+            <div className="flex items-center gap-2">
+                <div className="w-3 h-0.5" style={{ backgroundColor: colors.sma50, border: '1px dashed' }} />
+                <span>SMA 50</span>
+            </div>
+        )}
+        {colors.sma200 && (
+             <div className="flex items-center gap-2">
+                <div className="w-3 h-0.5" style={{ backgroundColor: colors.sma200, border: '1px dashed' }} />
+                <span>SMA 200</span>
+            </div>
+        )}
+    </div>
+);
+
+
 export const PriceChart: React.FC<PriceChartProps> = ({ priceData, className }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
@@ -160,5 +178,10 @@ export const PriceChart: React.FC<PriceChartProps> = ({ priceData, className }) 
     }
   }, []);
 
-  return <div ref={chartContainerRef} className={cn('w-full h-[400px]', className)} />;
+  return (
+    <div>
+        <div ref={chartContainerRef} className={cn('w-full h-[400px]', className)} />
+        <ChartLegend colors={colors} />
+    </div>
+  );
 };

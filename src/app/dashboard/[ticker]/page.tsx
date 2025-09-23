@@ -48,7 +48,7 @@ const getSignalBadgeVariant = (signal: string | undefined) => {
 }
 
 
-const KpiCard = ({ title, value, indicator, tooltip }: { title: string; value: string; indicator: React.ReactNode; tooltip: string }) => (
+const KpiCard = ({ title, value, subValue, indicator, tooltip }: { title: string; value: string; subValue?: string; indicator: React.ReactNode; tooltip: string }) => (
     <Card>
         <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-2 text-xs">
@@ -58,6 +58,7 @@ const KpiCard = ({ title, value, indicator, tooltip }: { title: string; value: s
             <CardTitle className="text-2xl">{value}</CardTitle>
         </CardHeader>
         <CardContent>
+            {subValue && <p className="text-xs text-muted-foreground mb-2">{subValue}</p>}
             <p className="text-xs text-muted-foreground">{tooltip}</p>
         </CardContent>
     </Card>
@@ -226,7 +227,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <KpiCard title="Price vs. 50-Day SMA" value={`$${kpis.trendStrength.price.toFixed(2)}`} indicator={getIndicator(isBullish ? 'bullish' : 'bearish', ArrowUp, ArrowDown, Minus)} tooltip={kpis.trendStrength.tooltip} />
+        <KpiCard title="Price vs. 50-Day SMA" value={`$${kpis.trendStrength.price.toFixed(2)}`} subValue={`SMA: $${kpis.trendStrength.sma50.toFixed(2)}`} indicator={getIndicator(isBullish ? 'bullish' : 'bearish', ArrowUp, ArrowDown, Minus)} tooltip={kpis.trendStrength.tooltip} />
         <KpiCard title="RSI (14-Day)" value={kpis.rsi.value.toFixed(1)} indicator={getIndicator(kpis.rsi.signal, TrendingUp, TrendingUp, Minus)} tooltip={kpis.rsi.tooltip} />
         <KpiCard title="Volume Surge (vs 30D)" value={`${kpis.volumeSurge.value.toFixed(0)}%`} indicator={getIndicator(kpis.volumeSurge.signal, BarChart2, BarChart2, Minus)} tooltip={kpis.volumeSurge.tooltip} />
         <KpiCard title="30-Day Volatility" value={`${kpis.historicalVolatility.value.toFixed(1)}%`} indicator={<Rss size={16} className="text-muted-foreground" />} tooltip={kpis.historicalVolatility.tooltip} />

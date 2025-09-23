@@ -66,7 +66,8 @@ const KpiCard = ({ title, value, subValue, indicator, tooltip }: { title: string
     </Card>
 );
 
-const getIndicator = (signal: string, IconUp: React.ElementType, IconDown: React.ElementType, IconNeutral: React.ElementType) => {
+const getIndicator = (signal: string | undefined, IconUp: React.ElementType, IconDown: React.ElementType, IconNeutral: React.ElementType) => {
+    if (!signal) return <IconNeutral className="h-4 w-4 text-muted-foreground" />;
     const lowerSignal = signal.toLowerCase();
     if (lowerSignal.includes('bullish') || lowerSignal.includes('positive') || lowerSignal.includes('strong')) {
         return <IconUp className="h-4 w-4 text-green-500" />;
@@ -142,7 +143,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
   }
 
   const { titleInfo, kpis, priceChartData, optionsHeader, topSignalSummary, stockLevelAnalysis } = data;
-  const isBullish = optionsHeader ? (kpis.trendStrength.price > kpis.trendStrength.sma50 && optionsHeader.optionType === 'call') : (kpis.trendStrength.price > kpis.trendStrength.sma50);
+  const isBullish = optionsHeader ? (kpis.trendStrength.price > kpis.trendStrength.sma50 && optionsHeader.optionType === 'call') : (kpis.trendStrength?.price > kpis.trendStrength?.sma50);
 
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
@@ -216,11 +217,11 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <KpiCard title="Price vs. 50-Day SMA" value={`$${kpis.trendStrength.price.toFixed(2)}`} subValue={`SMA: $${kpis.trendStrength.sma50.toFixed(2)}`} indicator={getIndicator(isBullish ? 'bullish' : 'bearish', ArrowUp, ArrowDown, Minus)} tooltip={kpis.trendStrength.tooltip} />
-        <KpiCard title="RSI (14-Day)" value={kpis.rsi.value.toFixed(1)} indicator={getIndicator(kpis.rsi.signal, TrendingUp, TrendingUp, Minus)} tooltip={kpis.rsi.tooltip} />
-        <KpiCard title="Volume Surge (vs 30D)" value={`${kpis.volumeSurge.value.toFixed(0)}%`} indicator={getIndicator(kpis.volumeSurge.signal, BarChart2, BarChart2, Minus)} tooltip={kpis.volumeSurge.tooltip} />
-        <KpiCard title="30-Day Volatility" value={`${kpis.historicalVolatility.value.toFixed(1)}%`} indicator={<Rss size={16} className="text-muted-foreground" />} tooltip={kpis.historicalVolatility.tooltip} />
-        <KpiCard title="30-Day Change" value={`${kpis.thirtyDayChange.value.toFixed(1)}%`} indicator={getIndicator(kpis.thirtyDayChange.value > 0 ? 'bullish' : 'bearish', ArrowUp, ArrowDown, Minus)} tooltip={kpis.thirtyDayChange.tooltip} />
+        <KpiCard title="Price vs. 50-Day SMA" value={`$${kpis.trendStrength?.price?.toFixed(2) ?? 'N/A'}`} subValue={`SMA: $${kpis.trendStrength?.sma50?.toFixed(2) ?? 'N/A'}`} indicator={getIndicator(isBullish ? 'bullish' : 'bearish', ArrowUp, ArrowDown, Minus)} tooltip={kpis.trendStrength?.tooltip ?? ''} />
+        <KpiCard title="RSI (14-Day)" value={kpis.rsi?.value?.toFixed(1) ?? 'N/A'} indicator={getIndicator(kpis.rsi?.signal, TrendingUp, TrendingUp, Minus)} tooltip={kpis.rsi?.tooltip ?? ''} />
+        <KpiCard title="Volume Surge (vs 30D)" value={`${kpis.volumeSurge?.value?.toFixed(0) ?? 'N/A'}%`} indicator={getIndicator(kpis.volumeSurge?.signal, BarChart2, BarChart2, Minus)} tooltip={kpis.volumeSurge?.tooltip ?? ''} />
+        <KpiCard title="30-Day Volatility" value={`${kpis.historicalVolatility?.value?.toFixed(1) ?? 'N/A'}%`} indicator={<Rss size={16} className="text-muted-foreground" />} tooltip={kpis.historicalVolatility?.tooltip ?? ''} />
+        <KpiCard title="30-Day Change" value={`${kpis.thirtyDayChange?.value?.toFixed(1) ?? 'N/A'}%`} indicator={getIndicator(kpis.thirtyDayChange?.value > 0 ? 'bullish' : 'bearish', ArrowUp, ArrowDown, Minus)} tooltip={kpis.thirtyDayChange?.tooltip ?? ''} />
       </div>
       
       <section>

@@ -203,6 +203,8 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
         </Card>
       )}
 
+      <NoteworthyOptions ticker={ticker} />
+
       {/* KPI Section with Carousel */}
       <div className="lg:hidden">
         <Carousel opts={{ align: "start" }} className="w-full">
@@ -241,27 +243,23 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
             )}
       </section>
       
-        <div className="space-y-6">
-            <NoteworthyOptions ticker={ticker} />
-        
-            {stockLevelAnalysis && (
-                <Card>
-                        <CardHeader>
-                            <CardTitle>AI Analysis</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Accordion type="single" collapsible>
-                                <AccordionItem value="item-1">
-                                    <AccordionTrigger>View Full Analysis</AccordionTrigger>
-                                    <AccordionContent>
-                                        <Markdown content={stockLevelAnalysis} className="prose prose-sm prose-invert max-w-none" />
-                                    </AccordionContent>
-                                </AccordionItem>
-                            </Accordion>
-                        </CardContent>
-                    </Card>
-            )}
-        </div>
+      {stockLevelAnalysis && (
+          <Card>
+              <CardHeader>
+                  <CardTitle>AI Analysis</CardTitle>
+              </CardHeader>
+              <CardContent>
+                  <Accordion type="single" collapsible>
+                      <AccordionItem value="item-1">
+                          <AccordionTrigger>View Full Analysis</AccordionTrigger>
+                          <AccordionContent>
+                              <Markdown content={stockLevelAnalysis} className="prose prose-sm prose-invert max-w-none" />
+                          </AccordionContent>
+                      </AccordionItem>
+                  </Accordion>
+              </CardContent>
+          </Card>
+      )}
 
     </div>
   );
@@ -271,4 +269,5 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
     
 
     
+
 

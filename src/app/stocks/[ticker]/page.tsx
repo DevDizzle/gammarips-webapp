@@ -249,7 +249,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardHeader>
             <CardContent>
                 <Button asChild size="lg">
-                    <Link href="/dashboard">
+                    <Link href={`/dashboard/${params.ticker}`}>
                         Launch Interactive Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
                     </Link>
                 </Button>

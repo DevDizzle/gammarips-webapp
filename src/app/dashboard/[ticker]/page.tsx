@@ -4,13 +4,14 @@ import { notFound } from 'next/navigation';
 import { getDashboardData } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown } from 'lucide-react';
+import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Markdown } from '@/components/markdown';
 import NoteworthyOptions from './noteworthy-options';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 
 interface TickerDashboardPageProps {
@@ -251,31 +252,16 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
                   <CardDescription>Our AI translates complex data—from fundamentals to momentum—into a clear, straightforward outlook.</CardDescription>
               </CardHeader>
               <CardContent>
-                  <Accordion type="single" collapsible>
-                      <AccordionItem value="item-1">
-                          <AccordionTrigger>View Full Analysis</AccordionTrigger>
-                          <AccordionContent>
-                              <Markdown content={stockLevelAnalysis} className="prose prose-sm prose-invert max-w-none" />
-                          </AccordionContent>
-                      </AccordionItem>
-                  </Accordion>
+                  <Button asChild variant="outline">
+                      <Link href={`/stocks/${ticker}`}>
+                          View Full Analyst Report <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                  </Button>
               </CardContent>
           </Card>
       )}
 
     </div>
   );
-
     
-
-    
-
-    
-
-
-
-
-    
-
-    
-
+}

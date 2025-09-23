@@ -87,8 +87,8 @@ const OptionCandidateSchema = z.object({
   expiry_date: z.string(),
   premium: z.number(),
   delta: z.number(),
-  volume: z.number().optional(),
-  implied_volatility: z.number().optional(),
+  volume: z.number().optional().nullable(),
+  implied_volatility: z.number().optional().nullable(),
   ticker: z.string(),
 });
 export type OptionCandidate = z.infer<typeof OptionCandidateSchema>;
@@ -415,9 +415,14 @@ export async function getTopOptionsAdmin(type: 'CALL' | 'PUT', limit: number): P
     }
 }
 
-export async function getOptionsCandidatesAdmin(): Promise<OptionCandidate[]> {
+export async function getOptionsCandidatesAdmin(ticker?: string): Promise<OptionCandidate[]> {
     try {
-        const q = adminDb.collection('options_candidates').orderBy('options_score', 'desc');
+        let q = adminDb.collection('options_candidates').orderBy('options_score', 'desc');
+        
+        if (ticker) {
+            q = q.where('ticker', '==', ticker.toUpperCase());
+        }
+
         const querySnapshot = await q.get();
 
         const candidates: OptionCandidate[] = [];
@@ -732,4 +737,5 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 
 
     
+
 

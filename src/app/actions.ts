@@ -63,8 +63,8 @@ export async function getTopOptions(type: 'CALL' | 'PUT', limit: number): Promis
     return getTopOptionsAdmin(type, limit);
 }
 
-export async function getOptionsCandidates(): Promise<OptionCandidate[]> {
-    return getOptionsCandidatesAdmin();
+export async function getOptionsCandidates(ticker?: string): Promise<OptionCandidate[]> {
+    return getOptionsCandidatesAdmin(ticker);
 }
 
 export async function getDashboardData(ticker: string): Promise<any | null> {

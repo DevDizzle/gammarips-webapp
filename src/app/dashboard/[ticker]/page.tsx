@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Markdown } from '@/components/markdown';
+import NoteworthyOptions from './noteworthy-options';
 
 interface TickerDashboardPageProps {
   params: {
@@ -212,6 +213,8 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
                         </CardContent>
                     </Card>
             )}
+
+            <NoteworthyOptions ticker={ticker} />
         </div>
 
     </div>

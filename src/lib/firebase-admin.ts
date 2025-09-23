@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -62,7 +63,6 @@ const EconomicEventSchema = z.object({
     date: z.string(),
     country: z.string().optional(),
     impact: z.string().optional(),
-    ticker: z.string().optional(),
 });
 export type EconomicEvent = z.infer<typeof EconomicEventSchema>;
 
@@ -71,6 +71,7 @@ const TickerEventSchema = z.object({
     event_name: z.string(),
     event_date: z.string(),
     event_type: z.string().optional(),
+    ticker: z.string(),
 });
 export type TickerEvent = z.infer<typeof TickerEventSchema>;
 
@@ -289,46 +290,30 @@ export async function getEconomicEventsAdmin(): Promise<EconomicEvent[]> {
         const nowStr = now.toISOString().split('T')[0];
         const thirtyDaysFromNowStr = thirtyDaysFromNow.toISOString().split('T')[0];
 
-        const eventsQuerySnapshot = await adminDb.collectionGroup('events')
-            .where('date', '>=', nowStr)
-            .where('date', '<=', thirtyDaysFromNowStr)
-            .orderBy('date', 'asc')
+        const eventsQuerySnapshot = await adminDb.collection('economic_calendar')
+            .where('event_date', '>=', nowStr)
+            .where('event_date', '<=', thirtyDaysFromNowStr)
+            .orderBy('event_date', 'asc')
             .get();
 
         const events: EconomicEvent[] = [];
-        const priorityKeywords = ['earnings', 'inflation', 'interest rate', 'fed', 'cpi', 'ppi'];
         
         eventsQuerySnapshot.forEach(doc => {
             const data = doc.data();
-            
-            // Safely get the parent path and extract the ticker
-            const parent = doc.ref.parent.parent;
-            const ticker = parent ? parent.path.split('/')[1] : undefined;
-
             const event = {
                 id: doc.id,
-                event_name: data.name,
-                date: data.date,
+                event_name: data.event_name,
+                date: data.event_date,
                 country: data.country,
                 impact: data.impact,
-                ticker: ticker,
             };
             
             const validation = EconomicEventSchema.safeParse(event);
             if (validation.success) {
                 events.push(validation.data);
             } else {
-                 console.error("Invalid event data from Firestore:", validation.error.flatten());
+                 console.error("Invalid economic event data from Firestore:", validation.error.flatten());
             }
-        });
-
-        // Prioritize events with keywords
-        events.sort((a, b) => {
-            const aIsPriority = priorityKeywords.some(keyword => a.event_name.toLowerCase().includes(keyword));
-            const bIsPriority = priorityKeywords.some(keyword => b.event_name.toLowerCase().includes(keyword));
-            if (aIsPriority && !bIsPriority) return -1;
-            if (!aIsPriority && bIsPriority) return 1;
-            return 0; // Keep original sort order (by date) otherwise
         });
 
         return events;
@@ -363,6 +348,7 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
                 event_name: data.event_name,
                 event_date: data.event_date,
                 event_type: data.event_type,
+                ticker: ticker.toUpperCase(),
             };
             const validation = TickerEventSchema.safeParse(event);
             if(validation.success) {
@@ -722,6 +708,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 
 
 

@@ -49,13 +49,13 @@ const ChartLegend = ({ colors }: { colors: ReturnType<typeof getChartColors> }) 
     <div className="flex justify-center items-center gap-4 text-xs text-muted-foreground mt-2">
         {colors.sma50 && (
             <div className="flex items-center gap-2">
-                <div className="w-3 h-0.5" style={{ backgroundColor: colors.sma50, border: '1px dashed' }} />
+                <div className="w-3 h-0.5" style={{ backgroundColor: colors.sma50 }} />
                 <span>SMA 50</span>
             </div>
         )}
         {colors.sma200 && (
              <div className="flex items-center gap-2">
-                <div className="w-3 h-0.5" style={{ backgroundColor: colors.sma200, border: '1px dashed' }} />
+                <div className="w-3 h-0.5" style={{ backgroundColor: colors.sma200 }} />
                 <span>SMA 200</span>
             </div>
         )}

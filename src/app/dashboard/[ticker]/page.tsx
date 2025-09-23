@@ -58,9 +58,11 @@ const KpiCard = ({ title, value, subValue, indicator, tooltip }: { title: string
             <CardTitle className="text-2xl">{value}</CardTitle>
         </CardHeader>
         <CardContent>
-            {subValue && <p className="text-xs text-muted-foreground mb-2">{subValue}</p>}
-            <p className="text-xs text-muted-foreground">{tooltip}</p>
+            {subValue && <p className="text-xs text-muted-foreground">{subValue}</p>}
         </CardContent>
+         <CardFooter>
+            <p className="text-xs text-muted-foreground">{tooltip}</p>
+        </CardFooter>
     </Card>
 );
 
@@ -75,7 +77,7 @@ const getIndicator = (signal: string, IconUp: React.ElementType, IconDown: React
     return <IconNeutral className="h-4 w-4 text-muted-foreground" />;
 };
 
-type CombinedEvent = (TickerEvent & { date: string, name: string }) | (EconomicEvent & { date: string, name: string });
+type CombinedEvent = (TickerEvent & { date: string; name: string; }) | (EconomicEvent & { date: string; name: string; ticker?: string });
 
 const UpcomingEvents = ({ events }: { events: CombinedEvent[] }) => {
     if (!events || events.length === 0) {
@@ -129,8 +131,8 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
 
   // Combine, de-duplicate, and sort events
   const combinedEvents: CombinedEvent[] = [
-      ...tickerEvents.map(e => ({ ...e, date: e.event_date, name: e.event_name, ticker: ticker })),
-      ...economicEvents.map(e => ({ ...e, date: e.date, name: e.event_name }))
+      ...tickerEvents.map(e => ({ ...e, date: e.event_date, name: e.event_name })),
+      ...economicEvents.map(e => ({ ...e, name: e.event_name }))
   ];
 
   const uniqueEvents = Array.from(new Map(combinedEvents.map(e => [e.name + e.date, e])).values());

@@ -109,6 +109,13 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
   const rsiChangeDisplay = rsiChange !== null 
     ? `${rsiChange > 0 ? '+' : ''}${rsiChange.toFixed(1)}` 
     : null;
+    
+  // Calculate Volume Surge percentage
+  const volumeSurgePct = kpis?.volumeSurge?.volume && kpis?.volumeSurge?.avgVolume30d
+    ? ((kpis.volumeSurge.volume - kpis.volumeSurge.avgVolume30d) / kpis.volumeSurge.avgVolume30d) * 100
+    : null;
+  const volumeSurgeDisplay = volumeSurgePct !== null ? `${volumeSurgePct > 0 ? '+' : ''}${volumeSurgePct.toFixed(0)}%` : 'N/A';
+
 
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
@@ -187,7 +194,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
             <CarouselContent>
                 {kpis?.trendStrength && <CarouselItem className="basis-3/4"><KpiCard title="Trend Strength" value={`$${kpis.trendStrength.price?.toFixed(2)}`} subValue={`SMA50: $${kpis.trendStrength.sma50?.toFixed(2)}`} signal={kpis.trendStrength.signal} tooltip={"Compares the previous day's closing price to the 50-day moving average"} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} /></CarouselItem>}
                 {kpis?.rsiMomentum && <CarouselItem className="basis-3/4"><KpiCard title="RSI Momentum" value={kpis.rsiMomentum.currentRsi?.toFixed(1)} subValue={rsiChangeDisplay ? `Change: ${rsiChangeDisplay}` : undefined} signal={kpis.rsiMomentum.signal} tooltip={kpis.rsiMomentum.tooltip} icon={getIndicator(kpis.rsiMomentum.signal, TrendingUp, TrendingDown, Minus)} /></CarouselItem>}
-                {kpis?.volumeSurge && <CarouselItem className="basis-3/4"><KpiCard title="Volume Surge" value={`${(kpis.volumeSurge.value * 100)?.toFixed(0)}%`} subValue={`vs 30D Avg`} signal={kpis.volumeSurge.signal} tooltip={kpis.volumeSurge.tooltip} icon={<BarChart2 size={16} className="text-muted-foreground" />} /></CarouselItem>}
+                {kpis?.volumeSurge && <CarouselItem className="basis-3/4"><KpiCard title="Volume Surge" value={volumeSurgeDisplay} subValue={`vs 30D Avg`} signal={kpis.volumeSurge.signal} tooltip={kpis.volumeSurge.tooltip} icon={<BarChart2 size={16} className="text-muted-foreground" />} /></CarouselItem>}
                 {kpis?.historicalVolatility && <CarouselItem className="basis-3/4"><KpiCard title="30D Volatility" value={`${kpis.historicalVolatility.value?.toFixed(1)}%`} signal={kpis.historicalVolatility.signal} tooltip={kpis.historicalVolatility.tooltip} icon={<Rss size={16} className="text-muted-foreground" />} /></CarouselItem>}
                 {kpis?.thirtyDayChange && <CarouselItem className="basis-3/4"><KpiCard title="30D Change" value={`${kpis.thirtyDayChange.value?.toFixed(1)}%`} subValue={`vs Industry: ${kpis.thirtyDayChange.industryAverage?.toFixed(1)}%`} signal={kpis.thirtyDayChange.comparisonSignal} tooltip={kpis.thirtyDayChange.tooltip} icon={getIndicator(kpis.thirtyDayChange.signal, ArrowUp, ArrowDown, Minus)} /></CarouselItem>}
             </CarouselContent>
@@ -199,7 +206,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
       <div className="hidden lg:grid grid-cols-5 gap-4">
         {kpis?.trendStrength && <KpiCard title="Trend Strength" value={`$${kpis.trendStrength.price?.toFixed(2)}`} subValue={`SMA50: $${kpis.trendStrength.sma50?.toFixed(2)}`} signal={kpis.trendStrength.signal} tooltip={"Compares the previous day's closing price to the 50-day moving average"} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} />}
         {kpis?.rsiMomentum && <KpiCard title="RSI Momentum" value={kpis.rsiMomentum.currentRsi?.toFixed(1)} subValue={rsiChangeDisplay ? `Change: ${rsiChangeDisplay}` : undefined} signal={kpis.rsiMomentum.signal} tooltip={kpis.rsiMomentum.tooltip} icon={getIndicator(kpis.rsiMomentum.signal, TrendingUp, TrendingDown, Minus)} />}
-        {kpis?.volumeSurge && <KpiCard title="Volume Surge" value={`${(kpis.volumeSurge.value * 100)?.toFixed(0)}%`} subValue={`vs 30D Avg`} signal={kpis.volumeSurge.signal} tooltip={kpis.volumeSurge.tooltip} icon={<BarChart2 size={16} className="text-muted-foreground" />} />}
+        {kpis?.volumeSurge && <KpiCard title="Volume Surge" value={volumeSurgeDisplay} subValue={`vs 30D Avg`} signal={kpis.volumeSurge.signal} tooltip={kpis.volumeSurge.tooltip} icon={<BarChart2 size={16} className="text-muted-foreground" />} />}
         {kpis?.historicalVolatility && <KpiCard title="30D Volatility" value={`${kpis.historicalVolatility.value?.toFixed(1)}%`} signal={kpis.historicalVolatility.signal} tooltip={kpis.historicalVolatility.tooltip} icon={<Rss size={16} className="text-muted-foreground" />} />}
         {kpis?.thirtyDayChange && <KpiCard title="30D Change" value={`${kpis.thirtyDayChange.value?.toFixed(1)}%`} subValue={`vs Industry: ${kpis.thirtyDayChange.industryAverage?.toFixed(1)}%`} signal={kpis.thirtyDayChange.comparisonSignal} tooltip={kpis.thirtyDayChange.tooltip} icon={getIndicator(kpis.thirtyDayChange.signal, ArrowUp, ArrowDown, Minus)} />}
       </div>
@@ -243,4 +250,5 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
 
     </div>
   );
-}
+
+    

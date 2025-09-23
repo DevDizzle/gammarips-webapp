@@ -292,7 +292,6 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
 
         const eventsCollectionRef = adminDb.collection('calendar_events');
         
-        // A single, simple query for all events in the date range.
         const query = eventsCollectionRef
             .where('event_date', '>=', nowStr)
             .where('event_date', '<=', thirtyDaysFromNowStr);
@@ -303,7 +302,6 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
 
         querySnapshot.forEach(doc => {
             const data = doc.data();
-            // Filter the results in the application code.
             if (data.entity === ticker.toUpperCase() || data.entity === null) {
                 const event: TickerEvent = {
                     id: doc.id,
@@ -314,7 +312,6 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
                 };
                 const validation = TickerEventSchema.safeParse(event);
                 if(validation.success) {
-                    // Use event_name and event_date as a composite key to avoid duplicates
                     const compositeKey = `${event.event_name}|${event.event_date}`;
                     if (!eventsMap.has(compositeKey)) {
                         eventsMap.set(compositeKey, validation.data);
@@ -689,3 +686,6 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 
 
 
+
+
+    

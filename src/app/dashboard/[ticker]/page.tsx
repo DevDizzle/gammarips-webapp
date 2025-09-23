@@ -67,7 +67,7 @@ const KpiCard = ({ title, value, subValue, signal, tooltip, icon }: { title: str
                 {icon}
                 <span>{title}</span>
             </CardDescription>
-            <CardTitle className={cn("text-2xl", getSentimentClasses(signal ?? ''))}>{value}</CardTitle>
+            <CardTitle className="text-2xl">{value}</CardTitle>
         </CardHeader>
         {subValue && (
             <CardContent className="pb-2">
@@ -177,7 +177,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
       <div className="lg:hidden">
         <Carousel opts={{ align: "start" }} className="w-full">
             <CarouselContent>
-                {kpis?.trendStrength && <CarouselItem className="basis-3/4"><KpiCard title="Trend Strength" value={kpis.trendStrength.value} subValue={`Price: $${kpis.trendStrength.price?.toFixed(2)} vs SMA50: $${kpis.trendStrength.sma50?.toFixed(2)}`} signal={kpis.trendStrength.signal} tooltip={kpis.trendStrength.tooltip} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} /></CarouselItem>}
+                {kpis?.trendStrength && <CarouselItem className="basis-3/4"><KpiCard title="Trend Strength" value={`$${kpis.trendStrength.price?.toFixed(2)}`} subValue={`SMA50: $${kpis.trendStrength.sma50?.toFixed(2)}`} signal={kpis.trendStrength.signal} tooltip={kpis.trendStrength.tooltip} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} /></CarouselItem>}
                 {kpis?.rsiMomentum && <CarouselItem className="basis-3/4"><KpiCard title="RSI Momentum" value={kpis.rsiMomentum.currentRsi?.toFixed(1)} subValue={`30D Ago: ${kpis.rsiMomentum.rsi30DaysAgo?.toFixed(1)}`} signal={kpis.rsiMomentum.signal} tooltip={kpis.rsiMomentum.tooltip} icon={getIndicator(kpis.rsiMomentum.signal, TrendingUp, TrendingDown, Minus)} /></CarouselItem>}
                 {kpis?.volumeSurge && <CarouselItem className="basis-3/4"><KpiCard title="Volume Surge" value={`${(kpis.volumeSurge.value * 100)?.toFixed(0)}%`} subValue={`vs 30D Avg`} signal={kpis.volumeSurge.signal} tooltip={kpis.volumeSurge.tooltip} icon={<BarChart2 size={16} className="text-muted-foreground" />} /></CarouselItem>}
                 {kpis?.historicalVolatility && <CarouselItem className="basis-3/4"><KpiCard title="30D Volatility" value={`${kpis.historicalVolatility.value?.toFixed(1)}%`} signal={kpis.historicalVolatility.signal} tooltip={kpis.historicalVolatility.tooltip} icon={<Rss size={16} className="text-muted-foreground" />} /></CarouselItem>}
@@ -189,7 +189,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
       </div>
 
       <div className="hidden lg:grid grid-cols-5 gap-4">
-        {kpis?.trendStrength && <KpiCard title="Trend Strength" value={kpis.trendStrength.value} subValue={`Price: $${kpis.trendStrength.price?.toFixed(2)} vs SMA50: $${kpis.trendStrength.sma50?.toFixed(2)}`} signal={kpis.trendStrength.signal} tooltip={kpis.trendStrength.tooltip} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} />}
+        {kpis?.trendStrength && <KpiCard title="Trend Strength" value={`$${kpis.trendStrength.price?.toFixed(2)}`} subValue={`SMA50: $${kpis.trendStrength.sma50?.toFixed(2)}`} signal={kpis.trendStrength.signal} tooltip={kpis.trendStrength.tooltip} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} />}
         {kpis?.rsiMomentum && <KpiCard title="RSI Momentum" value={kpis.rsiMomentum.currentRsi?.toFixed(1)} subValue={`30D Ago: ${kpis.rsiMomentum.rsi30DaysAgo?.toFixed(1)}`} signal={kpis.rsiMomentum.signal} tooltip={kpis.rsiMomentum.tooltip} icon={getIndicator(kpis.rsiMomentum.signal, TrendingUp, TrendingDown, Minus)} />}
         {kpis?.volumeSurge && <KpiCard title="Volume Surge" value={`${(kpis.volumeSurge.value * 100)?.toFixed(0)}%`} subValue={`vs 30D Avg`} signal={kpis.volumeSurge.signal} tooltip={kpis.volumeSurge.tooltip} icon={<BarChart2 size={16} className="text-muted-foreground" />} />}
         {kpis?.historicalVolatility && <KpiCard title="30D Volatility" value={`${kpis.historicalVolatility.value?.toFixed(1)}%`} signal={kpis.historicalVolatility.signal} tooltip={kpis.historicalVolatility.tooltip} icon={<Rss size={16} className="text-muted-foreground" />} />}
@@ -236,3 +236,5 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
     </div>
   );
 }
+
+    

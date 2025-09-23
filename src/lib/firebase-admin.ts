@@ -292,28 +292,19 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
 
         const eventsCollectionRef = adminDb.collection('calendar_events');
         
-        // Query for ticker-specific events
-        const tickerQuery = eventsCollectionRef
-            .where('entity', '==', ticker.toUpperCase())
-            .where('event_date', '>=', nowStr)
-            .where('event_date', '<=', thirtyDaysFromNowStr);
-            
-        // Query for general economic events (entity is null)
-        const generalQuery = eventsCollectionRef
-            .where('entity', '==', null)
+        // A single, simple query for all events in the date range.
+        const query = eventsCollectionRef
             .where('event_date', '>=', nowStr)
             .where('event_date', '<=', thirtyDaysFromNowStr);
         
-        const [tickerSnapshot, generalSnapshot] = await Promise.all([
-            tickerQuery.get(),
-            generalQuery.get()
-        ]);
+        const querySnapshot = await query.get();
         
         const eventsMap = new Map<string, TickerEvent>();
 
-        const processSnapshot = (snapshot: admin.firestore.QuerySnapshot) => {
-            snapshot.forEach(doc => {
-                const data = doc.data();
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+            // Filter the results in the application code.
+            if (data.entity === ticker.toUpperCase() || data.entity === null) {
                 const event: TickerEvent = {
                     id: doc.id,
                     event_name: data.event_name,
@@ -331,11 +322,8 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
                 } else {
                     console.warn(`Invalid ticker event data for ${ticker}:`, validation.error.flatten());
                 }
-            });
-        };
-
-        processSnapshot(tickerSnapshot);
-        processSnapshot(generalSnapshot);
+            }
+        });
         
         const combinedEvents = Array.from(eventsMap.values());
         combinedEvents.sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
@@ -690,6 +678,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 
 
 

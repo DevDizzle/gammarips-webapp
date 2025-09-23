@@ -412,8 +412,11 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
         let querySnapshot;
 
         if (ticker) {
-            const tickerPrefix = `O:${ticker.toUpperCase()}`;
-            // Create a query for documents where the ID is >= the prefix and < the character after the prefix
+            // FIX: Use the first two characters of the ticker for the prefix search.
+            const twoLetterPrefix = ticker.substring(0, 2).toUpperCase();
+            const tickerPrefix = `O:${twoLetterPrefix}`;
+            
+            // Create the end of the range for the query.
             const endPrefix = tickerPrefix.slice(0, -1) + String.fromCharCode(tickerPrefix.charCodeAt(tickerPrefix.length - 1) + 1);
 
             querySnapshot = await candidatesCollection
@@ -743,3 +746,6 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 
 
 
+
+
+    

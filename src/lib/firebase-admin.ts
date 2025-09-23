@@ -409,23 +409,17 @@ export async function getTopOptionsAdmin(type: 'CALL' | 'PUT', limit: number): P
 export async function getOptionsCandidatesAdmin(ticker?: string): Promise<OptionCandidate[]> {
     try {
         const candidatesCollection = adminDb.collection('options_candidates');
-        let querySnapshot;
+        let query;
 
         if (ticker) {
-            // FIX: Use the first two characters of the ticker for the prefix search.
-            const twoLetterPrefix = ticker.substring(0, 2).toUpperCase();
-            const tickerPrefix = `O:${twoLetterPrefix}`;
-            
-            // Create the end of the range for the query.
-            const endPrefix = tickerPrefix.slice(0, -1) + String.fromCharCode(tickerPrefix.charCodeAt(tickerPrefix.length - 1) + 1);
-
-            querySnapshot = await candidatesCollection
-                .where(admin.firestore.FieldPath.documentId(), '>=', tickerPrefix)
-                .where(admin.firestore.FieldPath.documentId(), '<', endPrefix)
-                .get();
+            // Simple query on the 'ticker' field. This does not require a composite index.
+            query = candidatesCollection.where('ticker', '==', ticker.toUpperCase());
         } else {
-            querySnapshot = await candidatesCollection.get();
+            // Get all documents if no ticker is provided
+            query = candidatesCollection;
         }
+        
+        const querySnapshot = await query.get();
 
         const candidates: OptionCandidate[] = [];
         querySnapshot.forEach(doc => {

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -82,18 +83,18 @@ function OptionsCandidatesTable() {
             </TableHeader>
             <TableBody>
               {candidates.map(c => {
-                const isCall = c.type === 'CALL';
+                const isCall = c.option_type === 'call';
                 return (
                   <TableRow key={c.id} onClick={() => handleRowClick(c.ticker)} className="cursor-pointer">
                     <TableCell className="font-medium">{c.ticker}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={cn(isCall ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50')}>
-                        {c.type}
+                        {c.option_type.toUpperCase()}
                       </Badge>
                     </TableCell>
-                    <TableCell>${c.strike_price.toFixed(2)}</TableCell>
-                    <TableCell>{new Date(c.expiry_date).toLocaleDateString()}</TableCell>
-                    <TableCell>${c.premium.toFixed(2)}</TableCell>
+                    <TableCell>${c.strike.toFixed(2)}</TableCell>
+                    <TableCell>{new Date(c.expiration_date).toLocaleDateString()}</TableCell>
+                    <TableCell>${c.last_price?.toFixed(2) ?? 'N/A'}</TableCell>
                     <TableCell>{c.volume?.toLocaleString() ?? 'N/A'}</TableCell>
                     <TableCell>{c.implied_volatility ? `${(c.implied_volatility * 100).toFixed(1)}%` : 'N/A'}</TableCell>
                     <TableCell className="text-right">{c.options_score.toFixed(2)}</TableCell>

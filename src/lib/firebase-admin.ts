@@ -69,17 +69,15 @@ export type TickerEvent = z.infer<typeof TickerEventSchema>;
 
 const OptionCandidateSchema = z.object({
   id: z.string(),
-  symbol: z.string(),
-  options_score: z.number(),
-  type: z.enum(['CALL', 'PUT']),
-  stock_price: z.number(),
-  strike_price: z.number(),
-  expiry_date: z.string(),
-  premium: z.number(),
-  delta: z.number(),
-  volume: z.number().optional().nullable(),
-  implied_volatility: z.number().optional().nullable(),
+  contract_symbol: z.string(),
   ticker: z.string(),
+  option_type: z.enum(['call', 'put']),
+  expiration_date: z.string(),
+  strike: z.number(),
+  last_price: z.number().nullable(),
+  volume: z.number().nullable(),
+  implied_volatility: z.number().nullable(),
+  options_score: z.number(),
 });
 export type OptionCandidate = z.infer<typeof OptionCandidateSchema>;
 
@@ -412,10 +410,8 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
         let query;
 
         if (ticker) {
-            // Simple query on the 'ticker' field. This does not require a composite index.
             query = candidatesCollection.where('ticker', '==', ticker.toUpperCase());
         } else {
-            // Get all documents if no ticker is provided
             query = candidatesCollection;
         }
         
@@ -424,37 +420,37 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
         const candidates: OptionCandidate[] = [];
         querySnapshot.forEach(doc => {
             const data = doc.data();
-            const candidate = {
+            const candidateData = {
                 id: doc.id,
-                symbol: data.symbol,
-                options_score: data.options_score,
-                type: data.type,
-                stock_price: data.stock_price,
-                strike_price: data.strike_price,
-                expiry_date: data.expiry_date,
-                premium: data.premium,
-                delta: data.delta,
+                contract_symbol: data.contract_symbol,
                 ticker: data.ticker,
+                option_type: data.option_type,
+                expiration_date: data.expiration_date,
+                strike: data.strike,
+                last_price: data.last_price,
                 volume: data.volume,
                 implied_volatility: data.implied_volatility,
+                options_score: data.options_score,
             };
-            const validation = OptionCandidateSchema.safeParse(candidate);
+            const validation = OptionCandidateSchema.safeParse(candidateData);
             if (validation.success) {
                 candidates.push(validation.data);
             } else {
-                console.error(`Invalid options candidate data from Firestore:`, validation.error.flatten());
+                console.error(`Invalid options candidate data for doc ${doc.id}:`, validation.error.flatten());
             }
         });
         
-        // Sort by score in code after fetching
         candidates.sort((a, b) => b.options_score - a.options_score);
         
+        console.log(`Successfully fetched and validated ${candidates.length} options candidates for ticker: ${ticker}`);
         return candidates;
+
     } catch (error) {
         console.error(`Error fetching options candidates:`, error);
         return [];
     }
 }
+
 
 
 export async function getDashboardDataAdmin(ticker: string): Promise<any | null> {
@@ -743,3 +739,4 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 
 
     
+

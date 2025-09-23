@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -55,16 +56,6 @@ const StockSchema = z.object({
   weighted_score: z.number().optional(),
 });
 export type Stock = z.infer<typeof StockSchema>;
-
-const EconomicEventSchema = z.object({
-    id: z.string(),
-    event_name: z.string(),
-    date: z.string(),
-    country: z.string().optional(),
-    impact: z.string().optional(),
-    ticker: z.string().optional().nullable(),
-});
-export type EconomicEvent = z.infer<typeof EconomicEventSchema>;
 
 const TickerEventSchema = z.object({
     id: z.string(),
@@ -294,11 +285,11 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
 
         const eventsCollectionRef = adminDb.collection('calendar_events');
         
-        const query = eventsCollectionRef
+        const q = eventsCollectionRef
             .where('event_date', '>=', nowStr)
             .where('event_date', '<=', thirtyDaysFromNowStr);
         
-        const querySnapshot = await query.get();
+        const querySnapshot = await q.get();
         
         const eventsMap = new Map<string, TickerEvent>();
 
@@ -417,11 +408,23 @@ export async function getTopOptionsAdmin(type: 'CALL' | 'PUT', limit: number): P
 
 export async function getOptionsCandidatesAdmin(ticker?: string): Promise<OptionCandidate[]> {
     try {
-        const q = adminDb.collection('options_candidates').orderBy('options_score', 'desc');
-        
-        const querySnapshot = await q.get();
+        const candidatesCollection = adminDb.collection('options_candidates');
+        let querySnapshot;
 
-        const allCandidates: OptionCandidate[] = [];
+        if (ticker) {
+            const tickerPrefix = `O:${ticker.toUpperCase()}`;
+            // Create a query for documents where the ID is >= the prefix and < the character after the prefix
+            const endPrefix = tickerPrefix.slice(0, -1) + String.fromCharCode(tickerPrefix.charCodeAt(tickerPrefix.length - 1) + 1);
+
+            querySnapshot = await candidatesCollection
+                .where(admin.firestore.FieldPath.documentId(), '>=', tickerPrefix)
+                .where(admin.firestore.FieldPath.documentId(), '<', endPrefix)
+                .get();
+        } else {
+            querySnapshot = await candidatesCollection.get();
+        }
+
+        const candidates: OptionCandidate[] = [];
         querySnapshot.forEach(doc => {
             const data = doc.data();
             const candidate = {
@@ -440,17 +443,16 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
             };
             const validation = OptionCandidateSchema.safeParse(candidate);
             if (validation.success) {
-                allCandidates.push(validation.data);
+                candidates.push(validation.data);
             } else {
                 console.error(`Invalid options candidate data from Firestore:`, validation.error.flatten());
             }
         });
         
-        if (ticker) {
-            return allCandidates.filter(c => c.ticker === ticker.toUpperCase());
-        }
+        // Sort by score in code after fetching
+        candidates.sort((a, b) => b.options_score - a.options_score);
         
-        return allCandidates;
+        return candidates;
     } catch (error) {
         console.error(`Error fetching options candidates:`, error);
         return [];
@@ -737,6 +739,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 
 
     
+
 
 
 

@@ -2,6 +2,7 @@
 import { TickerSearch } from "@/components/ticker-search";
 import Link from "next/link";
 import TodaysWinners from "@/app/dashboard/todays-winners";
+import OptionsCandidatesTable from "@/app/dashboard/options-candidates-table";
 
 export default function LandingPage() {
   return (
@@ -31,8 +32,13 @@ export default function LandingPage() {
         </section>
 
         {/* Winners Dashboard Section */}
-        <section id="winners-dashboard" className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 scroll-mt-20">
+        <section id="winners-dashboard" className="container mx-auto px-4 sm:px-6 lg:px-8 pb-8 scroll-mt-20">
             <TodaysWinners />
+        </section>
+        
+        {/* Options Candidates Section */}
+        <section id="options-candidates" className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+            <OptionsCandidatesTable />
         </section>
 
       </main>

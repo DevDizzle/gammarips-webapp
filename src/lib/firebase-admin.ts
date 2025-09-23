@@ -46,7 +46,7 @@ adminStorage = getAdminStorage(adminApp);
 
 const StockSchema = z.object({
   id: z.string(), // Document ID is the ticker
-  company_name: z.string().optional(),
+  company_name: z.string().optional().nullable(),
   image_uri: z.string().optional(),
   bundle_gcs_path: z.string().optional(),
   recommendation_analysis: z.string().optional(),
@@ -87,6 +87,9 @@ const OptionCandidateSchema = z.object({
   expiry_date: z.string(),
   premium: z.number(),
   delta: z.number(),
+  volume: z.number().optional(),
+  implied_volatility: z.number().optional(),
+  ticker: z.string(),
 });
 export type OptionCandidate = z.infer<typeof OptionCandidateSchema>;
 
@@ -393,6 +396,9 @@ export async function getTopOptionsAdmin(type: 'CALL' | 'PUT', limit: number): P
                 expiry_date: data.expiry_date,
                 premium: data.premium,
                 delta: data.delta,
+                ticker: data.ticker,
+                volume: data.volume,
+                implied_volatility: data.implied_volatility,
             };
             const validation = OptionCandidateSchema.safeParse(option);
             if (validation.success) {
@@ -405,6 +411,43 @@ export async function getTopOptionsAdmin(type: 'CALL' | 'PUT', limit: number): P
         return options;
     } catch (error) {
         console.error(`Error fetching top ${type} options:`, error);
+        return [];
+    }
+}
+
+export async function getOptionsCandidatesAdmin(): Promise<OptionCandidate[]> {
+    try {
+        const q = adminDb.collection('options_candidates').orderBy('options_score', 'desc');
+        const querySnapshot = await q.get();
+
+        const candidates: OptionCandidate[] = [];
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+            const candidate = {
+                id: doc.id,
+                symbol: data.symbol,
+                options_score: data.options_score,
+                type: data.type,
+                stock_price: data.stock_price,
+                strike_price: data.strike_price,
+                expiry_date: data.expiry_date,
+                premium: data.premium,
+                delta: data.delta,
+                ticker: data.ticker,
+                volume: data.volume,
+                implied_volatility: data.implied_volatility,
+            };
+            const validation = OptionCandidateSchema.safeParse(candidate);
+            if (validation.success) {
+                candidates.push(validation.data);
+            } else {
+                console.error(`Invalid options candidate data from Firestore:`, validation.error.flatten());
+            }
+        });
+        
+        return candidates;
+    } catch (error) {
+        console.error(`Error fetching options candidates:`, error);
         return [];
     }
 }
@@ -689,3 +732,4 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 
 
     
+

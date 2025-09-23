@@ -31,6 +31,7 @@ import {
     getOptionsSignalsAdmin,
     getOptionsHeaderSignalAdmin,
     getTickerEventsAdmin,
+    getOptionsCandidatesAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession } from '@/lib/stripe';
@@ -60,6 +61,10 @@ export async function getTopStocks(type: 'BUY' | 'SELL', limit: number): Promise
 
 export async function getTopOptions(type: 'CALL' | 'PUT', limit: number): Promise<OptionCandidate[]> {
     return getTopOptionsAdmin(type, limit);
+}
+
+export async function getOptionsCandidates(): Promise<OptionCandidate[]> {
+    return getOptionsCandidatesAdmin();
 }
 
 export async function getDashboardData(ticker: string): Promise<any | null> {

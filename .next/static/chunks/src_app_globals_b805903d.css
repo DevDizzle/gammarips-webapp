@@ -1316,6 +1316,10 @@ body {
   aspect-ratio: 16 / 9;
 }
 
+.h-0\.5 {
+  height: .125rem;
+}
+
 .h-10 {
   height: 2.5rem;
 }
@@ -1394,10 +1398,6 @@ body {
 
 .h-px {
   height: 1px;
-}
-
-.h-0\.5 {
-  height: .125rem;
 }
 
 .max-h-96 {

@@ -63,6 +63,7 @@ const EconomicEventSchema = z.object({
     date: z.string(),
     country: z.string().optional(),
     impact: z.string().optional(),
+    ticker: z.string().optional().nullable(),
 });
 export type EconomicEvent = z.infer<typeof EconomicEventSchema>;
 
@@ -290,15 +291,17 @@ export async function getEconomicEventsAdmin(): Promise<EconomicEvent[]> {
         const nowStr = now.toISOString().split('T')[0];
         const thirtyDaysFromNowStr = thirtyDaysFromNow.toISOString().split('T')[0];
 
-        const eventsQuerySnapshot = await adminDb.collection('economic_calendar')
+        const eventsQuery = adminDb.collection('calendar_events')
             .where('event_date', '>=', nowStr)
             .where('event_date', '<=', thirtyDaysFromNowStr)
-            .orderBy('event_date', 'asc')
-            .get();
+            .where('entity', '==', null)
+            .orderBy('event_date', 'asc');
+        
+        const querySnapshot = await eventsQuery.get();
 
         const events: EconomicEvent[] = [];
         
-        eventsQuerySnapshot.forEach(doc => {
+        querySnapshot.forEach(doc => {
             const data = doc.data();
             const event = {
                 id: doc.id,
@@ -306,6 +309,7 @@ export async function getEconomicEventsAdmin(): Promise<EconomicEvent[]> {
                 date: data.event_date,
                 country: data.country,
                 impact: data.impact,
+                ticker: data.entity,
             };
             
             const validation = EconomicEventSchema.safeParse(event);
@@ -329,17 +333,18 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
     try {
         const now = new Date();
         const nowStr = now.toISOString().split('T')[0];
+        const thirtyDaysFromNow = new Date();
+        thirtyDaysFromNow.setDate(now.getDate() + 30);
+        const thirtyDaysFromNowStr = thirtyDaysFromNow.toISOString().split('T')[0];
 
-        const eventsCollectionRef = adminDb.collection(`calendar_events/${ticker}/events`);
+        const eventsCollectionRef = adminDb.collection('calendar_events');
         const querySnapshot = await eventsCollectionRef
+            .where('entity', '==', ticker.toUpperCase())
             .where('event_date', '>=', nowStr)
+            .where('event_date', '<=', thirtyDaysFromNowStr)
             .orderBy('event_date', 'asc')
             .get();
         
-        if (querySnapshot.empty) {
-            return [];
-        }
-
         const events: TickerEvent[] = [];
         querySnapshot.forEach(doc => {
             const data = doc.data();
@@ -348,7 +353,7 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
                 event_name: data.event_name,
                 event_date: data.event_date,
                 event_type: data.event_type,
-                ticker: ticker.toUpperCase(),
+                ticker: data.entity,
             };
             const validation = TickerEventSchema.safeParse(event);
             if(validation.success) {
@@ -708,6 +713,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 
 
 

@@ -24,7 +24,6 @@ import {
     getGcsFileContentAdmin,
     getRandomBuyStockAdmin,
     getRandomSellStockAdmin,
-    getEconomicEventsAdmin,
     getTopStocksAdmin,
     getTopOptionsAdmin,
     getDashboardDataAdmin,
@@ -49,10 +48,6 @@ export async function getWinnersDashboard(): Promise<Winner[]> {
 
 export async function getStocks(): Promise<Stock[]> {
     return getStocksAdmin();
-}
-
-export async function getEconomicEvents(): Promise<EconomicEvent[]> {
-    return getEconomicEventsAdmin();
 }
 
 export async function getTickerEvents(ticker: string): Promise<TickerEvent[]> {

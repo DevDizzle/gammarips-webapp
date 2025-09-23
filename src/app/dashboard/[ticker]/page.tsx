@@ -1,7 +1,7 @@
 
 
 import { notFound } from 'next/navigation';
-import { getDashboardData, getEconomicEvents, getTickerEvents } from '@/app/actions';
+import { getDashboardData, getTickerEvents } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, CalendarDays } from 'lucide-react';
@@ -10,7 +10,7 @@ import { PriceChart } from '@/components/price-chart';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Markdown } from '@/components/markdown';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { EconomicEvent, TickerEvent } from '@/lib/firebase-admin';
+import type { TickerEvent } from '@/lib/firebase-admin';
 
 interface TickerDashboardPageProps {
   params: {
@@ -77,9 +77,7 @@ const getIndicator = (signal: string, IconUp: React.ElementType, IconDown: React
     return <IconNeutral className="h-4 w-4 text-muted-foreground" />;
 };
 
-type CombinedEvent = (TickerEvent & { date: string; name: string; }) | (EconomicEvent & { date: string; name: string; ticker?: string });
-
-const UpcomingEvents = ({ events }: { events: CombinedEvent[] }) => {
+const UpcomingEvents = ({ events }: { events: TickerEvent[] }) => {
     if (!events || events.length === 0) {
         return null;
     }
@@ -104,10 +102,10 @@ const UpcomingEvents = ({ events }: { events: CombinedEvent[] }) => {
                     <TableBody>
                         {events.map((event) => (
                             <TableRow key={event.id}>
-                                <TableCell>{new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</TableCell>
-                                <TableCell>{event.name}</TableCell>
+                                <TableCell>{new Date(event.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</TableCell>
+                                <TableCell>{event.event_name}</TableCell>
                                 <TableCell>
-                                    {'ticker' in event && event.ticker ? (
+                                    {event.ticker ? (
                                         <Badge variant="secondary">{event.ticker}</Badge>
                                     ) : null}
                                 </TableCell>
@@ -125,19 +123,8 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
   const ticker = params.ticker.toUpperCase();
   const data = await getDashboardData(ticker);
   
-  // Fetch both ticker-specific and general economic events
-  const tickerEvents = await getTickerEvents(ticker);
-  const economicEvents = await getEconomicEvents();
-
-  // Combine, de-duplicate, and sort events
-  const combinedEvents: CombinedEvent[] = [
-      ...tickerEvents.map(e => ({ ...e, date: e.event_date, name: e.event_name })),
-      ...economicEvents.map(e => ({ ...e, name: e.event_name }))
-  ];
-
-  const uniqueEvents = Array.from(new Map(combinedEvents.map(e => [e.name + e.date, e])).values());
-  uniqueEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
+  // Fetch all relevant events (ticker-specific and general)
+  const allEvents = await getTickerEvents(ticker);
 
   if (!data) {
     return (
@@ -270,7 +257,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
                     </Card>
             )}
 
-            <UpcomingEvents events={uniqueEvents} />
+            <UpcomingEvents events={allEvents} />
         </div>
 
     </div>

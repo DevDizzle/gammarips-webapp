@@ -48,7 +48,7 @@ const StockSchema = z.object({
   id: z.string(), // Document ID is the ticker
   company_name: z.string(),
   image_uri: z.string().optional(),
-  bundle_gcs_path: z.string().optional(), // Mapped from 'profile'
+  bundle_gcs_path: z.string().optional(),
   recommendation_analysis: z.string().optional(),
   recommendation: z.string().optional(),
   pages_json: z.string().optional(),
@@ -72,7 +72,7 @@ const TickerEventSchema = z.object({
     event_name: z.string(),
     event_date: z.string(),
     event_type: z.string().optional(),
-    ticker: z.string(),
+    ticker: z.string().nullable(),
 });
 export type TickerEvent = z.infer<typeof TickerEventSchema>;
 
@@ -282,53 +282,6 @@ export async function getStocksAdmin(): Promise<Stock[]> {
   }
 }
 
-export async function getEconomicEventsAdmin(): Promise<EconomicEvent[]> {
-    try {
-        const now = new Date();
-        const thirtyDaysFromNow = new Date();
-        thirtyDaysFromNow.setDate(now.getDate() + 30);
-        
-        const nowStr = now.toISOString().split('T')[0];
-        const thirtyDaysFromNowStr = thirtyDaysFromNow.toISOString().split('T')[0];
-
-        const eventsQuery = adminDb.collection('calendar_events')
-            .where('event_date', '>=', nowStr)
-            .where('event_date', '<=', thirtyDaysFromNowStr)
-            .where('entity', '==', null)
-            .orderBy('event_date', 'asc');
-        
-        const querySnapshot = await eventsQuery.get();
-
-        const events: EconomicEvent[] = [];
-        
-        querySnapshot.forEach(doc => {
-            const data = doc.data();
-            const event = {
-                id: doc.id,
-                event_name: data.event_name,
-                date: data.event_date,
-                country: data.country,
-                impact: data.impact,
-                ticker: data.entity,
-            };
-            
-            const validation = EconomicEventSchema.safeParse(event);
-            if (validation.success) {
-                events.push(validation.data);
-            } else {
-                 console.error("Invalid economic event data from Firestore:", validation.error.flatten());
-            }
-        });
-
-        return events;
-
-    } catch (error) {
-        console.error('Error fetching economic events:', error);
-        return [];
-    }
-}
-
-
 export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[]> {
     try {
         const now = new Date();
@@ -338,32 +291,56 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
         const thirtyDaysFromNowStr = thirtyDaysFromNow.toISOString().split('T')[0];
 
         const eventsCollectionRef = adminDb.collection('calendar_events');
-        const querySnapshot = await eventsCollectionRef
+        
+        // Query for ticker-specific events
+        const tickerQuery = eventsCollectionRef
             .where('entity', '==', ticker.toUpperCase())
             .where('event_date', '>=', nowStr)
-            .where('event_date', '<=', thirtyDaysFromNowStr)
-            .orderBy('event_date', 'asc')
-            .get();
+            .where('event_date', '<=', thirtyDaysFromNowStr);
+            
+        // Query for general economic events (entity is null)
+        const generalQuery = eventsCollectionRef
+            .where('entity', '==', null)
+            .where('event_date', '>=', nowStr)
+            .where('event_date', '<=', thirtyDaysFromNowStr);
         
-        const events: TickerEvent[] = [];
-        querySnapshot.forEach(doc => {
-            const data = doc.data();
-            const event = {
-                id: doc.id,
-                event_name: data.event_name,
-                event_date: data.event_date,
-                event_type: data.event_type,
-                ticker: data.entity,
-            };
-            const validation = TickerEventSchema.safeParse(event);
-            if(validation.success) {
-                events.push(validation.data);
-            } else {
-                console.warn(`Invalid ticker event data for ${ticker}:`, validation.error.flatten());
-            }
-        });
+        const [tickerSnapshot, generalSnapshot] = await Promise.all([
+            tickerQuery.get(),
+            generalQuery.get()
+        ]);
+        
+        const eventsMap = new Map<string, TickerEvent>();
 
-        return events;
+        const processSnapshot = (snapshot: admin.firestore.QuerySnapshot) => {
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const event: TickerEvent = {
+                    id: doc.id,
+                    event_name: data.event_name,
+                    event_date: data.event_date,
+                    event_type: data.event_type,
+                    ticker: data.entity,
+                };
+                const validation = TickerEventSchema.safeParse(event);
+                if(validation.success) {
+                    // Use event_name and event_date as a composite key to avoid duplicates
+                    const compositeKey = `${event.event_name}|${event.event_date}`;
+                    if (!eventsMap.has(compositeKey)) {
+                        eventsMap.set(compositeKey, validation.data);
+                    }
+                } else {
+                    console.warn(`Invalid ticker event data for ${ticker}:`, validation.error.flatten());
+                }
+            });
+        };
+
+        processSnapshot(tickerSnapshot);
+        processSnapshot(generalSnapshot);
+        
+        const combinedEvents = Array.from(eventsMap.values());
+        combinedEvents.sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
+        
+        return combinedEvents;
 
     } catch (error) {
         console.error(`Error fetching events for ticker ${ticker}:`, error);
@@ -713,6 +690,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 
 
 

@@ -229,18 +229,19 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
       </div>
       
       <section>
-          {priceChartData ? (
-                <PriceChart priceData={priceChartData} />
-            ) : (
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Price Chart</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-muted-foreground">Price chart data is not available for this ticker.</p>
-                    </CardContent>
-                </Card>
-            )}
+        <Card>
+            <CardHeader>
+                <CardTitle>Interactive Price Chart</CardTitle>
+                <CardDescription>Analyze price action with volume, 50-day, and 200-day moving averages.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                {priceChartData ? (
+                    <PriceChart priceData={priceChartData} />
+                ) : (
+                    <p className="text-muted-foreground">Price chart data is not available for this ticker.</p>
+                )}
+            </CardContent>
+        </Card>
       </section>
       
       {stockLevelAnalysis && (

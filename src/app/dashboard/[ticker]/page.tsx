@@ -246,7 +246,8 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
       {stockLevelAnalysis && (
           <Card>
               <CardHeader>
-                  <CardTitle>AI Analysis</CardTitle>
+                  <CardTitle>AI Analyst Briefing</CardTitle>
+                  <CardDescription>Our AI translates complex data—from fundamentals to momentum—into a clear, straightforward outlook.</CardDescription>
               </CardHeader>
               <CardContent>
                   <Accordion type="single" collapsible>
@@ -272,5 +273,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
 
 
 
+
+    
 
     

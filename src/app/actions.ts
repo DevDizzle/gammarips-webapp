@@ -102,22 +102,29 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
         return header;
     })();
     
-    // --- Fetch separate markdown for AI analysis ---
+    // --- Fetch separate markdown for AI analysis & industry for header ---
     const allStocks = await getStocksAdmin();
     const stock = allStocks.find(s => s.id === ticker.toUpperCase());
     let stockLevelAnalysis = rawData.stockLevelAnalysis; // Use original as fallback
+    let industry = null;
 
-    if (stock && stock.recommendation_analysis) {
-        try {
-            stockLevelAnalysis = await getGcsFileContentAdmin(stock.recommendation_analysis);
-        } catch (error) {
-            console.error(`Failed to fetch separate AI analysis for ${ticker}, using fallback.`, error);
+    if (stock) {
+        if (stock.recommendation_analysis) {
+            try {
+                stockLevelAnalysis = await getGcsFileContentAdmin(stock.recommendation_analysis);
+            } catch (error) {
+                console.error(`Failed to fetch separate AI analysis for ${ticker}, using fallback.`, error);
+            }
+        }
+        if (stock.industry) {
+            industry = stock.industry;
         }
     }
 
 
     return {
         ...rawData,
+        industry,
         optionsHeader, // This will be null if no top signal is found
         topSignalSummary: topSignal?.summary, // Pass summary separately
         stockLevelAnalysis, // Overwrite with new content

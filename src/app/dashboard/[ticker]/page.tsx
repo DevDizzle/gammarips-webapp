@@ -102,7 +102,7 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
     )
   }
 
-  const { titleInfo, kpis, priceChartData, optionsHeader, topSignalSummary, stockLevelAnalysis } = data;
+  const { titleInfo, kpis, priceChartData, optionsHeader, topSignalSummary, stockLevelAnalysis, industry } = data;
   const isBullish = kpis?.trendStrength?.signal?.toLowerCase().includes('bullish');
 
   // Calculate RSI change for display
@@ -135,9 +135,9 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
       <header>
-        <h1 className="text-3xl font-bold font-headline tracking-tight flex items-center gap-3">
-          <span className="truncate">{titleInfo.companyName}</span>
-          <Badge variant="secondary">{ticker}</Badge>
+        <h1 className="text-3xl font-bold font-headline tracking-tight flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span className="truncate">{titleInfo.companyName} ({ticker})</span>
+          {industry && <Badge variant="secondary">{industry}</Badge>}
         </h1>
         <p className="text-muted-foreground mt-1 text-sm">
             AI-Powered Options & Equity Analysis as of {new Date(data.runDate).toLocaleDateString()}
@@ -278,3 +278,4 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
     
 
     
+

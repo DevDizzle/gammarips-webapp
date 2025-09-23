@@ -47,6 +47,7 @@ adminStorage = getAdminStorage(adminApp);
 const StockSchema = z.object({
   id: z.string(), // Document ID is the ticker
   company_name: z.string().optional().nullable(),
+  industry: z.string().optional().nullable(),
   image_uri: z.string().optional(),
   bundle_gcs_path: z.string().optional(),
   recommendation_analysis: z.string().optional(),
@@ -250,6 +251,7 @@ export async function getStocksAdmin(): Promise<Stock[]> {
         const stock = {
             id: doc.id,
             company_name: data.company_name,
+            industry: data.industry,
             bundle_gcs_path: data.profile,
             recommendation_analysis: data.recommendation_analysis,
             recommendation: data.recommendation,

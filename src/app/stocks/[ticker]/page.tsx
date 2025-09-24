@@ -17,6 +17,7 @@ interface StockSeoPageProps {
   };
 }
 
+// Updated data structure to match the new JSON format
 interface StockSeoData {
     symbol: string;
     date: string;
@@ -25,11 +26,10 @@ interface StockSeoData {
         about: string;
         newsSummary: string;
         technicals: string;
-        mdAndA: string;
+        'md&a': string; // Key updated to handle '&'
         earningsCall: string;
         financials: string;
-        metrics: string;
-        ratios: string;
+        fundamentals?: string; // Made optional as per example
     };
     seo: {
         title: string;
@@ -37,14 +37,16 @@ interface StockSeoData {
         keywords: string[];
     };
     teaser: {
-        signal: 'BUY' | 'SELL' | 'HOLD';
+        signal: string;
         summary: string;
         metrics: {
             [key: string]: string;
         };
     };
     relatedStocks: string[];
+    aiOptionsPicks?: any[]; // Added optional field
 }
+
 
 const DAYS_THRESHOLD = 7; // Only consider files from the last 7 days as recent
 
@@ -107,7 +109,7 @@ async function getStockData(ticker: string): Promise<StockSeoData | null> {
 
 
 export async function generateMetadata({ params }: StockSeoPageProps): Promise<Metadata> {
-  const data = await getStockData(params.ticker);
+  const data = await getStockData(params.ticker.toUpperCase());
 
   if (!data) {
     return {
@@ -132,9 +134,9 @@ export async function generateStaticParams() {
 
     for (const stock of allStocks) {
         // Check if data exists and is recent before adding to static params
-        const hasValidData = await getStockData(stock.id);
+        const hasValidData = await getStockData(stock.id.toUpperCase());
         if (hasValidData) {
-            validTickers.push({ ticker: stock.id });
+            validTickers.push({ ticker: stock.id.toUpperCase() });
             console.log(`[generateStaticParams] Found valid data for ${stock.id}, adding to prerender list.`);
         } else {
             console.log(`[generateStaticParams] No valid/recent data for ${stock.id}, skipping.`);
@@ -150,19 +152,21 @@ export const dynamicParams = true;
 export const revalidate = 3600;
 
 
-const SignalIndicator = ({ signal }: { signal: 'BUY' | 'SELL' | 'HOLD' }) => {
+const SignalIndicator = ({ signal }: { signal: string }) => {
+    const lowerSignal = signal.toLowerCase();
     const baseClasses = "font-bold text-lg flex items-center gap-2";
-    if (signal === 'BUY') {
-        return <span className={`${baseClasses} text-green-500`}><TrendingUp size={20} /> BUY</span>;
+    if (lowerSignal.includes('buy') || lowerSignal.includes('bullish')) {
+        return <span className={`${baseClasses} text-green-500`}><TrendingUp size={20} /> {signal}</span>;
     }
-    if (signal === 'SELL') {
-        return <span className={`${baseClasses} text-red-500`}><TrendingDown size={20} /> SELL</span>;
+    if (lowerSignal.includes('sell') || lowerSignal.includes('bearish')) {
+        return <span className={`${baseClasses} text-red-500`}><TrendingDown size={20} /> {signal}</span>;
     }
-    return <span className={`${baseClasses} text-gray-500`}><Minus size={20} /> HOLD</span>;
+    return <span className={`${baseClasses} text-gray-500`}><Minus size={20} /> {signal}</span>;
 };
 
 export default async function StockSeoPage({ params }: StockSeoPageProps) {
-  const data = await getStockData(params.ticker);
+  const ticker = params.ticker.toUpperCase();
+  const data = await getStockData(ticker);
 
   if (!data) {
     notFound();
@@ -211,6 +215,22 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardContent>
         </Card>
 
+        <Card className="mb-8 text-center bg-primary/10 border-primary/20">
+            <CardHeader>
+                <CardTitle>Go Beyond the Analysis</CardTitle>
+                <CardDescription className="text-foreground/80">
+                    Get real-time insights, compare stocks, and see top-scored options on the interactive dashboard.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Button asChild size="lg">
+                    <Link href={`/dashboard/${params.ticker}`}>
+                        Launch Interactive Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
+                    </Link>
+                </Button>
+            </CardContent>
+        </Card>
+
         <Card className="mb-8">
             <CardHeader>
                 <CardTitle className="font-headline">Full Analysis Breakdown</CardTitle>
@@ -221,11 +241,11 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
                     {Object.entries(fullAnalysis).map(([key, value], index) => {
                          // A simple function to format the key into a readable title
                          const formatTitle = (s: string) => {
-                            if (s === 'mdAndA') return 'Management Discussion';
+                            if (s === 'md&a') return 'Management Discussion';
                             const result = s.replace(/([A-Z])/g, ' $1');
                             return result.charAt(0).toUpperCase() + result.slice(1);
                         };
-                        return (
+                        return value ? (
                              <AccordionItem key={key} value={`item-${index}`}>
                                 <AccordionTrigger>{formatTitle(key)}</AccordionTrigger>
                                 <AccordionContent>
@@ -234,25 +254,9 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
                                     </div>
                                 </AccordionContent>
                             </AccordionItem>
-                        )
+                        ) : null;
                     })}
                 </Accordion>
-            </CardContent>
-        </Card>
-
-         <Card className="mb-8 text-center bg-primary/10 border-primary/20">
-            <CardHeader>
-                <CardTitle>Go Beyond the Analysis</CardTitle>
-                <CardDescription className="text-foreground/80">
-                    Get real-time insights, compare stocks, and chat with our AI analyst on the interactive dashboard.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Button asChild size="lg">
-                    <Link href={`/dashboard/${params.ticker}`}>
-                        Launch Interactive Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
-                    </Link>
-                </Button>
             </CardContent>
         </Card>
 
@@ -285,3 +289,5 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
     </>
   );
 }
+
+    

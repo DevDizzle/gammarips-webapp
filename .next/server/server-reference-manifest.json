@@ -41,16 +41,11 @@
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
         "app/dashboard/[ticker]/page": "rsc",
-        "app/page": "action-browser",
-        "app/stocks/[ticker]/page": "action-browser"
+        "app/page": "action-browser"
       }
     },
     "4000694d2afc90b23b2dd7dc89d06882302da44460": {
@@ -190,15 +185,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "003e1e2f0430108d6d132533ff75e9cf6dc2fd996c": {
@@ -206,15 +196,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "00934f2b1eb65a4c67886b826ac26c2c63d0fc5916": {
@@ -222,15 +207,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "00943f07dbdb2c41fb583b06f835900ba2c570b32c": {
@@ -238,15 +218,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "4027297886abba1586bf4d4e86ec263d72783b67df": {
@@ -254,15 +229,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "403c36604a259efa20fff4d9b35d1476f611e38a17": {
@@ -270,15 +240,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "404cdebc2fa7159813d822f6e6e1810c25eaed53fa": {
@@ -286,15 +251,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "405df5c0ca8db57431a6efe7c09355f6b9b02aa313": {
@@ -302,15 +262,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "406f6c0af679647280adb9d83f29e766a569430756": {
@@ -318,15 +273,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "40860f31dbbb6de53986b32ead5bfa29f807a4ced6": {
@@ -334,15 +284,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "40acc23b8b1a614ccbf57b4e98af674512e338370b": {
@@ -350,15 +295,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "40b004a099a7ad8fb9ce95e0d682e57c2509ed74b6": {
@@ -366,15 +306,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "40d1d9159566753a150274514e8b37db4d803124dc": {
@@ -382,15 +317,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "40d9040ad4281e872e74c84699bb37d2e707ee369c": {
@@ -398,15 +328,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "40f8d60fc13e8f14fcf58e1560b04bb80780499fb1": {
@@ -414,15 +339,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "608418bbaacd15b5c227625dcc39868a4b7fdd233e": {
@@ -430,15 +350,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "60b2a1f95dd8d0d084ea92630a2a18b5f265c0372e": {
@@ -446,15 +361,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "60f529c299b5d07a3e2396fd429ef7ef4ed829f38f": {
@@ -462,15 +372,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     },
     "7cacb0911c16ad04aba3b9e6961e26a6a1085cfa3d": {
@@ -478,15 +383,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/feedback-summarization.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/stocks/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/stocks/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "rsc",
-        "app/stocks/[ticker]/page": "rsc"
+        "app/dashboard/[ticker]/page": "rsc"
       }
     }
   },

@@ -225,7 +225,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardHeader>
             <CardContent>
                 <Button asChild size="lg">
-                    <Link href={`/dashboard/${params.ticker}`}>
+                    <Link href="/">
                         Find Your Next Trade <ArrowRight className="ml-2 h-5 w-5"/>
                     </Link>
                 </Button>
@@ -261,6 +261,16 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardContent>
         </Card>
 
+        <Card className="mb-8 text-center bg-secondary/80">
+            <CardContent className="p-6">
+                <Button asChild size="lg" variant="secondary">
+                    <Link href="/">
+                        View today's top options setups <ArrowRight className="ml-2 h-5 w-5"/>
+                    </Link>
+                </Button>
+            </CardContent>
+        </Card>
+
         <Card className="mb-8 border-yellow-500/50 bg-yellow-500/10">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-yellow-400">
@@ -290,7 +300,3 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
     </>
   );
 }
-
-    
-
-    

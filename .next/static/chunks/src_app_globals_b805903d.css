@@ -2051,6 +2051,10 @@ body {
   background-color: #eab3081a;
 }
 
+.bg-secondary\/80 {
+  background-color: hsl(var(--secondary) / .8);
+}
+
 .fill-current {
   fill: currentColor;
 }

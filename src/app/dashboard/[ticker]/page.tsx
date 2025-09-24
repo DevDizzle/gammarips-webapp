@@ -246,19 +246,24 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
       </section>
       
       {stockLevelAnalysis && (
+        <>
           <Card>
               <CardHeader>
                   <CardTitle>AI Analyst Briefing</CardTitle>
                   <CardDescription>Our AI translates complex data—from fundamentals to momentum—into a clear, straightforward outlook.</CardDescription>
               </CardHeader>
               <CardContent>
-                  <Button asChild variant="outline">
-                      <Link href={`/stocks/${ticker}`}>
-                          View Full Analyst Report <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                  </Button>
+                   <Markdown content={stockLevelAnalysis} className="prose-sm prose-invert max-w-none" />
               </CardContent>
           </Card>
+          <div className="flex justify-center">
+            <Button asChild variant="outline">
+                <Link href={`/stocks/${ticker}`}>
+                    View Full Analyst Report <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+            </Button>
+          </div>
+        </>
       )}
 
     </div>

@@ -218,15 +218,15 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
 
         <Card className="mb-8 text-center bg-primary/10 border-primary/20">
             <CardHeader>
-                <CardTitle>Unlock High-Potential Trades</CardTitle>
+                <CardTitle>Find Your Edge in Options</CardTitle>
                 <CardDescription className="text-foreground/80">
-                    Our new interactive dashboard does more than just track stocks. Discover top options setups, see how they stack up against the industry, and find your next winning idea.
+                    Go from analysis to action. Instantly access today's top-rated Call and Put setups, backed by AI-driven scores and real-time market data.
                 </CardDescription>
             </CardHeader>
             <CardContent>
                 <Button asChild size="lg">
                     <Link href={`/dashboard/${params.ticker}`}>
-                        Launch Interactive Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
+                        Find Your Next Trade <ArrowRight className="ml-2 h-5 w-5"/>
                     </Link>
                 </Button>
             </CardContent>
@@ -290,5 +290,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
     </>
   );
 }
+
+    
 
     

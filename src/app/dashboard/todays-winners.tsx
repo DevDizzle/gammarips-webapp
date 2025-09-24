@@ -90,7 +90,7 @@ function TodaysWinners() {
       <CardHeader>
         <CardTitle>Today's Top Opportunities</CardTitle>
         <CardDescription>
-          <Markdown content="The strongest bullish and bearish signals from across the market, updated daily. **Click any stock to see the full options chain and our analysis.**" />
+          <Markdown content="The strongest bullish and bearish signals from across the market, updated daily. **Click any stock to see the top options setup and our analysis.**" />
         </CardDescription>
       </CardHeader>
       <CardContent>

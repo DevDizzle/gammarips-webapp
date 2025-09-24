@@ -1,4 +1,5 @@
 
+
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -217,9 +218,9 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
 
         <Card className="mb-8 text-center bg-primary/10 border-primary/20">
             <CardHeader>
-                <CardTitle>Go Beyond the Analysis</CardTitle>
+                <CardTitle>Unlock High-Potential Trades</CardTitle>
                 <CardDescription className="text-foreground/80">
-                    Get real-time insights, compare stocks, and see top-scored options on the interactive dashboard.
+                    Our new interactive dashboard does more than just track stocks. Discover top options setups, see how they stack up against the industry, and find your next winning idea.
                 </CardDescription>
             </CardHeader>
             <CardContent>

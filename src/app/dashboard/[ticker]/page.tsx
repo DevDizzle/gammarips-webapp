@@ -1,7 +1,7 @@
 
 'use client';
 
-import { notFound, useRouter } from 'next/navigation';
+import { notFound, useRouter, useParams } from 'next/navigation';
 import { getDashboardData } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -280,8 +280,9 @@ function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-export default function TickerDashboardPage({ params }: TickerDashboardPageProps) {
-  const { ticker } = params;
+export default function TickerDashboardPage() {
+  const params = useParams<{ ticker: string }>();
+  const ticker = params.ticker || '';
   const { user, dbUser, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [data, setData] = useState<any>(null);
@@ -312,6 +313,7 @@ export default function TickerDashboardPage({ params }: TickerDashboardPageProps
     }
 
     const fetchData = async () => {
+      if (!ticker) return;
       try {
         const dashboardData = await getDashboardData(ticker.toUpperCase());
         setData(dashboardData);
@@ -406,6 +408,8 @@ export default function TickerDashboardPage({ params }: TickerDashboardPageProps
     </div>
   );
 }
+    
+
     
 
     

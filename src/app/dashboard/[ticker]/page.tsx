@@ -21,6 +21,7 @@ import { createCheckoutSession } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
 import { AuthDialog } from '@/components/auth/auth-dialog';
+import Image from 'next/image';
 
 interface TickerDashboardPageProps {
   params: {
@@ -180,7 +181,23 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
             </CardHeader>
             <CardContent className="relative">
                 {priceChartData ? (
-                    <PriceChart priceData={priceChartData} />
+                    <>
+                        {/* Interactive chart for desktop */}
+                        <div className="hidden md:block">
+                            <PriceChart priceData={priceChartData} />
+                        </div>
+                        {/* Static image for mobile */}
+                        <div className="md:hidden">
+                             <Image
+                                src={`https://placehold.co/600x400/1C1C29/a855f7?text=${ticker}+30-Day+Chart`}
+                                alt={`${ticker} 30-day price chart`}
+                                width={600}
+                                height={400}
+                                className="w-full h-auto rounded-md"
+                                data-ai-hint="stock chart"
+                            />
+                        </div>
+                    </>
                 ) : (
                     <p className="text-muted-foreground">Price chart data is not available for this ticker.</p>
                 )}

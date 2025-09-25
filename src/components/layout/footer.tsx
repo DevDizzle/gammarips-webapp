@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { Twitter } from 'lucide-react';
+import { XIcon } from '@/components/icons/XIcon';
 
 const Footer = () => {
   return (
@@ -29,7 +29,7 @@ const Footer = () => {
           <div>
              <h4 className="font-semibold text-foreground">Follow Us</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><a href="https://x.com/ProfitScout1000" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><Twitter size={16} /> X / Twitter</a></li>
+              <li><a href="https://x.com/ProfitScout1000" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><XIcon className="h-4 w-4" /> X</a></li>
               <li><a href="mailto:admin@profitscout.app" className="text-muted-foreground hover:text-primary">Contact Us</a></li>
             </ul>
           </div>

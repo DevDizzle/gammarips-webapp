@@ -2,9 +2,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Twitter, Link as LinkIcon, Check } from 'lucide-react';
+import { Link as LinkIcon, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { XIcon } from '@/components/icons/XIcon';
 
 interface ShareButtonsProps {
   title: string;
@@ -31,7 +32,7 @@ export function ShareButtons({ title }: ShareButtonsProps) {
   const encodedTitle = encodeURIComponent(title);
   const encodedUrl = encodeURIComponent(currentUrl);
 
-  const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
+  const xShareUrl = `https://x.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
   const redditShareUrl = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedTitle}`;
 
   const copyToClipboard = () => {
@@ -53,9 +54,9 @@ export function ShareButtons({ title }: ShareButtonsProps) {
         <span className="text-sm font-medium text-muted-foreground mr-2">Share:</span>
         <Tooltip>
           <TooltipTrigger asChild>
-            <a href={twitterShareUrl} target="_blank" rel="noopener noreferrer">
+            <a href={xShareUrl} target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="icon">
-                <Twitter className="h-4 w-4" />
+                <XIcon className="h-4 w-4" />
                 <span className="sr-only">Share on X</span>
               </Button>
             </a>

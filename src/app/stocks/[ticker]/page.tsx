@@ -209,7 +209,9 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
                     {Object.entries(teaser.metrics).map(([key, value]) => (
                         <div key={key} className="p-4 bg-background rounded-lg">
                             <p className="text-sm font-medium text-muted-foreground">{key.replace(/([A-Z])/g, ' $1').trim()}</p>
-                            <p className="text-lg font-semibold">{value}</p>
+                            <p className="text-lg font-semibold">
+                                {key === 'Historical Volatility' ? `${value}%` : value}
+                            </p>
                         </div>
                     ))}
                 </div>

@@ -94,7 +94,7 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
                 <TableHead>Type</TableHead>
                 <TableHead>Strike</TableHead>
                 <TableHead>Expiration</TableHead>
-                <TableHead>Implied Vol.</TableHead>
+                <TableHead>Implied Volatility</TableHead>
                 <TableHead className="text-right">Setup Quality</TableHead>
               </TableRow>
             </TableHeader>

@@ -49,7 +49,7 @@
         "app/dashboard/[ticker]/page": "action-browser"
       }
     },
-    "405631e3e3ff111169b5d99e4ac1ce2091b6293858": {
+    "4000694d2afc90b23b2dd7dc89d06882302da44460": {
       "workers": {
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",

@@ -77,7 +77,7 @@ function OptionsCandidatesTable() {
                 <TableHead>Expiration</TableHead>
                 <TableHead>Last Price</TableHead>
                 <TableHead>Volume</TableHead>
-                <TableHead>Implied Vol.</TableHead>
+                <TableHead>Implied Volatility</TableHead>
                 <TableHead className="text-right">Score</TableHead>
               </TableRow>
             </TableHeader>

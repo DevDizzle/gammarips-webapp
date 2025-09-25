@@ -6,6 +6,10 @@
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
         },
+        "app/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -13,17 +17,23 @@
       },
       "layer": {
         "app/dashboard/[ticker]/page": "action-browser",
+        "app/dashboard/page": "action-browser",
         "app/page": "action-browser"
       }
     },
     "00b5bb7d5f6ae04c078d96cf5d36b948d5321d38d3": {
       "workers": {
+        "app/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
         }
       },
       "layer": {
+        "app/dashboard/page": "action-browser",
         "app/page": "action-browser"
       }
     },
@@ -31,6 +41,10 @@
       "workers": {
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
+        "app/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
         },
         "app/page": {
@@ -44,6 +58,7 @@
       },
       "layer": {
         "app/dashboard/[ticker]/page": "action-browser",
+        "app/dashboard/page": "action-browser",
         "app/page": "action-browser",
         "app/stocks/[ticker]/page": "action-browser"
       }
@@ -64,10 +79,15 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
+        },
+        "app/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "action-browser"
+        "app/dashboard/[ticker]/page": "action-browser",
+        "app/dashboard/page": "action-browser"
       }
     },
     "00324182b9ac3b577878a130ef278472991dbb2955": {

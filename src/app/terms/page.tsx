@@ -10,7 +10,7 @@ export default function TermsPage() {
   return (
     <article className="prose prose-invert">
       <h1>Terms of Service</h1>
-      <p><em>Last updated: {new Date().toLocaleDateString()}</em></p>
+      <p><em>Last updated: 9/25/2025</em></p>
 
       <h2>1. Acceptance of Terms</h2>
       <p>
@@ -37,12 +37,29 @@ export default function TermsPage() {
         You agree not to use the service for any unlawful purpose or any purpose prohibited under this clause. You agree not to use the Service in any way that could damage the Service, the services, or the general business of ProfitScout.
       </p>
 
-      <h2>6. Modification of Terms</h2>
+      <h2>6. Subscriptions and Payments</h2>
+      <p>
+        <strong>Billing:</strong> Access to the Service may require a paid subscription. You will be billed in advance on a recurring and periodic basis ("Billing Cycle"). Billing cycles are set on a monthly basis. At the end of each Billing Cycle, your subscription will automatically renew under the exact same conditions unless you cancel it or ProfitScout cancels it.
+      </p>
+      <p>
+        <strong>Payment:</strong> A valid payment method is required to process the payment for your subscription. Our monthly subscription fee is $19 USD.
+      </p>
+      <p>
+        <strong>Cancellation:</strong> You may cancel your subscription renewal at any time. The cancellation will take effect at the end of your current billing period, and you will continue to have access to the service until the end of that period.
+      </p>
+      <p>
+        <strong>No Refunds:</strong> Payments are non-refundable, and we do not provide refunds or credits for any partial-month subscription periods or unused services.
+      </p>
+      <p>
+        <strong>Fee Changes:</strong> ProfitScout, in its sole discretion and at any time, may modify the subscription fees. Any subscription fee change will become effective at the end of the then-current Billing Cycle. We will provide you with reasonable prior notice of any change in subscription fees to give you an opportunity to terminate your subscription before such change becomes effective.
+      </p>
+
+      <h2>7. Modification of Terms</h2>
       <p>
         We reserve the right, at our sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Service following the posting of any changes to this Agreement constitutes acceptance of those changes.
       </p>
 
-      <h2>7. Contact Information</h2>
+      <h2>8. Contact Information</h2>
       <p>
         If you have any questions about these Terms, please contact us at <a href="mailto:admin@profitscout.app">admin@profitscout.app</a>.
       </p>

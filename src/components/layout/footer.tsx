@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="md:col-span-2">
             <h3 className="text-xl font-bold font-headline text-primary">ProfitScout</h3>
-            <p className="text-sm text-muted-foreground mt-2">Smarter Stock Picks, Simplified.</p>
+            <p className="text-sm text-muted-foreground mt-2">Uncover Your Next Winning Trade</p>
           </div>
           <div>
             <h4 className="font-semibold text-foreground">Navigate</h4>
@@ -29,7 +29,7 @@ const Footer = () => {
           <div>
              <h4 className="font-semibold text-foreground">Follow Us</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><a href="https://x.com/ProfitScout1000" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><XIcon className="h-4 w-4" /> X</a></li>
+              <li><a href="https://x.com/ProfitScout1000" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><XIcon className="h-4 w-4" /></a></li>
               <li><a href="mailto:admin@profitscout.app" className="text-muted-foreground hover:text-primary">Contact Us</a></li>
             </ul>
           </div>

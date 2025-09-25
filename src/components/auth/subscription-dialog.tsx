@@ -20,7 +20,7 @@ type SubscriptionDialogProps = {
 };
 
 const features = [
-    "Unlimited AI Stock Outlooks",
+    "Unlimited AI-Powered Market Outlooks",
     "Daily Top-Rated Options Setups",
     "The \"Winners Dashboard\"",
     "Full Interactive Dashboards"
@@ -41,6 +41,7 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
         </DialogHeader>
         
         <div className="py-4">
+            <h3 className="mb-4 font-semibold text-foreground">What You Get with Pro:</h3>
             <ul className="space-y-3">
                 {features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3">
@@ -54,8 +55,9 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
         <DialogFooter className="flex-col items-center gap-2">
             <Button onClick={onSubscribe} className="w-full" disabled={loading} size="lg">
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Upgrade to Pro
+                Upgrade to Pro - $19/month
             </Button>
+            <p className="text-xs text-muted-foreground">Cancel anytime.</p>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -68,4 +70,3 @@ const CheckIcon = () => (
         <path d="m9 12 2 2 4-4" />
     </svg>
 )
-

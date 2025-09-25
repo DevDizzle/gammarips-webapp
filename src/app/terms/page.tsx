@@ -10,7 +10,7 @@ export default function TermsPage() {
   return (
     <article className="prose prose-invert">
       <h1>Terms of Service</h1>
-      <p><em>Last updated: 9/25/2025</em></p>
+      <p><em>Last updated: {new Date().toLocaleDateString()}</em></p>
 
       <h2>1. Acceptance of Terms</h2>
       <p>

@@ -182,7 +182,7 @@ export default function AboutPage() {
         <Separator className="my-12 sm:my-16" />
         
         {/* Contact Section */}
-        <section className="text-center">
+        <section id="contact" className="text-center scroll-mt-20">
              <h2 className="text-3xl font-bold font-headline">Contact</h2>
              <p className="mt-3 max-w-2xl mx-auto text-muted-foreground">
                 Have questions or ideas to improve ProfitScout? We’d love to hear from you.
@@ -209,5 +209,3 @@ export default function AboutPage() {
     </>
   );
 }
-
-    

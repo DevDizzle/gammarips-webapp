@@ -298,16 +298,16 @@ export default function TickerDashboardPage() {
   const [isSubscribing, setIsSubscribing] = useState(false);
 
   const trialHasEnded = useMemo(() => {
-    if (!dbUser) return false;
-    return dbUser.createdAt
-      ? (new Date().getTime() - new Date(dbUser.createdAt.seconds * 1000).getTime()) > 30 * 24 * 60 * 60 * 1000
-      : false;
+    if (!dbUser?.createdAt) return false;
+    // Note: Firestore Timestamps need to be converted to JS Dates.
+    const createdAtDate = (dbUser.createdAt as any).toDate ? (dbUser.createdAt as any).toDate() : new Date((dbUser.createdAt as any).seconds * 1000);
+    return (new Date().getTime() - createdAtDate.getTime()) > 30 * 24 * 60 * 60 * 1000;
   }, [dbUser]);
 
   const hasAccess = useMemo(() => {
-    if (!dbUser) return false;
+    if (authLoading || !dbUser) return false;
     return dbUser.isSubscribed || !trialHasEnded;
-  }, [dbUser, trialHasEnded]);
+  }, [dbUser, trialHasEnded, authLoading]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -392,7 +392,7 @@ export default function TickerDashboardPage() {
   }
 
   // If user's trial has ended and they are not subscribed, show the upgrade dialog
-  if (trialHasEnded && !dbUser?.isSubscribed && showSubDialog) {
+  if (dbUser && trialHasEnded && !dbUser.isSubscribed && showSubDialog) {
     return (
       <SubscriptionDialog
         open={showSubDialog}
@@ -422,5 +422,7 @@ export default function TickerDashboardPage() {
 
 
 
+
+    
 
     

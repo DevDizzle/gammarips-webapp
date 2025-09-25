@@ -177,27 +177,11 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
         <Card>
             <CardHeader>
                 <CardTitle>Interactive Price Chart</CardTitle>
-                <CardDescription>Analyze price action with volume, 50-day, and 200-day moving averages.</CardDescription>
+                <CardDescription>Analyze price action with volume, 50-day, and 200-day moving averages. For a better experience, view on desktop.</CardDescription>
             </CardHeader>
             <CardContent className="relative">
                 {priceChartData ? (
-                    <>
-                        {/* Interactive chart for desktop */}
-                        <div className="hidden md:block">
-                            <PriceChart priceData={priceChartData} />
-                        </div>
-                        {/* Static image for mobile */}
-                        <div className="md:hidden">
-                             <Image
-                                src={`https://picsum.photos/seed/${ticker}/600/400`}
-                                alt={`${ticker} 30-day price chart`}
-                                width={600}
-                                height={400}
-                                className="w-full h-auto rounded-md"
-                                data-ai-hint="stock chart"
-                            />
-                        </div>
-                    </>
+                    <PriceChart priceData={priceChartData} />
                 ) : (
                     <p className="text-muted-foreground">Price chart data is not available for this ticker.</p>
                 )}

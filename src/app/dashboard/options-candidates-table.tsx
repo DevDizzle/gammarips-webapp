@@ -39,7 +39,7 @@ function OptionsCandidatesTable() {
   }, [toast]);
 
   const handleRowClick = (ticker: string) => {
-    router.push(`/dashboard/${ticker}`);
+    router.push(`/dashboard/${ticker.toUpperCase()}`);
   };
 
   const renderSkeleton = () => (

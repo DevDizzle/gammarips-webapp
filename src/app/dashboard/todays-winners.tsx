@@ -53,7 +53,7 @@ function TodaysWinners() {
   }, [toast]);
 
   const handleRowClick = (ticker: string) => {
-    router.push(`/dashboard/${ticker}`);
+    router.push(`/dashboard/${ticker.toUpperCase()}`);
   };
 
   const getSignalMeta = (signal: string) => {

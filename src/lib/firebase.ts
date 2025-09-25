@@ -52,7 +52,9 @@ const UserSchema = z.object({
   isAnonymous: z.boolean(),
   isSubscribed: z.boolean(),
   usageCount: z.number().int().nonnegative(),
-  createdAt: z.any().optional(), // Can be Timestamp or FieldValue
+  createdAt: z.custom((data) => data instanceof Timestamp || data === null, {
+    message: "Expected Firestore Timestamp",
+  }).optional(),
   stripeCustomerId: z.string().optional().nullable(),
 });
 export type DbUser = z.infer<typeof UserSchema>;
@@ -77,7 +79,7 @@ export async function getOrCreateUser(
     return userData;
   }
 
-  const newUser: DbUser = {
+  const newUser: Omit<DbUser, 'createdAt'> & { createdAt: any } = {
     uid,
     email: email ?? null,
     displayName: displayName ?? null,
@@ -116,3 +118,5 @@ export async function getUserByStripeCustomerId(stripeCustomerId: string): Promi
   }
   return null;
 }
+
+    

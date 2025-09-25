@@ -1,10 +1,11 @@
 
+'use client';
 
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { getDashboardData } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight } from 'lucide-react';
+import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
 import { Markdown } from '@/components/markdown';
@@ -12,15 +13,19 @@ import NoteworthyOptions from './noteworthy-options';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-
+import { useAuth } from '@/hooks/use-auth';
+import { useEffect, useState } from 'react';
+import { SubscriptionDialog } from '@/components/auth/subscription-dialog';
+import { createCheckoutSession } from '@/app/actions';
+import { useToast } from '@/hooks/use-toast';
+import { loadStripe } from '@stripe/stripe-js';
+import { AuthDialog } from '@/components/auth/auth-dialog';
 
 interface TickerDashboardPageProps {
   params: {
     ticker: string;
   };
 }
-
-export const dynamic = 'force-dynamic';
 
 const getSentimentClasses = (signal: string) => {
     if (!signal) return 'text-muted-foreground border-border bg-card';
@@ -84,10 +89,7 @@ const KpiCard = ({ title, value, subValue, signal, tooltip, icon, children }: { 
     </Card>
 );
 
-export default async function TickerDashboardPage({ params }: TickerDashboardPageProps) {
-  const ticker = params.ticker.toUpperCase();
-  const data = await getDashboardData(ticker);
-  
+function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
   if (!data) {
     return (
         <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -268,5 +270,133 @@ export default async function TickerDashboardPage({ params }: TickerDashboardPag
 
     </div>
   );
-    
 }
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+export default function TickerDashboardPage({ params }: TickerDashboardPageProps) {
+  const { user, dbUser, loading: authLoading } = useAuth();
+  const { toast } = useToast();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [showSubDialog, setShowSubDialog] = useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
+
+  const hasTrialEnded = dbUser?.createdAt
+    ? (new Date().getTime() - new Date(dbUser.createdAt.seconds * 1000).getTime()) > 30 * 24 * 60 * 60 * 1000
+    : false;
+
+  const hasAccess = dbUser?.isSubscribed || !hasTrialEnded;
+
+  useEffect(() => {
+    if (authLoading) return; // Wait for auth state to be resolved
+
+    if (!user) {
+      setShowAuthDialog(true);
+      setLoading(false);
+      return;
+    }
+
+    if (!hasAccess) {
+      setShowSubDialog(true);
+      setLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const dashboardData = await getDashboardData(params.ticker.toUpperCase());
+        setData(dashboardData);
+      } catch (error) {
+        console.error("Failed to fetch dashboard data", error);
+        toast({
+            title: "Error",
+            description: "Could not load dashboard data.",
+            variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
+  }, [params.ticker, toast, authLoading, user, hasAccess]);
+
+
+  const handleSubscribe = async () => {
+    if (!user) return;
+    setIsSubscribing(true);
+    try {
+      const { sessionId } = await createCheckoutSession(user.uid);
+      const stripe = await stripePromise;
+      if (stripe) {
+        const { error } = await stripe.redirectToCheckout({ sessionId });
+        if (error) throw error;
+      }
+    } catch (error: any) {
+      toast({
+        title: "Subscription Error",
+        description: error.message || "Could not initiate subscription.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
+  const router = useRouter();
+  const handleDialogClose = () => {
+      setShowAuthDialog(false);
+      setShowSubDialog(false);
+      router.push('/');
+  }
+
+  if (loading || authLoading) {
+      return (
+          <div className="flex justify-center items-center h-[calc(100vh-10rem)]">
+              <Loader2 className="h-10 w-10 animate-spin" />
+          </div>
+      )
+  }
+
+  if (!user && showAuthDialog) {
+    return (
+      <AuthDialog 
+        open={showAuthDialog} 
+        onOpenChange={handleDialogClose} 
+      />
+    );
+  }
+
+  if (!hasAccess && showSubDialog) {
+    return (
+      <SubscriptionDialog
+        open={showSubDialog}
+        onOpenChange={handleDialogClose}
+        onSubscribe={handleSubscribe}
+        loading={isSubscribing}
+      />
+    );
+  }
+  
+  if (data) {
+    return <TickerDashboard data={data} ticker={params.ticker.toUpperCase()} />;
+  }
+
+  // Fallback for when data is null but access is granted (e.g. data fetching error)
+  return (
+    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <Card>
+            <CardHeader>
+                <CardTitle>Data not available</CardTitle>
+                <CardDescription>
+                    Could not load dashboard data for {params.ticker.toUpperCase()}. The data may be in the process of being generated, or the ticker may not be supported. Please check back later.
+                </CardDescription>
+            </CardHeader>
+        </Card>
+    </div>
+  );
+}
+    

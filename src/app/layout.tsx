@@ -28,10 +28,8 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen">
-        <AuthProvider>
-          <main className='flex-grow'>{children}</main>
-          <Footer />
-        </AuthProvider>
+        <main className='flex-grow'>{children}</main>
+        <Footer />
         <Toaster />
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-GHEYWRR8BX"></Script>
         <Script id="google-analytics">
@@ -46,3 +44,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+    

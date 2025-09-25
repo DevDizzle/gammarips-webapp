@@ -12,13 +12,17 @@ import {
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
 } from 'firebase/auth';
-import { app, getOrCreateUser } from '@/lib/firebase';
+import { app, getOrCreateUser, type DbUser } from '@/lib/firebase';
 import { useToast } from './use-toast';
+import { getDoc, doc } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 interface AuthContextType {
   user: User | null;
+  dbUser: DbUser | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signUpWithEmail: (email: string, password: string) => Promise<void>;
@@ -30,21 +34,30 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [dbUser, setDbUser] = useState<DbUser | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
-      setLoading(false); // Always set loading to false after the auth state has been determined.
-
       if (user) {
-        // Ensure user document exists in Firestore
-        await getOrCreateUser(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
+        // Fetch user document from Firestore to get subscription status and other details
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          setDbUser(userDocSnap.data() as DbUser);
+        } else {
+          // If doc doesn't exist, create it. This can happen on first sign-in.
+          const newDbUser = await getOrCreateUser(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
+          setDbUser(newDbUser);
+        }
+      } else {
+        setDbUser(null);
       }
+      setLoading(false);
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
@@ -52,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // onAuthStateChanged will handle setting the user state
+      // onAuthStateChanged will handle setting the user states
     } catch (error) {
       console.error("Google sign-in error", error);
       throw error;
@@ -62,7 +75,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signUpWithEmail = async (email: string, password: string) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      // onAuthStateChanged will handle setting the user state
+      // onAuthStateChanged will handle setting the user states
     } catch (error) {
         console.error("Email sign-up error", error);
         throw error;
@@ -72,7 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signInWithEmail = async (email: string, password: string) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-       // onAuthStateChanged will handle setting the user state
+       // onAuthStateChanged will handle setting the user states
     } catch (error) {
         console.error("Email sign-in error", error);
         throw error;
@@ -82,7 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signOut = async () => {
     try {
       await firebaseSignOut(auth);
-      // onAuthStateChanged will set user to null
+      // onAuthStateChanged will set user and dbUser to null
     } catch (error) {
       console.error("Sign out error", error);
       toast({
@@ -95,7 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signUpWithEmail, signInWithEmail, signOut }}>
+    <AuthContext.Provider value={{ user, dbUser, loading, signInWithGoogle, signUpWithEmail, signInWithEmail, signOut }}>
       {children}
     </AuthContext.Provider>
   );
@@ -108,3 +121,5 @@ export const useAuth = () => {
   }
   return context;
 };
+
+    

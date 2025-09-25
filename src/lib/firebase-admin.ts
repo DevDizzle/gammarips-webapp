@@ -216,19 +216,9 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
         });
         
         winners.sort((a, b) => {
-            const score = (signal: string) => {
-                const s = signal.toLowerCase();
-                if (s.includes('strongly bullish')) return 6;
-                if (s.includes('moderately bullish')) return 5;
-                if (s.includes('bullish')) return 4;
-                if (s.includes('neutral')) return 3;
-                if (s.includes('moderately bearish')) return 2;
-                if (s.includes('bearish')) return 1;
-                if (s.includes('strongly bearish')) return 0;
-                return 3; 
-            };
-
-            return score(b.outlook_signal) - score(a.outlook_signal);
+            const scoreA = a.weighted_score ?? -1;
+            const scoreB = b.weighted_score ?? -1;
+            return scoreB - scoreA; // Sort in descending order
         });
 
         return winners;
@@ -741,4 +731,5 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 
 
     
+
 

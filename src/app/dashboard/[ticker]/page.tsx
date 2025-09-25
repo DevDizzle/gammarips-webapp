@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -97,7 +98,7 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
                 <CardHeader>
                     <CardTitle>Data not available</CardTitle>
                     <CardDescription>
-                        {error || `Could not load dashboard data for ${ticker}. The data may be in the process of being generated, or the ticker may not be supported. Please check back later.`}
+                        {`Could not load dashboard data for ${ticker}. ${error || 'The data may be in the process of being generated, or the ticker may not be supported. Please check back later.'}`}
                     </CardDescription>
                 </CardHeader>
             </Card>
@@ -139,6 +140,10 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
     : kpis?.trendStrength?.price 
       ? `$${kpis.trendStrength.price.toFixed(2)}` 
       : 'N/A';
+  
+  const trendStrengthSubValue = kpis?.trendStrength?.sma50 
+    ? `50-Day Avg: $${kpis.trendStrength.sma50.toFixed(2)}`
+    : undefined;
 
 
   return (
@@ -218,7 +223,7 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
       <div className="lg:hidden">
         <Carousel opts={{ align: "start" }} className="w-full">
             <CarouselContent>
-                {kpis?.trendStrength && <CarouselItem className="basis-3/4"><KpiCard title="Trend Strength" value={trendStrengthValue} subValue={`50-Day Avg: $${kpis.trendStrength.sma50?.toFixed(2)}`} signal={kpis.trendStrength.signal} tooltip={"Price vs. its 50-day moving average."} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} /></CarouselItem>}
+                {kpis?.trendStrength && <CarouselItem className="basis-3/4"><KpiCard title="Trend Strength" value={trendStrengthValue} subValue={trendStrengthSubValue} signal={kpis.trendStrength.signal} tooltip={"Price vs. its 50-day moving average."} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} /></CarouselItem>}
                 {kpis?.rsiMomentum && <CarouselItem className="basis-3/4"><KpiCard title="RSI Momentum" value={kpis.rsiMomentum.currentRsi?.toFixed(1)} subValue={rsiChangeDisplay ? `Change: ${rsiChangeDisplay}` : undefined} signal={kpis.rsiMomentum.signal} tooltip={"The 30-day change in the 14-day RSI."} icon={getIndicator(kpis.rsiMomentum.signal, TrendingUp, TrendingDown, Minus)}><RsiContextBadge /></KpiCard></CarouselItem>}
                 {kpis?.volumeSurge && <CarouselItem className="basis-3/4"><KpiCard title="Volume Surge" value={volumeSurgeDisplay} subValue={`vs. 30-Day Avg`} signal={kpis.volumeSurge.signal} tooltip={"Recent daily volume compared to its 30-day average."} icon={<BarChart2 size={16} className="text-muted-foreground" />} /></CarouselItem>}
                 {kpis?.historicalVolatility && <CarouselItem className="basis-3/4"><KpiCard title="30-Day Volatility" value={`${kpis.historicalVolatility.value?.toFixed(1)}%`} signal={kpis.historicalVolatility.signal} tooltip={"The stock's realized volatility over the last 30 days."} icon={<Rss size={16} className="text-muted-foreground" />} /></CarouselItem>}
@@ -230,7 +235,7 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
       </div>
 
       <div className="hidden lg:grid grid-cols-5 gap-4">
-        {kpis?.trendStrength && <KpiCard title="Trend Strength" value={trendStrengthValue} subValue={`50-Day Avg: $${kpis.trendStrength.sma50?.toFixed(2)}`} signal={kpis.trendStrength.signal} tooltip={"Price vs. its 50-day moving average."} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} />}
+        {kpis?.trendStrength && <KpiCard title="Trend Strength" value={trendStrengthValue} subValue={trendStrengthSubValue} signal={kpis.trendStrength.signal} tooltip={"Price vs. its 50-day moving average."} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} />}
         {kpis?.rsiMomentum && <KpiCard title="RSI Momentum" value={kpis.rsiMomentum.currentRsi?.toFixed(1)} subValue={rsiChangeDisplay ? `Change: ${rsiChangeDisplay}` : undefined} signal={kpis.rsiMomentum.signal} tooltip={"The 30-day change in the 14-day RSI."} icon={getIndicator(kpis.rsiMomentum.signal, TrendingUp, TrendingDown, Minus)}><RsiContextBadge /></KpiCard>}
         {kpis?.volumeSurge && <KpiCard title="Volume Surge" value={volumeSurgeDisplay} subValue={`vs. 30-Day Avg`} signal={kpis.volumeSurge.signal} tooltip={"Recent daily volume compared to its 30-day average."} icon={<BarChart2 size={16} className="text-muted-foreground" />} />}
         {kpis?.historicalVolatility && <KpiCard title="30-Day Volatility" value={`${kpis.historicalVolatility.value?.toFixed(1)}%`} signal={kpis.historicalVolatility.signal} tooltip={"The stock's realized volatility over the last 30 days."} icon={<Rss size={16} className="text-muted-foreground" />} />}
@@ -416,3 +421,6 @@ export default function TickerDashboardPage() {
     
 
 
+
+
+    

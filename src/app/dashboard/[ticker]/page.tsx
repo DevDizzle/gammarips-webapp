@@ -275,6 +275,7 @@ function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function TickerDashboardPage({ params }: TickerDashboardPageProps) {
+  const { ticker } = params;
   const { user, dbUser, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [data, setData] = useState<any>(null);
@@ -306,7 +307,7 @@ export default function TickerDashboardPage({ params }: TickerDashboardPageProps
 
     const fetchData = async () => {
       try {
-        const dashboardData = await getDashboardData(params.ticker.toUpperCase());
+        const dashboardData = await getDashboardData(ticker.toUpperCase());
         setData(dashboardData);
       } catch (error) {
         console.error("Failed to fetch dashboard data", error);
@@ -322,7 +323,7 @@ export default function TickerDashboardPage({ params }: TickerDashboardPageProps
 
     fetchData();
 
-  }, [params.ticker, toast, authLoading, user, hasAccess]);
+  }, [ticker, toast, authLoading, user, hasAccess]);
 
 
   const handleSubscribe = async () => {
@@ -382,7 +383,7 @@ export default function TickerDashboardPage({ params }: TickerDashboardPageProps
   }
   
   if (data) {
-    return <TickerDashboard data={data} ticker={params.ticker.toUpperCase()} />;
+    return <TickerDashboard data={data} ticker={ticker.toUpperCase()} />;
   }
 
   // Fallback for when data is null but access is granted (e.g. data fetching error)
@@ -392,11 +393,13 @@ export default function TickerDashboardPage({ params }: TickerDashboardPageProps
             <CardHeader>
                 <CardTitle>Data not available</CardTitle>
                 <CardDescription>
-                    Could not load dashboard data for {params.ticker.toUpperCase()}. The data may be in the process of being generated, or the ticker may not be supported. Please check back later.
+                    Could not load dashboard data for {ticker.toUpperCase()}. The data may be in the process of being generated, or the ticker may not be supported. Please check back later.
                 </CardDescription>
             </CardHeader>
         </Card>
     </div>
   );
 }
+    
+
     

@@ -292,17 +292,20 @@ export default function TickerDashboardPage() {
   const [showSubDialog, setShowSubDialog] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
 
-  const hasAccess = useMemo(() => {
-    if (!dbUser) return false; // Default to no access if dbUser is not loaded
-    const hasTrialEnded = dbUser.createdAt
+  const trialHasEnded = useMemo(() => {
+    if (!dbUser) return false;
+    return dbUser.createdAt
       ? (new Date().getTime() - new Date(dbUser.createdAt.seconds * 1000).getTime()) > 30 * 24 * 60 * 60 * 1000
       : false;
-    return dbUser.isSubscribed || !hasTrialEnded;
   }, [dbUser]);
 
+  const hasAccess = useMemo(() => {
+    if (!dbUser) return false;
+    return dbUser.isSubscribed || !trialHasEnded;
+  }, [dbUser, trialHasEnded]);
 
   useEffect(() => {
-    if (authLoading) return; // Wait for auth state to be resolved
+    if (authLoading) return;
 
     if (!user) {
       setShowAuthDialog(true);
@@ -321,7 +324,7 @@ export default function TickerDashboardPage() {
       try {
         const dashboardData = await getDashboardData(ticker.toUpperCase());
         if (!dashboardData) {
-          throw new Error(`Could not load dashboard data for ${ticker.toUpperCase()}. The data may be in the process of being generated, or the ticker may not be supported. Please check back later.`);
+          throw new Error(`Could not load dashboard data for ${ticker.toUpperCase()}.`);
         }
         setData(dashboardData);
       } catch (e: any) {
@@ -373,6 +376,7 @@ export default function TickerDashboardPage() {
       )
   }
 
+  // If user is not logged in, show the trial sign-up dialog
   if (!user && showAuthDialog) {
     return (
       <AuthDialog 
@@ -382,7 +386,8 @@ export default function TickerDashboardPage() {
     );
   }
 
-  if (!hasAccess && showSubDialog) {
+  // If user's trial has ended and they are not subscribed, show the upgrade dialog
+  if (trialHasEnded && !dbUser?.isSubscribed && showSubDialog) {
     return (
       <SubscriptionDialog
         open={showSubDialog}
@@ -409,4 +414,5 @@ export default function TickerDashboardPage() {
     
 
     
+
 

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -32,12 +33,12 @@ type AuthDialogProps = {
   showSubscribeButton?: boolean;
 };
 
-export function AuthDialog({ open, onOpenChange, onSubscribe, showSubscribeButton = false }: AuthDialogProps) {
-  const { user, signInWithGoogle, signUpWithEmail, signInWithEmail } = useAuth();
+export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
+  const { signInWithGoogle, signUpWithEmail, signInWithEmail } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignUp, setIsSignUp] = useState(true);
-  const [loading, setLoading] = useState<'google' | 'email' | 'subscribe' | null>(null);
+  const [isSignIn, setIsSignIn] = useState(false);
+  const [loading, setLoading] = useState<'google' | 'email' | null>(null);
   const { toast } = useToast();
 
   const handleGoogleSignIn = async () => {
@@ -45,7 +46,7 @@ export function AuthDialog({ open, onOpenChange, onSubscribe, showSubscribeButto
     try {
       await signInWithGoogle();
       onOpenChange(false);
-      toast({ title: "Successfully signed in with Google." });
+      toast({ title: isSignIn ? "Successfully signed in." : "Free trial started!" });
     } catch (error: any) {
       toast({
         title: "Google Sign-In Failed",
@@ -61,18 +62,18 @@ export function AuthDialog({ open, onOpenChange, onSubscribe, showSubscribeButto
     e.preventDefault();
     setLoading('email');
     try {
-      if (isSignUp) {
-        await signUpWithEmail(email, password);
-        onOpenChange(false);
-        toast({ title: "Account created successfully!" });
-      } else {
+      if (isSignIn) {
         await signInWithEmail(email, password);
         onOpenChange(false);
         toast({ title: "Successfully signed in." });
+      } else {
+        await signUpWithEmail(email, password);
+        onOpenChange(false);
+        toast({ title: "Free trial started!" });
       }
     } catch (error: any) {
        toast({
-        title: isSignUp ? "Sign-Up Failed" : "Sign-In Failed",
+        title: isSignIn ? "Sign-In Failed" : "Sign-Up Failed",
         description: error.message,
         variant: "destructive",
       });
@@ -81,63 +82,23 @@ export function AuthDialog({ open, onOpenChange, onSubscribe, showSubscribeButto
     }
   };
   
-   const handleSubscribeClick = async () => {
-      if (!user) {
-        toast({
-            title: "Authentication Error",
-            description: "You must be signed in to subscribe.",
-            variant: "destructive"
-        })
-        return;
-      };
-      setLoading('subscribe');
-      try {
-          const { sessionId } = await createCheckoutSession(user.uid);
-          const stripe = await stripePromise;
-          const { error } = await stripe!.redirectToCheckout({ sessionId });
-          if (error) {
-              toast({
-                title: "Checkout Error",
-                description: error.message,
-                variant: 'destructive',
-              });
-          }
-      } catch (error) {
-          toast({
-            title: "Subscription Error",
-            description: "Could not initiate the subscription process. Please try again.",
-            variant: 'destructive',
-          });
-      } finally {
-        setLoading(null);
-      }
-  };
-
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{isSignUp ? 'Create an Account' : 'Sign In'}</DialogTitle>
+          <DialogTitle>{isSignIn ? 'Sign In' : 'Start Your 30-Day Free Trial'}</DialogTitle>
           <DialogDescription>
-            {isSignUp ? 'Sign up to continue using ProfitScout.' : 'Sign in to your account.'}
+             {isSignIn ? 'Sign in to your ProfitScout account.' : 'Get unlimited, full access to all ProfitScout Pro features for 30 days.'}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col space-y-4">
-          {showSubscribeButton && (
-             <Button onClick={handleSubscribeClick} disabled={!!loading}>
-                {loading === 'subscribe' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Subscribe to Pro
-            </Button>
-          )}
-
           <Button
             variant="outline"
             onClick={handleGoogleSignIn}
             disabled={!!loading}
           >
             {loading === 'google' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon />}
-            {isSignUp ? 'Sign up with Google' : 'Sign in with Google'}
+            Sign up with Google
           </Button>
 
           <div className="relative">
@@ -146,7 +107,7 @@ export function AuthDialog({ open, onOpenChange, onSubscribe, showSubscribeButto
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
+                Or
               </span>
             </div>
           </div>
@@ -178,17 +139,19 @@ export function AuthDialog({ open, onOpenChange, onSubscribe, showSubscribeButto
             </div>
             <Button type="submit" className="w-full" disabled={!!loading}>
                {loading === 'email' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSignUp ? 'Create Account' : 'Sign In'}
+              {isSignIn ? 'Sign In' : 'Start My Free Trial'}
             </Button>
           </form>
 
+            {!isSignIn && <p className="text-center text-xs text-muted-foreground">No credit card required.</p>}
+
           <p className="text-center text-sm text-muted-foreground">
-            {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+            {isSignIn ? "Don't have an account?" : 'Already have an account?'}{' '}
             <button
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={() => setIsSignIn(!isSignIn)}
               className="underline hover:text-primary"
             >
-              {isSignUp ? 'Sign In' : 'Sign Up'}
+              {isSignIn ? 'Start Free Trial' : 'Sign In'}
             </button>
           </p>
         </div>
@@ -196,3 +159,4 @@ export function AuthDialog({ open, onOpenChange, onSubscribe, showSubscribeButto
     </Dialog>
   );
 }
+

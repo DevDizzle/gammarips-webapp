@@ -34,9 +34,10 @@ import {
     getOptionsCandidatesAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent } from '@/lib/firebase-admin';
-import { createStripeCheckoutSession } from '@/lib/stripe';
+import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
+import { getAuth } from 'firebase-admin/auth';
 
 
 export async function getOptionsSignals(ticker: string): Promise<TickerOptionsData | null> {
@@ -251,4 +252,24 @@ export async function createCheckoutSession(uid: string): Promise<{ sessionId: s
   );
 
   return { sessionId };
+}
+
+export async function createStripePortalLink(uid: string): Promise<{ portalUrl: string }> {
+  const user = await getOrCreateUserAdmin(uid);
+  const stripeCustomerId = user.stripeCustomerId;
+
+  if (!stripeCustomerId) {
+    throw new Error('User does not have a Stripe Customer ID.');
+  }
+
+  const origin = headers().get('origin')!;
+  const returnUrl = `${origin}/account`;
+
+  const portalUrl = await createStripePortalSession(stripeCustomerId, returnUrl);
+
+  return { portalUrl };
+}
+
+export async function sendPasswordReset(email: string): Promise<void> {
+  await getAuth().generatePasswordResetLink(email);
 }

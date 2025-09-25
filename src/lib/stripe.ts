@@ -49,3 +49,16 @@ export async function createStripeCheckoutSession(
     
     return session.id;
 }
+
+export async function createStripePortalSession(stripeCustomerId: string, returnUrl: string) {
+    const portalSession = await stripe.billingPortal.sessions.create({
+        customer: stripeCustomerId,
+        return_url: returnUrl,
+    });
+
+    if (!portalSession.url) {
+        throw new Error('Could not create Stripe Portal Session.');
+    }
+
+    return portalSession.url;
+}

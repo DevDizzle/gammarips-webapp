@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -89,15 +90,15 @@ const KpiCard = ({ title, value, subValue, signal, tooltip, icon, children }: { 
     </Card>
 );
 
-function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
-  if (!data) {
+function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, error?: string | null }) {
+  if (error || !data) {
     return (
         <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <Card>
                 <CardHeader>
                     <CardTitle>Data not available</CardTitle>
                     <CardDescription>
-                        Could not load dashboard data for {ticker}. The data may be in the process of being generated, or the ticker may not be supported. Please check back later.
+                        {error || `Could not load dashboard data for ${ticker}. The data may be in the process of being generated, or the ticker may not be supported. Please check back later.`}
                     </CardDescription>
                 </CardHeader>
             </Card>
@@ -287,6 +288,7 @@ export default function TickerDashboardPage() {
   const { toast } = useToast();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [showSubDialog, setShowSubDialog] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
@@ -317,13 +319,9 @@ export default function TickerDashboardPage() {
       try {
         const dashboardData = await getDashboardData(ticker.toUpperCase());
         setData(dashboardData);
-      } catch (error) {
-        console.error("Failed to fetch dashboard data", error);
-        toast({
-            title: "Error",
-            description: "Could not load dashboard data.",
-            variant: "destructive"
-        });
+      } catch (e: any) {
+        console.error("Failed to fetch dashboard data", e);
+        setError(e.message || "An unknown error occurred while fetching data.");
       } finally {
         setLoading(false);
       }
@@ -331,7 +329,7 @@ export default function TickerDashboardPage() {
 
     fetchData();
 
-  }, [ticker, toast, authLoading, user, hasAccess]);
+  }, [ticker, authLoading, user, hasAccess]);
 
 
   const handleSubscribe = async () => {
@@ -390,21 +388,14 @@ export default function TickerDashboardPage() {
     );
   }
   
-  if (data) {
-    return <TickerDashboard data={data} ticker={ticker.toUpperCase()} />;
+  if (data || error) {
+    return <TickerDashboard data={data} ticker={ticker.toUpperCase()} error={error} />;
   }
 
-  // Fallback for when data is null but access is granted (e.g. data fetching error)
+  // Fallback for when data is null but access is granted (e.g. initial loading state)
   return (
-    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <Card>
-            <CardHeader>
-                <CardTitle>Data not available</CardTitle>
-                <CardDescription>
-                    Could not load dashboard data for {ticker.toUpperCase()}. The data may be in the process of being generated, or the ticker may not be supported. Please check back later.
-                </CardDescription>
-            </CardHeader>
-        </Card>
+    <div className="flex justify-center items-center h-[calc(100vh-10rem)]">
+        <Loader2 className="h-10 w-10 animate-spin" />
     </div>
   );
 }

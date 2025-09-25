@@ -21,7 +21,6 @@ import { createCheckoutSession } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
 import { AuthDialog } from '@/components/auth/auth-dialog';
-import { RotatePrompt } from '@/components/ui/rotate-prompt';
 
 interface TickerDashboardPageProps {
   params: {
@@ -180,7 +179,6 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
                 <CardDescription>Analyze price action with volume, 50-day, and 200-day moving averages.</CardDescription>
             </CardHeader>
             <CardContent className="relative">
-                <RotatePrompt />
                 {priceChartData ? (
                     <PriceChart priceData={priceChartData} />
                 ) : (
@@ -355,6 +353,8 @@ export default function TickerDashboardPage() {
 
 
 
+
+    
 
     
 

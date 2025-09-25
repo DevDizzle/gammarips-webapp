@@ -189,7 +189,7 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
                         {/* Static image for mobile */}
                         <div className="md:hidden">
                              <Image
-                                src={`https://placehold.co/600x400/1C1C29/a855f7?text=${ticker}+30-Day+Chart`}
+                                src={`https://picsum.photos/seed/${ticker}/600/400`}
                                 alt={`${ticker} 30-day price chart`}
                                 width={600}
                                 height={400}

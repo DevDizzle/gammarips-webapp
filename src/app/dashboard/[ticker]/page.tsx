@@ -256,6 +256,7 @@ export default function TickerDashboardPage() {
 
     const fetchData = async () => {
       if (!ticker) return;
+      setLoading(true);
       try {
         const dashboardData = await getDashboardData(ticker.toUpperCase());
         if (!dashboardData) {
@@ -356,4 +357,3 @@ export default function TickerDashboardPage() {
     
 
     
-

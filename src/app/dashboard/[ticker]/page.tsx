@@ -135,11 +135,9 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
     return null;
   };
 
-  const trendStrengthValue = typeof kpis?.trendStrength?.value === 'string' 
-    ? kpis.trendStrength.value 
-    : kpis?.trendStrength?.price 
-      ? `$${kpis.trendStrength.price.toFixed(2)}` 
-      : 'N/A';
+  const trendStrengthValue = kpis?.trendStrength?.price
+    ? `$${kpis.trendStrength.price.toFixed(2)}`
+    : 'N/A';
   
   const trendStrengthSubValue = kpis?.trendStrength?.sma50 
     ? `50-Day Avg: $${kpis.trendStrength.sma50.toFixed(2)}`
@@ -426,3 +424,4 @@ export default function TickerDashboardPage() {
     
 
     
+

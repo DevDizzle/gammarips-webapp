@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -15,7 +14,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { SubscriptionDialog } from '@/components/auth/subscription-dialog';
 import { createCheckoutSession } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
@@ -293,11 +292,14 @@ export default function TickerDashboardPage() {
   const [showSubDialog, setShowSubDialog] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
 
-  const hasTrialEnded = dbUser?.createdAt
-    ? (new Date().getTime() - new Date(dbUser.createdAt.seconds * 1000).getTime()) > 30 * 24 * 60 * 60 * 1000
-    : false;
+  const hasAccess = useMemo(() => {
+    if (!dbUser) return false; // Default to no access if dbUser is not loaded
+    const hasTrialEnded = dbUser.createdAt
+      ? (new Date().getTime() - new Date(dbUser.createdAt.seconds * 1000).getTime()) > 30 * 24 * 60 * 60 * 1000
+      : false;
+    return dbUser.isSubscribed || !hasTrialEnded;
+  }, [dbUser]);
 
-  const hasAccess = dbUser?.isSubscribed || !hasTrialEnded;
 
   useEffect(() => {
     if (authLoading) return; // Wait for auth state to be resolved
@@ -318,6 +320,9 @@ export default function TickerDashboardPage() {
       if (!ticker) return;
       try {
         const dashboardData = await getDashboardData(ticker.toUpperCase());
+        if (!dashboardData) {
+          throw new Error(`Could not load dashboard data for ${ticker.toUpperCase()}. The data may be in the process of being generated, or the ticker may not be supported. Please check back later.`);
+        }
         setData(dashboardData);
       } catch (e: any) {
         console.error("Failed to fetch dashboard data", e);
@@ -404,3 +409,4 @@ export default function TickerDashboardPage() {
     
 
     
+

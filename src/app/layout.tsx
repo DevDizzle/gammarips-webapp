@@ -8,11 +8,11 @@ import Script from 'next/script';
 export const metadata: Metadata = {
   metadataBase: new URL('https://profitscout.app'), // Replace with your actual domain
   title: {
-    default: 'ProfitScout | AI-Powered Stock Recommendations',
+    default: 'ProfitScout | AI-Powered Options Trading Signals',
     template: `%s | ProfitScout`,
   },
-  description: 'Get clear, AI-powered Buy, Hold, or Sell calls on the Russell 100. Smarter stock picks, simplified.',
-  keywords: ['stock analysis', 'investment', 'AI', 'finance', 'Russell 1000', 'stock recommendations', 'fintech'],
+  description: 'Get an edge in the options market. ProfitScout uses AI to analyze thousands of data points and pinpoint high-potential Call and Put setups on Russell 1000 stocks.',
+  keywords: ['options trading', 'stock options', 'AI trading', 'options signals', 'fintech', 'algorithmic trading', 'Russell 1000', 'call options', 'put options'],
 };
 
 export default function RootLayout({

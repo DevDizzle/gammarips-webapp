@@ -1,6 +1,6 @@
 
 import type { Metadata } from 'next';
-import { FileText, Mic, BarChart3, Calculator, Newspaper, Shield, CheckCircle2, TrendingUp, ArrowRight } from 'lucide-react';
+import { FileText, Mic, BarChart3, TrendingUp, Shield, CheckCircle2, ArrowRight, Target, Gem, Bot, Newspaper, Scale } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
@@ -15,34 +15,52 @@ const features = [
   {
     icon: <FileText className="h-8 w-8 text-primary" />,
     title: 'Company Filings',
-    description: 'SEC 10-K and 10-Q to assess financial health, risks, and management’s discussion.',
+    description: 'We analyze SEC 10-K and 10-Q filings to assess financial health, long-term strategy, and potential risks identified by management.',
   },
   {
     icon: <Mic className="h-8 w-8 text-primary" />,
     title: 'Earnings Call Transcripts',
-    description: 'Management tone, forward-looking statements, and responses to analyst questions.',
+    description: 'We go beyond the numbers to evaluate management tone, forward-looking guidance, and the conviction behind their answers to analyst questions.',
   },
   {
     icon: <BarChart3 className="h-8 w-8 text-primary" />,
     title: 'Financial Statements',
-    description: 'Balance sheet, income statement, and cash flow trends for performance and stability.',
-  },
-  {
-    icon: <Calculator className="h-8 w-8 text-primary" />,
-    title: 'Key Ratios & Metrics',
-    description: 'Valuation and profitability trends for a grounded perspective.',
+    description: 'We scrutinize the balance sheet, income statement, and cash flow trends to understand a company\'s performance, stability, and fundamental strength.',
   },
   {
     icon: <TrendingUp className="h-8 w-8 text-primary" />,
     title: 'Price & Technicals',
-    description: 'Trend, support/resistance, and momentum context to understand what’s moving now.',
+    description: 'Our models analyze price trends, volume, momentum, and key support/resistance levels to understand what\'s moving the market right now.',
+  },
+  {
+      icon: <Scale className="h-8 w-8 text-primary" />,
+      title: 'Options Chain Analysis',
+      description: 'We process daily options chain data to identify contracts with ideal liquidity, volatility, and risk/reward profiles, scoring the best setups for both Calls and Puts.'
   },
   {
     icon: <Newspaper className="h-8 w-8 text-primary" />,
     title: 'News & Sentiment',
-    description: 'Recent developments that may act as catalysts or introduce risks.',
+    description: 'Our system tracks recent news and market sentiment to identify catalysts that could introduce risks or create new opportunities.',
   },
 ];
+
+const benefits = [
+    {
+        icon: <Bot size={24} className="text-primary" />,
+        title: "AI-Powered Market Outlooks",
+        description: "Instead of a simple rating, you get a nuanced, five-tier outlook for each stock (from \"Strongly Bullish\" to \"Strongly Bearish\"), complete with a concise summary of the key drivers behind the analysis."
+    },
+    {
+        icon: <Target size={24} className="text-primary" />,
+        title: "Top-Rated Options Setups",
+        description: "A curated list of the highest-scoring Call and Put options, allowing you to find actionable trade ideas that align with your market view."
+    },
+    {
+        icon: <Gem size={24} className="text-primary" />,
+        title: "The Winners Dashboard",
+        description: "A daily snapshot of stocks that not only have a strong bullish or bearish outlook but also feature a \"Strong\" setup on our options scanner—giving you the best of both worlds."
+    },
+]
 
 export default function AboutPage() {
   return (
@@ -54,11 +72,11 @@ export default function AboutPage() {
           <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
             About ProfitScout
           </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            ProfitScout simplifies investment research with clear, data-driven insights powered by AI. Our mission is to help investors of all levels navigate the market with confidence.
+          <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
+            ProfitScout is designed to give you an AI-powered edge in the market. Our mission is to transform complex financial data into clear, actionable trade ideas for both stocks and options, helping you navigate the market with data-driven confidence.
           </p>
-           <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            Our ratings blend price action, news flow, earnings, and fundamentals—designed to highlight near-term potential without losing long-term context.
+           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
+            Our analysis goes beyond simple ratings by blending fundamentals, technicals, and AI-driven insights to highlight high-potential opportunities you can act on.
           </p>
           <a href="#how-it-works" className="mt-6 inline-block text-sm font-semibold text-primary hover:underline">
             See how it works &darr;
@@ -71,8 +89,8 @@ export default function AboutPage() {
         <section id="how-it-works" className="scroll-mt-20">
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">How ProfitScout Works</h2>
-            <p className="mt-3 max-w-2xl mx-auto text-muted-foreground">
-              We use state-of-the-art AI and large language models to analyze high-volume financial information and synthesize a balanced view guided by E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness).
+            <p className="mt-3 max-w-3xl mx-auto text-muted-foreground">
+              We use state-of-the-art AI and large language models to analyze thousands of data points and synthesize a balanced, forward-looking view of every asset we cover.
             </p>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -100,16 +118,24 @@ export default function AboutPage() {
                 <CardTitle className="font-headline text-3xl">What You Receive</CardTitle>
             </CardHeader>
             <CardContent>
-                <p className="text-lg font-semibold">A clear Buy / Hold / Sell rating for each stock we cover in the Russell 1000, refreshed daily.</p>
-                <p className="mt-2 text-muted-foreground">
-                    Every rating includes a concise summary of the key factors behind the decision—so you see the why without the jargon.
-                </p>
-                <ul className="mt-4 space-y-2 text-sm">
-                    <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Fundamental analysis (revenue, earnings)</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Valuation and key metric trends</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Price and technical context</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Identified risks and opportunities</li>
-                </ul>
+                <div className="space-y-6">
+                    {benefits.map(benefit => (
+                         <div key={benefit.title} className="flex items-start gap-4">
+                            <div className="flex-shrink-0 mt-1">{benefit.icon}</div>
+                            <div>
+                                <h3 className="text-lg font-semibold">{benefit.title}</h3>
+                                <p className="text-muted-foreground">{benefit.description}</p>
+                            </div>
+                        </div>
+                    ))}
+                     <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 mt-1"><CheckCircle2 className="h-6 w-6 text-primary" /></div>
+                        <div>
+                            <h3 className="text-lg font-semibold">An Interactive Dashboard</h3>
+                            <p className="text-muted-foreground">A powerful, user-friendly interface to explore all our data, compare stocks, and uncover your next winning trade.</p>
+                        </div>
+                    </div>
+                </div>
             </CardContent>
           </Card>
         </section>
@@ -122,10 +148,10 @@ export default function AboutPage() {
                     <CardTitle className="font-headline text-2xl">Ready to Get Started?</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-muted-foreground mb-4">Explore our AI-powered dashboard and see today's top picks.</p>
+                    <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Go from analysis to action. Instantly access today's top-rated Call and Put setups, backed by AI-driven scores and real-time market data.</p>
                     <Button asChild size="lg">
-                        <Link href="/dashboard">
-                            Explore the Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
+                        <Link href="/">
+                            Find Your Next Trade <ArrowRight className="ml-2 h-5 w-5"/>
                         </Link>
                     </Button>
                 </CardContent>
@@ -139,7 +165,7 @@ export default function AboutPage() {
           <div className="prose prose-invert max-w-none">
             <h2 className="font-headline text-3xl text-foreground">Trust & Responsibility</h2>
             <p className="text-muted-foreground">
-             Financial content falls under “Your Money or Your Life” (YMYL). Accuracy and reliability matter. ProfitScout aims to present well-sourced, balanced information with clear explanations.
+              Financial content falls under “Your Money or Your Life” (YMYL). Accuracy and reliability are paramount. ProfitScout is committed to presenting well-sourced, balanced information with clear, transparent explanations.
             </p>
           </div>
           <aside className="bg-muted/50 p-6 rounded-lg">
@@ -148,7 +174,7 @@ export default function AboutPage() {
                 <h3 className="text-lg font-semibold text-foreground">Important Disclaimer</h3>
             </div>
             <p className="mt-2 text-sm text-muted-foreground">
-              ProfitScout provides educational information—not financial advice. Always do your own research and consider consulting a licensed financial advisor before making investment decisions.
+              ProfitScout provides educational and informational content only—it is not financial advice. All trading and investment decisions involve risk. Always conduct your own research and consider consulting a licensed financial advisor before making investment decisions.
             </p>
           </aside>
         </section>
@@ -183,3 +209,5 @@ export default function AboutPage() {
     </>
   );
 }
+
+    

@@ -99,10 +99,12 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {signals.map(s => {
+              {signals.map((s, index) => {
                 const isCall = s.option_type === 'call';
+                const isTopSignal = index === 0;
+
                 return (
-                  <TableRow key={s.contract_symbol}>
+                  <TableRow key={s.contract_symbol} className={cn(isTopSignal && (isCall ? 'bg-green-500/10 hover:bg-green-500/20' : 'bg-red-500/10 hover:bg-red-500/20'))}>
                     <TableCell>
                       <Badge variant="outline" className={cn(isCall ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50')}>
                         {s.option_type.toUpperCase()}
@@ -129,18 +131,11 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
       <CardHeader>
         <CardTitle>Top-Scored Options for {ticker}</CardTitle>
          <CardDescription>
-            These options are selected through our proprietary filtering and scoring model. We analyze thousands of contracts for key metrics like high liquidity, strategic strike price, time decay (Theta), and price sensitivity (Delta) to identify the most actionable setups.
+            These options are selected through our proprietary filtering and scoring model. We analyze thousands of contracts for key metrics like high liquidity, strategic strike price, time decay (Theta), and price sensitivity (Delta) to identify the most actionable setups. The top-ranked signal is highlighted.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Accordion type="single" collapsible defaultValue="item-1">
-            <AccordionItem value="item-1">
-                <AccordionTrigger>View Top-Scored Options</AccordionTrigger>
-                <AccordionContent>
-                    {renderContent()}
-                </AccordionContent>
-            </AccordionItem>
-        </Accordion>
+        {renderContent()}
       </CardContent>
     </Card>
   );

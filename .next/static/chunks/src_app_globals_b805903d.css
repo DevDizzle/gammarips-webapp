@@ -2692,6 +2692,14 @@ body {
   background-color: hsl(var(--secondary) / .8);
 }
 
+.hover\:bg-green-500\/20:hover {
+  background-color: #22c55e33;
+}
+
+.hover\:bg-red-500\/20:hover {
+  background-color: #ef444433;
+}
+
 .hover\:text-accent-foreground:hover {
   color: hsl(var(--accent-foreground));
 }

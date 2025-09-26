@@ -1552,6 +1552,10 @@ body {
   width: 100%;
 }
 
+.w-\[calc\(100\%\+2rem\)\] {
+  width: calc(100% + 2rem);
+}
+
 .min-w-0 {
   min-width: 0;
 }

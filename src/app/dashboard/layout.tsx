@@ -19,14 +19,14 @@ export default function DashboardLayout({
     <AuthProvider>
       <div className="min-h-screen flex flex-col bg-background">
         <header className="sticky top-0 z-40 w-full border-b bg-background">
-          <div className="container flex h-16 items-center justify-between space-x-4">
+          <div className="container flex h-16 items-center justify-between space-x-4 px-4 sm:px-6 lg:px-8">
             <Link href="/" className="text-2xl font-bold font-headline text-primary">ProfitScout</Link>
             <div className="flex flex-1 items-center justify-end space-x-4">
               <TickerSearch />
             </div>
           </div>
         </header>
-        <main className="flex-1 container mx-auto p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 container mx-auto py-8 px-4 sm:px-6 lg:px-8">
           {children}
         </main>
       </div>

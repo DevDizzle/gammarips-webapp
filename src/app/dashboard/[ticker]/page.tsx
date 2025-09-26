@@ -137,7 +137,7 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
 
 
   return (
-    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
+    <div className="space-y-6">
       <header>
         <h1 className="text-3xl font-bold font-headline tracking-tight flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="truncate">{titleInfo.companyName} ({ticker})</span>
@@ -151,8 +151,8 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
       <NoteworthyOptions ticker={ticker} />
 
       {/* KPI Section with Carousel */}
-      <div className="lg:hidden">
-        <Carousel opts={{ align: "start" }} className="w-full">
+      <div className="lg:hidden -ml-4 w-[calc(100%+2rem)]">
+        <Carousel opts={{ align: "start", loop: true }} className="w-full">
             <CarouselContent>
                 {kpis?.trendStrength && <CarouselItem className="basis-3/4"><KpiCard title="Trend Strength" value={trendStrengthValue} subValue={trendStrengthSubValue} signal={kpis.trendStrength.signal} tooltip={"Price vs. its 50-day moving average."} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} /></CarouselItem>}
                 {kpis?.rsiMomentum && <CarouselItem className="basis-3/4"><KpiCard title="RSI Momentum" value={kpis.rsiMomentum.currentRsi?.toFixed(1)} subValue={rsiChangeDisplay ? `Change: ${rsiChangeDisplay}` : undefined} signal={kpis.rsiMomentum.signal} tooltip={"The 30-day change in the 14-day RSI."} icon={getIndicator(kpis.rsiMomentum.signal, TrendingUp, TrendingDown, Minus)}><RsiContextBadge /></KpiCard></CarouselItem>}

@@ -151,9 +151,9 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
       <NoteworthyOptions ticker={ticker} />
 
       {/* KPI Section with Carousel */}
-      <div className="lg:hidden -ml-4 w-[calc(100%+2rem)]">
+      <div className="lg:hidden -mx-4 sm:-mx-6 lg:-mx-8">
         <Carousel opts={{ align: "start", loop: true }} className="w-full">
-            <CarouselContent>
+            <CarouselContent className="px-4 sm:px-6 lg:px-8">
                 {kpis?.trendStrength && <CarouselItem className="basis-3/4"><KpiCard title="Trend Strength" value={trendStrengthValue} subValue={trendStrengthSubValue} signal={kpis.trendStrength.signal} tooltip={"Price vs. its 50-day moving average."} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} /></CarouselItem>}
                 {kpis?.rsiMomentum && <CarouselItem className="basis-3/4"><KpiCard title="RSI Momentum" value={kpis.rsiMomentum.currentRsi?.toFixed(1)} subValue={rsiChangeDisplay ? `Change: ${rsiChangeDisplay}` : undefined} signal={kpis.rsiMomentum.signal} tooltip={"The 30-day change in the 14-day RSI."} icon={getIndicator(kpis.rsiMomentum.signal, TrendingUp, TrendingDown, Minus)}><RsiContextBadge /></KpiCard></CarouselItem>}
                 {kpis?.volumeSurge && <CarouselItem className="basis-3/4"><KpiCard title="Volume Surge" value={volumeSurgeDisplay} subValue={`vs. 30-Day Avg`} signal={kpis.volumeSurge.signal} tooltip={"Recent daily volume compared to its 30-day average."} icon={<BarChart2 size={16} className="text-muted-foreground" />} /></CarouselItem>}

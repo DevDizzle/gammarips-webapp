@@ -1208,6 +1208,11 @@ body {
   margin-bottom: 3rem;
 }
 
+.-mx-4 {
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+
 .-ml-4 {
   margin-left: -1rem;
 }
@@ -3119,6 +3124,11 @@ body {
     margin-bottom: 4rem;
   }
 
+  .sm\:-mx-6 {
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+  }
+
   .sm\:mt-0 {
     margin-top: 0;
   }
@@ -3248,6 +3258,11 @@ body {
 @media (width >= 1024px) {
   .lg\:col-span-2 {
     grid-column: span 2 / span 2;
+  }
+
+  .lg\:-mx-8 {
+    margin-left: -2rem;
+    margin-right: -2rem;
   }
 
   .lg\:grid {

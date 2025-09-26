@@ -38,6 +38,8 @@ import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/st
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
 import { getAuth } from 'firebase-admin/auth';
+import { getAuth as getClientAuth } from 'firebase/auth';
+import { app } from '@/lib/firebase';
 
 
 export async function getOptionsSignals(ticker: string): Promise<TickerOptionsData | null> {
@@ -228,10 +230,14 @@ export async function handleFollowUp(data: {
   return await answerFollowUpQuestion(input);
 }
 
-export async function handleFeedback(feedbackText: string): Promise<void> {
-  const input: SummarizeFeedbackInput = { feedbackText };
-  const summaryOutput = await summarizeFeedback(input);
-  await saveFeedback(feedbackText, summaryOutput.summary);
+export async function handleFeedback(message: string, replyToEmail: string): Promise<{success: boolean}> {
+  const clientAuth = getClientAuth(app);
+  const user = clientAuth.currentUser;
+  
+  const userData = user ? { uid: user.uid, email: user.email } : null;
+
+  await saveFeedback(message, replyToEmail, userData);
+  return { success: true };
 }
 
 export async function createCheckoutSession(uid: string): Promise<{ sessionId: string }> {

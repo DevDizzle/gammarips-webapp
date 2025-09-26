@@ -31,11 +31,17 @@ const StockSchema = z.object({
 export type Stock = z.infer<typeof StockSchema>;
 
 
-export async function saveFeedback(originalFeedback: string, summary: string): Promise<void> {
+export async function saveFeedback(
+  message: string, 
+  replyToEmail: string, 
+  user: { uid: string; email: string | null } | null
+): Promise<void> {
   try {
     await addDoc(collection(db, "feedback"), {
-      originalFeedback,
-      summary,
+      message,
+      replyToEmail,
+      user,
+      status: 'new',
       createdAt: serverTimestamp(),
     });
   } catch (error) {
@@ -118,5 +124,3 @@ export async function getUserByStripeCustomerId(stripeCustomerId: string): Promi
   }
   return null;
 }
-
-    

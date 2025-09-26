@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/hooks/use-auth';
 import Footer from '@/components/layout/footer';
 import Script from 'next/script';
+import ContactWidget from '@/components/contact-widget';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://profitscout.app'), // Replace with your actual domain
@@ -34,6 +35,7 @@ export default function RootLayout({
           <main className='flex-grow'>{children}</main>
           <Footer />
           <Toaster />
+          <ContactWidget />
         </AuthProvider>
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-GHEYWRR8BX"></Script>
         <Script id="google-analytics">

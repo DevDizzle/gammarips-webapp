@@ -2,6 +2,8 @@
 
 /**
  * @fileOverview Summarizes user feedback using GenAI to identify common pain points and areas for improvement.
+ * THIS FLOW IS DEPRECATED and will be removed in a future version.
+ * The handleFeedback action now saves messages directly to Firestore.
  *
  * - summarizeFeedback - A function that summarizes user feedback.
  * - SummarizeFeedbackInput - The input type for the summarizeFeedback function.

@@ -93,7 +93,7 @@ function OptionsCandidatesTable() {
                       </Badge>
                     </TableCell>
                     <TableCell>${c.strike.toFixed(2)}</TableCell>
-                    <TableCell>{new Date(c.expiration_date).toLocaleDateString()}</TableCell>
+                    <TableCell>{new Date(c.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</TableCell>
                     <TableCell>${c.last_price?.toFixed(2) ?? 'N/A'}</TableCell>
                     <TableCell>{c.volume?.toLocaleString() ?? 'N/A'}</TableCell>
                     <TableCell>{c.implied_volatility ? `${(c.implied_volatility * 100).toFixed(1)}%` : 'N/A'}</TableCell>

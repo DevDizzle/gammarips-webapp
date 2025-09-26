@@ -88,7 +88,7 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
                     </Badge>
                   </TableCell>
                   <TableCell>${s.strike_price.toFixed(2)}</TableCell>
-                  <TableCell>{new Date(s.expiration_date).toLocaleDateString()}</TableCell>
+                  <TableCell>{new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</TableCell>
                   <TableCell>{`${(s.implied_volatility * 100).toFixed(1)}%`}</TableCell>
                   <TableCell className="text-right">
                       <Badge variant={getSignalBadgeVariant(s.setup_quality_signal)}>
@@ -119,7 +119,7 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
                                     </Badge>
                                     <span className="font-bold text-lg">${s.strike_price.toFixed(2)}</span>
                                 </div>
-                                <p className="text-sm text-muted-foreground mt-1">Exp: {new Date(s.expiration_date).toLocaleDateString()}</p>
+                                <p className="text-sm text-muted-foreground mt-1">Exp: {new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</p>
                             </div>
                             <div className="flex-shrink-0">
                                 <Badge variant={getSignalBadgeVariant(s.setup_quality_signal)}>

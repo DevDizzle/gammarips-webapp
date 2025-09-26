@@ -1,22 +1,20 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users can read and write to their own user document.
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // Authenticated users can create feedback.
+    // Allow anyone to submit feedback, but no one to read, update or delete it from the client.
+    // This provides a secure "write-only" endpoint for the contact form.
     match /feedback/{feedbackId} {
-      allow create: if request.auth != null;
+      allow read, update, delete: if false;
+      allow create: if true;
     }
 
-    // Server-side admin actions will bypass these client-side rules.
-    // Tickers collection is read-only for clients via server actions.
-    match /tickers/{ticker} {
-      allow read, write: if false; 
+    // Default deny all other collections for security.
+    // We can add specific rules for other collections like 'users' later if needed.
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

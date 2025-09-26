@@ -4997,3 +4997,12 @@ Dev App Server is now running.
 
 Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
  
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2025-09-26T18:38:19.313Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/demo-app:securityRules [none]
+[debug] [2025-09-26T18:38:19.313Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/demo-app:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"\nrules_version = '2';\n\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Allow anyone to submit feedback, but no one to read, update or delete it from the client.\n    // This provides a secure \"write-only\" endpoint for the contact form.\n    match /feedback/{feedbackId} {\n      allow read, update, delete: if false;\n      allow create: if true;\n    }\n\n    // Default deny all other collections for security.\n    // We can add specific rules for other collections like 'users' later if needed.\n    match /{document=**} {\n      allow read, write: if false;\n    }\n  }\n}\n"}]}}
+[debug] [2025-09-26T18:38:19.362Z] Sep 26, 2025 6:38:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sep 26, 2025 6:38:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2025-09-26T18:38:20.503Z] Sep 26, 2025 6:38:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sep 26, 2025 6:38:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}

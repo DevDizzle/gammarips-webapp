@@ -1188,6 +1188,11 @@ body {
   margin-right: -.25rem;
 }
 
+.-mx-4 {
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -1206,11 +1211,6 @@ body {
 .my-12 {
   margin-top: 3rem;
   margin-bottom: 3rem;
-}
-
-.-mx-4 {
-  margin-left: -1rem;
-  margin-right: -1rem;
 }
 
 .-ml-4 {
@@ -1555,10 +1555,6 @@ body {
 
 .w-full {
   width: 100%;
-}
-
-.w-\[calc\(100\%\+2rem\)\] {
-  width: calc(100% + 2rem);
 }
 
 .min-w-0 {
@@ -3119,14 +3115,14 @@ body {
     top: auto;
   }
 
-  .sm\:my-16 {
-    margin-top: 4rem;
-    margin-bottom: 4rem;
-  }
-
   .sm\:-mx-6 {
     margin-left: -1.5rem;
     margin-right: -1.5rem;
+  }
+
+  .sm\:my-16 {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
   }
 
   .sm\:mt-0 {
@@ -3181,10 +3177,6 @@ body {
 
   .sm\:rounded-lg {
     border-radius: var(--radius);
-  }
-
-  .sm\:p-6 {
-    padding: 1.5rem;
   }
 
   .sm\:px-6 {
@@ -3275,10 +3267,6 @@ body {
 
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .lg\:p-8 {
-    padding: 2rem;
   }
 
   .lg\:px-8 {

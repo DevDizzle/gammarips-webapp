@@ -16,7 +16,6 @@ import {
   summarizeFeedback,
   type SummarizeFeedbackInput,
 } from '@/ai/flows/feedback-summarization';
-import { saveFeedback } from '@/lib/firebase';
 import { 
     getStocksAdmin, 
     getOrCreateUserAdmin,
@@ -32,6 +31,7 @@ import {
     getOptionsHeaderSignalAdmin,
     getTickerEventsAdmin,
     getOptionsCandidatesAdmin,
+    saveFeedbackAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
@@ -230,13 +230,13 @@ export async function handleFollowUp(data: {
   return await answerFollowUpQuestion(input);
 }
 
-export async function handleFeedback(message: string, replyToEmail: string): Promise<{success: boolean}> {
-  const clientAuth = getClientAuth(app);
-  const user = clientAuth.currentUser;
-  
-  const userData = user ? { uid: user.uid, email: user.email } : null;
-
-  await saveFeedback(message, replyToEmail, userData);
+export async function handleFeedback(uid: string | null, message: string, replyToEmail: string): Promise<{success: boolean}> {
+  let userData: { uid: string, email: string | null } | null = null;
+  if (uid) {
+    const user = await getOrCreateUserAdmin(uid);
+    userData = { uid: user.uid, email: user.email };
+  }
+  await saveFeedbackAdmin(message, replyToEmail, userData);
   return { success: true };
 }
 

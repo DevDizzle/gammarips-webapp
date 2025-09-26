@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { handleFeedback } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
@@ -39,7 +39,7 @@ export default function ContactWidget() {
 
     setStatus('loading');
     try {
-      await handleFeedback(message, email);
+      await handleFeedback(user?.uid || null, message, email);
       setStatus('success');
       setMessage('');
       setTimeout(() => {
@@ -56,12 +56,12 @@ export default function ContactWidget() {
     }
   };
 
-  // When user logs in or out, update the email field if it hasn't been manually edited.
-  useState(() => {
-    if (user?.email && email === '') {
+  useEffect(() => {
+    // When user logs in, update the email field if it hasn't been manually edited by the user.
+    if (user?.email && (email === '' || !email.includes('@'))) {
         setEmail(user.email);
     }
-  });
+  }, [user, email]);
 
 
   return (

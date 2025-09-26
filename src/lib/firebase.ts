@@ -58,7 +58,7 @@ const UserSchema = z.object({
   isAnonymous: z.boolean(),
   isSubscribed: z.boolean(),
   usageCount: z.number().int().nonnegative(),
-  createdAt: z.custom((data) => data instanceof Timestamp || data === null, {
+  createdAt: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data), { // Allow server-side Timestamps
     message: "Expected Firestore Timestamp",
   }).optional(),
   stripeCustomerId: z.string().optional().nullable(),

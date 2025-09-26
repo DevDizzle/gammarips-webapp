@@ -121,6 +121,25 @@ const TickerOptionsDataSchema = z.object({
 export type TickerOptionsData = z.infer<typeof TickerOptionsDataSchema>;
 
 
+export async function saveFeedbackAdmin(
+  message: string, 
+  replyToEmail: string, 
+  user: { uid: string; email: string | null } | null
+): Promise<void> {
+  try {
+    await adminDb.collection("feedback").add({
+      message,
+      replyToEmail,
+      user,
+      status: 'new',
+      createdAt: FieldValue.serverTimestamp(),
+    });
+  } catch (error) {
+    console.error("Error writing feedback to Firestore with Admin SDK: ", error);
+    throw new Error("Could not save feedback to the database.");
+  }
+}
+
 export async function getOptionsHeaderSignalAdmin(ticker: string): Promise<OptionsSignal | null> {
     try {
         const docRef = adminDb.collection("options_signals").doc(ticker.toUpperCase());
@@ -731,5 +750,6 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
 
 
     
+
 
 

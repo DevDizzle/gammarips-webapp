@@ -6,7 +6,7 @@ import { notFound, useRouter, useParams } from 'next/navigation';
 import { getDashboardData } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight, Loader2, MailCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
 import { Markdown } from '@/components/markdown';
@@ -214,6 +214,26 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
   );
 }
 
+const VerifyEmailCard = () => (
+    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <Card className="max-w-xl mx-auto">
+            <CardHeader className="text-center">
+                <MailCheck className="mx-auto h-12 w-12 text-primary mb-4" />
+                <CardTitle>Verify Your Email Address</CardTitle>
+                <CardDescription>
+                    We've sent a verification link to your email. Please click the link to finish setting up your account and access the dashboard.
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="text-center">
+                <p className="text-sm text-muted-foreground">
+                    Didn't receive an email? Check your spam folder or wait a few minutes.
+                </p>
+            </CardContent>
+        </Card>
+    </div>
+);
+
+
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function TickerDashboardPage() {
@@ -237,8 +257,16 @@ export default function TickerDashboardPage() {
 
   const hasAccess = useMemo(() => {
     if (authLoading || !dbUser) return false;
+    
+    // Google users are automatically verified.
+    const isVerified = user?.providerData.some(p => p.providerId === 'google.com') || user?.emailVerified;
+
+    if (!isVerified) {
+        return false;
+    }
+
     return dbUser.isSubscribed || !trialHasEnded;
-  }, [dbUser, trialHasEnded, authLoading]);
+  }, [dbUser, user, trialHasEnded, authLoading]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -247,6 +275,13 @@ export default function TickerDashboardPage() {
       setShowAuthDialog(true);
       setLoading(false);
       return;
+    }
+
+    // New check for email verification
+    const isVerified = user.providerData.some(p => p.providerId === 'google.com') || user.emailVerified;
+    if (!isVerified) {
+      setLoading(false);
+      return; // Will render VerifyEmailCard below
     }
 
     if (!hasAccess) {
@@ -323,6 +358,13 @@ export default function TickerDashboardPage() {
     );
   }
 
+  // If user is logged in via email but not verified, show the verification prompt.
+  // Google users are exempt as their email is verified by default.
+  if (user && !user.emailVerified && !user.providerData.some(p => p.providerId === 'google.com')) {
+      return <VerifyEmailCard />;
+  }
+
+
   // If user's trial has ended and they are not subscribed, show the upgrade dialog
   if (dbUser && trialHasEnded && !dbUser.isSubscribed && showSubDialog) {
     return (
@@ -346,17 +388,3 @@ export default function TickerDashboardPage() {
     </div>
   );
 }
-    
-
-    
-
-    
-
-
-
-
-    
-
-    
-
-    

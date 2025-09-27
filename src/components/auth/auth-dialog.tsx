@@ -69,7 +69,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
       } else {
         await signUpWithEmail(email, password);
         onOpenChange(false);
-        toast({ title: "Free trial started!" });
+        toast({ title: "Account Created!", description: "Please check your inbox to verify your email." });
       }
     } catch (error: any) {
        toast({
@@ -159,4 +159,3 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
     </Dialog>
   );
 }
-

@@ -11,6 +11,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
+  sendEmailVerification,
 } from 'firebase/auth';
 import { app, getOrCreateUser, type DbUser } from '@/lib/firebase';
 import { useToast } from './use-toast';
@@ -74,7 +75,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signUpWithEmail = async (email: string, password: string) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Send verification email
+      await sendEmailVerification(userCredential.user);
       // onAuthStateChanged will handle setting the user states
     } catch (error) {
         console.error("Email sign-up error", error);
@@ -121,5 +124,3 @@ export const useAuth = () => {
   }
   return context;
 };
-
-    

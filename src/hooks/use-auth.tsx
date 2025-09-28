@@ -29,6 +29,7 @@ interface AuthContextType {
   signUpWithEmail: (email: string, password: string) => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  sendVerificationEmail: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -110,8 +111,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const sendVerificationEmail = async () => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      try {
+        await sendEmailVerification(currentUser);
+      } catch (error) {
+        console.error("Error sending verification email", error);
+        throw error;
+      }
+    } else {
+      throw new Error("No user is currently signed in.");
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, dbUser, loading, signInWithGoogle, signUpWithEmail, signInWithEmail, signOut }}>
+    <AuthContext.Provider value={{ user, dbUser, loading, signInWithGoogle, signUpWithEmail, signInWithEmail, signOut, sendVerificationEmail }}>
       {children}
     </AuthContext.Provider>
   );

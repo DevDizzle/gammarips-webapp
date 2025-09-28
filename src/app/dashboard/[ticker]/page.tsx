@@ -214,24 +214,56 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
   );
 }
 
-const VerifyEmailCard = () => (
-    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <Card className="max-w-xl mx-auto">
-            <CardHeader className="text-center">
-                <MailCheck className="mx-auto h-12 w-12 text-primary mb-4" />
-                <CardTitle>Verify Your Email Address</CardTitle>
-                <CardDescription>
-                    We've sent a verification link to your email. Please click the link to finish setting up your account and access the dashboard.
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
-                <p className="text-sm text-muted-foreground">
-                    Didn't receive an email? Check your spam folder or wait a few minutes.
-                </p>
-            </CardContent>
-        </Card>
-    </div>
-);
+const VerifyEmailCard = () => {
+    const { sendVerificationEmail } = useAuth();
+    const [isSending, setIsSending] = useState(false);
+    const { toast } = useToast();
+
+    const handleResend = async () => {
+        setIsSending(true);
+        try {
+            await sendVerificationEmail();
+            toast({
+                title: 'Verification Email Sent',
+                description: 'Please check your inbox for a new verification link.',
+            });
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: error.message || 'Failed to send verification email. Please try again.',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsSending(false);
+        }
+    };
+
+    return (
+        <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <Card className="max-w-xl mx-auto">
+                <CardHeader className="text-center">
+                    <MailCheck className="mx-auto h-12 w-12 text-primary mb-4" />
+                    <CardTitle>Verify Your Email Address</CardTitle>
+                    <CardDescription>
+                        We've sent a verification link to your email. Please click the link to finish setting up your account and access the dashboard.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="text-center space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                        Didn't receive an email? Check your spam folder or click below to resend.
+                    </p>
+                    <Button onClick={handleResend} disabled={isSending} variant="secondary">
+                        {isSending ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            'Resend Verification Email'
+                        )}
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
+    );
+};
 
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);

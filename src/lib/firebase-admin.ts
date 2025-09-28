@@ -156,14 +156,12 @@ export async function saveFeedbackAdmin(
 }
 
 export async function uploadWinImageAdmin(uid: string, fileName: string, fileType: string, fileBuffer: Buffer): Promise<string> {
-  const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
-  if (!bucketName) {
-    throw new Error("Firebase Storage bucket name is not configured in environment variables.");
-  }
+  const bucketName = 'profit-scout'; // Using the correct bucket name directly
+  
   const bucket = adminStorage.bucket(bucketName);
   const fileExtension = fileName.split('.').pop();
   const uniqueFileName = `${uid}-${randomUUID()}.${fileExtension}`;
-  const filePath = `user_wins/${uniqueFileName}`;
+  const filePath = `screenshots/${uniqueFileName}`; // Storing in the 'screenshots' folder
   const file = bucket.file(filePath);
 
   await file.save(fileBuffer, {

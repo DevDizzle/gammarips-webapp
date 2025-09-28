@@ -170,8 +170,8 @@ export async function uploadWinImageAdmin(uid: string, fileName: string, fileTyp
     },
   });
   
-  // Make the file public and return the URL
-  await file.makePublic();
+  // Return the public URL. This does not set permissions, but generates the correct link.
+  // Public access must be granted on the bucket itself (e.g., make all objects public).
   return file.publicUrl();
 }
 

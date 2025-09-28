@@ -37,15 +37,10 @@
         "app/dashboard/[ticker]/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
-        },
-        "app/winners-circle/page": {
-          "moduleId": "[project]/.next-internal/server/app/winners-circle/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "action-browser",
-        "app/winners-circle/page": "action-browser"
+        "app/dashboard/[ticker]/page": "action-browser"
       }
     },
     "4080e9cfbb43c2dfeab2236e9642204226975281ec": {

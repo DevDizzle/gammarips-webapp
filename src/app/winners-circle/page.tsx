@@ -111,6 +111,9 @@ export default function WinnersCirclePage() {
                     <h1 className="mt-4 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
                        The Winner's Circle
                     </h1>
+                    <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
+                        Welcome to the hub of success. This is where our community's best trades get the spotlight. Browse the wins below for inspiration, or share your own victory to motivate fellow traders!
+                    </p>
                 </section>
                 
                 {wins.length > 0 && (
@@ -134,9 +137,9 @@ export default function WinnersCirclePage() {
                 </section>
                 
                 <section className="text-center mb-12">
-                     <h2 className="text-3xl font-bold font-headline">Real Traders, Real Wins.</h2>
+                     <h2 className="text-3xl font-bold font-headline">Recent Community Wins</h2>
                     <p className="mt-2 max-w-2xl mx-auto text-muted-foreground">
-                        Check out the latest winning screenshots submitted by the ProfitScout community.
+                        Check out the latest winning screenshots submitted by the ProfitScout
                     </p>
                 </section>
 

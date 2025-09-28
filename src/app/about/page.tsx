@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import ContactForm from './contact-form';
 
 export const metadata: Metadata = {
   title: 'About Us | ProfitScout',
@@ -182,16 +183,8 @@ export default function AboutPage() {
         <Separator className="my-12 sm:my-16" />
         
         {/* Contact Section */}
-        <section id="contact" className="text-center scroll-mt-20">
-             <h2 className="text-3xl font-bold font-headline">Contact</h2>
-             <p className="mt-3 max-w-2xl mx-auto text-muted-foreground">
-                Have questions or ideas to improve ProfitScout? We’d love to hear from you.
-             </p>
-             <div className="mt-6">
-                <a href="mailto:admin@profitscout.app" className="font-semibold text-primary hover:underline">
-                    admin@profitscout.app
-                </a>
-             </div>
+        <section id="contact" className="scroll-mt-20">
+            <ContactForm />
         </section>
 
       </section>

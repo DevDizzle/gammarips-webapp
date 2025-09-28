@@ -1,26 +1,5 @@
 {
   "node": {
-    "70803c4fea2c1e0c96d4b2d56ea486e917b986f4e1": {
-      "workers": {
-        "app/dashboard/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        },
-        "app/page": {
-          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        },
-        "app/winners-circle/page": {
-          "moduleId": "[project]/.next-internal/server/app/winners-circle/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        }
-      },
-      "layer": {
-        "app/dashboard/[ticker]/page": "action-browser",
-        "app/page": "action-browser",
-        "app/winners-circle/page": "action-browser"
-      }
-    },
     "004432f536753d7a29d624ff3f499f766c74f5130f": {
       "workers": {
         "app/dashboard/[ticker]/page": {
@@ -51,6 +30,22 @@
       },
       "layer": {
         "app/page": "action-browser"
+      }
+    },
+    "70803c4fea2c1e0c96d4b2d56ea486e917b986f4e1": {
+      "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
+        "app/winners-circle/page": {
+          "moduleId": "[project]/.next-internal/server/app/winners-circle/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/dashboard/[ticker]/page": "action-browser",
+        "app/winners-circle/page": "action-browser"
       }
     },
     "4080e9cfbb43c2dfeab2236e9642204226975281ec": {

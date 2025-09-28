@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,6 +16,7 @@ import { ArrowDown, ArrowUp, ChevronRight, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Markdown } from '@/components/markdown';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 
 // Helper to convert GCS URI to a public URL
@@ -31,7 +32,7 @@ const convertGcsUriToUrl = (gcsUri: string) => {
 
 function TodaysWinners() {
   const [isLoading, setIsLoading] = useState(true);
-  const [winners, setWinners] = useState<Winner[]>([]);
+  const [allWinners, setAllWinners] = useState<Winner[]>([]);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -40,7 +41,7 @@ function TodaysWinners() {
       setIsLoading(true);
       try {
         const winnersData = await getWinnersDashboard();
-        setWinners(winnersData);
+        setAllWinners(winnersData);
       } catch (error) {
         console.error('Failed to fetch winners dashboard data:', error);
         toast({
@@ -54,6 +55,18 @@ function TodaysWinners() {
     };
     fetchData();
   }, [toast]);
+  
+  const { bullishWinners, bearishWinners } = useMemo(() => {
+    const bullish = allWinners
+      .filter(w => w.outlook_signal.toLowerCase().includes('bullish'))
+      .sort((a, b) => (b.weighted_score ?? -Infinity) - (a.weighted_score ?? -Infinity));
+
+    const bearish = allWinners
+      .filter(w => w.outlook_signal.toLowerCase().includes('bearish'))
+      .sort((a, b) => (a.weighted_score ?? Infinity) - (b.weighted_score ?? Infinity));
+      
+    return { bullishWinners: bullish, bearishWinners: bearish };
+  }, [allWinners]);
 
   const handleRowClick = (ticker: string) => {
     router.push(`/dashboard/${ticker.toUpperCase()}`);
@@ -70,102 +83,110 @@ function TodaysWinners() {
     return { color: 'text-muted-foreground', icon: null };
   };
   
-  const renderDesktopTable = () => (
-     <Table className="hidden md:table">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Company</TableHead>
-            <TableHead>Ticker</TableHead>
-            <TableHead>Last Close</TableHead>
-            <TableHead>Industry</TableHead>
-            <TableHead>AI Outlook</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {winners.map(winner => {
-              const imageUrl = winner.image_uri 
-                  ? convertGcsUriToUrl(winner.image_uri) 
-                  : `https://placehold.co/24x24/1e293b/a855f7?text=${winner.ticker[0]}`;
-              const signalMeta = getSignalMeta(winner.outlook_signal);
-              
-              return (
-                <TableRow key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer">
-                    <TableCell className="font-medium">
-                        <div className="flex items-center gap-3">
-                            <Image 
-                                src={imageUrl} 
-                                alt={`${winner.company_name} logo`}
-                                width={24}
-                                height={24}
-                                className="rounded-full"
-                            />
-                            <span className="truncate">{winner.company_name}</span>
-                        </div>
-                    </TableCell>
-                    <TableCell>{winner.ticker}</TableCell>
-                    <TableCell>${winner.last_close.toFixed(2)}</TableCell>
-                    <TableCell>{winner.industry}</TableCell>
-                    <TableCell>
-                        <div className={cn("flex items-center gap-1", signalMeta.color)}>
-                            {signalMeta.icon}
-                            <span>{winner.outlook_signal}</span>
-                        </div>
-                    </TableCell>
-                </TableRow>
-              );
-          })}
-        </TableBody>
-      </Table>
-  );
+  const renderWinnersList = (winners: Winner[]) => {
+    if (winners.length === 0) {
+      return <p className="text-sm text-muted-foreground text-center py-4">No signals found for this category today.</p>;
+    }
+    
+    return (
+      <>
+        {/* Desktop Table */}
+        <Table className="hidden md:table">
+            <TableHeader>
+            <TableRow>
+                <TableHead>Company</TableHead>
+                <TableHead>Ticker</TableHead>
+                <TableHead>Last Close</TableHead>
+                <TableHead>Industry</TableHead>
+                <TableHead>AI Outlook</TableHead>
+            </TableRow>
+            </TableHeader>
+            <TableBody>
+            {winners.map(winner => {
+                const imageUrl = winner.image_uri 
+                    ? convertGcsUriToUrl(winner.image_uri) 
+                    : `https://placehold.co/24x24/1e293b/a855f7?text=${winner.ticker[0]}`;
+                const signalMeta = getSignalMeta(winner.outlook_signal);
+                
+                return (
+                    <TableRow key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer">
+                        <TableCell className="font-medium">
+                            <div className="flex items-center gap-3">
+                                <Image 
+                                    src={imageUrl} 
+                                    alt={`${winner.company_name} logo`}
+                                    width={24}
+                                    height={24}
+                                    className="rounded-full"
+                                />
+                                <span className="truncate">{winner.company_name}</span>
+                            </div>
+                        </TableCell>
+                        <TableCell>{winner.ticker}</TableCell>
+                        <TableCell>${winner.last_close.toFixed(2)}</TableCell>
+                        <TableCell>{winner.industry}</TableCell>
+                        <TableCell>
+                            <div className={cn("flex items-center gap-1", signalMeta.color)}>
+                                {signalMeta.icon}
+                                <span>{winner.outlook_signal}</span>
+                            </div>
+                        </TableCell>
+                    </TableRow>
+                );
+            })}
+            </TableBody>
+        </Table>
 
-  const renderMobileCards = () => (
-      <div className="space-y-3 md:hidden">
-          {winners.map(winner => {
-               const imageUrl = winner.image_uri 
-                  ? convertGcsUriToUrl(winner.image_uri) 
-                  : `https://placehold.co/40x40/1e293b/a855f7?text=${winner.ticker[0]}`;
-              const signalMeta = getSignalMeta(winner.outlook_signal);
+        {/* Mobile Cards */}
+        <div className="space-y-3 md:hidden">
+            {winners.map(winner => {
+                const imageUrl = winner.image_uri 
+                    ? convertGcsUriToUrl(winner.image_uri) 
+                    : `https://placehold.co/40x40/1e293b/a855f7?text=${winner.ticker[0]}`;
+                const signalMeta = getSignalMeta(winner.outlook_signal);
 
-              return (
-                  <Card key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer transition-colors hover:bg-muted/50">
-                      <CardContent className="p-4">
-                          <div className="flex items-center justify-between gap-4">
-                              <div className="flex items-center gap-3 flex-1 min-w-0">
-                                   <Image 
-                                      src={imageUrl} 
-                                      alt={`${winner.company_name} logo`}
-                                      width={40}
-                                      height={40}
-                                      className="rounded-full"
-                                  />
-                                  <div className="flex-1 min-w-0">
-                                      <p className="font-bold truncate">{winner.company_name}</p>
-                                      <p className="text-sm text-muted-foreground">{winner.ticker}</p>
-                                  </div>
-                              </div>
-                              <div className="flex-shrink-0">
-                                 <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                              </div>
-                          </div>
-                          <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                              <div>
-                                  <p className="text-muted-foreground">Last Close</p>
-                                  <p className="font-semibold">${winner.last_close.toFixed(2)}</p>
-                              </div>
-                               <div>
-                                  <p className="text-muted-foreground">AI Outlook</p>
-                                  <div className={cn("flex items-center gap-1 font-semibold", signalMeta.color)}>
-                                      {signalMeta.icon}
-                                      <span>{winner.outlook_signal}</span>
-                                  </div>
-                              </div>
-                          </div>
-                      </CardContent>
-                  </Card>
-              )
-          })}
-      </div>
-  );
+                return (
+                    <Card key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer transition-colors hover:bg-muted/50">
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex items-center gap-3 flex-1 min-w-0">
+                                    <Image 
+                                        src={imageUrl} 
+                                        alt={`${winner.company_name} logo`}
+                                        width={40}
+                                        height={40}
+                                        className="rounded-full"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-bold truncate">{winner.company_name}</p>
+                                        <p className="text-sm text-muted-foreground">{winner.ticker}</p>
+                                    </div>
+                                </div>
+                                <div className="flex-shrink-0">
+                                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                                </div>
+                            </div>
+                            <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p className="text-muted-foreground">Last Close</p>
+                                    <p className="font-semibold">${winner.last_close.toFixed(2)}</p>
+                                </div>
+                                <div>
+                                    <p className="text-muted-foreground">AI Outlook</p>
+                                    <div className={cn("flex items-center gap-1 font-semibold", signalMeta.color)}>
+                                        {signalMeta.icon}
+                                        <span>{winner.outlook_signal}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )
+            })}
+        </div>
+      </>
+    );
+  }
 
   const renderSkeleton = () => (
     <div className="space-y-4">
@@ -234,20 +255,26 @@ function TodaysWinners() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {isLoading ? renderSkeleton() : (
-            <>
-              {renderDesktopTable()}
-              {renderMobileCards()}
-            </>
-          )}
+          <Tabs defaultValue="bullish" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="bullish">Top Bullish</TabsTrigger>
+              <TabsTrigger value="bearish">Top Bearish</TabsTrigger>
+            </TabsList>
+            <TabsContent value="bullish" className="mt-4">
+              {isLoading ? renderSkeleton() : renderWinnersList(bullishWinners)}
+            </TabsContent>
+            <TabsContent value="bearish" className="mt-4">
+              {isLoading ? renderSkeleton() : renderWinnersList(bearishWinners)}
+            </TabsContent>
+          </Tabs>
         </CardContent>
         <CardFooter className="flex-col items-center gap-4 border-t bg-card/50 px-6 py-4">
             <div className="text-center">
-                <h3 className="font-bold flex items-center gap-2 justify-center"><Trophy className="text-yellow-500" /> Had a Big Win?</h3>
-                <p className="text-sm text-muted-foreground">Share your success with the community and get featured in the Winner's Circle!</p>
+                <h3 className="font-bold flex items-center gap-2 justify-center"><Trophy className="text-yellow-500" /> Real Traders, Real Wins.</h3>
+                <p className="text-sm text-muted-foreground">Check out the latest winning screenshots. Nailed a great trade? Share your success and inspire the community!</p>
             </div>
             <Button asChild>
-                <Link href="/winners-circle#share-win">Share Your Win</Link>
+                <Link href="/winners-circle">Share Your Win</Link>
             </Button>
         </CardFooter>
       </Card>

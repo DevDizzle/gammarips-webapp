@@ -199,8 +199,6 @@ export async function getApprovedWinsAdmin(): Promise<Win[]> {
   try {
     const winsSnapshot = await adminDb.collection('wins')
       .where('status', '==', 'approved')
-      .orderBy('percentGain', 'desc')
-      .limit(6)
       .get();
 
     if (winsSnapshot.empty) {
@@ -234,7 +232,11 @@ export async function getApprovedWinsAdmin(): Promise<Win[]> {
     });
 
     const results = await Promise.all(winPromises);
-    return results.filter((win): win is Win => win !== null);
+    const validWins = results.filter((win): win is Win => win !== null);
+
+    // Sort in memory and take the top 6
+    validWins.sort((a, b) => b.percentGain - a.percentGain);
+    return validWins.slice(0, 6);
 
   } catch (error) {
     console.error("Error fetching approved wins:", error);

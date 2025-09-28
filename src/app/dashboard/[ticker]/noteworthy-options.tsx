@@ -190,24 +190,6 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
         <CardDescription>
             Our model analyzes thousands of contracts for key metrics like liquidity, strike, and time decay to identify actionable setups. The top-ranked signal is highlighted below.
         </CardDescription>
-        {topSignal && (
-            <div className="pt-2">
-                <div className={cn(
-                    "rounded-lg border p-4",
-                    topSignal.option_type === 'call' ? 'bg-green-500/10 border-green-500/50' : 'bg-red-500/10 border-red-500/50'
-                )}>
-                    <div className="flex items-start gap-3">
-                        <Info className={cn("h-5 w-5 flex-shrink-0 mt-0.5", topSignal.option_type === 'call' ? 'text-green-500' : 'text-red-500')} />
-                        <div>
-                             <p className="font-semibold text-sm">Top Signal Summary ({topSignal.option_type.toUpperCase()} @ ${topSignal.strike_price.toFixed(2)})</p>
-                             <p className="text-xs text-muted-foreground mt-1">
-                                <Markdown content={topSignal.summary} />
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )}
       </CardHeader>
       <CardContent>
         {renderContent()}

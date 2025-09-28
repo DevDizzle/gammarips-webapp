@@ -30,11 +30,16 @@
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
+        },
+        "app/winners-circle/page": {
+          "moduleId": "[project]/.next-internal/server/app/winners-circle/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
         }
       },
       "layer": {
         "app/dashboard/[ticker]/page": "action-browser",
-        "app/page": "action-browser"
+        "app/page": "action-browser",
+        "app/winners-circle/page": "action-browser"
       }
     },
     "00b5bb7d5f6ae04c078d96cf5d36b948d5321d38d3": {

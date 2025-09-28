@@ -10,7 +10,8 @@ import { getOptionsSignals } from '../../actions';
 import type { OptionsSignal } from '@/lib/firebase-admin';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Info } from 'lucide-react';
+import { Markdown } from '@/components/markdown';
 
 interface NoteworthyOptionsProps {
     ticker: string;
@@ -63,6 +64,8 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
       if (lowerSignal.includes('weak')) return 'destructive';
       return 'secondary';
   }
+  
+  const topSignal = signals[0];
 
   const renderDesktopTable = () => (
       <Table className="hidden md:table">
@@ -71,8 +74,9 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
               <TableHead>Type</TableHead>
               <TableHead>Strike</TableHead>
               <TableHead>Expiration</TableHead>
-              <TableHead>Implied Volatility</TableHead>
-              <TableHead className="text-right">Setup Quality</TableHead>
+              <TableHead>IV</TableHead>
+              <TableHead>Setup</TableHead>
+              <TableHead className="w-[40%]">AI Summary</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -90,11 +94,12 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
                   <TableCell>${s.strike_price.toFixed(2)}</TableCell>
                   <TableCell>{new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</TableCell>
                   <TableCell>{`${(s.implied_volatility * 100).toFixed(1)}%`}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell>
                       <Badge variant={getSignalBadgeVariant(s.setup_quality_signal)}>
                           {s.setup_quality_signal}
                       </Badge>
                   </TableCell>
+                   <TableCell className="text-xs text-muted-foreground">{s.summary}</TableCell>
                 </TableRow>
               );
             })}
@@ -128,9 +133,15 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
                             </div>
                           </div>
                           <div className="mt-4 border-t pt-4">
-                              <div className="flex justify-between items-center text-sm">
-                                  <span className="text-muted-foreground">Implied Volatility</span>
-                                  <span className="font-semibold">{`${(s.implied_volatility * 100).toFixed(1)}%`}</span>
+                              <div className="text-xs text-muted-foreground space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span>Implied Volatility</span>
+                                    <span className="font-semibold text-foreground">{`${(s.implied_volatility * 100).toFixed(1)}%`}</span>
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-foreground mb-1">AI Summary</p>
+                                    <p>{s.summary}</p>
+                                </div>
                               </div>
                           </div>
                       </CardContent>
@@ -143,12 +154,13 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
   const renderSkeleton = () => (
     <div className="space-y-2">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="grid grid-cols-5 gap-4">
+        <div key={i} className="grid grid-cols-6 gap-4">
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-full col-span-1" />
         </div>
       ))}
     </div>
@@ -175,9 +187,27 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
     <Card>
       <CardHeader>
         <CardTitle>Top-Scored Options for {ticker}</CardTitle>
-         <CardDescription>
-            These options are selected through our proprietary filtering and scoring model. We analyze thousands of contracts for key metrics like high liquidity, strategic strike price, time decay (Theta), and price sensitivity (Delta) to identify the most actionable setups. The top-ranked signal is highlighted.
+        <CardDescription>
+            Our model analyzes thousands of contracts for key metrics like liquidity, strike, and time decay to identify actionable setups. The top-ranked signal is highlighted below.
         </CardDescription>
+        {topSignal && (
+            <div className="pt-2">
+                <div className={cn(
+                    "rounded-lg border p-4",
+                    topSignal.option_type === 'call' ? 'bg-green-500/10 border-green-500/50' : 'bg-red-500/10 border-red-500/50'
+                )}>
+                    <div className="flex items-start gap-3">
+                        <Info className={cn("h-5 w-5 flex-shrink-0 mt-0.5", topSignal.option_type === 'call' ? 'text-green-500' : 'text-red-500')} />
+                        <div>
+                             <p className="font-semibold text-sm">Top Signal Summary ({topSignal.option_type.toUpperCase()} @ ${topSignal.strike_price.toFixed(2)})</p>
+                             <p className="text-xs text-muted-foreground mt-1">
+                                <Markdown content={topSignal.summary} />
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
       </CardHeader>
       <CardContent>
         {renderContent()}

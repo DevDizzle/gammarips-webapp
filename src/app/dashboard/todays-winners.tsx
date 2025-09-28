@@ -257,8 +257,8 @@ function TodaysWinners() {
         <CardContent>
           <Tabs defaultValue="bullish" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="bullish">Top Bullish</TabsTrigger>
-              <TabsTrigger value="bearish">Top Bearish</TabsTrigger>
+              <TabsTrigger value="bullish">Top Call Setups</TabsTrigger>
+              <TabsTrigger value="bearish">Top Put Setups</TabsTrigger>
             </TabsList>
             <TabsContent value="bullish" className="mt-4">
               {isLoading ? renderSkeleton() : renderWinnersList(bullishWinners)}

@@ -24,8 +24,21 @@ export default function ContactWidget() {
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [isMounted, setIsMounted] = useState(false);
   const { toast } = useToast();
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    // This effect runs only on the client, after hydration.
+    // It safely sets the email from the user object if it exists.
+    if (user?.email) {
+      setEmail(user.email);
+    }
+  }, [user]);
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim() || !email.trim()) {
@@ -56,14 +69,9 @@ export default function ContactWidget() {
     }
   };
 
-  useEffect(() => {
-    // This effect runs only on the client, after hydration.
-    // It safely sets the email from the user object if it exists.
-    if (user?.email) {
-      setEmail(user.email);
-    }
-  }, [user]);
-
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

@@ -8,11 +8,10 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Trophy } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { SubmissionForm } from './submission-form';
 import React, { useState, useEffect } from 'react';
 import type { Win } from '@/lib/firebase-admin';
+import { TickerSearch } from '@/components/ticker-search';
 
 const getInitials = (name: string | null | undefined) => {
     if (!name) return 'U';
@@ -100,6 +99,9 @@ export default function WinnersCirclePage() {
                     <Link href="/" className="text-2xl font-bold font-headline text-primary">
                         ProfitScout
                     </Link>
+                    <div className="flex flex-1 items-center justify-end space-x-4">
+                        <TickerSearch />
+                    </div>
                 </div>
             </header>
 

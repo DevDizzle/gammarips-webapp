@@ -107,11 +107,8 @@ export default function WinnersCirclePage() {
                 <section className="text-center mb-12">
                     <Trophy className="mx-auto h-12 w-12 text-yellow-500" />
                     <h1 className="mt-4 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-                       Real Traders, Real Wins.
+                       The Winner's Circle
                     </h1>
-                    <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                        Check out the latest winning screenshots. Nailed a great trade? Share your success and inspire the community!
-                    </p>
                 </section>
                 
                 {wins.length > 0 && (
@@ -133,8 +130,13 @@ export default function WinnersCirclePage() {
                 <section id="share-win" className="mb-12 scroll-mt-20">
                     <SubmissionForm onSubmissionSuccess={onSubmissionSuccess} />
                 </section>
-
-                <Separator className="mb-12" />
+                
+                <section className="text-center mb-12">
+                     <h2 className="text-3xl font-bold font-headline">Real Traders, Real Wins.</h2>
+                    <p className="mt-2 max-w-2xl mx-auto text-muted-foreground">
+                        Check out the latest winning screenshots submitted by the ProfitScout community.
+                    </p>
+                </section>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                    {loading ? (

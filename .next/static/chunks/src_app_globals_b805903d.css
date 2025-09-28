@@ -1179,6 +1179,10 @@ body {
   top: 50%;
 }
 
+.bottom-4 {
+  bottom: 1rem;
+}
+
 .z-40 {
   z-index: 40;
 }

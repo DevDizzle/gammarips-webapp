@@ -13,11 +13,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 
-interface SubmissionFormProps {
-    onSubmissionSuccess: (data: any) => void;
-}
-
-export function SubmissionForm({ onSubmissionSuccess }: SubmissionFormProps) {
+export function SubmissionForm() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [screenshot, setScreenshot] = useState<File | null>(null);
@@ -84,7 +80,6 @@ export function SubmissionForm({ onSubmissionSuccess }: SubmissionFormProps) {
 
     if (result.success) {
       setStatus('success');
-      onSubmissionSuccess(result);
     } else {
       setStatus('error');
       toast({

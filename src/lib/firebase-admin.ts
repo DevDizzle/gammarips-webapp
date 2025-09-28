@@ -8,6 +8,7 @@ import { getFirestore as getAdminFirestore, FieldValue } from 'firebase-admin/fi
 import { getStorage as getAdminStorage } from 'firebase-admin/storage';
 import { z } from 'zod';
 import type { DbUser } from './firebase';
+import { randomUUID } from 'crypto';
 
 let adminApp: AdminApp;
 let adminDb: ReturnType<typeof getAdminFirestore>;
@@ -35,6 +36,7 @@ if (!getAdminApps().length) {
   // access the bucket specified in the GCS URI.
   adminApp = initializeAdminApp({
     credential: admin.credential.cert(serviceAccount),
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   });
 } else {
   adminApp = getAdminApps()[0]!;
@@ -120,6 +122,19 @@ const TickerOptionsDataSchema = z.object({
 });
 export type TickerOptionsData = z.infer<typeof TickerOptionsDataSchema>;
 
+const WinSchema = z.object({
+  id: z.string(),
+  authorId: z.string(),
+  authorName: z.string().optional().nullable(),
+  authorImage: z.string().optional().nullable(),
+  imageUrl: z.string(),
+  tickers: z.string(),
+  percentGain: z.number(),
+  status: z.enum(['pending', 'approved', 'rejected']),
+  createdAt: z.custom((data) => data instanceof admin.firestore.Timestamp),
+});
+export type Win = z.infer<typeof WinSchema>;
+
 
 export async function saveFeedbackAdmin(
   message: string, 
@@ -137,6 +152,89 @@ export async function saveFeedbackAdmin(
   } catch (error) {
     console.error("Error writing feedback to Firestore with Admin SDK: ", error);
     throw new Error("Could not save feedback to the database.");
+  }
+}
+
+export async function uploadWinImageAdmin(uid: string, fileName: string, fileType: string, fileBuffer: Buffer): Promise<string> {
+  const bucket = adminStorage.bucket();
+  const fileExtension = fileName.split('.').pop();
+  const uniqueFileName = `${uid}-${randomUUID()}.${fileExtension}`;
+  const filePath = `user_wins/${uniqueFileName}`;
+  const file = bucket.file(filePath);
+
+  await file.save(fileBuffer, {
+    metadata: {
+      contentType: fileType,
+    },
+  });
+  
+  // Make the file public and return the URL
+  await file.makePublic();
+  return file.publicUrl();
+}
+
+export async function saveWinSubmissionAdmin(submission: {
+  authorId: string;
+  imageUrl: string;
+  tickers: string;
+  percentGain: number;
+}): Promise<void> {
+  try {
+    await adminDb.collection('wins').add({
+      ...submission,
+      status: 'pending',
+      createdAt: FieldValue.serverTimestamp(),
+    });
+  } catch (error) {
+    console.error("Error writing win submission to Firestore: ", error);
+    throw new Error("Could not save your submission.");
+  }
+}
+
+export async function getApprovedWinsAdmin(): Promise<Win[]> {
+  try {
+    const winsSnapshot = await adminDb.collection('wins')
+      .where('status', '==', 'approved')
+      .orderBy('percentGain', 'desc')
+      .limit(6)
+      .get();
+
+    if (winsSnapshot.empty) {
+      return [];
+    }
+
+    const winPromises = winsSnapshot.docs.map(async (doc) => {
+      const winData = doc.data();
+      const userDoc = await adminDb.collection('users').doc(winData.authorId).get();
+      const userData = userDoc.data();
+      
+      const combinedData = {
+        id: doc.id,
+        authorId: winData.authorId,
+        authorName: userData?.displayName,
+        authorImage: userData?.photoURL,
+        imageUrl: winData.imageUrl,
+        tickers: winData.tickers,
+        percentGain: winData.percentGain,
+        status: winData.status,
+        createdAt: winData.createdAt,
+      };
+
+      const validation = WinSchema.safeParse(combinedData);
+      if (validation.success) {
+        return validation.data;
+      } else {
+        console.warn(`Invalid win data in Firestore for doc ${doc.id}:`, validation.error.flatten());
+        return null;
+      }
+    });
+
+    const results = await Promise.all(winPromises);
+    return results.filter((win): win is Win => win !== null);
+
+  } catch (error) {
+    console.error("Error fetching approved wins:", error);
+    return [];
   }
 }
 
@@ -717,39 +815,3 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     }
     return null;
 }
-
-    
-
-
-
-
-
-
-
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-    
-
-
-

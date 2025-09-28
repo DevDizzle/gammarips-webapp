@@ -1045,6 +1045,10 @@ body {
   pointer-events: auto;
 }
 
+.visible {
+  visibility: visible;
+}
+
 .invisible {
   visibility: hidden;
 }
@@ -1187,6 +1191,10 @@ body {
   z-index: 100;
 }
 
+.col-span-full {
+  grid-column: 1 / -1;
+}
+
 .m-0 {
   margin: 0;
 }
@@ -1297,6 +1305,10 @@ body {
   margin-top: auto;
 }
 
+.mb-12 {
+  margin-bottom: 3rem;
+}
+
 .block {
   display: block;
 }
@@ -1335,6 +1347,10 @@ body {
 
 .aspect-video {
   aspect-ratio: 16 / 9;
+}
+
+.aspect-\[4\/3\] {
+  aspect-ratio: 4 / 3;
 }
 
 .h-0\.5 {
@@ -1431,6 +1447,10 @@ body {
 
 .h-px {
   height: 1px;
+}
+
+.h-32 {
+  height: 8rem;
 }
 
 .max-h-96 {
@@ -1754,6 +1774,10 @@ body {
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
 .flex-col {
   flex-direction: column;
 }
@@ -1818,6 +1842,10 @@ body {
   gap: 2rem;
 }
 
+.gap-6 {
+  gap: 1.5rem;
+}
+
 .gap-x-3 {
   column-gap: .75rem;
 }
@@ -1872,6 +1900,12 @@ body {
   --tw-space-y-reverse: 0;
   margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+}
+
+.space-y-0 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0px * var(--tw-space-y-reverse));
 }
 
 .overflow-auto {
@@ -2120,6 +2154,10 @@ body {
   object-fit: contain;
 }
 
+.object-cover {
+  object-fit: cover;
+}
+
 .p-0 {
   padding: 0;
 }
@@ -2219,6 +2257,11 @@ body {
   padding-bottom: 2rem;
 }
 
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
 .pb-16 {
   padding-bottom: 4rem;
 }
@@ -2273,6 +2316,14 @@ body {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pb-6 {
+  padding-bottom: 1.5rem;
+}
+
+.pt-5 {
+  padding-top: 1.25rem;
 }
 
 .text-left {
@@ -2345,6 +2396,11 @@ body {
 .text-xs {
   font-size: .75rem;
   line-height: 1rem;
+}
+
+.text-5xl {
+  font-size: 3rem;
+  line-height: 1;
 }
 
 .font-bold {
@@ -2478,6 +2534,15 @@ body {
 .text-yellow-400 {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity, 1));
+}
+
+.text-primary\/80 {
+  color: hsl(var(--primary) / .8);
+}
+
+.text-yellow-500 {
+  --tw-text-opacity: 1;
+  color: rgb(234 179 8 / var(--tw-text-opacity, 1));
 }
 
 .underline {
@@ -2685,6 +2750,10 @@ body {
 
 .focus-within\:z-20:focus-within {
   z-index: 20;
+}
+
+.hover\:border-primary:hover {
+  border-color: hsl(var(--primary));
 }
 
 .hover\:bg-accent:hover {

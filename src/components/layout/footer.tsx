@@ -16,6 +16,7 @@ const Footer = () => {
             <h4 className="font-semibold text-foreground">Navigate</h4>
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
+              <li><Link href="/winners-circle" className="text-muted-foreground hover:text-primary">Winner's Circle</Link></li>
             </ul>
           </div>
           <div>

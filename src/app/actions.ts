@@ -32,8 +32,11 @@ import {
     getTickerEventsAdmin,
     getOptionsCandidatesAdmin,
     saveFeedbackAdmin,
+    uploadWinImageAdmin,
+    saveWinSubmissionAdmin,
+    getApprovedWinsAdmin,
 } from '@/lib/firebase-admin';
-import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent } from '@/lib/firebase-admin';
+import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, Win } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
@@ -49,6 +52,41 @@ export async function getOptionsSignals(ticker: string): Promise<TickerOptionsDa
 export async function getWinnersDashboard(): Promise<Winner[]> {
     return getWinnersDashboardAdmin();
 }
+
+export async function getApprovedWins(): Promise<Win[]> {
+    return getApprovedWinsAdmin();
+}
+
+export async function handleWinSubmission(uid: string, formData: FormData): Promise<{success: boolean, error?: string}> {
+    const file = formData.get('screenshot') as File;
+    const tickers = formData.get('tickers') as string;
+    const percentGain = formData.get('percentGain') as string;
+
+    if (!file || !tickers || !percentGain) {
+        return { success: false, error: 'Missing required fields.' };
+    }
+
+    try {
+        const fileBuffer = Buffer.from(await file.arrayBuffer());
+        
+        // 1. Upload image to GCS
+        const imageUrl = await uploadWinImageAdmin(uid, file.name, file.type, fileBuffer);
+
+        // 2. Save submission to Firestore
+        await saveWinSubmissionAdmin({
+            authorId: uid,
+            imageUrl,
+            tickers,
+            percentGain: parseFloat(percentGain),
+        });
+
+        return { success: true };
+    } catch (error: any) {
+        console.error('Error handling win submission:', error);
+        return { success: false, error: error.message || 'Failed to process submission.' };
+    }
+}
+
 
 export async function getStocks(): Promise<Stock[]> {
     return getStocksAdmin();
@@ -277,5 +315,7 @@ export async function createStripePortalLink(uid: string): Promise<{ portalUrl: 
 }
 
 export async function sendPasswordReset(email: string): Promise<void> {
-  await getAuth().generatePasswordResetLink(email);
+  const auth = getAuth(app);
+  const { sendPasswordResetEmail } = await import('firebase/auth');
+  await sendPasswordResetEmail(auth, email);
 }

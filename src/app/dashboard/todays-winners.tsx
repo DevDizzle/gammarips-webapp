@@ -5,15 +5,20 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { getWinnersDashboard } from '../actions';
 import type { Winner } from '@/lib/firebase-admin';
-import { ArrowDown, ArrowUp, ChevronRight } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronRight, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Markdown } from '@/components/markdown';
+import { Button } from '@/components/ui/button';
+import { SubmissionDialog } from '@/components/winners-circle/submission-dialog';
+import { useAuth } from '@/hooks/use-auth';
+import { AuthDialog } from '@/components/auth/auth-dialog';
+
 
 // Helper to convert GCS URI to a public URL
 const convertGcsUriToUrl = (gcsUri: string) => {
@@ -31,6 +36,17 @@ function TodaysWinners() {
   const [winners, setWinners] = useState<Winner[]>([]);
   const { toast } = useToast();
   const router = useRouter();
+  const [isSubmissionOpen, setIsSubmissionOpen] = useState(false);
+  const { user } = useAuth();
+  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+
+  const handleShareWinClick = () => {
+    if (!user) {
+      setIsAuthDialogOpen(true);
+    } else {
+      setIsSubmissionOpen(true);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -222,25 +238,37 @@ function TodaysWinners() {
   );
 
   return (
-    <Card className="lg:col-span-2">
-      <CardHeader>
-        <CardTitle>Today's Top Opportunities</CardTitle>
-        <CardDescription>
-          <Markdown content="The strongest bullish and bearish signals from across the market, updated daily. **Click any stock to see the top options setup and our analysis.**" />
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {isLoading ? renderSkeleton() : (
-          <>
-            {renderDesktopTable()}
-            {renderMobileCards()}
-          </>
-        )}
-      </CardContent>
-    </Card>
+    <>
+      <SubmissionDialog open={isSubmissionOpen} onOpenChange={setIsSubmissionOpen} />
+      <AuthDialog open={isAuthDialogOpen} onOpenChange={setIsAuthDialogOpen} />
+      <Card className="lg:col-span-2">
+        <CardHeader>
+          <CardTitle>Today's Top Opportunities</CardTitle>
+          <CardDescription>
+            <Markdown content="The strongest bullish and bearish signals from across the market, updated daily. **Click any stock to see the top options setup and our analysis.**" />
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? renderSkeleton() : (
+            <>
+              {renderDesktopTable()}
+              {renderMobileCards()}
+            </>
+          )}
+        </CardContent>
+        <CardFooter className="flex-col items-center gap-4 border-t px-6 py-4">
+            <div className="text-center">
+                <h3 className="font-bold flex items-center gap-2 justify-center"><Trophy className="text-yellow-500" /> Had a Big Win?</h3>
+                <p className="text-sm text-muted-foreground">Share your success with the community and get featured in the Winner's Circle!</p>
+            </div>
+            <Button onClick={handleShareWinClick}>
+                Share Your Win
+            </Button>
+        </CardFooter>
+      </Card>
+    </>
   );
 }
 
 export default TodaysWinners;
 
-    

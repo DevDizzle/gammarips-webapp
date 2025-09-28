@@ -258,8 +258,8 @@ function TodaysWinners() {
         </CardContent>
         <CardFooter className="flex-col items-center gap-4 border-t px-6 py-4">
             <div className="text-center">
-                <h3 className="font-bold flex items-center gap-2 justify-center"><Trophy className="text-yellow-500" /> Had a Big Win?</h3>
-                <p className="text-sm text-muted-foreground">Share your success with the community and get featured in the Winner's Circle!</p>
+                <h3 className="font-bold flex items-center gap-2 justify-center"><Trophy className="text-yellow-500" /> Join the Winner's Circle</h3>
+                <p className="text-sm text-muted-foreground">Your success story helps other traders and builds trust in the community. Share your win to be featured!</p>
             </div>
             <Button onClick={handleShareWinClick}>
                 Share Your Win
@@ -271,4 +271,3 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
-

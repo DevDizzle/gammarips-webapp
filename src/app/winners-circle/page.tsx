@@ -58,9 +58,9 @@ const WinCard = ({ win }: { win: Win }) => (
 const NoWinsPlaceholder = () => (
     <div className="text-center col-span-full py-16 px-6 bg-card rounded-lg border-2 border-dashed">
         <Trophy className="mx-auto h-12 w-12 text-muted-foreground" />
-        <h2 className="mt-4 text-xl font-semibold">The Winner's Circle is Fresh</h2>
+        <h2 className="mt-4 text-xl font-semibold">The Winner's Circle is waiting for its first champion.</h2>
         <p className="mt-2 text-muted-foreground">
-            No wins have been featured yet. Be the first to share your success and claim a spot!
+            Be the first to claim the spotlight! Submit your winning trade and kickstart the gallery of success.
         </p>
     </div>
 );

@@ -9,11 +9,16 @@
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
+        },
+        "app/winners-circle/page": {
+          "moduleId": "[project]/.next-internal/server/app/winners-circle/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
         }
       },
       "layer": {
         "app/dashboard/[ticker]/page": "action-browser",
-        "app/page": "action-browser"
+        "app/page": "action-browser",
+        "app/winners-circle/page": "action-browser"
       }
     },
     "004432f536753d7a29d624ff3f499f766c74f5130f": {
@@ -74,6 +79,28 @@
       },
       "layer": {
         "app/dashboard/[ticker]/page": "action-browser"
+      }
+    },
+    "00315b0e354aa5543ddc526fac2086c63d0eba1bad": {
+      "workers": {
+        "app/winners-circle/page": {
+          "moduleId": "[project]/.next-internal/server/app/winners-circle/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/winners-circle/page": "action-browser"
+      }
+    },
+    "60e13c902e0b7748cf3a8fedd041f34cc099901433": {
+      "workers": {
+        "app/winners-circle/page": {
+          "moduleId": "[project]/.next-internal/server/app/winners-circle/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/winners-circle/page": "action-browser"
       }
     }
   },

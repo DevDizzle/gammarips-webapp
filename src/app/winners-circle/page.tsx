@@ -1,7 +1,6 @@
 
 'use client';
 
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getApprovedWins } from '../actions';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,8 +13,6 @@ import { Separator } from '@/components/ui/separator';
 import { SubmissionForm } from './submission-form';
 import React, { useState, useEffect } from 'react';
 import type { Win } from '@/lib/firebase-admin';
-
-export const revalidate = 60; // Revalidate this page every 60 seconds
 
 const getInitials = (name: string | null | undefined) => {
     if (!name) return 'U';

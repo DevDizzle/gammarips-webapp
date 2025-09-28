@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -15,9 +16,6 @@ import { ArrowDown, ArrowUp, ChevronRight, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Markdown } from '@/components/markdown';
 import { Button } from '@/components/ui/button';
-import { SubmissionDialog } from '@/components/winners-circle/submission-dialog';
-import { useAuth } from '@/hooks/use-auth';
-import { AuthDialog } from '@/components/auth/auth-dialog';
 
 
 // Helper to convert GCS URI to a public URL
@@ -36,17 +34,6 @@ function TodaysWinners() {
   const [winners, setWinners] = useState<Winner[]>([]);
   const { toast } = useToast();
   const router = useRouter();
-  const [isSubmissionOpen, setIsSubmissionOpen] = useState(false);
-  const { user } = useAuth();
-  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
-
-  const handleShareWinClick = () => {
-    if (!user) {
-      setIsAuthDialogOpen(true);
-    } else {
-      setIsSubmissionOpen(true);
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -239,8 +226,6 @@ function TodaysWinners() {
 
   return (
     <>
-      <SubmissionDialog open={isSubmissionOpen} onOpenChange={setIsSubmissionOpen} />
-      <AuthDialog open={isAuthDialogOpen} onOpenChange={setIsAuthDialogOpen} />
       <Card className="lg:col-span-2">
         <CardHeader>
           <CardTitle>Today's Top Opportunities</CardTitle>
@@ -261,8 +246,8 @@ function TodaysWinners() {
                 <h3 className="font-bold flex items-center gap-2 justify-center"><Trophy className="text-yellow-500" /> Join the Winner's Circle</h3>
                 <p className="text-sm text-muted-foreground">Your success story helps other traders and builds trust in the community. Share your win to be featured!</p>
             </div>
-            <Button onClick={handleShareWinClick}>
-                Share Your Win
+            <Button asChild>
+                <Link href="/winners-circle#share-win">Share Your Win</Link>
             </Button>
         </CardFooter>
       </Card>
@@ -271,3 +256,4 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
+

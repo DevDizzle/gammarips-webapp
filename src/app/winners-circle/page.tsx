@@ -1,4 +1,6 @@
 
+'use client';
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getApprovedWins } from '../actions';
@@ -9,11 +11,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-
-export const metadata: Metadata = {
-  title: "Winner's Circle | ProfitScout",
-  description: "See the latest wins from the ProfitScout community. Real results from real traders.",
-};
+import { SubmissionForm } from './submission-form';
+import React, { useState, useEffect } from 'react';
+import type { Win } from '@/lib/firebase-admin';
 
 export const revalidate = 60; // Revalidate this page every 60 seconds
 
@@ -23,7 +23,7 @@ const getInitials = (name: string | null | undefined) => {
     return names.length > 1 ? `${names[0][0]}${names[names.length - 1][0]}` : name[0];
 };
 
-const WinCard = ({ win }: { win: Awaited<ReturnType<typeof getApprovedWins>>[0] }) => (
+const WinCard = ({ win }: { win: Win }) => (
     <Card className="flex flex-col">
         <CardHeader className="flex-row items-center gap-3 space-y-0">
              <Avatar>
@@ -66,15 +66,32 @@ const NoWinsPlaceholder = () => (
         <p className="mt-2 text-muted-foreground">
             No wins have been featured yet. Be the first to share your success and claim a spot!
         </p>
-        <Button asChild className="mt-6">
-            <Link href="/">Share Your Win</Link>
-        </Button>
     </div>
 );
 
+export default function WinnersCirclePage() {
+    const [wins, setWins] = useState<Win[]>([]);
+    const [loading, setLoading] = useState(true);
 
-export default async function WinnersCirclePage() {
-    const wins = await getApprovedWins();
+    useEffect(() => {
+        const fetchWins = async () => {
+            setLoading(true);
+            try {
+                const approvedWins = await getApprovedWins();
+                setWins(approvedWins);
+            } catch (error) {
+                console.error("Failed to fetch wins", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchWins();
+    }, []);
+
+    const onSubmissionSuccess = (newWin: Win) => {
+        // For now, we just tell the user their submission is pending review.
+        // A more advanced implementation could refetch or optimistically add.
+    };
 
     const totalGain = wins.reduce((acc, win) => acc + win.percentGain, 0);
     const averageGain = wins.length > 0 ? (totalGain / wins.length) : 0;
@@ -93,10 +110,10 @@ export default async function WinnersCirclePage() {
                 <section className="text-center mb-12">
                     <Trophy className="mx-auto h-12 w-12 text-yellow-500" />
                     <h1 className="mt-4 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-                        Winner's Circle
+                       Real Traders, Real Wins.
                     </h1>
                     <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                        Real results from the ProfitScout community. See the latest wins and get inspired.
+                        Check out the latest winning screenshots. Nailed a great trade? Share your success and inspire the community!
                     </p>
                 </section>
                 
@@ -116,11 +133,18 @@ export default async function WinnersCirclePage() {
                     </Card>
                 )}
 
+                <section id="share-win" className="mb-12 scroll-mt-20">
+                    <SubmissionForm onSubmissionSuccess={onSubmissionSuccess} />
+                </section>
 
                 <Separator className="mb-12" />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                   {wins.length > 0 ? (
+                   {loading ? (
+                       Array.from({ length: 3 }).map((_, i) => (
+                           <Card key={i}><CardContent className="p-4"><div className="animate-pulse bg-muted rounded-md h-96 w-full"></div></CardContent></Card>
+                       ))
+                   ) : wins.length > 0 ? (
                         wins.map(win => <WinCard key={win.id} win={win} />)
                    ) : (
                         <NoWinsPlaceholder />

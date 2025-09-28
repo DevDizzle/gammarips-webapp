@@ -22,7 +22,7 @@ export default function ContactWidget() {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
-  const [email, setEmail] = useState(user?.email ?? '');
+  const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
   const { toast } = useToast();
 
@@ -57,11 +57,12 @@ export default function ContactWidget() {
   };
 
   useEffect(() => {
-    // When user logs in, update the email field if it hasn't been manually edited by the user.
-    if (user?.email && (email === '' || !email.includes('@'))) {
-        setEmail(user.email);
+    // This effect runs only on the client, after hydration.
+    // It safely sets the email from the user object if it exists.
+    if (user?.email) {
+      setEmail(user.email);
     }
-  }, [user, email]);
+  }, [user]);
 
 
   return (

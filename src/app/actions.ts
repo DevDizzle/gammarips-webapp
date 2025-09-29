@@ -41,7 +41,7 @@ import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/st
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
 import { getAuth } from 'firebase-admin/auth';
-import { getAuth as getClientAuth } from 'firebase/auth';
+import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 
 
@@ -315,7 +315,6 @@ export async function createStripePortalLink(uid: string): Promise<{ portalUrl: 
 }
 
 export async function sendPasswordReset(email: string): Promise<void> {
-  const auth = getAuth(app);
-  const { sendPasswordResetEmail } = await import('firebase/auth');
+  const auth = getClientAuth(app);
   await sendPasswordResetEmail(auth, email);
 }

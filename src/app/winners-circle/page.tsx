@@ -48,7 +48,7 @@ const WinCard = ({ win }: { win: Win }) => {
                     alt={altText}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover rounded-md"
+                    className="object-contain rounded-md"
                 />
             </CardContent>
             <CardFooter className="flex justify-between items-center bg-muted/50 p-4">

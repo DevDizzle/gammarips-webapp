@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { createCheckoutSession } from '@/app/actions';
 import { loadStripe } from '@stripe/stripe-js';
+import { event as trackEvent } from '@/lib/gtag';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -45,6 +46,9 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
     setLoading('google');
     try {
       await signInWithGoogle();
+      if (!isSignIn) {
+        trackEvent('sign_up', { event_category: 'engagement', event_label: 'Google Sign Up' });
+      }
       onOpenChange(false);
       toast({ title: isSignIn ? "Successfully signed in." : "Free trial started!" });
     } catch (error: any) {
@@ -68,6 +72,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
         toast({ title: "Successfully signed in." });
       } else {
         await signUpWithEmail(email, password);
+        trackEvent('sign_up', { event_category: 'engagement', event_label: 'Email Sign Up' });
         onOpenChange(false);
         toast({ title: "Account Created!", description: "Please check your inbox to verify your email." });
       }
@@ -98,7 +103,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
             disabled={!!loading}
           >
             {loading === 'google' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon />}
-            Sign up with Google
+            {isSignIn ? 'Sign in with Google' : 'Sign up with Google'}
           </Button>
 
           <div className="relative">

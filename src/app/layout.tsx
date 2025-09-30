@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   keywords: ['options trading', 'stock options', 'AI trading', 'options signals', 'fintech', 'algorithmic trading', 'Russell 1000', 'call options', 'put options'],
 };
 
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-KPGTJDBC6N';
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 export default function RootLayout({
   children,
@@ -31,7 +31,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
         
-        {/* Google Analytics - Updated */}
+      </head>
+      <body>
         <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
@@ -59,8 +60,6 @@ export default function RootLayout({
             `,
           }}
         />
-      </head>
-      <body>
         <AuthProvider>
           <main className='flex-grow'>{children}</main>
           <Footer />

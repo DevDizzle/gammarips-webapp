@@ -388,39 +388,38 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
     try {
         const eventsCollectionRef = adminDb.collection('calendar_events');
         
-        const q = eventsCollectionRef; // Removed date filtering
-        
+        // Query for ticker-specific events or general economic events of type 'Earnings'
+        const q = eventsCollectionRef
+            .where('event_type', '==', 'Earnings')
+            .where('entity', 'in', [ticker.toUpperCase(), null]);
+
         const querySnapshot = await q.get();
         
-        const eventsMap = new Map<string, TickerEvent>();
+        const events: TickerEvent[] = [];
 
         querySnapshot.forEach(doc => {
             const data = doc.data();
-            // Filter in code to avoid composite index requirement
-            if (data.entity === ticker.toUpperCase() || data.entity === null) {
-                const event: TickerEvent = {
-                    id: doc.id,
-                    event_name: data.event_name,
-                    event_date: data.event_date,
-                    event_type: data.event_type,
-                    ticker: data.entity,
-                };
-                const validation = TickerEventSchema.safeParse(event);
-                if(validation.success) {
-                    const compositeKey = `${event.event_name}|${event.event_date}`;
-                    if (!eventsMap.has(compositeKey)) {
-                        eventsMap.set(compositeKey, validation.data);
-                    }
-                } else {
-                    console.warn(`Invalid ticker event data for ${ticker}:`, validation.error.flatten());
-                }
+            const event: TickerEvent = {
+                id: doc.id,
+                event_name: data.event_name,
+                event_date: data.event_date,
+                event_type: data.event_type,
+                ticker: data.entity,
+            };
+            const validation = TickerEventSchema.safeParse(event);
+            if(validation.success) {
+                events.push(validation.data);
+            } else {
+                console.warn(`Invalid ticker event data for ${ticker}:`, validation.error.flatten());
             }
         });
         
-        const combinedEvents = Array.from(eventsMap.values());
-        combinedEvents.sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
+        // Remove duplicates based on name and date
+        const uniqueEvents = Array.from(new Map(events.map(e => [`${e.event_name}|${e.event_date}`, e])).values());
+
+        uniqueEvents.sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
         
-        return combinedEvents;
+        return uniqueEvents;
 
     } catch (error) {
         console.error(`Error fetching events for ticker ${ticker}:`, error);

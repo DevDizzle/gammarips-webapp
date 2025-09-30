@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -11,11 +12,11 @@ import type { TickerEvent } from '@/lib/firebase-admin';
 import { CalendarDays } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-interface UpcomingEventsProps {
+interface UpcomingEarningsProps {
     ticker: string;
 }
 
-function UpcomingEvents({ ticker }: UpcomingEventsProps) {
+function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [events, setEvents] = useState<TickerEvent[]>([]);
   const { toast } = useToast();
@@ -56,7 +57,7 @@ function UpcomingEvents({ ticker }: UpcomingEventsProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><CalendarDays /> Upcoming Catalysts</CardTitle>
+                <CardTitle className="flex items-center gap-2"><CalendarDays /> Upcoming Earnings</CardTitle>
                  <CardDescription>Loading key dates...</CardDescription>
             </CardHeader>
             <CardContent>
@@ -73,9 +74,9 @@ function UpcomingEvents({ ticker }: UpcomingEventsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><CalendarDays /> Upcoming Catalysts</CardTitle>
+        <CardTitle className="flex items-center gap-2"><CalendarDays /> Upcoming Earnings</CardTitle>
         <CardDescription>
-            Key dates that could impact market volatility and stock price.
+            Key earnings dates that could impact market volatility and stock price.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -106,4 +107,4 @@ function UpcomingEvents({ ticker }: UpcomingEventsProps) {
   );
 }
 
-export default UpcomingEvents;
+export default UpcomingEarnings;

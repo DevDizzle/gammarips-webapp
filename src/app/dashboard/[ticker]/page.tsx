@@ -22,7 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 import Image from 'next/image';
-import UpcomingEvents from './upcoming-events';
+import UpcomingEarnings from './upcoming-events';
 
 interface TickerDashboardPageProps {
   params: {
@@ -174,7 +174,7 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
         {kpis?.thirtyDayChange && <KpiCard title="30-Day Return" value={`${kpis.thirtyDayChange.value?.toFixed(1)}%`} subValue={`Industry Avg: ${kpis.thirtyDayChange.industryAverage?.toFixed(1)}%`} signal={kpis.thirtyDayChange.comparisonSignal} tooltip={"The stock's 30-day price change vs. its industry."} icon={getIndicator(kpis.thirtyDayChange.signal, ArrowUp, ArrowDown, Minus)} />}
       </div>
       
-      <UpcomingEvents ticker={ticker} />
+      <UpcomingEarnings ticker={ticker} />
 
       <section>
         <Card>

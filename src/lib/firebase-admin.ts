@@ -386,17 +386,9 @@ export async function getStocksAdmin(): Promise<Stock[]> {
 
 export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[]> {
     try {
-        const now = new Date();
-        const nowStr = now.toISOString().split('T')[0];
-        const thirtyDaysFromNow = new Date();
-        thirtyDaysFromNow.setDate(now.getDate() + 30);
-        const thirtyDaysFromNowStr = thirtyDaysFromNow.toISOString().split('T')[0];
-
         const eventsCollectionRef = adminDb.collection('calendar_events');
         
-        const q = eventsCollectionRef
-            .where('event_date', '>=', nowStr)
-            .where('event_date', '<=', thirtyDaysFromNowStr);
+        const q = eventsCollectionRef; // Removed date filtering
         
         const querySnapshot = await q.get();
         

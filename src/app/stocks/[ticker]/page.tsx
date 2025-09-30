@@ -310,11 +310,15 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardContent>
         </Card>
 
-        <Card className="mb-8 text-center bg-secondary/80">
-            <CardContent className="p-6">
-                <Button asChild size="lg" variant="secondary">
-                    <Link href="/">
-                        View today's top options setups <ArrowRight className="ml-2 h-5 w-5"/>
+        <Card className="mb-8 text-center bg-primary/10 border-primary/20">
+            <CardHeader>
+                <CardTitle className="font-headline text-2xl">Ready to See More?</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p className="text-muted-foreground mb-4 max-w-xl mx-auto">This page is just the beginning. The interactive dashboard has real-time data, price charts, and our top-rated option setups.</p>
+                <Button asChild size="lg">
+                    <Link href={`/dashboard/${ticker}`}>
+                        View Interactive Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
                     </Link>
                 </Button>
             </CardContent>

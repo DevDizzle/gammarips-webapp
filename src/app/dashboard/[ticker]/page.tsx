@@ -3,7 +3,7 @@
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
-import { getDashboardData } from '@/app/actions';
+import { getDashboardData, incrementDashboardViewCount } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight, Loader2, MailCheck } from 'lucide-react';
@@ -322,6 +322,11 @@ export default function TickerDashboardPage() {
       return;
     }
 
+    // Increment usage count for free trial users
+    if (user && dbUser && !dbUser.isSubscribed) {
+        incrementDashboardViewCount(user.uid).catch(console.error);
+    }
+
     const fetchData = async () => {
       if (!ticker) return;
       setLoading(true);
@@ -341,7 +346,7 @@ export default function TickerDashboardPage() {
 
     fetchData();
 
-  }, [ticker, authLoading, user, hasAccess]);
+  }, [ticker, authLoading, user, hasAccess, dbUser]);
 
 
   const handleSubscribe = async () => {

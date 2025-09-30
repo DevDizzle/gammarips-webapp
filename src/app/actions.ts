@@ -57,6 +57,21 @@ export async function getApprovedWins(): Promise<Win[]> {
     return getApprovedWinsAdmin();
 }
 
+export async function incrementDashboardViewCount(uid: string): Promise<{success: boolean}> {
+  try {
+    const user = await getOrCreateUserAdmin(uid);
+    // Only increment for non-subscribed users
+    if (!user.isSubscribed) {
+        await incrementUserUsageAdmin(uid);
+    }
+    return { success: true };
+  } catch (error) {
+    console.error(`Failed to increment dashboard view for user ${uid}`, error);
+    // Don't throw, as this is a non-critical background task
+    return { success: false };
+  }
+}
+
 export async function handleWinSubmission(uid: string, formData: FormData): Promise<{success: boolean, error?: string}> {
     const file = formData.get('screenshot') as File;
     const tickers = formData.get('tickers') as string;

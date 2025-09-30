@@ -28,13 +28,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
-      </head>
-      <body>
-        <Script
-            src="https://www.googletagmanager.com/gtag/js?id=G-KPGTJDBC6N"
-            strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-KPGTJDBC6N"></Script>
+        <Script id="google-analytics">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -42,6 +37,8 @@ export default function RootLayout({
             gtag('config', 'G-KPGTJDBC6N');
           `}
         </Script>
+      </head>
+      <body>
         <AuthProvider>
           <main className='flex-grow'>{children}</main>
           <Footer />

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   keywords: ['options trading', 'stock options', 'AI trading', 'options signals', 'fintech', 'algorithmic trading', 'Russell 1000', 'call options', 'put options'],
 };
 
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+const GA_MEASUREMENT_ID = 'G-KPGTJDBC6N';
 const AW_MEASUREMENT_ID = 'AW-17603675875';
 
 export default function RootLayout({

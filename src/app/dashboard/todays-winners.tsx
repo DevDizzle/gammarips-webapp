@@ -56,7 +56,7 @@ function TodaysWinners() {
     fetchData();
   }, [toast]);
   
-  const { bullishWinners, bearishWinners } = useMemo(() => {
+  const { bullishWinners, bearishWinners, lastUpdated } = useMemo(() => {
     const bullish = allWinners
       .filter(w => w.outlook_signal.toLowerCase().includes('bullish'))
       .sort((a, b) => (b.weighted_score ?? -Infinity) - (a.weighted_score ?? -Infinity));
@@ -64,8 +64,22 @@ function TodaysWinners() {
     const bearish = allWinners
       .filter(w => w.outlook_signal.toLowerCase().includes('bearish'))
       .sort((a, b) => (a.weighted_score ?? Infinity) - (b.weighted_score ?? Infinity));
+    
+    let updatedDate: string | null = null;
+    if (allWinners.length > 0) {
+      try {
+        updatedDate = new Date(allWinners[0].run_date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'UTC' // Important for consistency
+        });
+      } catch (e) {
+          console.error("Failed to parse run_date:", allWinners[0].run_date);
+      }
+    }
       
-    return { bullishWinners: bullish, bearishWinners: bearish };
+    return { bullishWinners: bullish, bearishWinners: bearish, lastUpdated: updatedDate };
   }, [allWinners]);
 
   const handleRowClick = (ticker: string) => {
@@ -251,7 +265,10 @@ function TodaysWinners() {
         <CardHeader>
           <CardTitle>Today's Top Opportunities</CardTitle>
           <CardDescription>
-            <Markdown content="The strongest bullish and bearish signals from across the market, updated daily. **Click any stock to see the top options setup and our analysis.**" />
+            <Markdown content="The strongest bullish and bearish signals from across the market. **Click any stock to see the top options setup and our analysis.**" />
+            {lastUpdated && !isLoading && (
+              <p className="text-xs text-muted-foreground mt-2">Last Updated: {lastUpdated}</p>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>

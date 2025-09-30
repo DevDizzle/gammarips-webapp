@@ -1,11 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+
+import { NextRequest, NextResponse } from 'next/headers';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { setUserSubscriptionStatusAdmin, getUserByStripeCustomerIdAdmin } from '@/lib/firebase-admin';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-KPGTJDBC6N';
+const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const gaApiSecret = process.env.GA_API_SECRET!;
 
 
@@ -52,6 +53,8 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
                 },
             }],
         };
+        
+        console.log('Webhook: Sending purchase event to Google Analytics:', JSON.stringify(purchaseEvent, null, 2));
 
         const response = await fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${gaMeasurementId}&api_secret=${gaApiSecret}`, {
             method: 'POST',
@@ -104,7 +107,7 @@ export async function POST(req: NextRequest) {
         }
         break;
     default:
-      console.log(`Unhandled event type ${event.type}`);
+      // console.log(`Unhandled event type ${event.type}`);
   }
 
   return NextResponse.json({ received: true });

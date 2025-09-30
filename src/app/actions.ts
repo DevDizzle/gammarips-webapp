@@ -1,5 +1,6 @@
 
 
+
 'use server';
 
 import {
@@ -293,7 +294,7 @@ export async function handleFeedback(uid: string | null, message: string, replyT
   return { success: true };
 }
 
-export async function createCheckoutSession(uid: string): Promise<{ sessionId: string }> {
+export async function createCheckoutSession(uid: string, gaClientId: string | null): Promise<{ sessionId: string }> {
   const user = await getOrCreateUserAdmin(uid);
   const origin = headers().get('origin')!;
   
@@ -302,12 +303,18 @@ export async function createCheckoutSession(uid: string): Promise<{ sessionId: s
       throw new Error('Stripe Price ID is not configured.');
   }
 
+  const sessionMetadata: { ga_client_id?: string } = {};
+  if (gaClientId) {
+      sessionMetadata.ga_client_id = gaClientId;
+  }
+
   const sessionId = await createStripeCheckoutSession(
     uid,
     user.email,
     priceId,
     `${origin}/dashboard`,
-    `${origin}/dashboard`
+    `${origin}/dashboard`,
+    sessionMetadata
   );
 
   return { sessionId };

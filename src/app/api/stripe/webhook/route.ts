@@ -5,6 +5,9 @@ import { stripe } from '@/lib/stripe';
 import { setUserSubscriptionStatusAdmin, getUserByStripeCustomerIdAdmin } from '@/lib/firebase-admin';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-KPGTJDBC6N';
+const gaApiSecret = process.env.GA_API_SECRET!;
+
 
 async function handleSubscriptionChange(subscription: Stripe.Subscription, isSubscribed: boolean) {
     const customerId = subscription.customer as string;
@@ -14,6 +17,56 @@ async function handleSubscriptionChange(subscription: Stripe.Subscription, isSub
         await setUserSubscriptionStatusAdmin(user.uid, isSubscribed);
     } else {
         console.warn(`Webhook Error: No user found with Stripe Customer ID: ${customerId}`);
+    }
+}
+
+async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
+    const gaClientId = session.metadata?.ga_client_id;
+    if (!gaClientId) {
+        console.warn('Webhook: Missing ga_client_id in checkout session metadata. Cannot send purchase event to GA.');
+        return;
+    }
+    if (!gaApiSecret) {
+        console.error('Webhook: GA_API_SECRET is not set. Cannot send purchase event to GA.');
+        return;
+    }
+
+    try {
+        const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+        const item = lineItems.data[0];
+
+        const purchaseEvent = {
+            client_id: gaClientId,
+            events: [{
+                name: 'purchase',
+                params: {
+                    transaction_id: session.payment_intent as string,
+                    value: (session.amount_total || 0) / 100,
+                    currency: session.currency?.toUpperCase() || 'USD',
+                    items: [{
+                        item_id: item.price?.product as string,
+                        item_name: 'ProfitScout Pro Subscription',
+                        price: (item.price?.unit_amount || 0) / 100,
+                        quantity: 1,
+                    }]
+                },
+            }],
+        };
+
+        const response = await fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${gaMeasurementId}&api_secret=${gaApiSecret}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(purchaseEvent),
+        });
+
+        if (response.ok) {
+            console.log('Successfully sent purchase event to Google Analytics for transaction:', session.payment_intent);
+        } else {
+            const errorBody = await response.text();
+            console.error('Failed to send purchase event to Google Analytics. Status:', response.status, 'Body:', errorBody);
+        }
+    } catch (error) {
+        console.error('Error constructing or sending GA purchase event:', error);
     }
 }
 
@@ -47,6 +100,7 @@ export async function POST(req: NextRequest) {
         if (session.mode === 'subscription' && session.subscription) {
             const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
             await handleSubscriptionChange(subscription, true);
+            await sendPurchaseEventToGA(session); // Send GA event
         }
         break;
     default:

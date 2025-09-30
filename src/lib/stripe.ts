@@ -11,7 +11,8 @@ export async function createStripeCheckoutSession(
     email: string | null | undefined,
     priceId: string,
     successUrl: string,
-    cancelUrl: string
+    cancelUrl: string,
+    metadata?: { [key: string]: string }
   ) {
     let user = await getOrCreateUserAdmin(uid);
     let customerId = user.stripeCustomerId;
@@ -39,6 +40,7 @@ export async function createStripeCheckoutSession(
           quantity: 1,
         },
       ],
+      metadata,
       success_url: successUrl,
       cancel_url: cancelUrl,
     });

@@ -356,7 +356,8 @@ export default function TickerDashboardPage() {
     if (!user) return;
     setIsSubscribing(true);
     try {
-      const { sessionId } = await createCheckoutSession(user.uid);
+      const gaClientId = localStorage.getItem('ga_client_id');
+      const { sessionId } = await createCheckoutSession(user.uid, gaClientId);
       const stripe = await stripePromise;
       if (stripe) {
         const { error } = await stripe.redirectToCheckout({ sessionId });

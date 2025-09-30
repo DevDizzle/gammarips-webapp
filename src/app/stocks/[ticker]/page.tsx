@@ -3,14 +3,15 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getGcsFileContentAdmin, getSeoPageGcsPathAdmin, getStocksAdmin } from '@/lib/firebase-admin';
+import { getGcsFileContentAdmin, getSeoPageGcsPathAdmin, getStocksAdmin, getTickerEventsAdmin, type TickerEvent } from '@/lib/firebase-admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, TrendingUp, TrendingDown, Minus, AlertTriangle } from 'lucide-react';
+import { ArrowRight, TrendingUp, TrendingDown, Minus, AlertTriangle, CalendarDays } from 'lucide-react';
 import { UserNav } from '@/components/auth/user-nav';
 import { ShareButtons } from '@/components/share-buttons';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface StockSeoPageProps {
   params: {
@@ -165,9 +166,53 @@ const SignalIndicator = ({ signal }: { signal: string }) => {
     return <span className={`${baseClasses} text-gray-500`}><Minus size={20} /> {signal}</span>;
 };
 
+const EventsTable = ({ events, ticker }: { events: TickerEvent[], ticker: string }) => {
+    if (!events || events.length === 0) {
+        return null; // Don't render anything if there are no events
+    }
+
+    return (
+        <Card className="mb-8">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <CalendarDays size={24} />
+                    Upcoming Catalysts for {ticker}
+                </CardTitle>
+                <CardDescription>Key dates that could impact market volatility and stock price.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Date</TableHead>
+                            <TableHead>Event</TableHead>
+                            <TableHead>Type</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {events.map(event => (
+                            <TableRow key={event.id}>
+                                <TableCell className="font-medium">{new Date(event.event_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</TableCell>
+                                <TableCell>{event.event_name}</TableCell>
+                                <TableCell>
+                                    <Badge variant={event.ticker ? 'default' : 'secondary'}>
+                                        {event.ticker ? `${event.ticker}-Specific` : 'Economic'}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+};
+
+
 export default async function StockSeoPage({ params }: StockSeoPageProps) {
   const ticker = params.ticker.toUpperCase();
   const data = await getStockData(ticker);
+  const events = await getTickerEventsAdmin(ticker);
 
   if (!data) {
     notFound();
@@ -217,6 +262,8 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
                 </div>
             </CardContent>
         </Card>
+        
+        <EventsTable events={events} ticker={ticker} />
 
         <Card className="mb-8 text-center bg-primary/10 border-primary/20">
             <CardHeader>

@@ -156,12 +156,12 @@ export async function saveFeedbackAdmin(
 }
 
 export async function uploadWinImageAdmin(uid: string, fileName: string, fileType: string, fileBuffer: Buffer): Promise<string> {
-  const bucketName = 'profit-scout'; // Using the correct bucket name directly
+  const bucketName = 'profit-scout';
   
   const bucket = adminStorage.bucket(bucketName);
   const fileExtension = fileName.split('.').pop();
   const uniqueFileName = `${uid}-${randomUUID()}.${fileExtension}`;
-  const filePath = `screenshots/${uniqueFileName}`; // Storing in the 'screenshots' folder
+  const filePath = `screenshots/${uniqueFileName}`;
   const file = bucket.file(filePath);
 
   await file.save(fileBuffer, {
@@ -170,8 +170,6 @@ export async function uploadWinImageAdmin(uid: string, fileName: string, fileTyp
     },
   });
   
-  // Return the public URL. This does not set permissions, but generates the correct link.
-  // Public access must be granted on the bucket itself (e.g., make all objects public).
   return file.publicUrl();
 }
 
@@ -232,8 +230,8 @@ export async function getApprovedWinsAdmin(): Promise<Win[]> {
     const results = await Promise.all(winPromises);
     const validWins = results.filter((win): win is Win => win !== null);
 
-    // Sort in memory and take the top 6
     validWins.sort((a, b) => b.percentGain - a.percentGain);
+    
     return validWins.slice(0, 6);
 
   } catch (error) {

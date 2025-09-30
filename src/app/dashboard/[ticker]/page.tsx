@@ -3,7 +3,7 @@
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
-import { getDashboardData, incrementDashboardViewCount } from '@/app/actions';
+import { getDashboardData, incrementDashboardViewCount, getTickerEvents } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight, Loader2, MailCheck } from 'lucide-react';
@@ -22,6 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 import Image from 'next/image';
+import UpcomingEvents from './upcoming-events';
 
 interface TickerDashboardPageProps {
   params: {
@@ -173,6 +174,8 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
         {kpis?.thirtyDayChange && <KpiCard title="30-Day Return" value={`${kpis.thirtyDayChange.value?.toFixed(1)}%`} subValue={`Industry Avg: ${kpis.thirtyDayChange.industryAverage?.toFixed(1)}%`} signal={kpis.thirtyDayChange.comparisonSignal} tooltip={"The stock's 30-day price change vs. its industry."} icon={getIndicator(kpis.thirtyDayChange.signal, ArrowUp, ArrowDown, Minus)} />}
       </div>
       
+      <UpcomingEvents ticker={ticker} />
+
       <section>
         <Card>
             <CardHeader>

@@ -1,3 +1,4 @@
+
 {
   "name": "nextn",
   "version": "0.1.0",
@@ -68,6 +69,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.14",
+    "@types/gtag.js": "^0.0.20",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

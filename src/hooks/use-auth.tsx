@@ -12,11 +12,13 @@ import {
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
   sendEmailVerification,
+  getAdditionalUserInfo,
 } from 'firebase/auth';
 import { app, getOrCreateUser, type DbUser } from '@/lib/firebase';
 import { useToast } from './use-toast';
 import { getDoc, doc } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
+import { event as trackEvent } from '@/lib/gtag';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -66,7 +68,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const additionalInfo = getAdditionalUserInfo(result);
+      if (additionalInfo?.isNewUser) {
+        trackEvent('sign_up', { event_category: 'engagement', event_label: 'Google Sign Up' });
+      }
       // onAuthStateChanged will handle setting the user states
     } catch (error) {
       console.error("Google sign-in error", error);
@@ -79,6 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       // Send verification email
       await sendEmailVerification(userCredential.user);
+      trackEvent('sign_up', { event_category: 'engagement', event_label: 'Email Sign Up' });
       // onAuthStateChanged will handle setting the user states
     } catch (error) {
         console.error("Email sign-up error", error);

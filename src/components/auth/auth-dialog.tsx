@@ -46,9 +46,6 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
     setLoading('google');
     try {
       await signInWithGoogle();
-      if (!isSignIn) {
-        trackEvent('sign_up', { event_category: 'engagement', event_label: 'Google Sign Up' });
-      }
       onOpenChange(false);
       toast({ title: isSignIn ? "Successfully signed in." : "Free trial started!" });
     } catch (error: any) {
@@ -72,7 +69,6 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
         toast({ title: "Successfully signed in." });
       } else {
         await signUpWithEmail(email, password);
-        trackEvent('sign_up', { event_category: 'engagement', event_label: 'Email Sign Up' });
         onOpenChange(false);
         toast({ title: "Account Created!", description: "Please check your inbox to verify your email." });
       }

@@ -20,10 +20,10 @@ type SubscriptionDialogProps = {
 };
 
 const features = [
-    "Unlimited AI-Powered Market Outlooks",
-    "Daily Top-Rated Options Setups",
-    "The \"Winners Dashboard\"",
-    "Full Interactive Dashboards"
+    "Unlimited AI-Powered Stock Analysis",
+    "Daily Top-Rated Call & Put Setups",
+    "Access to the Winners Dashboard",
+    "Full Interactive Dashboards on Any Stock"
 ];
 
 export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }: SubscriptionDialogProps) {
@@ -33,10 +33,10 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-headline text-2xl">
             <Star className="text-primary" />
-            Your Free Trial Has Ended
+            Keep Your Winning Edge
           </DialogTitle>
           <DialogDescription>
-            Upgrade to keep your AI edge and continue using all ProfitScout Pro features.
+            Don't lose your momentum. Upgrade to Pro and continue getting unlimited access to the AI tools that help you find your next winning trade.
           </DialogDescription>
         </DialogHeader>
         
@@ -55,7 +55,7 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
         <DialogFooter className="flex-col items-center gap-2">
             <Button onClick={onSubscribe} className="w-full" disabled={loading} size="lg">
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Upgrade to Pro - $19/month
+                Yes, Keep My AI Edge - $19/month
             </Button>
             <p className="text-xs text-muted-foreground">Cancel anytime.</p>
         </DialogFooter>

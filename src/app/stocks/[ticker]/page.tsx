@@ -166,7 +166,7 @@ const SignalIndicator = ({ signal }: { signal: string }) => {
     return <span className={`${baseClasses} text-gray-500`}><Minus size={20} /> {signal}</span>;
 };
 
-const EventsTable = ({ events, ticker }: { events: TickerEvent[], ticker: string }) => {
+const UpcomingCatalystsTable = ({ events, ticker }: { events: TickerEvent[], ticker: string }) => {
     if (!events || events.length === 0) {
         return null; // Don't render anything if there are no events
     }
@@ -192,7 +192,7 @@ const EventsTable = ({ events, ticker }: { events: TickerEvent[], ticker: string
                     <TableBody>
                         {events.map(event => (
                             <TableRow key={event.id}>
-                                <TableCell className="font-medium">{new Date(event.event_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</TableCell>
+                                <TableCell className="font-medium">{new Date(event.event_date).toLocaleDateString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'UTC' })}</TableCell>
                                 <TableCell>{event.event_name}</TableCell>
                                 <TableCell>
                                     <Badge variant={event.ticker ? 'default' : 'secondary'}>
@@ -263,7 +263,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardContent>
         </Card>
         
-        <EventsTable events={events} ticker={ticker} />
+        <UpcomingCatalystsTable events={events} ticker={ticker} />
 
         <Card className="mb-8 text-center bg-primary/10 border-primary/20">
             <CardHeader>

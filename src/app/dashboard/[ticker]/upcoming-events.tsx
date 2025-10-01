@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, 'useState', 'useEffect' from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -57,7 +57,7 @@ function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><CalendarDays /> Upcoming Earnings</CardTitle>
+                <CardTitle className="flex items-center gap-2"><CalendarDays /> Upcoming Catalysts</CardTitle>
                  <CardDescription>Loading key dates...</CardDescription>
             </CardHeader>
             <CardContent>
@@ -74,9 +74,9 @@ function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><CalendarDays /> Upcoming Earnings</CardTitle>
+        <CardTitle className="flex items-center gap-2"><CalendarDays /> Upcoming Catalysts</CardTitle>
         <CardDescription>
-            Key earnings dates that could impact market volatility and stock price.
+            Key dates that could impact market volatility and stock price.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -91,7 +91,7 @@ function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
             <TableBody>
                 {events.map(event => (
                     <TableRow key={event.id}>
-                        <TableCell className="font-medium">{new Date(event.event_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' })}</TableCell>
+                        <TableCell className="font-medium">{new Date(event.event_date).toLocaleDateString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'UTC' })}</TableCell>
                         <TableCell>{event.event_name}</TableCell>
                         <TableCell>
                              <Badge variant={event.ticker ? 'default' : 'secondary'}>

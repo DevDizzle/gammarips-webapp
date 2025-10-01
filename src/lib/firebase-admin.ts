@@ -387,19 +387,14 @@ export async function getStocksAdmin(): Promise<Stock[]> {
 export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[]> {
     try {
         const eventsCollectionRef = adminDb.collection('calendar_events');
-        
-        // Query for ticker-specific events or general economic events of type 'Earnings'
-        const q = eventsCollectionRef
-            .where('event_type', '==', 'Earnings')
-            .where('entity', 'in', [ticker.toUpperCase(), null]);
+        const allEvents: TickerEvent[] = [];
 
-        const querySnapshot = await q.get();
-        
-        const events: TickerEvent[] = [];
-
-        querySnapshot.forEach(doc => {
+        // 1. Get all ticker-specific events
+        const tickerQuery = eventsCollectionRef.where('entity', '==', ticker.toUpperCase());
+        const tickerSnapshot = await tickerQuery.get();
+        tickerSnapshot.forEach(doc => {
             const data = doc.data();
-            const event: TickerEvent = {
+            const event = {
                 id: doc.id,
                 event_name: data.event_name,
                 event_date: data.event_date,
@@ -407,16 +402,37 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
                 ticker: data.entity,
             };
             const validation = TickerEventSchema.safeParse(event);
-            if(validation.success) {
-                events.push(validation.data);
+            if (validation.success) {
+                allEvents.push(validation.data);
             } else {
-                console.warn(`Invalid ticker event data for ${ticker}:`, validation.error.flatten());
+                console.warn(`Invalid ticker-specific event data for ${ticker}:`, validation.error.flatten());
             }
         });
-        
-        // Remove duplicates based on name and date
-        const uniqueEvents = Array.from(new Map(events.map(e => [`${e.event_name}|${e.event_date}`, e])).values());
 
+        // 2. Get all general economic events (entity is null)
+        const economicQuery = eventsCollectionRef.where('entity', '==', null);
+        const economicSnapshot = await economicQuery.get();
+        economicSnapshot.forEach(doc => {
+            const data = doc.data();
+            const event = {
+                id: doc.id,
+                event_name: data.event_name,
+                event_date: data.event_date,
+                event_type: data.event_type,
+                ticker: data.entity,
+            };
+             const validation = TickerEventSchema.safeParse(event);
+            if (validation.success) {
+                allEvents.push(validation.data);
+            } else {
+                console.warn(`Invalid economic event data:`, validation.error.flatten());
+            }
+        });
+
+        // Remove duplicates based on a composite key of name and date
+        const uniqueEvents = Array.from(new Map(allEvents.map(e => [`${e.event_name}|${e.event_date}`, e])).values());
+
+        // Sort all merged events by date
         uniqueEvents.sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
         
         return uniqueEvents;

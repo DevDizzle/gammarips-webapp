@@ -52,9 +52,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (userDocSnap.exists()) {
           setDbUser(userDocSnap.data() as DbUser);
         } else {
-          // If doc doesn't exist, create it. This can happen on first sign-in.
+          // If doc doesn't exist, create it. This is the definitive "sign up" moment.
           const newDbUser = await getOrCreateUser(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
           setDbUser(newDbUser);
+          // Fire the sign_up event now that we know for sure it's a new user in our DB
+          trackEvent('sign_up', { event_category: 'engagement', event_label: user.providerData[0]?.providerId || 'email' });
         }
       } else {
         setDbUser(null);
@@ -68,12 +70,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      const additionalInfo = getAdditionalUserInfo(result);
-      if (additionalInfo?.isNewUser) {
-        trackEvent('sign_up', { event_category: 'engagement', event_label: 'Google Sign Up' });
-      }
-      // onAuthStateChanged will handle setting the user states
+      await signInWithPopup(auth, provider);
+      // onAuthStateChanged will handle setting the user states and tracking the event
     } catch (error) {
       console.error("Google sign-in error", error);
       throw error;
@@ -85,8 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       // Send verification email
       await sendEmailVerification(userCredential.user);
-      trackEvent('sign_up', { event_category: 'engagement', event_label: 'Email Sign Up' });
-      // onAuthStateChanged will handle setting the user states
+      // onAuthStateChanged will handle setting the user states and tracking the event
     } catch (error) {
         console.error("Email sign-up error", error);
         throw error;

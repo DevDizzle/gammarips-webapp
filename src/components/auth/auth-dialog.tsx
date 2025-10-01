@@ -87,9 +87,9 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{isSignIn ? 'Sign In' : 'Start Your 30-Day Free Trial'}</DialogTitle>
+          <DialogTitle>{isSignIn ? 'Sign In' : 'Welcome to a Clearer View of the Market'}</DialogTitle>
           <DialogDescription>
-             {isSignIn ? 'Sign in to your ProfitScout account.' : 'Get unlimited, full access to all ProfitScout Pro features for 30 days.'}
+             {isSignIn ? 'Sign in to your ProfitScout account.' : 'For the next 30 days, explore the interactive dashboard that turns complex data into clear, actionable insights for any stock you follow.'}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col space-y-4">
@@ -140,11 +140,21 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
             </div>
             <Button type="submit" className="w-full" disabled={!!loading}>
                {loading === 'email' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSignIn ? 'Sign In' : 'Start My Free Trial'}
+              {isSignIn ? 'Sign In' : 'Start Exploring for Free'}
             </Button>
           </form>
 
-            {!isSignIn && <p className="text-center text-xs text-muted-foreground">No credit card required.</p>}
+          {!isSignIn && (
+            <div className="space-y-4 pt-2">
+                <p className="text-center text-xs text-muted-foreground">
+                    No credit card required. Just pure, data-driven insights.
+                </p>
+                <blockquote className="border-l-2 pl-4 text-sm italic text-muted-foreground">
+                    "ProfitScout is my new secret weapon. The AI outlooks are scarily accurate."
+                    <footer className="mt-1 block text-xs not-italic">— E. Parra, Founder & Active Trader</footer>
+                </blockquote>
+            </div>
+            )}
 
           <p className="text-center text-sm text-muted-foreground">
             {isSignIn ? "Don't have an account?" : 'Already have an account?'}{' '}

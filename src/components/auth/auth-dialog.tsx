@@ -15,11 +15,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { createCheckoutSession } from '@/app/actions';
-import { loadStripe } from '@stripe/stripe-js';
-import { event as trackEvent } from '@/lib/gtag';
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const GoogleIcon = () => (
     <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
@@ -30,8 +25,6 @@ const GoogleIcon = () => (
 type AuthDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubscribe?: () => void;
-  showSubscribeButton?: boolean;
   defaultView?: 'signIn' | 'signUp';
 };
 
@@ -52,7 +45,6 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
     try {
       await signInWithGoogle();
       onOpenChange(false);
-      toast({ title: isSignIn ? "Successfully signed in." : "Free trial started!" });
     } catch (error: any) {
       toast({
         title: "Google Sign-In Failed",
@@ -70,13 +62,10 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
     try {
       if (isSignIn) {
         await signInWithEmail(email, password);
-        onOpenChange(false);
-        toast({ title: "Successfully signed in." });
       } else {
         await signUpWithEmail(email, password);
-        onOpenChange(false);
-        toast({ title: "Account Created!", description: "Please check your inbox to verify your email." });
       }
+      onOpenChange(false);
     } catch (error: any) {
        toast({
         title: isSignIn ? "Sign-In Failed" : "Sign-Up Failed",

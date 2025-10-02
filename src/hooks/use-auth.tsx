@@ -13,6 +13,7 @@ import {
   signOut as firebaseSignOut,
   sendEmailVerification,
   getAdditionalUserInfo,
+  UserCredential,
 } from 'firebase/auth';
 import { app, getOrCreateUser, type DbUser } from '@/lib/firebase';
 import { useToast } from './use-toast';
@@ -46,17 +47,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       if (user) {
-        // Fetch user document from Firestore to get subscription status and other details
         const userDocRef = doc(db, 'users', user.uid);
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
           setDbUser(userDocSnap.data() as DbUser);
         } else {
-          // If doc doesn't exist, create it. This is the definitive "sign up" moment.
-          const newDbUser = await getOrCreateUser(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
-          setDbUser(newDbUser);
-          // Fire the sign_up event now that we know for sure it's a new user in our DB
-          trackEvent('sign_up', { event_category: 'engagement', event_label: user.providerData[0]?.providerId || 'email' });
+          // This case might happen if a user is authenticated but their DB record was deleted.
+          // The getOrCreateUser call is better placed after the auth action itself.
+          console.warn(`Authenticated user ${user.uid} not found in Firestore. A new record will be created if they sign in again.`);
         }
       } else {
         setDbUser(null);
@@ -67,11 +65,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
+  const handleSuccessfulAuth = async (userCredential: UserCredential, method: 'google' | 'email') => {
+    const { user } = userCredential;
+    const additionalInfo = getAdditionalUserInfo(userCredential);
+
+    const newDbUser = await getOrCreateUser(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
+    setDbUser(newDbUser);
+
+    if (additionalInfo?.isNewUser) {
+      trackEvent('sign_up', { event_category: 'engagement', event_label: method });
+      if (method === 'email') {
+        await sendEmailVerification(user);
+        toast({ title: "Account Created!", description: "Please check your inbox to verify your email." });
+      } else {
+        toast({ title: "Free trial started!" });
+      }
+    } else {
+       toast({ title: "Successfully signed in." });
+    }
+  };
+
+
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
-      // onAuthStateChanged will handle setting the user states and tracking the event
+      const userCredential = await signInWithPopup(auth, provider);
+      await handleSuccessfulAuth(userCredential, 'google');
     } catch (error) {
       console.error("Google sign-in error", error);
       throw error;
@@ -81,9 +100,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signUpWithEmail = async (email: string, password: string) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      // Send verification email
-      await sendEmailVerification(userCredential.user);
-      // onAuthStateChanged will handle setting the user states and tracking the event
+      await handleSuccessfulAuth(userCredential, 'email');
     } catch (error) {
         console.error("Email sign-up error", error);
         throw error;
@@ -92,8 +109,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signInWithEmail = async (email: string, password: string) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-       // onAuthStateChanged will handle setting the user states
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      await handleSuccessfulAuth(userCredential, 'email');
     } catch (error) {
         console.error("Email sign-in error", error);
         throw error;
@@ -103,7 +120,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signOut = async () => {
     try {
       await firebaseSignOut(auth);
-      // onAuthStateChanged will set user and dbUser to null
     } catch (error) {
       console.error("Sign out error", error);
       toast({

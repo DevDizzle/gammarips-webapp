@@ -146,7 +146,15 @@ const WinSchema = z.object({
 });
 export type Win = z.infer<typeof WinSchema>;
 
-export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: number; signalCount: number; winRate: number; averageWinnerGain: number; averageLoserGain: number; }> {
+export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyGain: number; signalCount: number; winRate: number; averageWinnerGain: number; averageLoserGain: number; }> {
+    const defaultStats = {
+        averageDailyGain: 0,
+        signalCount: 0,
+        winRate: 0,
+        averageWinnerGain: 0,
+        averageLoserGain: 0,
+    };
+
     try {
         const today = new Date();
         today.setUTCHours(0, 0, 0, 0);
@@ -156,19 +164,11 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
             .where('run_date', '!=', todayStr)
             .get();
 
-        const defaultStats = {
-            averageGain: 0,
-            signalCount: 0,
-            winRate: 0,
-            averageWinnerGain: 0,
-            averageLoserGain: 0,
-        };
-
         if (snapshot.empty) {
             return defaultStats;
         }
 
-        let totalGain = 0;
+        let totalDailyGain = 0;
         let winnersSum = 0;
         let losersSum = 0;
         let winnerCount = 0;
@@ -178,9 +178,15 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
 
         snapshot.forEach(doc => {
             const data = doc.data();
-            if (typeof data.percent_gain === 'number') {
-                const gain = data.percent_gain;
-                totalGain += gain;
+            const gain = data.percent_gain;
+            if (typeof gain === 'number') {
+                const startDate = new Date(data.run_date);
+                const endDate = new Date(data.last_updated);
+                // Calculate duration in days. Use Math.max with 1 to avoid division by zero.
+                const durationDays = Math.max(1, (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+                
+                totalDailyGain += gain / durationDays;
+
                 if (gain > 0) {
                     winnersSum += gain;
                     winnerCount++;
@@ -196,7 +202,7 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
         }
 
         return {
-            averageGain: totalGain / signalCount,
+            averageDailyGain: totalDailyGain / signalCount,
             signalCount: signalCount,
             winRate: (winnerCount / signalCount) * 100,
             averageWinnerGain: winnerCount > 0 ? winnersSum / winnerCount : 0,
@@ -205,7 +211,7 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
 
     } catch (error) {
         console.error('Error fetching performance tracker stats:', error);
-        return { averageGain: 0, signalCount: 0, winRate: 0, averageWinnerGain: 0, averageLoserGain: 0 };
+        return defaultStats;
     }
 }
 

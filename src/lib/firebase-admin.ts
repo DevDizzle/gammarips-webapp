@@ -162,14 +162,14 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
         const todayStr = today.toISOString().split('T')[0];
 
         const snapshot = await adminDb.collection('performance_tracker')
-            .where('run_date', '!=', todayStr)
+            .where('run_date', '<', todayStr)
             .get();
 
         if (snapshot.empty) {
             return defaultStats;
         }
 
-        let totalDailyGain = 0;
+        let totalOfIndividualDailyGains = 0;
         let winnersSum = 0;
         let losersSum = 0;
         let winnerCount = 0;
@@ -180,19 +180,24 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
         snapshot.forEach(doc => {
             const data = doc.data();
             const gain = data.percent_gain;
+
             if (typeof gain === 'number') {
                 const startDate = new Date(data.run_date);
+                startDate.setUTCHours(0, 0, 0, 0);
                 const endDate = new Date(data.last_updated);
+                endDate.setUTCHours(0, 0, 0, 0);
 
-                // Correctly calculate duration in days, rounding up.
-                // A trade from 10/1 to 10/2 is 1 day.
+                // Calculate duration in days. +1 to include the start day.
+                // E.g., 10/2 - 10/1 = 1 day.
                 const durationMs = endDate.getTime() - startDate.getTime();
-                const durationDays = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
+                const durationDays = Math.round(durationMs / (1000 * 60 * 60 * 24)) + 1;
                 
-                // Use a minimum duration of 1 day to avoid division by zero.
                 const finalDuration = Math.max(1, durationDays);
 
-                totalDailyGain += gain / finalDuration;
+                if (finalDuration > 0) {
+                    const individualDailyReturn = gain / finalDuration;
+                    totalOfIndividualDailyGains += individualDailyReturn;
+                }
 
                 if (gain > 0) {
                     winnersSum += gain;
@@ -209,7 +214,7 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
         }
 
         return {
-            averageDailyGain: totalDailyGain / signalCount,
+            averageDailyGain: totalOfIndividualDailyGains / signalCount,
             signalCount: signalCount,
             winRate: (winnerCount / signalCount) * 100,
             averageWinnerGain: winnerCount > 0 ? winnersSum / winnerCount : 0,
@@ -954,5 +959,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     return null;
 }
 
+
+    
 
     

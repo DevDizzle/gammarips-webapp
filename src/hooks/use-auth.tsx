@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  const handleSuccessfulAuth = async (userCredential: UserCredential, method: 'google' | 'email') => {
+  const handleSuccessfulAuth = async (userCredential: UserCredential, method: 'Google' | 'Email') => {
     const { user } = userCredential;
     const additionalInfo = getAdditionalUserInfo(userCredential);
 
@@ -73,8 +73,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setDbUser(newDbUser);
 
     if (additionalInfo?.isNewUser) {
-      trackEvent('sign_up', { event_category: 'engagement', event_label: method });
-      if (method === 'email') {
+      trackEvent('sign_up', { method });
+      if (method === 'Email') {
         await sendEmailVerification(user);
         toast({ title: "Account Created!", description: "Please check your inbox to verify your email." });
       } else {
@@ -90,7 +90,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const provider = new GoogleAuthProvider();
     try {
       const userCredential = await signInWithPopup(auth, provider);
-      await handleSuccessfulAuth(userCredential, 'google');
+      await handleSuccessfulAuth(userCredential, 'Google');
     } catch (error) {
       console.error("Google sign-in error", error);
       throw error;
@@ -100,7 +100,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signUpWithEmail = async (email: string, password: string) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await handleSuccessfulAuth(userCredential, 'email');
+      await handleSuccessfulAuth(userCredential, 'Email');
     } catch (error) {
         console.error("Email sign-up error", error);
         throw error;
@@ -110,7 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signInWithEmail = async (email: string, password: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      await handleSuccessfulAuth(userCredential, 'email');
+      await handleSuccessfulAuth(userCredential, 'Email');
     } catch (error) {
         console.error("Email sign-in error", error);
         throw error;

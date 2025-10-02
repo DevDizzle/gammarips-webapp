@@ -1,15 +1,16 @@
-
-'use client';
-
-import { TickerSearch } from "@/components/ticker-search";
 import Link from "next/link";
+import { TickerSearch } from "@/components/ticker-search";
 import TodaysWinners from "@/app/dashboard/todays-winners";
 import { AuthDialog } from "@/components/auth/auth-dialog";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState, Suspense } from "react";
+import { Suspense } from "react";
 import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
 
-function HomePageContent({ performanceTracker }: { performanceTracker: React.ReactNode }) {
+function HomePageClientContent() {
+  'use client';
+
+  const { useSearchParams } = require("next/navigation");
+  const { useEffect, useState } = require("react");
+
   const searchParams = useSearchParams();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [authDialogDefaultView, setAuthDialogDefaultView] = useState<'signIn' | 'signUp'>('signUp');
@@ -22,12 +23,19 @@ function HomePageContent({ performanceTracker }: { performanceTracker: React.Rea
   }, [searchParams]);
 
   return (
-    <>
-      <AuthDialog 
-        open={showAuthDialog} 
-        onOpenChange={setShowAuthDialog} 
-        defaultView={authDialogDefaultView}
-      />
+    <AuthDialog 
+      open={showAuthDialog} 
+      onOpenChange={setShowAuthDialog} 
+      defaultView={authDialogDefaultView}
+    />
+  );
+}
+
+
+export default function LandingPage() {
+  return (
+    <Suspense fallback={<div className="h-screen w-full flex items-center justify-center">Loading...</div>}>
+      <HomePageClientContent />
       <div className="flex flex-col min-h-screen bg-background">
         {/* Header */}
         <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -55,7 +63,9 @@ function HomePageContent({ performanceTracker }: { performanceTracker: React.Rea
 
           {/* Performance Tracker Section */}
           <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-            {performanceTracker}
+            <Suspense fallback={<PerformanceTrackerSkeleton />}>
+              <PerformanceTracker />
+            </Suspense>
           </section>
 
           {/* Winners Dashboard Section */}
@@ -65,20 +75,6 @@ function HomePageContent({ performanceTracker }: { performanceTracker: React.Rea
           
         </main>
       </div>
-    </>
-  );
-}
-
-export default function LandingPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <HomePageContent 
-        performanceTracker={
-          <Suspense fallback={<PerformanceTrackerSkeleton />}>
-            <PerformanceTracker />
-          </Suspense>
-        }
-      />
     </Suspense>
   );
 }

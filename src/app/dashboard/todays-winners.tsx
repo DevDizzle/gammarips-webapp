@@ -10,9 +10,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { getWinnersDashboard } from '../actions';
-import type { Winner } from '@/lib/firebase-admin';
-import { ArrowDown, ArrowUp, ChevronRight, Trophy } from 'lucide-react';
+import { getWinnersDashboard, getPerformanceSignals } from '../actions';
+import type { Winner, PerformanceSignal } from '@/lib/firebase-admin';
+import { ArrowDown, ArrowUp, ChevronRight, Trophy, TrendingDown, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Markdown } from '@/components/markdown';
 import { Button } from '@/components/ui/button';
@@ -33,6 +33,8 @@ const convertGcsUriToUrl = (gcsUri: string) => {
 function TodaysWinners() {
   const [isLoading, setIsLoading] = useState(true);
   const [allWinners, setAllWinners] = useState<Winner[]>([]);
+  const [topGainers, setTopGainers] = useState<PerformanceSignal[]>([]);
+  const [topLosers, setTopLosers] = useState<PerformanceSignal[]>([]);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -40,13 +42,19 @@ function TodaysWinners() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const winnersData = await getWinnersDashboard();
+        const [winnersData, gainersData, losersData] = await Promise.all([
+          getWinnersDashboard(),
+          getPerformanceSignals('desc', 5),
+          getPerformanceSignals('asc', 5)
+        ]);
         setAllWinners(winnersData);
+        setTopGainers(gainersData);
+        setTopLosers(losersData);
       } catch (error) {
-        console.error('Failed to fetch winners dashboard data:', error);
+        console.error('Failed to fetch market hub data:', error);
         toast({
           title: 'Error Fetching Data',
-          description: 'Could not load today\'s winners. Please try again later.',
+          description: 'Could not load market data. Please try again later.',
           variant: 'destructive',
         });
       } finally {
@@ -95,6 +103,35 @@ function TodaysWinners() {
       return { color: 'text-red-500', icon: <ArrowDown className="h-4 w-4" /> };
     }
     return { color: 'text-muted-foreground', icon: null };
+  };
+
+  const renderPerformanceList = (signals: PerformanceSignal[]) => {
+    if (signals.length === 0) {
+        return <p className="text-sm text-muted-foreground text-center py-4">No performance signals available at this time.</p>;
+    }
+    return (
+        <Table>
+            <TableHeader>
+                <TableRow>
+                    <TableHead>Ticker</TableHead>
+                    <TableHead className="text-right">Percent Gain</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {signals.map(signal => {
+                    const isGainer = signal.percent_gain >= 0;
+                    return (
+                        <TableRow key={signal.id} onClick={() => handleRowClick(signal.ticker)} className="cursor-pointer">
+                            <TableCell className="font-medium">{signal.ticker}</TableCell>
+                            <TableCell className={cn("text-right font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
+                                {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
+                            </TableCell>
+                        </TableRow>
+                    );
+                })}
+            </TableBody>
+        </Table>
+    );
   };
   
   const renderWinnersList = (winners: Winner[]) => {
@@ -202,27 +239,45 @@ function TodaysWinners() {
     );
   }
 
-  const renderSkeleton = () => (
+  const renderSkeleton = (isPerformance: boolean = false) => (
     <div className="space-y-4">
         <div className="hidden md:block">
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead><Skeleton className="h-5 w-32" /></TableHead>
-                        <TableHead><Skeleton className="h-5 w-20" /></TableHead>
-                        <TableHead><Skeleton className="h-5 w-24" /></TableHead>
-                        <TableHead><Skeleton className="h-5 w-28" /></TableHead>
-                        <TableHead><Skeleton className="h-5 w-36" /></TableHead>
+                       {isPerformance ? (
+                           <>
+                               <TableHead><Skeleton className="h-5 w-32" /></TableHead>
+                               <TableHead><Skeleton className="h-5 w-24" /></TableHead>
+                           </>
+                       ) : (
+                           <>
+                                <TableHead><Skeleton className="h-5 w-32" /></TableHead>
+                                <TableHead><Skeleton className="h-5 w-20" /></TableHead>
+                                <TableHead><Skeleton className="h-5 w-24" /></TableHead>
+                                <TableHead><Skeleton className="h-5 w-28" /></TableHead>
+                                <TableHead><Skeleton className="h-5 w-36" /></TableHead>
+                           </>
+                       )}
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {Array.from({ length: 5 }).map((_, i) => (
                         <TableRow key={i}>
-                            <TableCell><Skeleton className="h-5 w-40" /></TableCell>
-                            <TableCell><Skeleton className="h-5 w-16" /></TableCell>
-                            <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                            <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                            <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                            {isPerformance ? (
+                                <>
+                                    <TableCell><Skeleton className="h-5 w-40" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-20 ml-auto" /></TableCell>
+                                </>
+                            ) : (
+                                <>
+                                    <TableCell><Skeleton className="h-5 w-40" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-16" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                                </>
+                            )}
                         </TableRow>
                     ))}
                 </TableBody>
@@ -263,25 +318,33 @@ function TodaysWinners() {
     <>
       <Card className="lg:col-span-2">
         <CardHeader>
-          <CardTitle>Today's Top Opportunities</CardTitle>
+          <CardTitle>Market Hub</CardTitle>
           <CardDescription>
-            <Markdown content="The strongest bullish and bearish signals from across the market. **Click any stock to see the top options setup and our analysis.**" />
+            <Markdown content="Explore today's top Call/Put setups, or review our model's historical performance with top gainers and losers. **Click any stock to see the full analysis.**" />
             {lastUpdated && !isLoading && (
-              <p className="text-xs text-muted-foreground mt-2">Last Updated: {lastUpdated}</p>
+              <p className="text-xs text-muted-foreground mt-2">Signal Data Last Updated: {lastUpdated}</p>
             )}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="bullish" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="bullish">Top Call Setups</TabsTrigger>
-              <TabsTrigger value="bearish">Top Put Setups</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="bullish"><TrendingUp className="mr-2" /> Top Call Setups</TabsTrigger>
+              <TabsTrigger value="bearish"><TrendingDown className="mr-2"/> Top Put Setups</TabsTrigger>
+              <TabsTrigger value="gainers">Top Gainers</TabsTrigger>
+              <TabsTrigger value="losers">Top Losers</TabsTrigger>
             </TabsList>
             <TabsContent value="bullish" className="mt-4">
               {isLoading ? renderSkeleton() : renderWinnersList(bullishWinners)}
             </TabsContent>
             <TabsContent value="bearish" className="mt-4">
               {isLoading ? renderSkeleton() : renderWinnersList(bearishWinners)}
+            </TabsContent>
+            <TabsContent value="gainers" className="mt-4">
+              {isLoading ? renderSkeleton(true) : renderPerformanceList(topGainers)}
+            </TabsContent>
+            <TabsContent value="losers" className="mt-4">
+              {isLoading ? renderSkeleton(true) : renderPerformanceList(topLosers)}
             </TabsContent>
           </Tabs>
         </CardContent>

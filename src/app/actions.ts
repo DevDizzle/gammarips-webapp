@@ -1,6 +1,4 @@
 
-
-
 'use server';
 
 import {
@@ -36,8 +34,9 @@ import {
     uploadWinImageAdmin,
     saveWinSubmissionAdmin,
     getApprovedWinsAdmin,
+    getPerformanceSignalsAdmin,
 } from '@/lib/firebase-admin';
-import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, Win } from '@/lib/firebase-admin';
+import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, Win, PerformanceSignal } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
@@ -48,6 +47,10 @@ import { app } from '@/lib/firebase';
 
 export async function getOptionsSignals(ticker: string): Promise<TickerOptionsData | null> {
     return getOptionsSignalsAdmin(ticker);
+}
+
+export async function getPerformanceSignals(order: 'asc' | 'desc', limit: number): Promise<PerformanceSignal[]> {
+    return getPerformanceSignalsAdmin(order, limit);
 }
 
 export async function getWinnersDashboard(): Promise<Winner[]> {

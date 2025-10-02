@@ -1,9 +1,12 @@
+
 import Link from "next/link";
 import { TickerSearch } from "@/components/ticker-search";
 import TodaysWinners from "@/app/dashboard/todays-winners";
 import { Suspense } from "react";
-import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
 import HomePageClientContent from "./home-page-client-content";
+
+// Force dynamic rendering to ensure performance data is always fresh.
+export const revalidate = 0;
 
 export default function LandingPage() {
   return (
@@ -34,13 +37,6 @@ export default function LandingPage() {
             <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
               Get AI-powered stock signals that pinpoint high-potential options setups in the Russell 1000. Stop chasing noise and start trading with confidence.
             </p>
-          </section>
-
-          {/* Performance Tracker Section */}
-          <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-            <Suspense fallback={<PerformanceTrackerSkeleton />}>
-              <PerformanceTracker />
-            </Suspense>
           </section>
 
           {/* Winners Dashboard Section */}

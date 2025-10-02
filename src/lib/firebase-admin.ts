@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -98,6 +97,13 @@ const WinnerSchema = z.object({
 });
 export type Winner = z.infer<typeof WinnerSchema>;
 
+const PerformanceSignalSchema = z.object({
+    id: z.string(),
+    ticker: z.string(),
+    percent_gain: z.number(),
+});
+export type PerformanceSignal = z.infer<typeof PerformanceSignalSchema>;
+
 const OptionsSignalSchema = z.object({
     contract_symbol: z.string(),
     expiration_date: z.string(),
@@ -135,44 +141,43 @@ const WinSchema = z.object({
 });
 export type Win = z.infer<typeof WinSchema>;
 
-export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: number, count: number } | null> {
+export async function getPerformanceSignalsAdmin(
+  order: 'asc' | 'desc',
+  limit: number
+): Promise<PerformanceSignal[]> {
   try {
-    const snapshot = await adminDb.collection('performance_tracker').get();
+    const snapshot = await adminDb
+      .collection('performance_tracker')
+      .orderBy('percent_gain', order)
+      .limit(limit)
+      .get();
+
     if (snapshot.empty) {
-      return null;
+      return [];
     }
 
-    // Get today's date in YYYY-MM-DD format (UTC)
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-
-    let totalGain = 0;
-    let validDocs = 0;
+    const signals: PerformanceSignal[] = [];
     snapshot.forEach(doc => {
       const data = doc.data();
-      const gain = data?.percent_gain;
-      const runDate = data?.run_date; // Assuming a 'run_date' field exists in 'YYYY-MM-DD' format
-
-      // Only include documents where run_date is not today
-      if (typeof gain === 'number' && runDate !== todayStr) {
-        totalGain += gain;
-        validDocs++;
+      const signal = {
+        id: doc.id,
+        ticker: data.ticker,
+        percent_gain: data.percent_gain,
+      };
+      const validation = PerformanceSignalSchema.safeParse(signal);
+      if (validation.success) {
+        signals.push(validation.data);
+      } else {
+        console.warn(`Invalid performance signal data in Firestore for doc ${doc.id}:`, validation.error.flatten());
       }
     });
 
-    if (validDocs === 0) {
-      return null;
-    }
-
-    const averageGain = totalGain / validDocs;
-    return { averageGain, count: validDocs };
-
+    return signals;
   } catch (error) {
-    console.error('Error fetching performance tracker stats:', error);
-    return null;
+    console.error('Error fetching performance signals:', error);
+    return [];
   }
 }
-
 
 export async function saveFeedbackAdmin(
   message: string, 

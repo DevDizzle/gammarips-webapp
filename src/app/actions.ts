@@ -34,7 +34,7 @@ import {
     uploadWinImageAdmin,
     saveWinSubmissionAdmin,
     getApprovedWinsAdmin,
-    getPerformanceSignalsAdmin,
+    getPerformanceSignals as getPerformanceSignalsAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, Win, PerformanceSignal } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
@@ -343,3 +343,7 @@ export async function sendPasswordReset(email: string): Promise<void> {
   const auth = getClientAuth(app);
   await sendPasswordResetEmail(auth, email);
 }
+
+    
+
+    

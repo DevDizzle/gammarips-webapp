@@ -141,7 +141,40 @@ const WinSchema = z.object({
 });
 export type Win = z.infer<typeof WinSchema>;
 
-export async function getPerformanceSignalsAdmin(
+export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: number; signalCount: number }> {
+    try {
+        const today = new Date();
+        today.setUTCHours(0, 0, 0, 0);
+        const todayStr = today.toISOString().split('T')[0];
+
+        const snapshot = await adminDb.collection('performance_tracker')
+            .where('run_date', '!=', todayStr)
+            .get();
+
+        if (snapshot.empty) {
+            return { averageGain: 0, signalCount: 0 };
+        }
+
+        let totalGain = 0;
+        const signalCount = snapshot.size;
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            if (typeof data.percent_gain === 'number') {
+                totalGain += data.percent_gain;
+            }
+        });
+
+        const averageGain = signalCount > 0 ? totalGain / signalCount : 0;
+
+        return { averageGain, signalCount };
+    } catch (error) {
+        console.error('Error fetching performance tracker stats:', error);
+        return { averageGain: 0, signalCount: 0 };
+    }
+}
+
+export async function getPerformanceSignals(
   order: 'asc' | 'desc',
   limit: number
 ): Promise<PerformanceSignal[]> {

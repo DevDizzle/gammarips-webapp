@@ -146,7 +146,7 @@ const WinSchema = z.object({
 });
 export type Win = z.infer<typeof WinSchema>;
 
-export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: number; signalCount: number }> {
+export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: number; signalCount: number; winRate: number; averageWinnerGain: number; averageLoserGain: number; }> {
     try {
         const today = new Date();
         today.setUTCHours(0, 0, 0, 0);
@@ -156,26 +156,56 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
             .where('run_date', '!=', todayStr)
             .get();
 
+        const defaultStats = {
+            averageGain: 0,
+            signalCount: 0,
+            winRate: 0,
+            averageWinnerGain: 0,
+            averageLoserGain: 0,
+        };
+
         if (snapshot.empty) {
-            return { averageGain: 0, signalCount: 0 };
+            return defaultStats;
         }
 
         let totalGain = 0;
+        let winnersSum = 0;
+        let losersSum = 0;
+        let winnerCount = 0;
+        let loserCount = 0;
+        
         const signalCount = snapshot.size;
 
         snapshot.forEach(doc => {
             const data = doc.data();
             if (typeof data.percent_gain === 'number') {
-                totalGain += data.percent_gain;
+                const gain = data.percent_gain;
+                totalGain += gain;
+                if (gain > 0) {
+                    winnersSum += gain;
+                    winnerCount++;
+                } else if (gain < 0) {
+                    losersSum += gain;
+                    loserCount++;
+                }
             }
         });
 
-        const averageGain = signalCount > 0 ? totalGain / signalCount : 0;
+        if (signalCount === 0) {
+            return defaultStats;
+        }
 
-        return { averageGain, signalCount };
+        return {
+            averageGain: totalGain / signalCount,
+            signalCount: signalCount,
+            winRate: (winnerCount / signalCount) * 100,
+            averageWinnerGain: winnerCount > 0 ? winnersSum / winnerCount : 0,
+            averageLoserGain: loserCount > 0 ? losersSum / loserCount : 0,
+        };
+
     } catch (error) {
         console.error('Error fetching performance tracker stats:', error);
-        return { averageGain: 0, signalCount: 0 };
+        return { averageGain: 0, signalCount: 0, winRate: 0, averageWinnerGain: 0, averageLoserGain: 0 };
     }
 }
 

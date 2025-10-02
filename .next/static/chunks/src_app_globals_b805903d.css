@@ -2150,6 +2150,10 @@ body {
   background-color: #eab3081a;
 }
 
+.bg-background\/50 {
+  background-color: hsl(var(--background) / .5);
+}
+
 .fill-current {
   fill: currentColor;
 }
@@ -3384,6 +3388,10 @@ body {
 
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .lg\:px-8 {

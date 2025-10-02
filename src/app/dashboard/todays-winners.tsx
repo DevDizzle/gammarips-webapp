@@ -204,7 +204,6 @@ function TodaysWinners() {
                 )
             })}
         </div>
-
       </>
     );
   };
@@ -263,8 +262,8 @@ function TodaysWinners() {
             </TableBody>
         </Table>
 
-        {/* Mobile Cards */}
-        <div className="md:hidden overflow-x-auto snap-x snap-mandatory flex gap-4 -mx-4 px-4">
+        {/* Mobile Cards - Vertical Stack */}
+        <div className="md:hidden space-y-3">
             {winners.map(winner => {
                 const imageUrl = winner.image_uri 
                     ? convertGcsUriToUrl(winner.image_uri) 
@@ -272,43 +271,41 @@ function TodaysWinners() {
                 const signalMeta = getSignalMeta(winner.outlook_signal);
 
                 return (
-                    <div key={winner.id} className="snap-start shrink-0 w-4/5">
-                        <Card onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer transition-colors hover:bg-muted/50 h-full">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between gap-4">
-                                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                                        <Image 
-                                            src={imageUrl} 
-                                            alt={`${winner.company_name} logo`}
-                                            width={40}
-                                            height={40}
-                                            className="rounded-full"
-                                        />
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-bold truncate">{winner.company_name}</p>
-                                            <p className="text-sm text-muted-foreground">{winner.ticker}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex-shrink-0">
-                                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                    <Card key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer transition-colors hover:bg-muted/50 h-full">
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex items-center gap-3 flex-1 min-w-0">
+                                    <Image 
+                                        src={imageUrl} 
+                                        alt={`${winner.company_name} logo`}
+                                        width={40}
+                                        height={40}
+                                        className="rounded-full"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-bold truncate">{winner.company_name}</p>
+                                        <p className="text-sm text-muted-foreground">{winner.ticker}</p>
                                     </div>
                                 </div>
-                                <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                                    <div>
-                                        <p className="text-muted-foreground">Last Close</p>
-                                        <p className="font-semibold">${winner.last_close.toFixed(2)}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-muted-foreground">AI Outlook</p>
-                                        <div className={cn("flex items-center gap-1 font-semibold", signalMeta.color)}>
-                                            {signalMeta.icon}
-                                            <span>{winner.outlook_signal}</span>
-                                        </div>
+                                <div className="flex-shrink-0">
+                                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                                </div>
+                            </div>
+                            <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p className="text-muted-foreground">Last Close</p>
+                                    <p className="font-semibold">${winner.last_close.toFixed(2)}</p>
+                                </div>
+                                <div>
+                                    <p className="text-muted-foreground">AI Outlook</p>
+                                    <div className={cn("flex items-center gap-1 font-semibold", signalMeta.color)}>
+                                        {signalMeta.icon}
+                                        <span>{winner.outlook_signal}</span>
                                     </div>
                                 </div>
-                            </CardContent>
-                        </Card>
-                    </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 )
             })}
         </div>
@@ -366,34 +363,32 @@ function TodaysWinners() {
                 </TableBody>
             </Table>
         </div>
-        <div className="md:hidden overflow-x-auto snap-x snap-mandatory flex gap-4 -mx-4 px-4">
+        <div className="md:hidden space-y-3">
              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="snap-start shrink-0 w-4/5">
-                    <Card>
-                        <CardContent className="p-4">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <Skeleton className="h-10 w-10 rounded-full" />
-                                    <div>
-                                        <Skeleton className="h-5 w-32" />
-                                        <Skeleton className="h-4 w-16 mt-1" />
-                                    </div>
-                                </div>
-                                <Skeleton className="h-5 w-5" />
-                            </div>
-                            <div className="mt-4 grid grid-cols-2 gap-4">
+                <Card key={i}>
+                    <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <Skeleton className="h-10 w-10 rounded-full" />
                                 <div>
-                                    <Skeleton className="h-4 w-20 mb-1" />
-                                    <Skeleton className="h-5 w-24" />
-                                </div>
-                                <div>
-                                    <Skeleton className="h-4 w-20 mb-1" />
-                                    <Skeleton className="h-5 w-28" />
+                                    <Skeleton className="h-5 w-32" />
+                                    <Skeleton className="h-4 w-16 mt-1" />
                                 </div>
                             </div>
-                        </CardContent>
-                    </Card>
-                </div>
+                            <Skeleton className="h-5 w-5" />
+                        </div>
+                        <div className="mt-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <Skeleton className="h-4 w-20 mb-1" />
+                                <Skeleton className="h-5 w-24" />
+                            </div>
+                            <div>
+                                <Skeleton className="h-4 w-20 mb-1" />
+                                <Skeleton className="h-5 w-28" />
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             ))}
         </div>
     </div>
@@ -450,9 +445,11 @@ function TodaysWinners() {
         </div>
         
         <div className="mt-4">
-          <p className='text-sm text-muted-foreground mb-2'>
-            <strong>Click any stock to see the full analysis.</strong>
-          </p>
+          <div className="mb-2">
+            <p className="text-sm text-muted-foreground">
+                <strong>Click any stock to see the full analysis.</strong>
+            </p>
+          </div>
           {renderActiveView()}
         </div>
       </CardContent>
@@ -461,7 +458,3 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
-
-    
-
-    

@@ -182,16 +182,17 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
             const gain = data.percent_gain;
 
             if (typeof gain === 'number') {
-                const startDate = new Date(data.run_date);
-                startDate.setUTCHours(0, 0, 0, 0);
-                const endDate = new Date(data.last_updated);
-                endDate.setUTCHours(0, 0, 0, 0);
+                // Ensure dates are parsed as UTC to avoid timezone shifts
+                const startDate = new Date(data.run_date + 'T00:00:00Z');
+                const endDate = new Date(data.last_updated.split(' ')[0] + 'T00:00:00Z');
 
                 // Calculate duration in days. +1 to include the start day.
                 // E.g., 10/2 - 10/1 = 1 day.
                 const durationMs = endDate.getTime() - startDate.getTime();
-                const durationDays = Math.round(durationMs / (1000 * 60 * 60 * 24)) + 1;
+                const durationDays = Math.round(durationMs / (1000 * 60 * 60 * 24));
                 
+                // Use a minimum duration of 1 day to avoid division by zero
+                // or inflating returns for trades held less than a day.
                 const finalDuration = Math.max(1, durationDays);
 
                 if (finalDuration > 0) {

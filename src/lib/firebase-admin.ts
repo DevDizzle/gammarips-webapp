@@ -135,6 +135,36 @@ const WinSchema = z.object({
 });
 export type Win = z.infer<typeof WinSchema>;
 
+export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: number, count: number } | null> {
+  try {
+    const snapshot = await adminDb.collection('performance_tracker').get();
+    if (snapshot.empty) {
+      return null;
+    }
+
+    let totalGain = 0;
+    let validDocs = 0;
+    snapshot.forEach(doc => {
+      const gain = doc.data()?.percent_gain;
+      if (typeof gain === 'number') {
+        totalGain += gain;
+        validDocs++;
+      }
+    });
+
+    if (validDocs === 0) {
+      return null;
+    }
+
+    const averageGain = totalGain / validDocs;
+    return { averageGain, count: validDocs };
+
+  } catch (error) {
+    console.error('Error fetching performance tracker stats:', error);
+    return null;
+  }
+}
+
 
 export async function saveFeedbackAdmin(
   message: string, 

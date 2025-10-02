@@ -7,6 +7,7 @@ import TodaysWinners from "@/app/dashboard/todays-winners";
 import { AuthDialog } from "@/components/auth/auth-dialog";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
+import PerformanceTracker from "@/components/performance-tracker";
 
 function HomePageContent() {
   const searchParams = useSearchParams();
@@ -50,6 +51,11 @@ function HomePageContent() {
             <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
               Get AI-powered stock signals that pinpoint high-potential options setups in the Russell 1000. Stop chasing noise and start trading with confidence.
             </p>
+          </section>
+
+          {/* Performance Tracker Section */}
+          <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+            <PerformanceTracker />
           </section>
 
           {/* Winners Dashboard Section */}

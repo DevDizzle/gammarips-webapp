@@ -60,11 +60,11 @@ export default function LandingPage() {
             <Card className="border-border">
               <CardHeader className="text-center">
                   <h3 className="font-bold flex items-center gap-2 justify-center text-xl font-headline"><Trophy className="text-yellow-500" /> Real Traders, Real Wins.</h3>
-                  <p className="text-sm text-muted-foreground max-w-lg mx-auto">Check out the latest winning screenshots. Nailed a great trade? Share your success and inspire the community!</p>
+                  <p className="text-sm text-muted-foreground max-w-lg mx-auto">See how traders just like you are using ProfitScout to find their edge. Explore a live gallery of winning trades shared by our community.</p>
               </CardHeader>
               <CardContent className="flex justify-center">
                   <Button asChild>
-                      <Link href="/winners-circle">Share Your Win</Link>
+                      <Link href="/winners-circle">See the Wins</Link>
                   </Button>
               </CardContent>
             </Card>

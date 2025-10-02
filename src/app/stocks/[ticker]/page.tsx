@@ -331,7 +331,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardHeader>
             <CardContent className="text-sm text-yellow-200/80">
                 <p>
-                    The information provided on this page is for informational purposes only and does not constitute investment advice, financial advice, trading advice, or any other sort of advice and you should not treat any of the page's content as such. ProfitScout does not recommend that any cryptocurrency should be bought, sold, or held by you. Do conduct your own due diligence and consult your financial advisor before making any investment decisions.
+                    The information provided on this page is for informational purposes only and does not constitute investment advice, financial advice, trading advice, or any other sort of advice and you should not treat any of the page's content as such. ProfitScout does not recommend that any security should be bought, sold, or held by you. Do conduct your own due diligence and consult your financial advisor before making any investment decisions.
                 </p>
             </CardContent>
         </Card>

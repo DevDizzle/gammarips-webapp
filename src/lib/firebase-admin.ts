@@ -183,10 +183,16 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
             if (typeof gain === 'number') {
                 const startDate = new Date(data.run_date);
                 const endDate = new Date(data.last_updated);
-                // Calculate duration in days. Use Math.max with 1 to avoid division by zero.
-                const durationDays = Math.max(1, (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+
+                // Correctly calculate duration in days, rounding up.
+                // A trade from 10/1 to 10/2 is 1 day.
+                const durationMs = endDate.getTime() - startDate.getTime();
+                const durationDays = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
                 
-                totalDailyGain += gain / durationDays;
+                // Use a minimum duration of 1 day to avoid division by zero.
+                const finalDuration = Math.max(1, durationDays);
+
+                totalDailyGain += gain / finalDuration;
 
                 if (gain > 0) {
                     winnersSum += gain;
@@ -947,3 +953,6 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     }
     return null;
 }
+
+
+    

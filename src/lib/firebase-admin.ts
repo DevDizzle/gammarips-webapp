@@ -142,11 +142,19 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
       return null;
     }
 
+    // Get today's date in YYYY-MM-DD format (UTC)
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+
     let totalGain = 0;
     let validDocs = 0;
     snapshot.forEach(doc => {
-      const gain = doc.data()?.percent_gain;
-      if (typeof gain === 'number') {
+      const data = doc.data();
+      const gain = data?.percent_gain;
+      const runDate = data?.run_date; // Assuming a 'run_date' field exists in 'YYYY-MM-DD' format
+
+      // Only include documents where run_date is not today
+      if (typeof gain === 'number' && runDate !== todayStr) {
         totalGain += gain;
         validDocs++;
       }

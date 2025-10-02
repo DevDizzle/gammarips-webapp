@@ -7,9 +7,9 @@ import TodaysWinners from "@/app/dashboard/todays-winners";
 import { AuthDialog } from "@/components/auth/auth-dialog";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
-import PerformanceTracker from "@/components/performance-tracker";
+import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
 
-function HomePageContent() {
+function HomePageContent({ performanceTracker }: { performanceTracker: React.ReactNode }) {
   const searchParams = useSearchParams();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [authDialogDefaultView, setAuthDialogDefaultView] = useState<'signIn' | 'signUp'>('signUp');
@@ -55,7 +55,7 @@ function HomePageContent() {
 
           {/* Performance Tracker Section */}
           <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-            <PerformanceTracker />
+            {performanceTracker}
           </section>
 
           {/* Winners Dashboard Section */}
@@ -72,7 +72,13 @@ function HomePageContent() {
 export default function LandingPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <HomePageContent />
+      <HomePageContent 
+        performanceTracker={
+          <Suspense fallback={<PerformanceTrackerSkeleton />}>
+            <PerformanceTracker />
+          </Suspense>
+        }
+      />
     </Suspense>
   );
 }

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,15 +32,20 @@ type AuthDialogProps = {
   onOpenChange: (open: boolean) => void;
   onSubscribe?: () => void;
   showSubscribeButton?: boolean;
+  defaultView?: 'signIn' | 'signUp';
 };
 
-export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
+export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthDialogProps) {
   const { signInWithGoogle, signUpWithEmail, signInWithEmail } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignIn, setIsSignIn] = useState(false);
+  const [isSignIn, setIsSignIn] = useState(defaultView === 'signIn');
   const [loading, setLoading] = useState<'google' | 'email' | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setIsSignIn(defaultView === 'signIn');
+  }, [defaultView, open]);
 
   const handleGoogleSignIn = async () => {
     setLoading('google');

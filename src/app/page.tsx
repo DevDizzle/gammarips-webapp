@@ -11,16 +11,22 @@ import { useEffect, useState, Suspense } from "react";
 function HomePageContent() {
   const searchParams = useSearchParams();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [authDialogDefaultView, setAuthDialogDefaultView] = useState<'signIn' | 'signUp'>('signUp');
 
   useEffect(() => {
     if (searchParams.get('from') === 'verification' && searchParams.get('verified') === 'true') {
+      setAuthDialogDefaultView('signIn');
       setShowAuthDialog(true);
     }
   }, [searchParams]);
 
   return (
     <>
-      <AuthDialog open={showAuthDialog} onOpenChange={setShowAuthDialog} />
+      <AuthDialog 
+        open={showAuthDialog} 
+        onOpenChange={setShowAuthDialog} 
+        defaultView={authDialogDefaultView}
+      />
       <div className="flex flex-col min-h-screen bg-background">
         {/* Header */}
         <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">

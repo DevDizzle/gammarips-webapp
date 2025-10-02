@@ -350,7 +350,7 @@ function TodaysWinners() {
         <CardHeader>
           <CardTitle>Market Hub</CardTitle>
           <CardDescription>
-            Explore today's top Call/Put setups, or review our model's historical performance with top gainers and losers. &lt;strong&gt;Click any stock to see the full analysis.&lt;/strong&gt;
+            Explore today's top Call/Put setups, or review our model's historical performance with top gainers and losers. <strong>Click any stock to see the full analysis.</strong>
             {lastUpdated && !isLoading && (
               <p className="text-xs text-muted-foreground mt-2">Signal Data Last Updated: {lastUpdated}</p>
             )}

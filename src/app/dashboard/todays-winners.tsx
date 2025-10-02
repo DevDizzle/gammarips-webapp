@@ -112,16 +112,40 @@ function TodaysWinners() {
         <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHead>Ticker</TableHead>
+                    <TableHead>Company</TableHead>
+                    <TableHead>Industry</TableHead>
+                    <TableHead>Initial Price</TableHead>
+                    <TableHead>Current Price</TableHead>
                     <TableHead className="text-right">Percent Gain</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {signals.map(signal => {
                     const isGainer = signal.percent_gain >= 0;
+                     const imageUrl = signal.image_uri 
+                    ? convertGcsUriToUrl(signal.image_uri) 
+                    : `https://placehold.co/24x24/1e293b/a855f7?text=${signal.ticker[0]}`;
+                
                     return (
                         <TableRow key={signal.id} onClick={() => handleRowClick(signal.ticker)} className="cursor-pointer">
-                            <TableCell className="font-medium">{signal.ticker}</TableCell>
+                            <TableCell className="font-medium">
+                                <div className="flex items-center gap-3">
+                                    <Image 
+                                        src={imageUrl} 
+                                        alt={`${signal.company_name} logo`}
+                                        width={24}
+                                        height={24}
+                                        className="rounded-full"
+                                    />
+                                    <div>
+                                      <span className="font-bold">{signal.ticker}</span>
+                                      <p className="text-xs text-muted-foreground">{signal.company_name}</p>
+                                    </div>
+                                </div>
+                            </TableCell>
+                            <TableCell>{signal.industry}</TableCell>
+                            <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
+                            <TableCell>${signal.current_price.toFixed(2)}</TableCell>
                             <TableCell className={cn("text-right font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
                                 {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
                             </TableCell>
@@ -247,7 +271,10 @@ function TodaysWinners() {
                        {isPerformance ? (
                            <>
                                <TableHead><Skeleton className="h-5 w-32" /></TableHead>
-                               <TableHead><Skeleton className="h-5 w-24 ml-auto" /></TableHead>
+                               <TableHead><Skeleton className="h-5 w-28" /></TableHead>
+                               <TableHead><Skeleton className="h-5 w-24" /></TableHead>
+                               <TableHead><Skeleton className="h-5 w-24" /></TableHead>
+                               <TableHead className="text-right"><Skeleton className="h-5 w-24 ml-auto" /></TableHead>
                            </>
                        ) : (
                            <>
@@ -266,6 +293,9 @@ function TodaysWinners() {
                             {isPerformance ? (
                                 <>
                                     <TableCell><Skeleton className="h-5 w-40" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
                                     <TableCell><Skeleton className="h-5 w-20 ml-auto" /></TableCell>
                                 </>
                             ) : (

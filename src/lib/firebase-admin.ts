@@ -100,6 +100,11 @@ export type Winner = z.infer<typeof WinnerSchema>;
 const PerformanceSignalSchema = z.object({
     id: z.string(),
     ticker: z.string(),
+    company_name: z.string(),
+    image_uri: z.string().optional().nullable(),
+    industry: z.string(),
+    initial_price: z.number(),
+    current_price: z.number(),
     percent_gain: z.number(),
 });
 export type PerformanceSignal = z.infer<typeof PerformanceSignalSchema>;
@@ -195,6 +200,11 @@ export async function getPerformanceSignals(
       const signal = {
         id: doc.id,
         ticker: data.ticker,
+        company_name: data.company_name,
+        image_uri: data.image_uri,
+        industry: data.industry,
+        initial_price: data.initial_price,
+        current_price: data.current_price,
         percent_gain: data.percent_gain,
       };
       const validation = PerformanceSignalSchema.safeParse(signal);

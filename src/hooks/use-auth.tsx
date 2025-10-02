@@ -73,7 +73,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setDbUser(newDbUser);
 
     if (additionalInfo?.isNewUser) {
-      console.log('New user detected, firing sign_up event with method:', method);
       trackEvent('sign_up', { method });
       if (method === 'Email') {
         await sendEmailVerification(user);

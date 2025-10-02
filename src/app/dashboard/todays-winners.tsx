@@ -358,26 +358,28 @@ function TodaysWinners() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="bullish" className="w-full mt-4">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
-            <TabsTrigger value="bullish"><TrendingUp className="mr-2 h-4 w-4" /> Top Call Setups</TabsTrigger>
-            <TabsTrigger value="bearish"><TrendingDown className="mr-2 h-4 w-4"/> Top Put Setups</TabsTrigger>
-            <TabsTrigger value="gainers">Top Gainers</TabsTrigger>
-            <TabsTrigger value="losers">Top Losers</TabsTrigger>
-          </TabsList>
-          <TabsContent value="bullish" className="mt-4">
-            {isLoading ? renderSkeleton() : renderWinnersList(bullishWinners)}
-          </TabsContent>
-          <TabsContent value="bearish" className="mt-4">
-            {isLoading ? renderSkeleton() : renderWinnersList(bearishWinners)}
-          </TabsContent>
-          <TabsContent value="gainers" className="mt-4">
-            {isLoading ? renderSkeleton(true) : renderPerformanceList(topGainers)}
-          </TabsContent>
-          <TabsContent value="losers" className="mt-4">
-            {isLoading ? renderSkeleton(true) : renderPerformanceList(topLosers)}
-          </TabsContent>
-        </Tabs>
+        <div className="mt-4">
+            <Tabs defaultValue="bullish" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+                <TabsTrigger value="bullish"><TrendingUp className="mr-2 h-4 w-4" /> Top Call Setups</TabsTrigger>
+                <TabsTrigger value="bearish"><TrendingDown className="mr-2 h-4 w-4"/> Top Put Setups</TabsTrigger>
+                <TabsTrigger value="gainers">Top Gainers</TabsTrigger>
+                <TabsTrigger value="losers">Top Losers</TabsTrigger>
+            </TabsList>
+            <TabsContent value="bullish" className="mt-4">
+                {isLoading ? renderSkeleton() : renderWinnersList(bullishWinners)}
+            </TabsContent>
+            <TabsContent value="bearish" className="mt-4">
+                {isLoading ? renderSkeleton() : renderWinnersList(bearishWinners)}
+            </TabsContent>
+            <TabsContent value="gainers" className="mt-4">
+                {isLoading ? renderSkeleton(true) : renderPerformanceList(topGainers)}
+            </TabsContent>
+            <TabsContent value="losers" className="mt-4">
+                {isLoading ? renderSkeleton(true) : renderPerformanceList(topLosers)}
+            </TabsContent>
+            </Tabs>
+        </div>
       </CardContent>
     </Card>
   );

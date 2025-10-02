@@ -37,9 +37,9 @@ function AuthActionHandler() {
             setStatus('success');
             setMessage('Your email has been successfully verified! You will be redirected shortly.');
             
-            // Redirect to home page after a delay
+            // Redirect to home page with a query param to trigger login modal
             setTimeout(() => {
-              router.push('/');
+              router.push('/?from=verification&verified=true');
             }, 3000);
             break;
           // Add cases for other modes like 'resetPassword' if needed in the future

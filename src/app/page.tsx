@@ -32,9 +32,9 @@ export default function LandingPage() {
         </header>
 
         {/* Main */}
-        <main className="flex-1">
+        <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero */}
-          <section className="container mx-auto px-4 sm:px-6 lg:px-8 text-center py-20 sm:py-24">
+          <section className="text-center py-20 sm:py-24">
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight">
               Find Your Next Winning Options Trade
             </h2>
@@ -44,19 +44,19 @@ export default function LandingPage() {
           </section>
 
           {/* Performance Tracker Section */}
-          <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+          <section className="pb-16">
              <Suspense fallback={<PerformanceTrackerSkeleton />}>
                 <PerformanceTracker />
               </Suspense>
           </section>
 
           {/* Winners Dashboard Section */}
-          <section id="winners-dashboard" className="container mx-auto px-4 sm:px-6 lg:px-8 pb-8 scroll-mt-20">
+          <section id="winners-dashboard" className="pb-8 scroll-mt-20">
               <TodaysWinners />
           </section>
 
           {/* Winners Circle CTA Section */}
-          <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+          <section className="pb-16">
             <Card className="border-border">
               <CardHeader className="text-center">
                   <h3 className="font-bold flex items-center gap-2 justify-center text-xl font-headline"><Trophy className="text-yellow-500" /> Real Traders, Real Wins.</h3>

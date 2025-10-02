@@ -32,10 +32,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
         
-      </head>
-      <body>
         <Script
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
         />
         <Script
@@ -56,12 +54,18 @@ export default function RootLayout({
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              gtag('get', '${GA_MEASUREMENT_ID}', 'client_id', function(cid) {
-                localStorage.setItem('ga_client_id', cid);
-              });
+              try {
+                gtag('get', '${GA_MEASUREMENT_ID}', 'client_id', function(cid) {
+                  if (cid) localStorage.setItem('ga_client_id', cid);
+                });
+              } catch (e) {
+                console.error("Error getting GA client_id:", e);
+              }
             `,
           }}
         />
+      </head>
+      <body>
         <AuthProvider>
           <main className='flex-grow'>{children}</main>
           <Footer />

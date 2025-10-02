@@ -5,6 +5,9 @@ import TodaysWinners from "@/app/dashboard/todays-winners";
 import { Suspense } from "react";
 import HomePageClientContent from "./home-page-client-content";
 import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Trophy } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Force dynamic rendering to ensure performance data is always fresh.
 export const revalidate = 0;
@@ -48,8 +51,23 @@ export default function LandingPage() {
           </section>
 
           {/* Winners Dashboard Section */}
-          <section id="winners-dashboard" className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 scroll-mt-20">
+          <section id="winners-dashboard" className="container mx-auto px-4 sm:px-6 lg:px-8 pb-8 scroll-mt-20">
               <TodaysWinners />
+          </section>
+
+          {/* Winners Circle CTA Section */}
+          <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+            <Card className="border-border">
+              <CardHeader className="text-center">
+                  <h3 className="font-bold flex items-center gap-2 justify-center text-xl font-headline"><Trophy className="text-yellow-500" /> Real Traders, Real Wins.</h3>
+                  <p className="text-sm text-muted-foreground max-w-lg mx-auto">Check out the latest winning screenshots. Nailed a great trade? Share your success and inspire the community!</p>
+              </CardHeader>
+              <CardContent className="flex justify-center">
+                  <Button asChild>
+                      <Link href="/winners-circle">Share Your Win</Link>
+                  </Button>
+              </CardContent>
+            </Card>
           </section>
           
         </main>

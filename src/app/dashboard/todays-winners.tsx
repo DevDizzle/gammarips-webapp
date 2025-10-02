@@ -158,8 +158,8 @@ function TodaysWinners() {
             </TableBody>
         </Table>
 
-        {/* Mobile Cards */}
-        <div className="md:hidden overflow-x-auto snap-x snap-mandatory flex gap-4 -mx-4 px-4">
+        {/* Mobile Cards - Vertical Stack */}
+        <div className="md:hidden space-y-3">
              {signals.map(signal => {
                 const isGainer = signal.percent_gain >= 0;
                 const imageUrl = signal.image_uri 
@@ -167,42 +167,40 @@ function TodaysWinners() {
                     : `https://placehold.co/40x40/1e293b/a855f7?text=${signal.ticker[0]}`;
 
                 return (
-                    <div key={signal.id} className="snap-start shrink-0 w-4/5">
-                        <Card onClick={() => handleRowClick(signal.ticker)} className="cursor-pointer transition-colors hover:bg-muted/50 h-full">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between gap-4">
-                                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                                        <Image 
-                                            src={imageUrl} 
-                                            alt={`${signal.company_name} logo`}
-                                            width={40}
-                                            height={40}
-                                            className="rounded-full"
-                                        />
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-bold truncate">{signal.company_name}</p>
-                                            <p className="text-sm text-muted-foreground">{signal.ticker}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex-shrink-0">
-                                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                    <Card key={signal.id} onClick={() => handleRowClick(signal.ticker)} className="cursor-pointer transition-colors hover:bg-muted/50">
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex items-center gap-3 flex-1 min-w-0">
+                                    <Image 
+                                        src={imageUrl} 
+                                        alt={`${signal.company_name} logo`}
+                                        width={40}
+                                        height={40}
+                                        className="rounded-full"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-bold truncate">{signal.company_name}</p>
+                                        <p className="text-sm text-muted-foreground">{signal.ticker}</p>
                                     </div>
                                 </div>
-                                <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                                    <div>
-                                        <p className="text-muted-foreground">Initial / Current</p>
-                                        <p className="font-semibold">${signal.initial_price.toFixed(2)} / ${signal.current_price.toFixed(2)}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-muted-foreground">Gain</p>
-                                        <p className={cn("font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
-                                            {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
-                                        </p>
-                                    </div>
+                                <div className="flex-shrink-0">
+                                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
                                 </div>
-                            </CardContent>
-                        </Card>
-                    </div>
+                            </div>
+                            <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p className="text-muted-foreground">Initial / Current</p>
+                                    <p className="font-semibold">${signal.initial_price.toFixed(2)} / ${signal.current_price.toFixed(2)}</p>
+                                </div>
+                                <div>
+                                    <p className="text-muted-foreground">Gain</p>
+                                    <p className={cn("font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
+                                        {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
+                                    </p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 )
             })}
         </div>
@@ -437,7 +435,7 @@ function TodaysWinners() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="mb-4">
+        <div className="mt-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {buttons.map(({label, view}) => (
                     <Button 
@@ -463,5 +461,7 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
+
+    
 
     

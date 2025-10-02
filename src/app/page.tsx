@@ -21,11 +21,11 @@ export default function LandingPage() {
       <div className="flex flex-col min-h-screen bg-background">
         {/* Header */}
         <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold font-headline text-primary">
+          <div className="flex justify-between items-center gap-4">
+            <Link href="/" className="text-2xl font-bold font-headline text-primary shrink-0">
               ProfitScout
             </Link>
-            <div className="flex flex-1 items-center justify-end space-x-4">
+            <div className="flex w-full items-center justify-end space-x-4">
               <TickerSearch />
             </div>
           </div>

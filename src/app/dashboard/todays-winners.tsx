@@ -4,7 +4,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -12,11 +11,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { getWinnersDashboard, getPerformanceSignals } from '../actions';
 import type { Winner, PerformanceSignal } from '@/lib/firebase-admin';
-import { ArrowDown, ArrowUp, ChevronRight, Trophy, TrendingDown, TrendingUp } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronRight, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Markdown } from '@/components/markdown';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+type ViewType = 'bullish' | 'bearish' | 'gainers' | 'losers';
 
 
 // Helper to convert GCS URI to a public URL
@@ -32,6 +31,7 @@ const convertGcsUriToUrl = (gcsUri: string) => {
 
 function TodaysWinners() {
   const [isLoading, setIsLoading] = useState(true);
+  const [activeView, setActiveView] = useState<ViewType>('bullish');
   const [allWinners, setAllWinners] = useState<Winner[]>([]);
   const [topGainers, setTopGainers] = useState<PerformanceSignal[]>([]);
   const [topLosers, setTopLosers] = useState<PerformanceSignal[]>([]);
@@ -344,41 +344,59 @@ function TodaysWinners() {
     </div>
   );
 
+  const renderActiveView = () => {
+    if (isLoading) return renderSkeleton(activeView === 'gainers' || activeView === 'losers');
+
+    switch (activeView) {
+        case 'bullish':
+            return renderWinnersList(bullishWinners);
+        case 'bearish':
+            return renderWinnersList(bearishWinners);
+        case 'gainers':
+            return renderPerformanceList(topGainers);
+        case 'losers':
+            return renderPerformanceList(topLosers);
+        default:
+            return null;
+    }
+  }
+
+  const buttons: { label: string; view: ViewType }[] = [
+    { label: 'Top Call Setups', view: 'bullish' },
+    { label: 'Top Put Setups', view: 'bearish' },
+    { label: 'Top Gainers', view: 'gainers' },
+    { label: 'Top Losers', view: 'losers' },
+  ];
+
   return (
     <Card className="lg:col-span-2">
       <CardHeader>
         <CardTitle>Market Hub</CardTitle>
         <CardDescription>
-          <p>Explore today's top Call/Put setups, or review our model's historical performance with top gainers and losers. {lastUpdated && !isLoading && (
-            <span className="text-xs text-muted-foreground mt-2">Signal Data Last Updated: {lastUpdated}</span>
-          )}</p>
-          <p>
-            <strong>Click any stock to see the full analysis.</strong>
-          </p>
+          Explore today's top Call/Put setups, or review our model's historical performance with top gainers and losers.
+          {lastUpdated && !isLoading && (
+            <span className="block text-xs text-muted-foreground mt-2">Signal Data Last Updated: {lastUpdated}</span>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+            {buttons.map(({label, view}) => (
+                <Button 
+                    key={view}
+                    variant={activeView === view ? 'default' : 'outline'}
+                    onClick={() => setActiveView(view)}
+                >
+                    {label}
+                </Button>
+            ))}
+        </div>
+        
         <div className="mt-4">
-            <Tabs defaultValue="bullish" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
-                <TabsTrigger value="bullish"><TrendingUp className="mr-2 h-4 w-4" /> Top Call Setups</TabsTrigger>
-                <TabsTrigger value="bearish"><TrendingDown className="mr-2 h-4 w-4"/> Top Put Setups</TabsTrigger>
-                <TabsTrigger value="gainers">Top Gainers</TabsTrigger>
-                <TabsTrigger value="losers">Top Losers</TabsTrigger>
-            </TabsList>
-            <TabsContent value="bullish" className="mt-4">
-                {isLoading ? renderSkeleton() : renderWinnersList(bullishWinners)}
-            </TabsContent>
-            <TabsContent value="bearish" className="mt-4">
-                {isLoading ? renderSkeleton() : renderWinnersList(bearishWinners)}
-            </TabsContent>
-            <TabsContent value="gainers" className="mt-4">
-                {isLoading ? renderSkeleton(true) : renderPerformanceList(topGainers)}
-            </TabsContent>
-            <TabsContent value="losers" className="mt-4">
-                {isLoading ? renderSkeleton(true) : renderPerformanceList(topLosers)}
-            </TabsContent>
-            </Tabs>
+          <p className='text-sm text-muted-foreground mb-2'>
+            <strong>Click any stock to see the full analysis.</strong>
+          </p>
+          {renderActiveView()}
         </div>
       </CardContent>
     </Card>
@@ -386,3 +404,5 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
+
+    

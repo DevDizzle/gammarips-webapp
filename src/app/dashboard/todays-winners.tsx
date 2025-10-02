@@ -352,11 +352,13 @@ function TodaysWinners() {
           <p>Explore today's top Call/Put setups, or review our model's historical performance with top gainers and losers. {lastUpdated && !isLoading && (
             <span className="text-xs text-muted-foreground mt-2">Signal Data Last Updated: {lastUpdated}</span>
           )}</p>
-          <p><strong>Click any stock to see the full analysis.</strong></p>
+          <p>
+            <strong>Click any stock to see the full analysis.</strong>
+          </p>
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="bullish" className="w-full">
+        <Tabs defaultValue="bullish" className="w-full mt-4">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
             <TabsTrigger value="bullish"><TrendingUp className="mr-2 h-4 w-4" /> Top Call Setups</TabsTrigger>
             <TabsTrigger value="bearish"><TrendingDown className="mr-2 h-4 w-4"/> Top Put Setups</TabsTrigger>

@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -248,7 +247,7 @@ function TodaysWinners() {
                        {isPerformance ? (
                            <>
                                <TableHead><Skeleton className="h-5 w-32" /></TableHead>
-                               <TableHead><Skeleton className="h-5 w-24" /></TableHead>
+                               <TableHead><Skeleton className="h-5 w-24 ml-auto" /></TableHead>
                            </>
                        ) : (
                            <>
@@ -320,7 +319,7 @@ function TodaysWinners() {
         <CardHeader>
           <CardTitle>Market Hub</CardTitle>
           <CardDescription>
-            <Markdown content="Explore today's top Call/Put setups, or review our model's historical performance with top gainers and losers. **Click any stock to see the full analysis.**" />
+            Explore today's top Call/Put setups, or review our model's historical performance with top gainers and losers. **Click any stock to see the full analysis.**
             {lastUpdated && !isLoading && (
               <p className="text-xs text-muted-foreground mt-2">Signal Data Last Updated: {lastUpdated}</p>
             )}
@@ -328,9 +327,9 @@ function TodaysWinners() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="bullish" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="bullish"><TrendingUp className="mr-2" /> Top Call Setups</TabsTrigger>
-              <TabsTrigger value="bearish"><TrendingDown className="mr-2"/> Top Put Setups</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+              <TabsTrigger value="bullish"><TrendingUp className="mr-2 h-4 w-4" /> Top Call Setups</TabsTrigger>
+              <TabsTrigger value="bearish"><TrendingDown className="mr-2 h-4 w-4"/> Top Put Setups</TabsTrigger>
               <TabsTrigger value="gainers">Top Gainers</TabsTrigger>
               <TabsTrigger value="losers">Top Losers</TabsTrigger>
             </TabsList>

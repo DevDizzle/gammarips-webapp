@@ -110,7 +110,9 @@ function TodaysWinners() {
         return <p className="text-sm text-muted-foreground text-center py-4">No performance signals available at this time.</p>;
     }
     return (
-        <Table>
+      <>
+        {/* Desktop Table */}
+        <Table className="hidden md:table">
             <TableHeader>
                 <TableRow>
                     <TableHead>Company</TableHead>
@@ -155,6 +157,57 @@ function TodaysWinners() {
                 })}
             </TableBody>
         </Table>
+
+        {/* Mobile Cards */}
+        <div className="md:hidden overflow-x-auto snap-x snap-mandatory flex gap-4 -mx-4 px-4">
+             {signals.map(signal => {
+                const isGainer = signal.percent_gain >= 0;
+                const imageUrl = signal.image_uri 
+                    ? convertGcsUriToUrl(signal.image_uri) 
+                    : `https://placehold.co/40x40/1e293b/a855f7?text=${signal.ticker[0]}`;
+
+                return (
+                    <div key={signal.id} className="snap-start shrink-0 w-4/5">
+                        <Card onClick={() => handleRowClick(signal.ticker)} className="cursor-pointer transition-colors hover:bg-muted/50 h-full">
+                            <CardContent className="p-4">
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                                        <Image 
+                                            src={imageUrl} 
+                                            alt={`${signal.company_name} logo`}
+                                            width={40}
+                                            height={40}
+                                            className="rounded-full"
+                                        />
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-bold truncate">{signal.company_name}</p>
+                                            <p className="text-sm text-muted-foreground">{signal.ticker}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex-shrink-0">
+                                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                                    </div>
+                                </div>
+                                <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <p className="text-muted-foreground">Initial / Current</p>
+                                        <p className="font-semibold">${signal.initial_price.toFixed(2)} / ${signal.current_price.toFixed(2)}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-muted-foreground">Gain</p>
+                                        <p className={cn("font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
+                                            {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
+                                        </p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                )
+            })}
+        </div>
+
+      </>
     );
   };
   
@@ -213,7 +266,7 @@ function TodaysWinners() {
         </Table>
 
         {/* Mobile Cards */}
-        <div className="space-y-3 md:hidden">
+        <div className="md:hidden overflow-x-auto snap-x snap-mandatory flex gap-4 -mx-4 px-4">
             {winners.map(winner => {
                 const imageUrl = winner.image_uri 
                     ? convertGcsUriToUrl(winner.image_uri) 
@@ -221,41 +274,43 @@ function TodaysWinners() {
                 const signalMeta = getSignalMeta(winner.outlook_signal);
 
                 return (
-                    <Card key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer transition-colors hover:bg-muted/50">
-                        <CardContent className="p-4">
-                            <div className="flex items-center justify-between gap-4">
-                                <div className="flex items-center gap-3 flex-1 min-w-0">
-                                    <Image 
-                                        src={imageUrl} 
-                                        alt={`${winner.company_name} logo`}
-                                        width={40}
-                                        height={40}
-                                        className="rounded-full"
-                                    />
-                                    <div className="flex-1 min-w-0">
-                                        <p className="font-bold truncate">{winner.company_name}</p>
-                                        <p className="text-sm text-muted-foreground">{winner.ticker}</p>
+                    <div key={winner.id} className="snap-start shrink-0 w-4/5">
+                        <Card onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer transition-colors hover:bg-muted/50 h-full">
+                            <CardContent className="p-4">
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                                        <Image 
+                                            src={imageUrl} 
+                                            alt={`${winner.company_name} logo`}
+                                            width={40}
+                                            height={40}
+                                            className="rounded-full"
+                                        />
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-bold truncate">{winner.company_name}</p>
+                                            <p className="text-sm text-muted-foreground">{winner.ticker}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex-shrink-0">
+                                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
                                     </div>
                                 </div>
-                                <div className="flex-shrink-0">
-                                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                                </div>
-                            </div>
-                            <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                                <div>
-                                    <p className="text-muted-foreground">Last Close</p>
-                                    <p className="font-semibold">${winner.last_close.toFixed(2)}</p>
-                                </div>
-                                <div>
-                                    <p className="text-muted-foreground">AI Outlook</p>
-                                    <div className={cn("flex items-center gap-1 font-semibold", signalMeta.color)}>
-                                        {signalMeta.icon}
-                                        <span>{winner.outlook_signal}</span>
+                                <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <p className="text-muted-foreground">Last Close</p>
+                                        <p className="font-semibold">${winner.last_close.toFixed(2)}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-muted-foreground">AI Outlook</p>
+                                        <div className={cn("flex items-center gap-1 font-semibold", signalMeta.color)}>
+                                            {signalMeta.icon}
+                                            <span>{winner.outlook_signal}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    </div>
                 )
             })}
         </div>
@@ -313,32 +368,34 @@ function TodaysWinners() {
                 </TableBody>
             </Table>
         </div>
-        <div className="space-y-3 md:hidden">
+        <div className="md:hidden overflow-x-auto snap-x snap-mandatory flex gap-4 -mx-4 px-4">
              {Array.from({ length: 3 }).map((_, i) => (
-                <Card key={i}>
-                    <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <Skeleton className="h-10 w-10 rounded-full" />
+                <div key={i} className="snap-start shrink-0 w-4/5">
+                    <Card>
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <Skeleton className="h-10 w-10 rounded-full" />
+                                    <div>
+                                        <Skeleton className="h-5 w-32" />
+                                        <Skeleton className="h-4 w-16 mt-1" />
+                                    </div>
+                                </div>
+                                <Skeleton className="h-5 w-5" />
+                            </div>
+                            <div className="mt-4 grid grid-cols-2 gap-4">
                                 <div>
-                                    <Skeleton className="h-5 w-32" />
-                                    <Skeleton className="h-4 w-16 mt-1" />
+                                    <Skeleton className="h-4 w-20 mb-1" />
+                                    <Skeleton className="h-5 w-24" />
+                                </div>
+                                <div>
+                                    <Skeleton className="h-4 w-20 mb-1" />
+                                    <Skeleton className="h-5 w-28" />
                                 </div>
                             </div>
-                            <Skeleton className="h-5 w-5" />
-                        </div>
-                        <div className="mt-4 grid grid-cols-2 gap-4">
-                            <div>
-                                <Skeleton className="h-4 w-20 mb-1" />
-                                <Skeleton className="h-5 w-24" />
-                            </div>
-                            <div>
-                                <Skeleton className="h-4 w-20 mb-1" />
-                                <Skeleton className="h-5 w-28" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                        </CardContent>
+                    </Card>
+                </div>
             ))}
         </div>
     </div>
@@ -380,16 +437,18 @@ function TodaysWinners() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
-            {buttons.map(({label, view}) => (
-                <Button 
-                    key={view}
-                    variant={activeView === view ? 'default' : 'outline'}
-                    onClick={() => setActiveView(view)}
-                >
-                    {label}
-                </Button>
-            ))}
+        <div className="mb-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {buttons.map(({label, view}) => (
+                    <Button 
+                        key={view}
+                        variant={activeView === view ? 'default' : 'outline'}
+                        onClick={() => setActiveView(view)}
+                    >
+                        {label}
+                    </Button>
+                ))}
+            </div>
         </div>
         
         <div className="mt-4">

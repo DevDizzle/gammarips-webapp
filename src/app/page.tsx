@@ -1,41 +1,16 @@
 import Link from "next/link";
 import { TickerSearch } from "@/components/ticker-search";
 import TodaysWinners from "@/app/dashboard/todays-winners";
-import { AuthDialog } from "@/components/auth/auth-dialog";
 import { Suspense } from "react";
 import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
-
-function HomePageClientContent() {
-  'use client';
-
-  const { useSearchParams } = require("next/navigation");
-  const { useEffect, useState } = require("react");
-
-  const searchParams = useSearchParams();
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
-  const [authDialogDefaultView, setAuthDialogDefaultView] = useState<'signIn' | 'signUp'>('signUp');
-
-  useEffect(() => {
-    if (searchParams.get('from') === 'verification' && searchParams.get('verified') === 'true') {
-      setAuthDialogDefaultView('signIn');
-      setShowAuthDialog(true);
-    }
-  }, [searchParams]);
-
-  return (
-    <AuthDialog 
-      open={showAuthDialog} 
-      onOpenChange={setShowAuthDialog} 
-      defaultView={authDialogDefaultView}
-    />
-  );
-}
-
+import HomePageClientContent from "./home-page-client-content";
 
 export default function LandingPage() {
   return (
-    <Suspense fallback={<div className="h-screen w-full flex items-center justify-center">Loading...</div>}>
-      <HomePageClientContent />
+    <>
+      <Suspense>
+        <HomePageClientContent />
+      </Suspense>
       <div className="flex flex-col min-h-screen bg-background">
         {/* Header */}
         <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -75,6 +50,6 @@ export default function LandingPage() {
           
         </main>
       </div>
-    </Suspense>
+    </>
   );
 }

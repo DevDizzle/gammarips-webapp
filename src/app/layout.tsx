@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/hooks/use-auth';
 import Footer from '@/components/layout/footer';
 import Script from 'next/script';
+import CookieConsentBanner from '@/components/cookie-consent-banner';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://profitscout.app'), // Replace with your actual domain
@@ -70,6 +71,7 @@ export default function RootLayout({
           <main className='flex-grow'>{children}</main>
           <Footer />
           <Toaster />
+          <CookieConsentBanner />
         </AuthProvider>
       </body>
     </html>

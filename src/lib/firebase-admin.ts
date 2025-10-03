@@ -157,8 +157,11 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
     };
 
     try {
-        const today = new Date();
-        today.setUTCHours(0, 0, 0, 0);
+        // Use 'America/New_York' timezone to align with market hours (EST/EDT)
+        const todayInNY = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+        const today = new Date(todayInNY);
+        today.setHours(0, 0, 0, 0); // Set to midnight NY time.
+
         const todayStr = today.toISOString().split('T')[0];
 
         const snapshot = await adminDb.collection('performance_tracker')
@@ -182,17 +185,12 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
             const gain = data.percent_gain;
 
             if (typeof gain === 'number') {
-                // Ensure dates are parsed as UTC to avoid timezone shifts
                 const startDate = new Date(data.run_date + 'T00:00:00Z');
                 const endDate = new Date(data.last_updated.split(' ')[0] + 'T00:00:00Z');
 
-                // Calculate duration in days. +1 to include the start day.
-                // E.g., 10/2 - 10/1 = 1 day.
                 const durationMs = endDate.getTime() - startDate.getTime();
                 const durationDays = Math.round(durationMs / (1000 * 60 * 60 * 24));
                 
-                // Use a minimum duration of 1 day to avoid division by zero
-                // or inflating returns for trades held less than a day.
                 const finalDuration = Math.max(1, durationDays);
 
                 if (finalDuration > 0) {
@@ -964,3 +962,4 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+

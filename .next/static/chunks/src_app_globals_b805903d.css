@@ -1597,10 +1597,6 @@ body {
   width: 100%;
 }
 
-.w-4\/5 {
-  width: 80%;
-}
-
 .min-w-0 {
   min-width: 0;
 }
@@ -1748,18 +1744,6 @@ body {
 
 .resize {
   resize: both;
-}
-
-.snap-x {
-  scroll-snap-type: x var(--tw-scroll-snap-strictness);
-}
-
-.snap-mandatory {
-  --tw-scroll-snap-strictness: mandatory;
-}
-
-.snap-start {
-  scroll-snap-align: start;
 }
 
 .scroll-mt-20 {
@@ -1930,10 +1914,6 @@ body {
 
 .overflow-hidden {
   overflow: hidden;
-}
-
-.overflow-x-auto {
-  overflow-x: auto;
 }
 
 .overflow-y-auto {

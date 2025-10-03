@@ -14,8 +14,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Winner's Circle | Real Winning Trades from the ProfitScout Community",
-    description: "See real success stories and winning trade screenshots from members of the ProfitScout community. Browse top stock and options trades and get inspired.",
+    title: "Community Insights | Real Trade Examples from the ProfitScout Community",
+    description: "See real success stories and trade screenshots from members of the ProfitScout community. Browse top stock and options trades and get inspired.",
   };
 }
 
@@ -26,7 +26,7 @@ const getInitials = (name: string | null | undefined) => {
 };
 
 const WinCard = ({ win }: { win: Win }) => {
-    const altText = `Winning trade screenshot for ${win.tickers} showing a +${win.percentGain.toFixed(2)}% gain, submitted by a ProfitScout user.`;
+    const altText = `Trade example screenshot for ${win.tickers} showing a +${win.percentGain.toFixed(2)}% gain, submitted by a ProfitScout user.`;
 
     return (
         <Card className="flex flex-col">
@@ -68,14 +68,14 @@ const WinCard = ({ win }: { win: Win }) => {
 const NoWinsPlaceholder = () => (
     <div className="text-center col-span-full py-16 px-6 bg-card rounded-lg border-2 border-dashed">
         <Trophy className="mx-auto h-12 w-12 text-muted-foreground" />
-        <h2 className="mt-4 text-xl font-semibold">The Winner's Circle is waiting for its first champion.</h2>
+        <h2 className="mt-4 text-xl font-semibold">The Community Gallery is Waiting for its First Submission.</h2>
         <p className="mt-2 text-muted-foreground">
-            Be the first to claim the spotlight! Submit your winning trade and kickstart the gallery of success.
+            Be the first to claim the spotlight! Submit your trade example and kickstart the gallery of insights.
         </p>
     </div>
 );
 
-export default async function WinnersCirclePage() {
+export default async function CommunityInsightsPage() {
     // Fetch wins on the server
     let wins: Win[] = [];
     let loading = true;
@@ -107,24 +107,24 @@ export default async function WinnersCirclePage() {
                 <section className="text-center mb-12">
                     <Trophy className="mx-auto h-12 w-12 text-yellow-500" />
                     <h1 className="mt-4 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-                       The Winner's Circle
+                       Community Insights
                     </h1>
                     <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                        Welcome to the hub of success. This is where our community's best trades get the spotlight. Browse the wins below for inspiration, or share your own victory to motivate fellow traders!
+                       Welcome to the hub of community-shared trade examples. Browse screenshots below for inspiration, or share your own to help fellow traders. Examples are user-submitted, may not be representative, and are not predictive of results. Educational use only.
                     </p>
                 </section>
                 
                 {wins.length > 0 && (
                     <Card className="mb-12 bg-primary/10 border-primary/20 text-center">
                         <CardHeader>
-                            <CardTitle className="font-headline text-2xl">Community Average Gain</CardTitle>
+                            <CardTitle className="font-headline text-2xl">Community Average Submitted Gain</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p className="text-5xl font-bold text-primary">
                                 +{averageGain.toFixed(2)}%
                             </p>
                             <p className="text-sm text-primary/80 mt-2">
-                                Average ROI from all featured community wins.
+                                Average ROI from all featured community submissions.
                             </p>
                         </CardContent>
                     </Card>
@@ -135,9 +135,9 @@ export default async function WinnersCirclePage() {
                 </section>
                 
                 <section className="text-center mb-12">
-                     <h2 className="text-3xl font-bold font-headline">Recent Community Wins</h2>
+                     <h2 className="text-3xl font-bold font-headline">Recent Community Submissions</h2>
                     <p className="mt-2 max-w-2xl mx-auto text-muted-foreground">
-                        Check out the latest winning screenshots submitted by the ProfitScout community.
+                        Check out the latest trade examples submitted by the ProfitScout community.
                     </p>
                 </section>
 

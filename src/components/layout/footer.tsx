@@ -10,13 +10,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="md:col-span-2">
             <h3 className="text-xl font-bold font-headline text-primary">ProfitScout</h3>
-            <p className="text-sm text-muted-foreground mt-2">Uncover Your Next Winning Trade</p>
+            <p className="text-sm text-muted-foreground mt-2">AI-Powered Research for Options Traders</p>
           </div>
           <div>
             <h4 className="font-semibold text-foreground">Navigate</h4>
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
-              <li><Link href="/winners-circle" className="text-muted-foreground hover:text-primary">Winner's Circle</Link></li>
+              <li><Link href="/winners-circle" className="text-muted-foreground hover:text-primary">Community Insights</Link></li>
             </ul>
           </div>
           <div>

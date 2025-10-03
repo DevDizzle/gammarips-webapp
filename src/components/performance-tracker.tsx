@@ -30,11 +30,11 @@ export async function PerformanceTracker() {
                 <div className="flex justify-center items-center gap-2">
                     <TrendingUp className="h-6 w-6 text-primary" />
                     <CardTitle className="font-headline text-2xl">
-                        Signal Performance Tracker
+                        Historical Model Performance
                     </CardTitle>
                 </div>
                  <CardDescription className="max-w-2xl mx-auto">
-                    This is the average performance of our AI-recommended options signals, tracked from the initial recommendation to expiry. This shows the real-world performance of our model.
+                    This data reflects the historical performance of the AI model's analyses, tracked from the date of identification to the standard expiry. All data is for informational purposes and does not guarantee future results.
                 </CardDescription>
             </CardHeader>
             <CardContent>

@@ -36,10 +36,10 @@ export default function LandingPage() {
           {/* Hero */}
           <section className="text-center py-20 sm:py-24">
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight">
-              Find Your Next Winning Options Trade
+              AI-Powered Research for Options Traders
             </h2>
             <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-              Get AI-powered stock signals that pinpoint high-potential options setups in the Russell 1000. Stop chasing noise and start trading with confidence.
+              Analyze data-driven insights to identify potential options setups in the Russell 1000. Enhance your research process and make more informed decisions.
             </p>
           </section>
 
@@ -59,12 +59,12 @@ export default function LandingPage() {
           <section className="pb-16">
             <Card className="border-border">
               <CardHeader className="text-center">
-                  <h3 className="font-bold flex items-center gap-2 justify-center text-xl font-headline"><Trophy className="text-yellow-500" /> Real Traders, Real Wins.</h3>
-                  <p className="text-sm text-muted-foreground max-w-lg mx-auto">See how traders just like you are using ProfitScout to find their edge. Explore a live gallery of winning trades shared by our community.</p>
+                  <h3 className="font-bold flex items-center gap-2 justify-center text-xl font-headline"><Trophy className="text-yellow-500" /> Join Our Community of Traders</h3>
+                  <p className="text-sm text-muted-foreground max-w-lg mx-auto">See how traders leverage ProfitScout to supplement their research process. Explore analyses and strategies shared by our community.</p>
               </CardHeader>
               <CardContent className="flex justify-center">
                   <Button asChild>
-                      <Link href="/winners-circle">See the Wins</Link>
+                      <Link href="/winners-circle">Explore Community Insights</Link>
                   </Button>
               </CardContent>
             </Card>

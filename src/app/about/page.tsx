@@ -36,7 +36,7 @@ const features = [
   {
       icon: <Scale className="h-8 w-8 text-primary" />,
       title: 'Options Chain Analysis',
-      description: 'We process daily options chain data to identify contracts with ideal liquidity, volatility, and risk/reward profiles, scoring the best setups for both Calls and Puts.'
+      description: 'We process daily options chain data to identify contracts with ideal liquidity, volatility, and risk/reward profiles, scoring setups based on these criteria for both Calls and Puts.'
   },
   {
     icon: <Newspaper className="h-8 w-8 text-primary" />,
@@ -48,18 +48,18 @@ const features = [
 const benefits = [
     {
         icon: <Bot size={24} className="text-primary" />,
-        title: "AI-Powered Market Outlooks",
-        description: "Instead of a simple rating, you get a nuanced, five-tier outlook for each stock (from \"Strongly Bullish\" to \"Strongly Bearish\"), complete with a concise summary of the key drivers behind the analysis."
+        title: "AI-Powered Market Analysis",
+        description: "Instead of a simple rating, you get a nuanced, five-tier analytical view for each stock (from \"Strongly Bullish\" to \"Strongly Bearish\"), complete with a concise summary of the key drivers behind the analysis."
     },
     {
         icon: <Target size={24} className="text-primary" />,
-        title: "Top-Rated Options Setups",
-        description: "A curated list of the highest-scoring Call and Put options, allowing you to find actionable trade ideas that align with your market view."
+        title: "Highest-Scoring Options Analysis",
+        description: "A filtered list of the highest-scoring Call and Put options based on our data model, allowing you to identify potential setups that align with your market view."
     },
     {
         icon: <Gem size={24} className="text-primary" />,
-        title: "The Winners Dashboard",
-        description: "A daily snapshot of stocks that not only have a strong bullish or bearish outlook but also feature a \"Strong\" setup on our options scanner—giving you the best of both worlds."
+        title: "The Confluence Dashboard",
+        description: "A daily snapshot of stocks that have a strong bullish or bearish analysis and also feature a high-scoring setup on our options scanner, highlighting where our stock and options data models align."
     },
 ]
 
@@ -74,10 +74,10 @@ export default function AboutPage() {
             About ProfitScout
           </h1>
           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            ProfitScout is designed to give you an AI-powered edge in the market. Our mission is to transform complex financial data into clear, actionable trade ideas for both stocks and options, helping you navigate the market with data-driven confidence.
+            ProfitScout is designed to offer a new perspective on the market. Our mission is to transform complex financial data into clear, data-driven insights for both stocks and options, helping you navigate the market with a more informed approach.
           </p>
            <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            Our analysis goes beyond simple ratings by blending fundamentals, technicals, and AI-driven insights to highlight high-potential opportunities you can act on.
+            Our analysis goes beyond simple ratings by blending fundamentals, technicals, and AI-driven models to highlight market setups that meet specific analytical criteria.
           </p>
           <a href="#how-it-works" className="mt-6 inline-block text-sm font-semibold text-primary hover:underline">
             See how it works &darr;
@@ -133,7 +133,7 @@ export default function AboutPage() {
                         <div className="flex-shrink-0 mt-1"><CheckCircle2 className="h-6 w-6 text-primary" /></div>
                         <div>
                             <h3 className="text-lg font-semibold">An Interactive Dashboard</h3>
-                            <p className="text-muted-foreground">A powerful, user-friendly interface to explore all our data, compare stocks, and uncover your next winning trade.</p>
+                            <p className="text-muted-foreground">A powerful, user-friendly interface to explore all our data, compare stocks, and support your personal research process.</p>
                         </div>
                     </div>
                 </div>
@@ -149,10 +149,10 @@ export default function AboutPage() {
                     <CardTitle className="font-headline text-2xl">Ready to Get Started?</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Go from analysis to action. Instantly access today's top-rated Call and Put setups, backed by AI-driven scores and real-time market data.</p>
+                    <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Go from analysis to informed decision. Instantly access today's data-driven Call and Put analyses, backed by AI scores and daily market data.</p>
                     <Button asChild size="lg">
                         <Link href="/">
-                            Find Your Next Trade <ArrowRight className="ml-2 h-5 w-5"/>
+                            Start Your Research <ArrowRight className="ml-2 h-5 w-5"/>
                         </Link>
                     </Button>
                 </CardContent>

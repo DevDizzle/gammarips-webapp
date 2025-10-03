@@ -134,19 +134,6 @@ const TickerOptionsDataSchema = z.object({
 });
 export type TickerOptionsData = z.infer<typeof TickerOptionsDataSchema>;
 
-const WinSchema = z.object({
-  id: z.string(),
-  authorId: z.string(),
-  authorName: z.string().optional().nullable(),
-  authorImage: z.string().optional().nullable(),
-  imageUrl: z.string(),
-  tickers: z.string(),
-  percentGain: z.number(),
-  status: z.enum(['pending', 'approved', 'rejected']),
-  createdAt: z.custom((data) => data instanceof admin.firestore.Timestamp),
-});
-export type Win = z.infer<typeof WinSchema>;
-
 export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyGain: number; signalCount: number; winRate: number; averageWinnerGain: number; averageLoserGain: number; }> {
     const defaultStats = {
         averageDailyGain: 0,
@@ -285,91 +272,6 @@ export async function saveFeedbackAdmin(
   } catch (error) {
     console.error("Error writing feedback to Firestore with Admin SDK: ", error);
     throw new Error("Could not save feedback to the database.");
-  }
-}
-
-export async function uploadWinImageAdmin(uid: string, fileName: string, fileType: string, fileBuffer: Buffer): Promise<string> {
-  const bucketName = 'profit-scout';
-  
-  const bucket = adminStorage.bucket(bucketName);
-  const fileExtension = fileName.split('.').pop();
-  const uniqueFileName = `${uid}-${randomUUID()}.${fileExtension}`;
-  const filePath = `screenshots/${uniqueFileName}`;
-  const file = bucket.file(filePath);
-
-  await file.save(fileBuffer, {
-    metadata: {
-      contentType: fileType,
-    },
-  });
-  
-  return file.publicUrl();
-}
-
-export async function saveWinSubmissionAdmin(submission: {
-  authorId: string;
-  imageUrl: string;
-  tickers: string;
-  percentGain: number;
-}): Promise<void> {
-  try {
-    await adminDb.collection('wins').add({
-      ...submission,
-      status: 'pending',
-      createdAt: FieldValue.serverTimestamp(),
-    });
-  } catch (error) {
-    console.error("Error writing win submission to Firestore: ", error);
-    throw new Error("Could not save your submission.");
-  }
-}
-
-export async function getApprovedWinsAdmin(): Promise<Win[]> {
-  try {
-    const winsSnapshot = await adminDb.collection('wins')
-      .where('status', '==', 'approved')
-      .get();
-
-    if (winsSnapshot.empty) {
-      return [];
-    }
-
-    const winPromises = winsSnapshot.docs.map(async (doc) => {
-      const winData = doc.data();
-      const userDoc = await adminDb.collection('users').doc(winData.authorId).get();
-      const userData = userDoc.data();
-      
-      const combinedData = {
-        id: doc.id,
-        authorId: winData.authorId,
-        authorName: userData?.displayName,
-        authorImage: userData?.photoURL,
-        imageUrl: winData.imageUrl,
-        tickers: winData.tickers,
-        percentGain: winData.percentGain,
-        status: winData.status,
-        createdAt: winData.createdAt,
-      };
-
-      const validation = WinSchema.safeParse(combinedData);
-      if (validation.success) {
-        return validation.data;
-      } else {
-        console.warn(`Invalid win data in Firestore for doc ${doc.id}:`, validation.error.flatten());
-        return null;
-      }
-    });
-
-    const results = await Promise.all(winPromises);
-    const validWins = results.filter((win): win is Win => win !== null);
-
-    validWins.sort((a, b) => b.percentGain - a.percentGain);
-    
-    return validWins.slice(0, 6);
-
-  } catch (error) {
-    console.error("Error fetching approved wins:", error);
-    return [];
   }
 }
 

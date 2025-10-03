@@ -31,12 +31,9 @@ import {
     getTickerEventsAdmin,
     getOptionsCandidatesAdmin,
     saveFeedbackAdmin,
-    uploadWinImageAdmin,
-    saveWinSubmissionAdmin,
-    getApprovedWinsAdmin,
     getPerformanceSignals as getPerformanceSignalsAdmin,
 } from '@/lib/firebase-admin';
-import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, Win, PerformanceSignal } from '@/lib/firebase-admin';
+import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
@@ -57,10 +54,6 @@ export async function getWinnersDashboard(): Promise<Winner[]> {
     return getWinnersDashboardAdmin();
 }
 
-export async function getApprovedWins(): Promise<Win[]> {
-    return getApprovedWinsAdmin();
-}
-
 export async function incrementDashboardViewCount(uid: string): Promise<{success: boolean}> {
   try {
     const user = await getOrCreateUserAdmin(uid);
@@ -75,37 +68,6 @@ export async function incrementDashboardViewCount(uid: string): Promise<{success
     return { success: false };
   }
 }
-
-export async function handleWinSubmission(uid: string, formData: FormData): Promise<{success: boolean, error?: string}> {
-    const file = formData.get('screenshot') as File;
-    const tickers = formData.get('tickers') as string;
-    const percentGain = formData.get('percentGain') as string;
-
-    if (!file || !tickers || !percentGain) {
-        return { success: false, error: 'Missing required fields.' };
-    }
-
-    try {
-        const fileBuffer = Buffer.from(await file.arrayBuffer());
-        
-        // 1. Upload image to GCS
-        const imageUrl = await uploadWinImageAdmin(uid, file.name, file.type, fileBuffer);
-
-        // 2. Save submission to Firestore
-        await saveWinSubmissionAdmin({
-            authorId: uid,
-            imageUrl,
-            tickers,
-            percentGain: parseFloat(percentGain),
-        });
-
-        return { success: true };
-    } catch (error: any) {
-        console.error('Error handling win submission:', error);
-        return { success: false, error: error.message || 'Failed to process submission.' };
-    }
-}
-
 
 export async function getStocks(): Promise<Stock[]> {
     return getStocksAdmin();

@@ -1187,10 +1187,6 @@ body {
   grid-column: span 1 / span 1;
 }
 
-.col-span-full {
-  grid-column: 1 / -1;
-}
-
 .m-0 {
   margin: 0;
 }
@@ -1235,10 +1231,6 @@ body {
 
 .mb-1 {
   margin-bottom: .25rem;
-}
-
-.mb-12 {
-  margin-bottom: 3rem;
 }
 
 .mb-2 {
@@ -1337,10 +1329,6 @@ body {
   display: none;
 }
 
-.aspect-\[4\/3\] {
-  aspect-ratio: 4 / 3;
-}
-
 .aspect-square {
   aspect-ratio: 1;
 }
@@ -1411,10 +1399,6 @@ body {
 
 .h-9 {
   height: 2.25rem;
-}
-
-.h-96 {
-  height: 24rem;
 }
 
 .h-\[1px\] {
@@ -1774,10 +1758,6 @@ body {
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
-.flex-row {
-  flex-direction: row;
-}
-
 .flex-col {
   flex-direction: column;
 }
@@ -1838,10 +1818,6 @@ body {
   gap: 1rem;
 }
 
-.gap-6 {
-  gap: 1.5rem;
-}
-
 .gap-8 {
   gap: 2rem;
 }
@@ -1864,12 +1840,6 @@ body {
   --tw-space-x-reverse: 0;
   margin-right: calc(1rem * var(--tw-space-x-reverse));
   margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
-.space-y-0 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(0px * var(--tw-space-y-reverse));
 }
 
 .space-y-1 > :not([hidden]) ~ :not([hidden]) {
@@ -2365,11 +2335,6 @@ body {
   line-height: 2.5rem;
 }
 
-.text-5xl {
-  font-size: 3rem;
-  line-height: 1;
-}
-
 .text-\[0\.8rem\] {
   font-size: .8rem;
 }
@@ -2512,10 +2477,6 @@ body {
 
 .text-primary-foreground {
   color: hsl(var(--primary-foreground));
-}
-
-.text-primary\/80 {
-  color: hsl(var(--primary) / .8);
 }
 
 .text-red-500 {

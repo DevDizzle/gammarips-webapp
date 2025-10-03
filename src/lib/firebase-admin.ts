@@ -84,20 +84,6 @@ const OptionCandidateSchema = z.object({
 });
 export type OptionCandidate = z.infer<typeof OptionCandidateSchema>;
 
-const WinnerSchema = z.object({
-  id: z.string(),
-  company_name: z.string(),
-  image_uri: z.string().optional(),
-  industry: z.string(),
-  last_close: z.number(),
-  outlook_signal: z.string(),
-  run_date: z.string(),
-  thirty_day_change_pct: z.number(),
-  ticker: z.string(),
-  weighted_score: z.number().optional().nullable(),
-});
-export type Winner = z.infer<typeof WinnerSchema>;
-
 const PerformanceSignalSchema = z.object({
     id: z.string(),
     ticker: z.string(),
@@ -165,7 +151,7 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
         let winnerCount = 0;
         let loserCount = 0;
         
-        const signalCount = snapshot.size;
+        let validSignalCountForAvg = 0;
 
         snapshot.forEach(doc => {
             const data = doc.data();
@@ -175,14 +161,15 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
                 const startDate = new Date(data.run_date + 'T00:00:00Z');
                 const endDate = new Date(data.last_updated.split(' ')[0] + 'T00:00:00Z');
 
+                // Calculate the difference in milliseconds and convert to days
                 const durationMs = endDate.getTime() - startDate.getTime();
-                const durationDays = Math.round(durationMs / (1000 * 60 * 60 * 24));
+                const durationDays = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
                 
-                const finalDuration = Math.max(1, durationDays);
-
-                if (finalDuration > 0) {
-                    const individualDailyReturn = gain / finalDuration;
+                // Only calculate daily return for signals active for at least one full day
+                if (durationDays > 0) {
+                    const individualDailyReturn = gain / durationDays;
                     totalOfIndividualDailyGains += individualDailyReturn;
+                    validSignalCountForAvg++;
                 }
 
                 if (gain > 0) {
@@ -194,15 +181,16 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
                 }
             }
         });
-
-        if (signalCount === 0) {
+        
+        const totalSignalCount = snapshot.size;
+        if (totalSignalCount === 0) {
             return defaultStats;
         }
 
         return {
-            averageDailyGain: totalOfIndividualDailyGains / signalCount,
-            signalCount: signalCount,
-            winRate: (winnerCount / signalCount) * 100,
+            averageDailyGain: validSignalCountForAvg > 0 ? totalOfIndividualDailyGains / validSignalCountForAvg : 0,
+            signalCount: totalSignalCount,
+            winRate: (winnerCount / totalSignalCount) * 100,
             averageWinnerGain: winnerCount > 0 ? winnersSum / winnerCount : 0,
             averageLoserGain: loserCount > 0 ? losersSum / loserCount : 0,
         };
@@ -864,4 +852,5 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 

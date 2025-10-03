@@ -267,13 +267,13 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
 
         <Card className="mb-8 text-center bg-primary/10 border-primary/20">
             <CardHeader>
-                <CardTitle className="font-headline text-2xl">Ready to Find Your Edge?</CardTitle>
+                <CardTitle className="font-headline text-2xl">Deepen Your Analysis</CardTitle>
             </CardHeader>
             <CardContent>
-                <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Go from analysis to action. Instantly access today's top-rated Call and Put setups, backed by AI-driven scores and daily market data.</p>
+                <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Explore the full picture. Access our complete list of AI-driven Call and Put analyses, supported by quantitative scores and daily market data.</p>
                 <Button asChild size="lg">
                     <Link href="/">
-                        View Today's Top Setups <ArrowRight className="ml-2 h-5 w-5"/>
+                        Explore All Analyses <ArrowRight className="ml-2 h-5 w-5"/>
                     </Link>
                 </Button>
             </CardContent>

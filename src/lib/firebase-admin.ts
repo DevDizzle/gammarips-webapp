@@ -445,8 +445,10 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
             }
         });
 
-        // Remove duplicates based on a composite key of name and date
-        const uniqueEvents = Array.from(new Map(allEvents.map(e => [`${e.event_name}|${e.event_date}`, e])).values());
+        // Remove duplicates and filter out specific events
+        const filteredEvents = allEvents.filter(event => event.event_name !== 'CPI s.a');
+        const uniqueEvents = Array.from(new Map(filteredEvents.map(e => [`${e.event_name}|${e.event_date}`, e])).values());
+
 
         // Sort all merged events by date
         uniqueEvents.sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
@@ -845,6 +847,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 
 
 

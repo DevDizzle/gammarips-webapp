@@ -1581,6 +1581,10 @@ body {
   width: 100%;
 }
 
+.w-48 {
+  width: 12rem;
+}
+
 .min-w-0 {
   min-width: 0;
 }

@@ -117,8 +117,7 @@ function TodaysWinners() {
                 <TableRow>
                     <TableHead>Company</TableHead>
                     <TableHead>Industry</TableHead>
-                    <TableHead>Initial Price</TableHead>
-                    <TableHead>Current Price</TableHead>
+                    <TableHead>Contract</TableHead>
                     <TableHead className="text-right">Percent Gain</TableHead>
                 </TableRow>
             </TableHeader>
@@ -147,8 +146,7 @@ function TodaysWinners() {
                                 </div>
                             </TableCell>
                             <TableCell>{signal.industry}</TableCell>
-                            <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
-                            <TableCell>${signal.current_price.toFixed(2)}</TableCell>
+                            <TableCell className="font-mono text-xs">{signal.contract_symbol}</TableCell>
                             <TableCell className={cn("text-right font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
                                 {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
                             </TableCell>
@@ -183,21 +181,16 @@ function TodaysWinners() {
                                         <p className="text-sm text-muted-foreground">{signal.ticker}</p>
                                     </div>
                                 </div>
-                                <div className="flex-shrink-0">
-                                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                                </div>
-                            </div>
-                            <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                                <div>
-                                    <p className="text-muted-foreground">Initial / Current</p>
-                                    <p className="font-semibold">${signal.initial_price.toFixed(2)} / ${signal.current_price.toFixed(2)}</p>
-                                </div>
-                                <div>
-                                    <p className="text-muted-foreground">Gain</p>
+                                <div className="flex-shrink-0 text-right">
                                     <p className={cn("font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
                                         {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
                                     </p>
+                                    <p className="text-xs text-muted-foreground">Gain</p>
                                 </div>
+                            </div>
+                            <div className="mt-4 border-t pt-3">
+                                <p className="text-xs text-muted-foreground">Contract</p>
+                                <p className="font-mono text-sm">{signal.contract_symbol}</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -323,8 +316,7 @@ function TodaysWinners() {
                            <>
                                <TableHead><Skeleton className="h-5 w-32" /></TableHead>
                                <TableHead><Skeleton className="h-5 w-28" /></TableHead>
-                               <TableHead><Skeleton className="h-5 w-24" /></TableHead>
-                               <TableHead><Skeleton className="h-5 w-24" /></TableHead>
+                               <TableHead><Skeleton className="h-5 w-48" /></TableHead>
                                <TableHead className="text-right"><Skeleton className="h-5 w-24 ml-auto" /></TableHead>
                            </>
                        ) : (
@@ -345,8 +337,7 @@ function TodaysWinners() {
                                 <>
                                     <TableCell><Skeleton className="h-5 w-40" /></TableCell>
                                     <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-48" /></TableCell>
                                     <TableCell><Skeleton className="h-5 w-20 ml-auto" /></TableCell>
                                 </>
                             ) : (

@@ -90,6 +90,7 @@ const PerformanceSignalSchema = z.object({
     company_name: z.string(),
     image_uri: z.string().optional().nullable(),
     industry: z.string(),
+    contract_symbol: z.string(),
     initial_price: z.number(),
     current_price: z.number(),
     percent_gain: z.number(),
@@ -130,11 +131,9 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
     };
 
     try {
-        // Use 'America/New_York' timezone to align with market hours (EST/EDT)
         const todayInNY = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
         const today = new Date(todayInNY);
-        today.setHours(0, 0, 0, 0); // Set to midnight NY time.
-
+        today.setHours(0, 0, 0, 0); 
         const todayStr = today.toISOString().split('T')[0];
 
         const snapshot = await adminDb.collection('performance_tracker')
@@ -157,11 +156,11 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
             const data = doc.data();
             const gain = data.percent_gain;
             
-            // Exclude signals where run_date is the same as last_updated, as their gain is 0.
-            const runDate = data.run_date;
-            const lastUpdatedDate = data.last_updated ? data.last_updated.split(' ')[0] : runDate;
+            const runDate = new Date(data.run_date + 'T00:00:00Z');
+            const lastUpdated = new Date(data.last_updated.split(' ')[0] + 'T00:00:00Z');
+            const durationDays = (lastUpdated.getTime() - runDate.getTime()) / (1000 * 60 * 60 * 24);
 
-            if (runDate !== lastUpdatedDate && typeof gain === 'number') {
+            if (typeof gain === 'number' && durationDays > 0) {
                 totalPercentGain += gain;
                 validSignalCount++;
 
@@ -193,6 +192,7 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
     }
 }
 
+
 export async function getPerformanceSignals(
   order: 'asc' | 'desc',
   limit: number
@@ -217,6 +217,7 @@ export async function getPerformanceSignals(
         company_name: data.company_name,
         image_uri: data.image_uri,
         industry: data.industry,
+        contract_symbol: data.contract_symbol,
         initial_price: data.initial_price,
         current_price: data.current_price,
         percent_gain: data.percent_gain,
@@ -844,6 +845,7 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 
 
 

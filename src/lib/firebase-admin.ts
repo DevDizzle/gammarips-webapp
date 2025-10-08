@@ -121,6 +121,20 @@ const TickerOptionsDataSchema = z.object({
 });
 export type TickerOptionsData = z.infer<typeof TickerOptionsDataSchema>;
 
+const WinnerSchema = z.object({
+    id: z.string(),
+    company_name: z.string(),
+    image_uri: z.string().optional().nullable(),
+    industry: z.string(),
+    last_close: z.number(),
+    outlook_signal: z.string(),
+    run_date: z.string(),
+    thirty_day_change_pct: z.number(),
+    ticker: z.string(),
+    weighted_score: z.number().nullable(),
+});
+export type Winner = z.infer<typeof WinnerSchema>;
+
 export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: number; signalCount: number; winRate: number; averageWinnerGain: number; averageLoserGain: number; }> {
     const defaultStats = {
         averageGain: 0,
@@ -446,7 +460,7 @@ export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[
         });
 
         // Remove duplicates and filter out specific events
-        const filteredEvents = allEvents.filter(event => event.event_name !== 'CPI s.a');
+        const filteredEvents = allEvents.filter(event => !event.event_name.includes('CPI s.a'));
         const uniqueEvents = Array.from(new Map(filteredEvents.map(e => [`${e.event_name}|${e.event_date}`, e])).values());
 
 
@@ -843,10 +857,57 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     return null;
 }
 
+export async function handleWinSubmission(uid: string, formData: FormData): Promise<{ success: boolean; error?: string }> {
+  try {
+    const screenshot = formData.get('screenshot') as File;
+    const tickers = formData.get('tickers') as string;
+    const percentGain = parseFloat(formData.get('percentGain') as string);
+    const user = await getOrCreateUserAdmin(uid);
 
+    if (!screenshot || !tickers || isNaN(percentGain)) {
+        return { success: false, error: 'Missing required fields.' };
+    }
+
+    // Upload image to GCS
+    const bucket = adminStorage.bucket();
+    const fileName = `user-wins/${uid}/${randomUUID()}-${screenshot.name}`;
+    const file = bucket.file(fileName);
+    const stream = file.createWriteStream({
+      metadata: { contentType: screenshot.type },
+    });
+    
+    const buffer = Buffer.from(await screenshot.arrayBuffer());
+    stream.end(buffer);
+    
+    await new Promise((resolve, reject) => {
+        stream.on('finish', resolve);
+        stream.on('error', reject);
+    });
+
+    const imageUrl = `gs://${bucket.name}/${fileName}`;
+
+    // Save metadata to Firestore
+    await adminDb.collection('user_wins').add({
+      uid,
+      userDisplayName: user.displayName,
+      userEmail: user.email,
+      tickers,
+      percentGain,
+      screenshotUrl: imageUrl,
+      status: 'pending', // for manual approval
+      submittedAt: FieldValue.serverTimestamp(),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error handling win submission:', error);
+    return { success: false, error: 'Failed to process your submission.' };
+  }
+}
     
 
     
+
 
 
 

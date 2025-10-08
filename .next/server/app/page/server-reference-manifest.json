@@ -209,6 +209,17 @@
         "app/page": "rsc"
       }
     },
+    "60d71efafa53b3fc4d8da76166d07f9a2dcd95910d": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/page": "rsc"
+      }
+    },
     "60f529c299b5d07a3e2396fd429ef7ef4ed829f38f": {
       "workers": {
         "app/page": {

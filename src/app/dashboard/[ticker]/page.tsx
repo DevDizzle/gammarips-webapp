@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -136,6 +135,14 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
     ? `50-Day Avg: $${kpis.trendStrength.sma50.toFixed(2)}`
     : undefined;
 
+  // Correctly format the run date to avoid timezone issues
+  const formattedRunDate = new Date(data.runDate).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC', // Treat the date string as UTC to prevent day-before errors
+  });
+
 
   return (
     <div className="space-y-6">
@@ -145,7 +152,7 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
           {industry && <Badge variant="secondary">{industry}</Badge>}
         </h1>
         <p className="text-muted-foreground mt-1 text-sm">
-            AI-Powered Options & Equity Analysis as of {new Date(data.runDate).toLocaleDateString()}
+            AI-Powered Options & Equity Analysis as of {formattedRunDate} at 5:00 AM EST
         </p>
       </header>
 
@@ -429,3 +436,5 @@ export default function TickerDashboardPage() {
     </div>
   );
 }
+
+    

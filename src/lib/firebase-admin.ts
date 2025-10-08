@@ -120,9 +120,9 @@ const TickerOptionsDataSchema = z.object({
 });
 export type TickerOptionsData = z.infer<typeof TickerOptionsDataSchema>;
 
-export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyGain: number; signalCount: number; winRate: number; averageWinnerGain: number; averageLoserGain: number; }> {
+export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: number; signalCount: number; winRate: number; averageWinnerGain: number; averageLoserGain: number; }> {
     const defaultStats = {
-        averageDailyGain: 0,
+        averageGain: 0,
         signalCount: 0,
         winRate: 0,
         averageWinnerGain: 0,
@@ -145,32 +145,25 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
             return defaultStats;
         }
 
-        let totalOfIndividualDailyGains = 0;
+        let totalPercentGain = 0;
         let winnersSum = 0;
         let losersSum = 0;
         let winnerCount = 0;
         let loserCount = 0;
         
-        let validSignalCountForAvg = 0;
+        let validSignalCount = 0;
 
         snapshot.forEach(doc => {
             const data = doc.data();
             const gain = data.percent_gain;
+            
+            // Exclude signals where run_date is the same as last_updated, as their gain is 0.
+            const runDate = data.run_date;
+            const lastUpdatedDate = data.last_updated ? data.last_updated.split(' ')[0] : runDate;
 
-            if (typeof gain === 'number') {
-                const startDate = new Date(data.run_date + 'T00:00:00Z');
-                const endDate = new Date(data.last_updated.split(' ')[0] + 'T00:00:00Z');
-
-                // Calculate the difference in milliseconds and convert to days
-                const durationMs = endDate.getTime() - startDate.getTime();
-                const durationDays = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
-                
-                // Only calculate daily return for signals active for at least one full day
-                if (durationDays > 0) {
-                    const individualDailyReturn = gain / durationDays;
-                    totalOfIndividualDailyGains += individualDailyReturn;
-                    validSignalCountForAvg++;
-                }
+            if (runDate !== lastUpdatedDate && typeof gain === 'number') {
+                totalPercentGain += gain;
+                validSignalCount++;
 
                 if (gain > 0) {
                     winnersSum += gain;
@@ -182,15 +175,14 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageDailyG
             }
         });
         
-        const totalSignalCount = snapshot.size;
-        if (totalSignalCount === 0) {
+        if (validSignalCount === 0) {
             return defaultStats;
         }
 
         return {
-            averageDailyGain: validSignalCountForAvg > 0 ? totalOfIndividualDailyGains / validSignalCountForAvg : 0,
-            signalCount: totalSignalCount,
-            winRate: (winnerCount / totalSignalCount) * 100,
+            averageGain: totalPercentGain / validSignalCount,
+            signalCount: validSignalCount,
+            winRate: (winnerCount / validSignalCount) * 100,
             averageWinnerGain: winnerCount > 0 ? winnersSum / winnerCount : 0,
             averageLoserGain: loserCount > 0 ? losersSum / loserCount : 0,
         };
@@ -852,5 +844,6 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     
 
     
+
 
 

@@ -40,8 +40,8 @@ export async function PerformanceTracker() {
             <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <StatCard 
-                        title="Avg. Daily ROI" 
-                        value={`${stats.averageDailyGain >= 0 ? '+' : ''}${stats.averageDailyGain.toFixed(2)}%`}
+                        title="Avg. Gain" 
+                        value={`${stats.averageGain >= 0 ? '+' : ''}${stats.averageGain.toFixed(2)}%`}
                         subtext={stats.signalCount > 0 ? `Across ${stats.signalCount} signals` : ''}
                     />
                     <StatCard 
@@ -86,3 +86,4 @@ export function PerformanceTrackerSkeleton() {
 }
 
 export default PerformanceTracker;
+

@@ -7,22 +7,18 @@ import { cn } from '@/lib/utils';
 import { Cookie } from 'lucide-react';
 
 export default function CookieConsentBanner() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // Check if consent has already been given.
-    // This runs only on the client-side.
     const consent = localStorage.getItem('cookie_consent');
-    if (!consent) {
-      setIsVisible(true);
+    if (consent) {
+      setIsVisible(false);
     }
   }, []);
 
   const handleConsent = (consent: 'granted' | 'denied') => {
     localStorage.setItem('cookie_consent', consent);
     setIsVisible(false);
-    // Here you could also disable or enable analytics scripts based on consent,
-    // but for now, we will just record the preference.
   };
 
   if (!isVisible) {

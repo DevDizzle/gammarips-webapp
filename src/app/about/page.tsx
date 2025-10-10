@@ -1,6 +1,6 @@
 
 import type { Metadata } from 'next';
-import { FileText, Mic, BarChart3, TrendingUp, Shield, CheckCircle2, ArrowRight, Target, Gem, Bot, Newspaper, Scale } from 'lucide-react';
+import { FileText, Mic, BarChart3, TrendingUp, Shield, CheckCircle2, ArrowRight, Target, Gem, Bot, Newspaper, Scale, Github } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
@@ -141,6 +141,27 @@ export default function AboutPage() {
           </Card>
         </section>
         
+        <Separator className="my-12 sm:my-16" />
+
+        <section>
+          <Card className="text-center">
+            <CardHeader>
+              <CardTitle className="font-headline text-2xl">Our Open-Source Engine</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4 max-w-xl mx-auto">
+                We believe in transparency. The core data processing and AI analysis engine that powers ProfitScout is open-source. We invite you to explore the code, understand our methodology, and even contribute.
+              </p>
+              <Button asChild size="lg" variant="outline">
+                <a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer">
+                  <Github className="mr-2 h-5 w-5"/>
+                  View on GitHub
+                </a>
+              </Button>
+            </CardContent>
+          </Card>
+        </section>
+
         <Separator className="my-12 sm:my-16" />
 
         <section>

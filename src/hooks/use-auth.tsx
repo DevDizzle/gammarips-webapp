@@ -20,6 +20,7 @@ import { useToast } from './use-toast';
 import { getDoc, doc } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { event as trackEvent } from '@/lib/gtag';
+import { useRouter } from 'next/navigation';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -42,6 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [dbUser, setDbUser] = useState<DbUser | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -52,8 +54,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (userDocSnap.exists()) {
           setDbUser(userDocSnap.data() as DbUser);
         } else {
-          // This case might happen if a user is authenticated but their DB record was deleted.
-          // The getOrCreateUser call is better placed after the auth action itself.
           console.warn(`Authenticated user ${user.uid} not found in Firestore. A new record will be created if they sign in again.`);
         }
       } else {
@@ -83,6 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } else {
        toast({ title: "Successfully signed in." });
     }
+    router.push('/dashboard');
   };
 
 
@@ -120,6 +121,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signOut = async () => {
     try {
       await firebaseSignOut(auth);
+      router.push('/');
     } catch (error) {
       console.error("Sign out error", error);
       toast({

@@ -9,9 +9,6 @@ import TodaysWinners from "@/app/dashboard/todays-winners";
 import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
 import { AuthDialog } from "@/components/auth/auth-dialog";
 
-// Force dynamic rendering to ensure performance data is always fresh.
-export const revalidate = 0;
-
 function DashboardContent() {
     return (
         <div className="space-y-8">

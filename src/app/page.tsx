@@ -36,7 +36,9 @@ export default function LandingPage() {
               Stop drowning in data. Our AI analyzes thousands of stocks and options contracts to deliver clear, data-driven trade ideas directly to your inbox and dashboard.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
-               <HomePageClientContent showButton={true} />
+               <Suspense>
+                <HomePageClientContent showButton={true} />
+               </Suspense>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">No credit card required. Get instant access.</p>
           </section>
@@ -156,7 +158,9 @@ export default function LandingPage() {
                         </div>
                     </div>
                     <div className="mt-8">
-                         <HomePageClientContent showButton={true} buttonText="Get Started for Free" />
+                        <Suspense>
+                            <HomePageClientContent showButton={true} buttonText="Get Started for Free" />
+                        </Suspense>
                     </div>
                     <p className="mt-4 text-sm text-muted-foreground">After your trial, you can upgrade to Pro for just $19/month to continue receiving daily setups and full access.</p>
                 </Card>

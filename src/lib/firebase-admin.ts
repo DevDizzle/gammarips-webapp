@@ -145,14 +145,7 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
     };
 
     try {
-        const todayInNY = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
-        const today = new Date(todayInNY);
-        today.setHours(0, 0, 0, 0); 
-        const todayStr = today.toISOString().split('T')[0];
-
-        const snapshot = await adminDb.collection('performance_tracker')
-            .where('run_date', '<', todayStr)
-            .get();
+        const snapshot = await adminDb.collection('performance_tracker').get();
 
         if (snapshot.empty) {
             return defaultStats;
@@ -170,11 +163,8 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
             const data = doc.data();
             const gain = data.percent_gain;
             
-            const runDate = new Date(data.run_date + 'T00:00:00Z');
-            const lastUpdated = new Date(data.last_updated.split(' ')[0] + 'T00:00:00Z');
-            const durationDays = (lastUpdated.getTime() - runDate.getTime()) / (1000 * 60 * 60 * 24);
-
-            if (typeof gain === 'number' && durationDays > 0) {
+            // Ensure the signal is valid before including it in calculations
+            if (typeof gain === 'number') {
                 totalPercentGain += gain;
                 validSignalCount++;
 
@@ -907,6 +897,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 
 

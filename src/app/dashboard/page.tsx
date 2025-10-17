@@ -8,10 +8,10 @@ import DashboardPageClient from "./dashboard-client";
 function DashboardContent() {
     return (
         <div className="space-y-8">
+            <TodaysWinners />
             <Suspense fallback={<PerformanceTrackerSkeleton />}>
                 <PerformanceTracker />
             </Suspense>
-            <TodaysWinners />
         </div>
     )
 }

@@ -101,7 +101,7 @@ const OptionsSignalSchema = z.object({
     contract_symbol: z.string(),
     expiration_date: z.string(),
     implied_volatility: z.number(),
-    iv_signal: z.string(),
+    iv_signal: z.string().optional(),
     option_type: z.enum(['call', 'put']),
     run_date: z.string(),
     setup_quality_signal: z.string().optional(),
@@ -308,8 +308,17 @@ export async function getNoteworthyOptionsAdmin(ticker: string): Promise<Options
         }
 
         const data = docSnap.data();
-        const allSignals = [...(data?.calls ?? []), ...(data?.puts ?? [])];
+        if (!data) {
+            console.warn(`Options signals document for ${ticker} is empty.`);
+            return [];
+        }
+        const allSignals = [...(data.calls ?? []), ...(data.puts ?? [])];
 
+        if (allSignals.length === 0) {
+            console.log(`No call or put signals found in the document for ${ticker}.`);
+            return [];
+        }
+        
         const filteredSignals = allSignals.filter(signal => {
             const setupQuality = signal.setup_quality_signal;
             const volatility = signal.volatility_comparison_signal;
@@ -334,6 +343,7 @@ export async function getNoteworthyOptionsAdmin(ticker: string): Promise<Options
             })
             .filter((s): s is OptionsSignal => s !== null);
 
+        console.log(`Found ${validatedSignals.length} noteworthy options for ${ticker} after filtering.`);
         return validatedSignals.slice(0, 10);
 
     } catch (error) {
@@ -934,3 +944,4 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+

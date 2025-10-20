@@ -70,13 +70,12 @@ function TodaysWinners() {
 
     const getTopUniqueTickers = (winners: Winner[]): Winner[] => {
       const topWinnersByTicker = new Map<string, Winner>();
-      winners.forEach(winner => {
-        const existing = topWinnersByTicker.get(winner.ticker);
-        // Use weighted_score for ranking, as options_score might be the same for a ticker's contracts
-        if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
-          topWinnersByTicker.set(winner.ticker, winner);
-        }
-      });
+      for (const winner of winners) {
+          const existing = topWinnersByTicker.get(winner.ticker);
+          if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
+              topWinnersByTicker.set(winner.ticker, winner);
+          }
+      }
       return Array.from(topWinnersByTicker.values())
         .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1))
         .slice(0, 10);

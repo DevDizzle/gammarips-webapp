@@ -68,15 +68,23 @@ function TodaysWinners() {
     const bullish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bullish'));
     const bearish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bearish'));
 
+    // This function now correctly ensures unique tickers in the final list.
     const getTopUniqueTickers = (winners: Winner[]): Winner[] => {
-      const topWinnersByTicker = new Map<string, Winner>();
+      if (!winners || winners.length === 0) return [];
+      // Step 1: Group all contracts by ticker and find the best one for each.
+      const bestContractByTicker = new Map<string, Winner>();
       for (const winner of winners) {
-          const existing = topWinnersByTicker.get(winner.ticker);
-          if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
-              topWinnersByTicker.set(winner.ticker, winner);
-          }
+        const existing = bestContractByTicker.get(winner.ticker);
+        if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
+          bestContractByTicker.set(winner.ticker, winner);
+        }
       }
-      return Array.from(topWinnersByTicker.values())
+      
+      // Step 2: Convert the map to an array of the best contracts.
+      const uniqueWinners = Array.from(bestContractByTicker.values());
+
+      // Step 3: Sort these unique winners by their score and take the top 10.
+      return uniqueWinners
         .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1))
         .slice(0, 10);
     };
@@ -461,5 +469,3 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
-
-    

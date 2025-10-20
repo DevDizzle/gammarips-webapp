@@ -1,4 +1,3 @@
-
 import { getWinnersDashboard } from '../actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -37,7 +36,18 @@ const getSignalMeta = (signal: string) => {
 export async function IndustryExplorer() {
     const allWinners = await getWinnersDashboard();
 
-    const winnersBySector = allWinners.reduce((acc, winner) => {
+    // 1. De-duplicate winners by ticker, keeping only the one with the highest score
+    const uniqueWinnersMap = new Map<string, Winner>();
+    allWinners.forEach(winner => {
+        const existing = uniqueWinnersMap.get(winner.ticker);
+        if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
+            uniqueWinnersMap.set(winner.ticker, winner);
+        }
+    });
+    const uniqueWinners = Array.from(uniqueWinnersMap.values());
+
+    // 2. Group the unique winners by sector
+    const winnersBySector = uniqueWinners.reduce((acc, winner) => {
         const sector = winner.sector || 'Other';
         if (!acc[sector]) {
             acc[sector] = [];
@@ -46,7 +56,7 @@ export async function IndustryExplorer() {
         return acc;
     }, {} as Record<string, Winner[]>);
 
-    // Sort sectors by the number of winners
+    // 3. Sort sectors by the number of winners
     const sortedSectors = Object.keys(winnersBySector).sort((a, b) => {
         return winnersBySector[b].length - winnersBySector[a].length;
     });

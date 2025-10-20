@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -65,8 +64,19 @@ function TodaysWinners() {
   }, [toast]);
   
   const { bullishWinners, bearishWinners, lastUpdated } = useMemo(() => {
-    const bullish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bullish'));
-    const bearish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bearish'));
+    // 1. De-duplicate winners by ticker, keeping only the one with the highest score
+    const uniqueWinnersMap = new Map<string, Winner>();
+    allWinners.forEach(winner => {
+        const existing = uniqueWinnersMap.get(winner.ticker);
+        if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
+            uniqueWinnersMap.set(winner.ticker, winner);
+        }
+    });
+    const uniqueWinners = Array.from(uniqueWinnersMap.values());
+
+    // 2. Filter and sort the unique winners
+    const bullish = uniqueWinners.filter(w => w.outlook_signal.toLowerCase().includes('bullish'));
+    const bearish = uniqueWinners.filter(w => w.outlook_signal.toLowerCase().includes('bearish'));
 
     const sortedBullish = bullish.sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1)).slice(0, 10);
     const sortedBearish = bearish.sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1)).slice(0, 10);

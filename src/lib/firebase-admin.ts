@@ -133,6 +133,7 @@ const WinnerSchema = z.object({
     thirty_day_change_pct: z.number(),
     ticker: z.string(),
     weighted_score: z.number().nullable(),
+    options_score: z.number().optional().nullable(), // Added for sorting
 });
 export type Winner = z.infer<typeof WinnerSchema>;
 
@@ -347,6 +348,7 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
                 thirty_day_change_pct: data.thirty_day_change_pct,
                 ticker: data.ticker,
                 weighted_score: isNaN(data.weighted_score) ? null : data.weighted_score,
+                options_score: data.options_score,
             };
             const validation = WinnerSchema.safeParse(winnerData);
             if (validation.success) {
@@ -907,3 +909,6 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
 
+
+
+    

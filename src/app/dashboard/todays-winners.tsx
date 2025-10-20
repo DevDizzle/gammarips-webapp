@@ -65,15 +65,33 @@ function TodaysWinners() {
   }, [toast]);
   
   const { bullishWinners, bearishWinners, lastUpdated } = useMemo(() => {
-    const bullish = allWinners
-      .filter(w => w.outlook_signal.toLowerCase().includes('bullish'))
-      .sort((a, b) => (b.weighted_score ?? -Infinity) - (a.weighted_score ?? -Infinity))
-      .slice(0, 10);
+    // 1. Filter for bullish signals
+    const bullish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bullish'));
+    
+    // 2. Filter for bearish signals
+    const bearish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bearish'));
 
-    const bearish = allWinners
-      .filter(w => w.outlook_signal.toLowerCase().includes('bearish'))
-      .sort((a, b) => (a.weighted_score ?? Infinity) - (b.weighted_score ?? Infinity))
-      .slice(0, 10);
+    // 3. Get unique top bullish tickers
+    const topBullishByTicker = new Map<string, Winner>();
+    bullish.forEach(winner => {
+      const existing = topBullishByTicker.get(winner.ticker);
+      if (!existing || (winner.options_score ?? -1) > (existing.options_score ?? -1)) {
+        topBullishByTicker.set(winner.ticker, winner);
+      }
+    });
+
+    // 4. Get unique top bearish tickers
+    const topBearishByTicker = new Map<string, Winner>();
+    bearish.forEach(winner => {
+        const existing = topBearishByTicker.get(winner.ticker);
+        if (!existing || (winner.options_score ?? -1) > (existing.options_score ?? -1)) {
+            topBearishByTicker.set(winner.ticker, winner);
+        }
+    });
+
+    // 5. Sort and slice
+    const sortedBullish = Array.from(topBullishByTicker.values()).sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1)).slice(0, 10);
+    const sortedBearish = Array.from(topBearishByTicker.values()).sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1)).slice(0, 10);
     
     let updatedDate: string | null = null;
     if (allWinners.length > 0) {
@@ -89,7 +107,7 @@ function TodaysWinners() {
       }
     }
       
-    return { bullishWinners: bullish, bearishWinners: bearish, lastUpdated: updatedDate };
+    return { bullishWinners: sortedBullish, bearishWinners: sortedBearish, lastUpdated: updatedDate };
   }, [allWinners]);
 
   const handleRowClick = (ticker: string) => {
@@ -452,5 +470,7 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
+
+    
 
     

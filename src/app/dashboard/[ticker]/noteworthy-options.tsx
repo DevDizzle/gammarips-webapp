@@ -6,12 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { getOptionsSignals } from '../../actions';
-import type { OptionsSignal } from '@/lib/firebase-admin';
+import { getOptionsCandidates } from '../../actions';
+import type { OptionCandidate } from '@/lib/firebase-admin';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { ChevronRight, Info } from 'lucide-react';
-import { Markdown } from '@/components/markdown';
 
 interface NoteworthyOptionsProps {
     ticker: string;
@@ -19,32 +17,17 @@ interface NoteworthyOptionsProps {
 
 function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [signals, setSignals] = useState<OptionsSignal[]>([]);
+  const [candidates, setCandidates] = useState<OptionCandidate[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const signalsData = await getOptionsSignals(ticker);
-        if (signalsData) {
-            // Combine calls and puts, then sort them by setup quality.
-            const combinedSignals = [...signalsData.calls, ...signalsData.puts];
-            
-            const qualityScore = (signal: string) => {
-                if (!signal) return 0;
-                const s = signal.toLowerCase();
-                if (s.includes('strong')) return 3;
-                if (s.includes('moderate')) return 2;
-                if (s.includes('weak')) return 1;
-                return 0;
-            };
-
-            combinedSignals.sort((a, b) => qualityScore(b.setup_quality_signal) - qualityScore(a.setup_quality_signal));
-            setSignals(combinedSignals);
-        }
+        const candidatesData = await getOptionsCandidates(ticker);
+        setCandidates(candidatesData);
       } catch (error) {
-        console.error(`Failed to fetch options signals for ${ticker}:`, error);
+        console.error(`Failed to fetch options candidates for ${ticker}:`, error);
         toast({
           title: 'Error Fetching Data',
           description: 'Could not load noteworthy options. Please try again later.',
@@ -57,16 +40,12 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
     fetchData();
   }, [ticker, toast]);
 
-  const getSignalBadgeVariant = (signal: string | undefined) => {
-      if (!signal) return 'secondary';
-      const lowerSignal = signal.toLowerCase();
-      if (lowerSignal.includes('strong')) return 'default';
-      if (lowerSignal.includes('weak')) return 'destructive';
+  const getScoreBadgeVariant = (score: number) => {
+      if (score > 7) return 'default';
+      if (score < 4) return 'destructive';
       return 'secondary';
   }
   
-  const topSignal = signals[0];
-
   const renderDesktopTable = () => (
       <Table className="hidden md:table">
           <TableHeader>
@@ -74,32 +53,32 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
               <TableHead>Type</TableHead>
               <TableHead>Strike</TableHead>
               <TableHead>Expiration</TableHead>
+              <TableHead>Last Price</TableHead>
+              <TableHead>Volume</TableHead>
               <TableHead>IV</TableHead>
-              <TableHead>Setup</TableHead>
-              <TableHead className="w-[40%]">AI Summary</TableHead>
+              <TableHead className="text-right">Score</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {signals.map((s, index) => {
-              const isCall = s.option_type === 'call';
-              const isTopSignal = index === 0;
-
+            {candidates.map((c) => {
+              const isCall = c.option_type === 'call';
               return (
-                <TableRow key={s.contract_symbol} className={cn(isTopSignal && (isCall ? 'bg-green-500/10 hover:bg-green-500/20' : 'bg-red-500/10 hover:bg-red-500/20'))}>
+                <TableRow key={c.id}>
                   <TableCell>
                     <Badge variant="outline" className={cn(isCall ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50')}>
-                      {s.option_type.toUpperCase()}
+                      {c.option_type.toUpperCase()}
                     </Badge>
                   </TableCell>
-                  <TableCell>${s.strike_price.toFixed(2)}</TableCell>
-                  <TableCell>{new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</TableCell>
-                  <TableCell>{`${(s.implied_volatility * 100).toFixed(1)}%`}</TableCell>
-                  <TableCell>
-                      <Badge variant={getSignalBadgeVariant(s.setup_quality_signal)}>
-                          {s.setup_quality_signal}
+                  <TableCell>${c.strike.toFixed(2)}</TableCell>
+                  <TableCell>{new Date(c.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</TableCell>
+                  <TableCell>${c.last_price?.toFixed(2) ?? 'N/A'}</TableCell>
+                  <TableCell>{c.volume?.toLocaleString() ?? 'N/A'}</TableCell>
+                  <TableCell>{c.implied_volatility ? `${(c.implied_volatility * 100).toFixed(1)}%` : 'N/A'}</TableCell>
+                  <TableCell className="text-right">
+                       <Badge variant={getScoreBadgeVariant(c.options_score)}>
+                          {c.options_score.toFixed(2)}
                       </Badge>
                   </TableCell>
-                   <TableCell className="text-xs text-muted-foreground">{s.summary}</TableCell>
                 </TableRow>
               );
             })}
@@ -109,38 +88,41 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
 
   const renderMobileCards = () => (
       <div className="space-y-3 md:hidden">
-          {signals.map((s, index) => {
-              const isCall = s.option_type === 'call';
-              const isTopSignal = index === 0;
-
+          {candidates.map((c) => {
+              const isCall = c.option_type === 'call';
               return (
-                  <Card key={s.contract_symbol} className={cn('cursor-pointer transition-colors hover:bg-muted/50', isTopSignal && (isCall ? 'bg-green-500/10 hover:bg-green-500/20 border-green-500/50' : 'bg-red-500/10 hover:bg-red-500/20 border-red-500/50'))}>
+                  <Card key={c.id}>
                       <CardContent className="p-4">
                           <div className="flex items-center justify-between gap-4">
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-3">
                                     <Badge variant="outline" className={cn(isCall ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50')}>
-                                        {s.option_type.toUpperCase()}
+                                        {c.option_type.toUpperCase()}
                                     </Badge>
-                                    <span className="font-bold text-lg">${s.strike_price.toFixed(2)}</span>
+                                    <span className="font-bold text-lg">${c.strike.toFixed(2)}</span>
                                 </div>
-                                <p className="text-sm text-muted-foreground mt-1">Exp: {new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</p>
+                                <p className="text-sm text-muted-foreground mt-1">Exp: {new Date(c.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</p>
                             </div>
-                            <div className="flex-shrink-0">
-                                <Badge variant={getSignalBadgeVariant(s.setup_quality_signal)}>
-                                    {s.setup_quality_signal}
+                            <div className="flex-shrink-0 text-right">
+                                <p className="text-xs text-muted-foreground">Score</p>
+                                <Badge variant={getScoreBadgeVariant(c.options_score)}>
+                                    {c.options_score.toFixed(2)}
                                 </Badge>
                             </div>
                           </div>
                           <div className="mt-4 border-t pt-4">
-                              <div className="text-xs text-muted-foreground space-y-2">
-                                <div className="flex justify-between items-center">
-                                    <span>Implied Volatility</span>
-                                    <span className="font-semibold text-foreground">{`${(s.implied_volatility * 100).toFixed(1)}%`}</span>
+                              <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
+                                <div className="text-center">
+                                    <p>Last Price</p>
+                                    <p className="font-semibold text-foreground">${c.last_price?.toFixed(2) ?? 'N/A'}</p>
                                 </div>
-                                <div>
-                                    <p className="font-semibold text-foreground mb-1">AI Summary</p>
-                                    <p>{s.summary}</p>
+                                <div className="text-center">
+                                    <p>Volume</p>
+                                    <p className="font-semibold text-foreground">{c.volume?.toLocaleString() ?? 'N/A'}</p>
+                                </div>
+                                <div className="text-center">
+                                    <p>IV</p>
+                                    <p className="font-semibold text-foreground">{c.implied_volatility ? `${(c.implied_volatility * 100).toFixed(1)}%` : 'N/A'}</p>
                                 </div>
                               </div>
                           </div>
@@ -154,13 +136,14 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
   const renderSkeleton = () => (
     <div className="space-y-2">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="grid grid-cols-6 gap-4">
+        <div key={i} className="grid grid-cols-7 gap-4">
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
-          <Skeleton className="h-5 w-full col-span-1" />
+          <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-full" />
         </div>
       ))}
     </div>
@@ -171,8 +154,8 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
         return renderSkeleton();
     }
 
-    if (signals.length === 0) {
-        return <p className="text-sm text-muted-foreground">No top-scored option signals found for {ticker} at this time.</p>
+    if (candidates.length === 0) {
+        return <p className="text-sm text-muted-foreground">No noteworthy option contracts found for {ticker} at this time.</p>
     }
 
     return (
@@ -186,9 +169,9 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top-Scored Options for {ticker}</CardTitle>
+        <CardTitle>Noteworthy Options for {ticker}</CardTitle>
         <CardDescription>
-            Our model analyzes thousands of contracts for key metrics like liquidity, strike, and time decay to identify actionable setups. The top-ranked signal is highlighted below.
+            A list of all scorable contracts for this ticker. Our model analyzes thousands of contracts for key metrics like liquidity, strike, and time decay to identify actionable setups.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -199,3 +182,5 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
 }
 
 export default NoteworthyOptions;
+
+    

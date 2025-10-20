@@ -26,10 +26,9 @@ import {
     getTopOptionsAdmin,
     getDashboardDataAdmin,
     getWinnersDashboardAdmin,
-    getOptionsSignalsAdmin,
+    getOptionsCandidatesAdmin,
     getOptionsHeaderSignalAdmin,
     getTickerEventsAdmin,
-    getOptionsCandidatesAdmin,
     saveFeedbackAdmin,
     getPerformanceSignals as getPerformanceSignalsAdmin,
 } from '@/lib/firebase-admin';
@@ -42,8 +41,8 @@ import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth'
 import { app } from '@/lib/firebase';
 
 
-export async function getOptionsSignals(ticker: string): Promise<TickerOptionsData | null> {
-    return getOptionsSignalsAdmin(ticker);
+export async function getOptionsSignals(ticker: string): Promise<OptionCandidate[]> {
+    return getOptionsCandidatesAdmin(ticker);
 }
 
 export async function getPerformanceSignals(order: 'asc' | 'desc', limit: number): Promise<PerformanceSignal[]> {
@@ -307,5 +306,8 @@ export async function sendPasswordReset(email: string): Promise<void> {
 }
 
     
+
+    
+
 
     

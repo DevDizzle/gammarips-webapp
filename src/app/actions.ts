@@ -310,9 +310,13 @@ export async function sendPasswordReset(email: string): Promise<void> {
   await sendPasswordResetEmail(auth, email);
 }
 
+export async function handleWinSubmission(uid: string, formData: FormData): Promise<{ success: boolean, error?: string }> {
+    return handleWinSubmission(uid, formData);
+}
     
 
     
 
 
     
+

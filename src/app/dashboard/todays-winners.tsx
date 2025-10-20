@@ -67,11 +67,13 @@ function TodaysWinners() {
   const { bullishWinners, bearishWinners, lastUpdated } = useMemo(() => {
     const bullish = allWinners
       .filter(w => w.outlook_signal.toLowerCase().includes('bullish'))
-      .sort((a, b) => (b.weighted_score ?? -Infinity) - (a.weighted_score ?? -Infinity));
+      .sort((a, b) => (b.weighted_score ?? -Infinity) - (a.weighted_score ?? -Infinity))
+      .slice(0, 10);
 
     const bearish = allWinners
       .filter(w => w.outlook_signal.toLowerCase().includes('bearish'))
-      .sort((a, b) => (a.weighted_score ?? Infinity) - (b.weighted_score ?? Infinity));
+      .sort((a, b) => (a.weighted_score ?? Infinity) - (b.weighted_score ?? Infinity))
+      .slice(0, 10);
     
     let updatedDate: string | null = null;
     if (allWinners.length > 0) {
@@ -428,6 +430,7 @@ function TodaysWinners() {
                         key={view}
                         variant={activeView === view ? 'default' : 'outline'}
                         onClick={() => setActiveView(view)}
+                        className="text-xs sm:text-sm"
                     >
                         {label}
                     </Button>
@@ -449,3 +452,5 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
+
+    

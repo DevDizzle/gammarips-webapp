@@ -57,7 +57,7 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
               <TableHead>Strike</TableHead>
               <TableHead>Expiration</TableHead>
               <TableHead>AI Outlook</TableHead>
-              <TableHead className="text-right">Options Score</TableHead>
+              <TableHead className="text-right">Stock Price</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -78,7 +78,7 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
                             {signal.outlook_signal}
                         </Badge>
                     </TableCell>
-                  <TableCell className="text-right font-mono">{signal.options_score?.toFixed(2)}</TableCell>
+                  <TableCell className="text-right font-mono">${signal.last_close?.toFixed(2)}</TableCell>
                 </TableRow>
               );
             })}
@@ -109,8 +109,8 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
                             </Badge>
                           </div>
                           <div className="mt-3 border-t pt-3 flex justify-between items-center">
-                              <p className="text-sm text-muted-foreground">Options Score</p>
-                              <p className="font-mono font-semibold">{signal.options_score?.toFixed(2)}</p>
+                              <p className="text-sm text-muted-foreground">Stock Price</p>
+                              <p className="font-mono font-semibold">${signal.last_close?.toFixed(2)}</p>
                           </div>
                       </CardContent>
                   </Card>
@@ -139,7 +139,7 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
     }
 
     if (signals.length === 0) {
-        return <p className="text-sm text-muted-foreground">No scorable option contracts were found for {ticker} in today's data run.</p>
+        return <p className="text-sm text-muted-foreground">No noteworthy option contracts were found for {ticker} in today's data run.</p>
     }
 
     return (
@@ -153,9 +153,9 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Scorable Option Contracts for {ticker}</CardTitle>
+        <CardTitle>Noteworthy Option Setups for {ticker}</CardTitle>
         <CardDescription>
-            All Call and Put contracts for this stock from today's analysis, sorted by our proprietary Options Score.
+          A curated list of Call and Put contracts for this stock where our AI outlook and the underlying stock's momentum show strong alignment.
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -2321,6 +2321,10 @@ body {
   padding-top: 2rem;
 }
 
+.pr-4 {
+  padding-right: 1rem;
+}
+
 .text-left {
   text-align: left;
 }

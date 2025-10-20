@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import TodaysWinners from "@/app/dashboard/todays-winners";
 import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
 import DashboardPageClient from "./dashboard-client";
-import IndustryExplorer, { IndustryExplorerSkeleton } from "./industry-explorer";
+import { IndustryExplorer, IndustryExplorerSkeleton } from "./industry-explorer";
 
 function DashboardContent() {
     return (

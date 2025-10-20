@@ -65,33 +65,25 @@ function TodaysWinners() {
   }, [toast]);
   
   const { bullishWinners, bearishWinners, lastUpdated } = useMemo(() => {
-    // 1. Filter for bullish signals
     const bullish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bullish'));
-    
-    // 2. Filter for bearish signals
     const bearish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bearish'));
 
-    // 3. Get unique top bullish tickers
-    const topBullishByTicker = new Map<string, Winner>();
-    bullish.forEach(winner => {
-      const existing = topBullishByTicker.get(winner.ticker);
-      if (!existing || (winner.options_score ?? -1) > (existing.options_score ?? -1)) {
-        topBullishByTicker.set(winner.ticker, winner);
-      }
-    });
-
-    // 4. Get unique top bearish tickers
-    const topBearishByTicker = new Map<string, Winner>();
-    bearish.forEach(winner => {
-        const existing = topBearishByTicker.get(winner.ticker);
-        if (!existing || (winner.options_score ?? -1) > (existing.options_score ?? -1)) {
-            topBearishByTicker.set(winner.ticker, winner);
+    const getTopUniqueTickers = (winners: Winner[]): Winner[] => {
+      const topWinnersByTicker = new Map<string, Winner>();
+      winners.forEach(winner => {
+        const existing = topWinnersByTicker.get(winner.ticker);
+        // Use weighted_score for ranking, as options_score might be the same for a ticker's contracts
+        if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
+          topWinnersByTicker.set(winner.ticker, winner);
         }
-    });
+      });
+      return Array.from(topWinnersByTicker.values())
+        .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1))
+        .slice(0, 10);
+    };
 
-    // 5. Sort and slice
-    const sortedBullish = Array.from(topBullishByTicker.values()).sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1)).slice(0, 10);
-    const sortedBearish = Array.from(topBearishByTicker.values()).sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1)).slice(0, 10);
+    const sortedBullish = getTopUniqueTickers(bullish);
+    const sortedBearish = getTopUniqueTickers(bearish);
     
     let updatedDate: string | null = null;
     if (allWinners.length > 0) {
@@ -470,7 +462,5 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
-
-    
 
     

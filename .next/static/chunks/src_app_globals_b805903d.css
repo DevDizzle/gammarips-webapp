@@ -1633,6 +1633,10 @@ body {
   max-width: 36rem;
 }
 
+.max-w-\[150px\] {
+  max-width: 150px;
+}
+
 .flex-1 {
   flex: 1;
 }

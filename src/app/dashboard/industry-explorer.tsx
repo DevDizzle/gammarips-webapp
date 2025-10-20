@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowDown, ArrowUp, Briefcase, ChevronRight, Pilcrow } from 'lucide-react';
+import { ArrowDown, ArrowUp, Briefcase, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
@@ -37,18 +37,18 @@ const getSignalMeta = (signal: string) => {
 export async function IndustryExplorer() {
     const allWinners = await getWinnersDashboard();
 
-    const winnersByIndustry = allWinners.reduce((acc, winner) => {
-        const industry = winner.industry || 'Other';
-        if (!acc[industry]) {
-            acc[industry] = [];
+    const winnersBySector = allWinners.reduce((acc, winner) => {
+        const sector = winner.sector || 'Other';
+        if (!acc[sector]) {
+            acc[sector] = [];
         }
-        acc[industry].push(winner);
+        acc[sector].push(winner);
         return acc;
     }, {} as Record<string, Winner[]>);
 
-    // Sort industries by the number of winners
-    const sortedIndustries = Object.keys(winnersByIndustry).sort((a, b) => {
-        return winnersByIndustry[b].length - winnersByIndustry[a].length;
+    // Sort sectors by the number of winners
+    const sortedSectors = Object.keys(winnersBySector).sort((a, b) => {
+        return winnersBySector[b].length - winnersBySector[a].length;
     });
 
     return (
@@ -56,25 +56,25 @@ export async function IndustryExplorer() {
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Briefcase />
-                    Industry Explorer
+                    Sector Explorer
                 </CardTitle>
                 <CardDescription>
-                    Browse all active Call and Put setups, grouped by industry. Click any stock to see its full analysis dashboard.
+                    Browse all active Call and Put setups, grouped by GICS sector. Click any stock to see its full analysis dashboard.
                 </CardDescription>
             </CardHeader>
             <CardContent>
                  <Accordion type="single" collapsible className="w-full">
-                    {sortedIndustries.map(industry => {
-                        const winners = winnersByIndustry[industry];
+                    {sortedSectors.map(sector => {
+                        const winners = winnersBySector[sector];
                         const bullishCount = winners.filter(w => w.outlook_signal.toLowerCase().includes('bullish')).length;
                         const bearishCount = winners.filter(w => w.outlook_signal.toLowerCase().includes('bearish')).length;
                         
                         return (
-                            <AccordionItem key={industry} value={industry}>
+                            <AccordionItem key={sector} value={sector}>
                                 <AccordionTrigger>
                                     <div className="flex items-center justify-between w-full pr-4">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-semibold">{industry}</span>
+                                            <span className="font-semibold">{sector}</span>
                                             <Badge variant="secondary">{winners.length} Stocks</Badge>
                                         </div>
                                         <div className="flex items-center gap-3 text-sm">
@@ -88,7 +88,7 @@ export async function IndustryExplorer() {
                                         <TableHeader>
                                             <TableRow>
                                                 <TableHead>Company</TableHead>
-                                                <TableHead>Ticker</TableHead>
+                                                <TableHead>Industry</TableHead>
                                                 <TableHead>Last Close</TableHead>
                                                 <TableHead>AI Outlook</TableHead>
                                                 <TableHead className="text-right">View</TableHead>
@@ -111,10 +111,13 @@ export async function IndustryExplorer() {
                                                                     height={24}
                                                                     className="rounded-full"
                                                                 />
-                                                                <span className="truncate">{winner.company_name}</span>
+                                                                <div>
+                                                                    <span className="font-semibold">{winner.ticker}</span>
+                                                                    <p className="text-xs text-muted-foreground truncate max-w-[150px]">{winner.company_name}</p>
+                                                                </div>
                                                             </div>
                                                         </TableCell>
-                                                        <TableCell>{winner.ticker}</TableCell>
+                                                        <TableCell className="text-xs text-muted-foreground">{winner.industry}</TableCell>
                                                         <TableCell>${winner.last_close.toFixed(2)}</TableCell>
                                                         <TableCell>
                                                             <div className={cn("flex items-center gap-1", signalMeta.color)}>

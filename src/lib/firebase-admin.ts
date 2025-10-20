@@ -126,6 +126,7 @@ const WinnerSchema = z.object({
     company_name: z.string(),
     image_uri: z.string().optional().nullable(),
     industry: z.string(),
+    sector: z.string().optional().nullable(),
     last_close: z.number(),
     outlook_signal: z.string(),
     run_date: z.string(),
@@ -339,6 +340,7 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
                 company_name: data.company_name,
                 image_uri: data.image_uri,
                 industry: data.industry,
+                sector: data.sector,
                 last_close: data.last_close,
                 outlook_signal: data.outlook_signal,
                 run_date: data.run_date,
@@ -897,6 +899,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 
 

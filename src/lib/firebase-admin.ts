@@ -133,7 +133,10 @@ const WinnerSchema = z.object({
     thirty_day_change_pct: z.number(),
     ticker: z.string(),
     weighted_score: z.number().nullable(),
-    options_score: z.number().optional().nullable(), // Added for sorting
+    option_type: z.enum(['call', 'put']),
+    strike_price: z.number(),
+    expiration_date: z.string(),
+    options_score: z.number().optional().nullable(),
 });
 export type Winner = z.infer<typeof WinnerSchema>;
 
@@ -296,57 +299,39 @@ export async function getOptionsHeaderSignalAdmin(ticker: string): Promise<Optio
 }
 
 
-export async function getNoteworthyOptionsAdmin(ticker: string): Promise<OptionsSignal[]> {
+export async function getNoteworthyOptionsAdmin(ticker: string): Promise<Winner[]> {
     try {
-        const docRef = adminDb.collection("options_signals").doc(ticker.toUpperCase());
-        const docSnap = await docRef.get();
+        const snapshot = await adminDb.collection("winners_dashboard")
+            .where('ticker', '==', ticker.toUpperCase())
+            .get();
 
-        if (!docSnap.exists) {
-            console.warn(`No options signals document found for ticker: ${ticker}`);
-            return [];
-        }
-
-        const data = docSnap.data();
-        if (!data) {
-            console.warn(`Options signals document for ${ticker} is empty.`);
-            return [];
-        }
-        const allSignals = [...(data.calls ?? []), ...(data.puts ?? [])];
-
-        if (allSignals.length === 0) {
-            console.log(`No call or put signals found in the document for ${ticker}.`);
+        if (snapshot.empty) {
+            console.warn(`No documents found in winners_dashboard for ticker: ${ticker}`);
             return [];
         }
         
-        const filteredSignals = allSignals.filter(signal => {
-            const setupQuality = signal.setup_quality_signal;
-            const volatility = signal.volatility_comparison_signal;
-            return (setupQuality === 'Strong' || setupQuality === 'Fair') && volatility === 'Cheap';
+        const winners: Winner[] = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+             const winnerData = {
+                id: doc.id,
+                ...data,
+            };
+            const validation = WinnerSchema.safeParse(winnerData);
+            if (validation.success) {
+                winners.push(validation.data);
+            } else {
+                console.warn(`Invalid winner data in getNoteworthyOptions for doc ${doc.id}:`, validation.error.flatten());
+            }
         });
-        
-        // Sort by setup quality: "Strong" first, then by expiration date
-        filteredSignals.sort((a, b) => {
-            if (a.setup_quality_signal === 'Strong' && b.setup_quality_signal !== 'Strong') return -1;
-            if (a.setup_quality_signal !== 'Strong' && b.setup_quality_signal === 'Strong') return 1;
-            return new Date(a.expiration_date).getTime() - new Date(b.expiration_date).getTime();
-        });
-        
-        const validatedSignals = filteredSignals
-            .map(signal => {
-                const validation = OptionsSignalSchema.safeParse(signal);
-                if (!validation.success) {
-                    console.warn(`Invalid noteworthy option signal data for ${ticker}:`, validation.error.flatten());
-                    return null;
-                }
-                return validation.data;
-            })
-            .filter((s): s is OptionsSignal => s !== null);
 
-        console.log(`Found ${validatedSignals.length} noteworthy options for ${ticker} after filtering.`);
-        return validatedSignals.slice(0, 10);
+        // Sort by options_score descending
+        winners.sort((a, b) => (b.options_score ?? 0) - (a.options_score ?? 0));
+        
+        return winners;
 
     } catch (error) {
-        console.error(`Error fetching noteworthy options for ${ticker}:`, error);
+        console.error(`Error fetching noteworthy options from winners_dashboard for ${ticker}:`, error);
         return [];
     }
 }
@@ -358,7 +343,7 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
         const winners: Winner[] = [];
         querySnapshot.docs.forEach(doc => {
              const data = doc.data();
-             const winnerData: Winner = {
+             const winnerData: any = { // Use any to bypass strict checking before validation
                 id: doc.id,
                 company_name: data.company_name,
                 image_uri: data.image_uri,
@@ -370,6 +355,9 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
                 thirty_day_change_pct: data.thirty_day_change_pct,
                 ticker: data.ticker,
                 weighted_score: isNaN(data.weighted_score) ? null : data.weighted_score,
+                option_type: data.option_type,
+                strike_price: data.strike_price,
+                expiration_date: data.expiration_date,
                 options_score: data.options_score,
             };
             const validation = WinnerSchema.safeParse(winnerData);
@@ -943,6 +931,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

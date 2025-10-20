@@ -71,16 +71,19 @@ function TodaysWinners() {
     // This function now correctly ensures unique tickers in the final list.
     const getTopUniqueTickers = (winners: Winner[]): Winner[] => {
       if (!winners || winners.length === 0) return [];
+      
       // Step 1: Group all contracts by ticker and find the best one for each.
       const bestContractByTicker = new Map<string, Winner>();
       for (const winner of winners) {
         const existing = bestContractByTicker.get(winner.ticker);
+        // Use weighted_score for comparison. If a ticker is not in the map, add it.
+        // If it is, replace it only if the current winner has a better score.
         if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
           bestContractByTicker.set(winner.ticker, winner);
         }
       }
       
-      // Step 2: Convert the map to an array of the best contracts.
+      // Step 2: Convert the map to an array of the best contracts (now unique by ticker).
       const uniqueWinners = Array.from(bestContractByTicker.values());
 
       // Step 3: Sort these unique winners by their score and take the top 10.
@@ -469,3 +472,5 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
+
+    

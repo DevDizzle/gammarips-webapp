@@ -1573,6 +1573,14 @@ body {
   width: 100%;
 }
 
+.w-\[50\%\] {
+  width: 50%;
+}
+
+.w-fit {
+  width: fit-content;
+}
+
 .min-w-0 {
   min-width: 0;
 }

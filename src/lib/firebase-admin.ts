@@ -104,8 +104,9 @@ const OptionsSignalSchema = z.object({
     iv_signal: z.string(),
     option_type: z.enum(['call', 'put']),
     run_date: z.string(),
-    setup_quality_signal: z.string(),
-    stock_price_trend_signal: z.string(),
+    setup_quality_signal: z.string().optional(),
+    stock_price_trend_signal: z.string().optional(),
+    volatility_comparison_signal: z.string().optional(),
     strike_price: z.number(),
     summary: z.string(),
     ticker: z.string(),
@@ -296,36 +297,48 @@ export async function getOptionsHeaderSignalAdmin(ticker: string): Promise<Optio
 }
 
 
-export async function getOptionsSignalsAdmin(ticker: string): Promise<TickerOptionsData | null> {
+export async function getNoteworthyOptionsAdmin(ticker: string): Promise<OptionsSignal[]> {
     try {
         const docRef = adminDb.collection("options_signals").doc(ticker.toUpperCase());
         const docSnap = await docRef.get();
 
         if (!docSnap.exists) {
-            console.warn(`No options signals found for ticker: ${ticker}`);
-            return null;
+            console.warn(`No options signals document found for ticker: ${ticker}`);
+            return [];
         }
 
         const data = docSnap.data();
-        
-        const optionsData: TickerOptionsData = {
-            calls: data?.calls ?? [],
-            puts: data?.puts ?? [],
-            company_name: data?.calls?.[0]?.company_name ?? data?.puts?.[0]?.company_name ?? ticker,
-            ticker: ticker.toUpperCase(),
-        };
+        const allSignals = [...(data?.calls ?? []), ...(data?.puts ?? [])];
 
-        const validation = TickerOptionsDataSchema.safeParse(optionsData);
-
-        if (!validation.success) {
-            console.error(`Invalid options signal data for ${ticker}:`, validation.error.flatten());
-            return null;
-        }
+        const filteredSignals = allSignals.filter(signal => {
+            const setupQuality = signal.setup_quality_signal;
+            const volatility = signal.volatility_comparison_signal;
+            return (setupQuality === 'Strong' || setupQuality === 'Fair') && volatility === 'Cheap';
+        });
         
-        return validation.data;
+        // Sort by setup quality: "Strong" first, then by expiration date
+        filteredSignals.sort((a, b) => {
+            if (a.setup_quality_signal === 'Strong' && b.setup_quality_signal !== 'Strong') return -1;
+            if (a.setup_quality_signal !== 'Strong' && b.setup_quality_signal === 'Strong') return 1;
+            return new Date(a.expiration_date).getTime() - new Date(b.expiration_date).getTime();
+        });
+        
+        const validatedSignals = filteredSignals
+            .map(signal => {
+                const validation = OptionsSignalSchema.safeParse(signal);
+                if (!validation.success) {
+                    console.warn(`Invalid noteworthy option signal data for ${ticker}:`, validation.error.flatten());
+                    return null;
+                }
+                return validation.data;
+            })
+            .filter((s): s is OptionsSignal => s !== null);
+
+        return validatedSignals.slice(0, 10);
+
     } catch (error) {
-        console.error(`Error fetching options signals for ${ticker}:`, error);
-        return null;
+        console.error(`Error fetching noteworthy options for ${ticker}:`, error);
+        return [];
     }
 }
 

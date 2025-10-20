@@ -51,12 +51,6 @@ function NoteworthyOptions({ ticker, outlookSignal }: NoteworthyOptionsProps) {
     fetchData();
   }, [ticker, outlookSignal, toast]);
 
-  const getScoreBadgeVariant = (score: number) => {
-      if (score > 7) return 'default';
-      if (score < 4) return 'destructive';
-      return 'secondary';
-  }
-  
   const renderDesktopTable = () => (
       <Table className="hidden md:table">
           <TableHeader>
@@ -67,7 +61,6 @@ function NoteworthyOptions({ ticker, outlookSignal }: NoteworthyOptionsProps) {
               <TableHead>Last Price</TableHead>
               <TableHead>Volume</TableHead>
               <TableHead>IV</TableHead>
-              <TableHead className="text-right">Score</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -85,11 +78,6 @@ function NoteworthyOptions({ ticker, outlookSignal }: NoteworthyOptionsProps) {
                   <TableCell>${c.last_price?.toFixed(2) ?? 'N/A'}</TableCell>
                   <TableCell>{c.volume?.toLocaleString() ?? 'N/A'}</TableCell>
                   <TableCell>{c.implied_volatility ? `${(c.implied_volatility * 100).toFixed(1)}%` : 'N/A'}</TableCell>
-                  <TableCell className="text-right">
-                       <Badge variant={getScoreBadgeVariant(c.options_score)}>
-                          {c.options_score.toFixed(2)}
-                      </Badge>
-                  </TableCell>
                 </TableRow>
               );
             })}
@@ -113,12 +101,6 @@ function NoteworthyOptions({ ticker, outlookSignal }: NoteworthyOptionsProps) {
                                     <span className="font-bold text-lg">${c.strike.toFixed(2)}</span>
                                 </div>
                                 <p className="text-sm text-muted-foreground mt-1">Exp: {new Date(c.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</p>
-                            </div>
-                            <div className="flex-shrink-0 text-right">
-                                <p className="text-xs text-muted-foreground">Score</p>
-                                <Badge variant={getScoreBadgeVariant(c.options_score)}>
-                                    {c.options_score.toFixed(2)}
-                                </Badge>
                             </div>
                           </div>
                           <div className="mt-4 border-t pt-4">
@@ -147,8 +129,7 @@ function NoteworthyOptions({ ticker, outlookSignal }: NoteworthyOptionsProps) {
   const renderSkeleton = () => (
     <div className="space-y-2">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="grid grid-cols-7 gap-4">
-          <Skeleton className="h-5 w-full" />
+        <div key={i} className="grid grid-cols-6 gap-4">
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />

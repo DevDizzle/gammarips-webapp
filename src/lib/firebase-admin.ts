@@ -617,7 +617,16 @@ export async function getDashboardDataAdmin(ticker: string): Promise<any | null>
 
         console.log(`[getDashboardDataAdmin] Found GCS path for ${ticker}: ${gcsPath}`);
         const content = await getGcsFileContentAdmin(gcsPath);
-        return JSON.parse(content);
+        const dashboardData = JSON.parse(content);
+        
+        // Find the outlook signal from the winners_dashboard collection
+        const winnersSnapshot = await adminDb.collection('winners_dashboard').where('ticker', '==', ticker.toUpperCase()).limit(1).get();
+        if (!winnersSnapshot.empty) {
+            const winnerData = winnersSnapshot.docs[0].data();
+            dashboardData.outlookSignal = winnerData.outlook_signal;
+        }
+
+        return dashboardData;
 
     } catch (error: any) {
         console.error(`[getDashboardDataAdmin] Error fetching dashboard data for ${ticker}:`, error);

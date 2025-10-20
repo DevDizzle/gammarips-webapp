@@ -282,17 +282,12 @@
     },
     "4000694d2afc90b23b2dd7dc89d06882302da44460": {
       "workers": {
-        "app/dashboard/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc"
       }
     },
@@ -320,12 +315,17 @@
     },
     "405631e3e3ff111169b5d99e4ac1ce2091b6293858": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc"
       }
     },

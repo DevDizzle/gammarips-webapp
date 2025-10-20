@@ -99,7 +99,7 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
     )
   }
 
-  const { titleInfo, kpis, priceChartData, stockLevelAnalysis, industry } = data;
+  const { titleInfo, kpis, priceChartData, stockLevelAnalysis, industry, outlookSignal } = data;
 
   // Calculate RSI change for display
   const rsiChange = kpis?.rsiMomentum?.currentRsi && kpis?.rsiMomentum?.rsi30DaysAgo
@@ -156,7 +156,7 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
         </p>
       </header>
 
-      <NoteworthyOptions ticker={ticker} />
+      <NoteworthyOptions ticker={ticker} outlookSignal={outlookSignal} />
 
       {/* KPI Section with Carousel */}
       <div className="lg:hidden -mx-4 sm:-mx-6 lg:-mx-8">

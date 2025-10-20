@@ -13,9 +13,10 @@ import { Badge } from '@/components/ui/badge';
 
 interface NoteworthyOptionsProps {
     ticker: string;
+    outlookSignal?: string | null;
 }
 
-function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
+function NoteworthyOptions({ ticker, outlookSignal }: NoteworthyOptionsProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [candidates, setCandidates] = useState<OptionCandidate[]>([]);
   const { toast } = useToast();
@@ -25,7 +26,17 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
       setIsLoading(true);
       try {
         const candidatesData = await getOptionsCandidates(ticker);
-        setCandidates(candidatesData);
+        
+        let filteredCandidates = candidatesData;
+        const signal = outlookSignal?.toLowerCase();
+
+        if (signal?.includes('bullish')) {
+            filteredCandidates = candidatesData.filter(c => c.option_type === 'call');
+        } else if (signal?.includes('bearish')) {
+            filteredCandidates = candidatesData.filter(c => c.option_type === 'put');
+        }
+        
+        setCandidates(filteredCandidates);
       } catch (error) {
         console.error(`Failed to fetch options candidates for ${ticker}:`, error);
         toast({
@@ -38,7 +49,7 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
       }
     };
     fetchData();
-  }, [ticker, toast]);
+  }, [ticker, outlookSignal, toast]);
 
   const getScoreBadgeVariant = (score: number) => {
       if (score > 7) return 'default';

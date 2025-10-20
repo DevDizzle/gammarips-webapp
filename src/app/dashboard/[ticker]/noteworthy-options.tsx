@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { getNoteworthyOptions } from '../../actions';
-import type { Winner } from '@/lib/firebase-admin';
+import type { OptionsSignal } from '@/lib/firebase-admin';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown } from 'lucide-react';
@@ -21,12 +21,13 @@ const getSignalBadgeVariant = (signal?: string) => {
     const lowerSignal = signal.toLowerCase();
     if (lowerSignal.includes('bullish')) return 'default';
     if (lowerSignal.includes('bearish')) return 'destructive';
+    if (lowerSignal.includes('strong')) return 'default';
     return 'outline';
 };
 
 function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [signals, setSignals] = useState<Winner[]>([]);
+  const [signals, setSignals] = useState<OptionsSignal[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -56,8 +57,8 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
               <TableHead>Type</TableHead>
               <TableHead>Strike</TableHead>
               <TableHead>Expiration</TableHead>
-              <TableHead>AI Outlook</TableHead>
-              <TableHead className="text-right">Stock Price</TableHead>
+              <TableHead>Trend</TableHead>
+              <TableHead>AI Summary</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -74,11 +75,11 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
                   <TableCell>${signal.strike_price.toFixed(2)}</TableCell>
                   <TableCell>{new Date(signal.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</TableCell>
                    <TableCell>
-                        <Badge variant={getSignalBadgeVariant(signal.outlook_signal)} className="whitespace-nowrap">
-                            {signal.outlook_signal}
+                        <Badge variant={getSignalBadgeVariant(signal.stock_price_trend_signal)} className="whitespace-nowrap">
+                            {signal.stock_price_trend_signal}
                         </Badge>
                     </TableCell>
-                  <TableCell className="text-right font-mono">${signal.last_close?.toFixed(2)}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{signal.summary}</TableCell>
                 </TableRow>
               );
             })}
@@ -104,13 +105,13 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
                                 </div>
                                 <p className="text-sm text-muted-foreground mt-1">Exp: {new Date(signal.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</p>
                             </div>
-                            <Badge variant={getSignalBadgeVariant(signal.outlook_signal)} className="whitespace-nowrap">
-                                {signal.outlook_signal}
+                            <Badge variant={getSignalBadgeVariant(signal.stock_price_trend_signal)} className="whitespace-nowrap">
+                                {signal.stock_price_trend_signal}
                             </Badge>
                           </div>
-                          <div className="mt-3 border-t pt-3 flex justify-between items-center">
-                              <p className="text-sm text-muted-foreground">Stock Price</p>
-                              <p className="font-mono font-semibold">${signal.last_close?.toFixed(2)}</p>
+                          <div className="mt-3 border-t pt-3">
+                              <p className="text-xs text-muted-foreground mb-1">AI Summary</p>
+                              <p className="text-sm">{signal.summary}</p>
                           </div>
                       </CardContent>
                   </Card>
@@ -139,7 +140,7 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
     }
 
     if (signals.length === 0) {
-        return <p className="text-sm text-muted-foreground">No noteworthy option contracts were found for {ticker} in today's data run.</p>
+        return <p className="text-sm text-muted-foreground">No noteworthy option contracts with a "Strong" setup were found for {ticker} in today's data run.</p>
     }
 
     return (
@@ -155,7 +156,7 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
       <CardHeader>
         <CardTitle>Noteworthy Option Setups for {ticker}</CardTitle>
         <CardDescription>
-          A curated list of Call and Put contracts for this stock where our AI outlook and the underlying stock's momentum show strong alignment.
+          A curated list of Call and Put contracts for this stock where our AI has identified a "Strong" setup quality.
         </CardDescription>
       </CardHeader>
       <CardContent>

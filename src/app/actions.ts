@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import {
@@ -46,7 +47,7 @@ export async function getOptionsSignals(ticker: string): Promise<OptionCandidate
     return getOptionsCandidatesAdmin(ticker);
 }
 
-export async function getNoteworthyOptions(ticker: string): Promise<Winner[]> {
+export async function getNoteworthyOptions(ticker: string): Promise<OptionsSignal[]> {
     return getNoteworthyOptionsAdmin(ticker);
 }
 
@@ -319,5 +320,6 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 

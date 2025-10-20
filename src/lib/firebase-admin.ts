@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -97,6 +98,7 @@ const PerformanceSignalSchema = z.object({
 export type PerformanceSignal = z.infer<typeof PerformanceSignalSchema>;
 
 const OptionsSignalSchema = z.object({
+    id: z.string().optional(), // Adding ID for React keys
     contract_symbol: z.string(),
     expiration_date: z.string(),
     implied_volatility: z.number(),
@@ -299,39 +301,29 @@ export async function getOptionsHeaderSignalAdmin(ticker: string): Promise<Optio
 }
 
 
-export async function getNoteworthyOptionsAdmin(ticker: string): Promise<Winner[]> {
+export async function getNoteworthyOptionsAdmin(ticker: string): Promise<OptionsSignal[]> {
     try {
-        const snapshot = await adminDb.collection("winners_dashboard")
-            .where('ticker', '==', ticker.toUpperCase())
-            .get();
+        const docRef = adminDb.collection("options_signals").doc(ticker.toUpperCase());
+        const docSnap = await docRef.get();
 
-        if (snapshot.empty) {
-            console.warn(`No documents found in winners_dashboard for ticker: ${ticker}`);
+        if (!docSnap.exists) {
+            console.warn(`No options_signals document found for ticker: ${ticker}`);
             return [];
         }
-        
-        const winners: Winner[] = [];
-        snapshot.forEach(doc => {
-            const data = doc.data();
-             const winnerData = {
-                id: doc.id,
-                ...data,
-            };
-            const validation = WinnerSchema.safeParse(winnerData);
-            if (validation.success) {
-                winners.push(validation.data);
-            } else {
-                console.warn(`Invalid winner data in getNoteworthyOptions for doc ${doc.id}:`, validation.error.flatten());
-            }
-        });
 
-        // Sort by options_score descending
-        winners.sort((a, b) => (b.options_score ?? 0) - (a.options_score ?? 0));
+        const data = docSnap.data() as TickerOptionsData;
+        const allSignals = [...(data.calls || []), ...(data.puts || [])];
+
+        const strongSetups = allSignals.filter(
+            (signal) => signal.setup_quality_signal === "Strong"
+        );
         
-        return winners;
+        strongSetups.forEach(s => s.id = s.contract_symbol);
+        
+        return strongSetups;
 
     } catch (error) {
-        console.error(`Error fetching noteworthy options from winners_dashboard for ${ticker}:`, error);
+        console.error(`Error fetching noteworthy options from options_signals for ${ticker}:`, error);
         return [];
     }
 }
@@ -931,6 +923,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

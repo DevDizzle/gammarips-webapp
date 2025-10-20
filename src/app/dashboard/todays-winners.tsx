@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -43,8 +44,8 @@ function TodaysWinners() {
       try {
         const [winnersData, gainersData, losersData] = await Promise.all([
           getWinnersDashboard(),
-          getPerformanceSignals('desc', 5),
-          getPerformanceSignals('asc', 5)
+          getPerformanceSignals('desc', 10),
+          getPerformanceSignals('asc', 10)
         ]);
         setAllWinners(winnersData);
         setTopGainers(gainersData);
@@ -63,10 +64,10 @@ function TodaysWinners() {
     fetchData();
   }, [toast]);
   
-  const { bullishWinners, bearishWinners, lastUpdated } = useMemo(() => {
+  const getTopUniqueTickers = (winners: Winner[], count: number): Winner[] => {
     // 1. De-duplicate winners by ticker, keeping only the one with the highest score
     const uniqueWinnersMap = new Map<string, Winner>();
-    allWinners.forEach(winner => {
+    winners.forEach(winner => {
         const existing = uniqueWinnersMap.get(winner.ticker);
         if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
             uniqueWinnersMap.set(winner.ticker, winner);
@@ -74,12 +75,18 @@ function TodaysWinners() {
     });
     const uniqueWinners = Array.from(uniqueWinnersMap.values());
 
-    // 2. Filter and sort the unique winners
-    const bullish = uniqueWinners.filter(w => w.outlook_signal.toLowerCase().includes('bullish'));
-    const bearish = uniqueWinners.filter(w => w.outlook_signal.toLowerCase().includes('bearish'));
+    // 2. Sort the unique winners by score and return the top N
+    return uniqueWinners
+        .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1))
+        .slice(0, count);
+  };
 
-    const sortedBullish = bullish.sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1)).slice(0, 10);
-    const sortedBearish = bearish.sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1)).slice(0, 10);
+  const { bullishWinners, bearishWinners, lastUpdated } = useMemo(() => {
+    const bullish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bullish'));
+    const bearish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bearish'));
+
+    const top10Bullish = getTopUniqueTickers(bullish, 10);
+    const top10Bearish = getTopUniqueTickers(bearish, 10);
     
     let updatedDate: string | null = null;
     if (allWinners.length > 0) {
@@ -95,7 +102,7 @@ function TodaysWinners() {
       }
     }
       
-    return { bullishWinners: sortedBullish, bearishWinners: sortedBearish, lastUpdated: updatedDate };
+    return { bullishWinners: top10Bullish, bearishWinners: top10Bearish, lastUpdated: updatedDate };
   }, [allWinners]);
 
   const handleRowClick = (ticker: string) => {

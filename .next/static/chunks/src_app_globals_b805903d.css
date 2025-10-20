@@ -1183,10 +1183,6 @@ body {
   z-index: 100;
 }
 
-.col-span-1 {
-  grid-column: span 1 / span 1;
-}
-
 .m-0 {
   margin: 0;
 }
@@ -1573,10 +1569,6 @@ body {
   width: 300px;
 }
 
-.w-\[40\%\] {
-  width: 40%;
-}
-
 .w-full {
   width: 100%;
 }
@@ -1609,6 +1601,10 @@ body {
   max-width: 56rem;
 }
 
+.max-w-\[150px\] {
+  max-width: 150px;
+}
+
 .max-w-full {
   max-width: 100%;
 }
@@ -1631,10 +1627,6 @@ body {
 
 .max-w-xl {
   max-width: 36rem;
-}
-
-.max-w-\[150px\] {
-  max-width: 150px;
 }
 
 .flex-1 {
@@ -2293,6 +2285,10 @@ body {
   padding-right: .5rem;
 }
 
+.pr-4 {
+  padding-right: 1rem;
+}
+
 .pr-8 {
   padding-right: 2rem;
 }
@@ -2323,10 +2319,6 @@ body {
 
 .pt-8 {
   padding-top: 2rem;
-}
-
-.pr-4 {
-  padding-right: 1rem;
 }
 
 .text-left {
@@ -2746,10 +2738,6 @@ body {
   background-color: hsl(var(--destructive) / .9);
 }
 
-.hover\:bg-green-500\/20:hover {
-  background-color: #22c55e33;
-}
-
 .hover\:bg-muted\/50:hover {
   background-color: hsl(var(--muted) / .5);
 }
@@ -2764,10 +2752,6 @@ body {
 
 .hover\:bg-primary\/90:hover {
   background-color: hsl(var(--primary) / .9);
-}
-
-.hover\:bg-red-500\/20:hover {
-  background-color: #ef444433;
 }
 
 .hover\:bg-secondary:hover {
@@ -3327,14 +3311,14 @@ body {
     line-height: 1;
   }
 
-  .sm\:text-xl {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-  }
-
   .sm\:text-sm {
     font-size: .875rem;
     line-height: 1.25rem;
+  }
+
+  .sm\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
 
   .data-\[state\=open\]\:sm\:slide-in-from-bottom-full[data-state="open"] {

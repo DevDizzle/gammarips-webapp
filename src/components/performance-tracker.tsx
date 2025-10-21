@@ -34,7 +34,7 @@ export async function PerformanceTracker() {
                     </CardTitle>
                 </div>
                  <CardDescription className="max-w-2xl mx-auto">
-                    This data reflects the historical performance of our AI data pipeline, tracked since 10/20/2025 from the date of identification to the standard expiry. All data is for informational purposes and does not guarantee future results.
+                    This data reflects the historical performance of our AI data pipeline, tracked since 10/21/2025 from the date of identification to the standard expiry. All data is for informational purposes and does not guarantee future results.
                 </CardDescription>
             </CardHeader>
             <CardContent>

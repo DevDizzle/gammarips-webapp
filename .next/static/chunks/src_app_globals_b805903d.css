@@ -1569,10 +1569,6 @@ body {
   width: 300px;
 }
 
-.w-\[50\%\] {
-  width: 50%;
-}
-
 .w-fit {
   width: fit-content;
 }

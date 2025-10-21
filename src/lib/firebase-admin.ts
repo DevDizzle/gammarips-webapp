@@ -152,6 +152,13 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
     };
 
     try {
+        // Get today's date in YYYY-MM-DD format, corrected for timezone.
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`;
+
         const snapshot = await adminDb.collection('performance_tracker').get();
 
         if (snapshot.empty) {
@@ -168,19 +175,22 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
 
         snapshot.forEach(doc => {
             const data = doc.data();
-            const gain = data.percent_gain;
             
-            // Ensure the signal is valid before including it in calculations
-            if (typeof gain === 'number') {
-                totalPercentGain += gain;
-                validSignalCount++;
+            // Only include documents where run_date is not today
+            if (data.run_date && data.run_date !== todayStr) {
+                const gain = data.percent_gain;
+                
+                if (typeof gain === 'number') {
+                    totalPercentGain += gain;
+                    validSignalCount++;
 
-                if (gain > 0) {
-                    winnersSum += gain;
-                    winnerCount++;
-                } else if (gain < 0) {
-                    losersSum += gain;
-                    loserCount++;
+                    if (gain > 0) {
+                        winnersSum += gain;
+                        winnerCount++;
+                    } else if (gain < 0) {
+                        losersSum += gain;
+                        loserCount++;
+                    }
                 }
             }
         });
@@ -923,6 +933,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

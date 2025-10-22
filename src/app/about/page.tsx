@@ -9,7 +9,7 @@ import ContactForm from './contact-form';
 
 export const metadata: Metadata = {
   title: 'About Us | ProfitScout',
-  description: 'Learn about the methodology and mission of ProfitScout, an AI-powered tool providing clear, data-driven investment insights.',
+  description: 'Learn about ProfitScout\'s mission to transform complex financial data into clear, actionable insights for stock and options traders using advanced AI.',
 };
 
 const features = [

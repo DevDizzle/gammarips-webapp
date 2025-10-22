@@ -7,7 +7,7 @@ import { AuthProvider } from '@/hooks/use-auth';
 
 export const metadata: Metadata = {
   title: 'Dashboard | ProfitScout',
-  description: 'Your AI-powered investment dashboard.',
+  description: 'Your personal dashboard for AI-powered stock and options analysis. View top setups, track performance, and search any ticker.',
 };
 
 export default function DashboardLayout({

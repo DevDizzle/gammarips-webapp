@@ -115,15 +115,21 @@ export async function generateMetadata({ params }: StockSeoPageProps): Promise<M
 
   if (!data) {
     return {
-      title: 'Stock Not Found | ProfitScout',
-      description: 'The requested stock could not be found.',
+      title: 'Stock Analysis Not Found | ProfitScout',
+      description: 'The requested stock analysis could not be found or is not up to date. Please check back later.',
     };
   }
+
+  // Ensure keywords are relevant and don't contain unwanted terms.
+  const cleanKeywords = (data.seo.keywords || []).filter(k => 
+    !k.toLowerCase().includes('crypto') && 
+    !k.toLowerCase().includes('bitcoin')
+  );
 
   return {
     title: data.seo.title,
     description: data.seo.metaDescription,
-    keywords: data.seo.keywords,
+    keywords: ['stock analysis', 'options analysis', 'AI stock pick', ...cleanKeywords],
   };
 }
 

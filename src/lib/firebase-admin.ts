@@ -362,34 +362,6 @@ export async function getOptionsHeaderSignalAdmin(ticker: string): Promise<Optio
 }
 
 
-export async function getNoteworthyOptionsAdmin(ticker: string): Promise<OptionsSignal[]> {
-    try {
-        const docRef = adminDb.collection("options_signals").doc(ticker.toUpperCase());
-        const docSnap = await docRef.get();
-
-        if (!docSnap.exists) {
-            console.warn(`No options_signals document found for ticker: ${ticker}`);
-            return [];
-        }
-
-        const data = docSnap.data() as TickerOptionsData;
-        const allSignals = [...(data.calls || []), ...(data.puts || [])];
-
-        const noteworthySignals = allSignals.filter(
-            (signal) => signal.setup_quality_signal === "Strong"
-        );
-        
-        noteworthySignals.forEach(s => s.id = s.contract_symbol);
-        
-        return noteworthySignals;
-
-    } catch (error) {
-        console.error(`Error fetching noteworthy options from options_signals for ${ticker}:`, error);
-        return [];
-    }
-}
-
-
 export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
     try {
         const querySnapshot = await adminDb.collection("winners_dashboard").get();

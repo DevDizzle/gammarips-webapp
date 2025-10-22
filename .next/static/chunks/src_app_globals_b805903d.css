@@ -1967,6 +1967,10 @@ body {
   border-radius: .75rem;
 }
 
+.rounded {
+  border-radius: .25rem;
+}
+
 .border {
   border-width: 1px;
 }
@@ -2185,6 +2189,10 @@ body {
 
 .p-\[1px\] {
   padding: 1px;
+}
+
+.p-2 {
+  padding: .5rem;
 }
 
 .px-2 {
@@ -3236,6 +3244,10 @@ body {
 
   .sm\:w-64 {
     width: 16rem;
+  }
+
+  .sm\:w-48 {
+    width: 12rem;
   }
 
   .sm\:max-w-md {

@@ -6,7 +6,7 @@ import { notFound, useRouter, useParams } from 'next/navigation';
 import { getDashboardData, incrementDashboardViewCount, getTickerEvents } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight, Loader2, MailCheck } from 'lucide-react';
+import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight, Loader2, MailCheck, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
 import { Markdown } from '@/components/markdown';
@@ -100,7 +100,7 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
     )
   }
 
-  const { titleInfo, kpis, priceChartData, stockLevelAnalysis, industry } = data;
+  const { titleInfo, kpis, priceChartData, stockLevelAnalysis, industry, optionsHeader, topSignalSummary } = data;
 
   // Calculate RSI change for display
   const rsiChange = kpis?.rsiMomentum?.currentRsi && kpis?.rsiMomentum?.rsi30DaysAgo
@@ -156,6 +156,58 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
             AI-Powered Options & Equity Analysis as of {formattedRunDate} at 5:00 AM EST
         </p>
       </header>
+
+      {optionsHeader && (
+        <Card className="bg-primary/10 border-primary/20">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 font-headline">
+                    <Star className="text-primary" />
+                    Top-Rated Option
+                </CardTitle>
+                 <CardDescription>{topSignalSummary}</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex-1 space-y-4">
+                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                            <div className="bg-background/50 p-3 rounded-lg">
+                                <p className="text-xs text-muted-foreground">Type</p>
+                                <Badge variant="outline" className={cn('mt-1 font-semibold', optionsHeader.optionType === 'call' ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50')}>
+                                    {optionsHeader.optionType.toUpperCase()}
+                                </Badge>
+                            </div>
+                             <div className="bg-background/50 p-3 rounded-lg">
+                                <p className="text-xs text-muted-foreground">Strike Price</p>
+                                <p className="font-semibold text-lg">${optionsHeader.strikePrice.toFixed(2)}</p>
+                            </div>
+                             <div className="bg-background/50 p-3 rounded-lg">
+                                <p className="text-xs text-muted-foreground">Exp. Date</p>
+                                <p className="font-semibold text-lg">{new Date(optionsHeader.expirationDate).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                            </div>
+                             <div className="bg-background/50 p-3 rounded-lg">
+                                <p className="text-xs text-muted-foreground">Days to Exp.</p>
+                                <p className="font-semibold text-lg">{optionsHeader.dte}</p>
+                            </div>
+                        </div>
+                        <div className="text-xs text-muted-foreground font-mono bg-background/50 p-2 rounded text-center">
+                            {optionsHeader.contractSymbol}
+                        </div>
+                    </div>
+                     <div className="flex-shrink-0 sm:w-48 space-y-2">
+                        <Badge className={cn("w-full justify-center", getSentimentClasses(optionsHeader.setupQuality))}>
+                            Setup Quality: {optionsHeader.setupQuality}
+                        </Badge>
+                        <Badge className={cn("w-full justify-center", getSentimentClasses(optionsHeader.trendSignal))}>
+                            Stock Trend: {optionsHeader.trendSignal}
+                        </Badge>
+                         <Badge className={cn("w-full justify-center", getSentimentClasses(optionsHeader.ivSignal))}>
+                            IV Signal: {optionsHeader.ivSignal}
+                        </Badge>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+      )}
 
       <SignalTracker ticker={ticker} />
 

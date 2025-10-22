@@ -24,8 +24,6 @@ import {
 import { getStocks } from '@/app/actions';
 import type { Stock } from '@/lib/firebase-admin';
 import { Skeleton } from './ui/skeleton';
-import { UserNav } from './auth/user-nav';
-
 
 // Helper to convert GCS URI to a public URL, correctly encoding path segments.
 const convertGcsUriToUrl = (gcsUri: string) => {
@@ -90,59 +88,63 @@ export function TickerSearch() {
   };
 
   if (loading) {
-    return (
-        <div className="flex items-center gap-4">
-            <Skeleton className="h-9 w-64 rounded-md" />
-            <Skeleton className="h-9 w-9 rounded-full" />
-        </div>
-    );
+    return <Skeleton className="h-9 w-9 sm:w-64 rounded-md" />;
   }
 
   return (
-    <div className="flex items-center gap-4">
-        <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-            <Button
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <>
+          {/* Desktop Search Button */}
+          <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[250px] justify-between text-muted-foreground"
-            >
+            className="hidden sm:flex w-[250px] justify-between text-muted-foreground"
+          >
             <Search className="mr-2 h-4 w-4 shrink-0" />
             Search ticker...
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-0">
-            <Command>
-            <CommandInput placeholder="Search by ticker or company..." />
-            <CommandList>
-                <CommandEmpty>No stock found.</CommandEmpty>
-                <CommandGroup>
-                {stocks.map((stock) => {
-                    const imageUrl = stock.image_uri 
-                      ? convertGcsUriToUrl(stock.image_uri) 
-                      : `https://placehold.co/24x24/1e293b/a855f7?text=${stock.id[0]}`;
-                    
-                    return (
-                        <CommandItem
-                        key={stock.id}
-                        value={`${stock.id} ${stock.company_name}`}
-                        onSelect={() => handleSelect(stock.id)}
-                        className="flex items-center gap-3"
-                        >
-                          <TinyLogo src={imageUrl} alt={`${stock.company_name} logo`} />
-                          <span className="font-medium">{stock.id}</span>
-                          <span className="text-xs text-muted-foreground truncate">{stock.company_name}</span>
-                        </CommandItem>
-                    )
-                })}
-                </CommandGroup>
-            </CommandList>
-            </Command>
-        </PopoverContent>
-        </Popover>
-        <UserNav />
-    </div>
+          </Button>
+          {/* Mobile Search Icon */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="sm:hidden"
+            aria-label="Search ticker"
+          >
+             <Search className="h-5 w-5" />
+          </Button>
+        </>
+      </PopoverTrigger>
+      <PopoverContent className="w-[300px] p-0">
+        <Command>
+          <CommandInput placeholder="Search by ticker or company..." />
+          <CommandList>
+            <CommandEmpty>No stock found.</CommandEmpty>
+            <CommandGroup>
+              {stocks.map((stock) => {
+                const imageUrl = stock.image_uri 
+                  ? convertGcsUriToUrl(stock.image_uri) 
+                  : `https://placehold.co/24x24/1e293b/a855f7?text=${stock.id[0]}`;
+                
+                return (
+                  <CommandItem
+                    key={stock.id}
+                    value={`${stock.id} ${stock.company_name}`}
+                    onSelect={() => handleSelect(stock.id)}
+                    className="flex items-center gap-3"
+                  >
+                    <TinyLogo src={imageUrl} alt={`${stock.company_name} logo`} />
+                    <span className="font-medium">{stock.id}</span>
+                    <span className="text-xs text-muted-foreground truncate">{stock.company_name}</span>
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }

@@ -209,8 +209,6 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
         </Card>
       )}
 
-      <SignalTracker ticker={ticker} />
-
       {/* KPI Section with Carousel */}
       <div className="lg:hidden -mx-4 sm:-mx-6 lg:-mx-8">
         <Carousel opts={{ align: "start", loop: true }} className="w-full">
@@ -272,6 +270,8 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
           </div>
         </>
       )}
+
+      <SignalTracker ticker={ticker} />
 
     </div>
   );
@@ -491,4 +491,5 @@ export default function TickerDashboardPage() {
 }
 
     
+
 

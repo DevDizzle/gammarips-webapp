@@ -39,10 +39,10 @@ const getSentimentClasses = (signal: string) => {
     if (lowerSignal.includes('bearish') || lowerSignal.includes('weak') || lowerSignal.includes('negative') || lowerSignal.includes('weakening') || lowerSignal.includes('underperforming')) {
         return 'text-red-500 border-red-500/20 bg-red-500/10';
     }
-    if (lowerSignal.includes('low')) {
+    if (lowerSignal.includes('low') || lowerSignal.includes('cheap')) {
         return 'text-green-500 border-green-500/20 bg-green-500/10';
     }
-     if (lowerSignal.includes('high')) {
+     if (lowerSignal.includes('high') || lowerSignal.includes('expensive')) {
         return 'text-red-500 border-red-500/20 bg-red-500/10';
     }
     return 'text-muted-foreground border-border bg-card';
@@ -200,8 +200,8 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
                         <Badge className={cn("w-full justify-center", getSentimentClasses(optionsHeader.trendSignal))}>
                             Stock Trend: {optionsHeader.trendSignal}
                         </Badge>
-                         <Badge className={cn("w-full justify-center", getSentimentClasses(optionsHeader.ivSignal))}>
-                            IV Signal: {optionsHeader.ivSignal}
+                         <Badge className={cn("w-full justify-center", getSentimentClasses(optionsHeader.volatilitySignal))}>
+                            Volatility: {optionsHeader.volatilitySignal}
                         </Badge>
                     </div>
                 </div>
@@ -491,3 +491,4 @@ export default function TickerDashboardPage() {
 }
 
     
+

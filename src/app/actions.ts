@@ -115,7 +115,7 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
             expirationDate: topSignal.expiration_date,
             strikePrice: topSignal.strike_price,
             ivValue: topSignal.implied_volatility,
-            ivSignal: topSignal.iv_signal,
+            volatilitySignal: topSignal.volatility_comparison_signal,
             dte: dte,
         };
         
@@ -320,6 +320,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

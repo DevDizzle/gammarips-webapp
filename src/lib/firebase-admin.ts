@@ -106,12 +106,11 @@ const OptionsSignalSchema = z.object({
     contract_symbol: z.string(),
     expiration_date: z.string(),
     implied_volatility: z.number(),
-    iv_signal: z.string().optional(),
+    volatility_comparison_signal: z.string().optional(),
     option_type: z.enum(['call', 'put']),
     run_date: z.string(),
     setup_quality_signal: z.string().optional(),
     stock_price_trend_signal: z.string().optional(),
-    volatility_comparison_signal: z.string().optional(),
     strike_price: z.number(),
     summary: z.string(),
     ticker: z.string(),
@@ -958,3 +957,4 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+

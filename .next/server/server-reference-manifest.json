@@ -104,6 +104,17 @@
         "app/dashboard/page": "rsc"
       }
     },
+    "405c6aefd2b4e8bf94480fa2da28aeca5dcae94312": {
+      "workers": {
+        "app/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/dashboard/page": "rsc"
+      }
+    },
     "405df5c0ca8db57431a6efe7c09355f6b9b02aa313": {
       "workers": {
         "app/dashboard/page": {
@@ -394,6 +405,22 @@
         "app/dashboard/page": "rsc"
       }
     },
+    "40ffed13830c5d0751fed7602ab2bd7b39dc6430f9": {
+      "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
+        "app/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/dashboard/[ticker]/page": "action-browser",
+        "app/dashboard/page": "rsc"
+      }
+    },
     "601f98e46519c012626d8451e7ca72bc064d2747d8": {
       "workers": {
         "app/dashboard/page": {
@@ -496,17 +523,6 @@
       },
       "layer": {
         "app/dashboard/page": "rsc"
-      }
-    },
-    "40ffed13830c5d0751fed7602ab2bd7b39dc6430f9": {
-      "workers": {
-        "app/dashboard/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        }
-      },
-      "layer": {
-        "app/dashboard/[ticker]/page": "action-browser"
       }
     }
   },

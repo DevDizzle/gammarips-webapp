@@ -93,30 +93,32 @@ export function TickerSearch() {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
+      {/* Desktop Search Button */}
       <PopoverTrigger asChild>
-        <>
-          {/* Desktop Search Button */}
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="hidden sm:flex w-[250px] justify-between text-muted-foreground"
-          >
-            <Search className="mr-2 h-4 w-4 shrink-0" />
-            Search ticker...
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-          {/* Mobile Search Icon */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="sm:hidden"
-            aria-label="Search ticker"
-          >
-             <Search className="h-5 w-5" />
-          </Button>
-        </>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="hidden sm:flex w-[250px] justify-between text-muted-foreground"
+        >
+          <Search className="mr-2 h-4 w-4 shrink-0" />
+          Search ticker...
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
       </PopoverTrigger>
+      
+      {/* Mobile Search Icon */}
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="sm:hidden"
+          aria-label="Search ticker"
+        >
+            <Search className="h-5 w-5" />
+        </Button>
+      </PopoverTrigger>
+
       <PopoverContent className="w-[300px] p-0">
         <Command>
           <CommandInput placeholder="Search by ticker or company..." />

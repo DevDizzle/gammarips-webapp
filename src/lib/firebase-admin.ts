@@ -96,6 +96,7 @@ const PerformanceSignalSchema = z.object({
     percent_gain: z.number(),
     option_type: z.enum(['call', 'put']).optional(),
     status: z.string().optional(),
+    strike_price: z.number(),
 });
 export type PerformanceSignal = z.infer<typeof PerformanceSignalSchema>;
 
@@ -245,6 +246,7 @@ export async function getPerformanceSignals(
         current_price: data.current_price,
         percent_gain: data.percent_gain,
         option_type: data.option_type,
+        strike_price: data.strike_price,
       };
       const validation = PerformanceSignalSchema.safeParse(signal);
       if (validation.success) {
@@ -263,7 +265,7 @@ export async function getPerformanceSignals(
 
 export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promise<PerformanceSignal[]> {
     try {
-        const snapshot = await adminDb.collection('performance_tracker').where('ticker', '==', ticker).get();
+        const snapshot = await adminDb.collection('performance_tracker').where('ticker', '==', ticker.toUpperCase()).get();
 
         if (snapshot.empty) {
             return [];
@@ -284,6 +286,7 @@ export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promis
                 percent_gain: data.percent_gain,
                 option_type: data.option_type,
                 status: data.status,
+                strike_price: data.strike_price,
             };
             const validation = PerformanceSignalSchema.safeParse(signal);
             if (validation.success) {
@@ -369,13 +372,13 @@ export async function getNoteworthyOptionsAdmin(ticker: string): Promise<Options
         const data = docSnap.data() as TickerOptionsData;
         const allSignals = [...(data.calls || []), ...(data.puts || [])];
 
-        const strongSetups = allSignals.filter(
+        const noteworthySignals = allSignals.filter(
             (signal) => signal.setup_quality_signal === "Strong"
         );
         
-        strongSetups.forEach(s => s.id = s.contract_symbol);
+        noteworthySignals.forEach(s => s.id = s.contract_symbol);
         
-        return strongSetups;
+        return noteworthySignals;
 
     } catch (error) {
         console.error(`Error fetching noteworthy options from options_signals for ${ticker}:`, error);
@@ -978,6 +981,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

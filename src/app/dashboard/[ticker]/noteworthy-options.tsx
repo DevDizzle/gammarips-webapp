@@ -76,7 +76,7 @@ function SignalTracker({ ticker }: SignalTrackerProps) {
                       {signal.option_type?.toUpperCase()}
                     </Badge>
                   </TableCell>
-                  <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
+                  <TableCell>${signal.strike_price.toFixed(2)}</TableCell>
                    <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
                    <TableCell>${signal.current_price.toFixed(2)}</TableCell>
                    <TableCell className={cn("font-semibold", isGain ? 'text-green-500' : 'text-red-500')}>

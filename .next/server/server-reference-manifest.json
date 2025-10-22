@@ -326,17 +326,12 @@
     },
     "406598e881250f4fee04b3ee8f47d4082d82016f6a": {
       "workers": {
-        "app/dashboard/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc"
       }
     },
@@ -501,6 +496,17 @@
       },
       "layer": {
         "app/dashboard/page": "rsc"
+      }
+    },
+    "40ffed13830c5d0751fed7602ab2bd7b39dc6430f9": {
+      "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/dashboard/[ticker]/page": "action-browser"
       }
     }
   },

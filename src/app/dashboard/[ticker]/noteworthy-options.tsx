@@ -127,7 +127,7 @@ function SignalTracker({ ticker }: SignalTrackerProps) {
       <CardHeader>
         <CardTitle>Active Signal Tracker for {ticker}</CardTitle>
         <CardDescription>
-          Real-time performance of all option signals we are actively tracking for this stock, from signal date through expiration.
+          Performance of all option signals we are actively tracking for this stock, from signal date through expiration.
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -34,7 +34,7 @@ export async function PerformanceTracker() {
                     </CardTitle>
                 </div>
                  <CardDescription className="max-w-2xl mx-auto">
-                    This data reflects the historical performance of our AI data pipeline, tracked since 10/21/2025 from the date of identification to the standard expiry. All data is for informational purposes and does not guarantee future results.
+                    We track each options signal from when it’s picked (late afternoon ET) using the NBBO mid (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and each day until the contract’s standard expiry.
                 </CardDescription>
             </CardHeader>
             <CardContent>

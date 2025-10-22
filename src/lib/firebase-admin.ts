@@ -97,6 +97,7 @@ const PerformanceSignalSchema = z.object({
     option_type: z.enum(['call', 'put']).optional(),
     status: z.string().optional(),
     strike_price: z.number(),
+    expiration_date: z.string(),
 });
 export type PerformanceSignal = z.infer<typeof PerformanceSignalSchema>;
 
@@ -247,6 +248,7 @@ export async function getPerformanceSignals(
         percent_gain: data.percent_gain,
         option_type: data.option_type,
         strike_price: data.strike_price,
+        expiration_date: data.expiration_date,
       };
       const validation = PerformanceSignalSchema.safeParse(signal);
       if (validation.success) {
@@ -287,6 +289,7 @@ export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promis
                 option_type: data.option_type,
                 status: data.status,
                 strike_price: data.strike_price,
+                expiration_date: data.expiration_date,
             };
             const validation = PerformanceSignalSchema.safeParse(signal);
             if (validation.success) {
@@ -982,10 +985,4 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
     
 
-
-
-
-
-
-
-
+    

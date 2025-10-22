@@ -12,6 +12,7 @@ import type { PerformanceSignal } from '@/lib/firebase-admin';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown } from 'lucide-react';
+import Image from 'next/image';
 
 interface SignalTrackerProps {
     ticker: string;
@@ -50,13 +51,14 @@ function SignalTracker({ ticker }: SignalTrackerProps) {
     fetchData();
   }, [ticker, toast]);
 
-  const renderTable = () => (
-      <Table>
+  const renderDesktopTable = () => (
+      <Table className="hidden md:table">
           <TableHeader>
             <TableRow>
               <TableHead>Contract</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Strike</TableHead>
+              <TableHead>Exp. Date</TableHead>
               <TableHead>Initial Price</TableHead>
               <TableHead>Current Price</TableHead>
               <TableHead>Gain (%)</TableHead>
@@ -77,6 +79,7 @@ function SignalTracker({ ticker }: SignalTrackerProps) {
                     </Badge>
                   </TableCell>
                   <TableCell>${signal.strike_price.toFixed(2)}</TableCell>
+                  <TableCell>{new Date(signal.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</TableCell>
                    <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
                    <TableCell>${signal.current_price.toFixed(2)}</TableCell>
                    <TableCell className={cn("font-semibold", isGain ? 'text-green-500' : 'text-red-500')}>
@@ -94,17 +97,63 @@ function SignalTracker({ ticker }: SignalTrackerProps) {
         </Table>
   );
   
+  const renderMobileCards = () => (
+    <div className="md:hidden space-y-4">
+        {signals.map((signal) => {
+            const isCall = signal.option_type === 'call';
+            const isGain = signal.percent_gain >= 0;
+
+            return (
+                <Card key={signal.id} className="w-full overflow-hidden">
+                    <CardContent className="p-4">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <Badge variant={getStatusBadgeVariant(signal.status)}>
+                                    {signal.status}
+                                </Badge>
+                                <p className="font-mono text-xs text-muted-foreground mt-2">{signal.contract_symbol}</p>
+                            </div>
+                             <div className={cn("text-right font-semibold text-lg", isGain ? 'text-green-500' : 'text-red-500')}>
+                                {isGain ? '+' : ''}{signal.percent_gain.toFixed(2)}%
+                                <p className="text-xs font-normal text-muted-foreground">Gain</p>
+                            </div>
+                        </div>
+
+                        <div className="mt-4 grid grid-cols-3 gap-2 text-center border-t pt-4">
+                            <div>
+                                <p className="text-xs text-muted-foreground">Type</p>
+                                <Badge variant="outline" className={cn('mt-1', isCall ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50')}>
+                                    {signal.option_type?.toUpperCase()}
+                                </Badge>
+                            </div>
+                             <div>
+                                <p className="text-xs text-muted-foreground">Strike</p>
+                                <p className="font-semibold">${signal.strike_price.toFixed(2)}</p>
+                            </div>
+                             <div>
+                                <p className="text-xs text-muted-foreground">Exp. Date</p>
+                                <p className="font-semibold">{new Date(signal.expiration_date).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit', timeZone: 'UTC' })}</p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )
+        })}
+    </div>
+  );
+  
   const renderSkeleton = () => (
     <div className="space-y-2">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="grid grid-cols-7 gap-4">
+        <div key={i} className="grid grid-cols-8 gap-4">
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
-           <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-full" />
         </div>
       ))}
     </div>
@@ -119,7 +168,12 @@ function SignalTracker({ ticker }: SignalTrackerProps) {
         return <p className="text-sm text-muted-foreground">No option signals are currently being tracked for {ticker}.</p>
     }
 
-    return renderTable();
+    return (
+        <>
+            {renderDesktopTable()}
+            {renderMobileCards()}
+        </>
+    );
   }
 
   return (
@@ -138,3 +192,5 @@ function SignalTracker({ ticker }: SignalTrackerProps) {
 }
 
 export default SignalTracker;
+
+    

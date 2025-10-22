@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -6,41 +7,40 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { getNoteworthyOptions } from '../../actions';
-import type { OptionsSignal } from '@/lib/firebase-admin';
+import { getPerformanceSignalsByTicker } from '../../actions';
+import type { PerformanceSignal } from '@/lib/firebase-admin';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 
-interface NoteworthyOptionsProps {
+interface SignalTrackerProps {
     ticker: string;
 }
 
-const getSignalBadgeVariant = (signal?: string) => {
-    if (!signal) return 'secondary';
-    const lowerSignal = signal.toLowerCase();
-    if (lowerSignal.includes('bullish')) return 'default';
-    if (lowerSignal.includes('bearish')) return 'destructive';
-    if (lowerSignal.includes('strong')) return 'default';
-    return 'outline';
+const getStatusBadgeVariant = (status?: string) => {
+    if (!status) return 'secondary';
+    const lowerStatus = status.toLowerCase();
+    if (lowerStatus === 'active') return 'default';
+    if (lowerStatus === 'expired') return 'outline';
+    return 'secondary';
 };
 
-function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
+function SignalTracker({ ticker }: SignalTrackerProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [signals, setSignals] = useState<OptionsSignal[]>([]);
+  const [signals, setSignals] = useState<PerformanceSignal[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const signalsData = await getNoteworthyOptions(ticker);
+        const signalsData = await getPerformanceSignalsByTicker(ticker);
         setSignals(signalsData);
       } catch (error) {
-        console.error(`Failed to fetch noteworthy options for ${ticker}:`, error);
+        console.error(`Failed to fetch tracked signals for ${ticker}:`, error);
         toast({
           title: 'Error Fetching Data',
-          description: 'Could not load noteworthy options. Please try again later.',
+          description: 'Could not load tracked signals. Please try again later.',
           variant: 'destructive',
         });
       } finally {
@@ -50,85 +50,61 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
     fetchData();
   }, [ticker, toast]);
 
-  const renderDesktopTable = () => (
-      <Table className="hidden md:table">
+  const renderTable = () => (
+      <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Contract</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Strike</TableHead>
-              <TableHead>Expiration</TableHead>
-              <TableHead>Trend</TableHead>
-              <TableHead>AI Summary</TableHead>
+              <TableHead>Initial Price</TableHead>
+              <TableHead>Current Price</TableHead>
+              <TableHead>Gain (%)</TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {signals.map((signal) => {
               const isCall = signal.option_type === 'call';
+              const isGain = signal.percent_gain >= 0;
               return (
                 <TableRow key={signal.id}>
+                  <TableCell className="font-mono text-xs">{signal.contract_symbol}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className={cn(isCall ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50', "flex items-center gap-1 w-fit")}>
                       {isCall ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
-                      {signal.option_type.toUpperCase()}
+                      {signal.option_type?.toUpperCase()}
                     </Badge>
                   </TableCell>
-                  <TableCell>${signal.strike_price.toFixed(2)}</TableCell>
-                  <TableCell>{new Date(signal.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</TableCell>
-                   <TableCell>
-                        <Badge variant={getSignalBadgeVariant(signal.stock_price_trend_signal)} className="whitespace-nowrap">
-                            {signal.stock_price_trend_signal}
-                        </Badge>
+                  <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
+                   <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
+                   <TableCell>${signal.current_price.toFixed(2)}</TableCell>
+                   <TableCell className={cn("font-semibold", isGain ? 'text-green-500' : 'text-red-500')}>
+                        {isGain ? '+' : ''}{signal.percent_gain.toFixed(2)}%
                     </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{signal.summary}</TableCell>
+                  <TableCell>
+                    <Badge variant={getStatusBadgeVariant(signal.status)}>
+                        {signal.status}
+                    </Badge>
+                  </TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
   );
-
-  const renderMobileCards = () => (
-      <div className="space-y-3 md:hidden">
-          {signals.map((signal) => {
-              const isCall = signal.option_type === 'call';
-              return (
-                  <Card key={signal.id}>
-                      <CardContent className="p-4">
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-3">
-                                    <Badge variant="outline" className={cn(isCall ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50', "flex items-center gap-1")}>
-                                      {isCall ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
-                                      {signal.option_type.toUpperCase()}
-                                    </Badge>
-                                    <span className="font-bold text-lg">${signal.strike_price.toFixed(2)}</span>
-                                </div>
-                                <p className="text-sm text-muted-foreground mt-1">Exp: {new Date(signal.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</p>
-                            </div>
-                            <Badge variant={getSignalBadgeVariant(signal.stock_price_trend_signal)} className="whitespace-nowrap">
-                                {signal.stock_price_trend_signal}
-                            </Badge>
-                          </div>
-                          <div className="mt-3 border-t pt-3">
-                              <p className="text-xs text-muted-foreground mb-1">AI Summary</p>
-                              <p className="text-sm">{signal.summary}</p>
-                          </div>
-                      </CardContent>
-                  </Card>
-              )
-          })}
-      </div>
-  );
   
   const renderSkeleton = () => (
     <div className="space-y-2">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="grid grid-cols-5 gap-4">
+        <div key={i} className="grid grid-cols-7 gap-4">
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-full" />
+           <Skeleton className="h-5 w-full" />
         </div>
       ))}
     </div>
@@ -140,23 +116,18 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
     }
 
     if (signals.length === 0) {
-        return <p className="text-sm text-muted-foreground">No noteworthy option contracts with a "Strong" setup were found for {ticker} in today's data run.</p>
+        return <p className="text-sm text-muted-foreground">No option signals are currently being tracked for {ticker}.</p>
     }
 
-    return (
-        <>
-            {renderDesktopTable()}
-            {renderMobileCards()}
-        </>
-    );
+    return renderTable();
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Noteworthy Option Setups for {ticker}</CardTitle>
+        <CardTitle>Active Signal Tracker for {ticker}</CardTitle>
         <CardDescription>
-          A curated list of Call and Put contracts for this stock where our AI has identified a "Strong" setup quality.
+          Real-time performance of all option signals we are actively tracking for this stock, from signal date through expiration.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -166,4 +137,4 @@ function NoteworthyOptions({ ticker }: NoteworthyOptionsProps) {
   );
 }
 
-export default NoteworthyOptions;
+export default SignalTracker;

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -9,7 +10,7 @@ import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, T
 import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
 import { Markdown } from '@/components/markdown';
-import NoteworthyOptions from './noteworthy-options';
+import SignalTracker from './noteworthy-options';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -156,7 +157,7 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
         </p>
       </header>
 
-      <NoteworthyOptions ticker={ticker} />
+      <SignalTracker ticker={ticker} />
 
       {/* KPI Section with Carousel */}
       <div className="lg:hidden -mx-4 sm:-mx-6 lg:-mx-8">

@@ -33,6 +33,7 @@ import {
     saveFeedbackAdmin,
     getPerformanceSignals as getPerformanceSignalsAdmin,
     getNoteworthyOptionsAdmin,
+    getPerformanceSignalsByTickerAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
@@ -53,6 +54,10 @@ export async function getNoteworthyOptions(ticker: string): Promise<OptionsSigna
 
 export async function getPerformanceSignals(order: 'asc' | 'desc', limit: number): Promise<PerformanceSignal[]> {
     return getPerformanceSignalsAdmin(order, limit);
+}
+
+export async function getPerformanceSignalsByTicker(ticker: string): Promise<PerformanceSignal[]> {
+    return getPerformanceSignalsByTickerAdmin(ticker);
 }
 
 export async function getWinnersDashboard(): Promise<Winner[]> {
@@ -320,6 +325,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

@@ -94,6 +94,8 @@ const PerformanceSignalSchema = z.object({
     initial_price: z.number(),
     current_price: z.number(),
     percent_gain: z.number(),
+    option_type: z.enum(['call', 'put']).optional(),
+    status: z.string().optional(),
 });
 export type PerformanceSignal = z.infer<typeof PerformanceSignalSchema>;
 
@@ -242,6 +244,7 @@ export async function getPerformanceSignals(
         initial_price: data.initial_price,
         current_price: data.current_price,
         percent_gain: data.percent_gain,
+        option_type: data.option_type,
       };
       const validation = PerformanceSignalSchema.safeParse(signal);
       if (validation.success) {
@@ -256,6 +259,48 @@ export async function getPerformanceSignals(
     console.error('Error fetching performance signals:', error);
     return [];
   }
+}
+
+export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promise<PerformanceSignal[]> {
+    try {
+        const snapshot = await adminDb.collection('performance_tracker').where('ticker', '==', ticker).get();
+
+        if (snapshot.empty) {
+            return [];
+        }
+
+        const signals: PerformanceSignal[] = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const signal = {
+                id: doc.id,
+                ticker: data.ticker,
+                company_name: data.company_name,
+                image_uri: data.image_uri,
+                industry: data.industry,
+                contract_symbol: data.contract_symbol,
+                initial_price: data.initial_price,
+                current_price: data.current_price,
+                percent_gain: data.percent_gain,
+                option_type: data.option_type,
+                status: data.status,
+            };
+            const validation = PerformanceSignalSchema.safeParse(signal);
+            if (validation.success) {
+                signals.push(validation.data);
+            } else {
+                console.warn(`Invalid performance signal data for ticker ${ticker}:`, validation.error.flatten());
+            }
+        });
+
+        // Sort by percent_gain descending
+        signals.sort((a, b) => b.percent_gain - a.percent_gain);
+
+        return signals;
+    } catch (error) {
+        console.error(`Error fetching performance signals for ticker ${ticker}:`, error);
+        return [];
+    }
 }
 
 export async function saveFeedbackAdmin(
@@ -933,6 +978,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

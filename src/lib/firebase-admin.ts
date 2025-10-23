@@ -9,6 +9,7 @@ import { getStorage as getAdminStorage } from 'firebase-admin/storage';
 import { z } from 'zod';
 import type { DbUser } from './firebase';
 import { randomUUID } from 'crypto';
+import { unstable_noStore as noStore } from 'next/cache';
 
 let adminApp: AdminApp;
 let adminDb: ReturnType<typeof getAdminFirestore>;
@@ -146,6 +147,7 @@ const WinnerSchema = z.object({
 export type Winner = z.infer<typeof WinnerSchema>;
 
 export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: number; signalCount: number; winRate: number; averageWinnerGain: number; averageLoserGain: number; }> {
+    noStore(); // Opt out of caching for this specific function
     const defaultStats = {
         averageGain: 0,
         signalCount: 0,
@@ -957,4 +959,5 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 

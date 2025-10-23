@@ -1537,10 +1537,6 @@ body {
   width: 1.5rem;
 }
 
-.w-64 {
-  width: 16rem;
-}
-
 .w-7 {
   width: 1.75rem;
 }
@@ -1849,6 +1845,12 @@ body {
   margin-left: calc(.25rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
+.space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
 .space-x-4 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(1rem * var(--tw-space-x-reverse));
@@ -1903,12 +1905,6 @@ body {
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
 }
 
-.space-x-2 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(.5rem * var(--tw-space-x-reverse));
-  margin-left: calc(.5rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
 .overflow-auto {
   overflow: auto;
 }
@@ -1939,6 +1935,10 @@ body {
   overflow-wrap: break-word;
 }
 
+.rounded {
+  border-radius: .25rem;
+}
+
 .rounded-\[2px\] {
   border-radius: 2px;
 }
@@ -1965,10 +1965,6 @@ body {
 
 .rounded-xl {
   border-radius: .75rem;
-}
-
-.rounded {
-  border-radius: .25rem;
 }
 
 .border {
@@ -2171,6 +2167,10 @@ body {
   padding: .25rem;
 }
 
+.p-2 {
+  padding: .5rem;
+}
+
 .p-3 {
   padding: .75rem;
 }
@@ -2189,10 +2189,6 @@ body {
 
 .p-\[1px\] {
   padding: 1px;
-}
-
-.p-2 {
-  padding: .5rem;
 }
 
 .px-2 {
@@ -3238,16 +3234,16 @@ body {
     display: none;
   }
 
-  .sm\:w-auto {
-    width: auto;
+  .sm\:w-48 {
+    width: 12rem;
   }
 
   .sm\:w-64 {
     width: 16rem;
   }
 
-  .sm\:w-48 {
-    width: 12rem;
+  .sm\:w-auto {
+    width: auto;
   }
 
   .sm\:max-w-md {

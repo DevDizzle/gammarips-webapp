@@ -50,8 +50,10 @@
     "firebase": "^11.9.1",
     "firebase-admin": "^12.2.0",
     "genkit": "^1.14.1",
+    "handlebars": "^4.7.8",
     "lightweight-charts": "^4.1.6",
     "lucide-react": "^0.475.0",
+    "mailgun.js": "^10.2.1",
     "next": "15.3.3",
     "patch-package": "^8.0.0",
     "react": "^18.3.1",
@@ -70,6 +72,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.14",
     "@types/gtag.js": "^0.0.20",
+    "@types/handlebars": "^4.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

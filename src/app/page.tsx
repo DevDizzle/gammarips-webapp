@@ -162,7 +162,7 @@ export default function LandingPage() {
                             <HomePageClientContent showButton={true} buttonText="Get Started for Free" />
                         </Suspense>
                     </div>
-                    <p className="mt-4 text-sm text-muted-foreground">After your trial, you can upgrade to Pro for just $19/month to continue receiving daily setups and full access.</p>
+                    <p className="mt-4 text-sm text-muted-foreground">After your trial, you can upgrade to Pro for just $99/month to continue receiving daily setups and full access.</p>
                 </Card>
             </div>
           </section>

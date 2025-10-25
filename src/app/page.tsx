@@ -8,6 +8,7 @@ import { UserNav } from "@/components/auth/user-nav";
 import HomePageClientContent from "./home-page-client-content";
 import Faq from "@/components/landing/faq";
 import { Badge } from "@/components/ui/badge";
+import MarketMovers from "@/components/landing/market-movers";
 
 export default function LandingPage() {
   return (
@@ -37,7 +38,7 @@ export default function LandingPage() {
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
                <Suspense>
-                <HomePageClientContent showButton={true} />
+                <HomePageClientContent showButton={true} buttonText="Start Your Free 30-Day Trial"/>
                </Suspense>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">No credit card required. Get instant access.</p>
@@ -117,8 +118,13 @@ export default function LandingPage() {
             </div>
           </section>
 
+          {/* Market Movers Section */}
+          <Suspense fallback={<div>Loading market movers...</div>}>
+            <MarketMovers />
+          </Suspense>
+
           {/* Trust & Transparency Section */}
-          <section className="py-16 sm:py-24 bg-muted/50">
+          <section className="py-16 sm:py-24 bg-background">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl mx-auto">
                 <Github className="h-10 w-10 text-primary mx-auto"/>
               <h2 className="mt-4 text-3xl font-bold font-headline">Built on Transparency. Powered by Open-Source AI.</h2>

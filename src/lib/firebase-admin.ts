@@ -10,6 +10,10 @@ import { z } from 'zod';
 import type { DbUser } from './firebase';
 import { randomUUID } from 'crypto';
 import { unstable_noStore as noStore } from 'next/cache';
+import { config } from 'dotenv';
+
+// Load environment variables from .env file
+config();
 
 let adminApp: AdminApp;
 let adminDb: ReturnType<typeof getAdminFirestore>;
@@ -959,5 +963,6 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 

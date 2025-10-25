@@ -41,7 +41,6 @@ import { randomUUID } from 'crypto';
 import { getAuth } from 'firebase-admin/auth';
 import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { app } from '@/lib/firebase';
-import { sendWinnersEmail } from '@/lib/email';
 
 
 export async function getOptionsSignals(ticker: string): Promise<OptionCandidate[]> {
@@ -315,33 +314,13 @@ export async function sendPasswordReset(email: string): Promise<void> {
 export async function handleWinSubmission(uid: string, formData: FormData): Promise<{ success: boolean, error?: string }> {
     return handleWinSubmission(uid, formData);
 }
-
-export async function sendTestWinnersEmail(): Promise<{ success: boolean; error?: string }> {
-  try {
-    const winners = await getWinnersDashboardAdmin();
-    if (winners.length === 0) {
-      return { success: false, error: "No winners data to send." };
-    }
-    
-    // Use the hardcoded "to" email from your .env for this test action
-    const toEmail = process.env.MAILGUN_TO_EMAIL;
-    if (!toEmail) {
-      throw new Error("MAILGUN_TO_EMAIL is not set in environment variables.");
-    }
-    
-    await sendWinnersEmail(toEmail, winners);
-    return { success: true };
-  } catch (error: any) {
-    console.error("Error in sendTestWinnersEmail action:", error);
-    return { success: false, error: error.message || 'Failed to send test email.' };
-  }
-}
     
 
     
 
 
     
+
 
 
 

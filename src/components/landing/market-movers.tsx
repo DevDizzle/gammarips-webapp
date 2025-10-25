@@ -1,0 +1,106 @@
+
+import { getPerformanceSignals } from '@/app/actions';
+import type { PerformanceSignal } from '@/lib/firebase-admin';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import { ArrowUp, ArrowDown } from 'lucide-react';
+import Link from 'next/link';
+
+// Helper to convert GCS URI to a public URL
+const convertGcsUriToUrl = (gcsUri: string) => {
+  if (!gcsUri?.startsWith('gs://')) return '';
+  const withoutScheme = gcsUri.slice('gs://'.length);
+  const slash = withoutScheme.indexOf('/');
+  const bucket = slash === -1 ? withoutScheme : withoutScheme.slice(0, slash);
+  const object = slash === -1 ? '' : withoutScheme.slice(slash + 1);
+  const encodedObject = object.split('/').map(encodeURIComponent).join('/');
+  return `https://storage.googleapis.com/${bucket}/${encodedObject}`;
+};
+
+const PerformanceList = ({ signals, title, icon }: { signals: PerformanceSignal[], title: string, icon: React.ReactNode }) => {
+    if (signals.length === 0) {
+        return null;
+    }
+
+    return (
+        <Card className="flex-1 bg-card/50">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    {icon}
+                    {title}
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Ticker</TableHead>
+                            <TableHead className="text-right">Gain</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {signals.map(signal => {
+                            const isGainer = signal.percent_gain >= 0;
+                            const imageUrl = signal.image_uri 
+                                ? convertGcsUriToUrl(signal.image_uri) 
+                                : `https://placehold.co/24x24/1e293b/a855f7?text=${signal.ticker[0]}`;
+                            
+                            return (
+                                <TableRow key={signal.id}>
+                                    <TableCell>
+                                        <div className="flex items-center gap-3">
+                                            <Image 
+                                                src={imageUrl} 
+                                                alt={`${signal.company_name} logo`}
+                                                width={24}
+                                                height={24}
+                                                className="rounded-full"
+                                            />
+                                            <div>
+                                                <Link href={`/dashboard/${signal.ticker}`} className="font-bold hover:underline">{signal.ticker}</Link>
+                                                <p className="text-xs text-muted-foreground truncate max-w-[150px]">{signal.company_name}</p>
+                                            </div>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className={cn("text-right font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
+                                        {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+};
+
+
+export default async function MarketMovers() {
+    const [topGainers, topLosers] = await Promise.all([
+        getPerformanceSignals('desc', 5),
+        getPerformanceSignals('asc', 5)
+    ]);
+    
+    // Reverse losers to show most negative first (asc query gives smallest numbers)
+    const sortedLosers = topLosers.sort((a,b) => a.percent_gain - b.percent_gain);
+
+    return (
+        <section className="py-16 sm:py-24 bg-muted/50">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center max-w-3xl mx-auto">
+                    <h2 className="text-3xl font-bold font-headline">See Our Results in Action</h2>
+                    <p className="mt-4 text-muted-foreground">
+                        Our models are constantly tracking the performance of our signals. Here's a live look at some of the top market movers identified by our AI. This is the data-driven edge we provide.
+                    </p>
+                </div>
+                <div className="mt-12 flex flex-col lg:flex-row justify-center gap-8">
+                    <PerformanceList signals={topGainers} title="Top Gainers" icon={<ArrowUp className="text-green-500" />} />
+                    <PerformanceList signals={sortedLosers} title="Top Losers" icon={<ArrowDown className="text-red-500" />} />
+                </div>
+            </div>
+        </section>
+    );
+}

@@ -113,11 +113,25 @@ export async function generateMetadata({ params }: StockSeoPageProps): Promise<M
   const ticker = params.ticker.toUpperCase();
   const data = await getStockData(ticker);
 
+  const defaultOgImage = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://profitscout.app'}/profitscout-og.png`;
+
   if (!data) {
     return {
       title: `Stock Analysis for ${ticker} Not Found | ProfitScout`,
       description: `The requested stock analysis for ${ticker} could not be found or is not up to date. Check back later for AI-powered insights.`,
       robots: 'noindex, nofollow',
+      openGraph: {
+        title: 'Analysis Not Found | ProfitScout',
+        description: 'The requested stock analysis could not be found.',
+        images: [
+          {
+            url: defaultOgImage,
+            width: 1200,
+            height: 630,
+            alt: 'ProfitScout AI-Powered Options Research',
+          },
+        ],
+      },
     };
   }
   
@@ -142,6 +156,26 @@ export async function generateMetadata({ params }: StockSeoPageProps): Promise<M
     title: data.seo.title,
     description: data.seo.metaDescription,
     keywords: cleanKeywords,
+    openGraph: {
+      title: data.seo.title,
+      description: data.seo.metaDescription,
+      images: [
+        {
+          url: defaultOgImage,
+          width: 1200,
+          height: 630,
+          alt: `ProfitScout AI Analysis for ${companyName} (${ticker})`,
+        },
+      ],
+      siteName: 'ProfitScout',
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: data.seo.title,
+      description: data.seo.metaDescription,
+      images: [defaultOgImage],
+    },
   };
 }
 
@@ -317,35 +351,34 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             ))}
         </div>
 
-        <Card className="mb-8 text-center bg-primary/10 border-primary/20">
+        <Card className="text-center bg-primary/10 border-primary/20">
             <CardHeader>
-                <CardTitle className="font-headline text-2xl">Go Beyond Static Analysis</CardTitle>
-                <CardDescription className="max-w-xl mx-auto">This page is just a snapshot. Your free trial unlocks the full interactive experience.</CardDescription>
+                <CardTitle className="font-headline text-2xl">Unlock Data-Driven Options Setups</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-                 <div className="max-w-md mx-auto space-y-2 text-left">
+            <CardContent>
+                <div className="max-w-md mx-auto space-y-3 text-left">
                     <div className="flex items-center gap-3">
                         <LineChart className="h-5 w-5 text-primary shrink-0"/>
-                        <span className="font-medium">Interactive charts with technical indicators</span>
+                        <span className="font-medium">Go beyond static reports with an interactive dashboard</span>
                     </div>
                      <div className="flex items-center gap-3">
                         <Star className="h-5 w-5 text-primary shrink-0"/>
-                        <span className="font-medium">Daily top-rated Call & Put setups</span>
+                        <span className="font-medium">Access daily, top-rated Call & Put setups</span>
                     </div>
                      <div className="flex items-center gap-3">
                         <CheckCircle className="h-5 w-5 text-primary shrink-0"/>
-                        <span className="font-medium">Full performance tracking for every signal</span>
+                        <span className="font-medium">Track performance for every signal we issue</span>
                     </div>
                 </div>
-                <Button asChild size="lg" className="mt-4">
-                    <Link href={`/dashboard/${ticker}`}>
-                        Unlock Your Interactive Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
+                <Button asChild size="lg" className="mt-6">
+                    <Link href={`/dashboard`}>
+                        Start Your Free 30-Day Trial <ArrowRight className="ml-2 h-5 w-5"/>
                     </Link>
                 </Button>
             </CardContent>
         </Card>
 
-        <Card className="mb-8 border-yellow-500/50 bg-yellow-500/10">
+        <Card className="mt-8 border-yellow-500/50 bg-yellow-500/10">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-yellow-400">
                     <AlertTriangle size={20} />
@@ -359,7 +392,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardContent>
         </Card>
 
-        <div>
+        <div className="mt-8">
             <h3 className="text-lg font-semibold mb-2">Related Stocks</h3>
             <div className="flex gap-2">
                 {relatedStocks.map(stock => (

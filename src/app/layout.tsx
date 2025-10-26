@@ -8,6 +8,7 @@ import Script from 'next/script';
 import CookieConsentBanner from '@/components/cookie-consent-banner';
 import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
+import RootLayoutClient from './root-layout-client';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://profitscout.app'), // Replace with your actual domain
@@ -70,7 +71,9 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
-          <main className='flex-grow'>{children}</main>
+          <RootLayoutClient>
+            <main className='flex-grow'>{children}</main>
+          </RootLayoutClient>
           <Footer />
           <Toaster />
           <CookieConsentBanner />

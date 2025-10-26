@@ -310,34 +310,6 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
         
         <UpcomingCatalystsTable events={events} ticker={ticker} />
 
-        <Card className="mb-8 text-center bg-primary/10 border-primary/20">
-            <CardHeader>
-                <CardTitle className="font-headline text-2xl">Unlock the Full Picture</CardTitle>
-                <CardDescription className="max-w-xl mx-auto">This static analysis is just the beginning. Sign up for a free trial to access:</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                 <div className="max-w-md mx-auto space-y-2 text-left">
-                    <div className="flex items-center gap-3">
-                        <LineChart className="h-5 w-5 text-primary shrink-0"/>
-                        <span className="font-medium">An Interactive Dashboard with Live Charts</span>
-                    </div>
-                     <div className="flex items-center gap-3">
-                        <Star className="h-5 w-5 text-primary shrink-0"/>
-                        <span className="font-medium">Daily Top-Rated Call & Put Setups</span>
-                    </div>
-                     <div className="flex items-center gap-3">
-                        <CheckCircle className="h-5 w-5 text-primary shrink-0"/>
-                        <span className="font-medium">Full Performance Tracking of All Signals</span>
-                    </div>
-                </div>
-                <Button asChild size="lg" className="mt-4">
-                    <Link href="/">
-                        Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5"/>
-                    </Link>
-                </Button>
-            </CardContent>
-        </Card>
-
         <div className="space-y-8 mb-8">
             <h2 className="text-2xl font-bold font-headline text-center">Full Analysis Breakdown</h2>
             {Object.entries(fullAnalysis).map(([key, value]) => (
@@ -347,13 +319,27 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
 
         <Card className="mb-8 text-center bg-primary/10 border-primary/20">
             <CardHeader>
-                <CardTitle className="font-headline text-2xl">Ready to See More?</CardTitle>
+                <CardTitle className="font-headline text-2xl">Go Beyond Static Analysis</CardTitle>
+                <CardDescription className="max-w-xl mx-auto">This page is just a snapshot. Your free trial unlocks the full interactive experience.</CardDescription>
             </CardHeader>
-            <CardContent>
-                <p className="text-muted-foreground mb-4 max-w-xl mx-auto">This page is just the beginning. The interactive dashboard includes price charts, technical indicators, and our top-rated option setups.</p>
-                <Button asChild size="lg">
+            <CardContent className="space-y-4">
+                 <div className="max-w-md mx-auto space-y-2 text-left">
+                    <div className="flex items-center gap-3">
+                        <LineChart className="h-5 w-5 text-primary shrink-0"/>
+                        <span className="font-medium">Interactive charts with technical indicators</span>
+                    </div>
+                     <div className="flex items-center gap-3">
+                        <Star className="h-5 w-5 text-primary shrink-0"/>
+                        <span className="font-medium">Daily top-rated Call & Put setups</span>
+                    </div>
+                     <div className="flex items-center gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary shrink-0"/>
+                        <span className="font-medium">Full performance tracking for every signal</span>
+                    </div>
+                </div>
+                <Button asChild size="lg" className="mt-4">
                     <Link href={`/dashboard/${ticker}`}>
-                        View Interactive Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
+                        Unlock Your Interactive Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
                     </Link>
                 </Button>
             </CardContent>
@@ -388,5 +374,3 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
     </>
   );
 }
-
-    

@@ -99,7 +99,7 @@ export async function IndustryExplorer() {
                                             <TableRow>
                                                 <TableHead>Company</TableHead>
                                                 <TableHead>Industry</TableHead>
-                                                <TableHead>Last Close</TableHead>
+                                                <TableHead>Contract</TableHead>
                                                 <TableHead>AI Outlook</TableHead>
                                                 <TableHead className="text-right">View</TableHead>
                                             </TableRow>
@@ -128,7 +128,12 @@ export async function IndustryExplorer() {
                                                             </div>
                                                         </TableCell>
                                                         <TableCell className="text-xs text-muted-foreground">{winner.industry}</TableCell>
-                                                        <TableCell>${winner.last_close.toFixed(2)}</TableCell>
+                                                        <TableCell>
+                                                            <div className="flex flex-col">
+                                                                <span className="font-semibold">${winner.strike_price.toFixed(2)} {winner.option_type.toUpperCase()}</span>
+                                                                <span className="text-xs text-muted-foreground">{new Date(winner.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
+                                                            </div>
+                                                        </TableCell>
                                                         <TableCell>
                                                             <div className={cn("flex items-center gap-1", signalMeta.color)}>
                                                                 {signalMeta.icon}

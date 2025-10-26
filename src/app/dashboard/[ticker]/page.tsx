@@ -247,7 +247,6 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
       </section>
       
       {stockLevelAnalysis && (
-        <>
           <Card>
               <CardHeader>
                   <CardTitle>AI Analyst Briefing</CardTitle>
@@ -257,18 +256,19 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
                    <Markdown content={stockLevelAnalysis} className="prose-sm prose-invert max-w-none" />
               </CardContent>
           </Card>
-          <div className="flex justify-center">
-            <Button asChild variant="outline">
-                <Link href={`/stocks/${ticker}`}>
-                    View Full Analyst Report <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-            </Button>
-          </div>
-        </>
       )}
 
       <SignalTracker ticker={ticker} />
 
+      {stockLevelAnalysis && (
+        <div className="flex justify-center mt-6">
+          <Button asChild variant="outline" size="lg">
+              <Link href={`/stocks/${ticker}`}>
+                  View Full Analyst Report <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

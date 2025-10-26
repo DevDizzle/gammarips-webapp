@@ -6,6 +6,8 @@ import { AuthProvider } from '@/hooks/use-auth';
 import Footer from '@/components/layout/footer';
 import Script from 'next/script';
 import CookieConsentBanner from '@/components/cookie-consent-banner';
+import Link from 'next/link';
+import { MessageCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://profitscout.app'), // Replace with your actual domain
@@ -72,6 +74,13 @@ export default function RootLayout({
           <Footer />
           <Toaster />
           <CookieConsentBanner />
+          <Link 
+            href="/about#contact" 
+            className="fixed bottom-6 right-6 bg-primary text-primary-foreground h-14 w-14 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-transform hover:scale-110"
+            aria-label="Contact Us"
+          >
+            <MessageCircle className="h-7 w-7" />
+          </Link>
         </AuthProvider>
       </body>
     </html>

@@ -97,7 +97,7 @@
         }
       },
       "layer": {
-        "app/dashboard/page": "rsc",
+        "app/dashboard/page": "action-browser",
         "app/page": "rsc"
       }
     },
@@ -304,6 +304,10 @@
     },
     "70803c4fea2c1e0c96d4b2d56ea486e917b986f4e1": {
       "workers": {
+        "app/about/page": {
+          "moduleId": "[project]/.next-internal/server/app/about/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -314,6 +318,7 @@
         }
       },
       "layer": {
+        "app/about/page": "action-browser",
         "app/dashboard/page": "rsc",
         "app/page": "rsc"
       }

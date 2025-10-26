@@ -316,7 +316,7 @@
         }
       },
       "layer": {
-        "app/dashboard/page": "rsc"
+        "app/dashboard/page": "action-browser"
       }
     },
     "407119af6c40b6858af21e4c43e139ac3792639ec8": {

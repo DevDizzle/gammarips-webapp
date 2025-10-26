@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowUp, ArrowDown, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 // Helper to convert GCS URI to a public URL
@@ -33,10 +33,13 @@ const PerformanceList = ({ signals, title, icon }: { signals: PerformanceSignal[
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <Table>
+                {/* Desktop Table */}
+                <Table className="hidden md:table">
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Ticker</TableHead>
+                            <TableHead>Company</TableHead>
+                            <TableHead>Industry</TableHead>
+                            <TableHead>Contract</TableHead>
                             <TableHead className="text-right">Gain</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -64,6 +67,8 @@ const PerformanceList = ({ signals, title, icon }: { signals: PerformanceSignal[
                                             </div>
                                         </div>
                                     </TableCell>
+                                    <TableCell className="text-xs text-muted-foreground">{signal.industry}</TableCell>
+                                    <TableCell className="font-mono text-xs">{signal.contract_symbol}</TableCell>
                                     <TableCell className={cn("text-right font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
                                         {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
                                     </TableCell>
@@ -72,6 +77,49 @@ const PerformanceList = ({ signals, title, icon }: { signals: PerformanceSignal[
                         })}
                     </TableBody>
                 </Table>
+                
+                {/* Mobile Cards */}
+                <div className="md:hidden space-y-3">
+                     {signals.map(signal => {
+                        const isGainer = signal.percent_gain >= 0;
+                        const imageUrl = signal.image_uri 
+                            ? convertGcsUriToUrl(signal.image_uri) 
+                            : `https://placehold.co/40x40/1e293b/a855f7?text=${signal.ticker[0]}`;
+
+                        return (
+                            <Card key={signal.id} className="transition-colors hover:bg-muted/50">
+                                <Link href={`/dashboard/${signal.ticker}`} className="block">
+                                    <CardContent className="p-4">
+                                        <div className="flex items-center justify-between gap-4">
+                                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                                                <Image 
+                                                    src={imageUrl} 
+                                                    alt={`${signal.company_name} logo`}
+                                                    width={40}
+                                                    height={40}
+                                                    className="rounded-full"
+                                                />
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-bold truncate">{signal.company_name}</p>
+                                                    <p className="text-sm text-muted-foreground">{signal.ticker}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex-shrink-0 text-right">
+                                                <p className={cn("font-semibold text-lg", isGainer ? "text-green-500" : "text-red-500")}>
+                                                    {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="mt-4 border-t pt-3 text-sm">
+                                            <p className="text-xs text-muted-foreground">Contract</p>
+                                            <p className="font-mono">{signal.contract_symbol}</p>
+                                        </div>
+                                    </CardContent>
+                                </Link>
+                            </Card>
+                        )
+                    })}
+                </div>
             </CardContent>
         </Card>
     );

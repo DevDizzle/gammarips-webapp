@@ -3,7 +3,7 @@
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
-import { getDashboardData, incrementDashboardViewCount, getTickerEvents } from '@/app/actions';
+import { getDashboardData, incrementDashboardViewCount } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight, Loader2, MailCheck, Star } from 'lucide-react';
@@ -15,14 +15,10 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
-import { useEffect, useState, useMemo } from 'react';
-import { SubscriptionDialog } from '@/components/auth/subscription-dialog';
-import { createCheckoutSession } from '@/app/actions';
-import { useToast } from '@/hooks/use-toast';
-import { loadStripe } from '@stripe/stripe-js';
-import { AuthDialog } from '@/components/auth/auth-dialog';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import UpcomingEarnings from './upcoming-events';
+import DashboardPageClient from '../dashboard-client';
 
 interface TickerDashboardPageProps {
   params: {
@@ -277,116 +273,19 @@ function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, e
   );
 }
 
-const VerifyEmailCard = () => {
-    const { sendVerificationEmail } = useAuth();
-    const [isSending, setIsSending] = useState(false);
-    const { toast } = useToast();
-
-    const handleResend = async () => {
-        setIsSending(true);
-        try {
-            await sendVerificationEmail();
-            toast({
-                title: 'Verification Email Sent',
-                description: 'Please check your inbox for a new verification link.',
-            });
-        } catch (error: any) {
-            toast({
-                title: 'Error',
-                description: error.message || 'Failed to send verification email. Please try again.',
-                variant: 'destructive',
-            });
-        } finally {
-            setIsSending(false);
-        }
-    };
-
-    return (
-        <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <Card className="max-w-xl mx-auto">
-                <CardHeader className="text-center">
-                    <MailCheck className="mx-auto h-12 w-12 text-primary mb-4" />
-                    <CardTitle>Verify Your Email Address</CardTitle>
-                    <CardDescription>
-                        We've sent a verification link to your email. Please click the link to finish setting up your account and access the dashboard.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="text-center space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                        Didn't receive an email? Check your spam folder or click below to resend.
-                    </p>
-                    <Button onClick={handleResend} disabled={isSending} variant="secondary">
-                        {isSending ? (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                            'Resend Verification Email'
-                        )}
-                    </Button>
-                </CardContent>
-            </Card>
-        </div>
-    );
-};
-
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
 export default function TickerDashboardPage() {
   const params = useParams<{ ticker: string }>();
   const ticker = params.ticker || '';
-  const { user, dbUser, loading: authLoading } = useAuth();
-  const { toast } = useToast();
+  const { user, dbUser } = useAuth();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
-  const [showSubDialog, setShowSubDialog] = useState(false);
-  const [isSubscribing, setIsSubscribing] = useState(false);
-
-  const trialHasEnded = useMemo(() => {
-    if (!dbUser?.createdAt) return false;
-    // Note: Firestore Timestamps need to be converted to JS Dates.
-    const createdAtDate = (dbUser.createdAt as any).toDate ? (dbUser.createdAt as any).toDate() : new Date((dbUser.createdAt as any).seconds * 1000);
-    return (new Date().getTime() - createdAtDate.getTime()) > 30 * 24 * 60 * 60 * 1000;
-  }, [dbUser]);
-
-  const hasAccess = useMemo(() => {
-    if (authLoading || !dbUser) return false;
-    
-    // Google users are automatically verified.
-    const isVerified = user?.providerData.some(p => p.providerId === 'google.com') || user?.emailVerified;
-
-    if (!isVerified) {
-        return false;
-    }
-
-    return dbUser.isSubscribed || !trialHasEnded;
-  }, [dbUser, user, trialHasEnded, authLoading]);
 
   useEffect(() => {
-    if (authLoading) return;
-
-    if (!user) {
-      setShowAuthDialog(true);
-      setLoading(false);
-      return;
-    }
-
-    // New check for email verification
-    const isVerified = user.providerData.some(p => p.providerId === 'google.com') || user.emailVerified;
-    if (!isVerified) {
-      setLoading(false);
-      return; // Will render VerifyEmailCard below
-    }
-
-    if (!hasAccess) {
-      setShowSubDialog(true);
-      setLoading(false);
-      return;
-    }
+    if (!user || !dbUser) return; // Wait for auth state to be resolved by DashboardPageClient
 
     // Increment usage count for free trial users
-    if (user && dbUser && !dbUser.isSubscribed) {
+    if (!dbUser.isSubscribed) {
         incrementDashboardViewCount(user.uid).catch(console.error);
     }
 
@@ -409,87 +308,26 @@ export default function TickerDashboardPage() {
 
     fetchData();
 
-  }, [ticker, authLoading, user, hasAccess, dbUser]);
+  }, [ticker, user, dbUser]);
 
 
-  const handleSubscribe = async () => {
-    if (!user) return;
-    setIsSubscribing(true);
-    try {
-      const gaClientId = localStorage.getItem('ga_client_id');
-      const { sessionId } = await createCheckoutSession(user.uid, gaClientId);
-      const stripe = await stripePromise;
-      if (stripe) {
-        const { error } = await stripe.redirectToCheckout({ sessionId });
-        if (error) throw error;
-      }
-    } catch (error: any) {
-      toast({
-        title: "Subscription Error",
-        description: error.message || "Could not initiate subscription.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubscribing(false);
-    }
-  };
-
-  const router = useRouter();
-  const handleDialogClose = () => {
-      setShowAuthDialog(false);
-      setShowSubDialog(false);
-      router.push('/');
-  }
-
-  if (loading || authLoading) {
+  if (loading) {
       return (
           <div className="flex justify-center items-center h-[calc(100vh-10rem)]">
               <Loader2 className="h-10 w-10 animate-spin" />
           </div>
       )
   }
-
-  // If user is not logged in, show the trial sign-up dialog
-  if (!user && showAuthDialog) {
-    return (
-      <AuthDialog 
-        open={showAuthDialog} 
-        onOpenChange={handleDialogClose} 
-      />
-    );
-  }
-
-  // If user is logged in via email but not verified, show the verification prompt.
-  // Google users are exempt as their email is verified by default.
-  if (user && !user.emailVerified && !user.providerData.some(p => p.providerId === 'google.com')) {
-      return <VerifyEmailCard />;
-  }
-
-
-  // If user's trial has ended and they are not subscribed, show the upgrade dialog
-  if (dbUser && trialHasEnded && !dbUser.isSubscribed && showSubDialog) {
-    return (
-      <SubscriptionDialog
-        open={showSubDialog}
-        onOpenChange={handleDialogClose}
-        onSubscribe={handleSubscribe}
-        loading={isSubscribing}
-      />
-    );
-  }
   
-  if (data || error) {
-    return <TickerDashboard data={data} ticker={ticker.toUpperCase()} error={error} />;
-  }
+  const content = (
+    data || error 
+        ? <TickerDashboard data={data} ticker={ticker.toUpperCase()} error={error} />
+        : <div className="flex justify-center items-center h-[calc(100vh-10rem)]"><Loader2 className="h-10 w-10 animate-spin" /></div>
+  )
 
-  // Fallback for when data is null but access is granted (e.g. initial loading state)
   return (
-    <div className="flex justify-center items-center h-[calc(100vh-10rem)]">
-        <Loader2 className="h-10 w-10 animate-spin" />
-    </div>
+    <DashboardPageClient>
+        {content}
+    </DashboardPageClient>
   );
 }
-
-    
-
-

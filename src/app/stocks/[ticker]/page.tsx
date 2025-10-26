@@ -5,10 +5,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getGcsFileContentAdmin, getSeoPageGcsPathAdmin, getStocksAdmin, getTickerEventsAdmin, type TickerEvent } from '@/lib/firebase-admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, TrendingUp, TrendingDown, Minus, AlertTriangle, CalendarDays } from 'lucide-react';
+import { ArrowRight, TrendingUp, TrendingDown, Minus, AlertTriangle, CalendarDays, CheckCircle, LineChart, Star } from 'lucide-react';
 import { UserNav } from '@/components/auth/user-nav';
 import { ShareButtons } from '@/components/share-buttons';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -111,25 +110,38 @@ async function getStockData(ticker: string): Promise<StockSeoData | null> {
 
 
 export async function generateMetadata({ params }: StockSeoPageProps): Promise<Metadata> {
-  const data = await getStockData(params.ticker.toUpperCase());
+  const ticker = params.ticker.toUpperCase();
+  const data = await getStockData(ticker);
 
   if (!data) {
     return {
-      title: 'Stock Analysis Not Found | ProfitScout',
-      description: 'The requested stock analysis could not be found or is not up to date. Please check back later.',
+      title: `Stock Analysis for ${ticker} Not Found | ProfitScout`,
+      description: `The requested stock analysis for ${ticker} could not be found or is not up to date. Check back later for AI-powered insights.`,
+      robots: 'noindex, nofollow',
     };
   }
+  
+  const companyName = data.seo.title.split(' Stock Forecast')[0];
 
   // Ensure keywords are relevant and don't contain unwanted terms.
-  const cleanKeywords = (data.seo.keywords || []).filter(k => 
-    !k.toLowerCase().includes('crypto') && 
+  const baseKeywords = ['stock forecast', 'options analysis', 'AI stock pick', 'earnings date', 'stock analysis'];
+  const stockSpecificKeywords = [
+    `${companyName} stock`,
+    `${ticker} stock`,
+    `${ticker} options`,
+    `${companyName} earnings`,
+  ];
+  const combinedKeywords = [...baseKeywords, ...stockSpecificKeywords, ...(data.seo.keywords || [])];
+  
+  const cleanKeywords = [...new Set(combinedKeywords)].filter(k => 
+    k && !k.toLowerCase().includes('crypto') && 
     !k.toLowerCase().includes('bitcoin')
   );
 
   return {
     title: data.seo.title,
     description: data.seo.metaDescription,
-    keywords: ['stock analysis', 'options analysis', 'AI stock pick', ...cleanKeywords],
+    keywords: cleanKeywords,
   };
 }
 
@@ -173,18 +185,21 @@ const SignalIndicator = ({ signal }: { signal: string }) => {
 };
 
 const UpcomingCatalystsTable = ({ events, ticker }: { events: TickerEvent[], ticker: string }) => {
-    if (!events || events.length === 0) {
-        return null; // Don't render anything if there are no events
+    // Filter for events specific to this ticker
+    const tickerSpecificEvents = events.filter(event => event.ticker === ticker);
+
+    if (tickerSpecificEvents.length === 0) {
+        return null;
     }
 
     return (
         <Card className="mb-8">
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <h2 className="text-2xl font-bold font-headline flex items-center gap-2">
                     <CalendarDays size={24} />
-                    Upcoming Catalysts for {ticker}
-                </CardTitle>
-                <CardDescription>Key dates that could impact market volatility and stock price.</CardDescription>
+                    {ticker} Earnings Date & Key Events
+                </h2>
+                <CardDescription>Key upcoming dates for {ticker} that could impact its stock price.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -196,19 +211,43 @@ const UpcomingCatalystsTable = ({ events, ticker }: { events: TickerEvent[], tic
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {events.map(event => (
+                        {tickerSpecificEvents.map(event => (
                             <TableRow key={event.id}>
                                 <TableCell className="font-medium">{new Date(event.event_date).toLocaleDateString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'UTC' })}</TableCell>
                                 <TableCell>{event.event_name}</TableCell>
                                 <TableCell>
-                                    <Badge variant={event.ticker ? 'default' : 'secondary'}>
-                                        {event.ticker ? `${event.ticker}-Specific` : 'Economic'}
+                                    <Badge variant={'default'}>
+                                        {event.ticker}-Specific
                                     </Badge>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
+            </CardContent>
+        </Card>
+    );
+};
+
+const AnalysisSectionCard = ({ title, content }: { title: string; content: string }) => {
+    if (!content) return null;
+
+    // A simple function to format the key into a readable title
+    const formatTitle = (s: string) => {
+        if (s === 'md&a') return 'Management Discussion';
+        const result = s.replace(/([A-Z])/g, ' $1');
+        return result.charAt(0).toUpperCase() + result.slice(1);
+    };
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>{formatTitle(title)}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                 <div className="prose prose-invert max-w-none text-muted-foreground">
+                    <p>{content}</p>
+                </div>
             </CardContent>
         </Card>
     );
@@ -273,46 +312,38 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
 
         <Card className="mb-8 text-center bg-primary/10 border-primary/20">
             <CardHeader>
-                <CardTitle className="font-headline text-2xl">Deepen Your Analysis</CardTitle>
+                <CardTitle className="font-headline text-2xl">Unlock the Full Picture</CardTitle>
+                <CardDescription className="max-w-xl mx-auto">This static analysis is just the beginning. Sign up for a free trial to access:</CardDescription>
             </CardHeader>
-            <CardContent>
-                <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Explore the full picture. Access our complete list of AI-driven Call and Put analyses, supported by quantitative scores and daily market data.</p>
-                <Button asChild size="lg">
+            <CardContent className="space-y-4">
+                 <div className="max-w-md mx-auto space-y-2 text-left">
+                    <div className="flex items-center gap-3">
+                        <LineChart className="h-5 w-5 text-primary shrink-0"/>
+                        <span className="font-medium">An Interactive Dashboard with Live Charts</span>
+                    </div>
+                     <div className="flex items-center gap-3">
+                        <Star className="h-5 w-5 text-primary shrink-0"/>
+                        <span className="font-medium">Daily Top-Rated Call & Put Setups</span>
+                    </div>
+                     <div className="flex items-center gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary shrink-0"/>
+                        <span className="font-medium">Full Performance Tracking of All Signals</span>
+                    </div>
+                </div>
+                <Button asChild size="lg" className="mt-4">
                     <Link href="/">
-                        Explore All Analyses <ArrowRight className="ml-2 h-5 w-5"/>
+                        Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5"/>
                     </Link>
                 </Button>
             </CardContent>
         </Card>
 
-        <Card className="mb-8">
-            <CardHeader>
-                <CardTitle className="font-headline">Full Analysis Breakdown</CardTitle>
-                <CardDescription>Expand the sections below for a detailed look at our analysis.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Accordion type="single" collapsible className="w-full">
-                    {Object.entries(fullAnalysis).map(([key, value], index) => {
-                         // A simple function to format the key into a readable title
-                         const formatTitle = (s: string) => {
-                            if (s === 'md&a') return 'Management Discussion';
-                            const result = s.replace(/([A-Z])/g, ' $1');
-                            return result.charAt(0).toUpperCase() + result.slice(1);
-                        };
-                        return value ? (
-                             <AccordionItem key={key} value={`item-${index}`}>
-                                <AccordionTrigger>{formatTitle(key)}</AccordionTrigger>
-                                <AccordionContent>
-                                    <div className="prose prose-invert max-w-none">
-                                        <p>{value}</p>
-                                    </div>
-                                </AccordionContent>
-                            </AccordionItem>
-                        ) : null;
-                    })}
-                </Accordion>
-            </CardContent>
-        </Card>
+        <div className="space-y-8 mb-8">
+            <h2 className="text-2xl font-bold font-headline text-center">Full Analysis Breakdown</h2>
+            {Object.entries(fullAnalysis).map(([key, value]) => (
+                <AnalysisSectionCard key={key} title={key} content={value} />
+            ))}
+        </div>
 
         <Card className="mb-8 text-center bg-primary/10 border-primary/20">
             <CardHeader>
@@ -357,3 +388,5 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
     </>
   );
 }
+
+    

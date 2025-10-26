@@ -20,10 +20,22 @@ type SubscriptionDialogProps = {
 };
 
 const features = [
-    "Unlimited AI-Powered Stock Analysis",
-    "Daily Top-Rated Call & Put Setups",
-    "Access to the Winners Dashboard",
-    "Full Interactive Dashboards on Any Stock"
+    { 
+        title: "Daily Top-Rated Call & Put Setups",
+        description: "Delivered to your inbox" 
+    },
+    { 
+        title: "Unlimited AI Analyst Briefings",
+        description: "Synthesizing filings, calls, & news"
+    },
+    {
+        title: "Access to the Confluence Dashboard",
+        description: "Where data models align"
+    },
+    {
+        title: "Full Interactive Stock & Options Dashboards",
+        description: ""
+    }
 ];
 
 export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }: SubscriptionDialogProps) {
@@ -33,20 +45,23 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-headline text-2xl">
             <Star className="text-primary" />
-            Keep Your Winning Edge
+            Maintain Your Analytical Edge
           </DialogTitle>
           <DialogDescription>
-            Don't lose your momentum. Upgrade to Pro and continue getting unlimited access to the AI tools that help you find your next winning trade.
+            Your 30-day trial is ending. Don't lose access to the powerful AI research tools you've been using. Upgrade to Pro to continue turning complex data into clear insights—delivered directly to your inbox.
           </DialogDescription>
         </DialogHeader>
         
         <div className="py-4">
             <h3 className="mb-4 font-semibold text-foreground">What You Get with Pro:</h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
                 {features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
+                    <li key={feature.title} className="flex items-start gap-3">
                         <CheckIcon /> 
-                        <p className="font-semibold text-foreground/90">{feature}</p>
+                        <div>
+                            <p className="font-semibold text-foreground/90">{feature.title}</p>
+                            {feature.description && <p className="text-sm text-muted-foreground">{feature.description}</p>}
+                        </div>
                     </li>
                 ))}
             </ul>
@@ -55,7 +70,7 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
         <DialogFooter className="flex-col items-center gap-2">
             <Button onClick={onSubscribe} className="w-full" disabled={loading} size="lg">
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Yes, Keep My AI Edge - $99/month
+                Yes, Continue My Pro Access - $99/month
             </Button>
             <p className="text-xs text-muted-foreground">Cancel anytime.</p>
         </DialogFooter>

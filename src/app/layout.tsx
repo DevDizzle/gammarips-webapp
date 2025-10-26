@@ -10,14 +10,38 @@ import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
 import RootLayoutClient from './root-layout-client';
 
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://profitscout.app';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://profitscout.app'), // Replace with your actual domain
+  metadataBase: new URL(siteUrl), 
   title: {
     default: 'ProfitScout | AI-Powered Options Research Tool',
     template: `%s | ProfitScout`,
   },
   description: 'ProfitScout is an AI-powered research tool that helps traders identify and analyze high-potential options setups on Russell 1000 stocks using structured data signals.',
   keywords: ['options trading', 'stock options', 'AI trading', 'options analysis', 'research tool', 'Russell 1000', 'call options', 'put options', 'stock market analysis'],
+  openGraph: {
+    title: 'ProfitScout | AI-Powered Options Research Tool',
+    description: 'AI-powered research tool for options traders.',
+    url: siteUrl,
+    siteName: 'ProfitScout',
+    images: [
+      {
+        url: `${siteUrl}/profitscout-og.png`,
+        width: 1200,
+        height: 630,
+        alt: 'ProfitScout AI-Powered Options Research',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+   twitter: {
+    card: 'summary_large_image',
+    title: 'ProfitScout | AI-Powered Options Research Tool',
+    description: 'AI-powered research tool for options traders.',
+    images: [`${siteUrl}/profitscout-og.png`],
+  },
 };
 
 const GA_MEASUREMENT_ID = 'G-KPGTJDBC6N';

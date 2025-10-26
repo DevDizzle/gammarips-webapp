@@ -71,43 +71,16 @@ export default function DashboardPageClient({ children }: { children: React.Reac
     const { user, dbUser, loading: authLoading } = useAuth();
     const router = useRouter();
     const { toast } = useToast();
-
-    const [showAuthDialog, setShowAuthDialog] = useState(false);
-    const [showSubDialog, setShowSubDialog] = useState(false);
     const [isSubscribing, setIsSubscribing] = useState(false);
 
     const trialHasEnded = useMemo(() => {
         if (!dbUser?.createdAt) return false;
+        // Firebase Timestamps can be objects with seconds and nanoseconds.
         const createdAtDate = (dbUser.createdAt as any).toDate ? (dbUser.createdAt as any).toDate() : new Date((dbUser.createdAt as any).seconds * 1000);
-        return (new Date().getTime() - createdAtDate.getTime()) > 30 * 24 * 60 * 60 * 1000;
+        const thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000;
+        return (new Date().getTime() - createdAtDate.getTime()) > thirtyDaysInMillis;
     }, [dbUser]);
 
-    const hasAccess = useMemo(() => {
-        if (authLoading || !dbUser) return false;
-        const isVerified = user?.providerData.some(p => p.providerId === 'google.com') || user?.emailVerified;
-        if (!isVerified) return false;
-        return dbUser.isSubscribed || !trialHasEnded;
-    }, [dbUser, user, trialHasEnded, authLoading]);
-
-    useEffect(() => {
-        if (authLoading) return;
-
-        if (!user) {
-            setShowAuthDialog(true);
-            return;
-        }
-
-        const isVerified = user.providerData.some(p => p.providerId === 'google.com') || user.emailVerified;
-        if (!isVerified) {
-            return; // Will render VerifyEmailCard
-        }
-
-        if (!hasAccess) {
-            setShowSubDialog(true);
-        }
-
-    }, [authLoading, user, hasAccess]);
-    
     const handleSubscribe = async () => {
         if (!user) return;
         setIsSubscribing(true);
@@ -128,14 +101,9 @@ export default function DashboardPageClient({ children }: { children: React.Reac
         } finally {
           setIsSubscribing(false);
         }
-      };
+    };
     
-      const handleDialogClose = () => {
-          setShowAuthDialog(false);
-          setShowSubDialog(false);
-          router.push('/');
-      }
-
+    // 1. Show loader while authentication is in progress
     if (authLoading) {
         return (
           <div className="flex justify-center items-center h-[calc(100vh-10rem)]">
@@ -144,24 +112,28 @@ export default function DashboardPageClient({ children }: { children: React.Reac
         );
     }
     
+    // 2. If user is not logged in, show the authentication dialog
     if (!user) {
-        return <AuthDialog open={showAuthDialog} onOpenChange={handleDialogClose} />;
+        return <AuthDialog open={true} onOpenChange={() => router.push('/')} />;
     }
 
+    // 3. If user is logged in but email is not verified (and not a Google user), show verification card
     if (!user.emailVerified && !user.providerData.some(p => p.providerId === 'google.com')) {
         return <VerifyEmailCard />;
     }
 
-    if (!hasAccess) {
+    // 4. If trial has ended and user is not subscribed, show subscription dialog
+    if (trialHasEnded && !dbUser?.isSubscribed) {
         return (
             <SubscriptionDialog
-              open={showSubDialog}
-              onOpenChange={handleDialogClose}
+              open={true}
+              onOpenChange={() => router.push('/')}
               onSubscribe={handleSubscribe}
               loading={isSubscribing}
             />
-          );
+        );
     }
 
+    // 5. If all checks pass, render the premium content
     return <>{children}</>;
 }

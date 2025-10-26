@@ -79,6 +79,9 @@ const OptionCandidateSchema = z.object({
   id: z.string(),
   contract_symbol: z.string(),
   ticker: z.string(),
+  company_name: z.string(),
+  industry: z.string().nullable(),
+  image_uri: z.string().optional().nullable(),
   option_type: z.enum(['call', 'put']),
   expiration_date: z.string(),
   strike: z.number(),
@@ -86,6 +89,7 @@ const OptionCandidateSchema = z.object({
   volume: z.number().nullable(),
   implied_volatility: z.number().nullable(),
   options_score: z.number(),
+  stock_outlook_signal: z.string(),
 });
 export type OptionCandidate = z.infer<typeof OptionCandidateSchema>;
 
@@ -596,7 +600,8 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
         if (ticker) {
             query = candidatesCollection.where('ticker', '==', ticker.toUpperCase());
         } else {
-            query = candidatesCollection;
+            // If no ticker, fetch all. You may want to add a limit for performance.
+            query = candidatesCollection.orderBy('options_score', 'desc').limit(50);
         }
         
         const querySnapshot = await query.get();
@@ -608,13 +613,17 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
                 id: doc.id,
                 contract_symbol: data.contract_symbol,
                 ticker: data.ticker,
+                company_name: data.company_name,
+                industry: data.industry,
+                image_uri: data.image_uri,
                 option_type: data.option_type,
                 expiration_date: data.expiration_date,
-                strike: data.strike,
+                strike: data.strike_price, // Changed from strike to strike_price
                 last_price: data.last_price,
                 volume: data.volume,
                 implied_volatility: data.implied_volatility,
                 options_score: data.options_score,
+                stock_outlook_signal: data.stock_outlook_signal,
             };
             const validation = OptionCandidateSchema.safeParse(candidateData);
             if (validation.success) {
@@ -624,9 +633,11 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
             }
         });
         
-        candidates.sort((a, b) => b.options_score - a.options_score);
+        // If fetching all, sort by score. If by ticker, maybe another sort order?
+        if (!ticker) {
+            candidates.sort((a, b) => b.options_score - a.options_score);
+        }
         
-        console.log(`Successfully fetched and validated ${candidates.length} options candidates for ticker: ${ticker}`);
         return candidates;
 
     } catch (error) {
@@ -963,6 +974,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 
 

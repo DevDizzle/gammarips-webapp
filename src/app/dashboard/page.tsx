@@ -5,6 +5,7 @@ import TodaysWinners from "@/app/dashboard/todays-winners";
 import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
 import DashboardPageClient from "./dashboard-client";
 import { IndustryExplorer, IndustryExplorerSkeleton } from "./industry-explorer";
+import OptionsCandidatesTable from "./options-candidates-table";
 
 function DashboardContent() {
     return (
@@ -16,6 +17,7 @@ function DashboardContent() {
             <Suspense fallback={<PerformanceTrackerSkeleton />}>
                 <PerformanceTracker />
             </Suspense>
+            <OptionsCandidatesTable />
         </div>
     )
 }

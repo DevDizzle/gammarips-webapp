@@ -75,7 +75,9 @@ export default function DashboardPageClient({ children }: { children: React.Reac
 
     const trialHasEnded = useMemo(() => {
         if (!dbUser?.createdAt) return false;
-        // Firebase Timestamps can be objects with seconds and nanoseconds.
+        // Correctly convert Firestore Timestamp to JS Date
+        // The `createdAt` field can be a plain object with seconds/nanoseconds from server-side rendering,
+        // or a Firestore Timestamp object on the client. The toDate() method handles the latter.
         const createdAtDate = (dbUser.createdAt as any).toDate ? (dbUser.createdAt as any).toDate() : new Date((dbUser.createdAt as any).seconds * 1000);
         const thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000;
         return (new Date().getTime() - createdAtDate.getTime()) > thirtyDaysInMillis;

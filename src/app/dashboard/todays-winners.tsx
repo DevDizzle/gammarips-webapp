@@ -228,9 +228,8 @@ function TodaysWinners() {
             <TableHeader>
             <TableRow>
                 <TableHead>Company</TableHead>
-                <TableHead>Ticker</TableHead>
-                <TableHead>Last Close</TableHead>
                 <TableHead>Industry</TableHead>
+                <TableHead>Last Close</TableHead>
                 <TableHead>AI Outlook</TableHead>
             </TableRow>
             </TableHeader>
@@ -252,12 +251,14 @@ function TodaysWinners() {
                                     height={24}
                                     className="rounded-full"
                                 />
-                                <span className="truncate">{winner.company_name}</span>
+                                <div>
+                                    <span className="font-semibold">{winner.ticker}</span>
+                                    <p className="text-xs text-muted-foreground truncate max-w-[150px]">{winner.company_name}</p>
+                                </div>
                             </div>
                         </TableCell>
-                        <TableCell>{winner.ticker}</TableCell>
-                        <TableCell>${winner.last_close.toFixed(2)}</TableCell>
                         <TableCell>{winner.industry}</TableCell>
+                        <TableCell>${winner.last_close.toFixed(2)}</TableCell>
                         <TableCell>
                             <div className={cn("flex items-center gap-1", signalMeta.color)}>
                                 {signalMeta.icon}
@@ -337,9 +338,8 @@ function TodaysWinners() {
                        ) : (
                            <>
                                 <TableHead><Skeleton className="h-5 w-32" /></TableHead>
-                                <TableHead><Skeleton className="h-5 w-20" /></TableHead>
-                                <TableHead><Skeleton className="h-5 w-24" /></TableHead>
                                 <TableHead><Skeleton className="h-5 w-28" /></TableHead>
+                                <TableHead><Skeleton className="h-5 w-24" /></TableHead>
                                 <TableHead><Skeleton className="h-5 w-36" /></TableHead>
                            </>
                        )}
@@ -358,9 +358,8 @@ function TodaysWinners() {
                             ) : (
                                 <>
                                     <TableCell><Skeleton className="h-5 w-40" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-16" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
                                     <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
                                     <TableCell><Skeleton className="h-5 w-32" /></TableCell>
                                 </>
                             )}

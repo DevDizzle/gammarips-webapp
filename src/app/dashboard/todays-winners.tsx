@@ -14,6 +14,7 @@ import type { Winner, PerformanceSignal } from '@/lib/firebase-admin';
 import { ArrowDown, ArrowUp, ChevronRight, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 type ViewType = 'bullish' | 'bearish' | 'gainers' | 'losers';
 
@@ -229,7 +230,7 @@ function TodaysWinners() {
             <TableRow>
                 <TableHead>Company</TableHead>
                 <TableHead>Industry</TableHead>
-                <TableHead>Last Close</TableHead>
+                <TableHead>Contract</TableHead>
                 <TableHead>AI Outlook</TableHead>
             </TableRow>
             </TableHeader>
@@ -258,7 +259,12 @@ function TodaysWinners() {
                             </div>
                         </TableCell>
                         <TableCell>{winner.industry}</TableCell>
-                        <TableCell>${winner.last_close.toFixed(2)}</TableCell>
+                        <TableCell>
+                           <div className="flex flex-col">
+                                <span className="font-semibold">${winner.strike_price.toFixed(2)} {winner.option_type.toUpperCase()}</span>
+                                <span className="text-xs text-muted-foreground">{new Date(winner.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
+                            </div>
+                        </TableCell>
                         <TableCell>
                             <div className={cn("flex items-center gap-1", signalMeta.color)}>
                                 {signalMeta.icon}
@@ -302,8 +308,8 @@ function TodaysWinners() {
                             </div>
                             <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
                                 <div>
-                                    <p className="text-muted-foreground">Last Close</p>
-                                    <p className="font-semibold">${winner.last_close.toFixed(2)}</p>
+                                    <p className="text-muted-foreground">Contract</p>
+                                    <p className="font-semibold">${winner.strike_price.toFixed(2)} {winner.option_type.toUpperCase()}</p>
                                 </div>
                                 <div>
                                     <p className="text-muted-foreground">AI Outlook</p>

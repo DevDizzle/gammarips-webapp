@@ -151,8 +151,26 @@ const WinnerSchema = z.object({
     strike_price: z.number(),
     expiration_date: z.string(),
     options_score: z.number().optional().nullable(),
+    contract_symbol: z.string(),
 });
 export type Winner = z.infer<typeof WinnerSchema>;
+
+export async function getAppStatusAdmin(): Promise<{ isUpdating: boolean }> {
+  noStore();
+  try {
+    const docRef = adminDb.collection('app_config').doc('status');
+    const docSnap = await docRef.get();
+    if (docSnap.exists) {
+      return { isUpdating: docSnap.data()?.isUpdating === true };
+    }
+    // Default to not updating if the document doesn't exist
+    return { isUpdating: false };
+  } catch (error) {
+    console.error('Error fetching app status:', error);
+    // Default to not updating in case of error to prevent locking out users
+    return { isUpdating: false };
+  }
+}
 
 export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: number; signalCount: number; winRate: number; averageWinnerGain: number; averageLoserGain: number; }> {
     noStore(); // Opt out of caching for this specific function
@@ -393,6 +411,7 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
                 strike_price: data.strike_price,
                 expiration_date: data.expiration_date,
                 options_score: data.options_score,
+                contract_symbol: data.contract_symbol,
             };
             const validation = WinnerSchema.safeParse(winnerData);
             if (validation.success) {
@@ -974,6 +993,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 
 

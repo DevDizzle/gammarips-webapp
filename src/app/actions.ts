@@ -33,6 +33,7 @@ import {
     saveFeedbackAdmin,
     getPerformanceSignals as getPerformanceSignalsAdmin,
     getPerformanceSignalsByTickerAdmin,
+    getAppStatusAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
@@ -42,6 +43,10 @@ import { getAuth } from 'firebase-admin/auth';
 import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 
+
+export async function getAppStatus(): Promise<{ isUpdating: boolean }> {
+    return getAppStatusAdmin();
+}
 
 export async function getOptionsSignals(ticker: string): Promise<OptionCandidate[]> {
     return getOptionsCandidatesAdmin(ticker);
@@ -320,6 +325,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

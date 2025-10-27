@@ -2,10 +2,6 @@
   "node": {
     "004432f536753d7a29d624ff3f499f766c74f5130f": {
       "workers": {
-        "app/dashboard/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -16,7 +12,6 @@
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc",
         "app/page": "rsc"
       }
@@ -34,6 +29,17 @@
       },
       "layer": {
         "app/dashboard/page": "action-browser",
+        "app/page": "rsc"
+      }
+    },
+    "00cd124188cfb11270901f3b2cf4c37a133b500cea": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
         "app/page": "rsc"
       }
     },
@@ -119,10 +125,6 @@
     },
     "4080e9cfbb43c2dfeab2236e9642204226975281ec": {
       "workers": {
-        "app/dashboard/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -133,17 +135,12 @@
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc",
         "app/page": "rsc"
       }
     },
     "4088e14489f23ae79f08a8dbbaa44d24ab37edfdd0": {
       "workers": {
-        "app/dashboard/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -154,17 +151,12 @@
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc",
         "app/page": "rsc"
       }
     },
     "40f5556d0148742cd50d1ad0035364745eb0b3876b": {
       "workers": {
-        "app/dashboard/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -175,17 +167,12 @@
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc",
         "app/page": "rsc"
       }
     },
     "40ffed13830c5d0751fed7602ab2bd7b39dc6430f9": {
       "workers": {
-        "app/dashboard/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -196,7 +183,6 @@
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc",
         "app/page": "rsc"
       }
@@ -267,10 +253,6 @@
     },
     "609a25081becdbccac3660cb7d59f3aa432b2909d8": {
       "workers": {
-        "app/dashboard/[ticker]/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": true
-        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -281,7 +263,6 @@
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "action-browser",
         "app/page": "rsc"
       }
@@ -347,6 +328,17 @@
       },
       "layer": {
         "app/dashboard/page": "rsc",
+        "app/page": "rsc"
+      }
+    },
+    "0011fea4a24d8b792843841c0e10e3d345ab919ded": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
         "app/page": "rsc"
       }
     },

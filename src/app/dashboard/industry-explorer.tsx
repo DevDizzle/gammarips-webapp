@@ -131,7 +131,7 @@ export async function IndustryExplorer() {
                                                         <TableCell>
                                                             <div className="flex flex-col">
                                                                 <span className="font-semibold">${winner.strike_price.toFixed(2)} {winner.option_type.toUpperCase()}</span>
-                                                                <span className="text-xs text-muted-foreground">{new Date(winner.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
+                                                                <span className="text-xs text-muted-foreground">Expires: {new Date(winner.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
                                                             </div>
                                                         </TableCell>
                                                         <TableCell>

@@ -162,7 +162,12 @@ function TodaysWinners() {
                                 </div>
                             </TableCell>
                             <TableCell>{signal.industry}</TableCell>
-                            <TableCell className="font-mono text-xs">{signal.contract_symbol}</TableCell>
+                            <TableCell>
+                                <div className="flex flex-col">
+                                    <span className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</span>
+                                    <span className="text-xs text-muted-foreground font-mono">{signal.contract_symbol}</span>
+                                </div>
+                            </TableCell>
                             <TableCell className={cn("text-right font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
                                 {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
                             </TableCell>
@@ -262,7 +267,7 @@ function TodaysWinners() {
                         <TableCell>
                            <div className="flex flex-col">
                                 <span className="font-semibold">${winner.strike_price.toFixed(2)} {winner.option_type.toUpperCase()}</span>
-                                <span className="text-xs text-muted-foreground">{new Date(winner.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
+                                <span className="text-xs text-muted-foreground">Expires: {new Date(winner.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
                             </div>
                         </TableCell>
                         <TableCell>

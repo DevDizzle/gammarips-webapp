@@ -126,7 +126,8 @@ function OptionsCandidatesTable() {
                     <TableCell>
                         <div className="flex flex-col">
                             <span className="font-semibold">${c.strike.toFixed(2)} {c.option_type.toUpperCase()}</span>
-                            <span className="text-xs text-muted-foreground">{new Date(c.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
+                            <span className="text-xs text-muted-foreground">Expires: {new Date(c.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
+                            <span className="text-xs text-muted-foreground font-mono">{c.contract_symbol}</span>
                         </div>
                     </TableCell>
                     <TableCell>

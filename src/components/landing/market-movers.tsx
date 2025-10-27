@@ -68,7 +68,12 @@ const PerformanceList = ({ signals, title, icon }: { signals: PerformanceSignal[
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-xs text-muted-foreground">{signal.industry}</TableCell>
-                                    <TableCell className="font-mono text-xs">{signal.contract_symbol}</TableCell>
+                                    <TableCell>
+                                        <div className="flex flex-col">
+                                            <span className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</span>
+                                            <span className="text-xs text-muted-foreground font-mono">{signal.contract_symbol}</span>
+                                        </div>
+                                    </TableCell>
                                     <TableCell className={cn("text-right font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
                                         {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
                                     </TableCell>

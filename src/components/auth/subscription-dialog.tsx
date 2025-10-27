@@ -70,7 +70,7 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
         <DialogFooter className="flex-col items-center gap-2">
             <Button onClick={onSubscribe} className="w-full" disabled={loading} size="lg">
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Yes, Continue My Pro Access - $99/month
+                Yes, Continue My Pro Access - $19/month
             </Button>
             <p className="text-xs text-muted-foreground">Cancel anytime.</p>
         </DialogFooter>

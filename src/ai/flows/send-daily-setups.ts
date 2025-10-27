@@ -39,15 +39,11 @@ const sendDailySetupsFlow = ai.defineFlow(
     outputSchema: SendDailySetupsOutputSchema,
   },
   async () => {
-    console.log('Starting sendDailySetupsFlow...');
+    console.log('Starting sendDailySetupsFlow in TEST MODE...');
 
-    // 1. Fetch subscribed users
-    const users = await getSubscribedUsersAdmin();
-    if (users.length === 0) {
-      console.log('No subscribed users to email. Exiting flow.');
-      return { sentCount: 0, skippedCount: 0, totalUsers: 0 };
-    }
-    console.log(`Found ${users.length} subscribed users.`);
+    // 1. Use a hardcoded user for testing instead of fetching all subscribed users.
+    const users = [{ email: 'eraphaelparra@gmail.com', isSubscribed: true, uid: 'test-user' }];
+    console.log(`Sending test email to: ${users[0].email}`);
 
     // 2. Fetch top setups from the winners_dashboard
     const allWinners = await getWinnersDashboardAdmin();

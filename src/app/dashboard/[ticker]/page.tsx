@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import UpcomingEarnings from './upcoming-events';
 import DashboardPageClient from '../dashboard-client';
+import DataUpdatingPage from '@/components/layout/data-updating-page';
 
 interface TickerDashboardPageProps {
   params: {
@@ -80,22 +81,7 @@ const KpiCard = ({ title, value, subValue, signal, tooltip, icon, children }: { 
     </Card>
 );
 
-function TickerDashboard({ data, ticker, error }: { data: any, ticker: string, error?: string | null }) {
-  if (error || !data) {
-    return (
-        <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Data not available</CardTitle>
-                    <CardDescription>
-                        {`Could not load dashboard data for ${ticker}. ${error || 'The data may be in the process of being generated, or the ticker may not be supported. Please check back later.'}`}
-                    </CardDescription>
-                </CardHeader>
-            </Card>
-        </div>
-    )
-  }
-
+function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
   const { titleInfo, kpis, priceChartData, stockLevelAnalysis, industry, optionsHeader, topSignalSummary } = data;
 
   // Calculate RSI change for display
@@ -292,6 +278,7 @@ export default function TickerDashboardPage() {
     const fetchData = async () => {
       if (!ticker) return;
       setLoading(true);
+      setError(null); // Reset error on new fetch
       try {
         const dashboardData = await getDashboardData(ticker.toUpperCase());
         if (!dashboardData) {
@@ -320,9 +307,9 @@ export default function TickerDashboardPage() {
   }
   
   const content = (
-    data || error 
-        ? <TickerDashboard data={data} ticker={ticker.toUpperCase()} error={error} />
-        : <div className="flex justify-center items-center h-[calc(100vh-10rem)]"><Loader2 className="h-10 w-10 animate-spin" /></div>
+    data && !error
+        ? <TickerDashboard data={data} ticker={ticker.toUpperCase()} />
+        : <DataUpdatingPage />
   )
 
   return (

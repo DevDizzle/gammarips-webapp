@@ -9,16 +9,8 @@ import HomePageClientContent from "./home-page-client-content";
 import Faq from "@/components/landing/faq";
 import { Badge } from "@/components/ui/badge";
 import MarketMovers from "@/components/landing/market-movers";
-import { getAppStatus } from "./actions";
-import DataUpdatingPage from "@/components/layout/data-updating-page";
 
 export default async function LandingPage() {
-  const { isUpdating } = await getAppStatus();
-
-  if (isUpdating) {
-    return <DataUpdatingPage />;
-  }
-  
   return (
     <>
       <Suspense>

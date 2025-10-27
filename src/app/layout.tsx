@@ -9,6 +9,8 @@ import CookieConsentBanner from '@/components/cookie-consent-banner';
 import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
 import RootLayoutClient from './root-layout-client';
+import { getAppStatus } from './actions';
+import DataUpdatingPage from '@/components/layout/data-updating-page';
 
 const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://profitscout.app';
 
@@ -47,11 +49,23 @@ export const metadata: Metadata = {
 const GA_MEASUREMENT_ID = 'G-KPGTJDBC6N';
 const AW_MEASUREMENT_ID = 'AW-17603675875';
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { isUpdating } = await getAppStatus();
+
+  if (isUpdating) {
+    return (
+      <html lang="en" className="dark">
+        <body>
+          <DataUpdatingPage />
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="en" className="dark">
       <head>

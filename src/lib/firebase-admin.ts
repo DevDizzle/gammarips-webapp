@@ -1,5 +1,6 @@
 
 
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -907,6 +908,28 @@ export async function getOrCreateUserAdmin(
   return newUser;
 }
 
+export async function getSubscribedUsersAdmin(): Promise<DbUser[]> {
+    const subscribedUsers: DbUser[] = [];
+    try {
+        const snapshot = await adminDb.collection('users').where('isSubscribed', '==', true).get();
+        if (snapshot.empty) {
+            console.log('No subscribed users found.');
+            return [];
+        }
+        snapshot.forEach(doc => {
+            const userData = doc.data() as DbUser;
+            if (userData.email) { // Only include users with an email
+                subscribedUsers.push(userData);
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching subscribed users:', error);
+        // Return empty array in case of error to avoid stopping the process
+        return [];
+    }
+    return subscribedUsers;
+}
+
 export async function incrementUserUsageAdmin(uid: string) {
   const userRef = adminDb.collection('users').doc(uid);
   await userRef.update({ usageCount: FieldValue.increment(1) });
@@ -993,6 +1016,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 
 

@@ -4,17 +4,31 @@ import { UserNav } from '@/components/auth/user-nav';
 import Link from 'next/link';
 import { TickerSearch } from '@/components/ticker-search';
 import { AuthProvider } from '@/hooks/use-auth';
+import { getAppStatus } from '../actions';
+import DataUpdatingPage from '@/components/layout/data-updating-page';
 
 export const metadata: Metadata = {
   title: 'Dashboard | ProfitScout',
   description: 'Your personal dashboard for AI-powered stock and options analysis. View top setups, track performance, and search any ticker.',
 };
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { isUpdating } = await getAppStatus();
+
+  if (isUpdating) {
+    return (
+      <html lang="en" className="dark">
+        <body>
+          <DataUpdatingPage />
+        </body>
+      </html>
+    );
+  }
+  
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <header className="sticky top-0 z-40 w-full border-b bg-background">

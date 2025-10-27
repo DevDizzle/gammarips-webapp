@@ -54,18 +54,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isUpdating } = await getAppStatus();
-
-  if (isUpdating) {
-    return (
-      <html lang="en" className="dark">
-        <body>
-          <DataUpdatingPage />
-        </body>
-      </html>
-    );
-  }
-
   return (
     <html lang="en" className="dark">
       <head>

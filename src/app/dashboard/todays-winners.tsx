@@ -165,7 +165,7 @@ function TodaysWinners() {
                             <TableCell>
                                 <div className="flex flex-col">
                                     <span className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</span>
-                                    <span className="text-xs text-muted-foreground font-mono">{signal.contract_symbol}</span>
+                                    <span className="text-xs text-muted-foreground">Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
                                 </div>
                             </TableCell>
                             <TableCell className={cn("text-right font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
@@ -211,7 +211,8 @@ function TodaysWinners() {
                             </div>
                             <div className="mt-4 border-t pt-3">
                                 <p className="text-xs text-muted-foreground">Contract</p>
-                                <p className="font-mono text-sm">{signal.contract_symbol}</p>
+                                <p className="font-semibold text-sm">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</p>
+                                <p className="text-xs text-muted-foreground">Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -315,6 +316,7 @@ function TodaysWinners() {
                                 <div>
                                     <p className="text-muted-foreground">Contract</p>
                                     <p className="font-semibold">${winner.strike_price.toFixed(2)} {winner.option_type.toUpperCase()}</p>
+                                    <p className="text-xs text-muted-foreground">Expires: {new Date(winner.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</p>
                                 </div>
                                 <div>
                                     <p className="text-muted-foreground">AI Outlook</p>

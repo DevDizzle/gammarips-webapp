@@ -36,7 +36,13 @@ export default function PerformanceClientPage({ signals }: { signals: Performanc
                 return signalsCopy.sort((a, b) => a.percent_gain - b.percent_gain);
             case 'recent':
             default:
-                return signalsCopy.sort((a, b) => new Date(b.run_date).getTime() - new Date(a.run_date).getTime());
+                // Correctly sort by date, ensuring consistent ordering for ties.
+                return signalsCopy.sort((a, b) => {
+                    const dateDiff = new Date(b.run_date).getTime() - new Date(a.run_date).getTime();
+                    if (dateDiff !== 0) return dateDiff;
+                    // If dates are the same, sort by ticker for stable order
+                    return a.ticker.localeCompare(b.ticker);
+                });
         }
     }, [signals, sortType]);
 
@@ -86,29 +92,29 @@ export default function PerformanceClientPage({ signals }: { signals: Performanc
                                 
                                 return (
                                     <TableRow key={signal.id}>
-                                        <TableCell>
-                                            <div className="flex items-center gap-3">
-                                                <Image src={imageUrl} alt={`${signal.company_name} logo`} width={24} height={24} className="rounded-full" />
-                                                <div>
-                                                    <Link href={`/dashboard/${signal.ticker}`} className="font-bold hover:underline">{signal.ticker}</Link>
-                                                    <p className="text-xs text-muted-foreground truncate max-w-[150px]">{signal.company_name}</p>
-                                                </div>
+                                      <TableCell>
+                                        <Link href={`/dashboard/${signal.ticker}`} className="flex items-center gap-3 group">
+                                            <Image src={imageUrl} alt={`${signal.company_name} logo`} width={24} height={24} className="rounded-full" />
+                                            <div>
+                                                <span className="font-bold group-hover:underline">{signal.ticker}</span>
+                                                <p className="text-xs text-muted-foreground truncate max-w-[150px]">{signal.company_name}</p>
                                             </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <span className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</span>
-                                            <p className="text-xs text-muted-foreground">Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}</p>
-                                        </TableCell>
-                                        <TableCell>{new Date(signal.run_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</TableCell>
-                                        <TableCell>{signal.status}</TableCell>
-                                        <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
-                                        <TableCell>${signal.current_price.toFixed(2)}</TableCell>
-                                        <TableCell className={cn("text-right font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
-                                            <span className="flex items-center justify-end gap-1">
-                                                {isGainer ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
-                                                {signal.percent_gain.toFixed(2)}%
-                                            </span>
-                                        </TableCell>
+                                        </Link>
+                                      </TableCell>
+                                      <TableCell>
+                                          <span className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</span>
+                                          <p className="text-xs text-muted-foreground">Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}</p>
+                                      </TableCell>
+                                      <TableCell>{new Date(signal.run_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</TableCell>
+                                      <TableCell>{signal.status}</TableCell>
+                                      <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
+                                      <TableCell>${signal.current_price.toFixed(2)}</TableCell>
+                                      <TableCell className={cn("text-right font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
+                                          <span className="flex items-center justify-end gap-1">
+                                              {isGainer ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+                                              {signal.percent_gain.toFixed(2)}%
+                                          </span>
+                                      </TableCell>
                                     </TableRow>
                                 );
                             })}

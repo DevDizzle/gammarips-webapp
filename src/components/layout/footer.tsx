@@ -18,6 +18,7 @@ const Footer = () => {
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
               <li><Link href="/dashboard" className="text-muted-foreground hover:text-primary">Dashboard</Link></li>
+              <li><Link href="/options/call-setups" className="text-muted-foreground hover:text-primary">Call Setups</Link></li>
             </ul>
           </div>
           <div>

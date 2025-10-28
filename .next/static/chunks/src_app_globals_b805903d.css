@@ -1645,6 +1645,10 @@ body {
   max-width: 200px;
 }
 
+.max-w-6xl {
+  max-width: 72rem;
+}
+
 .flex-1 {
   flex: 1;
 }

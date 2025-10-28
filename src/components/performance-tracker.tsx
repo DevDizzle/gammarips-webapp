@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import { TrendingUp } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const StatCard = ({ title, value, subtext }: { title: string; value: string; subtext?: string }) => {
     const isPositive = value.startsWith('+');
@@ -25,43 +26,46 @@ export async function PerformanceTracker() {
     const stats = await getPerformanceTrackerStatsAdmin();
 
     return (
-        <Card className="bg-primary/10 border-primary/20">
-            <CardHeader className="text-center">
-                <div className="flex justify-center items-center gap-2">
-                    <TrendingUp className="h-6 w-6 text-primary" />
-                    <CardTitle className="font-headline text-2xl">
-                        Historical Performance
-                    </CardTitle>
-                </div>
-                 <CardDescription className="max-w-2xl mx-auto">
-                    Performance tracking began on 10/21/2025. We track each options signal from when it’s picked (late afternoon ET) using the NBBO mid (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and each day until the contract’s standard expiry.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <StatCard 
-                        title="Avg. Gain" 
-                        value={`${stats.averageGain >= 0 ? '+' : ''}${stats.averageGain.toFixed(2)}%`}
-                        subtext={stats.signalCount > 0 ? `Across ${stats.signalCount} signals` : ''}
-                    />
-                    <StatCard 
-                        title="Win Rate" 
-                        value={`${stats.winRate.toFixed(1)}%`}
-                        subtext="Signals with positive gain"
-                    />
-                     <StatCard 
-                        title="Avg. Winner" 
-                        value={`${stats.averageWinnerGain >= 0 ? '+' : ''}${stats.averageWinnerGain.toFixed(2)}%`}
-                        subtext="Avg. gain on winning signals"
-                    />
-                     <StatCard 
-                        title="Avg. Loser" 
-                        value={`${stats.averageLoserGain.toFixed(2)}%`}
-                        subtext="Avg. loss on losing signals"
-                    />
-                </div>
-            </CardContent>
-        </Card>
+        <Link href="/performance" className="block group">
+            <Card className="bg-primary/10 border-primary/20 group-hover:bg-primary/20 group-hover:border-primary/30 transition-colors">
+                <CardHeader className="text-center">
+                    <div className="flex justify-center items-center gap-2">
+                        <TrendingUp className="h-6 w-6 text-primary" />
+                        <CardTitle className="font-headline text-2xl">
+                            Historical Performance
+                        </CardTitle>
+                    </div>
+                    <CardDescription className="max-w-2xl mx-auto">
+                        Performance tracking began on 10/21/2025. We track each options signal from when it’s picked (late afternoon ET) using the NBBO mid (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and each day until the contract’s standard expiry.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <StatCard 
+                            title="Avg. Gain" 
+                            value={`${stats.averageGain >= 0 ? '+' : ''}${stats.averageGain.toFixed(2)}%`}
+                            subtext={stats.signalCount > 0 ? `Across ${stats.signalCount} signals` : ''}
+                        />
+                        <StatCard 
+                            title="Win Rate" 
+                            value={`${stats.winRate.toFixed(1)}%`}
+                            subtext="Signals with positive gain"
+                        />
+                        <StatCard 
+                            title="Avg. Winner" 
+                            value={`${stats.averageWinnerGain >= 0 ? '+' : ''}${stats.averageWinnerGain.toFixed(2)}%`}
+                            subtext="Avg. gain on winning signals"
+                        />
+                        <StatCard 
+                            title="Avg. Loser" 
+                            value={`${stats.averageLoserGain.toFixed(2)}%`}
+                            subtext="Avg. loss on losing signals"
+                        />
+                    </div>
+                     <p className="text-center text-xs text-muted-foreground mt-4 group-hover:underline">Click to view full performance history &rarr;</p>
+                </CardContent>
+            </Card>
+        </Link>
     );
 }
 

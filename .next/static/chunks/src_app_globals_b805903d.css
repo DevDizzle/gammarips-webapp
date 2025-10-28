@@ -2910,6 +2910,18 @@ body {
   opacity: .5;
 }
 
+.group:hover .group-hover\:border-primary\/30 {
+  border-color: hsl(var(--primary) / .3);
+}
+
+.group:hover .group-hover\:bg-primary\/20 {
+  background-color: hsl(var(--primary) / .2);
+}
+
+.group:hover .group-hover\:underline {
+  text-decoration-line: underline;
+}
+
 .group:hover .group-hover\:opacity-100 {
   opacity: 1;
 }

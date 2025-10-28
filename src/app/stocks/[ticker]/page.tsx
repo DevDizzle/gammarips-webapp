@@ -154,16 +154,14 @@ export async function generateMetadata({ params }: StockSeoPageProps): Promise<M
 
 
 export async function generateStaticParams() {
-    console.log('[generateStaticParams] Starting to generate params for stock pages...');
+    console.log('[generateStaticParams] Starting to generate params for all stock pages...');
     const allStocks = await getStocksAdmin();
-    const validTickers: { ticker: string }[] = [];
-
-    for (const stock of allStocks) {
-        const hasValidData = await getStockData(stock.id.toUpperCase());
-        if (hasValidData) {
-            validTickers.push({ ticker: stock.id.toUpperCase() });
-        }
-    }
+    // Build a page for every stock that has a pages_json path configured.
+    const validTickers = allStocks
+        .filter(stock => stock.pages_json)
+        .map(stock => ({
+            ticker: stock.id.toUpperCase(),
+        }));
     
     console.log(`[generateStaticParams] Finished. Prerendering ${validTickers.length} stock pages.`);
     return validTickers;

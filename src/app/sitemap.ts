@@ -11,21 +11,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/about',
     '/terms',
     '/privacy',
+    '/options/call-setups',
+    '/options/put-hedges',
   ].map((route) => ({
     url: `${BASE_URL}${route}`,
     lastModified: new Date().toISOString(),
-    changeFrequency: 'monthly' as const,
+    changeFrequency: 'daily' as const,
     priority: route === '' ? 1.0 : 0.8,
   }));
 
   // 2. Dynamic stock pages
-  // We'll include all stocks from the database. The individual stock pages
-  // already have logic to show a 404 if recent data doesn't exist,
-  // so it's safe to include them all here. Search engines will discover
-  // the 404s and handle them appropriately.
+  // Include all stocks from the database. The page component will handle
+  // showing a "not found" state if the data is stale, but the page URL will exist.
   const allStocks = await getStocksAdmin();
   const stockRoutes: MetadataRoute.Sitemap = allStocks.map((stock) => ({
-    url: `${BASE_URL}/stocks/${stock.id}`,
+    url: `${BASE_URL}/stocks/${stock.id.toUpperCase()}`,
     lastModified: new Date().toISOString(),
     changeFrequency: 'weekly',
     priority: 0.9,

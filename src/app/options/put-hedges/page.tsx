@@ -90,7 +90,6 @@ export default async function PutSetupsPage() {
                                                     <div>
                                                         <p className="text-muted-foreground">Contract</p>
                                                         <p className="font-semibold">${winner.strike_price.toFixed(2)} {winner.option_type.toUpperCase()}</p>
-                                                        <p className="text-xs text-muted-foreground">Expires: {new Date(winner.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</p>
                                                     </div>
                                                     <div>
                                                         <p className="text-muted-foreground">AI Outlook</p>
@@ -173,7 +172,3 @@ export default async function PutSetupsPage() {
         </div>
     );
 }
-
-    
-
-    

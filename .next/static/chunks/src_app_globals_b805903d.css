@@ -1617,8 +1617,16 @@ body {
   max-width: 56rem;
 }
 
+.max-w-6xl {
+  max-width: 72rem;
+}
+
 .max-w-\[150px\] {
   max-width: 150px;
+}
+
+.max-w-\[200px\] {
+  max-width: 200px;
 }
 
 .max-w-full {
@@ -1643,14 +1651,6 @@ body {
 
 .max-w-xl {
   max-width: 36rem;
-}
-
-.max-w-\[200px\] {
-  max-width: 200px;
-}
-
-.max-w-6xl {
-  max-width: 72rem;
 }
 
 .flex-1 {
@@ -1855,12 +1855,12 @@ body {
   column-gap: .75rem;
 }
 
-.gap-y-1 {
-  row-gap: .25rem;
-}
-
 .gap-x-6 {
   column-gap: 1.5rem;
+}
+
+.gap-y-1 {
+  row-gap: .25rem;
 }
 
 .gap-y-3 {
@@ -1895,12 +1895,6 @@ body {
   --tw-space-y-reverse: 0;
   margin-top: calc(.375rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(.375rem * var(--tw-space-y-reverse));
-}
-
-.space-y-16 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(4rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(4rem * var(--tw-space-y-reverse));
 }
 
 .space-y-2 > :not([hidden]) ~ :not([hidden]) {
@@ -2778,6 +2772,10 @@ body {
   background-color: hsl(var(--accent));
 }
 
+.hover\:bg-card\/70:hover {
+  background-color: hsl(var(--card) / .7);
+}
+
 .hover\:bg-destructive\/80:hover {
   background-color: hsl(var(--destructive) / .8);
 }
@@ -2808,10 +2806,6 @@ body {
 
 .hover\:bg-secondary\/80:hover {
   background-color: hsl(var(--secondary) / .8);
-}
-
-.hover\:bg-card\/70:hover {
-  background-color: hsl(var(--card) / .7);
 }
 
 .hover\:text-accent-foreground:hover {
@@ -3442,10 +3436,6 @@ body {
 }
 
 @media (width >= 1024px) {
-  .lg\:order-last {
-    order: 9999;
-  }
-
   .lg\:col-span-2 {
     grid-column: span 2 / span 2;
   }
@@ -3477,10 +3467,6 @@ body {
 
   .lg\:flex-row {
     flex-direction: row;
-  }
-
-  .lg\:gap-12 {
-    gap: 3rem;
   }
 
   .lg\:px-8 {

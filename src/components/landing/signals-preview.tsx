@@ -49,8 +49,7 @@ const SignalCard = ({ signal, title, hubLink }: { signal: Winner | null, title: 
         ? convertGcsUriToUrl(signal.image_uri) 
         : `https://placehold.co/40x40/1e293b/a855f7?text=${signal.ticker[0]}`;
     const signalMeta = getSignalMeta(signal.outlook_signal);
-    const expiration = new Date(signal.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-
+    
     return (
         <Card className="flex-1 bg-card/50 hover:bg-card/70 transition-colors">
             <Link href={hubLink}>
@@ -75,7 +74,6 @@ const SignalCard = ({ signal, title, hubLink }: { signal: Winner | null, title: 
                         <div>
                             <p className="text-muted-foreground">Contract</p>
                             <p className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type.toUpperCase()}</p>
-                            <p className="text-xs text-muted-foreground">Expires: {expiration}</p>
                         </div>
                         <div>
                             <p className="text-muted-foreground">AI Outlook</p>
@@ -128,7 +126,3 @@ export default async function SignalsPreview() {
         </section>
     );
 }
-
-    
-
-    

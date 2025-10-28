@@ -153,15 +153,14 @@ export default async function LandingPage() {
 
           {/* Features Section */}
           <section className="py-16 sm:py-24">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                <div>
-                   <Badge variant="outline" className="border-primary/50 text-primary">Daily Delivery</Badge>
-                  <h3 className="mt-4 text-3xl font-bold font-headline">High-Potential Setups, Emailed Daily</h3>
-                  <p className="mt-4 text-muted-foreground">
-                    Our models score thousands of options contracts daily based on liquidity, volatility, and alignment with the underlying stock's trend. You get a filtered list of the highest-scoring opportunities, saving you hours of research.
-                  </p>
-                </div>
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center max-w-3xl mx-auto">
+                <h2 className="text-3xl font-bold font-headline">Your Complete Toolkit for Options Research</h2>
+                <p className="mt-4 text-muted-foreground">
+                  Our models score thousands of options contracts daily based on liquidity, volatility, and alignment with the underlying stock's trend. You get a filtered list of the highest-scoring opportunities, saving you hours of research.
+                </p>
+              </div>
+              <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="bg-card p-6 rounded-lg">
                     <div className="flex items-start gap-4">
                         <div className="flex-shrink-0 mt-1"><Bot size={24} className="text-primary" /></div>
@@ -171,9 +170,7 @@ export default async function LandingPage() {
                         </div>
                     </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                <div className="bg-card p-6 rounded-lg lg:order-last">
+                <div className="bg-card p-6 rounded-lg">
                      <div className="flex items-start gap-4">
                         <div className="flex-shrink-0 mt-1"><Gem size={24} className="text-primary" /></div>
                         <div>
@@ -181,13 +178,6 @@ export default async function LandingPage() {
                             <p className="text-muted-foreground text-sm">See where our data aligns. Our dashboard instantly highlights stocks that have both a strong bullish/bearish AI rating and a high-scoring options setup. It's the ultimate at-a-glance view of the market's strongest signals.</p>
                         </div>
                     </div>
-                </div>
-                 <div>
-                  <Badge variant="outline" className="border-primary/50 text-primary">At-a-Glance Insights</Badge>
-                  <h3 className="mt-4 text-3xl font-bold font-headline">The Confluence Dashboard</h3>
-                  <p className="mt-4 text-muted-foreground">
-                    See where our data aligns. Our dashboard instantly highlights stocks that have both a strong bullish/bearish AI rating and a high-scoring options setup. It's the ultimate at-a-glance view of the market's strongest signals.
-                  </p>
                 </div>
               </div>
             </div>

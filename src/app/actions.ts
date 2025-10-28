@@ -1,5 +1,6 @@
 
 
+
 'use server';
 
 import {
@@ -32,6 +33,7 @@ import {
     getTickerEventsAdmin,
     saveFeedbackAdmin,
     getPerformanceSignals as getPerformanceSignalsAdmin,
+    getAllPerformanceSignalsAdmin,
     getPerformanceSignalsByTickerAdmin,
     getAppStatusAdmin,
 } from '@/lib/firebase-admin';
@@ -54,6 +56,10 @@ export async function getOptionsSignals(ticker: string): Promise<OptionCandidate
 
 export async function getPerformanceSignals(order: 'asc' | 'desc', limit: number): Promise<PerformanceSignal[]> {
     return getPerformanceSignalsAdmin(order, limit);
+}
+
+export async function getAllPerformanceSignals(): Promise<PerformanceSignal[]> {
+    return getAllPerformanceSignalsAdmin();
 }
 
 export async function getPerformanceSignalsByTicker(ticker: string): Promise<PerformanceSignal[]> {
@@ -325,6 +331,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

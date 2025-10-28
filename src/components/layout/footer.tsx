@@ -10,7 +10,9 @@ const Footer = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="md:col-span-2">
-            <h3 className="text-xl font-bold font-headline text-primary">ProfitScout</h3>
+            <h3 className="text-xl font-bold font-headline">
+                <span className="text-foreground">Profit</span><span className="text-primary">Scout</span>
+            </h3>
             <p className="text-sm text-muted-foreground mt-2">AI-Powered Research for Options Traders</p>
           </div>
           <div>
@@ -18,6 +20,7 @@ const Footer = () => {
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
               <li><Link href="/dashboard" className="text-muted-foreground hover:text-primary">Dashboard</Link></li>
+              <li><Link href="/performance" className="text-muted-foreground hover:text-primary">Performance</Link></li>
               <li><Link href="/options/call-setups" className="text-muted-foreground hover:text-primary">Call Setups</Link></li>
               <li><Link href="/options/put-hedges" className="text-muted-foreground hover:text-primary">Put Hedges</Link></li>
             </ul>
@@ -51,7 +54,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
-    
-
-    

@@ -6,13 +6,70 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Bot, Gem, Target, Github } from "lucide-react";
 import { UserNav } from "@/components/auth/user-nav";
 import HomePageClientContent from "./home-page-client-content";
-import Faq from "@/components/landing/faq";
+import Faq, { faqs } from "@/components/landing/faq";
 import { Badge } from "@/components/ui/badge";
 import SignalsPreview from "@/components/landing/signals-preview";
 
 export default async function LandingPage() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ProfitScout",
+    "description": "AI-powered options research tool for Russell 1000 stocks; delivers daily call/put setups and supporting AI analysis.",
+    "applicationCategory": "FinancialApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "19.00",
+      "priceCurrency": "USD",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "19.00",
+        "priceCurrency": "USD",
+        "billingIncrement": "month"
+      }
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "88"
+    },
+    "softwareHelp": {
+      "@type": "CreativeWork",
+      "url": "https://profitscout.app/about"
+    },
+    "freeTrial": {
+        "@type": "Offer",
+        "name": "30-Day Free Trial",
+        "description": "Get 30 days of unlimited access to everything ProfitScout has to offer.",
+        "price": "0",
+        "priceCurrency": "USD"
+    }
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+       <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+      />
       <Suspense>
         <HomePageClientContent />
       </Suspense>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Bot, Gem, Target, Github } from "lucide-react";
+import { ArrowRight, CheckCircle, Bot, Gem, Target, Github, Scale, Shield } from "lucide-react";
 import { UserNav } from "@/components/auth/user-nav";
 import HomePageClientContent from "./home-page-client-content";
 import Faq, { faqs } from "@/components/landing/faq";
@@ -180,19 +180,39 @@ export default async function LandingPage() {
             </div>
           </section>
 
-          {/* Trust & Transparency Section */}
+          {/* Trust & Responsibility Section */}
           <section className="py-16 sm:py-24 bg-muted/50">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl mx-auto">
-                <Github className="h-10 w-10 text-primary mx-auto"/>
-              <h2 className="mt-4 text-3xl font-bold font-headline">Built on Transparency. Powered by Open-Source AI.</h2>
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto">
+              <h2 className="text-3xl font-bold font-headline">Trust & Responsibility</h2>
               <p className="mt-4 text-muted-foreground">
-                We believe in showing our work. The core AI engine that powers ProfitScout is open-source. We invite you to explore the code, understand our methodology, and see exactly how we turn complex data into market insights. Your trust is our priority.
+                Financial content demands the highest standard of trust. We are committed to transparency, providing clear, data-driven analysis to support your research—not replace it.
               </p>
-               <Button asChild variant="outline" className="mt-6">
-                <a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer">
-                  Explore the Code
-                </a>
-              </Button>
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                <Card className="bg-background/50">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><Scale className="h-6 w-6 text-primary"/> Sourced Data</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">We don't guess. Our AI synthesizes data directly from SEC filings, earnings calls, and financial statements so you can see the source of the analysis.</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-background/50">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><Github className="h-6 w-6 text-primary"/> Open-Source Engine</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">The core scoring engine that powers ProfitScout is open-source. We believe in showing our work and invite you to <a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer" className="underline">review our methodology</a>.</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-background/50">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><Shield className="h-6 w-6 text-primary"/> Educational Use</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">ProfitScout is an educational research tool, not financial advice. We provide data-driven insights to help you make more informed decisions.</p>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </section>
 
@@ -244,7 +264,3 @@ export default async function LandingPage() {
     </>
   );
 }
-
-    
-
-    

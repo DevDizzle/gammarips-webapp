@@ -1,6 +1,7 @@
 
 
 
+
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -50,7 +51,7 @@ interface StockSeoData {
 }
 
 
-const DAYS_THRESHOLD = 7; // Only consider files from the last 7 days as recent
+const DAYS_THRESHOLD = 30; // Only consider files from the last 30 days as recent
 
 /**
  * Checks if a date string 'YYYY-MM-DD' is within the last N days.
@@ -87,13 +88,15 @@ async function getStockData(ticker: string): Promise<StockSeoData | null> {
         const dateMatch = gcsPath.match(/_(\d{4}-\d{2}-\d{2})\.json$/);
         if (!dateMatch || !dateMatch[1]) {
             console.warn(`[getStockData] Could not extract date from GCS path: ${gcsPath}`);
-            return null;
+            // Fallback to trying to parse JSON even if date is missing, but it won't be recent
+             const content = await getGcsFileContentAdmin(gcsPath);
+             return JSON.parse(content) as StockSeoData;
         }
 
         const fileDate = dateMatch[1];
         if (!isRecentDate(fileDate)) {
             console.warn(`[getStockData] GCS file for ${ticker} is not recent (older than ${DAYS_THRESHOLD} days). Path: ${gcsPath}`);
-            return null;
+             return null;
         }
 
         const content = await getGcsFileContentAdmin(gcsPath);
@@ -271,8 +274,8 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
       />
       <header className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold font-headline text-primary">
-            ProfitScout
+          <Link href="/" className="text-2xl font-bold font-headline">
+            <span className="text-foreground">Profit</span><span className="text-primary">Scout</span>
           </Link>
           <UserNav />
         </div>

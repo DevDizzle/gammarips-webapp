@@ -77,8 +77,8 @@ export default async function LandingPage() {
         {/* Header */}
         <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold font-headline text-primary">
-              ProfitScout
+            <Link href="/" className="text-2xl font-bold font-headline">
+              <span className="text-foreground">Profit</span><span className="text-primary">Scout</span>
             </Link>
             <UserNav />
           </div>

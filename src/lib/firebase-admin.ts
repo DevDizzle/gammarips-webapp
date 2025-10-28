@@ -61,7 +61,7 @@ const StockSchema = z.object({
   recommendation_analysis: z.string().optional(),
   recommendation: z.string().optional(),
   pages_json: z.string().optional(),
-  dashboard_json: z.string().optional(),
+  dashboard_json: z.string().optional().nullable(),
   weighted_score: z.number().optional(),
 });
 export type Stock = z.infer<typeof StockSchema>;
@@ -1016,6 +1016,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 
 

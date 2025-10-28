@@ -6,6 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import ContactForm from './contact-form';
+import Faq, { faqs } from '@/components/landing/faq';
 
 export const metadata: Metadata = {
   title: 'About Us | ProfitScout',
@@ -64,6 +65,19 @@ const benefits = [
 ]
 
 export default function AboutPage() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
   return (
     <>
       <section className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
@@ -181,6 +195,16 @@ export default function AboutPage() {
         </section>
 
         <Separator className="my-12 sm:my-16" />
+        
+        {/* FAQ Section */}
+        <section id="faq" className="scroll-mt-20">
+            <div className="text-center">
+                <h2 className="text-3xl font-bold font-headline">Frequently Asked Questions</h2>
+            </div>
+            <Faq />
+        </section>
+
+        <Separator className="my-12 sm:my-16" />
 
         {/* Trust & Responsibility Section */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
@@ -210,6 +234,10 @@ export default function AboutPage() {
 
       </section>
 
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema)}}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify({

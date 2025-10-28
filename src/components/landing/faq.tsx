@@ -6,7 +6,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 
-const faqs = [
+export const faqs = [
     {
         question: "Is this financial advice?",
         answer: "No. ProfitScout provides educational and informational content only to support your research process. We are not financial advisors. All investments involve risk, and you should always conduct your own due diligence."

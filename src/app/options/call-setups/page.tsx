@@ -35,7 +35,7 @@ async function getBullishSetups(): Promise<Winner[]> {
 
 export default async function CallSetupsPage() {
     const allBullishSetups = await getBullishSetups();
-    const topSetups = allBullishSetups.slice(0, 10);
+    const topSetups = allBullishSetups.slice(0, 4);
 
     return (
         <div className="space-y-8">
@@ -50,9 +50,9 @@ export default async function CallSetupsPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>How We Score Call Setups</CardTitle>
+                    <CardTitle>How We Find Top Call Setups</CardTitle>
                     <CardDescription>
-                        We analyze thousands of contracts to find setups with a favorable risk/reward profile. Our scoring model prioritizes contracts with strong liquidity, fair volatility, and alignment with the underlying stock's positive trend and fundamental outlook.
+                        Our process combines smart screening for ideal contracts with AI-driven quality checks. We prioritize setups where the underlying stock has a strong bullish outlook, ensuring our featured calls mix strong contract specifics with a positive forecast.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

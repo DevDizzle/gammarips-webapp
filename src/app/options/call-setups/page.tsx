@@ -2,7 +2,7 @@
 import type { Metadata } from 'next';
 import { getWinnersDashboard } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowUp, ChevronRight, ArrowRight } from 'lucide-react';
+import { ArrowUp, ChevronRight, ArrowRight, Filter, Bot, BarChart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -50,9 +50,9 @@ export default async function CallSetupsPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>How We Find Top Call Setups</CardTitle>
+                    <CardTitle>Today's Top Call Setups</CardTitle>
                     <CardDescription>
-                        Our process combines smart screening for ideal contracts with AI-driven quality checks. We prioritize setups where the underlying stock has a strong bullish outlook, ensuring our featured calls mix strong contract specifics with a positive forecast.
+                       A preview of the top-scoring bullish Call setups from today's market analysis. Click any setup to see the full dashboard.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -111,6 +111,48 @@ export default async function CallSetupsPage() {
                     )}
                 </CardContent>
             </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>How We Find Top Call Setups</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 flex flex-col items-center gap-2">
+                           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                                <Filter className="h-6 w-6 text-primary" />
+                           </div>
+                           <div className="h-full w-px bg-border"></div>
+                        </div>
+                        <div>
+                            <h3 className="font-semibold">1. Smart Screening</h3>
+                            <p className="text-muted-foreground">We first identify liquid Call options (10-60 days to expiry) that are slightly out-of-the-money and meet strict volume, open interest, and spread criteria. We ensure the breakeven is realistic based on volatility.</p>
+                        </div>
+                    </div>
+                     <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 flex flex-col items-center gap-2">
+                           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                                <Bot className="h-6 w-6 text-primary" />
+                           </div>
+                           <div className="h-full w-px bg-border"></div>
+                        </div>
+                        <div>
+                            <h3 className="font-semibold">2. AI Quality Check</h3>
+                            <p className="text-muted-foreground">Our AI analyzes the best candidates, rating their "setup quality". It checks for alignment with the stock's trend, fair volatility pricing, liquidity, and time decay risks.</p>
+                        </div>
+                    </div>
+                     <div className="flex items-start gap-4">
+                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 flex-shrink-0">
+                            <BarChart className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                            <h3 className="font-semibold">3. Stock Outlook Confirmation</h3>
+                            <p className="text-muted-foreground">Only Call setups rated "Strong" by the AI and where the underlying stock has a Bullish overall outlook ("Strongly" or "Moderately Bullish") make the final list. This ensures our featured Call setups combine strong contract specifics with a positive underlying stock forecast.</p>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
 
             <div className="text-center">
                  <Card className="inline-block bg-primary/10 border-primary/20">

@@ -128,21 +128,21 @@ export default async function LandingPage() {
               <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">1</div>
-                  <h3 className="mt-6 text-xl font-semibold">Get Daily Setups</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Get Daily Options Setups</h3>
                   <p className="mt-2 text-muted-foreground">
                     Wake up to our top-ranked Call and Put setups for the Russell 1000, delivered to your inbox daily. We find the signals so you can focus on the strategy.
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">2</div>
-                  <h3 className="mt-6 text-xl font-semibold">Dive Deeper with AI Analysis</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Understand with an AI Stock Briefing</h3>
                   <p className="mt-2 text-muted-foreground">
                     Go beyond the signal. Understand the "why" with our AI Analyst Briefing, which synthesizes company filings, earnings calls, and technical data into a clear, actionable summary.
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">3</div>
-                  <h3 className="mt-6 text-xl font-semibold">Make Informed Decisions</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Research with the Interactive Dashboard</h3>
                   <p className="mt-2 text-muted-foreground">
                     Use our interactive dashboard to explore key metrics, chart price action, and supplement your own research. We provide the data; you maintain full control.
                   </p>

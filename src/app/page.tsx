@@ -98,7 +98,20 @@ export default async function LandingPage() {
                 <HomePageClientContent showButton={true} buttonText="Start Your Free 30-Day Trial"/>
                </Suspense>
             </div>
-            <p className="mt-3 text-xs text-muted-foreground">No credit card required. Get instant access.</p>
+            <div className="mt-6 max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-3 text-left">
+                <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary shrink-0"/>
+                    <span className="text-sm text-muted-foreground">Daily ranked Call & Put setups</span>
+                </div>
+                 <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary shrink-0"/>
+                    <span className="text-sm text-muted-foreground">AI Analyst Briefing that explains the setup</span>
+                </div>
+                 <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary shrink-0"/>
+                    <span className="text-sm text-muted-foreground">Interactive research dashboard</span>
+                </div>
+            </div>
           </section>
 
           {/* Signals Preview Section */}
@@ -179,13 +192,13 @@ export default async function LandingPage() {
               </div>
             </div>
           </section>
-
+          
           {/* Trust & Responsibility Section */}
           <section className="py-16 sm:py-24 bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold font-headline">Trust & Responsibility</h2>
+              <h2 className="text-3xl font-bold font-headline">Built on Transparency. Powered by Open-Source AI.</h2>
               <p className="mt-4 text-muted-foreground">
-                Financial content demands the highest standard of trust. We are committed to transparency, providing clear, data-driven analysis to support your research—not replace it.
+                We believe in showing our work. The core AI engine that powers ProfitScout is open-source. We invite you to explore the code, understand our methodology, and see exactly how we turn complex data into market insights. Your trust is our priority.
               </p>
               <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
                 <Card className="bg-background/50">
@@ -193,7 +206,7 @@ export default async function LandingPage() {
                     <CardTitle className="flex items-center gap-2"><Scale className="h-6 w-6 text-primary"/> Sourced Data</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">We don't guess. Our AI synthesizes data directly from SEC filings, earnings calls, and financial statements so you can see the source of the analysis.</p>
+                    <p className="text-muted-foreground text-sm">We don't guess. Our AI synthesizes data directly from SEC filings, earnings calls, and financial statements so you can see the source of the analysis.</p>
                   </CardContent>
                 </Card>
                 <Card className="bg-background/50">
@@ -201,7 +214,7 @@ export default async function LandingPage() {
                     <CardTitle className="flex items-center gap-2"><Github className="h-6 w-6 text-primary"/> Open-Source Engine</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">The core scoring engine that powers ProfitScout is open-source. We believe in showing our work and invite you to <a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer" className="underline">review our methodology</a>.</p>
+                    <p className="text-muted-foreground text-sm">The core scoring engine that powers ProfitScout is open-source. We believe in showing our work and invite you to <a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer" className="underline">review our methodology</a>.</p>
                   </CardContent>
                 </Card>
                 <Card className="bg-background/50">
@@ -209,7 +222,7 @@ export default async function LandingPage() {
                     <CardTitle className="flex items-center gap-2"><Shield className="h-6 w-6 text-primary"/> Educational Use</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">ProfitScout is an educational research tool, not financial advice. We provide data-driven insights to help you make more informed decisions.</p>
+                    <p className="text-muted-foreground text-sm">ProfitScout is an educational research tool, not financial advice. We provide data-driven insights to help you make more informed decisions.</p>
                   </CardContent>
                 </Card>
               </div>

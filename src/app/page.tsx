@@ -31,7 +31,7 @@ export default async function LandingPage() {
           {/* Hero Section */}
           <section className="text-center py-20 sm:py-28 px-4">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight">
-              Unlock AI-Powered Options Setups
+              AI Options Scanner for the Russell 1000 – Daily Call & Put Trade Setups
             </h1>
             <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
               Stop drowning in data. Our AI analyzes thousands of stocks and options contracts to deliver clear, data-driven trade ideas directly to your inbox and dashboard.

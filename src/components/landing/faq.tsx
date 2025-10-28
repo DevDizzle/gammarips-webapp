@@ -12,12 +12,16 @@ export const faqs = [
         answer: "No. ProfitScout provides educational and informational content only to support your research process. We are not financial advisors. All investments involve risk, and you should always conduct your own due diligence."
     },
     {
-        question: "What happens after my 30-day free trial?",
-        answer: "You will be invited to upgrade to our Pro plan for $19/month. If you choose not to, you will lose access to new daily signals and some premium features, but you can continue to use a limited version of the dashboard."
+        question: "How do you find bullish call options setups?",
+        answer: "We analyze options chains daily, scoring contracts based on liquidity, implied volatility vs. realized volatility, and alignment with the stock’s trend. This process allows us to surface candidates that our models identify as having a favorable risk/reward profile."
     },
     {
-        question: "What kind of trader is this for?",
-        answer: "ProfitScout is designed for options traders who want to leverage data-driven insights to speed up their research, discover new opportunities, and make more informed decisions."
+        question: "Do you track unusual options flow or volume spikes?",
+        answer: "Yes, our analysis includes monitoring for significant volume and elevated activity. The AI Analyst Briefing often highlights notable volume surges as a key part of its technical analysis, similar to how 'unusual options flow' tools spot aggressive trades."
+    },
+    {
+        question: "What happens after my 30-day free trial?",
+        answer: "You will be invited to upgrade to our Pro plan for $19/month. If you choose not to, you will lose access to new daily signals and some premium features, but you can continue to use a limited version of the dashboard."
     },
     {
         question: "What do I get immediately after signing up?",

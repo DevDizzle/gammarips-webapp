@@ -9,6 +9,7 @@ import HomePageClientContent from "./home-page-client-content";
 import Faq, { faqs } from "@/components/landing/faq";
 import { Badge } from "@/components/ui/badge";
 import SignalsPreview from "@/components/landing/signals-preview";
+import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
 
 export default async function LandingPage() {
   const faqSchema = {
@@ -219,8 +220,23 @@ export default async function LandingPage() {
             </div>
           </section>
 
-           {/* Offer Section */}
+          {/* Performance Tracker Section */}
           <section className="py-16 sm:py-24">
+             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center max-w-3xl mx-auto mb-12">
+                    <h2 className="text-3xl font-bold font-headline">See Our Results in Action</h2>
+                    <p className="mt-4 text-muted-foreground">
+                        Our models are constantly tracking the performance of our signals. Here's a live look at some of the top market movers identified by our AI. This is the data-driven edge we provide.
+                    </p>
+                </div>
+                <Suspense fallback={<PerformanceTrackerSkeleton />}>
+                    <PerformanceTracker />
+                </Suspense>
+            </div>
+          </section>
+
+           {/* Offer Section */}
+          <section className="py-16 sm:py-24 bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
                     <h2 className="text-3xl sm:text-4xl font-bold font-headline">Get Full Access for 30 Days. Absolutely Free.</h2>
@@ -254,7 +270,7 @@ export default async function LandingPage() {
           </section>
           
           {/* FAQ Section */}
-          <section className="py-16 sm:py-24 bg-muted/50">
+          <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
                 <div className="text-center">
                     <h2 className="text-3xl font-bold font-headline">Frequently Asked Questions</h2>
@@ -267,5 +283,3 @@ export default async function LandingPage() {
     </>
   );
 }
-
-    

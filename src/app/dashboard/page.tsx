@@ -2,7 +2,6 @@
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import TodaysWinners from "@/app/dashboard/todays-winners";
-import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
 import DashboardPageClient from "./dashboard-client";
 import { IndustryExplorer, IndustryExplorerSkeleton } from "./industry-explorer";
 import OptionsCandidatesTable from "./options-candidates-table";
@@ -13,9 +12,6 @@ function DashboardContent() {
             <TodaysWinners />
             <Suspense fallback={<IndustryExplorerSkeleton />}>
               <IndustryExplorer />
-            </Suspense>
-            <Suspense fallback={<PerformanceTrackerSkeleton />}>
-                <PerformanceTracker />
             </Suspense>
             <OptionsCandidatesTable />
         </div>

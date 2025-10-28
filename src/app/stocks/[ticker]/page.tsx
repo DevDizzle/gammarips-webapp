@@ -20,32 +20,32 @@ interface StockSeoPageProps {
 
 // Updated data structure to match the new JSON format
 interface StockSeoData {
-    symbol: string;
-    date: string;
-    bullishScore: number;
-    fullAnalysis: {
-        about: string;
-        newsSummary: string;
-        technicals: string;
-        'md&a': string; // Key updated to handle '&'
-        earningsCall: string;
-        financials: string;
-        fundamentals?: string; // Made optional as per example
+  symbol: string;
+  date: string;
+  seo: {
+    title: string;
+    metaDescription: string;
+    keywords: string[];
+    h1: string;
+  };
+  fullAnalysis: {
+    about: string;
+    newsSummary: string;
+    technicals: string;
+    'md&a': string;
+    earningsCall: string;
+    financials: string;
+    fundamentals?: string;
+  };
+  teaser: {
+    signal: string;
+    summary: string;
+    metrics: {
+      [key: string]: string;
     };
-    seo: {
-        title: string;
-        metaDescription: string;
-        keywords: string[];
-    };
-    teaser: {
-        signal: string;
-        summary: string;
-        metrics: {
-            [key: string]: string;
-        };
-    };
-    relatedStocks: string[];
-    aiOptionsPicks?: any[]; // Added optional field
+  };
+  relatedStocks: string[];
+  schemaOrg: object; // Keep it generic to accept any valid schema
 }
 
 
@@ -120,42 +120,15 @@ export async function generateMetadata({ params }: StockSeoPageProps): Promise<M
       title: `Stock Analysis for ${ticker} Not Found | ProfitScout`,
       description: `The requested stock analysis for ${ticker} could not be found or is not up to date. Check back later for AI-powered insights.`,
       robots: 'noindex, nofollow',
-      openGraph: {
-        title: 'Analysis Not Found | ProfitScout',
-        description: 'The requested stock analysis could not be found.',
-        images: [
-          {
-            url: defaultOgImage,
-            width: 1200,
-            height: 630,
-            alt: 'ProfitScout AI-Powered Options Research',
-          },
-        ],
-      },
     };
   }
   
   const companyName = data.seo.title.split(' Stock Forecast')[0];
 
-  // Ensure keywords are relevant and don't contain unwanted terms.
-  const baseKeywords = ['stock forecast', 'options analysis', 'AI stock pick', 'earnings date', 'stock analysis'];
-  const stockSpecificKeywords = [
-    `${companyName} stock`,
-    `${ticker} stock`,
-    `${ticker} options`,
-    `${companyName} earnings`,
-  ];
-  const combinedKeywords = [...baseKeywords, ...stockSpecificKeywords, ...(data.seo.keywords || [])];
-  
-  const cleanKeywords = [...new Set(combinedKeywords)].filter(k => 
-    k && !k.toLowerCase().includes('crypto') && 
-    !k.toLowerCase().includes('bitcoin')
-  );
-
   return {
     title: data.seo.title,
     description: data.seo.metaDescription,
-    keywords: cleanKeywords,
+    keywords: data.seo.keywords || [],
     openGraph: {
       title: data.seo.title,
       description: data.seo.metaDescription,
@@ -180,20 +153,15 @@ export async function generateMetadata({ params }: StockSeoPageProps): Promise<M
 }
 
 
-// Only prerender pages for which we can find valid, recent data.
 export async function generateStaticParams() {
     console.log('[generateStaticParams] Starting to generate params for stock pages...');
-    const allStocks = await getStocksAdmin(); // Get all potential tickers
+    const allStocks = await getStocksAdmin();
     const validTickers: { ticker: string }[] = [];
 
     for (const stock of allStocks) {
-        // Check if data exists and is recent before adding to static params
         const hasValidData = await getStockData(stock.id.toUpperCase());
         if (hasValidData) {
             validTickers.push({ ticker: stock.id.toUpperCase() });
-            console.log(`[generateStaticParams] Found valid data for ${stock.id}, adding to prerender list.`);
-        } else {
-            console.log(`[generateStaticParams] No valid/recent data for ${stock.id}, skipping.`);
         }
     }
     
@@ -202,7 +170,6 @@ export async function generateStaticParams() {
 }
 
 export const dynamicParams = true;
-// Revalidate this page at most once per hour (3600 seconds)
 export const revalidate = 3600;
 
 
@@ -219,7 +186,6 @@ const SignalIndicator = ({ signal }: { signal: string }) => {
 };
 
 const UpcomingCatalystsTable = ({ events, ticker }: { events: TickerEvent[], ticker: string }) => {
-    // Filter for events specific to this ticker
     const tickerSpecificEvents = events.filter(event => event.ticker === ticker);
 
     if (tickerSpecificEvents.length === 0) {
@@ -266,7 +232,6 @@ const UpcomingCatalystsTable = ({ events, ticker }: { events: TickerEvent[], tic
 const AnalysisSectionCard = ({ title, content }: { title: string; content: string }) => {
     if (!content) return null;
 
-    // A simple function to format the key into a readable title
     const formatTitle = (s: string) => {
         if (s === 'md&a') return 'Management Discussion';
         const result = s.replace(/([A-Z])/g, ' $1');
@@ -297,11 +262,14 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
     notFound();
   }
 
-  const { fullAnalysis, teaser, relatedStocks, seo } = data;
-  const pageTitle = seo.title.split(' | ')[0]; // Remove "| ProfitScout"
+  const { fullAnalysis, teaser, relatedStocks, seo, schemaOrg } = data;
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
+      />
       <header className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold font-headline text-primary">
@@ -312,7 +280,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
       </header>
     <div className="container mx-auto max-w-4xl py-8 px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold font-headline tracking-tight mb-2">
-            {pageTitle}
+            {seo.h1}
         </h1>
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
             <p className="text-muted-foreground">
@@ -334,7 +302,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
                         <div key={key} className="p-4 bg-background rounded-lg">
                             <p className="text-sm font-medium text-muted-foreground">{key.replace(/([A-Z])/g, ' $1').trim()}</p>
                             <p className="text-lg font-semibold">
-                                {key === 'Historical Volatility' ? `${value}%` : value}
+                                {key === 'Historical Volatility' ? `${value}` : value}
                             </p>
                         </div>
                     ))}
@@ -392,16 +360,20 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardContent>
         </Card>
 
-        <div className="mt-8">
+        {relatedStocks && relatedStocks.length > 0 && (
+          <div className="mt-8">
             <h3 className="text-lg font-semibold mb-2">Related Stocks</h3>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
                 {relatedStocks.map(stock => (
-                    <Link key={stock} href={`/stocks/${stock}`}>
-                        <Badge variant="secondary">{stock}</Badge>
-                    </Link>
+                    <Button key={stock} variant="outline" asChild>
+                       <Link href={`/stocks/${stock}`}>
+                            {stock}
+                       </Link>
+                    </Button>
                 ))}
             </div>
-        </div>
+          </div>
+        )}
 
     </div>
     </>

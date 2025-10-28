@@ -31,7 +31,7 @@ const getSignalMeta = (signal: string) => {
     return { color: 'text-muted-foreground', icon: null };
 };
 
-const SignalCard = ({ signal, title }: { signal: Winner | null, title: string }) => {
+const SignalCard = ({ signal, title, hubLink }: { signal: Winner | null, title: string, hubLink: string }) => {
     if (!signal) {
         return (
              <Card className="flex-1 bg-card/50">
@@ -53,7 +53,7 @@ const SignalCard = ({ signal, title }: { signal: Winner | null, title: string })
 
     return (
         <Card className="flex-1 bg-card/50 hover:bg-card/70 transition-colors">
-            <Link href={`/dashboard/${signal.ticker}`}>
+            <Link href={hubLink}>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg">{title}</CardTitle>
                 </CardHeader>
@@ -116,8 +116,8 @@ export default async function SignalsPreview() {
                     </p>
                 </div>
                 <div className="mt-12 flex flex-col lg:flex-row justify-center gap-8">
-                    <SignalCard signal={topCall} title="Top-Rated Call Setup" />
-                    <SignalCard signal={topPut} title="Top-Rated Put Setup" />
+                    <SignalCard signal={topCall} title="Top-Rated Call Setup" hubLink="/options/call-setups" />
+                    <SignalCard signal={topPut} title="Top-Rated Put Setup" hubLink="/options/put-hedges" />
                 </div>
                  <div className="text-center mt-8">
                     <Link href="/dashboard" className="text-sm font-semibold text-primary hover:underline">
@@ -128,5 +128,7 @@ export default async function SignalsPreview() {
         </section>
     );
 }
+
+    
 
     

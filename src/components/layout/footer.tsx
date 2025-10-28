@@ -33,8 +33,8 @@ const Footer = () => {
           <div>
              <h4 className="font-semibold text-foreground">Follow Us</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><a href="https://x.com/ProfitScoutAI" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><XIcon className="h-4 w-4" /></a></li>
-              <li><a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><Github className="h-4 w-4" /></a></li>
+              <li><a href="https://x.com/ProfitScoutAI" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><XIcon className="h-4 w-4" /> X / Twitter</a></li>
+              <li><a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><Github className="h-4 w-4" /> GitHub</a></li>
               <li><a href="/about#contact" className="text-muted-foreground hover:text-primary">Contact Us</a></li>
             </ul>
           </div>
@@ -51,5 +51,7 @@ const Footer = () => {
 };
 
 export default Footer;
+
+    
 
     

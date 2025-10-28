@@ -251,6 +251,13 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
 export async function getAllPerformanceSignalsAdmin(): Promise<PerformanceSignal[]> {
     noStore();
     try {
+        // Get today's date in YYYY-MM-DD format, corrected for timezone.
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`;
+
         const snapshot = await adminDb.collection('performance_tracker').get();
         if (snapshot.empty) {
             return [];
@@ -259,27 +266,31 @@ export async function getAllPerformanceSignalsAdmin(): Promise<PerformanceSignal
         const signals: PerformanceSignal[] = [];
         snapshot.forEach(doc => {
             const data = doc.data();
-            const signal = {
-                id: doc.id,
-                run_date: data.run_date,
-                ticker: data.ticker,
-                company_name: data.company_name,
-                image_uri: data.image_uri,
-                industry: data.industry,
-                contract_symbol: data.contract_symbol,
-                initial_price: data.initial_price,
-                current_price: data.current_price,
-                percent_gain: data.percent_gain,
-                option_type: data.option_type,
-                status: data.status,
-                strike_price: data.strike_price,
-                expiration_date: data.expiration_date,
-            };
-            const validation = PerformanceSignalSchema.safeParse(signal);
-            if (validation.success) {
-                signals.push(validation.data);
-            } else {
-                console.warn(`Invalid performance signal data in Firestore for doc ${doc.id}:`, validation.error.flatten());
+            
+            // Only include signals from before today
+            if (data.run_date && data.run_date !== todayStr) {
+                const signal = {
+                    id: doc.id,
+                    run_date: data.run_date,
+                    ticker: data.ticker,
+                    company_name: data.company_name,
+                    image_uri: data.image_uri,
+                    industry: data.industry,
+                    contract_symbol: data.contract_symbol,
+                    initial_price: data.initial_price,
+                    current_price: data.current_price,
+                    percent_gain: data.percent_gain,
+                    option_type: data.option_type,
+                    status: data.status,
+                    strike_price: data.strike_price,
+                    expiration_date: data.expiration_date,
+                };
+                const validation = PerformanceSignalSchema.safeParse(signal);
+                if (validation.success) {
+                    signals.push(validation.data);
+                } else {
+                    console.warn(`Invalid performance signal data in Firestore for doc ${doc.id}:`, validation.error.flatten());
+                }
             }
         });
 
@@ -1066,6 +1077,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 
 

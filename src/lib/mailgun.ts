@@ -36,7 +36,7 @@ export const sendEmail = async (options: EmailOptions) => {
 
     try {
         const result = await client.messages.create(domain, {
-            from: `postmaster@${domain}`,
+            from: `ProfitScout <postmaster@${domain}>`,
             to: options.to,
             subject: options.subject,
             html: options.html,

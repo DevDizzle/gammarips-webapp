@@ -8,7 +8,7 @@ import { UserNav } from "@/components/auth/user-nav";
 import HomePageClientContent from "./home-page-client-content";
 import Faq from "@/components/landing/faq";
 import { Badge } from "@/components/ui/badge";
-import MarketMovers from "@/components/landing/market-movers";
+import SignalsPreview from "@/components/landing/signals-preview";
 
 export default async function LandingPage() {
   return (
@@ -43,6 +43,11 @@ export default async function LandingPage() {
             </div>
             <p className="mt-3 text-xs text-muted-foreground">No credit card required. Get instant access.</p>
           </section>
+
+          {/* Signals Preview Section */}
+          <Suspense fallback={<div>Loading today's signals...</div>}>
+            <SignalsPreview />
+          </Suspense>
 
           {/* Process Section */}
           <section className="py-16 sm:py-24 bg-muted/50">
@@ -118,11 +123,6 @@ export default async function LandingPage() {
             </div>
           </section>
 
-          {/* Market Movers Section */}
-          <Suspense fallback={<div>Loading market movers...</div>}>
-            <MarketMovers />
-          </Suspense>
-
           {/* Trust & Transparency Section */}
           <section className="py-16 sm:py-24 bg-background">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl mx-auto">
@@ -187,3 +187,5 @@ export default async function LandingPage() {
     </>
   );
 }
+
+    

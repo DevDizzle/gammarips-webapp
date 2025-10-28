@@ -1641,6 +1641,10 @@ body {
   max-width: 36rem;
 }
 
+.max-w-\[200px\] {
+  max-width: 200px;
+}
+
 .flex-1 {
   flex: 1;
 }
@@ -2788,6 +2792,10 @@ body {
 
 .hover\:bg-secondary\/80:hover {
   background-color: hsl(var(--secondary) / .8);
+}
+
+.hover\:bg-card\/70:hover {
+  background-color: hsl(var(--card) / .7);
 }
 
 .hover\:text-accent-foreground:hover {

@@ -51,7 +51,7 @@ To see the full list and do your own research, visit your dashboard: https://pro
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>Your Daily Options Setups</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
@@ -133,7 +133,7 @@ const sendDailySetupsFlow = ai.defineFlow(
     inputSchema: SendDailySetupsInputSchema,
     outputSchema: SendDailySetupsOutputSchema,
   },
-  async () => {
+  async (input) => {
     let sentCount = 0;
     let skippedCount = 0;
 
@@ -202,6 +202,6 @@ const sendDailySetupsFlow = ai.defineFlow(
   }
 );
 
-export async function sendDailySetups(_: z.infer<typeof SendDailySetupsInputSchema>): Promise<z.infer<typeof SendDailySetupsOutputSchema>> {
-    return sendDailySetupsFlow();
+export async function sendDailySetups(input: z.infer<typeof SendDailySetupsInputSchema>): Promise<z.infer<typeof SendDailySetupsOutputSchema>> {
+    return sendDailySetupsFlow(input);
 }

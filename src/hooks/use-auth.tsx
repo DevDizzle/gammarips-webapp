@@ -22,6 +22,7 @@ import { getDoc, doc } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { event as trackEvent } from '@/lib/gtag';
 import { useRouter } from 'next/navigation';
+import { handleWelcomeEmail } from '@/app/actions';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -75,6 +76,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (additionalInfo?.isNewUser) {
       trackEvent('sign_up', { method });
+      
+      // Trigger welcome email for new users
+      if (user.email) {
+          handleWelcomeEmail(user.email, user.displayName || user.email).catch(err => {
+              console.error("Failed to send welcome email:", err);
+              // We don't block the user flow for this, but we log the error.
+          });
+      }
       
       if (method === 'Email') {
         await sendEmailVerification(user);

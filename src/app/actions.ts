@@ -3,6 +3,7 @@
 
 
 
+
 'use server';
 
 import {
@@ -278,21 +279,25 @@ export async function handleFeedback(uid: string | null, message: string, replyT
   return { success: true };
 }
 
+export async function handleWelcomeEmail(email: string, name: string): Promise<{success: boolean}> {
+    if (!email) {
+        console.error('handleWelcomeEmail: No email provided.');
+        return { success: false };
+    }
+    try {
+        await sendWelcomeEmailAdmin({ to: email, name: name || email.split('@')[0] });
+        console.log(`Welcome email sent to new user: ${email}`);
+        return { success: true };
+    } catch (error) {
+        console.error(`Failed to send welcome email to ${email}:`, error);
+        // Do not block the sign-up flow if the email fails.
+        return { success: false };
+    }
+}
+
 export async function createCheckoutSession(uid: string, gaClientId: string | null): Promise<{ sessionId: string }> {
     const user = await getOrCreateUserAdmin(uid);
     const origin = headers().get('origin')!;
-  
-    // Check if this is a new user to send a welcome email
-    // A low usage count (e.g., 0) is a good indicator of a new user in this context.
-    if (user.usageCount === 0 && user.email) {
-        try {
-            await sendWelcomeEmailAdmin({ to: user.email, name: user.displayName || user.email.split('@')[0] });
-            console.log(`Welcome email sent to new user: ${user.email}`);
-        } catch (error) {
-            console.error(`Failed to send welcome email to ${user.email}:`, error);
-            // Do not block the checkout flow if the email fails.
-        }
-    }
 
     const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
     if (!priceId) {
@@ -346,6 +351,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

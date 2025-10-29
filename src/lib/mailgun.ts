@@ -8,8 +8,8 @@ let mailgun: Mailgun;
 let mailgunClient: ReturnType<Mailgun['client']>;
 
 const initializeMailgun = () => {
-    if (!process.env.MAILGUN_API_KEY || !process.env.MAILGUN_DOMAIN) {
-        throw new Error('Mailgun API key and domain are not configured in environment variables.');
+    if (!process.env.MAILGUN_API_KEY || !process.env.MAILGUN_DOMAIN || !process.env.MAILGUN_FROM_EMAIL) {
+        throw new Error('Mailgun API key, domain, and from email are not configured in environment variables.');
     }
     
     if (!mailgun) {
@@ -33,10 +33,11 @@ interface EmailOptions {
 export const sendEmail = async (options: EmailOptions) => {
     const client = initializeMailgun();
     const domain = process.env.MAILGUN_DOMAIN!;
+    const fromEmail = process.env.MAILGUN_FROM_EMAIL!;
 
     try {
         const result = await client.messages.create(domain, {
-            from: `ProfitScout <postmaster@${domain}>`,
+            from: fromEmail,
             to: options.to,
             subject: options.subject,
             html: options.html,

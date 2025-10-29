@@ -28,12 +28,12 @@ const buildEmailContent = (winners: Winner[]): { html: string; text: string } =>
 
   const formatSetupHtml = (w: Winner) => `
     <tr>
-      <td style="padding: 8px; border-bottom: 1px solid #333;">${w.ticker}</td>
-      <td style="padding: 8px; border-bottom: 1px solid #333;">${w.company_name}</td>
-      <td style="padding: 8px; border-bottom: 1px solid #333;">${w.option_type.toUpperCase()}</td>
-      <td style="padding: 8px; border-bottom: 1px solid #333;">$${w.strike_price.toFixed(2)}</td>
-      <td style="padding: 8px; border-bottom: 1px solid #333;">${new Date(w.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</td>
-      <td style="padding: 8px; border-bottom: 1px solid #333;">${w.outlook_signal}</td>
+      <td style="padding: 12px 15px; border-bottom: 1px solid #4A4C5A;">${w.ticker}</td>
+      <td style="padding: 12px 15px; border-bottom: 1px solid #4A4C5A;">${w.company_name}</td>
+      <td style="padding: 12px 15px; border-bottom: 1px solid #4A4C5A;">${w.option_type.toUpperCase()}</td>
+      <td style="padding: 12px 15px; border-bottom: 1px solid #4A4C5A;">$${w.strike_price.toFixed(2)}</td>
+      <td style="padding: 12px 15px; border-bottom: 1px solid #4A4C5A;">${new Date(w.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</td>
+      <td style="padding: 12px 15px; border-bottom: 1px solid #4A4C5A;">${w.outlook_signal}</td>
     </tr>
   `;
 
@@ -41,22 +41,119 @@ const buildEmailContent = (winners: Winner[]): { html: string; text: string } =>
     `${w.ticker} | ${w.company_name} | ${w.option_type.toUpperCase()} @ $${w.strike_price.toFixed(2)} | Expires: ${new Date(w.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC' })} | Outlook: ${w.outlook_signal}`;
 
   const html = `
-    <h1>Your Daily Options Setups</h1>
-    <p>Here are the top-rated Call and Put setups for today, based on our AI analysis.</p>
-    
-    <h2>Top 5 Bullish Call Setups</h2>
-    <table style="width: 100%; border-collapse: collapse;">
-      <thead><tr><th>Ticker</th><th>Company</th><th>Type</th><th>Strike</th><th>Expires</th><th>Outlook</th></tr></thead>
-      <tbody>${topCalls.map(formatSetupHtml).join('')}</tbody>
-    </table>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
+      <style>
+        body {
+          font-family: 'Inter', sans-serif;
+          background-color: #282A3A;
+          color: #E5E7EB;
+          margin: 0;
+          padding: 0;
+        }
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        .header {
+          text-align: center;
+          padding: 20px 0;
+        }
+        .header h1 {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 36px;
+          font-weight: 800;
+          margin: 0;
+        }
+        .header .logo-profit { color: #FFFFFF; }
+        .header .logo-scout { color: #BE39FF; }
+        .content {
+          background-color: #1F212E;
+          border-radius: 8px;
+          padding: 30px;
+        }
+        h2 {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          color: #FFFFFF;
+          border-bottom: 1px solid #4A4C5A;
+          padding-bottom: 10px;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          color: #E5E7EB;
+        }
+        th {
+          text-align: left;
+          padding: 12px 15px;
+          color: #9CA3AF;
+          font-weight: normal;
+          text-transform: uppercase;
+          font-size: 12px;
+        }
+        .cta-button {
+          display: inline-block;
+          background-color: #D4348F;
+          color: #FFFFFF;
+          text-decoration: none;
+          padding: 15px 30px;
+          border-radius: 8px;
+          font-weight: bold;
+          margin: 30px 0;
+        }
+        .footer {
+          text-align: center;
+          padding: 20px 0;
+          font-size: 12px;
+          color: #9CA3AF;
+        }
+        .footer a {
+          color: #BE39FF;
+          text-decoration: none;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1><span class="logo-profit">Profit</span><span class="logo-scout">Scout</span></h1>
+        </div>
+        <div class="content">
+          <h2>Your Daily Options Setups</h2>
+          <p>Here are the top-rated Call and Put setups for today, based on our AI analysis. For a deeper dive, visit your interactive dashboard.</p>
+          
+          <h3>Top 5 Bullish Call Setups</h3>
+          <table>
+            <thead><tr><th>Ticker</th><th>Company</th><th>Type</th><th>Strike</th><th>Expires</th><th>Outlook</th></tr></thead>
+            <tbody>${topCalls.map(formatSetupHtml).join('')}</tbody>
+          </table>
 
-    <h2>Top 5 Bearish Put Setups</h2>
-    <table style="width: 100%; border-collapse: collapse;">
-      <thead><tr><th>Ticker</th><th>Company</th><th>Type</th><th>Strike</th><th>Expires</th><th>Outlook</th></tr></thead>
-      <tbody>${topPuts.map(formatSetupHtml).join('')}</tbody>
-    </table>
-    
-    <p>To see the full list and do your own research, visit your <a href="https://profitscout.app/dashboard">dashboard</a>.</p>
+          <h3 style="margin-top: 30px;">Top 5 Bearish Put Setups</h3>
+          <table>
+            <thead><tr><th>Ticker</th><th>Company</th><th>Type</th><th>Strike</th><th>Expires</th><th>Outlook</th></tr></thead>
+            <tbody>${topPuts.map(formatSetupHtml).join('')}</tbody>
+          </table>
+          
+          <div style="text-align: center;">
+            <a href="https://profitscout.app/dashboard" class="cta-button">View Full Dashboard</a>
+          </div>
+          
+          <p style="font-size: 12px; color: #9CA3AF;">These signals are for informational purposes only and are not investment advice. Always conduct your own research before making any trade.</p>
+        </div>
+        <div class="footer">
+          <p>&copy; ${new Date().getFullYear()} ProfitScout. All Rights Reserved.</p>
+          <p>
+            <a href="https://profitscout.app/terms">Terms of Service</a> | <a href="https://profitscout.app/privacy">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
   `;
 
   const text = `
@@ -70,6 +167,8 @@ Top 5 Bearish Put Setups:
 ${topPuts.map(formatSetupText).join('\n')}
 
 View all setups and do your own research on your dashboard: https://profitscout.app/dashboard
+
+Disclaimer: This is not financial advice. All investments involve risk.
   `;
 
   return { html, text };

@@ -13,17 +13,17 @@ export interface EmailOptions {
 }
 
 export async function sendEmail(options: EmailOptions) {
-  const API_KEY = process.env.MAILGUN_API_KEY;
-  const DOMAIN = process.env.MAILGUN_DOMAIN;
-  const DEFAULT_FROM = process.env.MAILGUN_FROM_EMAIL;
+  const API_KEY = process.env.MAILGUN_SENDING_KEY;
+  const DOMAIN = 'profitscout.app';
+  const DEFAULT_FROM = process.env.MAILGUN_FROM_EMAIL || 'ProfitScout <noreply@profitscout.app>';
 
   const FROM = options.from || DEFAULT_FROM;
   const TO =
     Array.isArray(options.to) ? options.to.join(', ') : options.to;
 
-  if (!API_KEY || !DOMAIN || !FROM) {
+  if (!API_KEY) {
     console.error(
-      '[Mailgun Error] Missing MAILGUN_API_KEY / MAILGUN_DOMAIN / MAILGUN_FROM_EMAIL'
+      '[Mailgun Error] Missing MAILGUN_SENDING_KEY'
     );
     return { ok: false, error: 'missing-env' };
   }
@@ -64,7 +64,7 @@ export async function sendEmail(options: EmailOptions) {
   if (!resp.ok) {
     // Mailgun returns JSON on errors like:
     // { "message": "'from' parameter is missing" } or
-    // { "message": "Domain ... is not allowed to send ..." } :contentReference[oaicite:0]{index=0}
+    // { "message": "Domain ... is not allowed to send ..." }
     const details = await resp.json().catch(() => ({}));
     console.error('[Mailgun Failure]', resp.status, details);
     return {

@@ -3,7 +3,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { getSubscribedUsersAdmin, getWinnersDashboard, type DbUser, type Winner } from '@/lib/firebase-admin';
+import { getSubscribedUsersAdmin, getWinnersDashboardAdmin, type DbUser, type Winner } from '@/lib/firebase-admin';
 import { sendEmail } from '@/lib/mailgun';
 
 const SendDailySetupsInputSchema = z.object({});
@@ -87,7 +87,7 @@ const sendDailySetupsFlow = ai.defineFlow(
     const isTestMode = process.env.NODE_ENV !== 'production';
 
     // Fetch necessary data
-    const allWinners = await getWinnersDashboard();
+    const allWinners = await getWinnersDashboardAdmin();
     if (allWinners.length === 0) {
       console.log('No winners found in the dashboard. Skipping email send.');
       return { sentCount: 0, skippedCount: 0, totalUsers: 0 };

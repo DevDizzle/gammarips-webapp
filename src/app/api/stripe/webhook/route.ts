@@ -4,6 +4,8 @@ import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { setUserSubscriptionStatusAdmin, getUserByStripeCustomerIdAdmin } from '@/lib/firebase-admin';
+import { sendSubscriptionThankYouEmail } from '@/lib/mailgun';
+import type { DbUser } from '@/lib/firebase';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -16,6 +18,19 @@ async function handleSubscriptionChange(subscription: Stripe.Subscription, isSub
 
     if (user) {
         await setUserSubscriptionStatusAdmin(user.uid, isSubscribed);
+        
+        // Send thank you email on new active subscription
+        if (isSubscribed && user.email) {
+            console.log(`Webhook: Sending subscription thank you email to ${user.email}`);
+            await sendSubscriptionThankYouEmail({
+                to: user.email,
+                name: user.displayName || user.email.split('@')[0],
+            }).catch(err => {
+                // Log error but don't fail the webhook processing
+                console.error(`Webhook: Failed to send subscription thank you email to ${user.email}`, err);
+            });
+        }
+
     } else {
         console.warn(`Webhook Error: No user found with Stripe Customer ID: ${customerId}`);
     }
@@ -92,7 +107,14 @@ export async function POST(req: NextRequest) {
     case 'customer.subscription.created':
     case 'customer.subscription.updated':
         const subscriptionUpdated = event.data.object as Stripe.Subscription;
-        await handleSubscriptionChange(subscriptionUpdated, subscriptionUpdated.status === 'active');
+        // We only care about the 'active' state for sending emails etc.
+        // handleSubscriptionChange handles this check.
+        if (subscriptionUpdated.status === 'active') {
+             await handleSubscriptionChange(subscriptionUpdated, true);
+        } else {
+            // For other statuses like 'past_due', we just update the DB.
+             await handleSubscriptionChange(subscriptionUpdated, false);
+        }
         break;
     case 'customer.subscription.deleted':
         const subscriptionDeleted = event.data.object as Stripe.Subscription;
@@ -102,7 +124,8 @@ export async function POST(req: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session;
         if (session.mode === 'subscription' && session.subscription) {
             const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
-            await handleSubscriptionChange(subscription, true);
+            // This will mark the user as subscribed AND send the thank you email
+            await handleSubscriptionChange(subscription, true); 
             await sendPurchaseEventToGA(session); // Send GA event
         }
         break;

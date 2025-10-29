@@ -164,3 +164,77 @@ export async function sendWelcomeEmail({ to, name }: { to: string, name: string 
         html,
     });
 }
+
+function buildSubscriptionThankYouEmailContent(name: string): { text: string; html: string } {
+    const textContent = `
+Thank You for Subscribing, ${name}!
+
+Welcome to ProfitScout Pro! We're thrilled to have you as a premium member.
+
+Your support helps us continue to build and improve the tools that power your research. We're committed to providing you with the best AI-driven market insights available.
+
+If you have any questions, feedback, or ideas for how we can improve, please don't hesitate to reach out. You can reply directly to this email or contact us anytime at admin@profitscout.app.
+
+Happy trading,
+The ProfitScout Team
+`;
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <title>Thank You for Subscribing!</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                    <tr>
+                        <td align="center" style="padding: 40px 20px;">
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
+                            <p style="font-size: 18px; color: #A0A0A0; margin-top: 12px;">Thank You, ${name}!</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px;">
+                            <p style="font-size: 16px; line-height: 1.6;">Welcome to <strong>ProfitScout Pro!</strong> We're thrilled to have you as a premium member. Your support helps us continue to build and improve the tools that power your research.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We are committed to providing you with the best AI-driven market insights available. If you have any questions, feedback, or ideas for new features, please don't hesitate to reach out. You can reply directly to this email or contact support anytime at <a href="mailto:admin@profitscout.app" style="color: #BEFF0A; text-decoration: none;">admin@profitscout.app</a>.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 30px 40px 40px;">
+                            <a href="https://profitscout.app/dashboard" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Explore Your Pro Dashboard</a>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
+                             <p style="margin: 0;">This is not financial advice. All trading involves risk.</p>
+                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+`;
+
+    return { text: textContent, html: htmlContent };
+}
+
+export async function sendSubscriptionThankYouEmail({ to, name }: { to: string, name: string }) {
+    const { text, html } = buildSubscriptionThankYouEmailContent(name);
+    return sendEmail({
+        to: `${name} <${to}>`,
+        subject: `Thank you for subscribing to ProfitScout Pro!`,
+        text,
+        html,
+    });
+}

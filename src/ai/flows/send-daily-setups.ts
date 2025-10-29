@@ -10,7 +10,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { getSubscribedUsersAdmin, getWinnersDashboardAdmin, type Winner } from '@/lib/firebase-admin';
+import { getSubscribedUsersAdmin } from '@/lib/firebase-admin';
 import { sendEmail } from '@/lib/mailgun';
 
 // This flow doesn't require any input as it fetches all necessary data.
@@ -26,7 +26,7 @@ const SendDailySetupsOutputSchema = z.object({
 export type SendDailySetupsOutput = z.infer<typeof SendDailySetupsOutputSchema>;
 
 /**
- * Fetches top call/put setups and emails them to all subscribed users.
+ * Sends a simple test email.
  */
 export async function sendDailySetups(input: SendDailySetupsInput): Promise<SendDailySetupsOutput> {
   return sendDailySetupsFlow(input);
@@ -39,122 +39,33 @@ const sendDailySetupsFlow = ai.defineFlow(
     outputSchema: SendDailySetupsOutputSchema,
   },
   async () => {
-    console.log('Starting sendDailySetupsFlow in TEST MODE...');
+    console.log('Starting simplified sendDailySetupsFlow to send a test email...');
 
-    // 1. Use a hardcoded user for testing instead of fetching all subscribed users.
-    const users = [{ email: 'admin@profitscout.app', isSubscribed: true, uid: 'test-user' }];
-    console.log(`Sending test email to: ${users[0].email}`);
+    const testUser = { email: 'admin@profitscout.app' };
+    const subject = "Hello from ProfitScout (Mailgun Test)";
+    const text = "Congratulations, you just sent an email with Mailgun! You are truly awesome!";
+    const html = `<strong>${text}</strong>`;
 
-    // 2. Fetch top setups from the winners_dashboard
-    const allWinners = await getWinnersDashboardAdmin();
+    if (!testUser.email) {
+      console.error("Test user email is not defined.");
+      return { sentCount: 0, skippedCount: 1, totalUsers: 1 };
+    }
     
-    const getTopSetups = (winners: Winner[], type: 'call' | 'put', count: number) => {
-        return winners
-            .filter(w => w.option_type.toLowerCase() === type)
-            .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1))
-            .slice(0, count);
-    };
+    console.log(`Sending test email to: ${testUser.email}`);
+    
+    const res = await sendEmail({
+      to: testUser.email,
+      subject,
+      html,
+      text,
+    });
 
-    const topCalls = getTopSetups(allWinners, 'call', 5);
-    const topPuts = getTopSetups(allWinners, 'put', 5);
-
-    if (topCalls.length === 0 && topPuts.length === 0) {
-        console.warn("No top Call or Put setups found in winners_dashboard. No emails will be sent.");
-        return { sentCount: 0, skippedCount: users.length, totalUsers: users.length };
+    if (res?.ok) {
+      console.log("Test email sent successfully.");
+      return { sentCount: 1, skippedCount: 0, totalUsers: 1 };
+    } else {
+      console.error("Failed to send test email.", res?.details);
+      return { sentCount: 0, skippedCount: 1, totalUsers: 1 };
     }
-
-    // 3. Construct the email content
-    const { html, text } = buildEmailContent(topCalls, topPuts);
-    const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    const subject = `ProfitScout: Top Setups for ${today}`;
-
-    // 4. Send email to each user
-    let sentCount = 0;
-    let skippedCount = 0;
-
-    for (const user of users) {
-      if (!user.email) {
-        skippedCount++;
-        continue;
-      }
-
-      const res = await sendEmail({
-        to: user.email,
-        subject,
-        html,
-        text,
-      });
-
-      if (res?.ok) {
-        sentCount++;
-      } else {
-        skippedCount++;
-      }
-    }
-
-    console.log(`Finished sending emails. Sent: ${sentCount}, Skipped: ${skippedCount}`);
-
-    return {
-      sentCount,
-      skippedCount,
-      totalUsers: users.length,
-    };
   }
 );
-
-
-// Helper to build email HTML and text
-function buildEmailContent(topCalls: Winner[], topPuts: Winner[]): { html: string, text: string } {
-    const header = `
-        <h1>ProfitScout Daily Setups</h1>
-        <p>Here are your top-rated Call and Put setups for today. For full analysis, visit your dashboard.</p>
-    `;
-
-    const footer = `
-        <br>
-        <p><a href="https://profitscout.app/dashboard">Go to your Dashboard</a></p>
-        <br>
-        <p><small>Disclaimer: This is for informational purposes only and is not investment advice. All investments involve risk.</small></p>
-        <p><small>To unsubscribe, please manage your subscription in your account settings.</small></p>
-    `;
-
-    const formatSetup = (setup: Winner) => {
-        const expiration = new Date(setup.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-        return `<li><strong>${setup.ticker}</strong>: ${setup.company_name} - $${setup.strike_price.toFixed(2)} ${setup.option_type.toUpperCase()} (Expires ${expiration})</li>`;
-    };
-    
-    const formatSetupText = (setup: Winner) => {
-        const expiration = new Date(setup.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-        return `- ${setup.ticker}: ${setup.company_name} - $${setup.strike_price.toFixed(2)} ${setup.option_type.toUpperCase()} (Expires ${expiration})`;
-    };
-
-    let html = header;
-    let text = "ProfitScout Daily Setups\n\n";
-
-    if (topCalls.length > 0) {
-        html += '<h2>Top 5 Call Setups</h2><ul>';
-        text += 'Top 5 Call Setups:\n';
-        topCalls.forEach(call => {
-            html += formatSetup(call);
-            text += formatSetupText(call) + '\n';
-        });
-        html += '</ul>';
-        text += '\n';
-    }
-
-    if (topPuts.length > 0) {
-        html += '<h2>Top 5 Put Setups</h2><ul>';
-        text += 'Top 5 Put Setups:\n';
-        topPuts.forEach(put => {
-            html += formatSetup(put);
-            text += formatSetupText(put) + '\n';
-        });
-        html += '</ul>';
-        text += '\n';
-    }
-
-    html += footer;
-    text += "Go to your Dashboard: https://profitscout.app/dashboard\n";
-
-    return { html, text };
-}

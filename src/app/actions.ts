@@ -2,6 +2,7 @@
 
 
 
+
 'use server';
 
 import {
@@ -277,40 +278,42 @@ export async function handleFeedback(uid: string | null, message: string, replyT
   return { success: true };
 }
 
-export async function handleWelcomeEmail(to: string, name: string): Promise<{success: boolean}> {
-    try {
-        await sendWelcomeEmailAdmin({ to, name });
-        return { success: true };
-    } catch (error) {
-        console.error('Failed to send welcome email:', error);
-        return { success: false };
-    }
-}
-
 export async function createCheckoutSession(uid: string, gaClientId: string | null): Promise<{ sessionId: string }> {
-  const user = await getOrCreateUserAdmin(uid);
-  const origin = headers().get('origin')!;
+    const user = await getOrCreateUserAdmin(uid);
+    const origin = headers().get('origin')!;
   
-  const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
-  if (!priceId) {
-      throw new Error('Stripe Price ID is not configured.');
-  }
+    // Check if this is a new user to send a welcome email
+    // A low usage count (e.g., 0) is a good indicator of a new user in this context.
+    if (user.usageCount === 0 && user.email) {
+        try {
+            await sendWelcomeEmailAdmin({ to: user.email, name: user.displayName || user.email.split('@')[0] });
+            console.log(`Welcome email sent to new user: ${user.email}`);
+        } catch (error) {
+            console.error(`Failed to send welcome email to ${user.email}:`, error);
+            // Do not block the checkout flow if the email fails.
+        }
+    }
 
-  const sessionMetadata: { ga_client_id?: string } = {};
-  if (gaClientId) {
-      sessionMetadata.ga_client_id = gaClientId;
-  }
+    const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
+    if (!priceId) {
+        throw new Error('Stripe Price ID is not configured.');
+    }
 
-  const sessionId = await createStripeCheckoutSession(
-    uid,
-    user.email,
-    priceId,
-    `${origin}/dashboard`,
-    `${origin}/dashboard`,
-    sessionMetadata
-  );
+    const sessionMetadata: { ga_client_id?: string } = {};
+    if (gaClientId) {
+        sessionMetadata.ga_client_id = gaClientId;
+    }
 
-  return { sessionId };
+    const sessionId = await createStripeCheckoutSession(
+        uid,
+        user.email,
+        priceId,
+        `${origin}/dashboard`,
+        `${origin}/dashboard`,
+        sessionMetadata
+    );
+
+    return { sessionId };
 }
 
 export async function createStripePortalLink(uid: string): Promise<{ portalUrl: string }> {
@@ -343,6 +346,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

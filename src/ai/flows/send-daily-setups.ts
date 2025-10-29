@@ -12,6 +12,9 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { getSubscribedUsersAdmin } from '@/lib/firebase-admin';
 import { sendEmail } from '@/lib/mailgun';
+import { config } from 'dotenv';
+config();
+
 
 // This flow doesn't require any input as it fetches all necessary data.
 const SendDailySetupsInputSchema = z.object({});
@@ -45,6 +48,10 @@ const sendDailySetupsFlow = ai.defineFlow(
     const subject = `Hello ${testUser.name}`;
     const text = `Congratulations ${testUser.name}, you just sent an email with Mailgun! You are truly awesome!`;
     const html = `<strong>${text}</strong>`;
+    
+    // TEMPORARY: Hardcode the from address for testing to bypass environment variable issues.
+    const testFromEmail = "Mailgun Sandbox <postmaster@sandbox050988b0938643568634dc539a857463.mailgun.org>";
+
 
     if (!testUser.email) {
       console.error("Test user email is not defined.");
@@ -54,6 +61,7 @@ const sendDailySetupsFlow = ai.defineFlow(
     console.log(`Sending test email to: ${testUser.email}`);
     
     const res = await sendEmail({
+      from: testFromEmail, // Pass the hardcoded value here
       to: [`${testUser.name} <${testUser.email}>`],
       subject,
       html,

@@ -12,16 +12,19 @@ interface EmailOptions {
     subject: string;
     html: string;
     text: string;
+    from?: string; // Make from optional
 }
 
 export const sendEmail = async (options: EmailOptions) => {
     const API_KEY = process.env.MAILGUN_API_KEY;
     const DOMAIN = process.env.MAILGUN_DOMAIN;
-    const FROM_EMAIL = process.env.MAILGUN_FROM_EMAIL;
+    // Use the provided 'from' address, or fall back to the environment variable.
+    const FROM_EMAIL = options.from || process.env.MAILGUN_FROM_EMAIL;
+
 
     if (!API_KEY || !DOMAIN || !FROM_EMAIL) {
         console.error(
-          'Mailgun env missing. Need MAILGUN_API_KEY, MAILGUN_DOMAIN, MAILGUN_FROM_EMAIL'
+          'Mailgun env missing. Need MAILGUN_API_KEY, MAILGUN_DOMAIN, and a FROM_EMAIL source.'
         );
         return {
           ok: false,

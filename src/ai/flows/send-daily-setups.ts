@@ -10,9 +10,11 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { sendEmail } from '@/lib/mailgun';
 import { config } from 'dotenv';
 config();
+
+import Mailgun from 'mailgun.js';
+import formData from 'form-data';
 
 
 // This flow doesn't require any input as it fetches all necessary data.
@@ -44,34 +46,43 @@ const sendDailySetupsFlow = ai.defineFlow(
     console.log('Starting simplified sendDailySetupsFlow to send a test email...');
     
     // The flow is now responsible for getting and validating all env vars.
+    const API_KEY = process.env.MAILGUN_API_KEY;
+    const DOMAIN = process.env.MAILGUN_DOMAIN;
     const FROM_EMAIL = process.env.MAILGUN_FROM_EMAIL;
-    if (!FROM_EMAIL) {
-        console.error('CRITICAL: MAILGUN_FROM_EMAIL environment variable is not set.');
-        // Return failure without attempting to send.
-        return { sentCount: 0, skippedCount: 1, totalUsers: 1 };
+
+    if (!API_KEY || !DOMAIN || !FROM_EMAIL) {
+      console.error(
+        'CRITICAL: Mailgun environment variables are not configured. Check MAILGUN_API_KEY, MAILGUN_DOMAIN, and MAILGUN_FROM_EMAIL.'
+      );
+      // Return failure without attempting to send.
+      return { sentCount: 0, skippedCount: 1, totalUsers: 1 };
     }
 
     const testUser = { email: 'admin@profitscout.app', name: 'Evan Parra' };
     const subject = `Hello ${testUser.name}`;
     const text = `Congratulations ${testUser.name}, you just sent an email with Mailgun! You are truly awesome!`;
-    const html = `<strong>${text}</strong>`;
     
     console.log(`Sending test email to: ${testUser.email}`);
-    
-    const res = await sendEmail({
-      from: FROM_EMAIL, // Pass the validated 'from' address
-      to: [`${testUser.name} <${testUser.email}>`],
-      subject,
-      html,
-      text,
-    });
 
-    if (res?.ok) {
-      console.log("Test email sent successfully.");
-      return { sentCount: 1, skippedCount: 0, totalUsers: 1 };
-    } else {
-      console.error("Failed to send test email.", res?.details);
-      return { sentCount: 0, skippedCount: 1, totalUsers: 1 };
+    try {
+        const mailgun = new Mailgun(formData);
+        const mg = mailgun.client({ username: 'api', key: API_KEY });
+
+        const data = {
+            from: FROM_EMAIL,
+            to: [`${testUser.name} <${testUser.email}>`],
+            subject: subject,
+            text: text,
+            html: `<strong>${text}</strong>`
+        };
+
+        const result = await mg.messages.create(DOMAIN, data);
+        console.log("Test email sent successfully.", result);
+        return { sentCount: 1, skippedCount: 0, totalUsers: 1 };
+
+    } catch (error: any) {
+        console.error("Failed to send test email.", error?.status, error?.details || error);
+        return { sentCount: 0, skippedCount: 1, totalUsers: 1 };
     }
   }
 );

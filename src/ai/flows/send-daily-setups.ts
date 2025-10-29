@@ -64,6 +64,11 @@ const buildEmailContent = (winners: Winner[]): { html: string; text: string } =>
           text-align: center;
           padding: 20px 0;
         }
+        .header img {
+          height: 40px;
+          width: 40px;
+          margin-bottom: 16px;
+        }
         .header h1 {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 36px;
@@ -71,7 +76,7 @@ const buildEmailContent = (winners: Winner[]): { html: string; text: string } =>
           margin: 0;
         }
         .header .logo-profit { color: #FFFFFF; }
-        .header .logo-scout { color: #BE39FF; }
+        .header .logo-scout { color: #BEFF0A; }
         .content {
           background-color: #1F212E;
           border-radius: 8px;
@@ -98,13 +103,14 @@ const buildEmailContent = (winners: Winner[]): { html: string; text: string } =>
         }
         .cta-button {
           display: inline-block;
-          background-color: #D4348F;
-          color: #FFFFFF;
+          background-color: #BEFF0A;
+          color: #1F212E;
           text-decoration: none;
           padding: 15px 30px;
           border-radius: 8px;
           font-weight: bold;
           margin: 30px 0;
+          font-family: 'Inter', sans-serif;
         }
         .footer {
           text-align: center;
@@ -113,7 +119,7 @@ const buildEmailContent = (winners: Winner[]): { html: string; text: string } =>
           color: #9CA3AF;
         }
         .footer a {
-          color: #BE39FF;
+          color: #BEFF0A;
           text-decoration: none;
         }
       </style>
@@ -121,6 +127,7 @@ const buildEmailContent = (winners: Winner[]): { html: string; text: string } =>
     <body>
       <div class="container">
         <div class="header">
+          <img src="https://firebasestorage.googleapis.com/v0/b/profitscout-app.appspot.com/o/profitscout-logo.png?alt=media&token=99f9c7e9-b5ef-4453-9337-33315a639abc" alt="ProfitScout Logo">
           <h1><span class="logo-profit">Profit</span><span class="logo-scout">Scout</span></h1>
         </div>
         <div class="content">
@@ -182,6 +189,15 @@ const sendDailySetupsFlow = ai.defineFlow(
     outputSchema: SendDailySetupsOutputSchema,
   },
   async () => {
+    const API_KEY = process.env.MAILGUN_API_KEY;
+    const DOMAIN = process.env.MAILGUN_DOMAIN;
+    const FROM_EMAIL = process.env.MAILGUN_FROM_EMAIL;
+
+    if (!API_KEY || !DOMAIN || !FROM_EMAIL) {
+        console.error('Mailgun environment variables are missing.');
+        throw new Error('Mailgun environment variables are not configured.');
+    }
+    
     // Determine if we're in a test environment
     const isTestMode = process.env.NODE_ENV !== 'production';
 
@@ -237,7 +253,8 @@ const sendDailySetupsFlow = ai.defineFlow(
       console.log(`Sending email to: ${user.email}`);
 
       const res = await sendEmail({
-        to: userTo,
+        from: FROM_EMAIL,
+        to: [userTo],
         subject,
         html,
         text,

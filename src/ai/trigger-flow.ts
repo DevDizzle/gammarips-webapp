@@ -2,11 +2,11 @@
 import { config } from 'dotenv';
 config();
 
-import { sendDailySetups } from './flows/send-daily-setups';
+import { sendDailySetupsFlow } from './flows/send-daily-setups';
 
 console.log('Attempting to trigger the sendDailySetups flow...');
 
-sendDailySetups()
+sendDailySetupsFlow()
   .then((result) => {
     console.log('Flow completed successfully.');
     console.log(`Sent: ${result.sentCount}, Skipped: ${result.skippedCount}, Total Users: ${result.totalUsers}`);

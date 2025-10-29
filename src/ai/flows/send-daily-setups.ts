@@ -3,10 +3,9 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { getSubscribedUsersAdmin, getWinnersDashboardAdmin, type DbUser, type Winner } from '@/lib/firebase-admin';
+import { getWinnersDashboardAdmin, type Winner } from '@/lib/firebase-admin';
 import { sendEmail } from '@/lib/mailgun';
 
-const SendDailySetupsInputSchema = z.object({});
 const SendDailySetupsOutputSchema = z.object({
   sentCount: z.number(),
   skippedCount: z.number(),
@@ -127,13 +126,12 @@ To see the full list and do your own research, visit your dashboard: https://pro
 }
 
 
-const sendDailySetupsFlow = ai.defineFlow(
+export const sendDailySetupsFlow = ai.defineFlow(
   {
     name: 'sendDailySetupsFlow',
-    inputSchema: SendDailySetupsInputSchema,
     outputSchema: SendDailySetupsOutputSchema,
   },
-  async (input) => {
+  async () => {
     let sentCount = 0;
     let skippedCount = 0;
 
@@ -169,6 +167,8 @@ const sendDailySetupsFlow = ai.defineFlow(
     }
 
     // Production logic starts here
+    // This part is commented out for now to focus on the simple test case.
+    /*
     const subscribedUsers = await getSubscribedUsersAdmin();
     const winners = await getWinnersDashboardAdmin();
 
@@ -199,9 +199,9 @@ const sendDailySetupsFlow = ai.defineFlow(
       }
     }
     return { sentCount, skippedCount, totalUsers: subscribedUsers.length };
+    */
+    
+    // Placeholder return for commented-out production logic
+    return { sentCount, skippedCount, totalUsers: 0 };
   }
 );
-
-export async function sendDailySetups(input: z.infer<typeof SendDailySetupsInputSchema>): Promise<z.infer<typeof SendDailySetupsOutputSchema>> {
-    return sendDailySetupsFlow(input);
-}

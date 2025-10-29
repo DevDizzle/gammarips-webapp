@@ -70,23 +70,33 @@ const sendDailySetupsFlow = ai.defineFlow(
 
     // 4. Send email to each user
     let sentCount = 0;
+    let skippedCount = 0;
+
     for (const user of users) {
-      if (user.email) {
-        await sendEmail({
-          to: user.email,
-          subject,
-          html,
-          text,
-        });
+      if (!user.email) {
+        skippedCount++;
+        continue;
+      }
+
+      const res = await sendEmail({
+        to: user.email,
+        subject,
+        html,
+        text,
+      });
+
+      if (res?.ok) {
         sentCount++;
+      } else {
+        skippedCount++;
       }
     }
 
-    console.log(`Finished sending emails. Sent: ${sentCount}, Skipped: ${users.length - sentCount}`);
+    console.log(`Finished sending emails. Sent: ${sentCount}, Skipped: ${skippedCount}`);
 
     return {
       sentCount,
-      skippedCount: users.length - sentCount,
+      skippedCount,
       totalUsers: users.length,
     };
   }

@@ -15,15 +15,18 @@ interface EmailOptions {
 }
 
 export const sendEmail = async (options: EmailOptions) => {
-    // Validate all necessary environment variables *before* use.
     const API_KEY = process.env.MAILGUN_API_KEY;
     const DOMAIN = process.env.MAILGUN_DOMAIN;
     const FROM_EMAIL = process.env.MAILGUN_FROM_EMAIL;
 
     if (!API_KEY || !DOMAIN || !FROM_EMAIL) {
-        console.error("Mailgun environment variables are not configured correctly. Check API_KEY, DOMAIN, and FROM_EMAIL.");
-        // Do not throw in a batch job, but log a severe error.
-        return; 
+        console.error(
+          'Mailgun env missing. Need MAILGUN_API_KEY, MAILGUN_DOMAIN, MAILGUN_FROM_EMAIL'
+        );
+        return {
+          ok: false,
+          error: 'missing-env',
+        };
     }
 
     if (!mailgun) {
@@ -43,9 +46,18 @@ export const sendEmail = async (options: EmailOptions) => {
             text: options.text,
         });
         console.log(`Email sent successfully to ${options.to}`, result);
-        return result;
-    } catch (error) {
-        console.error(`Failed to send email to ${options.to}`, error);
-        // Do not re-throw in a batch job to avoid stopping the entire process
+        return { ok: true };
+    } catch (error: any) {
+        console.error(
+            `Failed to send email to ${options.to}`,
+            error?.status,
+            error?.details || error
+        );
+        return {
+            ok: false,
+            error: 'mailgun-failed',
+            status: error?.status,
+            details: error?.details,
+        };
     }
 };

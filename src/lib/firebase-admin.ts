@@ -1,9 +1,10 @@
 
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
 import admin from 'firebase-admin';
-import { getFirestore as getAdminFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore as getAdminFirestore, FieldValue, Timestamp } from 'firebase-admin/firestore';
 import { getStorage as getAdminStorage } from 'firebase-admin/storage';
 import { z } from 'zod';
 import type { DbUser } from './firebase';
@@ -966,6 +967,46 @@ export async function getOrCreateUserAdmin(
   return newUser;
 }
 
+export async function getEligibleEmailRecipientsAdmin(): Promise<DbUser[]> {
+    const eligibleUsers: DbUser[] = [];
+    try {
+        const snapshot = await adminDb.collection('users').get();
+        if (snapshot.empty) {
+            return [];
+        }
+
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        snapshot.forEach(doc => {
+            const user = doc.data() as DbUser;
+
+            if (!user.email) {
+                return; // Skip users without an email
+            }
+
+            // Condition 1: User is subscribed
+            if (user.isSubscribed) {
+                eligibleUsers.push(user);
+                return; // Add user and continue to the next one
+            }
+
+            // Condition 2: User is in their 30-day trial
+            if (user.createdAt && user.createdAt instanceof Timestamp) {
+                const createdAtDate = user.createdAt.toDate();
+                if (createdAtDate > thirtyDaysAgo) {
+                    eligibleUsers.push(user);
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error('Error fetching eligible email recipients:', error);
+    }
+    return eligibleUsers;
+}
+
+
 export async function getSubscribedUsersAdmin(): Promise<DbUser[]> {
     const subscribedUsers: DbUser[] = [];
     try {
@@ -1074,6 +1115,8 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
+
 
 
 

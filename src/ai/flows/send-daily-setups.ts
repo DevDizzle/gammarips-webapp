@@ -3,7 +3,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { getWinnersDashboardAdmin, type Winner } from '@/lib/firebase-admin';
+import { getWinnersDashboardAdmin, type Winner, getEligibleEmailRecipientsAdmin } from '@/lib/firebase-admin';
 import { sendEmail } from '@/lib/mailgun';
 
 const SendDailySetupsOutputSchema = z.object({
@@ -129,6 +129,7 @@ To see the full list and do your own research, visit your dashboard: https://pro
 export const sendDailySetupsFlow = ai.defineFlow(
   {
     name: 'sendDailySetupsFlow',
+    inputSchema: z.object({}).optional(),
     outputSchema: SendDailySetupsOutputSchema,
   },
   async () => {
@@ -167,19 +168,17 @@ export const sendDailySetupsFlow = ai.defineFlow(
     }
 
     // Production logic starts here
-    // This part is commented out for now to focus on the simple test case.
-    /*
-    const subscribedUsers = await getSubscribedUsersAdmin();
+    const eligibleUsers = await getEligibleEmailRecipientsAdmin();
     const winners = await getWinnersDashboardAdmin();
 
     if (winners.length === 0) {
         console.warn('No winners found in the dashboard. Skipping email send for all users.');
-        return { sentCount: 0, skippedCount: subscribedUsers.length, totalUsers: subscribedUsers.length };
+        return { sentCount: 0, skippedCount: eligibleUsers.length, totalUsers: eligibleUsers.length };
     }
 
     const { text, html } = buildEmailContent(winners);
 
-    for (const user of subscribedUsers) {
+    for (const user of eligibleUsers) {
       if (user.email) {
         const result = await sendEmail({
             to: `${user.displayName || user.email} <${user.email}>`,
@@ -198,10 +197,7 @@ export const sendDailySetupsFlow = ai.defineFlow(
         skippedCount++;
       }
     }
-    return { sentCount, skippedCount, totalUsers: subscribedUsers.length };
-    */
-    
-    // Placeholder return for commented-out production logic
-    return { sentCount, skippedCount, totalUsers: 0 };
+    return { sentCount, skippedCount, totalUsers: eligibleUsers.length };
   }
 );
+

@@ -16,3 +16,4 @@ sendDailySetupsFlow()
     console.error('An error occurred while triggering the flow:', error);
     process.exit(1);
   });
+

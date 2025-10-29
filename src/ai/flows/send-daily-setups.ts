@@ -10,7 +10,6 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { getSubscribedUsersAdmin } from '@/lib/firebase-admin';
 import { sendEmail } from '@/lib/mailgun';
 import { config } from 'dotenv';
 config();
@@ -43,25 +42,24 @@ const sendDailySetupsFlow = ai.defineFlow(
   },
   async () => {
     console.log('Starting simplified sendDailySetupsFlow to send a test email...');
+    
+    // The flow is now responsible for getting and validating all env vars.
+    const FROM_EMAIL = process.env.MAILGUN_FROM_EMAIL;
+    if (!FROM_EMAIL) {
+        console.error('CRITICAL: MAILGUN_FROM_EMAIL environment variable is not set.');
+        // Return failure without attempting to send.
+        return { sentCount: 0, skippedCount: 1, totalUsers: 1 };
+    }
 
     const testUser = { email: 'admin@profitscout.app', name: 'Evan Parra' };
     const subject = `Hello ${testUser.name}`;
     const text = `Congratulations ${testUser.name}, you just sent an email with Mailgun! You are truly awesome!`;
     const html = `<strong>${text}</strong>`;
     
-    // TEMPORARY: Hardcode the from address for testing to bypass environment variable issues.
-    const testFromEmail = "Mailgun Sandbox <postmaster@sandbox050988b0938643568634dc539a857463.mailgun.org>";
-
-
-    if (!testUser.email) {
-      console.error("Test user email is not defined.");
-      return { sentCount: 0, skippedCount: 1, totalUsers: 1 };
-    }
-    
     console.log(`Sending test email to: ${testUser.email}`);
     
     const res = await sendEmail({
-      from: testFromEmail, // Pass the hardcoded value here
+      from: FROM_EMAIL, // Pass the validated 'from' address
       to: [`${testUser.name} <${testUser.email}>`],
       subject,
       html,

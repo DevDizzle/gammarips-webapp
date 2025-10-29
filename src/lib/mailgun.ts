@@ -15,7 +15,8 @@ export interface EmailOptions {
 export async function sendEmail(options: EmailOptions) {
   const API_KEY = process.env.MAILGUN_SENDING_KEY;
   const DOMAIN = 'profitscout.app';
-  const DEFAULT_FROM = process.env.MAILGUN_FROM_EMAIL || 'ProfitScout <admin@profitscout.app>';
+  // Hardcode the default from address to the verified domain.
+  const DEFAULT_FROM = 'ProfitScout <admin@profitscout.app>';
 
   const FROM = options.from || DEFAULT_FROM;
   const TO =

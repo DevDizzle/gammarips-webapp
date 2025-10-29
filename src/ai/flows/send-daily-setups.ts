@@ -129,7 +129,7 @@ To see the full list and do your own research, visit your dashboard: https://pro
 export const sendDailySetupsFlow = ai.defineFlow(
   {
     name: 'sendDailySetupsFlow',
-    inputSchema: z.object({}).optional(),
+    inputSchema: z.void(),
     outputSchema: SendDailySetupsOutputSchema,
   },
   async () => {
@@ -201,3 +201,4 @@ export const sendDailySetupsFlow = ai.defineFlow(
   }
 );
 
+    

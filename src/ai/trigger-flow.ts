@@ -2,19 +2,20 @@
 import { config } from 'dotenv';
 config();
 
-import { sendDailySetupsFlow } from './flows/send-daily-setups';
+import { handleWelcomeEmail } from '@/app/actions';
 
-console.log('Attempting to trigger the sendDailySetups flow...');
+console.log('Attempting to send a test welcome email...');
 
-sendDailySetupsFlow()
+handleWelcomeEmail('admin@profitscout.app', 'Test User')
   .then((result) => {
-    console.log('Flow completed successfully.');
-    console.log(`Sent: ${result.sentCount}, Skipped: ${result.skippedCount}, Total Users: ${result.totalUsers}`);
+    if (result.success) {
+      console.log('Test welcome email sent successfully.');
+    } else {
+      console.error('Failed to send test welcome email.');
+    }
     process.exit(0);
   })
   .catch((error) => {
-    console.error('An error occurred while triggering the flow:', error);
+    console.error('An error occurred while sending the test welcome email:', error);
     process.exit(1);
   });
-
-    

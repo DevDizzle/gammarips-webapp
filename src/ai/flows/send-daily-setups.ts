@@ -114,7 +114,7 @@ function buildEmailContent(topCalls: Winner[], topPuts: Winner[]): { html: strin
     };
     
     const formatSetupText = (setup: Winner) => {
-        const expiration = new date(setup.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+        const expiration = new Date(setup.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
         return `- ${setup.ticker}: ${setup.company_name} - $${setup.strike_price.toFixed(2)} ${setup.option_type.toUpperCase()} (Expires ${expiration})`;
     };
 

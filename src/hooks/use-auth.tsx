@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
@@ -21,6 +22,7 @@ import { getDoc, doc } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { event as trackEvent } from '@/lib/gtag';
 import { useRouter } from 'next/navigation';
+import { handleWelcomeEmail } from '@/app/actions';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -74,11 +76,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (additionalInfo?.isNewUser) {
       trackEvent('sign_up', { method });
+       // Send welcome email
+      if (user.email) {
+          handleWelcomeEmail(user.email, user.displayName || user.email.split('@')[0])
+            .catch(err => console.error("Failed to send welcome email:", err));
+      }
+      
       if (method === 'Email') {
         await sendEmailVerification(user);
-        toast({ title: "Account Created!", description: "Please check your inbox to verify your email." });
+        toast({ title: "Account Created!", description: "Welcome! Please check your inbox to verify your email." });
       } else {
-        toast({ title: "Free trial started!" });
+        toast({ title: "Welcome! Your free trial has started." });
       }
     } else {
        toast({ title: "Successfully signed in." });

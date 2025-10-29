@@ -1,6 +1,7 @@
 
 
 
+
 'use server';
 
 import {
@@ -44,6 +45,7 @@ import { randomUUID } from 'crypto';
 import { getAuth } from 'firebase-admin/auth';
 import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { app } from '@/lib/firebase';
+import { sendWelcomeEmail as sendWelcomeEmailAdmin } from '@/lib/mailgun';
 
 
 export async function getAppStatus(): Promise<{ isUpdating: boolean }> {
@@ -275,6 +277,16 @@ export async function handleFeedback(uid: string | null, message: string, replyT
   return { success: true };
 }
 
+export async function handleWelcomeEmail(to: string, name: string): Promise<{success: boolean}> {
+    try {
+        await sendWelcomeEmailAdmin({ to, name });
+        return { success: true };
+    } catch (error) {
+        console.error('Failed to send welcome email:', error);
+        return { success: false };
+    }
+}
+
 export async function createCheckoutSession(uid: string, gaClientId: string | null): Promise<{ sessionId: string }> {
   const user = await getOrCreateUserAdmin(uid);
   const origin = headers().get('origin')!;
@@ -331,6 +343,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+
 
 
 

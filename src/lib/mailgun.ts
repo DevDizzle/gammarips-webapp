@@ -7,22 +7,6 @@ import formData from 'form-data';
 let mailgun: Mailgun;
 let mailgunClient: ReturnType<Mailgun['client']>;
 
-const initializeMailgun = () => {
-    if (!process.env.MAILGUN_API_KEY || !process.env.MAILGUN_DOMAIN || !process.env.MAILGUN_FROM_EMAIL) {
-        throw new Error('Mailgun API key, domain, and from email are not configured in environment variables.');
-    }
-    
-    if (!mailgun) {
-        mailgun = new Mailgun(formData);
-        mailgunClient = mailgun.client({
-            username: 'api',
-            key: process.env.MAILGUN_API_KEY,
-        });
-    }
-    
-    return mailgunClient;
-};
-
 interface EmailOptions {
     to: string;
     subject: string;
@@ -31,13 +15,28 @@ interface EmailOptions {
 }
 
 export const sendEmail = async (options: EmailOptions) => {
-    const client = initializeMailgun();
-    const domain = process.env.MAILGUN_DOMAIN!;
-    const fromEmail = process.env.MAILGUN_FROM_EMAIL!;
+    // Validate all necessary environment variables *before* use.
+    const API_KEY = process.env.MAILGUN_API_KEY;
+    const DOMAIN = process.env.MAILGUN_DOMAIN;
+    const FROM_EMAIL = process.env.MAILGUN_FROM_EMAIL;
+
+    if (!API_KEY || !DOMAIN || !FROM_EMAIL) {
+        console.error("Mailgun environment variables are not configured correctly. Check API_KEY, DOMAIN, and FROM_EMAIL.");
+        // Do not throw in a batch job, but log a severe error.
+        return; 
+    }
+
+    if (!mailgun) {
+        mailgun = new Mailgun(formData);
+        mailgunClient = mailgun.client({
+            username: 'api',
+            key: API_KEY,
+        });
+    }
 
     try {
-        const result = await client.messages.create(domain, {
-            from: fromEmail,
+        const result = await mailgunClient.messages.create(DOMAIN, {
+            from: FROM_EMAIL,
             to: options.to,
             subject: options.subject,
             html: options.html,

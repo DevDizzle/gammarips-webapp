@@ -64,11 +64,6 @@ const buildEmailContent = (winners: Winner[]): { html: string; text: string } =>
           text-align: center;
           padding: 20px 0;
         }
-        .header img {
-          height: 40px;
-          width: 40px;
-          margin-bottom: 16px;
-        }
         .header h1 {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 36px;
@@ -127,7 +122,6 @@ const buildEmailContent = (winners: Winner[]): { html: string; text: string } =>
     <body>
       <div class="container">
         <div class="header">
-          <img src="https://firebasestorage.googleapis.com/v0/b/profitscout-app.appspot.com/o/profitscout-logo.png?alt=media&token=99f9c7e9-b5ef-4453-9337-33315a639abc" alt="ProfitScout Logo">
           <h1><span class="logo-profit">Profit</span><span class="logo-scout">Scout</span></h1>
         </div>
         <div class="content">

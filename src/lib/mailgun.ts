@@ -1,62 +1,80 @@
+
 'use server';
 
-import Mailgun from 'mailgun.js';
-import formData from 'form-data';
+import { Buffer } from 'node:buffer';
 
-let mailgun: Mailgun;
-let mailgunClient: ReturnType<Mailgun['client']>;
-
-interface EmailOptions {
-    from: string; // 'from' is now required
-    to: string[];
-    subject: string;
-    html: string;
-    text: string;
+// Node 18+ has global fetch. If you're on older Node, install `node-fetch`.
+export interface EmailOptions {
+  from?: string;           // optional override
+  to: string | string[];   // can be single or list
+  subject: string;
+  text: string;
+  html?: string;
 }
 
-export const sendEmail = async (options: EmailOptions) => {
-    const API_KEY = process.env.MAILGUN_API_KEY;
-    const DOMAIN = process.env.MAILGUN_DOMAIN;
-    
-    if (!API_KEY || !DOMAIN) {
-        console.error(
-          'Mailgun server env missing. Need MAILGUN_API_KEY, MAILGUN_DOMAIN.'
-        );
-        return {
-          ok: false,
-          error: 'missing-server-env',
-        };
-    }
+export async function sendEmail(options: EmailOptions) {
+  const API_KEY = process.env.MAILGUN_API_KEY;
+  const DOMAIN = process.env.MAILGUN_DOMAIN;
+  const DEFAULT_FROM = process.env.MAILGUN_FROM_EMAIL;
 
-    if (!mailgun) {
-        mailgun = new Mailgun(formData);
-        mailgunClient = mailgun.client({
-            username: 'api',
-            key: API_KEY,
-        });
-    }
+  const FROM = options.from || DEFAULT_FROM;
+  const TO =
+    Array.isArray(options.to) ? options.to.join(', ') : options.to;
 
-    try {
-        const result = await mailgunClient.messages.create(DOMAIN, {
-            from: options.from,
-            to: options.to,
-            subject: options.subject,
-            html: options.html,
-            text: options.text,
-        });
-        console.log(`Email sent successfully to ${options.to.join(', ')}`, result);
-        return { ok: true };
-    } catch (error: any) {
-        console.error(
-            `Failed to send email to ${options.to.join(', ')}`,
-            error?.status,
-            error?.details || error
-        );
-        return {
-            ok: false,
-            error: 'mailgun-failed',
-            status: error?.status,
-            details: error?.details,
-        };
+  if (!API_KEY || !DOMAIN || !FROM) {
+    console.error(
+      '[Mailgun Error] Missing MAILGUN_API_KEY / MAILGUN_DOMAIN / MAILGUN_FROM_EMAIL'
+    );
+    return { ok: false, error: 'missing-env' };
+  }
+
+  // Build form-data manually as URL-encoded form
+  // NOTE: Mailgun accepts either multipart/form-data or application/x-www-form-urlencoded.
+  // We're going to send x-www-form-urlencoded because it's simple and works reliably.
+  const form = new URLSearchParams();
+  form.append('from', FROM);
+  form.append('to', TO);
+  form.append('subject', options.subject);
+  form.append('text', options.text);
+  if (options.html) {
+    form.append('html', options.html);
+  }
+
+  // Basic auth header: "api:KEY"
+  const authHeader =
+    'Basic ' + Buffer.from(`api:${API_KEY}`).toString('base64');
+
+  console.log('[Mailgun Debug] DOMAIN=', DOMAIN);
+  console.log('[Mailgun Debug] FROM  =', FROM);
+  console.log('[Mailgun Debug] TO    =', TO);
+  console.log('[Mailgun Debug] SUBJ  =', options.subject);
+
+  const resp = await fetch(
+    `https://api.mailgun.net/v3/${DOMAIN}/messages`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: authHeader,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: form.toString(),
     }
-};
+  );
+
+  if (!resp.ok) {
+    // Mailgun returns JSON on errors like:
+    // { "message": "'from' parameter is missing" } or
+    // { "message": "Domain ... is not allowed to send ..." } :contentReference[oaicite:0]{index=0}
+    const details = await resp.json().catch(() => ({}));
+    console.error('[Mailgun Failure]', resp.status, details);
+    return {
+      ok: false,
+      status: resp.status,
+      details,
+    };
+  }
+
+  const data = await resp.json().catch(() => ({}));
+  console.log('[Mailgun Success]', data);
+  return { ok: true, data };
+}

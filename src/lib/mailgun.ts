@@ -8,7 +8,7 @@ let mailgun: Mailgun;
 let mailgunClient: ReturnType<Mailgun['client']>;
 
 interface EmailOptions {
-    to: string;
+    to: string[];
     subject: string;
     html: string;
     text: string;
@@ -45,11 +45,11 @@ export const sendEmail = async (options: EmailOptions) => {
             html: options.html,
             text: options.text,
         });
-        console.log(`Email sent successfully to ${options.to}`, result);
+        console.log(`Email sent successfully to ${options.to.join(', ')}`, result);
         return { ok: true };
     } catch (error: any) {
         console.error(
-            `Failed to send email to ${options.to}`,
+            `Failed to send email to ${options.to.join(', ')}`,
             error?.status,
             error?.details || error
         );

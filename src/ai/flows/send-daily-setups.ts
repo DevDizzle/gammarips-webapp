@@ -41,9 +41,9 @@ const sendDailySetupsFlow = ai.defineFlow(
   async () => {
     console.log('Starting simplified sendDailySetupsFlow to send a test email...');
 
-    const testUser = { email: 'admin@profitscout.app' };
-    const subject = "Hello from ProfitScout (Mailgun Test)";
-    const text = "Congratulations, you just sent an email with Mailgun! You are truly awesome!";
+    const testUser = { email: 'admin@profitscout.app', name: 'Evan Parra' };
+    const subject = `Hello ${testUser.name}`;
+    const text = `Congratulations ${testUser.name}, you just sent an email with Mailgun! You are truly awesome!`;
     const html = `<strong>${text}</strong>`;
 
     if (!testUser.email) {
@@ -54,7 +54,7 @@ const sendDailySetupsFlow = ai.defineFlow(
     console.log(`Sending test email to: ${testUser.email}`);
     
     const res = await sendEmail({
-      to: testUser.email,
+      to: [`${testUser.name} <${testUser.email}>`],
       subject,
       html,
       text,

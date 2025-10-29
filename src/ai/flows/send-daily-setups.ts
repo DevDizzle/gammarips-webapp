@@ -31,7 +31,7 @@ function buildEmailContent(winners: Winner[]): { text: string; html: string } {
     const textContent = `
 Your Daily Options Setups
 
-Here are the top-rated Call and Put setups for today, based on our AI analysis.
+The market has closed, and our AI has just finished processing the day's fresh data. Here are the top-rated Call and Put setups identified for tomorrow's trading day.
 
 Top 5 Bullish Call Setups:
 ${topBullish.map(s => `${s.ticker} | ${s.company_name} | ${s.option_type.toUpperCase()} | $${s.strike_price.toFixed(2)} | Expires: ${new Date(s.expiration_date).toLocaleDateString()} | ${s.outlook_signal}`).join('\n')}
@@ -66,7 +66,7 @@ To see the full list and do your own research, visit your dashboard: https://pro
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
-                            <p style="font-size: 16px; line-height: 1.6;">Here are the top-rated Call and Put setups for today, based on our AI analysis.</p>
+                            <p style="font-size: 16px; line-height: 1.6;">The market has closed, and our AI has just finished processing the day's fresh data. Here are the top-rated Call and Put setups identified for tomorrow's trading day.</p>
                             
                             <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px;">Top 5 Bullish Call Setups</h2>
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">
@@ -136,38 +136,6 @@ export const sendDailySetupsFlow = ai.defineFlow(
     let sentCount = 0;
     let skippedCount = 0;
 
-    // Use a test flag to decide logic path
-    const isTestRun = process.env.NODE_ENV !== 'production';
-
-    if (isTestRun) {
-        console.log('Starting simplified sendDailySetupsFlow to send a test email...');
-        const testUserEmail = 'admin@profitscout.app';
-        const testUserName = 'Evan Parra';
-        const winners = await getWinnersDashboardAdmin();
-
-        if (winners.length > 0) {
-            const { text, html } = buildEmailContent(winners);
-            console.log(`Sending test email to: ${testUserEmail}`);
-            const result = await sendEmail({
-                to: `${testUserName} <${testUserEmail}>`,
-                subject: `[TEST] Your Daily Options Setups`,
-                text,
-                html,
-            });
-            if (result.ok) {
-                sentCount++;
-            } else {
-                 console.error(`Failed to send test email.`, result.details || 'Unknown error');
-                 skippedCount++;
-            }
-        } else {
-            console.warn('No winners found in the dashboard, skipping test email.');
-            skippedCount++;
-        }
-        return { sentCount, skippedCount, totalUsers: 1 };
-    }
-
-    // Production logic starts here
     const eligibleUsers = await getEligibleEmailRecipientsAdmin();
     const winners = await getWinnersDashboardAdmin();
 
@@ -200,5 +168,3 @@ export const sendDailySetupsFlow = ai.defineFlow(
     return { sentCount, skippedCount, totalUsers: eligibleUsers.length };
   }
 );
-
-    

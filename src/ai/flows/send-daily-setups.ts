@@ -29,7 +29,7 @@ function buildEmailContent(winners: Winner[]): { text: string; html: string } {
         `).join('');
     
     const textContent = `
-Your Daily Options Setups
+Today's Top-Rated Options Setups
 
 The market has closed, and our AI has just finished processing the day's fresh data. Here are the top-rated Call and Put setups identified for tomorrow's trading day.
 
@@ -51,7 +51,7 @@ To see the full list and do your own research, visit your dashboard: https://pro
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>Your Daily Options Setups</title>
+    <title>Today's Top-Rated Options Setups</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
@@ -61,7 +61,7 @@ To see the full list and do your own research, visit your dashboard: https://pro
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
                             <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
-                            <p style="font-size: 16px; color: #A0A0A0; margin-top: 8px;">Your Daily Options Setups</p>
+                            <p style="font-size: 16px; color: #A0A0A0; margin-top: 8px;">Today's Top-Rated Options Setups</p>
                         </td>
                     </tr>
                     <tr>
@@ -150,7 +150,7 @@ export const sendDailySetupsFlow = ai.defineFlow(
       if (user.email) {
         const result = await sendEmail({
             to: `${user.displayName || user.email} <${user.email}>`,
-            subject: 'Your Daily Options Setups',
+            subject: 'Today\'s Top-Rated Options Setups',
             text,
             html,
         });

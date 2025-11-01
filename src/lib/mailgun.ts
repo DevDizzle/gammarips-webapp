@@ -392,3 +392,82 @@ export async function sendReferralEmail({ to, name, referralLink }: { to: string
         html,
     });
 }
+
+function buildFeedbackRequestEmailContent(name: string): { text: string; html: string } {
+    const textContent = `
+Hi ${name},
+
+You've been using ProfitScout for about a week now, and I wanted to personally check in.
+
+We're always working to make the tool better, and your early feedback is incredibly valuable.
+
+Is the daily email useful? Is there one thing we could do that would make ProfitScout even better for you?
+
+Click the link below to share your thoughts—it only takes a moment.
+
+Share Your Feedback: https://profitscout.app/about#contact
+
+Happy trading,
+The ProfitScout Team
+`;
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <title>How's it going with ProfitScout?</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                    <tr>
+                        <td align="center" style="padding: 40px 20px;">
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px;">
+                            <p style="font-size: 16px; line-height: 1.6;">Hi ${name},</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You've been using ProfitScout for about a week now, and I wanted to personally check in. We're always working to make the tool better, and your early feedback is incredibly valuable.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;"><b>Is the daily email useful? Is there one thing we could do that would make ProfitScout even better for you?</b></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 30px 40px 40px;">
+                            <a href="https://profitscout.app/about#contact" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
+                            <p style="margin: 0;">Happy trading!</p>
+                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+`;
+
+    return { text: textContent, html: htmlContent };
+}
+
+
+export async function sendFeedbackRequestEmail({ to, name }: { to: string, name: string }) {
+    const { text, html } = buildFeedbackRequestEmailContent(name);
+    return sendEmail({
+        to: `${name} <${to}>`,
+        subject: `How's it going with ProfitScout?`,
+        text,
+        html,
+    });
+}

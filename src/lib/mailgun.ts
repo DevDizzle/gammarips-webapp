@@ -315,3 +315,80 @@ export async function sendTrialReminderEmail({ to, name }: { to: string, name: s
         html,
     });
 }
+
+function buildReferralEmailContent(name: string, referralLink: string): { text: string; html: string } {
+    const textContent = `
+Hi ${name},
+
+Loving ProfitScout? Share it with a friend!
+
+We hope you're finding an edge with our AI-driven market insights.
+
+If you know someone else who would benefit from ProfitScout, use the link below to give them an extended 45-day free trial—on us.
+
+Your unique sharing link:
+${referralLink}
+
+Happy trading,
+The ProfitScout Team
+`;
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <title>Share ProfitScout with a Friend</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                    <tr>
+                        <td align="center" style="padding: 40px 20px;">
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
+                            <p style="font-size: 18px; color: #A0A0A0; margin-top: 12px;">Loving ProfitScout? Share it!</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px;">
+                            <p style="font-size: 16px; line-height: 1.6;">Hi ${name},</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We hope you're finding an edge with our AI-driven market insights. If you know someone else who would benefit from ProfitScout, use the link below to give them an extended <strong>45-day free trial</strong>—on us.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 30px 40px 40px;">
+                            <a href="${referralLink}" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share a 45-Day Trial</a>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
+                             <p style="margin: 0;">Happy trading!</p>
+                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+`;
+
+    return { text: textContent, html: htmlContent };
+}
+
+export async function sendReferralEmail({ to, name, referralLink }: { to: string; name: string; referralLink: string; }) {
+    const { text, html } = buildReferralEmailContent(name, referralLink);
+    return sendEmail({
+        to: `${name} <${to}>`,
+        subject: `Loving ProfitScout? Share it with a friend.`,
+        text,
+        html,
+    });
+}

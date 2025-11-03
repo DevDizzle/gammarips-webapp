@@ -186,13 +186,6 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
     };
 
     try {
-        // Get today's date in YYYY-MM-DD format, corrected for timezone.
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
-        const todayStr = `${year}-${month}-${day}`;
-
         const snapshot = await adminDb.collection('performance_tracker').get();
 
         if (snapshot.empty) {
@@ -204,27 +197,23 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
         let losersSum = 0;
         let winnerCount = 0;
         let loserCount = 0;
-        
         let validSignalCount = 0;
 
         snapshot.forEach(doc => {
             const data = doc.data();
-            
-            // Only include documents where run_date is not today
-            if (data.run_date && data.run_date !== todayStr) {
-                const gain = data.percent_gain;
-                
-                if (typeof gain === 'number') {
-                    totalPercentGain += gain;
-                    validSignalCount++;
+            const gain = data.percent_gain;
 
-                    if (gain > 0) {
-                        winnersSum += gain;
-                        winnerCount++;
-                    } else if (gain < 0) {
-                        losersSum += gain;
-                        loserCount++;
-                    }
+            // Check if gain is a valid number before including it in calculations
+            if (typeof gain === 'number' && !isNaN(gain)) {
+                totalPercentGain += gain;
+                validSignalCount++;
+
+                if (gain > 0) {
+                    winnersSum += gain;
+                    winnerCount++;
+                } else if (gain < 0) {
+                    losersSum += gain;
+                    loserCount++;
                 }
             }
         });
@@ -1227,6 +1216,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 
 

@@ -1437,6 +1437,10 @@ body {
   height: 1px;
 }
 
+.h-64 {
+  height: 16rem;
+}
+
 .max-h-96 {
   max-height: 24rem;
 }
@@ -1463,6 +1467,10 @@ body {
 
 .min-h-screen {
   min-height: 100vh;
+}
+
+.min-h-\[100px\] {
+  min-height: 100px;
 }
 
 .w-0 {
@@ -2181,6 +2189,10 @@ body {
   fill: currentColor;
 }
 
+.fill-yellow-400 {
+  fill: #facc15;
+}
+
 .object-contain {
   object-fit: contain;
 }
@@ -2557,6 +2569,11 @@ body {
 .text-yellow-500 {
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity, 1));
+}
+
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity, 1));
 }
 
 .underline {

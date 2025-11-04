@@ -1,5 +1,3 @@
-
-
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -157,6 +155,16 @@ const WinnerSchema = z.object({
     contract_symbol: z.string(),
 });
 export type Winner = z.infer<typeof WinnerSchema>;
+
+const FeedbackSurveyDataSchema = z.object({
+  usageFrequency: z.string(),
+  tradingImpact: z.string(),
+  tradingImpactExample: z.string().optional(),
+  perceivedValue: z.number(),
+  improvementSuggestion: z.string(),
+});
+export type FeedbackSurveyData = z.infer<typeof FeedbackSurveyDataSchema>;
+
 
 export async function getAppStatusAdmin(): Promise<{ isUpdating: boolean }> {
   noStore();
@@ -404,6 +412,19 @@ export async function saveFeedbackAdmin(
     console.error("Error writing feedback to Firestore with Admin SDK: ", error);
     throw new Error("Could not save feedback to the database.");
   }
+}
+
+export async function saveFeedbackSurveyAdmin(uid: string, data: FeedbackSurveyData): Promise<void> {
+    try {
+        await adminDb.collection("feedback_surveys").add({
+            ...data,
+            uid,
+            submittedAt: FieldValue.serverTimestamp(),
+        });
+    } catch (error) {
+        console.error("Error writing feedback survey to Firestore with Admin SDK: ", error);
+        throw new Error("Could not save survey to the database.");
+    }
 }
 
 export async function getOptionsHeaderSignalAdmin(ticker: string): Promise<OptionsSignal | null> {
@@ -1216,6 +1237,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 
 

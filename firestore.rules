@@ -11,6 +11,13 @@ service cloud.firestore {
       allow create: if true;
     }
 
+    // Allow authenticated users to submit a survey response for themselves,
+    // but not read, update, or delete any responses.
+    match /feedback_surveys/{surveyId} {
+      allow read, update, delete: if false;
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+    }
+
     // Default deny all other collections for security.
     // We can add specific rules for other collections like 'users' later if needed.
     match /{document=**} {

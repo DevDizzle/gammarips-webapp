@@ -1,9 +1,3 @@
-
-
-
-
-
-
 'use server';
 
 import {
@@ -39,8 +33,9 @@ import {
     getAllPerformanceSignalsAdmin,
     getPerformanceSignalsByTickerAdmin,
     getAppStatusAdmin,
+    saveFeedbackSurveyAdmin,
 } from '@/lib/firebase-admin';
-import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal } from '@/lib/firebase-admin';
+import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal, FeedbackSurveyData } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
@@ -345,12 +340,23 @@ export async function sendPasswordReset(email: string): Promise<void> {
 export async function handleWinSubmission(uid: string, formData: FormData): Promise<{ success: boolean, error?: string }> {
     return handleWinSubmission(uid, formData);
 }
+
+export async function handleFeedbackSurvey(uid: string, data: FeedbackSurveyData): Promise<{success: boolean}> {
+    try {
+        await saveFeedbackSurveyAdmin(uid, data);
+        return { success: true };
+    } catch (error: any) {
+        console.error(`Failed to save feedback survey for user ${uid}`, error);
+        throw new Error(error.message || "Could not save survey.");
+    }
+}
     
 
     
 
 
     
+
 
 
 

@@ -1,5 +1,3 @@
-
-
 'use server';
 
 import { Buffer } from 'node:buffer';
@@ -399,13 +397,11 @@ Hi ${name},
 
 You've been using ProfitScout for about a week now, and I wanted to personally check in.
 
-We're always working to make the tool better, and your early feedback is incredibly valuable.
-
-Is the daily email useful? Is there one thing we could do that would make ProfitScout even better for you?
+We're always working to make the tool better, and your early feedback is incredibly valuable. Is the information useful? Is there anything we can improve?
 
 Click the link below to share your thoughts—it only takes a moment.
 
-Share Your Feedback: https://profitscout.app/about#contact
+Share Your Feedback: https://profitscout.app/feedback
 
 Happy trading,
 The ProfitScout Team
@@ -436,12 +432,12 @@ The ProfitScout Team
                         <td style="padding: 0 40px;">
                             <p style="font-size: 16px; line-height: 1.6;">Hi ${name},</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You've been using ProfitScout for about a week now, and I wanted to personally check in. We're always working to make the tool better, and your early feedback is incredibly valuable.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;"><b>Is the daily email useful? Is there one thing we could do that would make ProfitScout even better for you?</b></p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;"><b>Is the information useful? Is there one thing we could do that would make ProfitScout even better for you?</b></p>
                         </td>
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://profitscout.app/about#contact" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
+                            <a href="https://profitscout.app/feedback" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
                         </td>
                     </tr>
                      <tr>
@@ -471,5 +467,3 @@ export async function sendFeedbackRequestEmail({ to, name }: { to: string, name:
         html,
     });
 }
-
-    

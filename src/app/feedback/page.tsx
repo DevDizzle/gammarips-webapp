@@ -1,3 +1,4 @@
+
 'use client';
 
 // A minimal component to test the route.

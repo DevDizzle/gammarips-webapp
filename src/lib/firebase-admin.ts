@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -155,7 +156,7 @@ const WinnerSchema = z.object({
     options_score: z.number().optional().nullable(),
     contract_symbol: z.string(),
 });
-export type Winner = z.infer<typeof WinnerSchema>;
+export type Winner = zInfer<typeof WinnerSchema>;
 
 const FeedbackSurveyDataSchema = z.object({
   perceivedValue: z.string(),
@@ -1052,6 +1053,7 @@ export async function getUsersForFeedbackEmailAdmin(): Promise<DbUser[]> {
     const eligibleUsers: DbUser[] = [];
     const daysIntervals = [7, 64, 128, 256];
     const now = new Date();
+    const thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000;
 
     try {
         const snapshot = await adminDb.collection('users').get();
@@ -1063,13 +1065,22 @@ export async function getUsersForFeedbackEmailAdmin(): Promise<DbUser[]> {
         snapshot.forEach(doc => {
             const user = doc.data() as DbUser;
 
-            if (user.email && user.createdAt && user.createdAt instanceof Timestamp) {
-                const createdAtDate = user.createdAt.toDate();
-                const diffTime = now.getTime() - createdAtDate.getTime();
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            // Basic validation
+            if (!user.email || !user.createdAt || !(user.createdAt instanceof Timestamp)) {
+                return;
+            }
+            
+            const createdAtDate = user.createdAt.toDate();
+            const diffTime = now.getTime() - createdAtDate.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-                // Check if the difference in days is one of the specified intervals
-                if (daysIntervals.includes(diffDays)) {
+            // Check if the user's signup date falls into one of the intervals
+            const isAtInterval = daysIntervals.includes(diffDays);
+
+            if (isAtInterval) {
+                 // Check if the user is either a paid subscriber OR in their free trial
+                const isInTrial = diffTime <= thirtyDaysInMillis;
+                if (user.isSubscribed || isInTrial) {
                     eligibleUsers.push(user);
                 }
             }

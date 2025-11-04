@@ -247,7 +247,7 @@ Your ProfitScout free trial is ending in 5 days.
 
 Don't lose access to the AI-powered tools that help you find your analytical edge. Upgrade to Pro now to keep receiving daily options setups and full access to your interactive dashboard.
 
-Upgrade to Pro: https://profitscout.app/dashboard
+Upgrade to Pro: https://profitscout.app/
 
 If you have any questions, just reply to this email.
 
@@ -286,7 +286,7 @@ The ProfitScout Team
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://profitscout.app/dashboard" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Upgrade to Pro - $19/month</a>
+                            <a href="https://profitscout.app/" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Upgrade to Pro - $19/month</a>
                         </td>
                     </tr>
                      <tr>
@@ -471,3 +471,5 @@ export async function sendFeedbackRequestEmail({ to, name }: { to: string, name:
         html,
     });
 }
+
+    

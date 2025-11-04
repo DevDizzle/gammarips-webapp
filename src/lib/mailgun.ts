@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { Buffer } from 'node:buffer';
@@ -319,16 +320,11 @@ function buildReferralEmailContent(name: string, referralLink: string): { text: 
     const textContent = `
 Hi ${name},
 
-Loving ProfitScout? Share it with a friend!
-
-We hope you're finding an edge with our AI-driven market insights.
-
-If you know someone else who would benefit from ProfitScout, use the link below to give them an extended 45-day free trial—on us.
+We hope you're finding an edge with our AI-driven market insights. If you know someone else who would benefit from ProfitScout, use the link below to give them an extended 45-day free trial—on us.
 
 Your unique sharing link:
 ${referralLink}
 
-Happy trading,
 The ProfitScout Team
 `;
 
@@ -361,13 +357,15 @@ The ProfitScout Team
                         </td>
                     </tr>
                     <tr>
-                        <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="${referralLink}" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share a 45-Day Trial</a>
+                         <td style="padding: 20px 40px 30px;">
+                            <p style="font-size: 14px; line-height: 1.6; text-align: center; color: #A0A0A0;">Copy your unique link and share it with a friend:</p>
+                            <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 12px; text-align: center; margin-top: 8px;">
+                                <a href="${referralLink}" style="font-family: monospace; font-size: 15px; color: #BEFF0A; text-decoration: none; word-break: break-all;">${referralLink}</a>
+                            </div>
                         </td>
                     </tr>
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
-                             <p style="margin: 0;">Happy trading!</p>
                             <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
                         </td>
                     </tr>

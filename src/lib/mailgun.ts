@@ -1,3 +1,4 @@
+
 'use server';
 
 import { Buffer } from 'node:buffer';
@@ -395,16 +396,17 @@ function buildFeedbackRequestEmailContent(name: string): { text: string; html: s
     const textContent = `
 Hi ${name},
 
-You've been using ProfitScout for about a week now, and I wanted to personally check in.
+I'm Evan Parra, the founder of ProfitScout.
 
-We're always working to make the tool better, and your early feedback is incredibly valuable. Is the information useful? Is there anything we can improve?
+You've been using the tool for about a week now, and I wanted to personally check in. As an early user, your perspective is incredibly valuable for shaping what we build next.
 
-Click the link below to share your thoughts—it only takes a moment.
+I would be grateful if you could take 60 seconds to share your initial thoughts. Your feedback goes directly to our product team (and me) to help us improve.
 
 Share Your Feedback: https://profitscout.app/feedback
 
-Happy trading,
-The ProfitScout Team
+All the best,
+Evan Parra
+Founder, ProfitScout
 `;
 
     const htmlContent = `
@@ -416,7 +418,7 @@ The ProfitScout Team
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>How's it going with ProfitScout?</title>
+    <title>A personal check-in from ProfitScout's founder</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
@@ -431,8 +433,9 @@ The ProfitScout Team
                     <tr>
                         <td style="padding: 0 40px;">
                             <p style="font-size: 16px; line-height: 1.6;">Hi ${name},</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You've been using ProfitScout for about a week now, and I wanted to personally check in. We're always working to make the tool better, and your early feedback is incredibly valuable.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;"><b>Is the information useful? Is there one thing we could do that would make ProfitScout even better for you?</b></p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I'm Evan Parra, the founder of ProfitScout.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You've been using the tool for about a week now, and I wanted to personally check in. As an early user, your perspective is incredibly valuable for shaping what we build next.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I would be grateful if you could take 60 seconds to share your initial thoughts. Your feedback goes directly to our product team (and me) to help us improve.</p>
                         </td>
                     </tr>
                     <tr>
@@ -441,9 +444,14 @@ The ProfitScout Team
                         </td>
                     </tr>
                      <tr>
-                        <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
-                            <p style="margin: 0;">Happy trading!</p>
-                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
+                        <td style="padding: 0 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
+                            <p style="margin: 0;">All the best,</p>
+                            <p style="margin-top: 4px;">Evan Parra<br>Founder, ProfitScout</p>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td style="padding: 0 40px 20px; text-align: center; font-size: 12px; color: #A0A0A0; border-top: 1px solid #393b4d; padding-top: 20px;">
+                             <p style="margin: 0;">&copy; 2025 ProfitScout. All rights reserved.</p>
                         </td>
                     </tr>
                 </table>
@@ -461,8 +469,9 @@ The ProfitScout Team
 export async function sendFeedbackRequestEmail({ to, name }: { to: string, name: string }) {
     const { text, html } = buildFeedbackRequestEmailContent(name);
     return sendEmail({
+        from: 'Evan Parra <evan@profitscout.app>',
         to: `${name} <${to}>`,
-        subject: `How's it going with ProfitScout?`,
+        subject: `A personal check-in from ProfitScout's founder`,
         text,
         html,
     });

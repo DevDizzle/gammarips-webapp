@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, CheckCircle, Star } from 'lucide-react';
+import { Loader2, CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 import type { FeedbackSurveyData } from '@/lib/firebase-admin';
@@ -20,23 +20,20 @@ export default function FeedbackPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const [usageFrequency, setUsageFrequency] = useState('');
-  const [tradingImpact, setTradingImpact] = useState('');
-  const [tradingImpactExample, setTradingImpactExample] = useState('');
-  const [perceivedValue, setPerceivedValue] = useState(0);
+  const [perceivedValue, setPerceivedValue] = useState('');
+  const [mostUseful, setMostUseful] = useState('');
   const [improvementSuggestion, setImprovementSuggestion] = useState('');
   
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      setShowAuthDialog(true);
+      router.push('/');
       return;
     }
 
-    if (!usageFrequency || !tradingImpact || perceivedValue === 0 || !improvementSuggestion) {
+    if (!perceivedValue || !improvementSuggestion) {
       toast({
         title: 'Please complete all required fields',
         description: 'Your feedback is valuable, please fill out all parts of the survey.',
@@ -48,10 +45,8 @@ export default function FeedbackPage() {
     setStatus('loading');
     
     const surveyData: FeedbackSurveyData = {
-        usageFrequency,
-        tradingImpact,
-        tradingImpactExample,
         perceivedValue,
+        mostUseful,
         improvementSuggestion,
     };
 
@@ -77,11 +72,7 @@ export default function FeedbackPage() {
   }
 
   if (!user && !authLoading) {
-     return (
-        <>
-            <AuthDialog open={!user} onOpenChange={() => router.push('/')} />
-        </>
-    );
+     return <AuthDialog open={true} onOpenChange={() => router.push('/')} />;
   }
   
   if (status === 'success') {
@@ -112,55 +103,34 @@ export default function FeedbackPage() {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Question 1 */}
           <div className="space-y-3">
-            <Label className="font-semibold">In the past 7 days, how often have you used ProfitScout?</Label>
-            <RadioGroup value={usageFrequency} onValueChange={setUsageFrequency} required>
-              <div className="flex items-center space-x-2"><RadioGroupItem value="daily" id="q1-daily" /><Label htmlFor="q1-daily">Daily</Label></div>
-              <div className="flex items-center space-x-2"><RadioGroupItem value="2-3-times" id="q1-2-3" /><Label htmlFor="q1-2-3">2–3 times</Label></div>
-              <div className="flex items-center space-x-2"><RadioGroupItem value="once" id="q1-once" /><Label htmlFor="q1-once">Once</Label></div>
-              <div className="flex items-center space-x-2"><RadioGroupItem value="not-used" id="q1-not-used" /><Label htmlFor="q1-not-used">I haven’t really used it yet</Label></div>
-              <div className="flex items-center space-x-2"><RadioGroupItem value="trouble-starting" id="q1-trouble" /><Label htmlFor="q1-trouble">I tried, but had trouble getting started</Label></div>
+            <Label className="font-semibold">So far, how valuable has ProfitScout been to you?</Label>
+            <RadioGroup value={perceivedValue} onValueChange={setPerceivedValue} required>
+              <div className="flex items-center space-x-2"><RadioGroupItem value="very-valuable" id="q1-very" /><Label htmlFor="q1-very">Very valuable</Label></div>
+              <div className="flex items-center space-x-2"><RadioGroupItem value="somewhat-valuable" id="q1-somewhat" /><Label htmlFor="q1-somewhat">Somewhat valuable</Label></div>
+              <div className="flex items-center space-x-2"><RadioGroupItem value="not-very-valuable" id="q1-not-very" /><Label htmlFor="q1-not-very">Not very valuable</Label></div>
+              <div className="flex items-center space-x-2"><RadioGroupItem value="not-used-yet" id="q1-not-used" /><Label htmlFor="q1-not-used">I haven't had a chance to use it much yet</Label></div>
             </RadioGroup>
           </div>
 
           {/* Question 2 */}
           <div className="space-y-3">
-            <Label className="font-semibold">So far, how has ProfitScout influenced your options trading decisions?</Label>
-            <RadioGroup value={tradingImpact} onValueChange={setTradingImpact} required>
-                <div className="flex items-center space-x-2"><RadioGroupItem value="helped-place-trade" id="q2-place" /><Label htmlFor="q2-place">It helped me place a trade I felt more confident about</Label></div>
-                <div className="flex items-center space-x-2"><RadioGroupItem value="helped-avoid-trade" id="q2-avoid" /><Label htmlFor="q2-avoid">It helped me avoid a trade I might have taken</Label></div>
-                <div className="flex items-center space-x-2"><RadioGroupItem value="explored-no-decision" id="q2-explore" /><Label htmlFor="q2-explore">I’ve explored the app but haven’t used it to make a decision yet</Label></div>
-                <div className="flex items-center space-x-2"><RadioGroupItem value="no-trades-placed" id="q2-no-trades" /><Label htmlFor="q2-no-trades">I haven’t placed any trades yet / I’m just learning</Label></div>
-            </RadioGroup>
-             <Textarea
-                value={tradingImpactExample}
-                onChange={(e) => setTradingImpactExample(e.target.value)}
-                placeholder="Tell us about one example (optional)"
-                className="mt-2"
+            <Label htmlFor="q2-most-useful" className="font-semibold">What, if anything, have you found most useful about ProfitScout so far?</Label>
+            <Textarea
+                id="q2-most-useful"
+                value={mostUseful}
+                onChange={(e) => setMostUseful(e.target.value)}
+                placeholder="e.g., the daily emails, the AI analysis, the dashboard KPIs..."
             />
           </div>
-
+          
           {/* Question 3 */}
           <div className="space-y-3">
-            <Label className="font-semibold">Overall, how valuable has ProfitScout been to your options research so far?</Label>
-            <div className="flex items-center gap-2">
-                {[1, 2, 3, 4, 5].map(star => (
-                    <Star
-                        key={star}
-                        className={`h-8 w-8 cursor-pointer transition-colors ${perceivedValue >= star ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground'}`}
-                        onClick={() => setPerceivedValue(star)}
-                    />
-                ))}
-            </div>
-          </div>
-          
-          {/* Question 4 */}
-          <div className="space-y-3">
-            <Label htmlFor="q4-improvement" className="font-semibold">What is the #1 thing we could improve or add to make ProfitScout more useful for you?</Label>
+            <Label htmlFor="q3-improvement" className="font-semibold">What is the #1 thing we could improve or add to make ProfitScout more useful for you?</Label>
             <Textarea
-                id="q4-improvement"
+                id="q3-improvement"
                 value={improvementSuggestion}
                 onChange={(e) => setImprovementSuggestion(e.target.value)}
-                placeholder="E.g., a specific feature, data you wish we had, or something that feels confusing/slow."
+                placeholder="e.g., a specific feature, data you wish we had, or something that feels confusing/slow."
                 required
             />
           </div>

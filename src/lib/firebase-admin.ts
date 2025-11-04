@@ -158,10 +158,8 @@ const WinnerSchema = z.object({
 export type Winner = z.infer<typeof WinnerSchema>;
 
 const FeedbackSurveyDataSchema = z.object({
-  usageFrequency: z.string(),
-  tradingImpact: z.string(),
-  tradingImpactExample: z.string().optional(),
-  perceivedValue: z.number(),
+  perceivedValue: z.string(),
+  mostUseful: z.string().optional(),
   improvementSuggestion: z.string(),
 });
 export type FeedbackSurveyData = z.infer<typeof FeedbackSurveyDataSchema>;
@@ -1238,6 +1236,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 
 

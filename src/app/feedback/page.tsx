@@ -68,6 +68,8 @@ function FeedbackPageClient() {
   }
 
   if (!user) {
+    // Redirect non-logged-in users or show a login dialog
+    router.push('/'); 
     return <AuthDialog open={true} onOpenChange={() => router.push('/')} />;
   }
   

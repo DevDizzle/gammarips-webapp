@@ -2,16 +2,16 @@
 import { config } from 'dotenv';
 config();
 
-import { sendTrialReminderEmail } from '@/lib/mailgun';
+import { sendReferralEmail } from '@/lib/mailgun';
 
-console.log('Attempting to send a test trial reminder email...');
+console.log('Attempting to send a test referral email...');
 
-sendTrialReminderEmail({ to: 'eraphaelparra@gmail.com', name: 'Test User' })
+sendReferralEmail({ to: 'eraphaelparra@gmail.com', name: 'Test User', referralLink: 'https://profitscout.app/?ref=TEST-UID-123' })
   .then((result) => {
     if (result.ok) {
-      console.log('Test trial reminder email sent successfully.');
+      console.log('Test referral email sent successfully.');
     } else {
-      console.error('Failed to send test trial reminder email:', result.details);
+      console.error('Failed to send test referral email:', result.details);
     }
     process.exit(0);
   })
@@ -19,4 +19,3 @@ sendTrialReminderEmail({ to: 'eraphaelparra@gmail.com', name: 'Test User' })
     console.error('An error occurred while sending the test email:', error);
     process.exit(1);
   });
-

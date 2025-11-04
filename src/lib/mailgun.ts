@@ -317,15 +317,36 @@ export async function sendTrialReminderEmail({ to, name }: { to: string, name: s
 }
 
 function buildReferralEmailContent(name: string, referralLink: string): { text: string; html: string } {
+    const suggestedPost = `I'm using ProfitScout for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out: ${referralLink}`;
+    const twitterShareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(suggestedPost)}&hashtags=optionstrading,AI,fintech,tradingtools`;
+    const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(referralLink)}`;
+
     const textContent = `
 Hi ${name},
 
-We hope you're finding an edge with our AI-driven market insights. If you know someone else who would benefit from ProfitScout, use the link below to give them an extended 45-day free trial—on us.
+I hope you're finding an edge with ProfitScout's AI-driven market insights.
 
-Your unique sharing link:
+As you continue to explore the tool, I wanted to share a quick way you can give your friends and colleagues that same advantage. We've created a special referral offer. When you use your unique link below, you can give anyone in your network an extended 45-day free trial—on us.
+
+1. Share Directly with a Friend
+Know someone specific who would benefit from ProfitScout? Just copy your link and send it their way.
+Your unique link: ${referralLink}
+
+2. Share on Social Media
+Want to share this offer with your wider network? 
+Share on X/Twitter: ${twitterShareUrl}
+Share on LinkedIn: ${linkedinShareUrl}
+
+Suggested Post:
+I'm using ProfitScout for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out:
 ${referralLink}
+#optionstrading #AI #fintech #tradingtools
 
-The ProfitScout Team
+Thanks for helping spread the word!
+
+All the best,
+Evan P.
+Founder, ProfitScout
 `;
 
     const htmlContent = `
@@ -337,7 +358,7 @@ The ProfitScout Team
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>Share ProfitScout with a Friend</title>
+    <title>Share the edge: Give your friends 45 days of ProfitScout</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
@@ -347,26 +368,56 @@ The ProfitScout Team
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
                             <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
-                            <p style="font-size: 18px; color: #A0A0A0; margin-top: 12px;">Loving ProfitScout? Share it!</p>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
                             <p style="font-size: 16px; line-height: 1.6;">Hi ${name},</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We hope you're finding an edge with our AI-driven market insights. If you know someone else who would benefit from ProfitScout, use the link below to give them an extended <strong>45-day free trial</strong>—on us.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I hope you're finding an edge with ProfitScout's AI-driven market insights.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">As you continue to explore the tool, I wanted to share a quick way you can give your friends and colleagues that same advantage. We've created a special referral offer. When you use your unique link below, you can give anyone in your network an extended <strong>45-day free trial</strong>—on us.</p>
                         </td>
                     </tr>
                     <tr>
-                         <td style="padding: 20px 40px 30px;">
-                            <p style="font-size: 14px; line-height: 1.6; text-align: center; color: #A0A0A0;">Copy your unique link and share it with a friend:</p>
-                            <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 12px; text-align: center; margin-top: 8px;">
+                        <td style="padding: 30px 40px 0;">
+                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; color: #ffffff; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #393b4d; padding-bottom: 10px;">1. Share Directly with a Friend</h2>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 0;">Know someone specific who would benefit? Just copy your link and send it their way.</p>
+                            <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 12px; text-align: center; margin-top: 8px; margin-bottom: 20px;">
                                 <a href="${referralLink}" style="font-family: monospace; font-size: 15px; color: #BEFF0A; text-decoration: none; word-break: break-all;">${referralLink}</a>
                             </div>
                         </td>
                     </tr>
+                    <tr>
+                        <td style="padding: 20px 40px 0;">
+                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; color: #ffffff; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #393b4d; padding-bottom: 10px;">2. Share on Social Media</h2>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 0;">Want to share this offer with your wider network? We've made it easy.</p>
+                            <table border="0" cellspacing="0" cellpadding="0" style="margin-top: 20px; width: 100%;">
+                                <tr>
+                                    <td align="center" width="50%" style="padding-right: 10px;">
+                                        <a href="${twitterShareUrl}" style="background-color: #393b4d; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; display: block;">Share on X/Twitter</a>
+                                    </td>
+                                    <td align="center" width="50%" style="padding-left: 10px;">
+                                        <a href="${linkedinShareUrl}" style="background-color: #393b4d; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; display: block;">Share on LinkedIn</a>
+                                    </td>
+                                </tr>
+                            </table>
+                             <p style="font-size: 14px; line-height: 1.6; margin-top: 20px; color: #A0A0A0;">You can also copy and paste the message below:</p>
+                             <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 15px; margin-top: 8px;">
+                                <p style="font-size: 14px; line-height: 1.6; margin: 0;">I'm using ProfitScout for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out:</p>
+                                <p style="font-size: 14px; line-height: 1.6; margin: 10px 0 0;"><a href="${referralLink}" style="color: #BEFF0A; text-decoration: none;">${referralLink}</a></p>
+                                <p style="font-size: 14px; line-height: 1.6; margin: 10px 0 0; color: #A0A0A0;">#optionstrading #AI #fintech #tradingtools</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 40px 40px 20px; text-align: left; font-size: 14px; color: #A0A0A0;">
+                            <p style="margin: 0;">Thanks for helping spread the word!</p>
+                            <p style="margin: 16px 0 0;">All the best,</p>
+                            <p style="margin-top: 4px;">Evan P.<br>Founder, ProfitScout</p>
+                        </td>
+                    </tr>
                      <tr>
-                        <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
-                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
+                        <td style="padding: 20px 40px 20px; text-align: center; font-size: 12px; color: #A0A0A0; border-top: 1px solid #393b4d; margin-top: 20px;">
+                             <p style="margin: 0;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
                         </td>
                     </tr>
                 </table>
@@ -380,11 +431,12 @@ The ProfitScout Team
     return { text: textContent, html: htmlContent };
 }
 
+
 export async function sendReferralEmail({ to, name, referralLink }: { to: string; name: string; referralLink: string; }) {
     const { text, html } = buildReferralEmailContent(name, referralLink);
     return sendEmail({
         to: `${name} <${to}>`,
-        subject: `Loving ProfitScout? Share it with a friend.`,
+        subject: `Share the edge: Give your friends 45 days of ProfitScout`,
         text,
         html,
     });
@@ -427,6 +479,7 @@ Founder, ProfitScout
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
+                            
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I'm Evan Parra, the founder of ProfitScout.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You've been using the tool for about a week now, and I wanted to personally check in. As an early user, your perspective is incredibly valuable for shaping what we build next.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I would be grateful if you could take 60 seconds to share your initial thoughts. Your feedback goes directly to our product team (and me) to help us improve.</p>

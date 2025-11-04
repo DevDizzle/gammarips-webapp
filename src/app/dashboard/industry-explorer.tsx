@@ -1,3 +1,6 @@
+
+'use client';
+
 import { getWinnersDashboard } from '../actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -9,6 +12,8 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import type { Winner } from '@/lib/firebase-admin';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 // Helper to convert GCS URI to a public URL
 const convertGcsUriToUrl = (gcsUri: string) => {
@@ -33,33 +38,60 @@ const getSignalMeta = (signal: string) => {
 };
 
 
-export async function IndustryExplorer() {
-    const allWinners = await getWinnersDashboard();
+export function IndustryExplorer() {
+    const router = useRouter();
+    const [winnersBySector, setWinnersBySector] = useState<Record<string, Winner[]>>({});
+    const [sortedSectors, setSortedSectors] = useState<string[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    // 1. De-duplicate winners by ticker, keeping only the one with the highest score
-    const uniqueWinnersMap = new Map<string, Winner>();
-    allWinners.forEach(winner => {
-        const existing = uniqueWinnersMap.get(winner.ticker);
-        if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
-            uniqueWinnersMap.set(winner.ticker, winner);
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const allWinners = await getWinnersDashboard();
+
+                // 1. De-duplicate winners by ticker, keeping only the one with the highest score
+                const uniqueWinnersMap = new Map<string, Winner>();
+                allWinners.forEach(winner => {
+                    const existing = uniqueWinnersMap.get(winner.ticker);
+                    if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
+                        uniqueWinnersMap.set(winner.ticker, winner);
+                    }
+                });
+                const uniqueWinners = Array.from(uniqueWinnersMap.values());
+
+                // 2. Group the unique winners by sector
+                const groupedBySector = uniqueWinners.reduce((acc, winner) => {
+                    const sector = winner.sector || 'Other';
+                    if (!acc[sector]) {
+                        acc[sector] = [];
+                    }
+                    acc[sector].push(winner);
+                    return acc;
+                }, {} as Record<string, Winner[]>);
+
+                // 3. Sort sectors by the number of winners
+                const sorted = Object.keys(groupedBySector).sort((a, b) => {
+                    return groupedBySector[b].length - groupedBySector[a].length;
+                });
+
+                setWinnersBySector(groupedBySector);
+                setSortedSectors(sorted);
+            } catch (error) {
+                console.error("Failed to fetch and process industry data", error);
+            } finally {
+                setLoading(false);
+            }
         }
-    });
-    const uniqueWinners = Array.from(uniqueWinnersMap.values());
+        fetchData();
+    }, []);
 
-    // 2. Group the unique winners by sector
-    const winnersBySector = uniqueWinners.reduce((acc, winner) => {
-        const sector = winner.sector || 'Other';
-        if (!acc[sector]) {
-            acc[sector] = [];
-        }
-        acc[sector].push(winner);
-        return acc;
-    }, {} as Record<string, Winner[]>);
+    const handleRowClick = (ticker: string) => {
+        router.push(`/dashboard/${ticker.toUpperCase()}`);
+    };
 
-    // 3. Sort sectors by the number of winners
-    const sortedSectors = Object.keys(winnersBySector).sort((a, b) => {
-        return winnersBySector[b].length - winnersBySector[a].length;
-    });
+    if (loading) {
+        return <IndustryExplorerSkeleton />;
+    }
 
     return (
         <Card>
@@ -111,7 +143,7 @@ export async function IndustryExplorer() {
                                                     : `https://placehold.co/24x24/1e293b/a855f7?text=${winner.ticker[0]}`;
                                                 const signalMeta = getSignalMeta(winner.outlook_signal);
                                                 return (
-                                                    <TableRow key={winner.id}>
+                                                    <TableRow key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer">
                                                         <TableCell className="font-medium">
                                                             <div className="flex items-center gap-3">
                                                                 <Image 

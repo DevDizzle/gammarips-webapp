@@ -12,9 +12,7 @@ function DashboardContent() {
             <Suspense fallback={<PerformanceTrackerSkeleton />}>
                 <PerformanceTracker />
             </Suspense>
-            <Suspense fallback={<IndustryExplorerSkeleton />}>
-              <IndustryExplorer />
-            </Suspense>
+            <IndustryExplorer />
         </div>
     )
 }

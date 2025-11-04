@@ -393,10 +393,7 @@ export async function sendReferralEmail({ to, name, referralLink }: { to: string
 }
 
 function buildFeedbackRequestEmailContent(name: string): { text: string; html: string } {
-    const textContent = `
-Hi ${name},
-
-I'm Evan Parra, the founder of ProfitScout.
+    const textContent = `I'm Evan Parra, the founder of ProfitScout.
 
 You've been using the tool for about a week now, and I wanted to personally check in. As an early user, your perspective is incredibly valuable for shaping what we build next.
 
@@ -405,7 +402,7 @@ I would be grateful if you could take 60 seconds to share your initial thoughts.
 Share Your Feedback: https://profitscout.app/feedback
 
 All the best,
-Evan Parra
+Evan P.
 Founder, ProfitScout
 `;
 
@@ -432,7 +429,6 @@ Founder, ProfitScout
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
-                            <p style="font-size: 16px; line-height: 1.6;">Hi ${name},</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I'm Evan Parra, the founder of ProfitScout.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You've been using the tool for about a week now, and I wanted to personally check in. As an early user, your perspective is incredibly valuable for shaping what we build next.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I would be grateful if you could take 60 seconds to share your initial thoughts. Your feedback goes directly to our product team (and me) to help us improve.</p>
@@ -446,7 +442,7 @@ Founder, ProfitScout
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
                             <p style="margin: 0;">All the best,</p>
-                            <p style="margin-top: 4px;">Evan Parra<br>Founder, ProfitScout</p>
+                            <p style="margin-top: 4px;">Evan P.<br>Founder, ProfitScout</p>
                         </td>
                     </tr>
                      <tr>
@@ -469,7 +465,7 @@ Founder, ProfitScout
 export async function sendFeedbackRequestEmail({ to, name }: { to: string, name: string }) {
     const { text, html } = buildFeedbackRequestEmailContent(name);
     return sendEmail({
-        from: 'Evan Parra <evan@profitscout.app>',
+        from: 'ProfitScout <admin@profitscout.app>',
         to: `${name} <${to}>`,
         subject: `A personal check-in from ProfitScout's founder`,
         text,

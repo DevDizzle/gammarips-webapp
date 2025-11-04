@@ -1016,23 +1016,12 @@ export async function getUsersForTrialReminderAdmin(): Promise<DbUser[]> {
 
 export async function getUsersForReferralEmailAdmin(): Promise<DbUser[]> {
     const eligibleUsers: DbUser[] = [];
+    const daysIntervals = [14, 64, 128, 256];
+    const now = new Date();
+
     try {
-        const now = new Date();
-        const startOf14DaysAgo = new Date(now.getTime() - (14 * 24 * 60 * 60 * 1000));
-        startOf14DaysAgo.setHours(0, 0, 0, 0);
-
-        const endOf14DaysAgo = new Date(startOf14DaysAgo);
-        endOf14DaysAgo.setHours(23, 59, 59, 999);
-        
-        const startTimestamp = Timestamp.fromDate(startOf14DaysAgo);
-        const endTimestamp = Timestamp.fromDate(endOf14DaysAgo);
-
-        // Find non-subscribed users created 14 days ago
-        const snapshot = await adminDb.collection('users')
-            .where('isSubscribed', '==', false)
-            .where('createdAt', '>=', startTimestamp)
-            .where('createdAt', '<=', endTimestamp)
-            .get();
+        // Fetch all non-subscribed users
+        const snapshot = await adminDb.collection('users').where('isSubscribed', '==', false).get();
 
         if (snapshot.empty) {
             return [];
@@ -1040,9 +1029,16 @@ export async function getUsersForReferralEmailAdmin(): Promise<DbUser[]> {
 
         snapshot.forEach(doc => {
             const user = doc.data() as DbUser;
-            // Ensure they have an email to send to
-            if (user.email) {
-                eligibleUsers.push(user);
+
+            if (user.email && user.createdAt && user.createdAt instanceof Timestamp) {
+                const createdAtDate = user.createdAt.toDate();
+                const diffTime = now.getTime() - createdAtDate.getTime();
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+                // Check if the difference in days is one of the specified intervals
+                if (daysIntervals.includes(diffDays)) {
+                    eligibleUsers.push(user);
+                }
             }
         });
 
@@ -1236,6 +1232,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+
 
 
 

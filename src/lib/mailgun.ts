@@ -319,7 +319,9 @@ export async function sendTrialReminderEmail({ to, name }: { to: string, name: s
 function buildReferralEmailContent(name: string, referralLink: string): { text: string; html: string } {
     const suggestedPost = `I'm using ProfitScout for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out: ${referralLink}`;
     const twitterShareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(suggestedPost)}&hashtags=optionstrading,AI,fintech,tradingtools`;
-    const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(referralLink)}`;
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`;
+    const redditShareUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(referralLink)}&title=${encodeURIComponent("Check out this AI-powered tool for options traders - ProfitScout")}`;
+
 
     const textContent = `
 Hi ${name},
@@ -335,7 +337,8 @@ Your unique link: ${referralLink}
 2. Share on Social Media
 Want to share this offer with your wider network? 
 Share on X/Twitter: ${twitterShareUrl}
-Share on LinkedIn: ${linkedinShareUrl}
+Share on Facebook: ${facebookShareUrl}
+Share on Reddit: ${redditShareUrl}
 
 Suggested Post:
 I'm using ProfitScout for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out:
@@ -392,11 +395,14 @@ Founder, ProfitScout
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 0;">Want to share this offer with your wider network? We've made it easy.</p>
                             <table border="0" cellspacing="0" cellpadding="0" style="margin-top: 20px; width: 100%;">
                                 <tr>
-                                    <td align="center" width="50%" style="padding-right: 10px;">
-                                        <a href="${twitterShareUrl}" style="background-color: #393b4d; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; display: block;">Share on X/Twitter</a>
+                                    <td align="center" style="padding-right: 5px;">
+                                        <a href="${twitterShareUrl}" style="background-color: #393b4d; color: #ffffff; padding: 12px 10px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; display: block;">X/Twitter</a>
                                     </td>
-                                    <td align="center" width="50%" style="padding-left: 10px;">
-                                        <a href="${linkedinShareUrl}" style="background-color: #393b4d; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; display: block;">Share on LinkedIn</a>
+                                    <td align="center" style="padding-left: 5px; padding-right: 5px;">
+                                        <a href="${facebookShareUrl}" style="background-color: #393b4d; color: #ffffff; padding: 12px 10px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; display: block;">Facebook</a>
+                                    </td>
+                                     <td align="center" style="padding-left: 5px;">
+                                        <a href="${redditShareUrl}" style="background-color: #393b4d; color: #ffffff; padding: 12px 10px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; display: block;">Reddit</a>
                                     </td>
                                 </tr>
                             </table>

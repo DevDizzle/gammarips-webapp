@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { handleFeedbackSurvey } from '../actions';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 
-function FeedbackPageClient() {
+export default function FeedbackPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
@@ -171,9 +171,4 @@ function FeedbackPageClient() {
       </CardContent>
     </Card>
   );
-}
-
-
-export default function FeedbackPage() {
-    return <FeedbackPageClient />;
 }

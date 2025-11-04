@@ -2,16 +2,16 @@
 import { config } from 'dotenv';
 config();
 
-import { sendTrialReminderEmail } from '@/lib/mailgun';
+import { sendFeedbackRequestEmail } from '@/lib/mailgun';
 
-console.log('Attempting to send a test trial reminder email...');
+console.log('Attempting to send a test feedback request email...');
 
-sendTrialReminderEmail({ to: 'admin@profitscout.app', name: 'Test User' })
+sendFeedbackRequestEmail({ to: 'eraphaelparra@gmail.com', name: 'Test User' })
   .then((result) => {
     if (result.ok) {
-      console.log('Test trial reminder email sent successfully.');
+      console.log('Test feedback request email sent successfully.');
     } else {
-      console.error('Failed to send test trial reminder email:', result.details);
+      console.error('Failed to send test feedback request email:', result.details);
     }
     process.exit(0);
   })

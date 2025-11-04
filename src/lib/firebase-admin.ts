@@ -1050,21 +1050,11 @@ export async function getUsersForReferralEmailAdmin(): Promise<DbUser[]> {
 
 export async function getUsersForFeedbackEmailAdmin(): Promise<DbUser[]> {
     const eligibleUsers: DbUser[] = [];
+    const daysIntervals = [7, 64, 128, 256];
+    const now = new Date();
+
     try {
-        const now = new Date();
-        const startOf7DaysAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
-        startOf7DaysAgo.setHours(0, 0, 0, 0);
-
-        const endOf7DaysAgo = new Date(startOf7DaysAgo);
-        endOf7DaysAgo.setHours(23, 59, 59, 999);
-        
-        const startTimestamp = Timestamp.fromDate(startOf7DaysAgo);
-        const endTimestamp = Timestamp.fromDate(endOf7DaysAgo);
-
-        const snapshot = await adminDb.collection('users')
-            .where('createdAt', '>=', startTimestamp)
-            .where('createdAt', '<=', endTimestamp)
-            .get();
+        const snapshot = await adminDb.collection('users').get();
 
         if (snapshot.empty) {
             return [];
@@ -1072,8 +1062,16 @@ export async function getUsersForFeedbackEmailAdmin(): Promise<DbUser[]> {
 
         snapshot.forEach(doc => {
             const user = doc.data() as DbUser;
-            if (user.email) {
-                eligibleUsers.push(user);
+
+            if (user.email && user.createdAt && user.createdAt instanceof Timestamp) {
+                const createdAtDate = user.createdAt.toDate();
+                const diffTime = now.getTime() - createdAtDate.getTime();
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+                // Check if the difference in days is one of the specified intervals
+                if (daysIntervals.includes(diffDays)) {
+                    eligibleUsers.push(user);
+                }
             }
         });
 
@@ -1253,3 +1251,6 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
 
+
+
+    

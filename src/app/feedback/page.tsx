@@ -24,10 +24,14 @@ export default function FeedbackPage() {
   const [tradingImpactExample, setTradingImpactExample] = useState('');
   const [perceivedValue, setPerceivedValue] = useState(0);
   const [improvementSuggestion, setImprovementSuggestion] = useState('');
+  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user) {
+      setIsAuthDialogOpen(true);
+      return;
+    };
 
     if (!usageFrequency || !tradingImpact || !perceivedValue || !improvementSuggestion) {
       toast({
@@ -67,9 +71,11 @@ export default function FeedbackPage() {
   }
 
   if (!user) {
-    // Redirect non-logged-in users or show a login dialog
-    router.push('/'); 
-    return <AuthDialog open={true} onOpenChange={() => router.push('/')} />;
+     return (
+        <>
+            <AuthDialog open={isAuthDialogOpen || true} onOpenChange={setIsAuthDialogOpen} />
+        </>
+    );
   }
   
   if (status === 'success') {

@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -151,12 +150,12 @@ const WinnerSchema = z.object({
     ticker: z.string(),
     weighted_score: z.number().nullable(),
     option_type: z.enum(['call', 'put']),
-    strike_price: z.number(),
+    strike_price: z.preprocess((val) => (typeof val === 'number' ? String(val) : val), z.string()).transform(v => parseFloat(v)),
     expiration_date: z.string(),
     options_score: z.number().optional().nullable(),
     contract_symbol: z.string(),
 });
-export type Winner = zInfer<typeof WinnerSchema>;
+export type Winner = z.infer<typeof WinnerSchema>;
 
 const FeedbackSurveyDataSchema = z.object({
   perceivedValue: z.string(),
@@ -438,18 +437,20 @@ export async function getOptionsHeaderSignalAdmin(ticker: string): Promise<Optio
         }
 
         const data = docSnap.data();
+        const allSignals = [...(data?.calls || []), ...(data?.puts || [])];
         
-        // Find the first 'call' signal to use for the header
-        const headerSignal = data?.calls?.[0] ?? null;
-        if (!headerSignal) {
-             console.warn(`No 'call' option signals found for ticker: ${ticker} to create header.`);
+        // Find the first signal with a "Strong" setup quality
+        const strongSignal = allSignals.find(signal => signal.setup_quality_signal === 'Strong');
+
+        if (!strongSignal) {
+             console.warn(`No "Strong" quality option signal found for ticker: ${ticker} to create header.`);
              return null;
         }
 
-        const validation = OptionsSignalSchema.safeParse(headerSignal);
+        const validation = OptionsSignalSchema.safeParse(strongSignal);
 
         if (!validation.success) {
-            console.error(`Invalid options header signal data for ${ticker}:`, validation.error.flatten());
+            console.error(`Invalid "Strong" options signal data for ${ticker}:`, validation.error.flatten());
             return null;
         }
         
@@ -1262,6 +1263,9 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
 
+
+
+    
 
 
     

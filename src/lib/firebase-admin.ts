@@ -1052,7 +1052,7 @@ export async function getUsersForReferralEmailAdmin(): Promise<DbUser[]> {
 
 export async function getUsersForFeedbackEmailAdmin(): Promise<DbUser[]> {
     const eligibleUsers: DbUser[] = [];
-    const daysIntervals = [7, 64, 128, 256];
+    const daysIntervals = [7, 28, 112, 224];
     const now = new Date();
     const thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000;
 

@@ -1,5 +1,6 @@
 
 
+
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -93,7 +94,7 @@ const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-headline">
                     <ThumbsUp className="text-muted-foreground" />
-                    Other Noteworthy Setups
+                    Noteworthy Setups
                 </CardTitle>
                 <CardDescription>
                     These options have a "Fair" setup quality. They might offer interesting opportunities but have some trade-offs compared to our top-rated signal.

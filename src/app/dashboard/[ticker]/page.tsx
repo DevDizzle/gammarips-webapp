@@ -1,4 +1,3 @@
-
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -253,7 +252,7 @@ function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
       <FairOptionsDisplay options={fairQualityOptions} />
 
       {/* KPI Section with Carousel */}
-      <div className="lg:hidden -mx-4 sm:-mx-6 lg:-mx-8">
+      <div className="-mx-4 sm:-mx-6 lg:hidden lg:-mx-8">
         <Carousel opts={{ align: "start", loop: true }} className="w-full">
             <CarouselContent className="px-4 sm:px-6 lg:px-8">
                 {kpis?.trendStrength && <CarouselItem className="basis-3/4"><KpiCard title="Trend Strength" value={trendStrengthValue} subValue={trendStrengthSubValue} signal={kpis.trendStrength.signal} tooltip={"Price vs. its 50-day moving average."} icon={getIndicator(kpis.trendStrength.signal, ArrowUp, ArrowDown, Minus)} /></CarouselItem>}

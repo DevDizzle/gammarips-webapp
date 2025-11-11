@@ -1,6 +1,7 @@
 
 
 
+
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -90,7 +91,7 @@ const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
     }
 
     return (
-        <Card className="bg-card/50">
+        <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-headline">
                     <ThumbsUp className="text-muted-foreground" />
@@ -278,8 +279,6 @@ function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
         {kpis?.thirtyDayChange && <KpiCard title="30-Day Return" value={`${kpis.thirtyDayChange.value?.toFixed(1)}%`} subValue={`Industry Avg: ${kpis.thirtyDayChange.industryAverage?.toFixed(1)}%`} signal={kpis.thirtyDayChange.comparisonSignal} tooltip={"The stock's 30-day price change vs. its industry."} icon={getIndicator(kpis.thirtyDayChange.signal, ArrowUp, ArrowDown, Minus)} />}
       </div>
       
-      <UpcomingEarnings ticker={ticker} />
-
       <section>
         <Card>
             <CardHeader>
@@ -307,6 +306,8 @@ function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
               </CardContent>
           </Card>
       )}
+
+      <UpcomingEarnings ticker={ticker} />
 
       <SignalTracker ticker={ticker} />
 

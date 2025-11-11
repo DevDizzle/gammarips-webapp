@@ -1,6 +1,4 @@
 {
-  "/dashboard/[ticker]/page": "app/dashboard/[ticker]/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/options/put-hedges/page": "app/options/put-hedges/page.js",
   "/page": "app/page.js"
 }

@@ -443,7 +443,7 @@ function TodaysWinners() {
         <CardDescription>
           Explore today's top Call/Put setups, or review our model's historical performance with top gainers and losers. Rankings are signals for research, not investment advice.
           {lastUpdated && !isLoading && (
-            <span className="block text-xs text-muted-foreground mt-2">Signal Data Last Updated: {lastUpdated}</span>
+            <span className="block text-xs text-muted-foreground mt-2">Signal Data Last Updated: {lastUpdated} as of market close</span>
           )}
         </CardDescription>
       </CardHeader>

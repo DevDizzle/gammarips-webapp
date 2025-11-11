@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -150,7 +151,7 @@ const WinnerSchema = z.object({
     ticker: z.string(),
     weighted_score: z.number().nullable(),
     option_type: z.enum(['call', 'put']),
-    strike_price: z.preprocess((val) => (typeof val === 'number' ? String(val) : val), z.string()).transform(v => parseFloat(v)),
+    strike_price: z.preprocess((val) => (typeof val === 'number' ? val : parseFloat(val as string)), z.number()),
     expiration_date: z.string(),
     options_score: z.number().optional().nullable(),
     contract_symbol: z.string(),
@@ -463,6 +464,7 @@ export async function getOptionsHeaderSignalAdmin(ticker: string): Promise<Optio
 
 
 export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
+    noStore();
     try {
         const querySnapshot = await adminDb.collection("winners_dashboard").get();
         const winners: Winner[] = [];
@@ -1229,6 +1231,38 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 
     
+export async function getFairQualityOptionsAdmin(ticker: string): Promise<OptionsSignal[]> {
+    try {
+        const docRef = adminDb.collection("options_signals").doc(ticker.toUpperCase());
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            return [];
+        }
+
+        const data = docSnap.data();
+        const allSignals = [...(data?.calls || []), ...(data?.puts || [])];
+        
+        const fairSignals = allSignals
+            .filter(signal => signal.setup_quality_signal === 'Fair')
+            .slice(0, 3); // Take a maximum of 3
+
+        const validatedSignals: OptionsSignal[] = [];
+        for (const signal of fairSignals) {
+            const validation = OptionsSignalSchema.safeParse(signal);
+            if (validation.success) {
+                validatedSignals.push(validation.data);
+            } else {
+                console.warn(`Invalid "Fair" options signal data for ${ticker}:`, validation.error.flatten());
+            }
+        }
+        
+        return validatedSignals;
+    } catch (error) {
+        console.error(`Error fetching fair quality options for ${ticker}:`, error);
+        return [];
+    }
+}
 
 
 
@@ -1269,3 +1303,4 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
 
 
     
+

@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import {
@@ -35,6 +36,7 @@ import {
     getPerformanceSignalsByTickerAdmin,
     getAppStatusAdmin,
     saveFeedbackSurveyAdmin,
+    getFairQualityOptionsAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal, FeedbackSurveyData } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
@@ -111,6 +113,7 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
 
     // --- Options Header Selection & Transformation ---
     const topSignal = await getOptionsHeaderSignalAdmin(ticker);
+    const fairOptions = await getFairQualityOptionsAdmin(ticker);
 
     const optionsHeader = (() => {
         if (!topSignal) return null;
@@ -164,6 +167,7 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
         ...rawData,
         industry,
         optionsHeader, // This will be null if no top signal is found
+        fairQualityOptions: fairOptions,
         topSignalSummary: topSignal?.summary, // Pass summary separately
         stockLevelAnalysis, // Overwrite with new content
     };
@@ -357,6 +361,7 @@ export async function handleFeedbackSurvey(uid: string, data: FeedbackSurveyData
 
 
     
+
 
 
 

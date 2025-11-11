@@ -6,7 +6,7 @@ import { notFound, useRouter, useParams } from 'next/navigation';
 import { getDashboardData, incrementDashboardViewCount } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight, Loader2, MailCheck, Star } from 'lucide-react';
+import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, TrendingDown, ArrowRight, Loader2, MailCheck, Star, ThumbsUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
 import { Markdown } from '@/components/markdown';
@@ -20,6 +20,7 @@ import Image from 'next/image';
 import UpcomingEarnings from './upcoming-events';
 import DashboardPageClient from '../dashboard-client';
 import DataUpdatingPage from '@/components/layout/data-updating-page';
+import type { OptionsSignal } from '@/lib/firebase-admin';
 
 interface TickerDashboardPageProps {
   params: {
@@ -81,8 +82,60 @@ const KpiCard = ({ title, value, subValue, signal, tooltip, icon, children }: { 
     </Card>
 );
 
+const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
+    if (!options || options.length === 0) {
+        return null;
+    }
+
+    return (
+        <Card className="bg-card/50">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 font-headline">
+                    <ThumbsUp className="text-muted-foreground" />
+                    Other Noteworthy Setups
+                </CardTitle>
+                <CardDescription>
+                    These options have a "Fair" setup quality. They might offer interesting opportunities but have some trade-offs compared to our top-rated signal.
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {options.map((option) => (
+                    <div key={option.contract_symbol} className="bg-background/50 p-4 rounded-lg">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <Badge variant="outline" className={cn('font-semibold', option.option_type === 'call' ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50')}>
+                                    {option.option_type.toUpperCase()}
+                                </Badge>
+                                <p className="font-bold text-xl mt-1">${option.strike_price.toFixed(2)}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-xs text-muted-foreground">Expires</p>
+                                <p className="font-semibold text-sm">{new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                            </div>
+                        </div>
+                        <div className="mt-3 space-y-1 text-xs">
+                             <div className="flex justify-between">
+                                <span className="text-muted-foreground">Stock Trend:</span>
+                                <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
+                                    {option.stock_price_trend_signal}
+                                </Badge>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-muted-foreground">Volatility:</span>
+                                <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
+                                    {option.volatility_comparison_signal}
+                                </Badge>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </CardContent>
+        </Card>
+    );
+};
+
 function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
-  const { titleInfo, kpis, priceChartData, stockLevelAnalysis, industry, optionsHeader, topSignalSummary } = data;
+  const { titleInfo, kpis, priceChartData, stockLevelAnalysis, industry, optionsHeader, topSignalSummary, fairQualityOptions } = data;
 
   // Calculate RSI change for display
   const rsiChange = kpis?.rsiMomentum?.currentRsi && kpis?.rsiMomentum?.rsi30DaysAgo
@@ -135,7 +188,7 @@ function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
           {industry && <Badge variant="secondary">{industry}</Badge>}
         </h1>
         <p className="text-muted-foreground mt-1 text-sm">
-            AI-Powered Options & Equity Analysis for {formattedRunDate} as of market close
+            AI-Powered Options & Equity Analysis as of market close
         </p>
       </header>
 
@@ -190,6 +243,8 @@ function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
             </CardContent>
         </Card>
       )}
+
+      <FairOptionsDisplay options={fairQualityOptions} />
 
       {/* KPI Section with Carousel */}
       <div className="lg:hidden -mx-4 sm:-mx-6 lg:-mx-8">

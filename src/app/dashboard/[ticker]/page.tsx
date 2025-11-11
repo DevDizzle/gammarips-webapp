@@ -101,7 +101,7 @@ const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
             <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {options.map((option) => (
                     <Card key={option.contract_symbol} className="flex flex-col bg-background/50">
-                        <CardHeader className="pb-4 flex-grow">
+                        <CardHeader className="pb-4">
                             <div className="flex justify-between items-start">
                                 <div>
                                     <Badge variant="outline" className={cn('font-semibold', option.option_type === 'call' ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50')}>
@@ -114,21 +114,21 @@ const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
                                     <p className="font-semibold text-sm">{new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}</p>
                                 </div>
                             </div>
-                            <div className="space-y-1 text-xs pt-4">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-muted-foreground">Stock Trend:</span>
-                                    <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
-                                        {option.stock_price_trend_signal}
-                                    </Badge>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-muted-foreground">Volatility:</span>
-                                    <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
-                                        {option.volatility_comparison_signal}
-                                    </Badge>
-                                </div>
-                            </div>
                         </CardHeader>
+                        <CardContent className="flex-grow space-y-2 text-xs border-t pt-4">
+                            <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">Stock Trend:</span>
+                                <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
+                                    {option.stock_price_trend_signal}
+                                </Badge>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">Volatility:</span>
+                                <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
+                                    {option.volatility_comparison_signal}
+                                </Badge>
+                            </div>
+                        </CardContent>
                         <CardContent className="pt-4 border-t">
                            <p className="text-xs text-muted-foreground leading-snug">{option.summary}</p>
                         </CardContent>

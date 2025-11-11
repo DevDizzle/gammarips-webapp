@@ -135,7 +135,7 @@ function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
           {industry && <Badge variant="secondary">{industry}</Badge>}
         </h1>
         <p className="text-muted-foreground mt-1 text-sm">
-            AI-Powered Options & Equity Analysis as of {formattedRunDate} at 5:00 AM EST
+            AI-Powered Options & Equity Analysis for {formattedRunDate} as of market close
         </p>
       </header>
 

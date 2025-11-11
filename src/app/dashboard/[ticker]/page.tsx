@@ -1,3 +1,4 @@
+
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -115,13 +116,13 @@ const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
                         </CardHeader>
                         <CardContent className="flex-grow space-y-2">
                              <div className="space-y-1 text-xs">
-                                <div className="flex justify-between">
+                                <div className="flex justify-between items-center">
                                     <span className="text-muted-foreground">Stock Trend:</span>
                                     <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
                                         {option.stock_price_trend_signal}
                                     </Badge>
                                 </div>
-                                <div className="flex justify-between">
+                                <div className="flex justify-between items-center">
                                     <span className="text-muted-foreground">Volatility:</span>
                                     <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
                                         {option.volatility_comparison_signal}

@@ -100,34 +100,41 @@ const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {options.map((option) => (
-                    <div key={option.contract_symbol} className="bg-background/50 p-4 rounded-lg">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <Badge variant="outline" className={cn('font-semibold', option.option_type === 'call' ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50')}>
-                                    {option.option_type.toUpperCase()}
-                                </Badge>
-                                <p className="font-bold text-xl mt-1">${option.strike_price.toFixed(2)}</p>
+                    <Card key={option.contract_symbol} className="flex flex-col bg-background/50">
+                        <CardHeader className="pb-3">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <Badge variant="outline" className={cn('font-semibold', option.option_type === 'call' ? 'text-green-500 border-green-500/50' : 'text-red-500 border-red-500/50')}>
+                                        {option.option_type.toUpperCase()}
+                                    </Badge>
+                                    <p className="font-bold text-xl mt-1">${option.strike_price.toFixed(2)}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-xs text-muted-foreground">Expires</p>
+                                    <p className="font-semibold text-sm">{new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                                </div>
                             </div>
-                            <div className="text-right">
-                                <p className="text-xs text-muted-foreground">Expires</p>
-                                <p className="font-semibold text-sm">{new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                        </CardHeader>
+                        <CardContent className="flex-grow">
+                             <div className="space-y-1 text-xs">
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Stock Trend:</span>
+                                    <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
+                                        {option.stock_price_trend_signal}
+                                    </Badge>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Volatility:</span>
+                                    <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
+                                        {option.volatility_comparison_signal}
+                                    </Badge>
+                                </div>
                             </div>
-                        </div>
-                        <div className="mt-3 space-y-1 text-xs">
-                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Stock Trend:</span>
-                                <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
-                                    {option.stock_price_trend_signal}
-                                </Badge>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-muted-foreground">Volatility:</span>
-                                <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
-                                    {option.volatility_comparison_signal}
-                                </Badge>
-                            </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                        <CardFooter>
+                           <p className="text-xs text-muted-foreground italic leading-snug">"{option.summary}"</p>
+                        </CardFooter>
+                    </Card>
                 ))}
             </CardContent>
         </Card>

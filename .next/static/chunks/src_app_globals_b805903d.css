@@ -1191,6 +1191,10 @@ body {
   z-index: 100;
 }
 
+.col-span-1 {
+  grid-column: span 1 / span 1;
+}
+
 .m-0 {
   margin: 0;
 }
@@ -2457,10 +2461,6 @@ body {
   text-transform: uppercase;
 }
 
-.italic {
-  font-style: italic;
-}
-
 .tabular-nums {
   --tw-numeric-spacing: tabular-nums;
   font-variant-numeric: var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction);
@@ -2476,10 +2476,6 @@ body {
 
 .leading-tight {
   line-height: 1.25;
-}
-
-.leading-snug {
-  line-height: 1.375;
 }
 
 .tracking-tight {

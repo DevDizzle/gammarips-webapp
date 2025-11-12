@@ -2,6 +2,7 @@
 
 
 
+
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -102,7 +103,8 @@ const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <Table>
+                {/* Desktop Table */}
+                <Table className="hidden md:table">
                     <TableHeader>
                         <TableRow>
                             <TableHead>Contract</TableHead>
@@ -139,6 +141,47 @@ const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
                         ))}
                     </TableBody>
                 </Table>
+                 {/* Mobile Cards */}
+                <div className="md:hidden space-y-4">
+                    {options.map((option) => (
+                        <Card key={option.contract_symbol} className="bg-background/50">
+                            <CardContent className="p-4 space-y-3">
+                                <div className="grid grid-cols-3 gap-4 text-sm">
+                                    <div className="col-span-1">
+                                        <p className="text-muted-foreground">Contract</p>
+                                        <p className="font-semibold">{option.option_type.toUpperCase()}</p>
+                                    </div>
+                                    <div className="col-span-1">
+                                        <p className="text-muted-foreground">Strike</p>
+                                        <p className="font-semibold">${option.strike_price.toFixed(2)}</p>
+                                    </div>
+                                     <div className="col-span-1">
+                                        <p className="text-muted-foreground">Expires</p>
+                                        <p className="font-semibold">{new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })}</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center text-sm">
+                                        <p className="text-muted-foreground">Stock Trend</p>
+                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
+                                            {option.stock_price_trend_signal}
+                                        </Badge>
+                                    </div>
+                                     <div className="flex justify-between items-center text-sm">
+                                        <p className="text-muted-foreground">Volatility</p>
+                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
+                                            {option.volatility_comparison_signal}
+                                        </Badge>
+                                    </div>
+                                </div>
+                                 <div>
+                                     <p className="text-xs text-muted-foreground">{option.summary}</p>
+                                 </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
             </CardContent>
         </Card>
     );

@@ -22,10 +22,13 @@
 **Answer:** "After your 30-day free trial, you'll be invited to upgrade to our Pro plan for $19/month to maintain full access to all features, including new daily setups and the complete interactive dashboard. If you choose not to upgrade, you'll still have limited access to some parts of the dashboard."
 
 ### How do I cancel my subscription?
-**Answer:** "You can manage your subscription at any time from your Account page. There is a link there that will take you to our secure billing portal where you can cancel, update your payment method, or view your billing history."
+**Answer:** "You can manage your subscription at any time from your Account page. There is a link there that will take you to our secure billing portal where you can cancel, update your payment method, or view your billing history. If you cancel, your Pro access will continue until the end of your current billing period."
 
 ### My dashboard isn't loading or a stock is missing.
 **Answer:** "Our AI engine processes vast amounts of market data daily. Occasionally, this process can be delayed, or data for a specific stock might not meet our quality checks for that day. If the dashboard is showing a 'Data Refresh in Progress' message, please check back in a few minutes. If a specific stock is missing, it likely means it didn't have a high-scoring setup for the day, but you can still search for it to see its historical data."
+
+### How does the referral program work?
+**Answer:** "Our referral program is a way for you to give friends an extended 45-day free trial, which is much longer than our standard 7-day public trial. You can find your unique referral link in the emails we send about it. There is currently no credit or reward for the referrer, but it's a great way to share the tool with your network."
 
 ## Handling Negative Feedback or Bugs
 - **Acknowledge and Validate:** "Thank you for bringing this to our attention. I understand how frustrating that must be."
@@ -37,3 +40,17 @@
 - **Acknowledge and Thank:** "That's an excellent suggestion, thank you for sharing it. We're always looking for ways to make ProfitScout more valuable for our users."
 - **Log the Request:** "I've passed your idea along to our product team for consideration in future updates."
 - **Connect to Mission:** "Ideas like this help us improve our mission of making complex market data more accessible."
+
+## Data, Privacy, & Security
+
+### How is my personal information protected?
+**Answer:** "We take your privacy and security very seriously. We minimize the personal data we collect, storing only the essential information needed for your account to function: your name, email address, and a securely encrypted password. We do not store any other personally identifiable information on our systems."
+
+### How is my payment information handled? Is it secure?
+**Answer:** "Your payment information is extremely secure because we do not handle it directly. All payment processing is managed by Stripe, a global leader in online payments and a certified PCI Level 1 Service Provider. Your sensitive card details are sent directly to Stripe and never touch our servers, ensuring they are protected by multiple layers of industry-leading security."
+
+### Do you use my stock queries or other inputs to train your AI models?
+**Answer:** "No. As stated in our Privacy Policy, your queries, prompts, and other inputs are used only to provide the service to you—that is, to run the query and generate your output. We do not use your personal inputs or account data to train our AI models."
+
+### What general security measures are in place?
+**Answer:** "Our platform is built on Google Cloud, which provides robust infrastructure security. We use administrative, technical, and physical safeguards appropriate for the data we handle, including encryption for data in transit, strict access controls, and other cloud provider protections to ensure our systems and your data are secure."

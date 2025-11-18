@@ -45,7 +45,7 @@ import { randomUUID } from 'crypto';
 import { getAuth } from 'firebase-admin/auth';
 import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { app } from '@/lib/firebase';
-import { sendWelcomeEmail as sendWelcomeEmailAdmin } from '@/lib/mailgun';
+import { sendWelcomeEmail as sendWelcomeEmailAdmin, sendFeedbackAcknowledgmentEmail } from '@/lib/mailgun';
 
 
 export async function getAppStatus(): Promise<{ isUpdating: boolean }> {
@@ -275,7 +275,14 @@ export async function handleFeedback(uid: string | null, message: string, replyT
     const user = await getOrCreateUserAdmin(uid);
     userData = { uid: user.uid, email: user.email };
   }
-  await saveFeedbackAdmin(message, replyToEmail, userData);
+  const { trackingId } = await saveFeedbackAdmin(message, replyToEmail, userData);
+  
+  // Send acknowledgment email
+  await sendFeedbackAcknowledgmentEmail({
+    to: replyToEmail,
+    trackingId,
+  });
+
   return { success: true };
 }
 
@@ -355,26 +362,3 @@ export async function handleFeedbackSurvey(uid: string, data: FeedbackSurveyData
         throw new Error(error.message || "Could not save survey.");
     }
 }
-    
-
-    
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -11,6 +11,7 @@ export interface EmailOptions {
   subject: string;
   text: string;
   html?: string;
+  replyTo?: string;
 }
 
 export async function sendEmail(options: EmailOptions) {
@@ -41,6 +42,10 @@ export async function sendEmail(options: EmailOptions) {
   if (options.html) {
     form.append('html', options.html);
   }
+   if (options.replyTo) {
+    form.append('h:Reply-To', options.replyTo);
+  }
+
 
   // Basic auth header: "api:KEY"
   const authHeader =
@@ -527,5 +532,156 @@ export async function sendFeedbackRequestEmail({ to, name }: { to: string, name:
         subject: `A personal check-in from ProfitScout's founder`,
         text,
         html,
+    });
+}
+
+function buildFeedbackAcknowledgmentEmailContent(trackingId: string): { text: string; html: string } {
+    const textContent = `
+Thank you for contacting ProfitScout!
+
+We've received your message and will get back to you as soon as possible.
+
+Your reference ID is: ${trackingId}
+
+Best,
+The ProfitScout Team
+`;
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <title>We've Received Your Feedback</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                    <tr>
+                        <td align="center" style="padding: 40px 20px;">
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px;">
+                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; color: #ffffff; margin-top: 0;">Message Received</h2>
+                            <p style="font-size: 16px; line-height: 1.6;">Thank you for contacting us! We've received your message and our team will review it shortly. We appreciate you taking the time to reach out.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">For your records, your reference ID is:</p>
+                             <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 12px; text-align: center; margin-top: 8px;">
+                                <p style="font-family: monospace; font-size: 18px; color: #BEFF0A; margin: 0;">${trackingId}</p>
+                            </div>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td style="padding: 40px 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
+                            <p style="margin: 0;">Best regards,</p>
+                            <p style="margin-top: 4px;">The ProfitScout Team</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+`;
+
+    return { text: textContent, html: htmlContent };
+}
+
+export async function sendFeedbackAcknowledgmentEmail({ to, trackingId }: { to: string, trackingId: string }) {
+    const { text, html } = buildFeedbackAcknowledgmentEmailContent(trackingId);
+    return sendEmail({
+        to,
+        subject: `We've received your message (Ref: ${trackingId})`,
+        text,
+        html,
+    });
+}
+
+
+function buildAgentResponseEmailContent({ userEmail, response, trackingId }: { userEmail: string, response: string, trackingId: string }): { text: string; html: string } {
+    const textContent = `
+Hello,
+
+Here is the response regarding your inquiry (Ref: ${trackingId}):
+
+${response}
+
+If you have any further questions, please reply to this email.
+
+Best,
+The ProfitScout Team
+`;
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <title>Response to your inquiry</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                    <tr>
+                        <td align="center" style="padding: 40px 20px;">
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px;">
+                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; color: #ffffff; margin-top: 0;">Response to Your Inquiry (Ref: ${trackingId})</h2>
+                            <div style="font-size: 16px; line-height: 1.6; color: #E0E0E0; border-left: 2px solid #393b4d; padding-left: 15px; margin-top: 20px;">
+                                ${response.replace(/\n/g, '<br>')}
+                            </div>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 20px;">If you have any further questions, please feel free to reply directly to this email.</p>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td style="padding: 40px 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
+                            <p style="margin: 0;">Best regards,</p>
+                            <p style="margin-top: 4px;">The ProfitScout Team</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+`;
+
+    return { text: textContent, html: htmlContent };
+}
+
+
+export async function sendAgentResponseEmail({ to, response, trackingId }: { to: string, response: string, trackingId: string }) {
+    const { text, html } = buildAgentResponseEmailContent({ userEmail: to, response, trackingId });
+    const MY_EMAIL = process.env.MY_PERSONAL_EMAIL;
+
+    if (!MY_EMAIL) {
+        console.error('[Mailgun Error] Missing MY_PERSONAL_EMAIL for Reply-To');
+        // Proceed without Reply-To if not set, but log error
+    }
+
+    return sendEmail({
+        to,
+        subject: `Re: Your ProfitScout Inquiry (Ref: ${trackingId})`,
+        text,
+        html,
+        replyTo: MY_EMAIL,
     });
 }

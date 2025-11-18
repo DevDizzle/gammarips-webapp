@@ -396,18 +396,21 @@ export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promis
 }
 
 export async function saveFeedbackAdmin(
-  message: string, 
-  replyToEmail: string, 
+  message: string,
+  replyToEmail: string,
   user: { uid: string; email: string | null } | null
-): Promise<void> {
+): Promise<{ trackingId: string }> {
   try {
+    const trackingId = `PS-${uuidv4().split('-')[0].toUpperCase()}`;
     await adminDb.collection("feedback").add({
       message,
       replyToEmail,
       user,
+      trackingId,
       status: 'new',
       createdAt: FieldValue.serverTimestamp(),
     });
+    return { trackingId };
   } catch (error) {
     console.error("Error writing feedback to Firestore with Admin SDK: ", error);
     throw new Error("Could not save feedback to the database.");
@@ -1263,44 +1266,3 @@ export async function getFairQualityOptionsAdmin(ticker: string): Promise<Option
         return [];
     }
 }
-
-
-
-
-
-
-
-
-
-
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-    
-

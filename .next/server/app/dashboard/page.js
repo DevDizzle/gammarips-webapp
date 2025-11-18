@@ -7,7 +7,7 @@ runtime.loadChunk("server/chunks/ssr/_94e4cfe7._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_96715ba7._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_next_dist_client_components_forbidden-error_ea7ea172.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_next_dist_client_components_unauthorized-error_c8949b27.js");
-runtime.loadChunk("server/chunks/ssr/node_modules_node-fetch_src_index_b80223dc.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_node-fetch_src_index_7a0953aa.js");
 runtime.loadChunk("server/chunks/ssr/[root-of-the-server]__eb796401._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_next_8b838e2d._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_zod_6294a4bd._.js");
@@ -34,7 +34,7 @@ runtime.loadChunk("server/chunks/ssr/node_modules_@firebase_firestore_dist_index
 runtime.loadChunk("server/chunks/ssr/node_modules_tailwind-merge_dist_bundle-mjs_mjs_6bc68adb._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_@opentelemetry_26c0981b._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_@firebase_18d98a1c._.js");
-runtime.loadChunk("server/chunks/ssr/node_modules_a3580a4b._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_d53c88a6._.js");
 runtime.loadChunk("server/chunks/ssr/_18ddda76._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_97352206._.js");
 runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)", CHUNK_PUBLIC_PATH);

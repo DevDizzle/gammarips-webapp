@@ -66,9 +66,7 @@ In the inline editor, select the `package.json` file. Replace its entire content
 
 ### Step 5: Add the Function Code to index.js
 
-Select the `index.js` file in the editor. Replace its entire contents with the code from your local `index.js` file.
-
-*Self-Correction Note: The `PLAN.md` previously contained older Genkit syntax. The code block below has been updated to use the correct `ai.definePrompt` and `ai.defineFlow` syntax which you have in your current `index.js`.*
+Select the `index.js` file in the editor. Replace its entire contents with the code from your local `index.js` file. This code has been updated to use the correct Genkit syntax and will work in the 2nd Gen environment.
 
 ```javascript
 const admin = require("firebase-admin");
@@ -119,7 +117,17 @@ const prompt = ai.definePrompt({
   name: 'customerServiceAgentPrompt',
   input: {schema: AnswerFeedbackInputSchema},
   output: {schema: AnswerFeedbackOutputSchema},
-  prompt: `You are an expert customer service agent for ProfitScout...`, // NOTE: The full prompt text is in your index.js
+  prompt: `You are an expert customer service agent for ProfitScout, an AI-powered options trading research tool. Your goal is to provide a helpful, empathetic, and professional response to user feedback. You MUST strictly adhere to the policies and tone outlined in the knowledge base. Never give financial advice.
+
+Knowledge Base:
+---
+{{{knowledgeBase}}}
+---
+
+User's Message:
+"{{{message}}}"
+
+Generate a helpful response to the user.`,
 });
 
 const customerServiceAgentFlow = ai.defineFlow({
@@ -135,11 +143,100 @@ const customerServiceAgentFlow = ai.defineFlow({
 });
 
 async function sendAgentResponseEmail({ to, response, trackingId }) {
-    // ... Full Mailgun logic from your index.js file
+    const API_KEY = process.env.MAILGUN_SENDING_KEY;
+    const DOMAIN = 'profitscout.app';
+    const FROM = 'ProfitScout <admin@profitscout.app>';
+    const REPLY_TO = process.env.MY_PERSONAL_EMAIL;
+
+    if (!API_KEY || !REPLY_TO) {
+        throw new Error("Mailgun environment variables (MAILGUN_SENDING_KEY, MY_PERSONAL_EMAIL) are not set.");
+    }
+
+    const html = \`
+    <!DOCTYPE html>
+    <html>
+    <body>
+        <div>Response to Your Inquiry (Ref: ${trackingId})</div>
+        <div style="border-left: 2px solid #ccc; padding-left: 15px; margin-top: 20px;">
+            ${response.replace(/\n/g, '<br>')}
+        </div>
+        <p>If you have any further questions, please reply to this email.</p>
+    </body>
+    </html>
+    \`;
+    const text = \`Response to your inquiry (Ref: ${trackingId}):\n\n${response}\n\nIf you have further questions, reply to this email.\`;
+
+    const form = new URLSearchParams();
+    form.append('from', FROM);
+    form.append('to', to);
+    form.append('subject', \`Re: Your ProfitScout Inquiry (Ref: ${trackingId})\`);
+    form.append('text', text);
+    form.append('html', html);
+    form.append('h:Reply-To', REPLY_TO);
+
+    const resp = await fetch(\`https://api.mailgun.net/v3/${DOMAIN}/messages\`, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Basic ' + Buffer.from(\`api:${API_KEY}\`).toString('base64'),
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: form.toString(),
+    });
+
+    if (!resp.ok) {
+        const details = await resp.json().catch(() => ({}));
+        logger.error('Mailgun Failure', { status: resp.status, details });
+        throw new Error(\`Mailgun API error: ${details.message || 'Failed to send'}\`);
+    }
+    return resp.json();
 }
 
 exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (event) => {
-    // ... Full function logic from your index.js file
+    const snap = event.data;
+
+    if (!snap) {
+        logger.error("processNewFeedback triggered without snapshot", { eventId: event.id });
+        return;
+    }
+
+    const newFeedback = snap.data();
+    const { feedbackId } = event.params;
+
+    logger.info("Processing new feedback", { feedbackId });
+
+    if (!newFeedback?.message || !newFeedback?.replyToEmail || !newFeedback?.trackingId) {
+        logger.error("Feedback document is missing required fields.", { feedbackId });
+        await snap.ref.set({
+            status: "error",
+            errorMessage: "Missing message, replyToEmail, or trackingId",
+            checkedAt: admin.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+        return;
+    }
+
+    try {
+        const aiResponse = await customerServiceAgentFlow({
+            message: newFeedback.message,
+            trackingId: newFeedback.trackingId,
+        });
+
+        await sendAgentResponseEmail({
+            to: newFeedback.replyToEmail,
+            response: aiResponse.response,
+            trackingId: newFeedback.trackingId,
+        });
+
+        await snap.ref.set({
+            agentResponse: aiResponse.response,
+            status: "responded",
+            respondedAt: admin.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+
+        logger.info("Successfully processed feedback", { feedbackId });
+    } catch (error) {
+        logger.error("Failed to process feedback", { feedbackId, error: error.message });
+        await snap.ref.set({ status: "error", errorMessage: error.message }, { merge: true });
+    }
 });
 ```
 

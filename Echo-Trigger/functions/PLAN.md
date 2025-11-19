@@ -68,7 +68,7 @@ In the inline editor, select the `package.json` file. Replace its entire content
 
 Select the `index.js` file in the editor. Replace its entire contents with the code from your local `index.js` file.
 
-*Self-Correction Note: The `PLAN.md` previously contained older Genkit syntax. The code block below has been updated to use the correct `kit.definePrompt` and `kit.defineFlow` syntax which you have in your current `index.js`.*
+*Self-Correction Note: The `PLAN.md` previously contained older Genkit syntax. The code block below has been updated to use the correct `ai.definePrompt` and `ai.defineFlow` syntax which you have in your current `index.js`.*
 
 ```javascript
 const admin = require("firebase-admin");
@@ -99,9 +99,8 @@ const logger = winston.createLogger({
 
 admin.initializeApp();
 
-const kit = genkit({
+const ai = genkit({
   plugins: [googleAI()],
-  model: 'googleai/gemini-2.0-flash',
 });
 
 const knowledgeBasePath = resolve(__dirname, "knowledge", "customer-service-policy.md");
@@ -116,13 +115,14 @@ const AnswerFeedbackOutputSchema = z.object({
   response: z.string(),
 });
 
-const prompt = kit.definePrompt({
+const prompt = ai.definePrompt({
   name: 'customerServiceAgentPrompt',
   input: {schema: AnswerFeedbackInputSchema},
   output: {schema: AnswerFeedbackOutputSchema},
-}, (input) => `You are an expert customer service agent for ProfitScout...`); // NOTE: The full prompt text is in your index.js
+  prompt: `You are an expert customer service agent for ProfitScout...`, // NOTE: The full prompt text is in your index.js
+});
 
-const customerServiceAgentFlow = kit.defineFlow({
+const customerServiceAgentFlow = ai.defineFlow({
     name: 'customerServiceAgentFlow',
     inputSchema: AnswerFeedbackInputSchema,
     outputSchema: AnswerFeedbackOutputSchema,

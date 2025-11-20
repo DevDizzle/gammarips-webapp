@@ -36,6 +36,8 @@ function TodaysWinners() {
   const [allWinners, setAllWinners] = useState<Winner[]>([]);
   const [topGainers, setTopGainers] = useState<PerformanceSignal[]>([]);
   const [topLosers, setTopLosers] = useState<PerformanceSignal[]>([]);
+  const [showAllBullish, setShowAllBullish] = useState(false);
+  const [showAllBearish, setShowAllBearish] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -65,7 +67,7 @@ function TodaysWinners() {
     fetchData();
   }, [toast]);
   
-  const getTopUniqueTickers = (winners: Winner[], count: number): Winner[] => {
+  const getTopUniqueTickers = (winners: Winner[]): Winner[] => {
     // 1. De-duplicate winners by ticker, keeping only the one with the highest score
     const uniqueWinnersMap = new Map<string, Winner>();
     winners.forEach(winner => {
@@ -76,18 +78,17 @@ function TodaysWinners() {
     });
     const uniqueWinners = Array.from(uniqueWinnersMap.values());
 
-    // 2. Sort the unique winners by score and return the top N
+    // 2. Sort the unique winners by score
     return uniqueWinners
-        .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1))
-        .slice(0, count);
+        .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1));
   };
 
   const { bullishWinners, bearishWinners, lastUpdated } = useMemo(() => {
     const bullish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bullish'));
     const bearish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bearish'));
 
-    const top10Bullish = getTopUniqueTickers(bullish, 10);
-    const top10Bearish = getTopUniqueTickers(bearish, 10);
+    const allBullish = getTopUniqueTickers(bullish);
+    const allBearish = getTopUniqueTickers(bearish);
     
     let updatedDate: string | null = null;
     if (allWinners.length > 0) {
@@ -103,8 +104,11 @@ function TodaysWinners() {
       }
     }
       
-    return { bullishWinners: top10Bullish, bearishWinners: top10Bearish, lastUpdated: updatedDate };
+    return { bullishWinners: allBullish, bearishWinners: allBearish, lastUpdated: updatedDate };
   }, [allWinners]);
+
+  const visibleBullish = showAllBullish ? bullishWinners : bullishWinners.slice(0, 10);
+  const visibleBearish = showAllBearish ? bearishWinners : bearishWinners.slice(0, 10);
 
   const handleRowClick = (ticker: string) => {
     router.push(`/dashboard/${ticker.toUpperCase()}`);
@@ -223,7 +227,7 @@ function TodaysWinners() {
     );
   };
   
-  const renderWinnersList = (winners: Winner[]) => {
+  const renderWinnersList = (winners: Winner[], showAll: boolean, setShowAll: (show: boolean) => void, fullCount: number) => {
     if (winners.length === 0) {
       return <p className="text-sm text-muted-foreground text-center py-4">No signals found for this category today.</p>;
     }
@@ -331,6 +335,13 @@ function TodaysWinners() {
                 )
             })}
         </div>
+        {!showAll && fullCount > 10 && (
+          <div className="mt-4 text-center">
+            <Button variant="secondary" onClick={() => setShowAll(true)}>
+              Show All {fullCount} Setups
+            </Button>
+          </div>
+        )}
       </>
     );
   }
@@ -417,9 +428,9 @@ function TodaysWinners() {
 
     switch (activeView) {
         case 'bullish':
-            return renderWinnersList(bullishWinners);
+            return renderWinnersList(visibleBullish, showAllBullish, setShowAllBullish, bullishWinners.length);
         case 'bearish':
-            return renderWinnersList(bearishWinners);
+            return renderWinnersList(visibleBearish, showAllBearish, setShowAllBearish, bearishWinners.length);
         case 'gainers':
             return renderPerformanceList(topGainers);
         case 'losers':
@@ -477,3 +488,5 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
+
+    

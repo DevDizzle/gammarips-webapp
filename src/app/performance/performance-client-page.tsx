@@ -13,6 +13,8 @@ import Link from 'next/link';
 
 type SortType = 'recent' | 'gainers' | 'losers';
 
+const INITIAL_VISIBLE_COUNT = 25;
+
 // Helper to convert GCS URI to a public URL
 const convertGcsUriToUrl = (gcsUri: string) => {
   if (!gcsUri?.startsWith('gs://')) return '';
@@ -26,6 +28,7 @@ const convertGcsUriToUrl = (gcsUri: string) => {
 
 export default function PerformanceClientPage({ signals }: { signals: PerformanceSignal[] }) {
     const [sortType, setSortType] = useState<SortType>('recent');
+    const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
 
     const sortedSignals = useMemo(() => {
         const signalsCopy = [...signals];
@@ -36,21 +39,27 @@ export default function PerformanceClientPage({ signals }: { signals: Performanc
                 return signalsCopy.sort((a, b) => a.percent_gain - b.percent_gain);
             case 'recent':
             default:
-                // Correctly sort by date, ensuring consistent ordering for ties.
                 return signalsCopy.sort((a, b) => {
                     const dateDiff = new Date(b.run_date).getTime() - new Date(a.run_date).getTime();
                     if (dateDiff !== 0) return dateDiff;
-                    // If dates are the same, sort by ticker for stable order
                     return a.ticker.localeCompare(b.ticker);
                 });
         }
     }, [signals, sortType]);
+
+    const visibleSignals = useMemo(() => {
+        return sortedSignals.slice(0, visibleCount);
+    }, [sortedSignals, visibleCount]);
 
     const buttons: { label: string; view: SortType }[] = [
         { label: 'Most Recent', view: 'recent' },
         { label: 'Top Gainers', view: 'gainers' },
         { label: 'Top Losers', view: 'losers' },
     ];
+
+    const showAll = () => {
+        setVisibleCount(sortedSignals.length);
+    };
 
     return (
         <Card>
@@ -84,7 +93,7 @@ export default function PerformanceClientPage({ signals }: { signals: Performanc
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {sortedSignals.map((signal) => {
+                            {visibleSignals.map((signal) => {
                                 const isGainer = signal.percent_gain >= 0;
                                 const imageUrl = signal.image_uri
                                     ? convertGcsUriToUrl(signal.image_uri)
@@ -124,7 +133,7 @@ export default function PerformanceClientPage({ signals }: { signals: Performanc
 
                 {/* Mobile Cards */}
                 <div className="md:hidden space-y-3">
-                    {sortedSignals.map((signal) => {
+                    {visibleSignals.map((signal) => {
                         const isGainer = signal.percent_gain >= 0;
                         const imageUrl = signal.image_uri
                             ? convertGcsUriToUrl(signal.image_uri)
@@ -165,6 +174,14 @@ export default function PerformanceClientPage({ signals }: { signals: Performanc
                         )
                     })}
                 </div>
+                
+                {visibleCount < sortedSignals.length && (
+                    <div className="mt-6 text-center">
+                        <Button variant="secondary" onClick={showAll}>
+                            Show All {sortedSignals.length} Signals
+                        </Button>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );

@@ -53,11 +53,11 @@ export default async function PerformancePage() {
                         <CardContent className="p-6">
                             <h3 className="text-xl font-semibold font-headline">Ready to Get Started?</h3>
                             <p className="text-muted-foreground mt-2 mb-4">
-                                Sign up for a free trial to get daily setups and access to the interactive dashboard.
+                                Sign up for a membership to get daily setups and access to the interactive dashboard.
                             </p>
                             <Button asChild size="lg">
                                 <Link href="/dashboard">
-                                    Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5"/>
+                                    Become a Member ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
                                 </Link>
                             </Button>
                         </CardContent>

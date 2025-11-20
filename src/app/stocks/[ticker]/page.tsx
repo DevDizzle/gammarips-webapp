@@ -2,6 +2,7 @@
 
 
 
+
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -342,7 +343,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
                 </div>
                 <Button asChild size="lg" className="mt-6">
                     <Link href={`/dashboard`}>
-                        Start Your Free 30-Day Trial <ArrowRight className="ml-2 h-5 w-5"/>
+                        Get Instant Access ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
                     </Link>
                 </Button>
             </CardContent>

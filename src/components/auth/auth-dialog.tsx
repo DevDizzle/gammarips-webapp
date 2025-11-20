@@ -82,9 +82,9 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{isSignIn ? 'Sign In' : 'Start Your Free 30-Day Trial'}</DialogTitle>
+          <DialogTitle>{isSignIn ? 'Sign In to Your Account' : 'Create Your ProfitScout Account'}</DialogTitle>
           <DialogDescription>
-             {isSignIn ? 'Sign in to your ProfitScout account.' : 'Get instant access to AI-powered options setups and analysis. No credit card required.'}
+             {isSignIn ? 'Welcome back! Sign in to access your dashboard.' : 'Get instant access to AI-powered options setups and analysis for $19/month.'}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col space-y-4">
@@ -136,7 +136,7 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
             </div>
             <Button type="submit" className="w-full" disabled={!!loading}>
                {loading === 'email' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSignIn ? 'Sign In' : 'Create Free Account'}
+              {isSignIn ? 'Sign In' : 'Create Account'}
             </Button>
           </form>
 

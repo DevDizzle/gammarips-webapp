@@ -158,11 +158,11 @@ export default async function PutSetupsPage() {
                     <CardContent className="p-6">
                         <h3 className="text-xl font-semibold font-headline">See All {allBearishSetups.length}+ Setups</h3>
                         <p className="text-muted-foreground mt-2 mb-4">
-                            Sign up for a free trial to get the full list of daily setups, access the interactive dashboard, and unlock complete AI analysis.
+                             Sign up for a membership to get the full list of daily setups, access the interactive dashboard, and unlock complete AI analysis.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">
-                                Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5"/>
+                                Become a Member ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
                             </Link>
                         </Button>
                     </CardContent>

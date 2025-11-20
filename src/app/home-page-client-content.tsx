@@ -13,7 +13,7 @@ interface HomePageClientContentProps {
   buttonText?: string;
 }
 
-export default function HomePageClientContent({ showButton = false, buttonText = "Start Your Free 30-Day Trial" }: HomePageClientContentProps) {
+export default function HomePageClientContent({ showButton = false, buttonText = "Get Instant Access ($19/mo)" }: HomePageClientContentProps) {
   const searchParams = useSearchParams();
   const { user, loading } = useAuth();
 

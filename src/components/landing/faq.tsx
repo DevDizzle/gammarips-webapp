@@ -20,8 +20,8 @@ export const faqs = [
         answer: "Yes, our analysis includes monitoring for significant volume and elevated activity. The AI Analyst Briefing often highlights notable volume surges as a key part of its technical analysis, similar to how 'unusual options flow' tools spot aggressive trades."
     },
     {
-        question: "What happens after my 30-day free trial?",
-        answer: "You will be invited to upgrade to our Pro plan for $19/month. If you choose not to, you will lose access to new daily signals and some premium features, but you can continue to use a limited version of the dashboard."
+        question: "How does the $19/month membership work?",
+        answer: "Your membership gives you unlimited access to all features, including the daily options setups and the interactive dashboard. It's a recurring subscription that you can cancel at any time from your account page."
     },
     {
         question: "What do I get immediately after signing up?",

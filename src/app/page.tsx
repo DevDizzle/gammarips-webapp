@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Bot, Gem, Target, Github, Scale, Shield } from "lucide-react";
+import { ArrowRight, CheckCircle, Bot, Gem, Target, Github, Scale, Shield, LineChart, Star } from "lucide-react";
 import { UserNav } from "@/components/auth/user-nav";
 import HomePageClientContent from "./home-page-client-content";
 import Faq, { faqs } from "@/components/landing/faq";
@@ -51,13 +51,6 @@ export default async function LandingPage() {
     "softwareHelp": {
       "@type": "CreativeWork",
       "url": "https://profitscout.app/about"
-    },
-    "freeTrial": {
-        "@type": "Offer",
-        "name": "30-Day Free Trial",
-        "description": "Get 30 days of unlimited access to everything ProfitScout has to offer.",
-        "price": "0",
-        "priceCurrency": "USD"
     }
   };
 
@@ -96,7 +89,7 @@ export default async function LandingPage() {
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
                <Suspense>
-                <HomePageClientContent showButton={true} buttonText="Start Your Free 30-Day Trial"/>
+                <HomePageClientContent showButton={true} buttonText="Get Instant Access ($19/mo)"/>
                </Suspense>
             </div>
             <div className="mt-6 max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-3 text-left">
@@ -239,32 +232,28 @@ export default async function LandingPage() {
           <section className="py-16 sm:py-24 bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
-                    <h2 className="text-3xl sm:text-4xl font-bold font-headline">Get Full Access for 30 Days. Absolutely Free.</h2>
-                    <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">Sign up today and get 30 days of unlimited access to everything ProfitScout has to offer.</p>
+                    <h2 className="text-3xl sm:text-4xl font-bold font-headline">An Exclusive Engine for Members</h2>
+                    <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">To provide real-time AI analysis on thousands of contracts requires significant computing resources. We operate as a member-exclusive platform to ensure our subscribers receive 100% of our server capacity and analyst bandwidth.</p>
                     <div className="mt-8 max-w-sm mx-auto space-y-3 text-left">
+                        <h3 className="font-semibold text-center mb-4">Your $19/month Membership Includes:</h3>
                         <div className="flex items-center gap-3">
-                            <CheckCircle className="h-5 w-5 text-primary shrink-0"/>
-                            <span className="font-medium">Daily AI-Powered Options Setups</span>
+                            <Star className="h-5 w-5 text-primary shrink-0"/>
+                            <span className="font-medium">Daily AI-Powered Options Setups: Unrestricted access to the Daily AI Briefings.</span>
                         </div>
                          <div className="flex items-center gap-3">
-                            <CheckCircle className="h-5 w-5 text-primary shrink-0"/>
-                            <span className="font-medium">Full AI Analyst Briefings</span>
+                            <LineChart className="h-5 w-5 text-primary shrink-0"/>
+                            <span className="font-medium">Full Historical Performance: Complete data for every signal, win or lose.</span>
                         </div>
                          <div className="flex items-center gap-3">
-                            <CheckCircle className="h-5 w-5 text-primary shrink-0"/>
-                            <span className="font-medium">Interactive Stock & Options Dashboard</span>
-                        </div>
-                         <div className="flex items-center gap-3">
-                            <CheckCircle className="h-5 w-5 text-primary shrink-0"/>
-                            <span className="font-medium">And more!</span>
+                            <Bot className="h-5 w-5 text-primary shrink-0"/>
+                            <span className="font-medium">Interactive Dashboard: The same quantitative research engine we use ourselves.</span>
                         </div>
                     </div>
                     <div className="mt-8">
                         <Suspense>
-                            <HomePageClientContent showButton={true} buttonText="Get Started for Free" />
+                            <HomePageClientContent showButton={true} buttonText="Secure Your Membership ($19/mo)" />
                         </Suspense>
                     </div>
-                    <p className="mt-4 text-sm text-muted-foreground">After your trial, you can upgrade to Pro for just $19/month to continue receiving daily setups and full access.</p>
                 </Card>
             </div>
           </section>

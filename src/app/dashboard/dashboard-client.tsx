@@ -14,57 +14,6 @@ import { MailCheck } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const VerifyEmailCard = () => {
-    const { sendVerificationEmail } = useAuth();
-    const [isSending, setIsSending] = useState(false);
-    const { toast } = useToast();
-
-    const handleResend = async () => {
-        setIsSending(true);
-        try {
-            await sendVerificationEmail();
-            toast({
-                title: 'Verification Email Sent',
-                description: 'Please check your inbox for a new verification link.',
-            });
-        } catch (error: any) {
-            toast({
-                title: 'Error',
-                description: error.message || 'Failed to send verification email. Please try again.',
-                variant: 'destructive',
-            });
-        } finally {
-            setIsSending(false);
-        }
-    };
-
-    return (
-        <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <Card className="max-w-xl mx-auto">
-                <CardHeader className="text-center">
-                    <MailCheck className="mx-auto h-12 w-12 text-primary mb-4" />
-                    <CardTitle>Verify Your Email Address</CardTitle>
-                    <CardDescription>
-                        We've sent a verification link to your email. Please click the link to finish setting up your account and access the dashboard.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="text-center space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                        Didn't receive an email? Check your spam folder or click below to resend.
-                    </p>
-                    <Button onClick={handleResend} disabled={isSending} variant="secondary">
-                        {isSending ? (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                            'Resend Verification Email'
-                        )}
-                    </Button>
-                </CardContent>
-            </Card>
-        </div>
-    );
-};
-
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function DashboardPageClient({ children }: { children: React.ReactNode }) {
@@ -72,16 +21,6 @@ export default function DashboardPageClient({ children }: { children: React.Reac
     const router = useRouter();
     const { toast } = useToast();
     const [isSubscribing, setIsSubscribing] = useState(false);
-
-    const trialHasEnded = useMemo(() => {
-        if (!dbUser?.createdAt) return false;
-        // Correctly convert Firestore Timestamp to JS Date
-        // The `createdAt` field can be a plain object with seconds/nanoseconds from server-side rendering,
-        // or a Firestore Timestamp object on the client. The toDate() method handles the latter.
-        const createdAtDate = (dbUser.createdAt as any).toDate ? (dbUser.createdAt as any).toDate() : new Date((dbUser.createdAt as any).seconds * 1000);
-        const thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000;
-        return (new Date().getTime() - createdAtDate.getTime()) > thirtyDaysInMillis;
-    }, [dbUser]);
 
     const handleSubscribe = async () => {
         if (!user) return;
@@ -119,13 +58,9 @@ export default function DashboardPageClient({ children }: { children: React.Reac
         return <AuthDialog open={true} onOpenChange={() => router.push('/')} />;
     }
 
-    // 3. If user is logged in but email is not verified (and not a Google user), show verification card
-    if (!user.emailVerified && !user.providerData.some(p => p.providerId === 'google.com')) {
-        return <VerifyEmailCard />;
-    }
-
-    // 4. If trial has ended and user is not subscribed, show subscription dialog
-    if (trialHasEnded && !dbUser?.isSubscribed) {
+    // 3. If user is not subscribed, show subscription dialog.
+    // The previous email verification check is removed.
+    if (!dbUser?.isSubscribed) {
         return (
             <SubscriptionDialog
               open={true}
@@ -136,6 +71,6 @@ export default function DashboardPageClient({ children }: { children: React.Reac
         );
     }
 
-    // 5. If all checks pass, render the premium content
+    // 4. If all checks pass, render the premium content
     return <>{children}</>;
 }

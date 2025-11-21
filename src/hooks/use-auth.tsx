@@ -22,10 +22,13 @@ import { getDoc, doc } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { event as trackEvent } from '@/lib/gtag';
 import { useRouter } from 'next/navigation';
-import { handleWelcomeEmail } from '@/app/actions';
+import { handleWelcomeEmail, createCheckoutSession } from '@/app/actions';
+import { loadStripe } from '@stripe/stripe-js';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
 
 interface AuthContextType {
   user: User | null;
@@ -67,6 +70,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
+  const redirectToCheckout = async (uid: string) => {
+      try {
+        const gaClientId = localStorage.getItem('ga_client_id');
+        const { sessionId } = await createCheckoutSession(uid, gaClientId);
+        const stripe = await stripePromise;
+        if (stripe) {
+            const { error } = await stripe.redirectToCheckout({ sessionId });
+            if (error) throw new Error(error.message);
+        } else {
+            throw new Error("Stripe.js has not loaded yet.");
+        }
+    } catch (error: any) {
+        console.error("Failed to redirect to checkout:", error);
+        toast({
+            title: "Subscription Error",
+            description: error.message || "Could not initiate subscription process. Please try again or contact support.",
+            variant: "destructive",
+        });
+        // If redirect fails, send them to the homepage so they aren't stuck.
+        router.push('/');
+    }
+  }
+
   const handleSuccessfulAuth = async (userCredential: UserCredential, method: 'Google' | 'Email') => {
     const { user } = userCredential;
     const additionalInfo = getAdditionalUserInfo(userCredential);
@@ -81,20 +107,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (user.email) {
           handleWelcomeEmail(user.email, user.displayName || user.email).catch(err => {
               console.error("Failed to send welcome email:", err);
-              // We don't block the user flow for this, but we log the error.
           });
       }
       
-      if (method === 'Email') {
-        await sendEmailVerification(user);
-        toast({ title: "Account Created!", description: "Welcome! Please check your inbox to verify your email." });
-      } else {
-        toast({ title: "Welcome! Your free trial has started." });
-      }
+      // Redirect to Stripe checkout for new users instead of dashboard
+      await redirectToCheckout(user.uid);
+
     } else {
        toast({ title: "Successfully signed in." });
+       router.push('/dashboard');
     }
-    router.push('/dashboard');
   };
 
 
@@ -122,7 +144,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signInWithEmail = async (email: string, password: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      await handleSuccessfulAuth(userCredential, 'Email');
+      // For sign-in, we just go to the dashboard. The dashboard client will handle subscription checks.
+      const { user } = userCredential;
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+      if (userDocSnap.exists()) {
+          setDbUser(userDocSnap.data() as DbUser);
+      }
+      toast({ title: "Successfully signed in." });
+      router.push('/dashboard');
+
     } catch (error) {
         console.error("Email sign-in error", error);
         throw error;

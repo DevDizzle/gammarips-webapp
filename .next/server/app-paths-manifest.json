@@ -1,7 +1,5 @@
 {
   "/dashboard/[ticker]/page": "app/dashboard/[ticker]/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/options/call-setups/page": "app/options/call-setups/page.js",
-  "/page": "app/page.js",
-  "/performance/page": "app/performance/page.js"
+  "/page": "app/page.js"
 }

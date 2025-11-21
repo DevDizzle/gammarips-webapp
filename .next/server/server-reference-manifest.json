@@ -415,7 +415,7 @@
         }
       },
       "layer": {
-        "app/dashboard/[ticker]/page": "action-browser",
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "action-browser",
         "app/page": "rsc"
       }

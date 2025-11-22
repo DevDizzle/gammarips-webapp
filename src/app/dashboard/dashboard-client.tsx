@@ -59,12 +59,11 @@ export default function DashboardPageClient({ children }: { children: React.Reac
     }
 
     // 3. If user is not subscribed, show subscription dialog.
-    // The previous email verification check is removed.
     if (!dbUser?.isSubscribed) {
         return (
             <SubscriptionDialog
               open={true}
-              onOpenChange={() => router.push('/')}
+              onOpenChange={() => router.push('/')} // Redirect to home on close
               onSubscribe={handleSubscribe}
               loading={isSubscribing}
             />

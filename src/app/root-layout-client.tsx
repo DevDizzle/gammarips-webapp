@@ -11,26 +11,18 @@ export default function RootLayoutClient({ children }: { children: React.ReactNo
     const router = useRouter();
     const pathname = usePathname();
 
-    useEffect(() => {
-        if (!loading && user && pathname === '/') {
-            router.push('/dashboard');
-        }
-    }, [user, loading, pathname, router]);
+    // The automatic redirect from '/' to '/dashboard' for logged-in users has been removed
+    // to allow users to visit the homepage even when authenticated.
+    // The dashboard is now the explicit entry point for authenticated, subscribed users.
 
-    // While auth is loading and we are on the homepage with a potential user, show a loader
-    if (loading && pathname === '/') {
+    // While auth is loading on any page, you might want a global loader,
+    // but for now, we'll keep it minimal to avoid layout shifts.
+    // The original logic was tied only to the homepage, which is no longer desired.
+    if (loading && !user) {
+        // Show a brief loader on initial load if user state is unknown
+        // to prevent flashes of content.
         return (
             <div className="fixed inset-0 flex items-center justify-center bg-background z-50">
-                <Loader2 className="h-10 w-10 animate-spin" />
-            </div>
-        );
-    }
-    
-    // If user is logged in and on the homepage, the effect will redirect them.
-    // We render null here to avoid a flash of the homepage content.
-    if (user && pathname === '/') {
-        return (
-             <div className="fixed inset-0 flex items-center justify-center bg-background z-50">
                 <Loader2 className="h-10 w-10 animate-spin" />
             </div>
         );

@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -36,8 +35,6 @@ function TodaysWinners() {
   const [allWinners, setAllWinners] = useState<Winner[]>([]);
   const [topGainers, setTopGainers] = useState<PerformanceSignal[]>([]);
   const [topLosers, setTopLosers] = useState<PerformanceSignal[]>([]);
-  const [showAllBullish, setShowAllBullish] = useState(false);
-  const [showAllBearish, setShowAllBearish] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -106,9 +103,6 @@ function TodaysWinners() {
       
     return { bullishWinners: allBullish, bearishWinners: allBearish, lastUpdated: updatedDate };
   }, [allWinners]);
-
-  const visibleBullish = showAllBullish ? bullishWinners : bullishWinners.slice(0, 10);
-  const visibleBearish = showAllBearish ? bearishWinners : bearishWinners.slice(0, 10);
 
   const handleRowClick = (ticker: string) => {
     router.push(`/dashboard/${ticker.toUpperCase()}`);
@@ -227,7 +221,7 @@ function TodaysWinners() {
     );
   };
   
-  const renderWinnersList = (winners: Winner[], showAll: boolean, setShowAll: (show: boolean) => void, fullCount: number) => {
+  const renderWinnersList = (winners: Winner[]) => {
     if (winners.length === 0) {
       return <p className="text-sm text-muted-foreground text-center py-4">No signals found for this category today.</p>;
     }
@@ -335,13 +329,6 @@ function TodaysWinners() {
                 )
             })}
         </div>
-        {!showAll && fullCount > 10 && (
-          <div className="mt-4 text-center">
-            <Button variant="secondary" onClick={() => setShowAll(true)}>
-              Show All {fullCount} Setups
-            </Button>
-          </div>
-        )}
       </>
     );
   }
@@ -428,9 +415,9 @@ function TodaysWinners() {
 
     switch (activeView) {
         case 'bullish':
-            return renderWinnersList(visibleBullish, showAllBullish, setShowAllBullish, bullishWinners.length);
+            return renderWinnersList(bullishWinners);
         case 'bearish':
-            return renderWinnersList(visibleBearish, showAllBearish, setShowAllBearish, bearishWinners.length);
+            return renderWinnersList(bearishWinners);
         case 'gainers':
             return renderPerformanceList(topGainers);
         case 'losers':

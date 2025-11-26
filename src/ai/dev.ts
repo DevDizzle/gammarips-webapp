@@ -9,3 +9,4 @@ import '@/ai/flows/send-trial-reminders.ts';
 import '@/ai/flows/send-referral-links.ts';
 import '@/ai/flows/send-feedback-requests.ts';
 import '@/ai/flows/customer-service-agent.ts';
+import '@/ai/flows/send-top-pick.ts';

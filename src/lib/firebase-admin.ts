@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -1248,4 +1249,45 @@ export async function getFairQualityOptionsAdmin(ticker: string): Promise<Option
     }
 }
 
+export async function getTopPickAdmin(): Promise<Stock | null> {
+    noStore();
+    try {
+        const snapshot = await adminDb.collection('tickers')
+            .orderBy('weighted_score', 'desc')
+            .limit(1)
+            .get();
+
+        if (snapshot.empty) {
+            console.warn('No stocks found in tickers collection to determine a top pick.');
+            return null;
+        }
+
+        const doc = snapshot.docs[0];
+        const data = doc.data();
+        
+        const stock: Stock = {
+            id: doc.id,
+            company_name: data.company_name,
+            industry: data.industry,
+            image_uri: data.image_uri,
+            bundle_gcs_path: data.profile,
+            recommendation_analysis: data.recommendation_analysis,
+            recommendation: data.recommendation,
+            pages_json: data.pages_json,
+            dashboard_json: data.dashboard_json,
+            weighted_score: data.weighted_score,
+        };
+        
+        const validation = StockSchema.safeParse(stock);
+        if (validation.success) {
+            return validation.data;
+        } else {
+            console.error(`Invalid top pick stock data for ${doc.id}:`, validation.error.flatten());
+            return null;
+        }
+    } catch (error) {
+        console.error('Error fetching top pick from admin:', error);
+        return null;
+    }
+}
     

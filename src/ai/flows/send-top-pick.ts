@@ -38,7 +38,7 @@ const SendTopPickOutputSchema = z.object({
   topPickTicker: z.string().nullable(),
 });
 
-export function buildTopPickEmailContent(stock: Stock, summary: string): { text: string; html: string } {
+function buildTopPickEmailContent(stock: Stock, summary: string): { text: string; html: string } {
     const dashboardLink = `https://profitscout.app/dashboard/${stock.id}`;
     
     const textContent = `
@@ -181,3 +181,5 @@ export const sendTopPickFlow = ai.defineFlow(
     return { sentCount, skippedCount, totalUsers: eligibleUsers.length, topPickTicker: topPick.id };
   }
 );
+
+    

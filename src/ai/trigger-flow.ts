@@ -5,15 +5,12 @@ import { config } from 'dotenv';
 config();
 
 import { sendEmail } from '@/lib/mailgun';
-import { getWinnersDashboardAdmin, getPerformanceSignalsAdmin, getTopPickAdmin, getGcsFileContentAdmin, type Winner, type PerformanceSignal, type Stock } from '@/lib/firebase-admin';
-import { ai } from '@/ai/genkit';
-import { z } from 'zod';
+import { getWinnersDashboardAdmin, getPerformanceSignals as getPerformanceSignalsAdmin, getTopPickAdmin, getGcsFileContentAdmin } from '@/lib/firebase-admin';
+import { summarizeForEmailPrompt, buildTopPickEmailContent } from '@/ai/flows/send-top-pick';
+import { buildEmailContent } from '@/ai/flows/send-daily-setups';
+
 
 // --- Test for Daily Setups Email ---
-
-// Import the actual email builder function from the flow
-import { buildEmailContent as buildDailySetupsEmailContent } from '@/ai/flows/send-daily-setups';
-
 
 async function testSendDailySetups(email: string) {
     console.log('Attempting to send a test "Daily Setups" email...');
@@ -32,7 +29,7 @@ async function testSendDailySetups(email: string) {
         // Ensure losers are sorted correctly
         topLosers.sort((a,b) => a.percent_gain - b.percent_gain);
 
-        const { text, html } = buildDailySetupsEmailContent(winners, topGainers, topLosers);
+        const { text, html } = buildEmailContent(winners, topGainers, topLosers);
 
         const result = await sendEmail({
             to: email,
@@ -53,10 +50,6 @@ async function testSendDailySetups(email: string) {
 
 
 // --- Test for Top Pick Email ---
-
-// Import the actual email builder and summarizer from the flow
-import { buildTopPickEmailContent, summarizeForEmailPrompt } from '@/ai/flows/send-top-pick';
-
 
 async function testSendTopPick(email: string) {
     console.log('Attempting to send a test "Top Pick" email...');

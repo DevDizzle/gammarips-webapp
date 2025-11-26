@@ -12,7 +12,7 @@ const SendDailySetupsOutputSchema = z.object({
   totalUsers: z.number(),
 });
 
-export function buildEmailContent(winners: Winner[], topGainers: PerformanceSignal[], topLosers: PerformanceSignal[]): { text: string; html: string } {
+function buildEmailContent(winners: Winner[], topGainers: PerformanceSignal[], topLosers: PerformanceSignal[]): { text: string; html: string } {
     const topBullish = winners.filter(w => w.option_type === 'call').slice(0, 5);
     const topBearish = winners.filter(w => w.option_type === 'put').slice(0, 5);
     const topGainer = topGainers.length > 0 ? topGainers[0] : null;

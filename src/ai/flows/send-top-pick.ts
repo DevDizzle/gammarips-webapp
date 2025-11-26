@@ -14,7 +14,7 @@ const SummarizeAnalysisOutputSchema = z.object({
   summary: z.string().describe('A compelling, one-paragraph summary of the analysis, suitable for an email. It should grab the reader\'s attention and make them want to learn more.'),
 });
 
-const summarizeForEmailPrompt = ai.definePrompt({
+export const summarizeForEmailPrompt = ai.definePrompt({
     name: 'summarizeAnalysisForEmail',
     input: { schema: SummarizeAnalysisInputSchema },
     output: { schema: SummarizeAnalysisOutputSchema },
@@ -38,7 +38,7 @@ const SendTopPickOutputSchema = z.object({
   topPickTicker: z.string().nullable(),
 });
 
-function buildTopPickEmailContent(stock: Stock, summary: string): { text: string; html: string } {
+export function buildTopPickEmailContent(stock: Stock, summary: string): { text: string; html: string } {
     const dashboardLink = `https://profitscout.app/dashboard/${stock.id}`;
     
     const textContent = `

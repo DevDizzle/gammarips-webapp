@@ -3,7 +3,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { getEligibleEmailRecipientsAdmin, type Winner, getPerformanceSignals as getPerformanceSignalsAdmin, type PerformanceSignal } from '@/lib/firebase-admin';
+import { getEligibleEmailRecipientsAdmin, getWinnersDashboardAdmin, type Winner, getPerformanceSignals as getPerformanceSignalsAdmin, type PerformanceSignal } from '@/lib/firebase-admin';
 import { sendEmail } from '@/lib/mailgun';
 
 const SendDailySetupsOutputSchema = z.object({
@@ -12,7 +12,7 @@ const SendDailySetupsOutputSchema = z.object({
   totalUsers: z.number(),
 });
 
-function buildEmailContent(winners: Winner[], topGainers: PerformanceSignal[], topLosers: PerformanceSignal[]): { text: string; html: string } {
+export function buildEmailContent(winners: Winner[], topGainers: PerformanceSignal[], topLosers: PerformanceSignal[]): { text: string; html: string } {
     const topBullish = winners.filter(w => w.option_type === 'call').slice(0, 5);
     const topBearish = winners.filter(w => w.option_type === 'put').slice(0, 5);
     const topGainer = topGainers.length > 0 ? topGainers[0] : null;
@@ -80,7 +80,7 @@ To see the full list and do your own research, visit your dashboard: https://pro
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-w: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
                             <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
@@ -246,5 +246,3 @@ export const sendDailySetupsFlow = ai.defineFlow(
     return { sentCount, skippedCount, totalUsers: eligibleUsers.length };
   }
 );
-
-    

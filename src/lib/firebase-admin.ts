@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -1100,42 +1099,24 @@ export async function getUsersForFeedbackEmailAdmin(): Promise<DbUser[]> {
 
 
 export async function getEligibleEmailRecipientsAdmin(): Promise<DbUser[]> {
-    const eligibleUsers: DbUser[] = [];
+    const allUsers: DbUser[] = [];
     try {
         const snapshot = await adminDb.collection('users').get();
         if (snapshot.empty) {
             return [];
         }
 
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
         snapshot.forEach(doc => {
             const user = doc.data() as DbUser;
-
-            if (!user.email) {
-                return; // Skip users without an email
-            }
-
-            // Condition 1: User is subscribed
-            if (user.isSubscribed) {
-                eligibleUsers.push(user);
-                return; // Add user and continue to the next one
-            }
-
-            // Condition 2: User is in their 30-day trial
-            if (user.createdAt && user.createdAt instanceof Timestamp) {
-                const createdAtDate = user.createdAt.toDate();
-                if (createdAtDate > thirtyDaysAgo) {
-                    eligibleUsers.push(user);
-                }
+            if (user.email) { // Only include users with an email
+                allUsers.push(user);
             }
         });
 
     } catch (error) {
-        console.error('Error fetching eligible email recipients:', error);
+        console.error('Error fetching all email recipients:', error);
     }
-    return eligibleUsers;
+    return allUsers;
 }
 
 
@@ -1266,3 +1247,5 @@ export async function getFairQualityOptionsAdmin(ticker: string): Promise<Option
         return [];
     }
 }
+
+    

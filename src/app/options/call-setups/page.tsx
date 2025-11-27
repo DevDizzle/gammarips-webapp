@@ -121,11 +121,10 @@ export default async function CallSetupsPage() {
                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary text-xl">
                                 1
                            </div>
-                           <div className="h-full w-px bg-border"></div>
                         </div>
                         <div>
                             <h3 className="font-semibold">Identify High-Conviction Stocks First</h3>
-                            <p className="text-muted-foreground">Instead of scanning for random option activity, we start by identifying the market's strongest stocks. We target the Top 20% of companies based on our proprietary AI conviction score, or those with a massive breaking news catalyst (Score &gt; 0.9).</p>
+                            <p className="text-muted-foreground">Instead of scanning for random option activity, we start by identifying the market's strongest stocks. We target the Top 20% of companies based on our proprietary AI conviction score, or those with a massive breaking news catalyst (Score > 0.9).</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -133,11 +132,10 @@ export default async function CallSetupsPage() {
                             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary text-xl">
                                 2
                            </div>
-                           <div className="h-full w-px bg-border"></div>
                         </div>
                         <div>
                             <h3 className="font-semibold">The "Rip Hunter" Protocol</h3>
-                            <p className="text-muted-foreground">For these elite high-conviction stocks, we deploy our "Rip Hunter" logic. We hunt for aggressive, high-gamma contracts (3–60 days to expiry) and "Lotto" setups (up to 25% out-of-the-money) that are primed for explosive acceleration, prioritizing directional potential over rigid safety filters.</p>
+                            <p className="text-muted-foreground">For these elite high-conviction stocks, we deploy our "Rip Hunter" logic. We hunt for aggressive, high-gamma contracts (3-60 days to expiry) and "Lotto" setups (up to 25% out-of-the-money) that are primed for explosive acceleration, prioritizing directional potential over rigid safety filters.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -146,7 +144,7 @@ export default async function CallSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">AI Validation & Ranking</h3>
-                            <p className="text-muted-foreground">Finally, our AI validates the trade setup. It applies a "Tiered" safety check—relaxing liquidity rules for high-conviction breakouts while enforcing strict safety measures for standard setups. It also boosts scores for "Unusual Options Activity" (volume &gt; open interest), ensuring only the most explosive opportunities make the daily dashboard.</p>
+                            <p className="text-muted-foreground">Finally, our AI validates the trade setup. It applies a "Tiered" safety check - relaxing liquidity rules for high-conviction breakouts while enforcing strict safety measures for standard setups. It also boosts scores for "Unusual Options Activity" (volume > open interest), ensuring only the most explosive opportunities make the daily dashboard.</p>
                         </div>
                     </div>
                 </CardContent>

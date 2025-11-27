@@ -51,13 +51,13 @@ export default async function PerformancePage() {
                 <div className="text-center">
                     <Card className="inline-block bg-primary/10 border-primary/20">
                         <CardContent className="p-6">
-                            <h3 className="text-xl font-semibold font-headline">Ready to Get Started?</h3>
+                            <h3 className="text-xl font-semibold font-headline">Ready to Become a Ripper?</h3>
                             <p className="text-muted-foreground mt-2 mb-4">
-                                Sign up for a membership to get daily rippers and access to the interactive dashboard.
+                                Get the daily Rips. Unlock the dashboard. See the full AI analysis for every trade. Start your morning with a plan.
                             </p>
                             <Button asChild size="lg">
                                 <Link href="/dashboard">
-                                    Become a Member ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
+                                    Become a Ripper ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
                                 </Link>
                             </Button>
                         </CardContent>

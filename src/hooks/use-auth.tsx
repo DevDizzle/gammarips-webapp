@@ -68,29 +68,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  const redirectToCheckout = async (uid: string) => {
-      try {
-        const gaClientId = localStorage.getItem('ga_client_id');
-        const { sessionId } = await createCheckoutSession(uid, gaClientId);
-        const stripe = await stripePromise;
-        if (stripe) {
-            const { error } = await stripe.redirectToCheckout({ sessionId });
-            if (error) throw new Error(error.message);
-        } else {
-            throw new Error("Stripe.js has not loaded yet.");
-        }
-    } catch (error: any) {
-        console.error("Failed to redirect to checkout:", error);
-        toast({
-            title: "Subscription Error",
-            description: error.message || "Could not initiate subscription process. Please try again or contact support.",
-            variant: "destructive",
-        });
-        // If redirect fails, send them to the homepage so they aren't stuck.
-        router.push('/');
-    }
-  }
-
   const handleSuccessfulAuth = async (userCredential: UserCredential, method: 'Google' | 'Email') => {
     const { user } = userCredential;
     const additionalInfo = getAdditionalUserInfo(userCredential);
@@ -101,10 +78,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (additionalInfo?.isNewUser) {
       trackEvent('sign_up', { method });
       
-      // No welcome email in this flow, straight to checkout
-      
-      // Redirect to Stripe checkout for new users instead of dashboard
-      await redirectToCheckout(user.uid);
+      // Redirect new users to the processing page, which will handle the Stripe redirect.
+      router.push('/auth/processing');
 
     } else {
        toast({ title: "Successfully signed in." });

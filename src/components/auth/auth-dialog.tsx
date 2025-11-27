@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -139,7 +138,7 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
             </div>
             <Button type="submit" className="w-full" disabled={!!loading}>
                {loading === 'email' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSignIn ? 'Sign In' : 'Create Account'}
+              {isSignIn ? 'Sign In' : 'Create Account →'}
             </Button>
           </form>
 

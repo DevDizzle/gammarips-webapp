@@ -120,10 +120,6 @@ export default function TermsPage() {
 
       <h2>18) Contact</h2>
       <p>Questions about these Terms? Email <a href="mailto:admin@gammarips.com">admin@gammarips.com</a>.</p>
-      <p>
-        GammaRips<br />
-        AI-Powered Research for Options Traders
-      </p>
     </article>
   );
 }

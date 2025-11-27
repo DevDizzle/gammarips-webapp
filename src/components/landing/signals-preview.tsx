@@ -89,18 +89,43 @@ const SignalCard = ({ signal, title, hubLink }: { signal: Winner | null, title: 
     );
 };
 
+// Helper function to get top N unique tickers from a list of winners
+const getTopUniqueWinners = (winners: Winner[], count: number): (Winner | null)[] => {
+    const uniqueWinners: Winner[] = [];
+    const seenTickers = new Set<string>();
+
+    for (const winner of winners) {
+        if (!seenTickers.has(winner.ticker)) {
+            uniqueWinners.push(winner);
+            seenTickers.add(winner.ticker);
+        }
+        if (uniqueWinners.length === count) {
+            break;
+        }
+    }
+    
+    // Pad with null if we don't have enough unique winners
+    while (uniqueWinners.length < count) {
+        uniqueWinners.push(null as any);
+    }
+
+    return uniqueWinners;
+};
+
+
 export default async function SignalsPreview() {
     const allWinners = await getWinnersDashboard();
     
-    const topCalls = allWinners
+    const sortedCalls = allWinners
         .filter(w => w.option_type.toLowerCase() === 'call')
-        .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1))
-        .slice(0, 2);
+        .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1));
 
-    const topPuts = allWinners
+    const sortedPuts = allWinners
         .filter(w => w.option_type.toLowerCase() === 'put')
-        .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1))
-        .slice(0, 2);
+        .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1));
+
+    const topCalls = getTopUniqueWinners(sortedCalls, 2);
+    const topPuts = getTopUniqueWinners(sortedPuts, 2);
 
     const lastUpdated = allWinners.length > 0 
         ? new Date(allWinners[0].run_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' })

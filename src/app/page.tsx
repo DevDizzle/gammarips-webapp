@@ -143,7 +143,7 @@ export default async function LandingPage() {
           </Suspense>
 
           {/* Performance Tracker Section */}
-          <section className="pb-16 sm:pb-24">
+          <section className="pb-16 sm:pb-24 pt-16 sm:pt-24">
              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
                     <h2 className="text-3xl font-bold font-headline">Live Performance. No Hiding.</h2>
@@ -162,102 +162,67 @@ export default async function LandingPage() {
             </div>
           </section>
 
-          {/* New Process Section */}
+          {/* The Daily Routine Section */}
           <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center max-w-3xl mx-auto">
-                <h2 className="text-3xl font-bold font-headline">How Daily Rippers Fit Into Your Trading Day</h2>
+                <h2 className="text-3xl font-bold font-headline">How to Use the Playbook</h2>
               </div>
               <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">1</div>
-                  <h3 className="mt-6 text-xl font-semibold">Grab Today’s Rippers</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Grab Today’s Rips</h3>
                   <p className="mt-2 text-muted-foreground">
-                    Every session, GammaRips scans the Russell 1000 and surfaces a tight list of Call & Put Rippers- ideas where the stock, volatility, and options structure all line up. No 500-row table, no 20 strategies. Just the handful worth a look.
+                    Every session, we scan the Russell 1000 to surface a tight list of Call & Put Rips. These are setups where the stock, volatility, and options structure align. No 500-row spreadsheet. No 20-strategy zoo. Just the handful worth a look.
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">2</div>
-                  <h3 className="mt-6 text-xl font-semibold">Skim the “Why” in 60 Seconds</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Read the "Why"</h3>
                   <p className="mt-2 text-muted-foreground">
-                    Each Ripper comes with a fast AI Briefing: what’s driving the setup (trend, earnings, catalysts, risk flags), and where it can break. You get the story, not just a ticker and a Greek salad.
+                    Each Rip comes with a clean AI Breakdown covering trend, catalysts, and risk flags. You get the full story in 60 seconds. We give you context, not just a ticker and a "Greek salad" of data.
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">3</div>
                   <h3 className="mt-6 text-xl font-semibold">Run Your Own Playbook</h3>
                   <p className="mt-2 text-muted-foreground">
-                    We don’t touch your orders. GammaRips is research only. You decide entries, size, stops, and exits. We hunt for potential rips; you decide how much heat you want to put on.
+                    We are the research. You are the Ripper. You decide entries, sizing, stops, and exits. We hunt for the potential moves. You manage the risk.
                   </p>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* New Features Section */}
+          {/* Under the Hood Section */}
           <section className="py-16 sm:py-24 bg-muted/50">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-              
-              {/* What the Engine Does */}
-              <div>
-                <div className="text-center max-w-3xl mx-auto">
-                  <h2 className="text-3xl font-bold font-headline">What the GammaRips Engine Actually Does</h2>
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center max-w-3xl mx-auto">
+                  <h2 className="text-3xl font-bold font-headline">Real Logic. No Black Box.</h2>
                   <p className="mt-4 text-muted-foreground">
-                    Forget buzzwords. Here’s the job description for the engine under the hood:
+                    We do not scan for random options volume in a vacuum. Here is how the engine actually works.
                   </p>
                 </div>
                 <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
                   <Card className="bg-card/50">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><Target className="text-primary"/>Starts with the Stock</CardTitle>
+                      <CardTitle className="flex items-center gap-3"><span className="font-bold text-primary">1.</span>Stock First, Options Second</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-muted-foreground">We don't scan for random option volume in a vacuum. We identify the Top 20% strongest stocks using our AI conviction score first. If the underlying stock isn't ready to move, the option chain doesn't matter.</CardContent>
+                    <CardContent className="text-muted-foreground">If the underlying stock is not ready to move, the option chain does not matter. We identify the top strongest stocks using our AI conviction score first. Then we look for the trade.</CardContent>
                   </Card>
                   <Card className="bg-card/50">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><Zap className="text-primary"/>Deploys the "Rip Hunter" Protocol</CardTitle>
+                      <CardTitle className="flex items-center gap-3"><span className="font-bold text-primary">2.</span>The "Rip Hunter" Protocol</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-muted-foreground">For those high-conviction winners, the engine switches modes. It hunts for aggressive, high-gamma contracts (3-60 days out)-prioritizing explosive acceleration over "perfect" spreads. It finds the contracts designed to move fast, not just the ones that look safe on paper.</CardContent>
+                    <CardContent className="text-muted-foreground">For those high-conviction stocks, the engine hunts for aggressive, high-gamma contracts. We prioritize explosive potential over "safe on paper" spreads.</CardContent>
                   </Card>
                   <Card className="bg-card/50">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><Shield className="text-primary"/>Auto-Adjusts for Safety</CardTitle>
+                      <CardTitle className="flex items-center gap-3"><span className="font-bold text-primary">3.</span>AI Without the Hype</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-muted-foreground">It uses dynamic filtering: loosening the ropes for elite breakouts to catch them early, while enforcing strict liquidity and spread rules for everything else. You get a short, lethal list of Rippers, not a spreadsheet to scroll through.</CardContent>
+                    <CardContent className="text-muted-foreground">Our AI reads the boring stuff like earnings transcripts, SEC filings, and dense reports. It translates them into plain English risk notes. It is not a magic money machine. It is an analyst that never sleeps.</CardContent>
                   </Card>
                 </div>
-              </div>
-
-              {/* AI Co-Pilot */}
-              <div>
-                <div className="text-center max-w-3xl mx-auto">
-                  <h2 className="text-3xl font-bold font-headline">Your AI Co-Pilot (Not Your Broker)</h2>
-                  <p className="mt-4 text-muted-foreground">
-                    Yes, there’s real AI in here. No, it’s not a magic money machine.
-                  </p>
-                </div>
-                <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-                   <Card className="bg-card/50">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><Search className="text-primary"/>Reads the Boring Stuff</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-muted-foreground">Earnings call transcripts, SEC filings, headlines- things most people pretend to read. The model condenses that into a directional view and risk notes you can skim.</CardContent>
-                  </Card>
-                   <Card className="bg-card/50">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><BrainCircuit className="text-primary"/>Translates Data Into Plain Language</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-muted-foreground">“Bullish bias with elevated volatility; earnings just passed; watch [X] level as a line in the sand.”</CardContent>
-                  </Card>
-                   <Card className="bg-card/50">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><XCircle className="text-primary"/>Never Presses the Buy Button</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-muted-foreground">GammaRips doesn’t execute trades. It’s there to inform your decisions, not replace your judgment.</CardContent>
-                  </Card>
-                </div>
-              </div>
-
             </div>
           </section>
           

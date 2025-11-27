@@ -83,18 +83,18 @@ export default async function LandingPage() {
           {/* Hero Section */}
           <section className="text-center py-20 sm:py-28 px-4">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight">
-              One Simple Options Playbook. Daily Rippers.
+              One Simple Options Playbook. Daily Rips.
             </h1>
             <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-              GammaRips uses AI to hunt for rippers, which are high-conviction options ideas on stocks that are ready to move. You get a tight daily list of call & put options and clean AI explanations. No tourist signals. No 20-strategy zoo. Just the heat.
+              GammaRips uses AI to hunt for Rips. These are high-conviction options setups on stocks that are ready to move. You get a tight daily list of call & put Rips and clean AI breakdowns. No tourist signals. No 20-strategy zoo. Just the heat.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
                <Suspense>
-                <HomePageClientContent showButton={true} buttonText="Start for $19/month"/>
+                <HomePageClientContent showButton={true} buttonText="Become a Ripper ($19/mo)"/>
                </Suspense>
             </div>
-             <p className="mt-3 text-sm text-muted-foreground">Billed monthly, cancel anytime. 7-day money-back guarantee on your first month.</p>
-             <p className="mt-4 text-xs text-muted-foreground max-w-md mx-auto">GammaRips is an AI-driven options research and education tool. Options trading is risky and can result in 100% loss of premium.</p>
+             <p className="mt-3 text-sm text-muted-foreground">Flat monthly rate. Cancel anytime. 7-day money-back guarantee on your first month.</p>
+             <p className="mt-4 text-xs text-muted-foreground max-w-md mx-auto">GammaRips is an AI-driven options research tool, not a broker or advisor. Options are risky and can result in 100% loss of premium.</p>
           </section>
 
           {/* New "Who This Is For" Section */}

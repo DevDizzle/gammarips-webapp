@@ -1,8 +1,9 @@
 
+
 import type { Metadata } from 'next';
 import { getWinnersDashboard } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowUp, ChevronRight, ArrowRight, Filter, Bot, BarChart } from 'lucide-react';
+import { ArrowUp, ChevronRight, ArrowRight, Filter, Bot, BarChart, ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -46,6 +47,11 @@ export default async function CallSetupsPage() {
                 <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
                     This is a preview of our complete, daily-updated list of bullish Call option setups for Russell 1000 stocks, scored by our AI engine.
                 </p>
+                 <Button asChild variant="link" className="mt-2">
+                    <Link href="/options/put-hedges">
+                        Looking for bearish ideas? View Put Setups <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                </Button>
             </header>
 
             <Card>
@@ -124,7 +130,7 @@ export default async function CallSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">Identify High-Conviction Stocks First</h3>
-                            <p className="text-muted-foreground">Instead of scanning for random option activity, we start by identifying the market's strongest stocks. We target the Top 20% of companies based on our proprietary AI conviction score, or those with a massive breaking news catalyst (Score &gt; 0.9).</p>
+                            <p className="text-muted-foreground">Instead of scanning for random option activity, we start by identifying the market's strongest stocks. We target the Top 20% of companies based on our proprietary AI conviction score, or those with a massive breaking news catalyst (Score > 0.9).</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -144,7 +150,7 @@ export default async function CallSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">AI Validation & Ranking</h3>
-                            <p className="text-muted-foreground">Finally, our AI validates the trade setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakouts while enforcing strict safety measures for standard setups. It also boosts scores for "Unusual Options Activity" (volume &gt; open interest), ensuring only the most explosive opportunities make the daily dashboard.</p>
+                            <p className="text-muted-foreground">Finally, our AI validates the trade setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakouts while enforcing strict safety measures for standard setups. It also boosts scores for "Unusual Options Activity" (volume > open interest), ensuring only the most explosive opportunities make the daily dashboard.</p>
                         </div>
                     </div>
                 </CardContent>

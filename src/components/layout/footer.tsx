@@ -20,8 +20,8 @@ const Footer = () => {
               <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
               <li><Link href="/dashboard" className="text-muted-foreground hover:text-primary">Dashboard</Link></li>
               <li><Link href="/performance" className="text-muted-foreground hover:text-primary">Performance</Link></li>
-              <li><Link href="/options/call-setups" className="text-muted-foreground hover:text-primary">Top Call Setups</Link></li>
-              <li><Link href="/options/put-hedges" className="text-muted-foreground hover:text-primary">Top Put Setups</Link></li>
+              <li><Link href="/options/call-setups" className="text-muted-foreground hover:text-primary">Top Calls</Link></li>
+              <li><Link href="/options/put-hedges" className="text-muted-foreground hover:text-primary">Top Puts</Link></li>
             </ul>
           </div>
           <div>

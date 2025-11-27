@@ -1,4 +1,5 @@
 
+
 import type { Metadata } from 'next';
 import { FileText, Mic, BarChart3, TrendingUp, Shield, CheckCircle2, ArrowRight, Target, Gem, Bot, Newspaper, Scale, Github, BookOpen } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -164,7 +165,7 @@ export default function AboutPage() {
                 We believe in transparency. Instead of hiding behind “secret sauce,” we explain how the GammaRips engine thinks-stock-first scoring, options quality filters, risk flags, and how we define a “Ripper.”
               </p>
               <Button asChild size="lg" variant="outline">
-                <a href="#">
+                <a href="/options/call-setups">
                   <BookOpen className="mr-2 h-5 w-5"/>
                   Methodology Overview
                 </a>

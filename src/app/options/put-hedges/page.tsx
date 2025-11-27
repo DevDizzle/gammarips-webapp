@@ -1,8 +1,9 @@
 
+
 import type { Metadata } from 'next';
 import { getWinnersDashboard } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowDown, ChevronRight, ArrowRight, Filter, Bot, BarChart } from 'lucide-react';
+import { ArrowDown, ChevronRight, ArrowRight, Filter, Bot, BarChart, ArrowUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -46,6 +47,11 @@ export default async function PutSetupsPage() {
                 <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
                     This is a preview of our complete, daily-updated list of bearish Put option setups, ideal for hedging or directional plays.
                 </p>
+                <Button asChild variant="link" className="mt-2">
+                    <Link href="/options/call-setups">
+                        Looking for bullish ideas? View Call Setups <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                </Button>
             </header>
 
             <Card>
@@ -144,7 +150,7 @@ export default async function PutSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">AI Validation & Ranking</h3>
-                            <p className="text-muted-foreground">Finally, our AI validates the setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakdowns while enforcing strict safety measures for standard defensive plays. It also boosts scores for "Unusual Put Activity" (volume &gt; open interest), ensuring only the most actionable downside plays make the daily list.</p>
+                            <p className="text-muted-foreground">Finally, our AI validates the setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakdowns while enforcing strict safety measures for standard defensive plays. It also boosts scores for "Unusual Put Activity" (volume > open interest), ensuring only the most actionable downside plays make the daily list.</p>
                         </div>
                     </div>
                 </CardContent>

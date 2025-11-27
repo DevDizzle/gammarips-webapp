@@ -83,10 +83,10 @@ export default async function LandingPage() {
           {/* Hero Section */}
           <section className="text-center py-20 sm:py-28 px-4">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight">
-              One Simple Playbook. Daily Options Rippers.
+              One Simple Options Playbook. Daily Rippers.
             </h1>
             <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-              GammaRips uses AI to hunt for rippers, which are high-conviction options ideas on stocks that are ready to move. You get a tight daily list of call & put rippers and clean AI explanations. No tourist signals. No 20-strategy zoo. Just the heat.
+              GammaRips uses AI to hunt for rippers, which are high-conviction options ideas on stocks that are ready to move. You get a tight daily list of call & put options and clean AI explanations. No tourist signals. No 20-strategy zoo. Just the heat.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
                <Suspense>

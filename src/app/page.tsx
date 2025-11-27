@@ -260,37 +260,15 @@ export default async function LandingPage() {
                 <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
                     <h2 className="text-3xl sm:text-4xl font-bold font-headline">Get the Daily Playbook</h2>
                     <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-                      Become a member to get full access to our daily ranked rippers, the interactive dashboard, and the complete AI analysis behind every signal.
+                      Become a ripper to get full access to our daily ranked options, the interactive dashboard, and the complete AI analysis behind every signal.
                     </p>
-                    <div className="mt-8 max-w-md mx-auto">
-                      <table className="w-full text-left">
-                        <tbody>
-                          <tr className="border-b">
-                            <td className="py-2 font-medium">Price</td>
-                            <td className="py-2 text-right font-semibold">$19 / month</td>
-                          </tr>
-                          <tr className="border-b">
-                            <td className="py-2 font-medium">Billing</td>
-                            <td className="py-2 text-right">Billed monthly, cancel anytime</td>
-                          </tr>
-                           <tr className="border-b">
-                            <td className="py-2 font-medium">Includes</td>
-                            <td className="py-2 text-right">Full access to all features</td>
-                          </tr>
-                          <tr>
-                            <td className="py-2 font-medium">Guarantee</td>
-                            <td className="py-2 text-right">7-day money-back guarantee</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                       <p className="text-xs text-muted-foreground mt-4">
-                        If you don’t find GammaRips useful in your first 7 days, email us and we’ll refund your first month, no questions asked.
-                      </p>
-                    </div>
                     <div className="mt-8">
-                        <Suspense>
-                            <HomePageClientContent showButton={true} buttonText="Start for $19/month" />
-                        </Suspense>
+                        <Button asChild size="lg">
+                            <Link href="/dashboard">
+                                Become a Ripper – $19/mo <ArrowRight className="ml-2 h-5 w-5"/>
+                            </Link>
+                        </Button>
+                         <p className="text-xs text-muted-foreground mt-3">Billed monthly, cancel anytime. 7-day money-back guarantee on your first month.</p>
                     </div>
                 </Card>
             </div>

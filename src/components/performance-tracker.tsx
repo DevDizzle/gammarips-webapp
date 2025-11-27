@@ -32,11 +32,11 @@ export async function PerformanceTracker() {
                     <div className="flex justify-center items-center gap-2">
                         <TrendingUp className="h-6 w-6 text-primary" />
                         <CardTitle className="font-headline text-2xl">
-                            Historical Performance
+                            Live Performance. No Hiding.
                         </CardTitle>
                     </div>
                     <CardDescription className="max-w-2xl mx-auto">
-                        Performance tracking began on 10/21/2025. We track each options signal from when it’s picked (late afternoon ET) using the NBBO mid (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and each day until the contract’s standard expiry.
+                        Our models track the performance of every Rip. We show the wins, the losses, and the volatility in between. This is a live look at our data-driven edge. Past performance does not guarantee future results.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

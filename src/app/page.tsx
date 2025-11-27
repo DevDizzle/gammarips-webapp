@@ -116,6 +116,7 @@ export default async function LandingPage() {
                     <p>✓ You are an active options trader. You place multiple trades per month.</p>
                     <p>✓ You want a short, focused list of daily Rips. No complex labs or endless scrolling.</p>
                     <p>✓ You understand risk. You are comfortable buying premium and managing your own trades.</p>
+                    <p>✓ You take trading seriously and treat it like a business,</p>
                   </CardContent>
                 </Card>
                  <Card className="bg-card/50">

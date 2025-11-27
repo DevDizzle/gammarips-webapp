@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -428,8 +429,8 @@ function TodaysWinners() {
   }
 
   const buttons: { label: string; view: ViewType }[] = [
-    { label: 'Top Call Rippers', view: 'bullish' },
-    { label: 'Top Put Rippers', view: 'bearish' },
+    { label: 'Top Calls', view: 'bullish' },
+    { label: 'Top Puts', view: 'bearish' },
     { label: 'Top Gainers', view: 'gainers' },
     { label: 'Top Losers', view: 'losers' },
   ];
@@ -439,7 +440,7 @@ function TodaysWinners() {
       <CardHeader>
         <CardTitle>Market Hub</CardTitle>
         <CardDescription>
-          Explore today's top Call/Put rippers, or review our model's historical performance with top gainers and losers. Rankings are for research, not investment advice.
+          Explore today's top rippers, or review our model's historical performance with top gainers and losers. Rankings are for research, not investment advice.
           {lastUpdated && !isLoading && (
             <span className="block text-xs text-muted-foreground mt-2">Signal Data Last Updated: {lastUpdated} as of market close</span>
           )}
@@ -475,3 +476,5 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
+
+    

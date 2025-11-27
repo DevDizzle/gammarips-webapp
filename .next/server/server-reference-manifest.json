@@ -2,6 +2,10 @@
   "node": {
     "60e100df91b64ef49b428549db67cc32a17058d71c": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -20,6 +24,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -28,8 +33,16 @@
     },
     "60c7860d4bb2b3def6364d27c36d4fc2db3f6b6d02": {
       "workers": {
+        "app/_not-found/page": {
+          "moduleId": "[project]/.next-internal/server/app/_not-found/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/about/page": {
           "moduleId": "[project]/.next-internal/server/app/about/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
         },
         "app/dashboard/page": {
@@ -50,7 +63,9 @@
         }
       },
       "layer": {
+        "app/_not-found/page": "action-browser",
         "app/about/page": "action-browser",
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -59,6 +74,10 @@
     },
     "000a6af633d5066b736065ae9c1556a6d18fd7a57f": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -77,6 +96,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "action-browser",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -85,6 +105,10 @@
     },
     "009f9f67211bd56576ab36f3fa33b524ec045e511d": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -103,6 +127,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -111,6 +136,10 @@
     },
     "00a864d13703829605ebae4e161e9e9c441715ffa0": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -129,6 +158,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "action-browser",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -137,6 +167,10 @@
     },
     "00d28a93a4397a5ff768bd1a1f820a80ac84685859": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -155,6 +189,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -163,6 +198,10 @@
     },
     "4021a3b3a8edb45f0815c9b2db8cef56cbc5daaf85": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -181,6 +220,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -189,6 +229,10 @@
     },
     "40336742dd4b33c7668b73d39ce40c4a97b62c9e69": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -207,6 +251,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -215,6 +260,10 @@
     },
     "4043b006356c4f678b5cc6b3b6eac00523cd652c1a": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -233,6 +282,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -241,6 +291,10 @@
     },
     "404b58e2135834521f45385bee553b63db448a94ad": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -259,6 +313,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -267,6 +322,10 @@
     },
     "404eb5e35e3f70c66bbaa7dfda987d838c5650ba69": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -285,6 +344,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -293,6 +353,10 @@
     },
     "40643a4c9ba1cb3ab8ef73e94e5bd122e123d4e264": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -311,6 +375,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -319,6 +384,10 @@
     },
     "408509c4f40cde0bdbe385ff9565a4170d06ac7d12": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -337,6 +406,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "action-browser",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -345,6 +415,10 @@
     },
     "40a65682cd8991d60959b4ca39184f8d0505a4b158": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -363,6 +437,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -371,6 +446,10 @@
     },
     "40b129b17f340a2ca7fb8cc8ffe5cb049f129f6d16": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -389,6 +468,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -397,6 +477,10 @@
     },
     "601cf4c088b1d339dc875f62c45f5637f0fd0df8ac": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -415,6 +499,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -423,6 +508,10 @@
     },
     "602b563348a8a3bf14498f01b791d06c98004c4578": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -441,6 +530,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -449,6 +539,10 @@
     },
     "6034459da1e9e20e661d42cbbf94df8f8730a35060": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -467,6 +561,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -475,6 +570,10 @@
     },
     "6046966c9ade858dac51d4c0b844774e4f2e004ef1": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -493,6 +592,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -501,6 +601,10 @@
     },
     "605e5815122c6e8709a3cd01391cec5591df0b0eea": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -519,6 +623,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -527,6 +632,10 @@
     },
     "60f8409f91ae8d0ce5cab56005f84a92cec2873a34": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -545,6 +654,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "action-browser",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -557,6 +667,10 @@
           "moduleId": "[project]/.next-internal/server/app/about/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
         },
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -576,6 +690,7 @@
       },
       "layer": {
         "app/about/page": "action-browser",
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -584,6 +699,10 @@
     },
     "00091fdf163115b0ef27e190646d75b7e2e0ba0041": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -602,6 +721,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -610,6 +730,10 @@
     },
     "0026229634f8ee3aff0250cb69b5af877af7cae743": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -628,6 +752,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -636,6 +761,10 @@
     },
     "00386d2f426503181f78543336904ad5eb1a08d021": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -654,6 +783,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -662,6 +792,10 @@
     },
     "004af17eb17e104a970d07fc62fb584ebdef317b29": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -680,6 +814,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -688,6 +823,10 @@
     },
     "004d7137fa7a58c42c5e77553022e2b379ced47ef5": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -706,6 +845,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -714,6 +854,10 @@
     },
     "005b406f67999ba6ae9756927d9bb6023e52829134": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -732,6 +876,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -740,6 +885,10 @@
     },
     "00994b56ae5fa178a8f1fc3732de0ed45d7a5514a9": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -758,6 +907,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -766,6 +916,10 @@
     },
     "00bdc7868c3dabf5fe6ecadc2410278ded84347c4f": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -784,6 +938,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -792,6 +947,10 @@
     },
     "00c379528f27893faf8e7df9d7d8df58383d763657": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -810,6 +969,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -818,6 +978,10 @@
     },
     "00cf7b810399269d44726d3f142f08e79e5fd5a22e": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -836,6 +1000,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -844,6 +1009,10 @@
     },
     "00d261461d10b57b699d6a862d1ea027260bf01970": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -862,6 +1031,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -870,6 +1040,10 @@
     },
     "00dc0e0f72092350b6a05341bafa68e9467de490c7": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -888,6 +1062,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -896,6 +1071,10 @@
     },
     "00ec17c9229897cbdcff114203aa594359347ddb25": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -914,6 +1093,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -922,6 +1102,10 @@
     },
     "401213ca960fb5d5846ca70e2a0a7cfb6861777a51": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -940,6 +1124,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -948,6 +1133,10 @@
     },
     "403cb2062e94b7908e6c800af54a396df09b3183b3": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -966,6 +1155,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -974,6 +1164,10 @@
     },
     "4067ebfc1014948a401b48a6ae80cdeb08e215e1fd": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -992,6 +1186,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1000,6 +1195,10 @@
     },
     "4070369435ad7ed5e4228baf3091e30bf28d3b3d05": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1018,6 +1217,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1026,6 +1226,10 @@
     },
     "408e3ac20b123a319678fdcdf85e2e1ca2ffc146bc": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1044,6 +1248,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1052,6 +1257,10 @@
     },
     "4090445be3fb215ada0f7dccc9a4f7e347a9b520fd": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1070,6 +1279,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1078,6 +1288,10 @@
     },
     "409b649ca8d259f98cf8a1adfec6543a4c169e7069": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1096,6 +1310,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1104,6 +1319,10 @@
     },
     "40a74359ed060ec5e23d7a547c7e83e7722f1f5e2f": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1122,6 +1341,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1130,6 +1350,10 @@
     },
     "40aec49752a46f93ec8caab55896a7743d9b5d7e9e": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1148,6 +1372,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1156,6 +1381,10 @@
     },
     "40cba28c032a77c2a85135994b52bee41fa69cf2ba": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1174,6 +1403,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1182,6 +1412,10 @@
     },
     "40d2d4b6f66f86c83a400606b6d48b7c6261356148": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1200,6 +1434,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1208,6 +1443,10 @@
     },
     "40e0c6b7218530c34e4bea9cb0fb4554bdde2b1103": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1226,6 +1465,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1234,6 +1474,10 @@
     },
     "60205b1e58e3f0e098b69a4d514c26bf6be5a11610": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1252,6 +1496,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1260,6 +1505,10 @@
     },
     "6057cf6b65221580efa8c7148222543bb5def1aad5": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1278,6 +1527,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1286,6 +1536,10 @@
     },
     "60720a235d38c72e0d78c3f04ee9bbf3380a0f3438": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1304,6 +1558,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1312,6 +1567,10 @@
     },
     "607f95f4d9ad68359d3db0ff5a03dd4e4d23bce341": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1330,6 +1589,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1338,6 +1598,10 @@
     },
     "609d6fabb90e699aa62fa8ead2ddfbc9a621fa1448": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1356,6 +1620,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1364,6 +1629,10 @@
     },
     "60afcb99da710fe6b70859a73fd7c72d9b1ee596d8": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1382,6 +1651,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1390,6 +1660,10 @@
     },
     "704e3a2cf88740cc30a57fe5b1db59435fd6ae6395": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1408,6 +1682,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1416,6 +1691,10 @@
     },
     "7cd0dde5464b4d947fda063d9a4edff4f20410f39a": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1434,6 +1713,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1442,6 +1722,10 @@
     },
     "404bac4b913dac8922a6c5e74464f5e04bf8646691": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1460,6 +1744,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1468,6 +1753,10 @@
     },
     "404150efdf956df7d3e7a88d41fc1b777204861235": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1486,6 +1775,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1494,6 +1784,10 @@
     },
     "4012e3302b838e22559174793e63cce97cb56924a9": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1512,6 +1806,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1520,6 +1815,10 @@
     },
     "401e98881988a1f03154bc5768c38e61f99b4c8121": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1538,6 +1837,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1546,6 +1846,10 @@
     },
     "4021aaa3efcede3c2ddcb255aaf2a105cd8de92335": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1564,6 +1868,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1572,6 +1877,10 @@
     },
     "402f880919512ae575d5faaf27640895238ba6037d": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1590,6 +1899,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1598,6 +1908,10 @@
     },
     "4072c3b9e84f853085be97daa892616f4cbd396d65": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1616,6 +1930,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1624,6 +1939,10 @@
     },
     "40a0e2a91768c1c16419e4c89294d700f6a4e15bb6": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1642,6 +1961,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1650,6 +1970,10 @@
     },
     "40bfb6bef7fdfeab001c788ff5167e8303dc9bfca4": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1668,6 +1992,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
@@ -1676,6 +2001,10 @@
     },
     "40c07340a25555de9d94b15150f60bafc165944f85": {
       "workers": {
+        "app/dashboard/[ticker]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/[ticker]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
@@ -1694,6 +2023,7 @@
         }
       },
       "layer": {
+        "app/dashboard/[ticker]/page": "rsc",
         "app/dashboard/page": "rsc",
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",

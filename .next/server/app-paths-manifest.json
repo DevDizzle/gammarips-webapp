@@ -1,5 +1,7 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
   "/about/page": "app/about/page.js",
+  "/dashboard/[ticker]/page": "app/dashboard/[ticker]/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/options/call-setups/page": "app/options/call-setups/page.js",
   "/options/put-hedges/page": "app/options/put-hedges/page.js",

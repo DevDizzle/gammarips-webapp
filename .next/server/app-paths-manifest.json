@@ -6,8 +6,8 @@
   "/api/cron/send-top-pick/route": "app/api/cron/send-top-pick/route.js",
   "/api/cron/send-trial-reminders/route": "app/api/cron/send-trial-reminders/route.js",
   "/api/stripe/webhook/route": "app/api/stripe/webhook/route.js",
-  "/robots.txt/route": "app/robots.txt/route.js",
   "/sitemap.xml/route": "app/sitemap.xml/route.js",
+  "/robots.txt/route": "app/robots.txt/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js",
   "/winners-circle/page": "app/winners-circle/page.js",
@@ -22,7 +22,7 @@
   "/dashboard/[ticker]/page": "app/dashboard/[ticker]/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/performance/page": "app/performance/page.js",
-  "/options/put-hedges/page": "app/options/put-hedges/page.js",
   "/options/call-setups/page": "app/options/call-setups/page.js",
+  "/options/put-hedges/page": "app/options/put-hedges/page.js",
   "/api/cron/page": "app/api/cron/page.js"
 }

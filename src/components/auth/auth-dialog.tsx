@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -81,9 +82,12 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{isSignIn ? 'Sign In to Your Account' : 'Create Your GammaRips Account'}</DialogTitle>
+          <DialogTitle>{isSignIn ? 'Sign In' : 'Become a Ripper'}</DialogTitle>
           <DialogDescription>
-             {isSignIn ? 'Welcome back! Sign in to access your dashboard.' : 'Get instant access to AI-powered options rippers and analysis for $19/month.'}
+             {isSignIn 
+                ? 'Welcome back. Sign in to access your dashboard.' 
+                : 'Unlock the full Daily Playbook. Get the Rips, the interactive dashboard, and the deep-dive AI analysis. Just $19/mo. Cancel anytime.'
+             }
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col space-y-4">
@@ -152,7 +156,7 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
             </p>
 
           <p className="text-center text-sm text-muted-foreground">
-            {isSignIn ? "Don't have an account?" : 'Already have an account?'}{' '}
+            {isSignIn ? "Not a Ripper yet?" : 'Already a Ripper?'}{' '}
             <button
               onClick={() => setIsSignIn(!isSignIn)}
               className="underline hover:text-primary"

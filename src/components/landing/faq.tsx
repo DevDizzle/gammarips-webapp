@@ -9,7 +9,7 @@ import {
 export const faqs = [
     {
         question: "Is this financial advice?",
-        answer: "No. ProfitScout is an AI-powered educational research tool, not a registered investment advisor. We surface data-driven trade ideas and performance stats, but we do not provide personalized financial, investment, or trading advice. You’re fully responsible for your own trades, position sizing, and risk management."
+        answer: "No. GammaRips is an AI-powered educational research tool, not a registered investment advisor. We surface data-driven trade ideas and performance stats, but we do not provide personalized financial, investment, or trading advice. You’re fully responsible for your own trades, position sizing, and risk management."
     },
     {
         question: "How do you find bullish call options setups?",
@@ -21,15 +21,15 @@ export const faqs = [
     },
     {
         question: "How does the $19/month membership work?",
-        answer: "Membership is a flat $19 per month, billed monthly with no long-term contract. You can cancel anytime. We also offer a 7-day money-back guarantee on your first month—if you don’t find ProfitScout useful, email us within the first 7 days and we’ll refund that first payment."
+        answer: "Membership is a flat $19 per month, billed monthly with no long-term contract. You can cancel anytime. We also offer a 7-day money-back guarantee on your first month—if you don’t find GammaRips useful, email us within the first 7 days and we’ll refund that first payment."
     },
     {
         question: "What do I get immediately after signing up?",
         answer: "You get instant access to: Today’s daily options playbook (our “Rip Hunter” breakout and hedge signals), the interactive research dashboard, AI-generated briefings that explain the “why” behind each stock, and our live performance tracker, which currently measures signals from November 28, 2025 onward."
     },
     {
-        question: "Does ProfitScout use AI to pick stocks?",
-        answer: "Yes. ProfitScout uses large language models on Google Cloud’s Vertex AI to analyze earnings call transcripts, SEC filings, and news, then converts thousands of data points into a single directional conviction score for each stock. That conviction score sits on top of our quantitative filters for trend, volatility, and liquidity."
+        question: "Does GammaRips use AI to pick stocks?",
+        answer: "Yes. GammaRips uses large language models on Google Cloud’s Vertex AI to analyze earnings call transcripts, SEC filings, and news, then converts thousands of data points into a single directional conviction score for each stock. That conviction score sits on top of our quantitative filters for trend, volatility, and liquidity."
     },
     {
         question: "What is the “Rip Hunter” protocol?",
@@ -37,15 +37,15 @@ export const faqs = [
     },
     {
         question: "Is this platform for day trading or swing trading?",
-        answer: "ProfitScout is optimized for swing trading. Most signals are designed for moves over roughly 3 to 20 trading days, so you can capture trends without staring at the screen all day. You can still choose to manage entries and exits intraday, but our research is built around short-term swing horizons, not hyper-scalping."
+        answer: "GammaRips is optimized for swing trading. Most signals are designed for moves over roughly 3 to 20 trading days, so you can capture trends without staring at the screen all day. You can still choose to manage entries and exits intraday, but our research is built around short-term swing horizons, not hyper-scalping."
     },
     {
         question: "How do you handle risky or volatile markets?",
         answer: "When conviction is lower or conditions are choppy, our “Tier 2” safety logic automatically tightens the rules: stricter liquidity and spread requirements, fewer marginal setups, and more emphasis on quality over quantity. That doesn’t remove the risk of options trading, but it helps filter out low-quality ideas when markets are noisy."
     },
     {
-        question: "Can I use ProfitScout with a small account?",
-        answer: "Possibly—but only if you fully understand options risk. ProfitScout often highlights lower-cost, further out-of-the-money contracts that offer high potential reward and a high risk of losing 100% of the premium. For smaller accounts, that can be attractive because you can define your maximum loss up front, but it is still speculative and not suitable for everyone."
+        question: "Can I use GammaRips with a small account?",
+        answer: "Possibly—but only if you fully understand options risk. GammaRips often highlights lower-cost, further out-of-the-money contracts that offer high potential reward and a high risk of losing 100% of the premium. For smaller accounts, that can be attractive because you can define your maximum loss up front, but it is still speculative and not suitable for everyone."
     },
     {
         question: "Do you analyze news and earnings calls?",

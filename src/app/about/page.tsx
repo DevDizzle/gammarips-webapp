@@ -1,5 +1,6 @@
+
 import type { Metadata } from 'next';
-import { FileText, Mic, BarChart3, TrendingUp, Shield, CheckCircle2, ArrowRight, Target, Gem, Bot, Newspaper, Scale, Github } from 'lucide-react';
+import { FileText, Mic, BarChart3, TrendingUp, Shield, CheckCircle2, ArrowRight, Target, Gem, Bot, Newspaper, Scale, Github, BookOpen } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
@@ -53,13 +54,13 @@ const benefits = [
     },
     {
         icon: <Target size={24} className="text-primary" />,
-        title: "Highest-Scoring Options Analysis",
-        description: "A filtered list of the highest-scoring Call and Put options based on our data model, allowing you to identify potential rippers that align with your market view."
+        title: "Daily Rippers (Highest-Scoring Options Ideas)",
+        description: "A filtered list of the highest-scoring Call and Put options based on our data model, allowing you to identify potential Rippers that align with your market view."
     },
     {
         icon: <Gem size={24} className="text-primary" />,
         title: "The Confluence Dashboard",
-        description: "A daily snapshot of stocks that have a strong bullish or bearish analysis and also feature a high-scoring setup on our options scanner, highlighting where our stock and options data models align."
+        description: "A daily snapshot of stocks that have a strong bullish or bearish analysis and also feature a high-scoring Ripper on our options scanner, highlighting where our stock and options data models align. Every Ripper is tracked from the moment it’s published, so you can see how ideas actually played out over time—not just in backtests."
     },
 ]
 
@@ -87,10 +88,7 @@ export default function AboutPage() {
             About GammaRips
           </h1>
           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            GammaRips is designed to offer a new perspective on the market. Our mission is to transform complex financial data into clear, data-driven insights for both stocks and options, helping you navigate the market with a more informed approach.
-          </p>
-           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            Our analysis goes beyond simple ratings by blending fundamentals, technicals, and AI-driven models to highlight market setups that meet specific analytical criteria.
+            GammaRips exists to give active options traders fewer, better ideas—not more noise. Our mission is to turn complex fundamentals, options data, and market context into a small, focused list of “Rippers” you can actually act on, with clear stats and clear risks.
           </p>
           <a href="#how-it-works" className="mt-6 inline-block text-sm font-semibold text-primary hover:underline">
             See how it works &darr;
@@ -104,7 +102,7 @@ export default function AboutPage() {
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">How GammaRips Works</h2>
             <p className="mt-3 max-w-3xl mx-auto text-muted-foreground">
-              We use state-of-the-art AI and large language models to analyze thousands of data points and synthesize a balanced, forward-looking view of every asset we cover.
+              We use state-of-the-art AI to analyze thousands of data points and synthesize a balanced, forward-looking view of every asset we cover. Then our engine scores the options chain to surface a short list of potential Rippers—call and put contracts where stock conviction, liquidity, and risk/reward line up.
             </p>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -159,16 +157,16 @@ export default function AboutPage() {
         <section>
           <Card className="text-center">
             <CardHeader>
-              <CardTitle className="font-headline text-2xl">Our Open-Source Engine</CardTitle>
+              <CardTitle className="font-headline text-2xl">Our Methodology, In Plain English</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-4 max-w-xl mx-auto">
-                We believe in transparency. The core data processing and AI analysis engine that powers GammaRips is open-source. We invite you to explore the code, understand our methodology, and even contribute.
+                We believe in transparency. Instead of hiding behind “secret sauce,” we explain how the GammaRips engine thinks—stock-first scoring, options quality filters, risk flags, and how we define a “Ripper.”
               </p>
               <Button asChild size="lg" variant="outline">
-                <a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer">
-                  <Github className="mr-2 h-5 w-5"/>
-                  View on GitHub
+                <a href="#">
+                  <BookOpen className="mr-2 h-5 w-5"/>
+                  Methodology Overview
                 </a>
               </Button>
             </CardContent>
@@ -183,7 +181,7 @@ export default function AboutPage() {
                     <CardTitle className="font-headline text-2xl">Ready to Get Started?</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Go from analysis to informed decision. Instantly access today's data-driven Call and Put analyses, backed by AI scores and daily market data.</p>
+                    <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Go from analysis to informed decision. Instantly access today's data-driven Call and Put Rippers, backed by AI scores and daily market data.</p>
                     <Button asChild size="lg">
                         <Link href="/">
                             Start Your Research <ArrowRight className="ml-2 h-5 w-5"/>

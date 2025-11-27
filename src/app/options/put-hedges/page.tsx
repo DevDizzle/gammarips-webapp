@@ -123,7 +123,7 @@ export default async function PutSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">Identify Weak Stocks First</h3>
-                            <p className="text-muted-foreground">We start by identifying stocks with bearish conviction. We target companies with low AI scores (e.g., Score < 0.2) or those facing significant negative catalysts, such as poor earnings or sector-wide weakness.</p>
+                            <p className="text-muted-foreground">We start by identifying stocks with bearish conviction. We target companies with low AI scores (e.g., Score &lt; 0.2) or those facing significant negative catalysts, such as poor earnings or sector-wide weakness.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">

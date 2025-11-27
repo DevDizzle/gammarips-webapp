@@ -29,7 +29,7 @@ export default async function LandingPage() {
         "billingIncrement": "month",
         "unitText": "month"
       },
-      "description": "Monthly subscription, cancel anytime. Includes a 7-day money-back guarantee on your first month."
+      "description": "Monthly subscription, cancel anytime. 7-day money-back guarantee on your first month."
     },
     "aggregateRating": {
       "@type": "AggregateRating",
@@ -140,8 +140,23 @@ export default async function LandingPage() {
             <SignalsPreview />
           </Suspense>
 
-          {/* New Process Section */}
+          {/* Performance Tracker Section */}
           <section className="py-16 sm:py-24 bg-muted/50">
+             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center max-w-3xl mx-auto mb-12">
+                    <h2 className="text-3xl font-bold font-headline">See Our Results in Action</h2>
+                    <p className="mt-4 text-muted-foreground">
+                        Our models track the performance of every signal. Here's a live look at the data-driven edge we provide. Past performance does not guarantee future results.
+                    </p>
+                </div>
+                <Suspense fallback={<PerformanceTrackerSkeleton />}>
+                    <PerformanceTracker />
+                </Suspense>
+            </div>
+          </section>
+
+          {/* New Process Section */}
+          <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center max-w-3xl mx-auto">
                 <h2 className="text-3xl font-bold font-headline">How Daily Rippers Fit Into Your Trading Day</h2>
@@ -173,7 +188,7 @@ export default async function LandingPage() {
           </section>
 
           {/* New Features Section */}
-          <section className="py-16 sm:py-24">
+          <section className="py-16 sm:py-24 bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
               
               {/* What the Engine Does */}
@@ -236,86 +251,10 @@ export default async function LandingPage() {
                 </div>
               </div>
 
-              {/* One Screen */}
-              <div>
-                <div className="text-center max-w-3xl mx-auto">
-                  <h2 className="text-3xl font-bold font-headline">One Screen to See Where It All Lines Up</h2>
-                   <p className="mt-4 text-muted-foreground">
-                    Think of the dashboard as your “is this really worth my time?” filter.
-                  </p>
-                </div>
-                <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="bg-card p-6 rounded-lg">
-                      <div className="flex items-start gap-4">
-                          <div className="flex-shrink-0 mt-1"><Gem size={24} className="text-primary" /></div>
-                          <div>
-                              <h3 className="text-lg font-semibold">Conviction + Options in One View</h3>
-                              <p className="text-muted-foreground text-sm">You see where strong stock conviction and quality options contracts overlap—that’s where Rippers are born.</p>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="bg-card p-6 rounded-lg">
-                      <div className="flex items-start gap-4">
-                          <div className="flex-shrink-0 mt-1"><Zap size={24} className="text-primary" /></div>
-                          <div>
-                              <h3 className="text-lg font-semibold">Fast Drill-Downs, No Platform Hopping</h3>
-                              <p className="text-muted-foreground text-sm">Quickly flip between call and put Rippers, zoom into a single name, or step back to see how the whole list behaved.</p>
-                          </div>
-                      </div>
-                  </div>
-                   <div className="bg-card p-6 rounded-lg lg:col-span-2">
-                      <div className="flex items-start gap-4">
-                          <div className="flex-shrink-0 mt-1"><LineChart size={24} className="text-primary" /></div>
-                          <div>
-                              <h3 className="text-lg font-semibold">Live Stats on Every Ripper</h3>
-                              <p className="text-muted-foreground text-sm">We track how signals perform after they’re published, not just when they look pretty. You see wins, losses, and the boring in-between.</p>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Built on Receipts */}
-              <div className="text-center max-w-4xl mx-auto">
-                <h2 className="text-3xl font-bold font-headline">Built on Receipts, Not Magic</h2>
-                <p className="mt-4 text-muted-foreground">
-                  You don’t need our source code, but you do deserve to know how this thing thinks.
-                </p>
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                  <Card className="bg-card/50">
-                    <CardHeader><CardTitle className="flex items-center gap-2"><Scale className="h-6 w-6 text-primary"/> Methodology</CardTitle></CardHeader>
-                    <CardContent><p className="text-muted-foreground text-sm">Stock-first scoring, options quality filters, and clear definitions of what a "Ripper" is.</p></CardContent>
-                  </Card>
-                  <Card className="bg-card/50">
-                    <CardHeader><CardTitle className="flex items-center gap-2"><Github className="h-6 w-6 text-primary"/> Transparent Performance</CardTitle></CardHeader>
-                    <CardContent><p className="text-muted-foreground text-sm">We track Rippers from the moment they go live. No cherry-picked case studies, no magic backtests.</p></CardContent>
-                  </Card>
-                  <Card className="bg-card/50">
-                    <CardHeader><CardTitle className="flex items-center gap-2"><Shield className="h-6 w-6 text-primary"/> Educational Use Only</CardTitle></CardHeader>
-                    <CardContent><p className="text-muted-foreground text-sm">GammaRips is educational research, not financial advice. Options are risky and can go to zero. Past performance does not guarantee future results.</p></CardContent>
-                  </Card>
-                </div>
-              </div>
-
             </div>
           </section>
           
-          {/* Performance Tracker Section */}
-          <section className="py-16 sm:py-24 bg-muted/50">
-             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center max-w-3xl mx-auto mb-12">
-                    <h2 className="text-3xl font-bold font-headline">See Our Results in Action</h2>
-                    <p className="mt-4 text-muted-foreground">
-                        Our models track the performance of every signal. Here's a live look at the data-driven edge we provide. Past performance does not guarantee future results.
-                    </p>
-                </div>
-                <Suspense fallback={<PerformanceTrackerSkeleton />}>
-                    <PerformanceTracker />
-                </Suspense>
-            </div>
-          </section>
-
-           {/* Membership/Pricing Section */}
+          {/* Membership/Pricing Section */}
           <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">

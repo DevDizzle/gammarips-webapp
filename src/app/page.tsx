@@ -210,7 +210,7 @@ export default async function LandingPage() {
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3"><Zap className="text-primary"/>Deploys the "Rip Hunter" Protocol</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-muted-foreground">For those high-conviction winners, the engine switches modes. It hunts for aggressive, high-gamma contracts (3–60 days out)—prioritizing explosive acceleration over "perfect" spreads. It finds the contracts designed to move fast, not just the ones that look safe on paper.</CardContent>
+                    <CardContent className="text-muted-foreground">For those high-conviction winners, the engine switches modes. It hunts for aggressive, high-gamma contracts (3-60 days out)-prioritizing explosive acceleration over "perfect" spreads. It finds the contracts designed to move fast, not just the ones that look safe on paper.</CardContent>
                   </Card>
                   <Card className="bg-card/50">
                     <CardHeader>

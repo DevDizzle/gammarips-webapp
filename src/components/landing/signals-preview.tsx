@@ -1,4 +1,3 @@
-
 import { getWinnersDashboard } from '@/app/actions';
 import type { Winner } from '@/lib/firebase-admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -39,7 +38,7 @@ const SignalCard = ({ signal, title, hubLink }: { signal: Winner | null, title: 
                     <CardTitle className="flex items-center gap-2 text-lg">{title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-sm text-muted-foreground">No setup met the criteria today. Check back tomorrow.</p>
+                    <p className="text-sm text-muted-foreground">No ripper met the criteria today. Check back tomorrow.</p>
                 </CardContent>
             </Card>
         );
@@ -108,18 +107,18 @@ export default async function SignalsPreview() {
         <section className="py-16 sm:py-24 bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center max-w-3xl mx-auto">
-                    <h2 className="text-3xl font-bold font-headline">Today's Signals Preview</h2>
+                    <h2 className="text-3xl font-bold font-headline">Today's Rippers Preview</h2>
                     <p className="mt-4 text-muted-foreground">
-                        Here's a sample of today’s top-rated setups from our AI engine. Full list and analysis available in the dashboard. Data from {lastUpdated}.
+                        Here's a sample of today’s top-rated rippers from our AI engine. Full list and analysis available in the dashboard. Data from {lastUpdated}.
                     </p>
                 </div>
                 <div className="mt-12 flex flex-col lg:flex-row justify-center gap-8">
-                    <SignalCard signal={topCall} title="Top-Rated Call Setup" hubLink="/options/call-setups" />
-                    <SignalCard signal={topPut} title="Top-Rated Put Setup" hubLink="/options/put-hedges" />
+                    <SignalCard signal={topCall} title="Top-Rated Call Ripper" hubLink="/options/call-setups" />
+                    <SignalCard signal={topPut} title="Top-Rated Put Ripper" hubLink="/options/put-hedges" />
                 </div>
                  <div className="text-center mt-8">
                     <Link href="/dashboard" className="text-sm font-semibold text-primary hover:underline">
-                        View all setups in the Dashboard &rarr;
+                        View all rippers in the Dashboard &rarr;
                     </Link>
                 </div>
             </div>

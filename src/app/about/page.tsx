@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import { FileText, Mic, BarChart3, TrendingUp, Shield, CheckCircle2, ArrowRight, Target, Gem, Bot, Newspaper, Scale, Github } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,8 +8,8 @@ import ContactForm from './contact-form';
 import Faq, { faqs } from '@/components/landing/faq';
 
 export const metadata: Metadata = {
-  title: 'About Us | ProfitScout',
-  description: 'Learn about ProfitScout\'s mission to transform complex financial data into clear, actionable insights for stock and options traders using advanced AI.',
+  title: 'About Us | GammaRips',
+  description: 'Learn about GammaRips\'s mission to transform complex financial data into clear, actionable insights for stock and options traders using advanced AI.',
 };
 
 const features = [
@@ -55,7 +54,7 @@ const benefits = [
     {
         icon: <Target size={24} className="text-primary" />,
         title: "Highest-Scoring Options Analysis",
-        description: "A filtered list of the highest-scoring Call and Put options based on our data model, allowing you to identify potential setups that align with your market view."
+        description: "A filtered list of the highest-scoring Call and Put options based on our data model, allowing you to identify potential rippers that align with your market view."
     },
     {
         icon: <Gem size={24} className="text-primary" />,
@@ -85,10 +84,10 @@ export default function AboutPage() {
         <header className="text-center">
           <p className="text-sm font-semibold uppercase tracking-wider text-primary">Our Mission</p>
           <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-            About ProfitScout
+            About GammaRips
           </h1>
           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            ProfitScout is designed to offer a new perspective on the market. Our mission is to transform complex financial data into clear, data-driven insights for both stocks and options, helping you navigate the market with a more informed approach.
+            GammaRips is designed to offer a new perspective on the market. Our mission is to transform complex financial data into clear, data-driven insights for both stocks and options, helping you navigate the market with a more informed approach.
           </p>
            <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
             Our analysis goes beyond simple ratings by blending fundamentals, technicals, and AI-driven models to highlight market setups that meet specific analytical criteria.
@@ -103,7 +102,7 @@ export default function AboutPage() {
         {/* How it Works Section */}
         <section id="how-it-works" className="scroll-mt-20">
           <div className="text-center">
-            <h2 className="text-3xl font-bold font-headline">How ProfitScout Works</h2>
+            <h2 className="text-3xl font-bold font-headline">How GammaRips Works</h2>
             <p className="mt-3 max-w-3xl mx-auto text-muted-foreground">
               We use state-of-the-art AI and large language models to analyze thousands of data points and synthesize a balanced, forward-looking view of every asset we cover.
             </p>
@@ -164,7 +163,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-4 max-w-xl mx-auto">
-                We believe in transparency. The core data processing and AI analysis engine that powers ProfitScout is open-source. We invite you to explore the code, understand our methodology, and even contribute.
+                We believe in transparency. The core data processing and AI analysis engine that powers GammaRips is open-source. We invite you to explore the code, understand our methodology, and even contribute.
               </p>
               <Button asChild size="lg" variant="outline">
                 <a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer">
@@ -211,7 +210,7 @@ export default function AboutPage() {
           <div className="prose prose-invert max-w-none">
             <h2 className="font-headline text-3xl text-foreground">Trust & Responsibility</h2>
             <p className="text-muted-foreground">
-              Financial content falls under “Your Money or Your Life” (YMYL). Accuracy and reliability are paramount. ProfitScout is committed to presenting well-sourced, balanced information with clear, transparent explanations.
+              Financial content falls under “Your Money or Your Life” (YMYL). Accuracy and reliability are paramount. GammaRips is committed to presenting well-sourced, balanced information with clear, transparent explanations.
             </p>
           </div>
           <aside className="bg-muted/50 p-6 rounded-lg">
@@ -220,7 +219,7 @@ export default function AboutPage() {
                 <h3 className="text-lg font-semibold text-foreground">Important Disclaimer</h3>
             </div>
             <p className="mt-2 text-sm text-muted-foreground">
-              ProfitScout provides educational and informational content only—it is not financial advice. All trading and investment decisions involve risk. Always conduct your own research and consider consulting a licensed financial advisor before making investment decisions.
+              GammaRips provides educational and informational content only—it is not financial advice. All trading and investment decisions involve risk. Always conduct your own research and consider consulting a licensed financial advisor before making investment decisions.
             </p>
           </aside>
         </section>
@@ -243,9 +242,9 @@ export default function AboutPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          "name": "ProfitScout",
-          "url": "https://profitscout.app",
-          "email": "admin@profitscout.app"
+          "name": "GammaRips",
+          "url": "https://gammarips.com",
+          "email": "admin@gammarips.com"
         })}}
       />
     </>

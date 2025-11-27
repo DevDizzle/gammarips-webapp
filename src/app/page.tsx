@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,8 +13,8 @@ export default async function LandingPage() {
   const softwareSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "ProfitScout",
-    "description": "A simple, focused options research tool that provides a daily playbook of high-conviction call & put setups for active traders scanning the Russell 1000.",
+    "name": "GammaRips",
+    "description": "One simple playbook for daily options rippers. GammaRips uses AI to hunt for high-conviction options ideas on stocks that are ready to move.",
     "applicationCategory": "FinancialApplication",
     "operatingSystem": "Web",
     "offers": {
@@ -38,7 +37,7 @@ export default async function LandingPage() {
     },
     "softwareHelp": {
       "@type": "CreativeWork",
-      "url": "https://profitscout.app/about"
+      "url": "https://gammarips.com/about"
     }
   };
 
@@ -73,7 +72,7 @@ export default async function LandingPage() {
         <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="text-2xl font-bold font-headline">
-              <span className="text-foreground">Profit</span><span className="text-primary">Scout</span>
+              <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
             </Link>
             <UserNav />
           </div>
@@ -83,24 +82,25 @@ export default async function LandingPage() {
           {/* Hero Section */}
           <section className="text-center py-20 sm:py-28 px-4">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight">
-              One Simple Playbook. Daily Options Setups.
+              One Simple Playbook. Daily Options Rippers.
             </h1>
             <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-              We scan the Russell 1000 for a short, focused list of high-conviction Call & Put setups. No clutter, no 20-strategy lab—just a daily list and clear rationale for traders who execute.
+              GammaRips uses AI to hunt for rippers—high-conviction options ideas on stocks that are ready to move. You get a tight daily list of call & put rippers and clean AI explanations. No tourist signals. No 20-strategy zoo. Just the heat.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
                <Suspense>
                 <HomePageClientContent showButton={true} buttonText="Start for $19/month"/>
                </Suspense>
             </div>
-             <p className="mt-3 text-sm text-muted-foreground">7-day money-back guarantee on your first month if you don’t find it useful.</p>
+             <p className="mt-3 text-sm text-muted-foreground">Billed monthly, cancel anytime. 7-day money-back guarantee on your first month.</p>
+             <p className="mt-4 text-xs text-muted-foreground max-w-md mx-auto">GammaRips is an AI-driven options research and education tool. Options trading is risky and can result in 100% loss of premium.</p>
           </section>
 
           {/* New "Who This Is For" Section */}
           <section className="pb-16 sm:pb-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
-                 <h2 className="text-3xl font-bold font-headline">Who ProfitScout Is For</h2>
+                 <h2 className="text-3xl font-bold font-headline">Who GammaRips Is For</h2>
                  <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">This is a professional research tool designed for a specific type of trader.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -148,9 +148,9 @@ export default async function LandingPage() {
               <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">1</div>
-                  <h3 className="mt-6 text-xl font-semibold">Get Daily Options Setups</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Get Daily Call & Put Rippers</h3>
                   <p className="mt-2 text-muted-foreground">
-                    Get our top-ranked Call and Put setups for the Russell 1000, delivered to your dashboard daily. We find the signals so you can focus on the strategy.
+                    Get our top-ranked Call and Put rippers for the Russell 1000, delivered to your dashboard daily. We find the signals so you can focus on the strategy.
                   </p>
                 </div>
                 <div className="text-center">
@@ -164,7 +164,7 @@ export default async function LandingPage() {
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">3</div>
                   <h3 className="mt-6 text-xl font-semibold">Manage Your Own Risk & Exits</h3>
                   <p className="mt-2 text-muted-foreground">
-                    ProfitScout provides research and data-driven setups. As an active trader, you maintain full control over your risk management, trade execution, and exit strategy.
+                    GammaRips provides research and data-driven setups. As an active trader, you maintain full control over your risk management, trade execution, and exit strategy.
                   </p>
                 </div>
               </div>
@@ -208,7 +208,7 @@ export default async function LandingPage() {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto">
               <h2 className="text-3xl font-bold font-headline">Built on Transparency. Powered by Open-Source AI.</h2>
               <p className="mt-4 text-muted-foreground">
-                We believe in showing our work. The core AI engine that powers ProfitScout is open-source. We invite you to explore the code, understand our methodology, and see exactly how we turn complex data into market insights. Your trust is our priority.
+                We believe in showing our work. The core AI engine that powers GammaRips is open-source. We invite you to explore the code, understand our methodology, and see exactly how we turn complex data into market insights. Your trust is our priority.
               </p>
               <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
                 <Card className="bg-background/50">
@@ -224,7 +224,7 @@ export default async function LandingPage() {
                     <CardTitle className="flex items-center gap-2"><Github className="h-6 w-6 text-primary"/> Open-Source Engine</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground text-sm">The core scoring engine that powers ProfitScout is open-source. We believe in showing our work and invite you to <a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer" className="underline">review our methodology</a>.</p>
+                    <p className="text-muted-foreground text-sm">The core scoring engine that powers GammaRips is open-source. We believe in showing our work and invite you to <a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer" className="underline">review our methodology</a>.</p>
                   </CardContent>
                 </Card>
                 <Card className="bg-background/50">
@@ -232,7 +232,7 @@ export default async function LandingPage() {
                     <CardTitle className="flex items-center gap-2"><Shield className="h-6 w-6 text-primary"/> Educational Use</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground text-sm">ProfitScout is an educational research tool, not financial advice. We provide data-driven insights to help you make more informed decisions. Past performance does not guarantee future results.</p>
+                    <p className="text-muted-foreground text-sm">GammaRips is an educational research tool, not financial advice. We provide data-driven insights to help you make more informed decisions. Past performance does not guarantee future results.</p>
                   </CardContent>
                 </Card>
               </div>
@@ -260,7 +260,7 @@ export default async function LandingPage() {
                 <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
                     <h2 className="text-3xl sm:text-4xl font-bold font-headline">Get the Daily Playbook</h2>
                     <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-                      Become a member to get full access to our daily ranked setups, the interactive dashboard, and the complete AI analysis behind every signal.
+                      Become a member to get full access to our daily ranked rippers, the interactive dashboard, and the complete AI analysis behind every signal.
                     </p>
                     <div className="mt-8 max-w-md mx-auto">
                       <table className="w-full text-left">
@@ -284,7 +284,7 @@ export default async function LandingPage() {
                         </tbody>
                       </table>
                        <p className="text-xs text-muted-foreground mt-4">
-                        If you don’t find ProfitScout useful in your first 7 days, email us and we’ll refund your first month, no questions asked.
+                        If you don’t find GammaRips useful in your first 7 days, email us and we’ll refund your first month, no questions asked.
                       </p>
                     </div>
                     <div className="mt-8">

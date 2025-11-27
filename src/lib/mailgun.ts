@@ -1,5 +1,3 @@
-
-
 'use server';
 
 import { Buffer } from 'node:buffer';
@@ -16,9 +14,9 @@ export interface EmailOptions {
 
 export async function sendEmail(options: EmailOptions) {
   const API_KEY = process.env.MAILGUN_SENDING_KEY;
-  const DOMAIN = 'profitscout.app';
+  const DOMAIN = 'gammarips.com';
   // Hardcode the default from address to the verified domain.
-  const DEFAULT_FROM = 'ProfitScout <admin@profitscout.app>';
+  const DEFAULT_FROM = 'GammaRips <admin@gammarips.com>';
 
   const FROM = options.from || DEFAULT_FROM;
   const TO =
@@ -89,20 +87,18 @@ export async function sendEmail(options: EmailOptions) {
 
 function buildWelcomeEmailContent(name: string): { text: string; html: string } {
     const textContent = `
-Welcome to ProfitScout, ${name}!
-
-Your 30-day free trial has officially started.
+Welcome to GammaRips, ${name}!
 
 You now have full access to our AI-powered options research dashboard. Here's what you can do right now:
 
-- View today's top-rated Call and Put setups.
+- View today's top-rated Call and Put rippers.
 - Dive deep into any stock with our AI Analyst Briefings.
 - Explore the interactive dashboard to find your next trade idea.
 
-Get started now: https://profitscout.app/dashboard
+Get started now: https://gammarips.com/dashboard
 
 Happy trading,
-The ProfitScout Team
+The GammaRips Team
 `;
 
     const htmlContent = `
@@ -114,25 +110,25 @@ The ProfitScout Team
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>Welcome to ProfitScout!</title>
+    <title>Welcome to GammaRips!</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
                             <p style="font-size: 18px; color: #A0A0A0; margin-top: 12px;">Welcome, ${name}!</p>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
-                            <p style="font-size: 16px; line-height: 1.6;">Your <strong>30-day free trial</strong> has officially started. You now have full access to our complete suite of AI-powered research tools.</p>
+                            <p style="font-size: 16px; line-height: 1.6;">You now have full access to our complete suite of AI-powered research tools.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Here's what you can do right now:</p>
                              <ul style="font-size: 16px; line-height: 1.6; margin-top: 16px; padding-left: 20px; color: #E0E0E0;">
-                                <li style="margin-bottom: 10px;">View today's top-rated Call & Put setups.</li>
+                                <li style="margin-bottom: 10px;">View today's top-rated Call & Put rippers.</li>
                                 <li style="margin-bottom: 10px;">Dive deep with our AI Analyst Briefings.</li>
                                 <li style="margin-bottom: 10px;">Explore the interactive dashboard.</li>
                             </ul>
@@ -140,13 +136,13 @@ The ProfitScout Team
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://profitscout.app/dashboard" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
+                            <a href="https://gammarips.com/dashboard" style="background-color: #f5a623; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
                         </td>
                     </tr>
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
                              <p style="margin: 0;">This is not financial advice. All trading involves risk.</p>
-                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
+                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
                         </td>
                     </tr>
                 </table>
@@ -164,7 +160,7 @@ export async function sendWelcomeEmail({ to, name }: { to: string, name: string 
     const { text, html } = buildWelcomeEmailContent(name);
     return sendEmail({
         to: `${name} <${to}>`,
-        subject: `Welcome to ProfitScout! Your Free Trial Has Started.`,
+        subject: `Welcome to GammaRips!`,
         text,
         html,
     });
@@ -174,14 +170,14 @@ function buildSubscriptionThankYouEmailContent(name: string): { text: string; ht
     const textContent = `
 Thank You for Subscribing, ${name}!
 
-Welcome to ProfitScout Pro! We're thrilled to have you as a premium member.
+Welcome to GammaRips Pro! We're thrilled to have you as a premium member.
 
 Your support helps us continue to build and improve the tools that power your research. We're committed to providing you with the best AI-driven market insights available.
 
-If you have any questions, feedback, or ideas for how we can improve, please don't hesitate to reach out. You can reply directly to this email or contact us anytime at admin@profitscout.app.
+If you have any questions, feedback, or ideas for how we can improve, please don't hesitate to reach out. You can reply directly to this email or contact us anytime at admin@gammarips.com.
 
 Happy trading,
-The ProfitScout Team
+The GammaRips Team
 `;
 
     const htmlContent = `
@@ -195,32 +191,32 @@ The ProfitScout Team
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>Thank You for Subscribing!</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
                             <p style="font-size: 18px; color: #A0A0A0; margin-top: 12px;">Thank You, ${name}!</p>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
-                            <p style="font-size: 16px; line-height: 1.6;">Welcome to <strong>ProfitScout Pro!</strong> We're thrilled to have you as a premium member. Your support helps us continue to build and improve the tools that power your research.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We are committed to providing you with the best AI-driven market insights available. If you have any questions, feedback, or ideas for new features, please don't hesitate to reach out. You can reply directly to this email or contact support anytime at <a href="mailto:admin@profitscout.app" style="color: #BEFF0A; text-decoration: none;">admin@profitscout.app</a>.</p>
+                            <p style="font-size: 16px; line-height: 1.6;">Welcome to <strong>GammaRips Pro!</strong> We're thrilled to have you as a premium member. Your support helps us continue to build and improve the tools that power your research.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We are committed to providing you with the best AI-driven market insights available. If you have any questions, feedback, or ideas for new features, please don't hesitate to reach out. You can reply directly to this email or contact support anytime at <a href="mailto:admin@gammarips.com" style="color: #f5a623; text-decoration: none;">admin@gammarips.com</a>.</p>
                         </td>
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://profitscout.app/dashboard" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Explore Your Pro Dashboard</a>
+                            <a href="https://gammarips.com/dashboard" style="background-color: #f5a623; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Explore Your Pro Dashboard</a>
                         </td>
                     </tr>
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
                              <p style="margin: 0;">This is not financial advice. All trading involves risk.</p>
-                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
+                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
                         </td>
                     </tr>
                 </table>
@@ -238,7 +234,7 @@ export async function sendSubscriptionThankYouEmail({ to, name }: { to: string, 
     const { text, html } = buildSubscriptionThankYouEmailContent(name);
     return sendEmail({
         to: `${name} <${to}>`,
-        subject: `Thank you for subscribing to ProfitScout Pro!`,
+        subject: `Thank you for subscribing to GammaRips Pro!`,
         text,
         html,
     });
@@ -248,16 +244,16 @@ function buildTrialReminderEmailContent(name: string): { text: string; html: str
     const textContent = `
 Hi ${name},
 
-Your ProfitScout free trial is ending in 5 days.
+Your GammaRips access will require a subscription soon.
 
-Don't lose access to the AI-powered tools that help you find your analytical edge. Upgrade to Pro now to keep receiving daily options setups and full access to your interactive dashboard.
+Upgrade to Pro now to keep receiving daily options rippers and full access to your interactive dashboard.
 
-Upgrade to Pro: https://profitscout.app/
+Upgrade to Pro: https://gammarips.com/
 
 If you have any questions, just reply to this email.
 
 Happy trading,
-The ProfitScout Team
+The GammaRips Team
 `;
 
     const htmlContent = `
@@ -269,35 +265,34 @@ The ProfitScout Team
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>Your Trial Ends in 5 Days</title>
+    <title>Your Access Requires Subscription</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
-                            <p style="font-size: 18px; color: #A0A0A0; margin-top: 12px;">Your Trial Ends in 5 Days</p>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
                             <p style="font-size: 16px; line-height: 1.6;">Hi ${name},</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Just a friendly reminder that your free trial of ProfitScout is ending in 5 days. Don't lose access to the AI-powered tools that help you find your analytical edge.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Upgrade to Pro to keep receiving daily options setups, full AI Analyst Briefings, and unlimited access to your interactive dashboard.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Just a friendly reminder that your access to GammaRips will require a subscription soon. Don't lose access to the AI-powered tools that help you find your analytical edge.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Upgrade to Pro to keep receiving daily options rippers, full AI Analyst Briefings, and unlimited access to your interactive dashboard.</p>
                         </td>
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://profitscout.app/" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Upgrade to Pro - $19/month</a>
+                            <a href="https://gammarips.com/" style="background-color: #f5a623; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Upgrade to Pro - $19/month</a>
                         </td>
                     </tr>
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
                              <p style="margin: 0;">If you have any questions, just reply to this email. We're happy to help.</p>
-                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
+                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
                         </td>
                     </tr>
                 </table>
@@ -315,28 +310,28 @@ export async function sendTrialReminderEmail({ to, name }: { to: string, name: s
     const { text, html } = buildTrialReminderEmailContent(name);
     return sendEmail({
         to: `${name} <${to}>`,
-        subject: `Your ProfitScout Trial Ends in 5 Days`,
+        subject: `Your GammaRips Access Requires Subscription`,
         text,
         html,
     });
 }
 
 function buildReferralEmailContent(name: string, referralLink: string): { text: string; html: string } {
-    const suggestedPost = `I'm using ProfitScout for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out: ${referralLink}`;
+    const suggestedPost = `I'm using GammaRips for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out: ${referralLink}`;
     const twitterShareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(suggestedPost)}&hashtags=optionstrading,AI,fintech,tradingtools`;
     const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`;
-    const redditShareUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(referralLink)}&title=${encodeURIComponent("Check out this AI-powered tool for options traders - ProfitScout")}`;
+    const redditShareUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(referralLink)}&title=${encodeURIComponent("Check out this AI-powered tool for options traders - GammaRips")}`;
 
 
     const textContent = `
 Hi ${name},
 
-I hope you're finding an edge with ProfitScout's AI-driven market insights.
+I hope you're finding an edge with GammaRips's AI-driven market insights.
 
 As you continue to explore the tool, I wanted to share a quick way you can give your friends and colleagues that same advantage. We've created a special referral offer. When you use your unique link below, you can give anyone in your network an extended 45-day free trial—on us.
 
 1. Share Directly with a Friend
-Know someone specific who would benefit from ProfitScout? Just copy your link and send it their way.
+Know someone specific who would benefit from GammaRips? Just copy your link and send it their way.
 Your unique link: ${referralLink}
 
 2. Share on Social Media
@@ -346,7 +341,7 @@ Share on Facebook: ${facebookShareUrl}
 Share on Reddit: ${redditShareUrl}
 
 Suggested Post:
-I'm using ProfitScout for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out:
+I'm using GammaRips for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out:
 ${referralLink}
 #optionstrading #AI #fintech #tradingtools
 
@@ -354,7 +349,7 @@ Thanks for helping spread the word!
 
 All the best,
 Evan P.
-Founder, ProfitScout
+Founder, GammaRips
 `;
 
     const htmlContent = `
@@ -366,22 +361,22 @@ Founder, ProfitScout
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>Share the edge: Give your friends 45 days of ProfitScout</title>
+    <title>Share the edge: Give your friends 45 days of GammaRips</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
                             <p style="font-size: 16px; line-height: 1.6;">Hi ${name},</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I hope you're finding an edge with ProfitScout's AI-driven market insights.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I hope you're finding an edge with GammaRips's AI-driven market insights.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">As you continue to explore the tool, I wanted to share a quick way you can give your friends and colleagues that same advantage. We've created a special referral offer. When you use your unique link below, you can give anyone in your network an extended <strong>45-day free trial</strong>—on us.</p>
                         </td>
                     </tr>
@@ -390,7 +385,7 @@ Founder, ProfitScout
                             <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; color: #ffffff; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #393b4d; padding-bottom: 10px;">1. Share Directly with a Friend</h2>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 0;">Know someone specific who would benefit? Just copy your link and send it their way.</p>
                             <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 12px; text-align: center; margin-top: 8px; margin-bottom: 20px;">
-                                <a href="${referralLink}" style="font-family: monospace; font-size: 15px; color: #BEFF0A; text-decoration: none; word-break: break-all;">${referralLink}</a>
+                                <a href="${referralLink}" style="font-family: monospace; font-size: 15px; color: #f5a623; text-decoration: none; word-break: break-all;">${referralLink}</a>
                             </div>
                         </td>
                     </tr>
@@ -413,8 +408,8 @@ Founder, ProfitScout
                             </table>
                              <p style="font-size: 14px; line-height: 1.6; margin-top: 20px; color: #A0A0A0;">You can also copy and paste the message below:</p>
                              <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 15px; margin-top: 8px;">
-                                <p style="font-size: 14px; line-height: 1.6; margin: 0;">I'm using ProfitScout for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out:</p>
-                                <p style="font-size: 14px; line-height: 1.6; margin: 10px 0 0;"><a href="${referralLink}" style="color: #BEFF0A; text-decoration: none;">${referralLink}</a></p>
+                                <p style="font-size: 14px; line-height: 1.6; margin: 0;">I'm using GammaRips for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out:</p>
+                                <p style="font-size: 14px; line-height: 1.6; margin: 10px 0 0;"><a href="${referralLink}" style="color: #f5a623; text-decoration: none;">${referralLink}</a></p>
                                 <p style="font-size: 14px; line-height: 1.6; margin: 10px 0 0; color: #A0A0A0;">#optionstrading #AI #fintech #tradingtools</p>
                             </div>
                         </td>
@@ -423,12 +418,12 @@ Founder, ProfitScout
                         <td style="padding: 40px 40px 20px; text-align: left; font-size: 14px; color: #A0A0A0;">
                             <p style="margin: 0;">Thanks for helping spread the word!</p>
                             <p style="margin: 16px 0 0;">All the best,</p>
-                            <p style="margin-top: 4px;">Evan P.<br>Founder, ProfitScout</p>
+                            <p style="margin-top: 4px;">Evan P.<br>Founder, GammaRips</p>
                         </td>
                     </tr>
                      <tr>
                         <td style="padding: 20px 40px 20px; text-align: center; font-size: 12px; color: #A0A0A0; border-top: 1px solid #393b4d; margin-top: 20px;">
-                             <p style="margin: 0;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
+                             <p style="margin: 0;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
                         </td>
                     </tr>
                 </table>
@@ -447,24 +442,24 @@ export async function sendReferralEmail({ to, name, referralLink }: { to: string
     const { text, html } = buildReferralEmailContent(name, referralLink);
     return sendEmail({
         to: `${name} <${to}>`,
-        subject: `Share the edge: Give your friends 45 days of ProfitScout`,
+        subject: `Share the edge: Give your friends 45 days of GammaRips`,
         text,
         html,
     });
 }
 
 function buildFeedbackRequestEmailContent(name: string): { text: string; html: string } {
-    const textContent = `I'm Evan Parra, the founder of ProfitScout.
+    const textContent = `I'm Evan Parra, the founder of GammaRips.
 
 You've been using the tool for about a week now, and I wanted to personally check in. As an early user, your perspective is incredibly valuable for shaping what we build next.
 
 I would be grateful if you could take 60 seconds to share your initial thoughts. Your feedback goes directly to our product team (and me) to help us improve.
 
-Share Your Feedback: https://profitscout.app/feedback
+Share Your Feedback: https://gammarips.com/feedback
 
 All the best,
 Evan P.
-Founder, ProfitScout
+Founder, GammaRips
 `;
 
     const htmlContent = `
@@ -476,40 +471,40 @@ Founder, ProfitScout
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>A personal check-in from ProfitScout's founder</title>
+    <title>A personal check-in from GammaRips's founder</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
                             
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I'm Evan Parra, the founder of ProfitScout.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I'm Evan Parra, the founder of GammaRips.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You've been using the tool for about a week now, and I wanted to personally check in. As an early user, your perspective is incredibly valuable for shaping what we build next.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I would be grateful if you could take 60 seconds to share your initial thoughts. Your feedback goes directly to our product team (and me) to help us improve.</p>
                         </td>
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://profitscout.app/feedback" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
+                            <a href="https://gammarips.com/feedback" style="background-color: #f5a623; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
                         </td>
                     </tr>
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
                             <p style="margin: 0;">All the best,</p>
-                            <p style="margin-top: 4px;">Evan P.<br>Founder, ProfitScout</p>
+                            <p style="margin-top: 4px;">Evan P.<br>Founder, GammaRips</p>
                         </td>
                     </tr>
                      <tr>
                         <td style="padding: 0 40px 20px; text-align: center; font-size: 12px; color: #A0A0A0; border-top: 1px solid #393b4d; padding-top: 20px;">
-                             <p style="margin: 0;">&copy; 2025 ProfitScout. All rights reserved.</p>
+                             <p style="margin: 0;">&copy; 2025 GammaRips. All rights reserved.</p>
                         </td>
                     </tr>
                 </table>
@@ -527,9 +522,9 @@ Founder, ProfitScout
 export async function sendFeedbackRequestEmail({ to, name }: { to: string, name: string }) {
     const { text, html } = buildFeedbackRequestEmailContent(name);
     return sendEmail({
-        from: 'ProfitScout <admin@profitscout.app>',
+        from: 'GammaRips <admin@gammarips.com>',
         to: `${name} <${to}>`,
-        subject: `A personal check-in from ProfitScout's founder`,
+        subject: `A personal check-in from GammaRips's founder`,
         text,
         html,
     });
@@ -537,14 +532,14 @@ export async function sendFeedbackRequestEmail({ to, name }: { to: string, name:
 
 function buildFeedbackAcknowledgmentEmailContent(trackingId: string): { text: string; html: string } {
     const textContent = `
-Thank you for contacting ProfitScout!
+Thank you for contacting GammaRips!
 
 We've received your message and will get back to you as soon as possible.
 
 Your reference ID is: ${trackingId}
 
 Best,
-The ProfitScout Team
+The GammaRips Team
 `;
 
     const htmlContent = `
@@ -558,14 +553,14 @@ The ProfitScout Team
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>We've Received Your Feedback</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
@@ -574,14 +569,14 @@ The ProfitScout Team
                             <p style="font-size: 16px; line-height: 1.6;">Thank you for contacting us! We've received your message and our team will review it shortly. We appreciate you taking the time to reach out.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">For your records, your reference ID is:</p>
                              <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 12px; text-align: center; margin-top: 8px;">
-                                <p style="font-family: monospace; font-size: 18px; color: #BEFF0A; margin: 0;">${trackingId}</p>
+                                <p style="font-family: monospace; font-size: 18px; color: #f5a623; margin: 0;">${trackingId}</p>
                             </div>
                         </td>
                     </tr>
                      <tr>
                         <td style="padding: 40px 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
                             <p style="margin: 0;">Best regards,</p>
-                            <p style="margin-top: 4px;">The ProfitScout Team</p>
+                            <p style="margin-top: 4px;">The GammaRips Team</p>
                         </td>
                     </tr>
                 </table>
@@ -617,7 +612,7 @@ ${response}
 If you have any further questions, please reply to this email.
 
 Best,
-The ProfitScout Team
+The GammaRips Team
 `;
 
     const htmlContent = `
@@ -631,14 +626,14 @@ The ProfitScout Team
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>Response to your inquiry</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
@@ -653,7 +648,7 @@ The ProfitScout Team
                      <tr>
                         <td style="padding: 40px 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
                             <p style="margin: 0;">Best regards,</p>
-                            <p style="margin-top: 4px;">The ProfitScout Team</p>
+                            <p style="margin-top: 4px;">The GammaRips Team</p>
                         </td>
                     </tr>
                 </table>
@@ -679,7 +674,7 @@ export async function sendAgentResponseEmail({ to, response, trackingId }: { to:
 
     return sendEmail({
         to,
-        subject: `Re: Your ProfitScout Inquiry (Ref: ${trackingId})`,
+        subject: `Re: Your GammaRips Inquiry (Ref: ${trackingId})`,
         text,
         html,
         replyTo: MY_EMAIL,

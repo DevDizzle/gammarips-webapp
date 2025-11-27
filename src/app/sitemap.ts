@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { getStocksAdmin } from '@/lib/firebase-admin';
 
-const BASE_URL = 'https://profitscout.app'; // Replace with your production URL
+const BASE_URL = 'https://gammarips.com'; // Replace with your production URL
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 1. Static pages

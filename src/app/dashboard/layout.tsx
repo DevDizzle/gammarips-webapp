@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import { UserNav } from '@/components/auth/user-nav';
 import Link from 'next/link';
@@ -8,8 +7,8 @@ import { getAppStatus } from '../actions';
 import DataUpdatingPage from '@/components/layout/data-updating-page';
 
 export const metadata: Metadata = {
-  title: 'Dashboard | ProfitScout',
-  description: 'Your personal dashboard for AI-powered stock and options analysis. View top setups, track performance, and search any ticker.',
+  title: 'Dashboard | GammaRips',
+  description: 'Your personal dashboard for AI-powered stock and options analysis. View top rippers, track performance, and search any ticker.',
 };
 
 export default async function DashboardLayout({
@@ -28,7 +27,7 @@ export default async function DashboardLayout({
       <header className="sticky top-0 z-40 w-full border-b bg-background">
         <div className="container flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Link href="/dashboard" className="text-2xl font-bold font-headline shrink-0">
-            <span className="text-foreground">Profit</span><span className="text-primary">Scout</span>
+            <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
           </Link>
           <div className="flex flex-1 items-center justify-end space-x-2 sm:space-x-4">
             <TickerSearch />

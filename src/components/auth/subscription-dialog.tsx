@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -21,7 +20,7 @@ type SubscriptionDialogProps = {
 
 const features = [
     { 
-        title: "Daily Top-Rated Call & Put Setups",
+        title: "Daily Top-Rated Call & Put Rippers",
         description: "Delivered to your inbox" 
     },
     { 
@@ -48,7 +47,7 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
             Maintain Your Analytical Edge
           </DialogTitle>
           <DialogDescription>
-            Your 30-day trial is ending. Don't lose access to the powerful AI research tools you've been using. Upgrade to Pro to continue turning complex data into clear insights—delivered directly to your inbox.
+            Don't lose access to the powerful AI research tools you've been using. Upgrade to Pro to continue turning complex data into clear insights.
           </DialogDescription>
         </DialogHeader>
         

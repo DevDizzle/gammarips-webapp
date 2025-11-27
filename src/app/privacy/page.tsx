@@ -1,9 +1,8 @@
-
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | ProfitScout',
-  description: 'Read the Privacy Policy for ProfitScout.',
+  title: 'Privacy Policy | GammaRips',
+  description: 'Read the Privacy Policy for GammaRips.',
 };
 
 export default function PrivacyPage() {
@@ -12,7 +11,7 @@ export default function PrivacyPage() {
       <h1>Privacy Policy</h1>
       <p><em>Last updated: October 16, 2025</em></p>
       <p>
-        ProfitScout (“we,” “us,” or “our”) provides AI-powered research tools for equity and options analysis. This Privacy Policy explains what information we collect, how we use it, how it’s shared, and the choices you have. By using our website, apps, APIs, or ChatGPT Actions (collectively, the “Services”), you agree to this Policy.
+        GammaRips (“we,” “us,” or “our”) provides AI-powered research tools for equity and options analysis. This Privacy Policy explains what information we collect, how we use it, how it’s shared, and the choices you have. By using our website, apps, APIs, or ChatGPT Actions (collectively, the “Services”), you agree to this Policy.
       </p>
       <p>Educational only; not investment advice.</p>
 
@@ -46,7 +45,7 @@ export default function PrivacyPage() {
 
       <h2>3) AI processing and your data</h2>
       <p><strong>ChatGPT Actions &amp; the OpenAI API.</strong> When you invoke our ChatGPT Action, OpenAI transmits the user’s request and our Action’s response as part of delivering the feature. OpenAI describes how it processes ChatGPT and API data in its Privacy Policy and API Data Usage Policies. Notably, OpenAI states that API data is not used to train models by default.</p>
-      <p><strong>Our API &amp; storage.</strong> ProfitScout hosts read-only datasets and responses in Google Cloud (Cloud Run, Cloud Storage). Google’s Cloud Privacy Notice describes how Google processes customer data as a service provider/processor.</p>
+      <p><strong>Our API &amp; storage.</strong> GammaRips hosts read-only datasets and responses in Google Cloud (Cloud Run, Cloud Storage). Google’s Cloud Privacy Notice describes how Google processes customer data as a service provider/processor.</p>
 
       <h2>4) How we share information</h2>
       <p>We do not sell personal information. We share it only with:</p>
@@ -97,8 +96,8 @@ export default function PrivacyPage() {
       <p>We may update this Policy from time to time. We will post the new effective date at the top and, if changes are material, provide additional notice as required.</p>
 
       <h2>14) Contact</h2>
-      <p>Questions or requests?<br />Email: admin@profitscout.app</p>
-      <p>Postal: ProfitScout, AI-Powered Research for Options Traders</p>
+      <p>Questions or requests?<br />Email: admin@gammarips.com</p>
+      <p>Postal: GammaRips, AI-Powered Research for Options Traders</p>
     </article>
   );
 }

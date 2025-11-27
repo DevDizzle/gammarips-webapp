@@ -1,8 +1,3 @@
-
-
-
-
-
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -118,11 +113,11 @@ export async function generateMetadata({ params }: StockSeoPageProps): Promise<M
   const ticker = params.ticker.toUpperCase();
   const data = await getStockData(ticker);
 
-  const defaultOgImage = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://profitscout.app'}/profitscout-og.png`;
+  const defaultOgImage = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://gammarips.com'}/gammarips-og.png`;
 
   if (!data) {
     return {
-      title: `Stock Analysis for ${ticker} Not Found | ProfitScout`,
+      title: `Stock Analysis for ${ticker} Not Found | GammaRips`,
       description: `The requested stock analysis for ${ticker} could not be found or is not up to date. Check back later for AI-powered insights.`,
       robots: 'noindex, nofollow',
     };
@@ -142,10 +137,10 @@ export async function generateMetadata({ params }: StockSeoPageProps): Promise<M
           url: defaultOgImage,
           width: 1200,
           height: 630,
-          alt: `ProfitScout AI Analysis for ${companyName} (${ticker})`,
+          alt: `GammaRips AI Analysis for ${companyName} (${ticker})`,
         },
       ],
-      siteName: 'ProfitScout',
+      siteName: 'GammaRips',
       type: 'article',
     },
     twitter: {
@@ -276,7 +271,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
       <header className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold font-headline">
-            <span className="text-foreground">Profit</span><span className="text-primary">Scout</span>
+            <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
           </Link>
           <UserNav />
         </div>
@@ -324,7 +319,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
 
         <Card className="text-center bg-primary/10 border-primary/20">
             <CardHeader>
-                <CardTitle className="font-headline text-2xl">Unlock Data-Driven Options Setups</CardTitle>
+                <CardTitle className="font-headline text-2xl">Unlock Data-Driven Options Rippers</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="max-w-md mx-auto space-y-3 text-left">
@@ -334,7 +329,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
                     </div>
                      <div className="flex items-center gap-3">
                         <Star className="h-5 w-5 text-primary shrink-0"/>
-                        <span className="font-medium">Access daily, top-rated Call & Put setups</span>
+                        <span className="font-medium">Access daily, top-rated Call & Put rippers</span>
                     </div>
                      <div className="flex items-center gap-3">
                         <CheckCircle className="h-5 w-5 text-primary shrink-0"/>
@@ -358,7 +353,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardHeader>
             <CardContent className="text-sm text-yellow-200/80">
                 <p>
-                    The information provided on this page is for informational purposes only and does not constitute investment advice, financial advice, trading advice, or any other sort of advice and you should not treat any of the page's content as such. ProfitScout does not recommend that any security should be bought, sold, or held by you. Do conduct your own due diligence and consult your financial advisor before making any investment decisions.
+                    The information provided on this page is for informational purposes only and does not constitute investment advice, financial advice, trading advice, or any other sort of advice and you should not treat any of the page's content as such. GammaRips does not recommend that any security should be bought, sold, or held by you. Do conduct your own due diligence and consult your financial advisor before making any investment decisions.
                 </p>
             </CardContent>
         </Card>

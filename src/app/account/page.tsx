@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -101,7 +100,7 @@ export default function AccountPage() {
             <CardDescription>
                 {dbUser?.isSubscribed 
                     ? `You are currently on the Pro plan.` 
-                    : "You are currently on the free trial plan."}
+                    : "You are not currently subscribed to a Pro plan."}
             </CardDescription>
           </CardHeader>
           <CardContent>

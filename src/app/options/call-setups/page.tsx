@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import { getWinnersDashboard } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,8 +9,8 @@ import type { Winner } from '@/lib/firebase-admin';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Daily Bullish Call Setups on Russell 1000 Stocks',
-  description: 'Browse our full list of AI-scored bullish call option setups on Russell 1000 stocks. Updated daily with fresh analysis.',
+  title: 'Daily Call Rippers on Russell 1000 Stocks',
+  description: 'Browse our full list of AI-scored bullish call option rippers on Russell 1000 stocks. Updated daily with fresh analysis.',
 };
 
 // Helper to convert GCS URI to a public URL
@@ -41,18 +40,18 @@ export default async function CallSetupsPage() {
         <div className="space-y-8">
             <header className="text-center">
                 <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-                    Daily Bullish Call Setups
+                    Daily Call Rippers
                 </h1>
                 <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                    This is a preview of our complete, daily-updated list of bullish Call option setups for Russell 1000 stocks, scored by our AI engine.
+                    This is a preview of our complete, daily-updated list of bullish Call option rippers for Russell 1000 stocks, scored by our AI engine.
                 </p>
             </header>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Today's Top Call Setups</CardTitle>
+                    <CardTitle>Today's Top Call Rippers</CardTitle>
                     <CardDescription>
-                       A preview of the top-scoring bullish Call setups from today's market analysis. Click any setup to see the full dashboard.
+                       A preview of the top-scoring bullish Call rippers from today's market analysis. Click any setup to see the full dashboard.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -106,14 +105,14 @@ export default async function CallSetupsPage() {
                             })}
                         </div>
                     ) : (
-                        <p className="text-muted-foreground text-center">No bullish call setups met the criteria today. Check back tomorrow for new signals.</p>
+                        <p className="text-muted-foreground text-center">No bullish call rippers met the criteria today. Check back tomorrow for new signals.</p>
                     )}
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>How We Find Top Call Setups</CardTitle>
+                    <CardTitle>How We Find Top Call Rippers</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="flex items-start gap-4">
@@ -146,7 +145,7 @@ export default async function CallSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">3. Stock Outlook Confirmation</h3>
-                            <p className="text-muted-foreground">Only Call setups rated "Strong" by the AI and where the underlying stock has a Bullish overall outlook ("Strongly" or "Moderately Bullish") make the final list. This ensures our featured Call setups combine strong contract specifics with a positive underlying stock forecast.</p>
+                            <p className="text-muted-foreground">Only Call rippers rated "Strong" by the AI and where the underlying stock has a Bullish overall outlook ("Strongly" or "Moderately Bullish") make the final list. This ensures our featured Call rippers combine strong contract specifics with a positive underlying stock forecast.</p>
                         </div>
                     </div>
                 </CardContent>
@@ -156,9 +155,9 @@ export default async function CallSetupsPage() {
             <div className="text-center">
                  <Card className="inline-block bg-primary/10 border-primary/20">
                     <CardContent className="p-6">
-                        <h3 className="text-xl font-semibold font-headline">See All {allBullishSetups.length}+ Setups</h3>
+                        <h3 className="text-xl font-semibold font-headline">See All {allBullishSetups.length}+ Rippers</h3>
                         <p className="text-muted-foreground mt-2 mb-4">
-                            Sign up for a membership to get the full list of daily setups, access the interactive dashboard, and unlock complete AI analysis.
+                            Sign up for a membership to get the full list of daily rippers, access the interactive dashboard, and unlock complete AI analysis.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">

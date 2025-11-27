@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import { getWinnersDashboard } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,8 +9,8 @@ import type { Winner } from '@/lib/firebase-admin';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Daily Bearish Put Setups & Hedges on Russell 1000 Stocks',
-  description: 'Browse our full list of AI-scored bearish put option setups on Russell 1000 stocks. Ideal for hedging or speculative plays. Updated daily.',
+  title: 'Daily Bearish Put Rippers & Hedges on Russell 1000 Stocks',
+  description: 'Browse our full list of AI-scored bearish put option rippers on Russell 1000 stocks. Ideal for hedging or speculative plays. Updated daily.',
 };
 
 // Helper to convert GCS URI to a public URL
@@ -41,18 +40,18 @@ export default async function PutSetupsPage() {
         <div className="space-y-8">
             <header className="text-center">
                 <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-                    Daily Bearish Put Setups
+                    Daily Bearish Put Rippers
                 </h1>
                 <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                    This is a preview of our complete, daily-updated list of bearish Put option setups, ideal for hedging or directional plays.
+                    This is a preview of our complete, daily-updated list of bearish Put option rippers, ideal for hedging or directional plays.
                 </p>
             </header>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Today's Top Put Setups</CardTitle>
+                    <CardTitle>Today's Top Put Rippers</CardTitle>
                     <CardDescription>
-                       A preview of the top-scoring bearish Put setups from today's analysis. Click any setup to see the full dashboard.
+                       A preview of the top-scoring bearish Put rippers from today's analysis. Click any setup to see the full dashboard.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -106,14 +105,14 @@ export default async function PutSetupsPage() {
                             })}
                         </div>
                     ) : (
-                        <p className="text-muted-foreground text-center">No bearish put setups met the criteria today. Check back tomorrow for new signals.</p>
+                        <p className="text-muted-foreground text-center">No bearish put rippers met the criteria today. Check back tomorrow for new signals.</p>
                     )}
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>How We Find Top Put Setups</CardTitle>
+                    <CardTitle>How We Find Top Put Rippers</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="flex items-start gap-4">
@@ -146,7 +145,7 @@ export default async function PutSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">3. Stock Outlook Confirmation</h3>
-                            <p className="text-muted-foreground">Only Put setups rated "Strong" by the AI on stocks with a Bearish overall outlook ("Strongly" or "Moderately Bearish") are featured. This ensures our Put setups combine solid contract specifics with a negative underlying forecast.</p>
+                            <p className="text-muted-foreground">Only Put rippers rated "Strong" by the AI on stocks with a Bearish overall outlook ("Strongly" or "Moderately Bearish") are featured. This ensures our Put rippers combine solid contract specifics with a negative underlying forecast.</p>
                         </div>
                     </div>
                 </CardContent>
@@ -156,9 +155,9 @@ export default async function PutSetupsPage() {
             <div className="text-center">
                  <Card className="inline-block bg-primary/10 border-primary/20">
                     <CardContent className="p-6">
-                        <h3 className="text-xl font-semibold font-headline">See All {allBearishSetups.length}+ Setups</h3>
+                        <h3 className="text-xl font-semibold font-headline">See All {allBearishSetups.length}+ Rippers</h3>
                         <p className="text-muted-foreground mt-2 mb-4">
-                             Sign up for a membership to get the full list of daily setups, access the interactive dashboard, and unlock complete AI analysis.
+                             Sign up for a membership to get the full list of daily rippers, access the interactive dashboard, and unlock complete AI analysis.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">

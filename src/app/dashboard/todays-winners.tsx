@@ -223,7 +223,7 @@ function TodaysWinners() {
   
   const renderWinnersList = (winners: Winner[]) => {
     if (winners.length === 0) {
-      return <p className="text-sm text-muted-foreground text-center py-4">No signals found for this category today.</p>;
+      return <p className="text-sm text-muted-foreground text-center py-4">No rippers found for this category today.</p>;
     }
     
     return (
@@ -428,8 +428,8 @@ function TodaysWinners() {
   }
 
   const buttons: { label: string; view: ViewType }[] = [
-    { label: 'Top Call Setups', view: 'bullish' },
-    { label: 'Top Put Setups', view: 'bearish' },
+    { label: 'Top Call Rippers', view: 'bullish' },
+    { label: 'Top Put Rippers', view: 'bearish' },
     { label: 'Top Gainers', view: 'gainers' },
     { label: 'Top Losers', view: 'losers' },
   ];
@@ -439,7 +439,7 @@ function TodaysWinners() {
       <CardHeader>
         <CardTitle>Market Hub</CardTitle>
         <CardDescription>
-          Explore today's top Call/Put setups, or review our model's historical performance with top gainers and losers. Rankings are signals for research, not investment advice.
+          Explore today's top Call/Put rippers, or review our model's historical performance with top gainers and losers. Rankings are for research, not investment advice.
           {lastUpdated && !isLoading && (
             <span className="block text-xs text-muted-foreground mt-2">Signal Data Last Updated: {lastUpdated} as of market close</span>
           )}
@@ -475,5 +475,3 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
-
-    

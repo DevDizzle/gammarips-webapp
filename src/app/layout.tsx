@@ -1,4 +1,3 @@
-
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
@@ -12,27 +11,27 @@ import RootLayoutClient from './root-layout-client';
 import { getAppStatus } from './actions';
 import DataUpdatingPage from '@/components/layout/data-updating-page';
 
-const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://profitscout.app';
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://gammarips.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl), 
   title: {
-    default: 'ProfitScout | AI-Powered Options Research Tool',
-    template: `%s | ProfitScout`,
+    default: 'GammaRips | AI-Powered Options Research Tool',
+    template: `%s | GammaRips`,
   },
-  description: 'ProfitScout is an AI-powered research tool that helps traders identify and analyze high-potential options setups on Russell 1000 stocks using structured data signals.',
+  description: 'GammaRips is an AI-powered research tool that helps traders identify and analyze high-potential options setups on Russell 1000 stocks using structured data signals.',
   keywords: ['options trading', 'stock options', 'AI trading', 'options analysis', 'research tool', 'Russell 1000', 'call options', 'put options', 'stock market analysis'],
   openGraph: {
-    title: 'ProfitScout | AI-Powered Options Research Tool',
+    title: 'GammaRips | AI-Powered Options Research Tool',
     description: 'AI-powered research tool for options traders.',
     url: siteUrl,
-    siteName: 'ProfitScout',
+    siteName: 'GammaRips',
     images: [
       {
-        url: `${siteUrl}/profitscout-og.png`,
+        url: `${siteUrl}/gammarips-og.png`,
         width: 1200,
         height: 630,
-        alt: 'ProfitScout AI-Powered Options Research',
+        alt: 'GammaRips AI-Powered Options Research',
       },
     ],
     locale: 'en_US',
@@ -40,9 +39,9 @@ export const metadata: Metadata = {
   },
    twitter: {
     card: 'summary_large_image',
-    title: 'ProfitScout | AI-Powered Options Research Tool',
+    title: 'GammaRips | AI-Powered Options Research Tool',
     description: 'AI-powered research tool for options traders.',
-    images: [`${siteUrl}/profitscout-og.png`],
+    images: [`${siteUrl}/gammarips-og.png`],
   },
 };
 

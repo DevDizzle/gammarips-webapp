@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
@@ -103,12 +101,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (additionalInfo?.isNewUser) {
       trackEvent('sign_up', { method });
       
-      // Trigger welcome email for new users
-      if (user.email) {
-          handleWelcomeEmail(user.email, user.displayName || user.email).catch(err => {
-              console.error("Failed to send welcome email:", err);
-          });
-      }
+      // No welcome email in this flow, straight to checkout
       
       // Redirect to Stripe checkout for new users instead of dashboard
       await redirectToCheckout(user.uid);

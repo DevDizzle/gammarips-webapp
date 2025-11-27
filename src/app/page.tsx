@@ -143,7 +143,7 @@ export default async function LandingPage() {
           </Suspense>
 
           {/* Performance Tracker Section */}
-          <section className="pt-8">
+          <section>
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
                 <h2 className="text-3xl font-bold font-headline">Live Performance. No Hiding.</h2>

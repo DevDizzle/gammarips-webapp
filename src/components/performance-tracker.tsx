@@ -27,7 +27,7 @@ export async function PerformanceTracker() {
 
     return (
         <Link href="/performance" className="block group">
-            <Card className="bg-transparent border-none shadow-none group-hover:bg-primary/20 group-hover:border-primary/30 transition-colors">
+            <Card className="bg-transparent border-none shadow-none transition-colors">
                 <CardContent className="p-0">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <StatCard 

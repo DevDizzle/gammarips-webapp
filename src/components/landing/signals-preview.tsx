@@ -129,9 +129,9 @@ export default async function SignalsPreview() {
         <section className="py-16 sm:py-24 bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center max-w-3xl mx-auto">
-                    <h2 className="text-3xl font-bold font-headline">Today's Setup Preview</h2>
+                    <h2 className="text-3xl font-bold font-headline">Preview Today's Rips</h2>
                     <p className="mt-4 text-muted-foreground">
-                        Here's a sample of today’s top-rated setups from our AI engine. Full list and analysis available in the dashboard. Data from {lastUpdated}.
+                        Here is a sample of today’s top-rated Rips from our AI engine. Unlock the full list and the deep-dive analysis in the dashboard. Data from {lastUpdated}.
                     </p>
                 </div>
                 <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

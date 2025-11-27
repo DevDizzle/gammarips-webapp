@@ -27,19 +27,8 @@ export async function PerformanceTracker() {
 
     return (
         <Link href="/performance" className="block group">
-            <Card className="bg-primary/10 border-primary/20 group-hover:bg-primary/20 group-hover:border-primary/30 transition-colors">
-                <CardHeader className="text-center">
-                    <div className="flex justify-center items-center gap-2">
-                        <TrendingUp className="h-6 w-6 text-primary" />
-                        <CardTitle className="font-headline text-2xl">
-                            Live Performance. No Hiding.
-                        </CardTitle>
-                    </div>
-                    <CardDescription className="max-w-2xl mx-auto">
-                        Our models track the performance of every Rip. We show the wins, the losses, and the volatility in between. This is a live look at our data-driven edge. Past performance does not guarantee future results.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
+            <Card className="bg-transparent border-none shadow-none group-hover:bg-primary/20 group-hover:border-primary/30 transition-colors">
+                <CardContent className="p-0">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <StatCard 
                             title="Avg. Gain" 

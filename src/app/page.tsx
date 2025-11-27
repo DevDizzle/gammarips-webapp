@@ -146,9 +146,12 @@ export default async function LandingPage() {
           <section className="py-16 sm:py-24 bg-muted/50">
              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center max-w-3xl mx-auto mb-12">
-                    <h2 className="text-3xl font-bold font-headline">See Our Results in Action</h2>
+                    <h2 className="text-3xl font-bold font-headline">Live Performance. No Hiding.</h2>
                     <p className="mt-4 text-muted-foreground">
-                        Our models track the performance of every signal. Here's a live look at the data-driven edge we provide. Past performance does not guarantee future results.
+                        Our models track the performance of every Rip. We show the wins, the losses, and the volatility in between. This is a live look at our data-driven edge. Past performance does not guarantee future results.
+                    </p>
+                    <p className="mt-4 text-xs text-muted-foreground">
+                      Performance tracking began on 10/21/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and daily until the contract expires.
                     </p>
                 </div>
                 <Suspense fallback={<PerformanceTrackerSkeleton />}>

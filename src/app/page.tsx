@@ -101,8 +101,8 @@ export default async function LandingPage() {
           <section className="pb-16 sm:pb-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
-                 <h2 className="text-3xl font-bold font-headline">Who GammaRips Is For</h2>
-                 <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">This is a professional research tool designed for a specific type of trader.</p>
+                 <h2 className="text-3xl font-bold font-headline">Who GammaRips Is For (and Not For)</h2>
+                 <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">We built this tool for Rippers. It is not a beginner playground or a generic signal service.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                 <Card className="bg-card/50">
@@ -113,9 +113,9 @@ export default async function LandingPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 text-muted-foreground">
-                    <p>✓ You are an active options trader placing multiple trades per month.</p>
-                    <p>✓ You want a short, focused list of daily ideas, not a complex lab.</p>
-                    <p>✓ You are comfortable with options risk and buying premium.</p>
+                    <p>✓ You are an active options trader. You place multiple trades per month.</p>
+                    <p>✓ You want a short, focused list of daily Rips. No complex labs or endless scrolling.</p>
+                    <p>✓ You understand risk. You are comfortable buying premium and managing your own trades.</p>
                   </CardContent>
                 </Card>
                  <Card className="bg-card/50">
@@ -126,9 +126,10 @@ export default async function LandingPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 text-muted-foreground">
-                    <p>✗ You are a total beginner in options trading.</p>
-                    <p>✗ You rarely or never execute trades.</p>
-                    <p>✗ You are a long-term, buy-and-hold equity investor only.</p>
+                    <p>✗ You are a total beginner. You are still learning the basics of options.</p>
+                    <p>✗ You are a "tourist." You like to watch but rarely execute trades.</p>
+                    <p>✗ You only trade major indices (like SPY or QQQ). We focus exclusively on single-stock Rips.</p>
+                    <p>✗ You are a buy-and-hold investor. You don't trade volatility.</p>
                   </CardContent>
                 </Card>
               </div>

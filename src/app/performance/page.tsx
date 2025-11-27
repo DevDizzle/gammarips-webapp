@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { getAllPerformanceSignals } from '@/app/actions';
 import PerformanceClientPage from './performance-client-page';
@@ -38,10 +39,10 @@ export default async function PerformancePage() {
             <div className="space-y-8">
                 <header className="text-center">
                     <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-                        AI Signal Performance History
+                        The Rip Archive
                     </h1>
                     <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                        This is our complete, transparent archive of every options signal our AI has generated. We believe in showing our work—both wins and losses. Click any ticker to view the full analysis.
+                        This is the complete ledger of every Rip our engine has flagged. We show the work. We post the wins, the losses, and the flat trades. This is live data. It is not a cherry-picked highlight reel. Click any ticker to view the full analysis.
                     </p>
                 </header>
                 

@@ -31,14 +31,11 @@ const getSignalMeta = (signal: string) => {
     return { color: 'text-muted-foreground', icon: null };
 };
 
-const SignalCard = ({ signal, title, hubLink }: { signal: Winner | null, title: string, hubLink: string }) => {
+const SignalCard = ({ signal, hubLink }: { signal: Winner | null, hubLink: string }) => {
     if (!signal) {
         return (
              <Card className="flex-1 bg-card/50">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">{title}</CardTitle>
-                </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                     <p className="text-sm text-muted-foreground">No setup met the criteria today. Check back tomorrow.</p>
                 </CardContent>
             </Card>
@@ -53,10 +50,7 @@ const SignalCard = ({ signal, title, hubLink }: { signal: Winner | null, title: 
     return (
         <Card className="flex-1 bg-card/50 hover:bg-card/70 transition-colors">
             <Link href={hubLink}>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">{title}</CardTitle>
-                </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                     <div className="flex items-center gap-4">
                         <Image 
                             src={imageUrl} 
@@ -142,10 +136,10 @@ export default async function SignalsPreview() {
                 </div>
                 <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {topCalls.map((call, index) => (
-                        <SignalCard key={`call-${index}`} signal={call} title="Top-Rated Call" hubLink="/options/call-setups" />
+                        <SignalCard key={`call-${index}`} signal={call} hubLink="/options/call-setups" />
                     ))}
                     {topPuts.map((put, index) => (
-                        <SignalCard key={`put-${index}`} signal={put} title="Top-Rated Put" hubLink="/options/put-hedges" />
+                        <SignalCard key={`put-${index}`} signal={put} hubLink="/options/put-hedges" />
                     ))}
                 </div>
                  <div className="text-center mt-8">

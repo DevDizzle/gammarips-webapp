@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { getWinnersDashboard } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -117,35 +118,35 @@ export default async function CallSetupsPage() {
                 <CardContent className="space-y-6">
                     <div className="flex items-start gap-4">
                         <div className="flex-shrink-0 flex flex-col items-center gap-2">
-                           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                                <Filter className="h-6 w-6 text-primary" />
+                           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary text-xl">
+                                1
                            </div>
                            <div className="h-full w-px bg-border"></div>
                         </div>
                         <div>
-                            <h3 className="font-semibold">1. Smart Screening</h3>
-                            <p className="text-muted-foreground">We first identify liquid Call options (10-60 days to expiry) that are slightly out-of-the-money and meet strict volume, open interest, and spread criteria. We ensure the breakeven is realistic based on volatility.</p>
+                            <h3 className="font-semibold">Identify High-Conviction Stocks First</h3>
+                            <p className="text-muted-foreground">Instead of scanning for random option activity, we start by identifying the market's strongest stocks. We target the Top 20% of companies based on our proprietary AI conviction score, or those with a massive breaking news catalyst (Score &gt; 0.9).</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
                         <div className="flex-shrink-0 flex flex-col items-center gap-2">
-                           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                                <Bot className="h-6 w-6 text-primary" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary text-xl">
+                                2
                            </div>
                            <div className="h-full w-px bg-border"></div>
                         </div>
                         <div>
-                            <h3 className="font-semibold">2. AI Quality Check</h3>
-                            <p className="text-muted-foreground">Our AI analyzes the best candidates, rating their "setup quality". It checks for alignment with the stock's trend, fair volatility pricing, liquidity, and time decay risks.</p>
+                            <h3 className="font-semibold">The "Rip Hunter" Protocol</h3>
+                            <p className="text-muted-foreground">For these elite high-conviction stocks, we deploy our "Rip Hunter" logic. We hunt for aggressive, high-gamma contracts (3–60 days to expiry) and "Lotto" setups (up to 25% out-of-the-money) that are primed for explosive acceleration, prioritizing directional potential over rigid safety filters.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
-                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 flex-shrink-0">
-                            <BarChart className="h-6 w-6 text-primary" />
+                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary text-xl flex-shrink-0">
+                            3
                         </div>
                         <div>
-                            <h3 className="font-semibold">3. Stock Outlook Confirmation</h3>
-                            <p className="text-muted-foreground">Only Call rippers rated "Strong" by the AI and where the underlying stock has a Bullish overall outlook ("Strongly" or "Moderately Bullish") make the final list. This ensures our featured Call rippers combine strong contract specifics with a positive underlying stock forecast.</p>
+                            <h3 className="font-semibold">AI Validation & Ranking</h3>
+                            <p className="text-muted-foreground">Finally, our AI validates the trade setup. It applies a "Tiered" safety check—relaxing liquidity rules for high-conviction breakouts while enforcing strict safety measures for standard setups. It also boosts scores for "Unusual Options Activity" (volume &gt; open interest), ensuring only the most explosive opportunities make the daily dashboard.</p>
                         </div>
                     </div>
                 </CardContent>

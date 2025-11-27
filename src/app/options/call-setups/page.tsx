@@ -154,13 +154,13 @@ export default async function CallSetupsPage() {
             <div className="text-center">
                 <Card className="inline-block bg-primary/10 border-primary/20">
                     <CardContent className="p-6">
-                        <h3 className="text-xl font-semibold font-headline">See All {allBullishSetups.length}+ Setups</h3>
+                        <h3 className="text-xl font-semibold font-headline">See All {allBullishSetups.length}+ Rippers</h3>
                         <p className="text-muted-foreground mt-2 mb-4 max-w-md mx-auto">
-                            Daily setups are the ideas. Traders are the ones who use them. Join GammaRips to unlock the full list, the dashboard, and the AI breakdowns behind every setup.
+                            Daily Rippers are the ideas. Rippers are the traders who actually use them. Join GammaRips to unlock the full list, the dashboard, and the AI breakdowns behind every setup.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">
-                                Become a Member – $19/mo <ArrowRight className="ml-2 h-5 w-5"/>
+                                Become a Ripper – $19/mo <ArrowRight className="ml-2 h-5 w-5"/>
                             </Link>
                         </Button>
                         <p className="text-xs text-muted-foreground mt-3">Billed monthly, cancel anytime. GammaRips is an AI-powered options research tool, not a broker or advisor.</p>

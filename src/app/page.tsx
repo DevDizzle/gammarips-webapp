@@ -143,7 +143,7 @@ export default async function LandingPage() {
           </Suspense>
 
           {/* Performance Tracker Section */}
-          <section>
+          <section className="pb-16 sm:pb-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
                 <h2 className="text-3xl font-bold font-headline">Live Performance. No Hiding.</h2>
@@ -163,7 +163,7 @@ export default async function LandingPage() {
           </section>
 
           {/* The Daily Routine Section */}
-          <section className="py-16 sm:py-24">
+          <section className="pb-16 sm:pb-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center max-w-3xl mx-auto">
                 <h2 className="text-3xl font-bold font-headline">How to Use the Playbook</h2>
@@ -204,21 +204,30 @@ export default async function LandingPage() {
                   </p>
                 </div>
                 <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <Card className="bg-card/50">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><span className="font-bold text-primary">1.</span>Stock First, Options Second</CardTitle>
+                  <Card className="bg-card/50 text-center">
+                    <CardHeader className="items-center">
+                       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <Search className="h-6 w-6" />
+                      </div>
+                      <CardTitle>Stock First, Options Second</CardTitle>
                     </CardHeader>
                     <CardContent className="text-muted-foreground">If the underlying stock is not ready to move, the option chain does not matter. We identify the top strongest stocks using our AI conviction score first. Then we look for the trade.</CardContent>
                   </Card>
-                  <Card className="bg-card/50">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><span className="font-bold text-primary">2.</span>The "Rip Hunter" Protocol</CardTitle>
+                  <Card className="bg-card/50 text-center">
+                    <CardHeader className="items-center">
+                       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <Zap className="h-6 w-6" />
+                      </div>
+                      <CardTitle>The "Rip Hunter" Protocol</CardTitle>
                     </CardHeader>
                     <CardContent className="text-muted-foreground">For those high-conviction stocks, the engine hunts for aggressive, high-gamma contracts. We prioritize explosive potential over "safe on paper" spreads.</CardContent>
                   </Card>
-                  <Card className="bg-card/50">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><span className="font-bold text-primary">3.</span>AI Without the Hype</CardTitle>
+                  <Card className="bg-card/50 text-center">
+                    <CardHeader className="items-center">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <BrainCircuit className="h-6 w-6" />
+                      </div>
+                      <CardTitle>AI Without the Hype</CardTitle>
                     </CardHeader>
                     <CardContent className="text-muted-foreground">Our AI reads the boring stuff like earnings transcripts, SEC filings, and dense reports. It translates them into plain English risk notes. It is not a magic money machine. It is an analyst that never sleeps.</CardContent>
                   </Card>

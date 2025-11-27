@@ -145,18 +145,20 @@ export default async function LandingPage() {
           {/* Performance Tracker Section */}
           <section className="py-16 sm:py-24 bg-muted/50">
              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center max-w-3xl mx-auto mb-12">
+                <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
                     <h2 className="text-3xl font-bold font-headline">Live Performance. No Hiding.</h2>
-                    <p className="mt-4 text-muted-foreground">
+                    <p className="mt-4 max-w-3xl mx-auto text-muted-foreground">
                         Our models track the performance of every Rip. We show the wins, the losses, and the volatility in between. This is a live look at our data-driven edge. Past performance does not guarantee future results.
                     </p>
-                    <p className="mt-4 text-xs text-muted-foreground">
-                      Performance tracking began on 10/21/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and daily until the contract expires.
+                    <div className="mt-8">
+                        <Suspense fallback={<PerformanceTrackerSkeleton />}>
+                            <PerformanceTracker />
+                        </Suspense>
+                    </div>
+                    <p className="mt-8 text-xs text-muted-foreground max-w-xl mx-auto">
+                        Performance tracking began on 10/21/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and daily until the contract expires.
                     </p>
-                </div>
-                <Suspense fallback={<PerformanceTrackerSkeleton />}>
-                    <PerformanceTracker />
-                </Suspense>
+                </Card>
             </div>
           </section>
 

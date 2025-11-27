@@ -2,5 +2,6 @@
   "/about/page": "app/about/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/options/call-setups/page": "app/options/call-setups/page.js",
+  "/options/put-hedges/page": "app/options/put-hedges/page.js",
   "/page": "app/page.js"
 }

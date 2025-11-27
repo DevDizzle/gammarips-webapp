@@ -117,35 +117,33 @@ export default async function PutSetupsPage() {
                 <CardContent className="space-y-6">
                     <div className="flex items-start gap-4">
                         <div className="flex-shrink-0 flex flex-col items-center gap-2">
-                           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                                <Filter className="h-6 w-6 text-primary" />
+                           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary text-xl">
+                                1
                            </div>
-                           <div className="h-full w-px bg-border"></div>
                         </div>
                         <div>
-                            <h3 className="font-semibold">1. Smart Screening</h3>
-                            <p className="text-muted-foreground">We identify liquid Put options (10-60 days to expiry) that are slightly out-of-the-money and meet strict criteria for volume, open interest, and bid-ask spreads, ensuring viability.</p>
+                            <h3 className="font-semibold">Identify Weak Stocks First</h3>
+                            <p className="text-muted-foreground">We start by identifying stocks with bearish conviction. We target companies with low AI scores (e.g., Score < 0.2) or those facing significant negative catalysts, such as poor earnings or sector-wide weakness.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
                         <div className="flex-shrink-0 flex flex-col items-center gap-2">
-                           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                                <Bot className="h-6 w-6 text-primary" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary text-xl">
+                                2
                            </div>
-                           <div className="h-full w-px bg-border"></div>
                         </div>
                         <div>
-                            <h3 className="font-semibold">2. AI Quality Check</h3>
-                            <p className="text-muted-foreground">Our AI rates the "setup quality" by checking for alignment with a stock's bearish trend, assessing volatility pricing for fairness, and considering time decay risks.</p>
+                            <h3 className="font-semibold">The "Hedge Hunter" Protocol</h3>
+                            <p className="text-muted-foreground">For these weak stocks, we deploy our "Hedge Hunter" logic. We look for Put contracts (10-60 days to expiry) with fair volatility pricing and sufficient liquidity to act as effective hedges or directional bets against downward momentum.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
-                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 flex-shrink-0">
-                            <BarChart className="h-6 w-6 text-primary" />
+                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary text-xl flex-shrink-0">
+                            3
                         </div>
                         <div>
-                            <h3 className="font-semibold">3. Stock Outlook Confirmation</h3>
-                            <p className="text-muted-foreground">Only Put rippers rated "Strong" by the AI on stocks with a Bearish overall outlook ("Strongly" or "Moderately Bearish") are featured. This ensures our Put rippers combine solid contract specifics with a negative underlying forecast.</p>
+                            <h3 className="font-semibold">AI Validation & Ranking</h3>
+                            <p className="text-muted-foreground">Our AI validates the setup, ensuring the contract's risk profile is reasonable. It boosts scores for Puts on stocks showing strong bearish trends and flags any unusual volume, ensuring only the highest-conviction hedges and bearish plays make the list.</p>
                         </div>
                     </div>
                 </CardContent>

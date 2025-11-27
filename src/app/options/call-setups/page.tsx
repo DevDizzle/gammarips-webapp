@@ -149,7 +149,7 @@ export default async function CallSetupsPage() {
                             3
                         </div>
                         <div>
-                            <h3 className="font-semibold">AI Validation &amp; Ranking</h3>
+                            <h3 className="font-semibold">AI Validation & Ranking</h3>
                             <p className="text-muted-foreground">Finally, our AI validates the trade setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakouts while enforcing strict safety measures for standard setups. It also boosts scores for "Unusual Options Activity" (volume &gt; open interest), ensuring only the most explosive opportunities make the daily dashboard.</p>
                         </div>
                     </div>
@@ -162,7 +162,7 @@ export default async function CallSetupsPage() {
                     <CardContent className="p-6">
                         <h3 className="text-xl font-semibold font-headline">Unlock the Full Rippers Playbook</h3>
                         <p className="text-muted-foreground mt-2 mb-4 max-w-md mx-auto">
-                            Daily Rippers are the ideas. Rippers are the traders who actually use them. Join GammaRips to unlock the full list, the dashboard, and the AI breakdowns behind every setup.
+                            Join GammaRips to access the full list, the dashboard, and the AI breakdowns behind every setup.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">

@@ -162,7 +162,7 @@ export default async function PutSetupsPage() {
                     <CardContent className="p-6">
                         <h3 className="text-xl font-semibold font-headline">Unlock the Full Rippers Playbook</h3>
                         <p className="text-muted-foreground mt-2 mb-4 max-w-md mx-auto">
-                            Daily Rippers are the ideas. Rippers are the traders who actually use them. Join GammaRips to unlock the full list, the dashboard, and the AI breakdowns behind every setup.
+                            Join GammaRips to access the full list, the dashboard, and the AI breakdowns behind every setup.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">

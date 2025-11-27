@@ -86,7 +86,7 @@ export default async function LandingPage() {
               One Simple Playbook. Daily Options Rippers.
             </h1>
             <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-              GammaRips uses AI to hunt for rippers—high-conviction options ideas on stocks that are ready to move. You get a tight daily list of call & put rippers and clean AI explanations. No tourist signals. No 20-strategy zoo. Just the heat.
+              GammaRips uses AI to hunt for rippers- high-conviction options ideas on stocks that are ready to move. You get a tight daily list of call & put rippers and clean AI explanations. No tourist signals. No 20-strategy zoo. Just the heat.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
                <Suspense>
@@ -166,7 +166,7 @@ export default async function LandingPage() {
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">1</div>
                   <h3 className="mt-6 text-xl font-semibold">Grab Today’s Rippers</h3>
                   <p className="mt-2 text-muted-foreground">
-                    Every session, GammaRips scans the Russell 1000 and surfaces a tight list of Call & Put Rippers—ideas where the stock, volatility, and options structure all line up. No 500-row table, no 20 strategies. Just the handful worth a look.
+                    Every session, GammaRips scans the Russell 1000 and surfaces a tight list of Call & Put Rippers- ideas where the stock, volatility, and options structure all line up. No 500-row table, no 20 strategies. Just the handful worth a look.
                   </p>
                 </div>
                 <div className="text-center">
@@ -204,7 +204,7 @@ export default async function LandingPage() {
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3"><Zap className="text-primary"/>Scores Thousands of Contracts</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-muted-foreground">It looks at liquidity, spreads, time to expiry, and how the option moves when the stock moves—so you’re not stuck digging through junk contracts.</CardContent>
+                    <CardContent className="text-muted-foreground">It looks at liquidity, spreads, time to expiry, and how the option moves when the stock moves- so you’re not stuck digging through junk contracts.</CardContent>
                   </Card>
                   <Card className="bg-card/50">
                     <CardHeader>
@@ -234,13 +234,13 @@ export default async function LandingPage() {
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3"><Search className="text-primary"/>Reads the Boring Stuff</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-muted-foreground">Earnings call transcripts, SEC filings, headlines—things most people pretend to read. The model condenses that into a directional view and risk notes you can skim.</CardContent>
+                    <CardContent className="text-muted-foreground">Earnings call transcripts, SEC filings, headlines- things most people pretend to read. The model condenses that into a directional view and risk notes you can skim.</CardContent>
                   </Card>
                    <Card className="bg-card/50">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3"><BrainCircuit className="text-primary"/>Translates Data Into Plain Language</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-muted-foreground">You get: “Bullish bias with elevated volatility; earnings just passed; watch [X] level as a line in the sand.”</CardContent>
+                    <CardContent className="text-muted-foreground">“Bullish bias with elevated volatility; earnings just passed; watch [X] level as a line in the sand.”</CardContent>
                   </Card>
                    <Card className="bg-card/50">
                     <CardHeader>

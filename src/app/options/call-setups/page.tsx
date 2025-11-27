@@ -11,7 +11,7 @@ import type { Winner } from '@/lib/firebase-admin';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Daily Call Setups on Russell 1000 Stocks',
+  title: 'Daily Call Rips on Russell 1000 Stocks',
   description: 'Browse our full list of AI-scored bullish call option setups on Russell 1000 stocks. Updated daily with fresh analysis.',
 };
 
@@ -42,23 +42,23 @@ export default async function CallSetupsPage() {
         <div className="space-y-8">
             <header className="text-center">
                 <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-                    Daily Call Setups
+                    Daily Call Rips
                 </h1>
                 <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                    This is a preview of our complete, daily-updated list of bullish Call option setups for Russell 1000 stocks, scored by our AI engine.
+                    This is a preview of our daily bullish Rips. These are Call options on Russell 1000 stocks scored by our AI engine. We hunt for upside momentum.
                 </p>
                  <Button asChild variant="link" className="mt-2">
                     <Link href="/options/put-hedges">
-                        Looking for bearish ideas? View Put Setups <ArrowRight className="ml-2 h-4 w-4" />
+                        Looking for downside? View Put Rips <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                 </Button>
             </header>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Today's Top Call Setups</CardTitle>
+                    <CardTitle>Today's Top Call Rips</CardTitle>
                     <CardDescription>
-                       A preview of the top-scoring bullish Call setups from today's market analysis. Click any setup to see the full dashboard.
+                       A sample of the top-scoring bullish Rips from today's market analysis. Click any card to unlock the full dashboard.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -119,7 +119,7 @@ export default async function CallSetupsPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>How We Find Top Call Setups</CardTitle>
+                    <CardTitle>How We Find Call Rips</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="flex items-start gap-4">
@@ -130,7 +130,7 @@ export default async function CallSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">Identify High-Conviction Stocks First</h3>
-                            <p className="text-muted-foreground">Instead of scanning for random option activity, we start by identifying the market's strongest stocks. We target the Top 20% of companies based on our proprietary AI conviction score, or those with a massive breaking news catalyst (Score &gt; 0.9).</p>
+                            <p className="text-muted-foreground">We do not scan for random option activity. We start by identifying the market's strongest stocks. We target the top 20% of companies based on our proprietary AI conviction score or those with a massive breaking news catalyst.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -141,7 +141,7 @@ export default async function CallSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">The "Rip Hunter" Protocol</h3>
-                            <p className="text-muted-foreground">For these elite high-conviction stocks, we deploy our "Rip Hunter" logic. We hunt for aggressive, high-gamma contracts (3-60 days to expiry) and "Lotto" setups (up to 25% out-of-the-money) that are primed for explosive acceleration, prioritizing directional potential over rigid safety filters.</p>
+                            <p className="text-muted-foreground">For these elite stocks, we deploy the Rip Hunter logic. We hunt for aggressive, high-gamma contracts with 3 to 60 days to expiry. We look for deep out-of-the-money setups that are primed for explosive acceleration. We prioritize directional potential over rigid safety filters.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -150,7 +150,7 @@ export default async function CallSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">AI Validation & Ranking</h3>
-                            <p className="text-muted-foreground">Finally, our AI validates the trade setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakouts while enforcing strict safety measures for standard setups. It also boosts scores for "Unusual Options Activity" (volume &gt; open interest), ensuring only the most explosive opportunities make the daily dashboard.</p>
+                            <p className="text-muted-foreground">Finally, our AI validates the trade. It applies a dynamic safety check. It relaxes liquidity rules for high-conviction breakouts to catch them early but enforces strict filters for standard setups. It boosts scores for unusual options activity where volume exceeds open interest. Only the most explosive opportunities make the daily list.</p>
                         </div>
                     </div>
                 </CardContent>
@@ -160,16 +160,16 @@ export default async function CallSetupsPage() {
             <div className="text-center">
                 <Card className="inline-block bg-primary/10 border-primary/20">
                     <CardContent className="p-6">
-                        <h3 className="text-xl font-semibold font-headline">Unlock the Full Rippers Playbook</h3>
+                        <h3 className="text-xl font-semibold font-headline">Unlock the Full Call List</h3>
                         <p className="text-muted-foreground mt-2 mb-4 max-w-md mx-auto">
-                            Join GammaRips to access the full list, the dashboard, and the AI breakdowns behind every setup.
+                            Join GammaRips to access the full daily list. Get the interactive dashboard and the AI breakdowns behind every trade.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">
-                                Become a Ripper – $19/mo <ArrowRight className="ml-2 h-5 w-5"/>
+                                Become a Ripper ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
                             </Link>
                         </Button>
-                        <p className="text-xs text-muted-foreground mt-3">Billed monthly, cancel anytime. GammaRips is an AI-powered options research tool, not a broker or advisor.</p>
+                        <p className="text-xs text-muted-foreground mt-3">Billed monthly. Cancel anytime. GammaRips is an AI-powered options research tool, not a broker or advisor.</p>
                     </CardContent>
                 </Card>
             </div>

@@ -1,8 +1,9 @@
+
 import Link from "next/link";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Bot, Gem, Target, Github, Scale, Shield, LineChart, Star, Users, XCircle } from "lucide-react";
+import { ArrowRight, CheckCircle, Bot, Gem, Target, Github, Scale, Shield, LineChart, Star, Users, XCircle, Search, BrainCircuit, Zap } from "lucide-react";
 import { UserNav } from "@/components/auth/user-nav";
 import HomePageClientContent from "./home-page-client-content";
 import Faq, { faqs } from "@/components/landing/faq";
@@ -139,108 +140,168 @@ export default async function LandingPage() {
             <SignalsPreview />
           </Suspense>
 
-          {/* Process Section */}
+          {/* New Process Section */}
           <section className="py-16 sm:py-24 bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center max-w-3xl mx-auto">
-                <h2 className="text-3xl font-bold font-headline">Go From Data Overload to Actionable Insight in Minutes</h2>
+                <h2 className="text-3xl font-bold font-headline">How Daily Rippers Fit Into Your Trading Day</h2>
               </div>
               <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">1</div>
-                  <h3 className="mt-6 text-xl font-semibold">Get Daily Call & Put Rippers</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Grab Today’s Rippers</h3>
                   <p className="mt-2 text-muted-foreground">
-                    Get our top-ranked Call and Put rippers for the Russell 1000, delivered to your dashboard daily. We find the signals so you can focus on the strategy.
+                    Every session, GammaRips scans the Russell 1000 and surfaces a tight list of Call & Put Rippers—ideas where the stock, volatility, and options structure all line up. No 500-row table, no 20 strategies. Just the handful worth a look.
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">2</div>
-                  <h3 className="mt-6 text-xl font-semibold">Understand with an AI Stock Briefing</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Skim the “Why” in 60 Seconds</h3>
                   <p className="mt-2 text-muted-foreground">
-                    Go beyond the signal. Understand the "why" with our AI Analyst Briefing, which synthesizes company filings, earnings calls, and technicals into a clear summary. We provide the shortlist; you decide the trade.
+                    Each Ripper comes with a fast AI Briefing: what’s driving the setup (trend, earnings, catalysts, risk flags), and where it can break. You get the story, not just a ticker and a Greek salad.
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">3</div>
-                  <h3 className="mt-6 text-xl font-semibold">Manage Your Own Risk & Exits</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Run Your Own Playbook</h3>
                   <p className="mt-2 text-muted-foreground">
-                    GammaRips provides research and data-driven setups. As an active trader, you maintain full control over your risk management, trade execution, and exit strategy.
+                    We don’t touch your orders. GammaRips is research only. You decide entries, size, stops, and exits. We hunt for potential rips; you decide how much heat you want to put on.
                   </p>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Features Section */}
+          {/* New Features Section */}
           <section className="py-16 sm:py-24">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center max-w-3xl mx-auto">
-                <h2 className="text-3xl font-bold font-headline">Your Complete Toolkit for Options Research</h2>
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+              
+              {/* What the Engine Does */}
+              <div>
+                <div className="text-center max-w-3xl mx-auto">
+                  <h2 className="text-3xl font-bold font-headline">What the GammaRips Engine Actually Does</h2>
+                  <p className="mt-4 text-muted-foreground">
+                    Forget buzzwords. Here’s the job description for the engine under the hood:
+                  </p>
+                </div>
+                <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <Card className="bg-card/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-3"><Zap className="text-primary"/>Scores Thousands of Contracts</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-muted-foreground">It looks at liquidity, spreads, time to expiry, and how the option moves when the stock moves—so you’re not stuck digging through junk contracts.</CardContent>
+                  </Card>
+                  <Card className="bg-card/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-3"><Target className="text-primary"/>Leans Stock-First, Not Lotto-First</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-muted-foreground">We start with high-conviction stocks and then pair them with contracts that make sense for that move. No random “0DTE YOLO” slop.</CardContent>
+                  </Card>
+                  <Card className="bg-card/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-3"><CheckCircle className="text-primary"/>Keeps the List Short on Purpose</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-muted-foreground">More noise ≠ more edge. GammaRips is built to give you fewer, better Rippers so you can actually execute instead of scrolling yourself to death.</CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              {/* AI Co-Pilot */}
+              <div>
+                <div className="text-center max-w-3xl mx-auto">
+                  <h2 className="text-3xl font-bold font-headline">Your AI Co-Pilot (Not Your Broker)</h2>
+                  <p className="mt-4 text-muted-foreground">
+                    Yes, there’s real AI in here. No, it’s not a magic money machine.
+                  </p>
+                </div>
+                <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                   <Card className="bg-card/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-3"><Search className="text-primary"/>Reads the Boring Stuff</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-muted-foreground">Earnings call transcripts, SEC filings, headlines—things most people pretend to read. The model condenses that into a directional view and risk notes you can skim.</CardContent>
+                  </Card>
+                   <Card className="bg-card/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-3"><BrainCircuit className="text-primary"/>Translates Data Into Plain Language</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-muted-foreground">You get: “Bullish bias with elevated volatility; earnings just passed; watch [X] level as a line in the sand.”</CardContent>
+                  </Card>
+                   <Card className="bg-card/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-3"><XCircle className="text-primary"/>Never Presses the Buy Button</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-muted-foreground">GammaRips doesn’t execute trades. It’s there to inform your decisions, not replace your judgment.</CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              {/* One Screen */}
+              <div>
+                <div className="text-center max-w-3xl mx-auto">
+                  <h2 className="text-3xl font-bold font-headline">One Screen to See Where It All Lines Up</h2>
+                   <p className="mt-4 text-muted-foreground">
+                    Think of the dashboard as your “is this really worth my time?” filter.
+                  </p>
+                </div>
+                <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="bg-card p-6 rounded-lg">
+                      <div className="flex items-start gap-4">
+                          <div className="flex-shrink-0 mt-1"><Gem size={24} className="text-primary" /></div>
+                          <div>
+                              <h3 className="text-lg font-semibold">Conviction + Options in One View</h3>
+                              <p className="text-muted-foreground text-sm">You see where strong stock conviction and quality options contracts overlap—that’s where Rippers are born.</p>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="bg-card p-6 rounded-lg">
+                      <div className="flex items-start gap-4">
+                          <div className="flex-shrink-0 mt-1"><Zap size={24} className="text-primary" /></div>
+                          <div>
+                              <h3 className="text-lg font-semibold">Fast Drill-Downs, No Platform Hopping</h3>
+                              <p className="text-muted-foreground text-sm">Quickly flip between call and put Rippers, zoom into a single name, or step back to see how the whole list behaved.</p>
+                          </div>
+                      </div>
+                  </div>
+                   <div className="bg-card p-6 rounded-lg lg:col-span-2">
+                      <div className="flex items-start gap-4">
+                          <div className="flex-shrink-0 mt-1"><LineChart size={24} className="text-primary" /></div>
+                          <div>
+                              <h3 className="text-lg font-semibold">Live Stats on Every Ripper</h3>
+                              <p className="text-muted-foreground text-sm">We track how signals perform after they’re published, not just when they look pretty. You see wins, losses, and the boring in-between.</p>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Built on Receipts */}
+              <div className="text-center max-w-4xl mx-auto">
+                <h2 className="text-3xl font-bold font-headline">Built on Receipts, Not Magic</h2>
                 <p className="mt-4 text-muted-foreground">
-                  Our models score thousands of options contracts daily based on liquidity, volatility, and alignment with the underlying stock's trend. You get a filtered list of the highest-scoring opportunities, saving you hours of research.
+                  You don’t need our source code, but you do deserve to know how this thing thinks.
                 </p>
-              </div>
-              <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="bg-card p-6 rounded-lg">
-                    <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 mt-1"><Bot size={24} className="text-primary" /></div>
-                        <div>
-                            <h3 className="text-lg font-semibold">Your Personal AI Analyst</h3>
-                            <p className="text-muted-foreground text-sm">Forget spending hours reading SEC filings and earnings transcripts. Our AI does the heavy lifting, giving you a clear, easy-to-read rationale for every stock's outlook, including risks, catalysts, and key support levels.</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="bg-card p-6 rounded-lg">
-                     <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 mt-1"><Gem size={24} className="text-primary" /></div>
-                        <div>
-                            <h3 className="text-lg font-semibold">The Confluence Dashboard</h3>
-                            <p className="text-muted-foreground text-sm">See where our data aligns. Our dashboard instantly highlights stocks that have both a strong bullish/bearish AI rating and a high-scoring options setup. It's the ultimate at-a-glance view of the market's strongest signals.</p>
-                        </div>
-                    </div>
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                  <Card className="bg-card/50">
+                    <CardHeader><CardTitle className="flex items-center gap-2"><Scale className="h-6 w-6 text-primary"/> Methodology</CardTitle></CardHeader>
+                    <CardContent><p className="text-muted-foreground text-sm">Stock-first scoring, options quality filters, and clear definitions of what a "Ripper" is.</p></CardContent>
+                  </Card>
+                  <Card className="bg-card/50">
+                    <CardHeader><CardTitle className="flex items-center gap-2"><Github className="h-6 w-6 text-primary"/> Transparent Performance</CardTitle></CardHeader>
+                    <CardContent><p className="text-muted-foreground text-sm">We track Rippers from the moment they go live. No cherry-picked case studies, no magic backtests.</p></CardContent>
+                  </Card>
+                  <Card className="bg-card/50">
+                    <CardHeader><CardTitle className="flex items-center gap-2"><Shield className="h-6 w-6 text-primary"/> Educational Use Only</CardTitle></CardHeader>
+                    <CardContent><p className="text-muted-foreground text-sm">GammaRips is educational research, not financial advice. Options are risky and can go to zero. Past performance does not guarantee future results.</p></CardContent>
+                  </Card>
                 </div>
               </div>
+
             </div>
           </section>
           
-          {/* Trust & Responsibility Section */}
-          <section className="py-16 sm:py-24 bg-muted/50">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold font-headline">Built on Transparency. Powered by Open-Source AI.</h2>
-              <p className="mt-4 text-muted-foreground">
-                We believe in showing our work. The core AI engine that powers GammaRips is open-source. We invite you to explore the code, understand our methodology, and see exactly how we turn complex data into market insights. Your trust is our priority.
-              </p>
-              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                <Card className="bg-background/50">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Scale className="h-6 w-6 text-primary"/> Sourced Data</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground text-sm">We don't guess. Our AI synthesizes data directly from SEC filings, earnings calls, and financial statements so you can see the source of the analysis.</p>
-                  </CardContent>
-                </Card>
-                <Card className="bg-background/50">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Github className="h-6 w-6 text-primary"/> Open-Source Engine</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground text-sm">The core scoring engine that powers GammaRips is open-source. We believe in showing our work and invite you to <a href="https://github.com/DevDizzle/profitscout-engine" target="_blank" rel="noopener noreferrer" className="underline">review our methodology</a>.</p>
-                  </CardContent>
-                </Card>
-                <Card className="bg-background/50">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Shield className="h-6 w-6 text-primary"/> Educational Use</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground text-sm">GammaRips is an educational research tool, not financial advice. We provide data-driven insights to help you make more informed decisions. Past performance does not guarantee future results.</p>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </section>
-
           {/* Performance Tracker Section */}
-          <section className="py-16 sm:py-24">
+          <section className="py-16 sm:py-24 bg-muted/50">
              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center max-w-3xl mx-auto mb-12">
                     <h2 className="text-3xl font-bold font-headline">See Our Results in Action</h2>
@@ -255,7 +316,7 @@ export default async function LandingPage() {
           </section>
 
            {/* Membership/Pricing Section */}
-          <section className="py-16 sm:py-24 bg-muted/50">
+          <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
                     <h2 className="text-3xl sm:text-4xl font-bold font-headline">Get the Daily Playbook</h2>
@@ -297,7 +358,7 @@ export default async function LandingPage() {
           </section>
           
           {/* FAQ Section */}
-          <section className="py-16 sm:py-24">
+          <section className="py-16 sm:py-24 bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
                 <div className="text-center">
                     <h2 className="text-3xl font-bold font-headline">Frequently Asked Questions</h2>

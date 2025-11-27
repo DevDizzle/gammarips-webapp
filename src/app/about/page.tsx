@@ -1,5 +1,4 @@
 
-
 import type { Metadata } from 'next';
 import { FileText, Mic, BarChart3, TrendingUp, Shield, CheckCircle2, ArrowRight, Target, Gem, Bot, Newspaper, Scale, Github, BookOpen } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,50 +17,50 @@ const features = [
   {
     icon: <FileText className="h-8 w-8 text-primary" />,
     title: 'Company Filings',
-    description: 'We analyze SEC 10-K and 10-Q filings to assess financial health, long-term strategy, and potential risks identified by management.',
+    description: 'We analyze SEC 10-K and 10-Q filings. We assess financial health, long-term strategy, and the risks hidden in the fine print.',
   },
   {
     icon: <Mic className="h-8 w-8 text-primary" />,
     title: 'Earnings Call Transcripts',
-    description: 'We go beyond the numbers to evaluate management tone, forward-looking guidance, and the conviction behind their answers to analyst questions.',
+    description: 'We go beyond the numbers. We evaluate management tone and the conviction behind their answers to analyst questions.',
   },
   {
     icon: <BarChart3 className="h-8 w-8 text-primary" />,
     title: 'Financial Statements',
-    description: 'We scrutinize the balance sheet, income statement, and cash flow trends to understand a company\'s performance, stability, and fundamental strength.',
+    description: 'We scrutinize the balance sheet, income statement, and cash flow. We look for fundamental strength and stability.',
   },
   {
     icon: <TrendingUp className="h-8 w-8 text-primary" />,
     title: 'Price & Technicals',
-    description: 'Our models analyze price trends, volume, momentum, and key support/resistance levels to understand what\'s moving the market right now.',
+    description: 'Our models analyze price trends, volume, and momentum. We identify key levels to understand what is moving the market right now.',
   },
   {
       icon: <Scale className="h-8 w-8 text-primary" />,
       title: 'Options Chain Analysis',
-      description: 'We process daily options chain data to identify contracts with ideal liquidity, volatility, and risk/reward profiles, scoring setups based on these criteria for both Calls and Puts.'
+      description: 'We process daily options data. We hunt for contracts with ideal liquidity and gamma profiles. We score setups for both Calls and Puts.',
   },
   {
     icon: <Newspaper className="h-8 w-8 text-primary" />,
     title: 'News & Sentiment',
-    description: 'Our system tracks recent news and market sentiment to identify catalysts that could introduce risks or create new opportunities.',
+    description: 'Our system tracks recent headlines. We identify catalysts that could introduce risk or ignite a move.',
   },
 ];
 
 const benefits = [
     {
         icon: <Bot size={24} className="text-primary" />,
-        title: "AI-Powered Market Analysis",
-        description: "Instead of a simple rating, you get a nuanced, five-tier analytical view for each stock (from \"Strongly Bullish\" to \"Strongly Bearish\"), complete with a concise summary of the key drivers behind the analysis."
+        title: "AI-Powered Outlooks",
+        description: "Instead of a simple rating, you get a nuanced view for each stock. From \"Strongly Bullish\" to \"Strongly Bearish.\" We include a concise summary of the drivers behind the score."
     },
     {
         icon: <Target size={24} className="text-primary" />,
-        title: "Daily Rippers (Highest-Scoring Options Ideas)",
-        description: "A filtered list of the highest-scoring Call and Put options based on our data model, allowing you to identify potential Rippers that align with your market view."
+        title: "Daily Rips",
+        description: "This is the core product. It is a filtered list of the highest-scoring Call and Put options based on our model. We find the setups. You run the trade."
     },
     {
         icon: <Gem size={24} className="text-primary" />,
         title: "The Confluence Dashboard",
-        description: "A daily snapshot of stocks that have a strong bullish or bearish analysis and also feature a high-scoring Ripper on our options scanner, highlighting where our stock and options data models align. Every Ripper is tracked from the moment it’s published, so you can see how ideas actually played out over time-not just in backtests."
+        description: "This is a snapshot where our stock model and our options model align. We track every Rip from the moment it is published. You can see how ideas actually played out over time. This is live data, not just a backtest."
     },
 ]
 
@@ -89,7 +88,7 @@ export default function AboutPage() {
             About GammaRips
           </h1>
           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            GammaRips exists to give active options traders fewer, better ideas-not more noise. Our mission is to turn complex fundamentals, options data, and market context into a small, focused list of “Rippers” you can actually act on, with clear stats and clear risks.
+            GammaRips exists to give active options traders fewer, better ideas. We do not add to the noise. Our mission is to turn complex fundamentals, options data, and market context into a small, focused list of Rips. You get clear stats, clear risks, and ideas you can actually act on.
           </p>
           <a href="#how-it-works" className="mt-6 inline-block text-sm font-semibold text-primary hover:underline">
             See how it works &darr;
@@ -103,7 +102,7 @@ export default function AboutPage() {
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">How GammaRips Works</h2>
             <p className="mt-3 max-w-3xl mx-auto text-muted-foreground">
-              We use state-of-the-art AI to analyze thousands of data points and synthesize a balanced, forward-looking view of every asset we cover. Then our engine scores the options chain to surface a short list of potential Rippers-call and put contracts where stock conviction, liquidity, and risk/reward line up.
+              We use AI to analyze thousands of data points. We synthesize a balanced view of every asset we cover. Then our engine scores the options chain to surface a short list of potential Rips. These are contracts where stock conviction, liquidity, and risk/reward all line up.
             </p>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -127,8 +126,8 @@ export default function AboutPage() {
         <section>
           <Card className="border-primary/50 bg-primary/5">
              <CardHeader>
-                <p className="text-sm font-semibold text-primary">Result</p>
-                <CardTitle className="font-headline text-3xl">What You Receive</CardTitle>
+                <p className="text-sm font-semibold text-primary">The Output</p>
+                <CardTitle className="font-headline text-3xl">What You Get</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="space-y-6">
@@ -144,8 +143,8 @@ export default function AboutPage() {
                      <div className="flex items-start gap-4">
                         <div className="flex-shrink-0 mt-1"><CheckCircle2 className="h-6 w-6 text-primary" /></div>
                         <div>
-                            <h3 className="text-lg font-semibold">An Interactive Dashboard</h3>
-                            <p className="text-muted-foreground">A powerful, user-friendly interface to explore all our data, compare stocks, and support your personal research process.</p>
+                            <h3 className="text-lg font-semibold">Interactive Tools</h3>
+                            <p className="text-muted-foreground">Access a powerful interface to explore our data and compare stocks. Use it to support your own research process.</p>
                         </div>
                     </div>
                 </div>
@@ -158,17 +157,17 @@ export default function AboutPage() {
         <section>
           <Card className="text-center">
             <CardHeader>
-              <CardTitle className="font-headline text-2xl">Our Methodology, In Plain English</CardTitle>
+              <CardTitle className="font-headline text-2xl">No Secret Sauce. Just Logic.</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-4 max-w-xl mx-auto">
-                We believe in transparency. Instead of hiding behind “secret sauce,” we explain how the GammaRips engine thinks-stock-first scoring, options quality filters, risk flags, and how we define a “Ripper.”
+                We believe in transparency. We explain exactly how the GammaRips engine thinks. We show you the stock-first scoring, the options quality filters, and the risk flags. We define exactly what makes a Rip.
               </p>
               <Button asChild size="lg" variant="outline">
-                <a href="/options/call-setups">
+                <Link href="/options/call-setups">
                   <BookOpen className="mr-2 h-5 w-5"/>
-                  Methodology Overview
-                </a>
+                  Read the full Methodology Overview
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -179,13 +178,13 @@ export default function AboutPage() {
         <section>
              <Card className="text-center bg-primary/10 border-primary/20">
                 <CardHeader>
-                    <CardTitle className="font-headline text-2xl">Ready to Get Started?</CardTitle>
+                    <CardTitle className="font-headline text-2xl">Ready to Start?</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Go from analysis to informed decision. Instantly access today's data-driven Call and Put Rippers, backed by AI scores and daily market data.</p>
+                    <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Go from analysis to informed decision. Instantly access today's data-driven Call and Put Rips.</p>
                     <Button asChild size="lg">
-                        <Link href="/">
-                            Start Your Research <ArrowRight className="ml-2 h-5 w-5"/>
+                        <Link href="/dashboard">
+                            Become a Ripper ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
                         </Link>
                     </Button>
                 </CardContent>
@@ -218,7 +217,7 @@ export default function AboutPage() {
                 <h3 className="text-lg font-semibold text-foreground">Important Disclaimer</h3>
             </div>
             <p className="mt-2 text-sm text-muted-foreground">
-              GammaRips provides educational and informational content only-it is not financial advice. All trading and investment decisions involve risk. Always conduct your own research and consider consulting a licensed financial advisor before making investment decisions.
+              GammaRips provides educational and informational content only. It is not financial advice. All trading and investment decisions involve risk. Always conduct your own research and consider consulting a licensed financial advisor before making investment decisions.
             </p>
           </aside>
         </section>

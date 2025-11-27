@@ -11,7 +11,7 @@ import type { Winner } from '@/lib/firebase-admin';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Daily Bearish Put Setups & Hedges on Russell 1000 Stocks',
+  title: 'Daily Put Rips & Hedges on Russell 1000 Stocks',
   description: 'Browse our full list of AI-scored bearish put option setups on Russell 1000 stocks. Ideal for hedging or speculative plays. Updated daily.',
 };
 
@@ -42,23 +42,23 @@ export default async function PutSetupsPage() {
         <div className="space-y-8">
             <header className="text-center">
                 <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-                    Daily Bearish Put Setups
+                    Daily Put Rips
                 </h1>
                 <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                    This is a preview of our complete, daily-updated list of bearish Put option setups, ideal for hedging or directional plays.
+                    This is a preview of our daily bearish Rips. These are Put options on Russell 1000 stocks scored by our AI engine. We hunt for weakness and downside momentum.
                 </p>
                 <Button asChild variant="link" className="mt-2">
                     <Link href="/options/call-setups">
-                        Looking for bullish ideas? View Call Setups <ArrowRight className="ml-2 h-4 w-4" />
+                        Looking for upside? View Call Rips <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                 </Button>
             </header>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Today's Top Put Setups</CardTitle>
+                    <CardTitle>Today's Top Put Rips</CardTitle>
                     <CardDescription>
-                       A preview of the top-scoring bearish Put setups from today's analysis. Click any setup to see the full dashboard.
+                       A sample of the top-scoring bearish Rips from today's analysis. Click any card to unlock the full dashboard.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -119,7 +119,7 @@ export default async function PutSetupsPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>How We Find Top Put Setups</CardTitle>
+                    <CardTitle>How We Find Put Rips</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="flex items-start gap-4">
@@ -129,8 +129,8 @@ export default async function PutSetupsPage() {
                            </div>
                         </div>
                         <div>
-                            <h3 className="font-semibold">Identify Vulnerable Stocks First</h3>
-                            <p className="text-muted-foreground">Instead of scanning for random put activity, we start by identifying the market's weakest links. We target the Bottom 20% of companies based on our proprietary AI conviction score, or those facing a severe negative catalyst (e.g. bad earnings, lawsuits).</p>
+                            <h3 className="font-semibold">Identify Weakness First</h3>
+                            <p className="text-muted-foreground">We do not scan for random put activity. We start by identifying the market's weakest links. We target the bottom 20% of companies based on our proprietary AI conviction score or those facing a severe negative catalyst like bad earnings or lawsuits.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -141,7 +141,7 @@ export default async function PutSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">The "Hedge Hunter" Protocol</h3>
-                            <p className="text-muted-foreground">For these high-conviction bearish targets, we deploy our "Hedge Hunter" logic. We hunt for aggressive, high-gamma Put contracts (3-60 days to expiry) and speculative setups (up to 25% out-of-the-money) that are primed for rapid value expansion during a sell-off, prioritizing downside acceleration over safe hedging structures.</p>
+                            <p className="text-muted-foreground">For these vulnerable targets, we deploy the Hedge Hunter logic. We hunt for aggressive, high-gamma Put contracts with 3 to 60 days to expiry. We look for deep out-of-the-money setups that are primed for rapid value expansion during a sell-off. We prioritize downside acceleration over safety.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -149,8 +149,8 @@ export default async function PutSetupsPage() {
                             3
                         </div>
                         <div>
-                            <h3 className="font-semibold">AI Validation &amp; Ranking</h3>
-                            <p className="text-muted-foreground">Finally, our AI validates the setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakdowns while enforcing strict safety measures for standard defensive plays. It also boosts scores for "Unusual Put Activity" (volume &gt; open interest), ensuring only the most actionable downside plays make the daily list.</p>
+                            <h3 className="font-semibold">AI Validation & Ranking</h3>
+                            <p className="text-muted-foreground">Finally, our AI validates the trade. It applies a dynamic safety check. It relaxes liquidity rules for high-conviction breakdowns to catch the move early but enforces strict filters for standard defensive plays. It boosts scores for unusual put activity where volume exceeds open interest. Only the most actionable downside plays make the daily list.</p>
                         </div>
                     </div>
                 </CardContent>
@@ -160,16 +160,16 @@ export default async function PutSetupsPage() {
             <div className="text-center">
                  <Card className="inline-block bg-primary/10 border-primary/20">
                     <CardContent className="p-6">
-                        <h3 className="text-xl font-semibold font-headline">Unlock the Full Rippers Playbook</h3>
+                        <h3 className="text-xl font-semibold font-headline">Unlock the Full Put List</h3>
                         <p className="text-muted-foreground mt-2 mb-4 max-w-md mx-auto">
-                            Join GammaRips to access the full list, the dashboard, and the AI breakdowns behind every setup.
+                            Join GammaRips to access the full daily list. Get the interactive dashboard and the AI breakdowns behind every trade.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">
-                                Become a Ripper – $19/mo <ArrowRight className="ml-2 h-5 w-5"/>
+                                Become a Ripper ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
                             </Link>
                         </Button>
-                         <p className="text-xs text-muted-foreground mt-3">Billed monthly, cancel anytime. GammaRips is an AI-powered options research tool, not a broker or advisor.</p>
+                         <p className="text-xs text-muted-foreground mt-3">Billed monthly. Cancel anytime. GammaRips is an AI-powered options research tool, not a broker or advisor.</p>
                     </CardContent>
                 </Card>
             </div>

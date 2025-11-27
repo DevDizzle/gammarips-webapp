@@ -102,7 +102,7 @@ export default async function LandingPage() {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
                  <h2 className="text-3xl font-bold font-headline">Who GammaRips Is For (and Not For)</h2>
-                 <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">We built this tool for Rippers. It is not a beginner playground or a generic signal service.</p>
+                 <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">We built this tool for <span className="text-primary font-semibold">Rippers</span>. It is not a beginner playground or a generic signal service.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                 <Card className="bg-card/50">
@@ -143,7 +143,7 @@ export default async function LandingPage() {
           </Suspense>
 
           {/* Performance Tracker Section */}
-          <section className="pb-16 sm:pb-24 pt-16 sm:pt-24">
+          <section className="pt-16 sm:pt-24">
              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
                     <h2 className="text-3xl font-bold font-headline">Live Performance. No Hiding.</h2>

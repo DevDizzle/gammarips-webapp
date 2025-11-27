@@ -202,21 +202,21 @@ export default async function LandingPage() {
                 <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
                   <Card className="bg-card/50">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><Zap className="text-primary"/>Scores Thousands of Contracts</CardTitle>
+                      <CardTitle className="flex items-center gap-3"><Target className="text-primary"/>Starts with the Stock</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-muted-foreground">It looks at liquidity, spreads, time to expiry, and how the option moves when the stock moves- so you’re not stuck digging through junk contracts.</CardContent>
+                    <CardContent className="text-muted-foreground">We don't scan for random option volume in a vacuum. We identify the Top 20% strongest stocks using our AI conviction score first. If the underlying stock isn't ready to move, the option chain doesn't matter.</CardContent>
                   </Card>
                   <Card className="bg-card/50">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><Target className="text-primary"/>Leans Stock-First, Not Lotto-First</CardTitle>
+                      <CardTitle className="flex items-center gap-3"><Zap className="text-primary"/>Deploys the "Rip Hunter" Protocol</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-muted-foreground">We start with high-conviction stocks and then pair them with contracts that make sense for that move. No random “0DTE YOLO” slop.</CardContent>
+                    <CardContent className="text-muted-foreground">For those high-conviction winners, the engine switches modes. It hunts for aggressive, high-gamma contracts (3–60 days out)—prioritizing explosive acceleration over "perfect" spreads. It finds the contracts designed to move fast, not just the ones that look safe on paper.</CardContent>
                   </Card>
                   <Card className="bg-card/50">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-3"><CheckCircle className="text-primary"/>Keeps the List Short on Purpose</CardTitle>
+                      <CardTitle className="flex items-center gap-3"><Shield className="text-primary"/>Auto-Adjusts for Safety</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-muted-foreground">More noise ≠ more edge. GammaRips is built to give you fewer, better Rippers so you can actually execute instead of scrolling yourself to death.</CardContent>
+                    <CardContent className="text-muted-foreground">It uses dynamic filtering: loosening the ropes for elite breakouts to catch them early, while enforcing strict liquidity and spread rules for everything else. You get a short, lethal list of Rippers, not a spreadsheet to scroll through.</CardContent>
                   </Card>
                 </div>
               </div>
@@ -264,7 +264,7 @@ export default async function LandingPage() {
                     </p>
                     <div className="mt-8">
                         <Button asChild size="lg">
-                            <Link href="/dashboard">
+                             <Link href="/dashboard">
                                 Become a Ripper – $19/mo <ArrowRight className="ml-2 h-5 w-5"/>
                             </Link>
                         </Button>

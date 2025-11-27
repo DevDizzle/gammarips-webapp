@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -65,28 +64,37 @@ function TodaysWinners() {
     fetchData();
   }, [toast]);
   
-  const getTopUniqueTickers = (winners: Winner[]): Winner[] => {
-    // 1. De-duplicate winners by ticker, keeping only the one with the highest score
+  const getTopUniqueTickers = (winners: Winner[], sortOrder: 'asc' | 'desc'): Winner[] => {
+    // 1. De-duplicate winners by ticker
     const uniqueWinnersMap = new Map<string, Winner>();
     winners.forEach(winner => {
         const existing = uniqueWinnersMap.get(winner.ticker);
-        if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
+        // For bearish (asc), we keep the one with the lowest score.
+        // For bullish (desc), we keep the one with the highest score.
+        const shouldReplace = sortOrder === 'asc'
+            ? (winner.weighted_score ?? Infinity) < (existing?.weighted_score ?? Infinity)
+            : (winner.weighted_score ?? -1) > (existing?.weighted_score ?? -1);
+
+        if (!existing || shouldReplace) {
             uniqueWinnersMap.set(winner.ticker, winner);
         }
     });
     const uniqueWinners = Array.from(uniqueWinnersMap.values());
 
     // 2. Sort the unique winners by score
-    return uniqueWinners
-        .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1));
+    return uniqueWinners.sort((a, b) => {
+        const scoreA = a.weighted_score ?? (sortOrder === 'asc' ? Infinity : -1);
+        const scoreB = b.weighted_score ?? (sortOrder === 'asc' ? Infinity : -1);
+        return sortOrder === 'asc' ? scoreA - scoreB : scoreB - scoreA;
+    });
   };
 
   const { bullishWinners, bearishWinners, lastUpdated } = useMemo(() => {
-    const bullish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bullish'));
-    const bearish = allWinners.filter(w => w.outlook_signal.toLowerCase().includes('bearish'));
+    const bullish = allWinners.filter(w => w.option_type.toLowerCase().includes('call'));
+    const bearish = allWinners.filter(w => w.option_type.toLowerCase().includes('put'));
 
-    const allBullish = getTopUniqueTickers(bullish);
-    const allBearish = getTopUniqueTickers(bearish);
+    const allBullish = getTopUniqueTickers(bullish, 'desc');
+    const allBearish = getTopUniqueTickers(bearish, 'asc');
     
     let updatedDate: string | null = null;
     if (allWinners.length > 0) {
@@ -476,5 +484,3 @@ function TodaysWinners() {
 }
 
 export default TodaysWinners;
-
-    

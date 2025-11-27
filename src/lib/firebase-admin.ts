@@ -183,7 +183,17 @@ export async function getAppStatusAdmin(): Promise<{ isUpdating: boolean }> {
   }
 }
 
-export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: number; signalCount: number; winRate: number; averageWinnerGain: number; averageLoserGain: number; }> {
+export async function getPerformanceTrackerStatsAdmin(): Promise<{
+    averageGain: number;
+    signalCount: number;
+    winRate: number;
+    averageWinnerGain: number;
+    averageLoserGain: number;
+    initialValue: number;
+    currentValue: number;
+    netProfits: number;
+    roi: number;
+}> {
     noStore(); // Opt out of caching for this specific function
     const defaultStats = {
         averageGain: 0,
@@ -191,6 +201,10 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
         winRate: 0,
         averageWinnerGain: 0,
         averageLoserGain: 0,
+        initialValue: 0,
+        currentValue: 0,
+        netProfits: 0,
+        roi: 0,
     };
 
     try {
@@ -206,15 +220,22 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
         let winnerCount = 0;
         let loserCount = 0;
         let validSignalCount = 0;
+        let totalInitialValue = 0;
+        let totalCurrentValue = 0;
 
         snapshot.forEach(doc => {
             const data = doc.data();
             const gain = data.percent_gain;
+            const initialPrice = data.initial_price;
+            const currentPrice = data.current_price;
 
             // Check if gain is a valid number before including it in calculations
-            if (typeof gain === 'number' && !isNaN(gain)) {
+            if (typeof gain === 'number' && !isNaN(gain) && typeof initialPrice === 'number' && typeof currentPrice === 'number') {
                 totalPercentGain += gain;
                 validSignalCount++;
+                
+                totalInitialValue += initialPrice * 100;
+                totalCurrentValue += currentPrice * 100;
 
                 if (gain > 0) {
                     winnersSum += gain;
@@ -230,12 +251,19 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{ averageGain: 
             return defaultStats;
         }
 
+        const netProfits = totalCurrentValue - totalInitialValue;
+        const roi = totalInitialValue > 0 ? (netProfits / totalInitialValue) * 100 : 0;
+
         return {
             averageGain: totalPercentGain / validSignalCount,
             signalCount: validSignalCount,
             winRate: (winnerCount / validSignalCount) * 100,
             averageWinnerGain: winnerCount > 0 ? winnersSum / winnerCount : 0,
             averageLoserGain: loserCount > 0 ? losersSum / loserCount : 0,
+            initialValue: totalInitialValue,
+            currentValue: totalCurrentValue,
+            netProfits: netProfits,
+            roi: roi,
         };
 
     } catch (error) {
@@ -1291,3 +1319,4 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+

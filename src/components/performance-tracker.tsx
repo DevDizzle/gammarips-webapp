@@ -1,4 +1,5 @@
 
+
 import { getPerformanceTrackerStatsAdmin } from "@/lib/firebase-admin";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { TrendingUp } from "lucide-react";
@@ -24,15 +25,37 @@ const StatCard = ({ title, value, subtext }: { title: string; value: string; sub
 
 export async function PerformanceTracker() {
     const stats = await getPerformanceTrackerStatsAdmin();
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    });
 
     return (
         <Link href="/performance" className="block group">
             <Card className="bg-transparent border-none shadow-none transition-colors">
                 <CardContent className="p-0">
+                    <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                        <div className="bg-background/50 p-3 rounded-lg">
+                            <p className="text-sm text-muted-foreground">Initial Value</p>
+                            <p className="text-xl font-semibold">{formatter.format(stats.initialValue)}</p>
+                        </div>
+                        <div className="bg-background/50 p-3 rounded-lg">
+                            <p className="text-sm text-muted-foreground">Current Value</p>
+                            <p className="text-xl font-semibold">{formatter.format(stats.currentValue)}</p>
+                        </div>
+                        <div className="bg-background/50 p-3 rounded-lg">
+                            <p className="text-sm text-muted-foreground">Net Profits</p>
+                            <p className={cn("text-xl font-semibold", stats.netProfits >= 0 ? "text-green-500" : "text-red-500")}>
+                                {stats.netProfits >= 0 ? '+' : ''}{formatter.format(stats.netProfits)}
+                            </p>
+                        </div>
+                    </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <StatCard 
-                            title="Avg. Gain" 
-                            value={`${stats.averageGain >= 0 ? '+' : ''}${stats.averageGain.toFixed(2)}%`}
+                            title="ROI" 
+                            value={`${stats.roi >= 0 ? '+' : ''}${stats.roi.toFixed(2)}%`}
                             subtext={stats.signalCount > 0 ? `Across ${stats.signalCount} signals` : ''}
                         />
                         <StatCard 
@@ -79,3 +102,4 @@ export function PerformanceTrackerSkeleton() {
 }
 
 export default PerformanceTracker;
+

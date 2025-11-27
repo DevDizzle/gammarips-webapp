@@ -97,7 +97,6 @@ export default function PrivacyPage() {
 
       <h2>14) Contact</h2>
       <p>Questions or requests?<br />Email: admin@gammarips.com</p>
-      <p>Postal: GammaRips, AI-Powered Research for Options Traders</p>
     </article>
   );
 }

@@ -21,6 +21,10 @@
         "app/performance/page": {
           "moduleId": "[project]/.next-internal/server/app/performance/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": true
+        },
+        "app/privacy/page": {
+          "moduleId": "[project]/.next-internal/server/app/privacy/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
         }
       },
       "layer": {
@@ -28,7 +32,8 @@
         "app/options/call-setups/page": "rsc",
         "app/options/put-hedges/page": "rsc",
         "app/page": "rsc",
-        "app/performance/page": "rsc"
+        "app/performance/page": "rsc",
+        "app/privacy/page": "action-browser"
       }
     },
     "000a6af633d5066b736065ae9c1556a6d18fd7a57f": {

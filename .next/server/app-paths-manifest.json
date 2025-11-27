@@ -3,5 +3,6 @@
   "/options/call-setups/page": "app/options/call-setups/page.js",
   "/options/put-hedges/page": "app/options/put-hedges/page.js",
   "/page": "app/page.js",
-  "/performance/page": "app/performance/page.js"
+  "/performance/page": "app/performance/page.js",
+  "/privacy/page": "app/privacy/page.js"
 }

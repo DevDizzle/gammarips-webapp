@@ -10,8 +10,8 @@ import type { Winner } from '@/lib/firebase-admin';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Daily Call Rippers on Russell 1000 Stocks',
-  description: 'Browse our full list of AI-scored bullish call option rippers on Russell 1000 stocks. Updated daily with fresh analysis.',
+  title: 'Daily Call Setups on Russell 1000 Stocks',
+  description: 'Browse our full list of AI-scored bullish call option setups on Russell 1000 stocks. Updated daily with fresh analysis.',
 };
 
 // Helper to convert GCS URI to a public URL
@@ -41,18 +41,18 @@ export default async function CallSetupsPage() {
         <div className="space-y-8">
             <header className="text-center">
                 <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-                    Daily Call Rippers
+                    Daily Call Setups
                 </h1>
                 <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                    This is a preview of our complete, daily-updated list of bullish Call option rippers for Russell 1000 stocks, scored by our AI engine.
+                    This is a preview of our complete, daily-updated list of bullish Call option setups for Russell 1000 stocks, scored by our AI engine.
                 </p>
             </header>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Today's Top Call Rippers</CardTitle>
+                    <CardTitle>Today's Top Call Setups</CardTitle>
                     <CardDescription>
-                       A preview of the top-scoring bullish Call rippers from today's market analysis. Click any setup to see the full dashboard.
+                       A preview of the top-scoring bullish Call setups from today's market analysis. Click any setup to see the full dashboard.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -106,14 +106,14 @@ export default async function CallSetupsPage() {
                             })}
                         </div>
                     ) : (
-                        <p className="text-muted-foreground text-center">No bullish call rippers met the criteria today. Check back tomorrow for new signals.</p>
+                        <p className="text-muted-foreground text-center">No bullish call setups met the criteria today. Check back tomorrow for new signals.</p>
                     )}
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>How We Find Top Call Rippers</CardTitle>
+                    <CardTitle>How We Find Top Call Setups</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="flex items-start gap-4">
@@ -124,7 +124,7 @@ export default async function CallSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">Identify High-Conviction Stocks First</h3>
-                            <p className="text-muted-foreground">Instead of scanning for random option activity, we start by identifying the market's strongest stocks. We target the Top 20% of companies based on our proprietary AI conviction score, or those with a massive breaking news catalyst (Score > 0.9).</p>
+                            <p className="text-muted-foreground">Instead of scanning for random option activity, we start by identifying the market's strongest stocks. We target the Top 20% of companies based on our proprietary AI conviction score, or those with a massive breaking news catalyst (Score &gt; 0.9).</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -144,7 +144,7 @@ export default async function CallSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">AI Validation & Ranking</h3>
-                            <p className="text-muted-foreground">Finally, our AI validates the trade setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakouts while enforcing strict safety measures for standard setups. It also boosts scores for "Unusual Options Activity" (volume > open interest), ensuring only the most explosive opportunities make the daily dashboard.</p>
+                            <p className="text-muted-foreground">Finally, our AI validates the trade setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakouts while enforcing strict safety measures for standard setups. It also boosts scores for "Unusual Options Activity" (volume &gt; open interest), ensuring only the most explosive opportunities make the daily dashboard.</p>
                         </div>
                     </div>
                 </CardContent>
@@ -154,13 +154,13 @@ export default async function CallSetupsPage() {
             <div className="text-center">
                 <Card className="inline-block bg-primary/10 border-primary/20">
                     <CardContent className="p-6">
-                        <h3 className="text-xl font-semibold font-headline">See All {allBullishSetups.length}+ Rippers</h3>
+                        <h3 className="text-xl font-semibold font-headline">See All {allBullishSetups.length}+ Setups</h3>
                         <p className="text-muted-foreground mt-2 mb-4 max-w-md mx-auto">
-                            Daily Rippers are the ideas. Rippers are the traders who actually use them. Join GammaRips to unlock the full list, the dashboard, and the AI breakdowns behind every setup.
+                            Daily setups are the ideas. Traders are the ones who use them. Join GammaRips to unlock the full list, the dashboard, and the AI breakdowns behind every setup.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">
-                                Become a Ripper – $19/mo <ArrowRight className="ml-2 h-5 w-5"/>
+                                Become a Member – $19/mo <ArrowRight className="ml-2 h-5 w-5"/>
                             </Link>
                         </Button>
                         <p className="text-xs text-muted-foreground mt-3">Billed monthly, cancel anytime. GammaRips is an AI-powered options research tool, not a broker or advisor.</p>

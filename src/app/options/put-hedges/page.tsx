@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { getWinnersDashboard } from '@/app/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,8 +10,8 @@ import type { Winner } from '@/lib/firebase-admin';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Daily Bearish Put Rippers & Hedges on Russell 1000 Stocks',
-  description: 'Browse our full list of AI-scored bearish put option rippers on Russell 1000 stocks. Ideal for hedging or speculative plays. Updated daily.',
+  title: 'Daily Bearish Put Setups & Hedges on Russell 1000 Stocks',
+  description: 'Browse our full list of AI-scored bearish put option setups on Russell 1000 stocks. Ideal for hedging or speculative plays. Updated daily.',
 };
 
 // Helper to convert GCS URI to a public URL
@@ -40,18 +41,18 @@ export default async function PutSetupsPage() {
         <div className="space-y-8">
             <header className="text-center">
                 <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-                    Daily Bearish Put Rippers
+                    Daily Bearish Put Setups
                 </h1>
                 <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                    This is a preview of our complete, daily-updated list of bearish Put option rippers, ideal for hedging or directional plays.
+                    This is a preview of our complete, daily-updated list of bearish Put option setups, ideal for hedging or directional plays.
                 </p>
             </header>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Today's Top Put Rippers</CardTitle>
+                    <CardTitle>Today's Top Put Setups</CardTitle>
                     <CardDescription>
-                       A preview of the top-scoring bearish Put rippers from today's analysis. Click any setup to see the full dashboard.
+                       A preview of the top-scoring bearish Put setups from today's analysis. Click any setup to see the full dashboard.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -105,14 +106,14 @@ export default async function PutSetupsPage() {
                             })}
                         </div>
                     ) : (
-                        <p className="text-muted-foreground text-center">No bearish put rippers met the criteria today. Check back tomorrow for new signals.</p>
+                        <p className="text-muted-foreground text-center">No bearish put setups met the criteria today. Check back tomorrow for new signals.</p>
                     )}
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>How We Find Top Put Rippers</CardTitle>
+                    <CardTitle>How We Find Top Put Setups</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="flex items-start gap-4">
@@ -153,13 +154,13 @@ export default async function PutSetupsPage() {
             <div className="text-center">
                  <Card className="inline-block bg-primary/10 border-primary/20">
                     <CardContent className="p-6">
-                        <h3 className="text-xl font-semibold font-headline">See All {allBearishSetups.length}+ Rippers</h3>
+                        <h3 className="text-xl font-semibold font-headline">See All {allBearishSetups.length}+ Setups</h3>
                         <p className="text-muted-foreground mt-2 mb-4 max-w-md mx-auto">
-                            Daily Rippers are the ideas. Rippers are the traders who actually use them. Join GammaRips to unlock the full list, the dashboard, and the AI breakdowns behind every setup.
+                            Daily setups are the ideas. Traders are the ones who use them. Join GammaRips to unlock the full list, the dashboard, and the AI breakdowns behind every setup.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">
-                                Become a Ripper – $19/mo <ArrowRight className="ml-2 h-5 w-5"/>
+                                Become a Member – $19/mo <ArrowRight className="ml-2 h-5 w-5"/>
                             </Link>
                         </Button>
                          <p className="text-xs text-muted-foreground mt-3">Billed monthly, cancel anytime. GammaRips is an AI-powered options research tool, not a broker or advisor.</p>

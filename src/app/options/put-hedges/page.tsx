@@ -123,8 +123,8 @@ export default async function PutSetupsPage() {
                            </div>
                         </div>
                         <div>
-                            <h3 className="font-semibold">Identify Weak Stocks First</h3>
-                            <p className="text-muted-foreground">We start by identifying stocks with bearish conviction. We target companies with low AI scores (e.g., Score &lt; 0.2) or those facing significant negative catalysts, such as poor earnings or sector-wide weakness.</p>
+                            <h3 className="font-semibold">Identify Vulnerable Stocks First</h3>
+                            <p className="text-muted-foreground">Instead of scanning for random put activity, we start by identifying the market's weakest links. We target the Bottom 20% of companies based on our proprietary AI conviction score, or those facing a severe negative catalyst (e.g. bad earnings, lawsuits).</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -135,7 +135,7 @@ export default async function PutSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">The "Hedge Hunter" Protocol</h3>
-                            <p className="text-muted-foreground">For these weak stocks, we deploy our "Hedge Hunter" logic. We look for Put contracts (10-60 days to expiry) with fair volatility pricing and sufficient liquidity to act as effective hedges or directional bets against downward momentum.</p>
+                            <p className="text-muted-foreground">For these high-conviction bearish targets, we deploy our "Hedge Hunter" logic. We hunt for aggressive, high-gamma Put contracts (3-60 days to expiry) and speculative setups (up to 25% out-of-the-money) that are primed for rapid value expansion during a sell-off, prioritizing downside acceleration over safe hedging structures.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -144,7 +144,7 @@ export default async function PutSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">AI Validation & Ranking</h3>
-                            <p className="text-muted-foreground">Our AI validates the setup, ensuring the contract's risk profile is reasonable. It boosts scores for Puts on stocks showing strong bearish trends and flags any unusual volume, ensuring only the highest-conviction hedges and bearish plays make the list.</p>
+                            <p className="text-muted-foreground">Finally, our AI validates the setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakdowns while enforcing strict safety measures for standard defensive plays. It also boosts scores for "Unusual Put Activity" (volume &gt; open interest), ensuring only the most actionable downside plays make the daily list.</p>
                         </div>
                     </div>
                 </CardContent>

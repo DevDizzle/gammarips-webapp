@@ -128,7 +128,7 @@ export default async function LandingPage() {
                   <CardContent className="space-y-3 text-muted-foreground">
                     <p>✗ You are a total beginner. You are still learning the basics of options.</p>
                     <p>✗ You are a "tourist." You like to watch but rarely execute trades.</p>
-                    <p>✗ You only trade major indices (like SPY or QQQ). We focus exclusively on single-stock Rips.</p>
+                    <p>✗ You only trade major indices (like SPY or QQQ). We focus exclusively on single-stock Rips (at this time).</p>
                     <p>✗ You are a buy-and-hold investor. You don't trade volatility.</p>
                   </CardContent>
                 </Card>

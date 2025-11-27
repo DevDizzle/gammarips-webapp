@@ -13,15 +13,15 @@ export const faqs = [
     },
     {
         question: "How do you find bullish call options setups?",
-        answer: "We start by ranking the strongest stocks in the Russell 1000 using AI-driven conviction scores, then look for call contracts with attractive liquidity, risk/reward, and higher gamma so they respond more strongly to underlying price moves. In simple terms: we hunt for strong stocks first, then pair them with option contracts that can participate in potential breakouts—while clearly showing you the risk."
+        answer: "We start by ranking the strongest stocks in the Russell 1000 using AI-driven conviction scores, then look for call contracts with attractive liquidity, risk/reward, and higher gamma so they respond more strongly to underlying price moves. In simple terms: we hunt for strong stocks first, then pair them with option contracts that can participate in potential breakouts-while clearly showing you the risk."
     },
     {
         question: "Do you track unusual options flow or volume spikes?",
-        answer: "Yes. We treat unusual options activity (UOA)—for example, volume that’s large relative to open interest or recent averages—as a conviction booster in our scoring. It’s one of several inputs into the signal, not the only thing we look at, so you’re not just chasing raw flow without context."
+        answer: "Yes. We treat unusual options activity (UOA)-for example, volume that’s large relative to open interest or recent averages-as a conviction booster in our scoring. It’s one of several inputs into the signal, not the only thing we look at, so you’re not just chasing raw flow without context."
     },
     {
         question: "How does the $19/month membership work?",
-        answer: "Membership is a flat $19 per month, billed monthly with no long-term contract. You can cancel anytime. We also offer a 7-day money-back guarantee on your first month—if you don’t find GammaRips useful, email us within the first 7 days and we’ll refund that first payment."
+        answer: "Membership is a flat $19 per month, billed monthly with no long-term contract. You can cancel anytime. We also offer a 7-day money-back guarantee on your first month-if you don’t find GammaRips useful, email us within the first 7 days and we’ll refund that first payment."
     },
     {
         question: "What do I get immediately after signing up?",
@@ -45,7 +45,7 @@ export const faqs = [
     },
     {
         question: "Can I use GammaRips with a small account?",
-        answer: "Possibly—but only if you fully understand options risk. GammaRips often highlights lower-cost, further out-of-the-money contracts that offer high potential reward and a high risk of losing 100% of the premium. For smaller accounts, that can be attractive because you can define your maximum loss up front, but it is still speculative and not suitable for everyone."
+        answer: "Possibly-but only if you fully understand options risk. GammaRips often highlights lower-cost, further out-of-the-money contracts that offer high potential reward and a high risk of losing 100% of the premium. For smaller accounts, that can be attractive because you can define your maximum loss up front, but it is still speculative and not suitable for everyone."
     },
     {
         question: "Do you analyze news and earnings calls?",

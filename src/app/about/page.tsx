@@ -60,7 +60,7 @@ const benefits = [
     {
         icon: <Gem size={24} className="text-primary" />,
         title: "The Confluence Dashboard",
-        description: "A daily snapshot of stocks that have a strong bullish or bearish analysis and also feature a high-scoring Ripper on our options scanner, highlighting where our stock and options data models align. Every Ripper is tracked from the moment it’s published, so you can see how ideas actually played out over time—not just in backtests."
+        description: "A daily snapshot of stocks that have a strong bullish or bearish analysis and also feature a high-scoring Ripper on our options scanner, highlighting where our stock and options data models align. Every Ripper is tracked from the moment it’s published, so you can see how ideas actually played out over time-not just in backtests."
     },
 ]
 
@@ -88,7 +88,7 @@ export default function AboutPage() {
             About GammaRips
           </h1>
           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            GammaRips exists to give active options traders fewer, better ideas—not more noise. Our mission is to turn complex fundamentals, options data, and market context into a small, focused list of “Rippers” you can actually act on, with clear stats and clear risks.
+            GammaRips exists to give active options traders fewer, better ideas-not more noise. Our mission is to turn complex fundamentals, options data, and market context into a small, focused list of “Rippers” you can actually act on, with clear stats and clear risks.
           </p>
           <a href="#how-it-works" className="mt-6 inline-block text-sm font-semibold text-primary hover:underline">
             See how it works &darr;
@@ -102,7 +102,7 @@ export default function AboutPage() {
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">How GammaRips Works</h2>
             <p className="mt-3 max-w-3xl mx-auto text-muted-foreground">
-              We use state-of-the-art AI to analyze thousands of data points and synthesize a balanced, forward-looking view of every asset we cover. Then our engine scores the options chain to surface a short list of potential Rippers—call and put contracts where stock conviction, liquidity, and risk/reward line up.
+              We use state-of-the-art AI to analyze thousands of data points and synthesize a balanced, forward-looking view of every asset we cover. Then our engine scores the options chain to surface a short list of potential Rippers-call and put contracts where stock conviction, liquidity, and risk/reward line up.
             </p>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -161,7 +161,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-4 max-w-xl mx-auto">
-                We believe in transparency. Instead of hiding behind “secret sauce,” we explain how the GammaRips engine thinks—stock-first scoring, options quality filters, risk flags, and how we define a “Ripper.”
+                We believe in transparency. Instead of hiding behind “secret sauce,” we explain how the GammaRips engine thinks-stock-first scoring, options quality filters, risk flags, and how we define a “Ripper.”
               </p>
               <Button asChild size="lg" variant="outline">
                 <a href="#">
@@ -217,7 +217,7 @@ export default function AboutPage() {
                 <h3 className="text-lg font-semibold text-foreground">Important Disclaimer</h3>
             </div>
             <p className="mt-2 text-sm text-muted-foreground">
-              GammaRips provides educational and informational content only—it is not financial advice. All trading and investment decisions involve risk. Always conduct your own research and consider consulting a licensed financial advisor before making investment decisions.
+              GammaRips provides educational and informational content only-it is not financial advice. All trading and investment decisions involve risk. Always conduct your own research and consider consulting a licensed financial advisor before making investment decisions.
             </p>
           </aside>
         </section>

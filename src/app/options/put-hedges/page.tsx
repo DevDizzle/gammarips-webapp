@@ -149,8 +149,8 @@ export default async function PutSetupsPage() {
                             3
                         </div>
                         <div>
-                            <h3 className="font-semibold">AI Validation & Ranking</h3>
-                            <p className="text-muted-foreground">Finally, our AI validates the setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakdowns while enforcing strict safety measures for standard defensive plays. It also boosts scores for "Unusual Put Activity" (volume > open interest), ensuring only the most actionable downside plays make the daily list.</p>
+                            <h3 className="font-semibold">AI Validation &amp; Ranking</h3>
+                            <p className="text-muted-foreground">Finally, our AI validates the setup. It applies a "Tiered" safety check-relaxing liquidity rules for high-conviction breakdowns while enforcing strict safety measures for standard defensive plays. It also boosts scores for "Unusual Put Activity" (volume &gt; open interest), ensuring only the most actionable downside plays make the daily list.</p>
                         </div>
                     </div>
                 </CardContent>
@@ -160,7 +160,7 @@ export default async function PutSetupsPage() {
             <div className="text-center">
                  <Card className="inline-block bg-primary/10 border-primary/20">
                     <CardContent className="p-6">
-                        <h3 className="text-xl font-semibold font-headline">See All {allBearishSetups.length}+ Rippers</h3>
+                        <h3 className="text-xl font-semibold font-headline">Unlock the Full Rippers Playbook</h3>
                         <p className="text-muted-foreground mt-2 mb-4 max-w-md mx-auto">
                             Daily Rippers are the ideas. Rippers are the traders who actually use them. Join GammaRips to unlock the full list, the dashboard, and the AI breakdowns behind every setup.
                         </p>

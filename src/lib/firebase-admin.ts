@@ -380,7 +380,10 @@ export async function getPerformanceSignals(
 
 export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promise<PerformanceSignal[]> {
     try {
-        const snapshot = await adminDb.collection('performance_tracker').where('ticker', '==', ticker.toUpperCase()).get();
+        const snapshot = await adminDb.collection('performance_tracker')
+            .where('ticker', '==', ticker.toUpperCase())
+            .orderBy('run_date', 'desc') // Sort by most recent signals first
+            .get();
 
         if (snapshot.empty) {
             return [];
@@ -412,11 +415,9 @@ export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promis
                 console.warn(`Invalid performance signal data for ticker ${ticker}:`, validation.error.flatten());
             }
         });
-
-        // Sort by percent_gain descending
-        signals.sort((a, b) => b.percent_gain - a.percent_gain);
-
+        
         return signals;
+
     } catch (error) {
         console.error(`Error fetching performance signals for ticker ${ticker}:`, error);
         return [];
@@ -1319,4 +1320,5 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 

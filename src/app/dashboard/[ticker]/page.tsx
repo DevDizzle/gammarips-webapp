@@ -1,9 +1,3 @@
-
-
-
-
-
-
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -14,7 +8,7 @@ import { ArrowUp, ArrowDown, Minus, TrendingUp, Rss, BarChart2, Info, XCircle, T
 import { cn } from '@/lib/utils';
 import { PriceChart } from '@/components/price-chart';
 import { Markdown } from '@/components/markdown';
-import SignalTracker from './noteworthy-options';
+import ActiveSignalTracker from './signal-tracker';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -26,6 +20,7 @@ import DashboardPageClient from '../dashboard-client';
 import DataUpdatingPage from '@/components/layout/data-updating-page';
 import type { OptionsSignal } from '@/lib/firebase-admin';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { FairOptionsDisplay } from './noteworthy-options';
 
 interface TickerDashboardPageProps {
   params: {
@@ -86,109 +81,6 @@ const KpiCard = ({ title, value, subValue, signal, tooltip, icon, children }: { 
         </CardFooter>
     </Card>
 );
-
-const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
-    if (!options || options.length === 0) {
-        return null;
-    }
-
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2 font-headline">
-                    <ThumbsUp className="text-muted-foreground" />
-                    Noteworthy Setups
-                </CardTitle>
-                <CardDescription>
-                    These options have a "Fair" setup quality. They might offer interesting opportunities but have some trade-offs compared to our top-rated signal.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                {/* Desktop Table */}
-                <div className="hidden md:block">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Contract</TableHead>
-                                <TableHead>Trend Signal</TableHead>
-                                <TableHead>Volatility</TableHead>
-                                <TableHead>AI Summary</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {options.map((option) => (
-                                <TableRow key={option.contract_symbol}>
-                                    <TableCell>
-                                        <div className="flex flex-col">
-                                            <span className="font-semibold">${option.strike_price.toFixed(2)} {option.option_type.toUpperCase()}</span>
-                                            <span className="text-xs text-muted-foreground">
-                                                Expires: {new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
-                                            </span>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
-                                            {option.stock_price_trend_signal}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
-                                            {option.volatility_comparison_signal}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="text-xs text-muted-foreground max-w-xs">
-                                        {option.summary}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
-                 {/* Mobile Cards */}
-                <div className="md:hidden space-y-4">
-                    {options.map((option) => (
-                        <Card key={option.contract_symbol} className="bg-background/50">
-                            <CardContent className="p-4 space-y-3">
-                                <div className="grid grid-cols-3 gap-4 text-sm">
-                                    <div className="col-span-1">
-                                        <p className="text-muted-foreground">Contract</p>
-                                        <p className="font-semibold">{option.option_type.toUpperCase()}</p>
-                                    </div>
-                                    <div className="col-span-1">
-                                        <p className="text-muted-foreground">Strike</p>
-                                        <p className="font-semibold">${option.strike_price.toFixed(2)}</p>
-                                    </div>
-                                     <div className="col-span-1">
-                                        <p className="text-muted-foreground">Expires</p>
-                                        <p className="font-semibold">{new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })}</p>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center text-sm">
-                                        <p className="text-muted-foreground">Stock Trend</p>
-                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
-                                            {option.stock_price_trend_signal}
-                                        </Badge>
-                                    </div>
-                                     <div className="flex justify-between items-center text-sm">
-                                        <p className="text-muted-foreground">Volatility</p>
-                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
-                                            {option.volatility_comparison_signal}
-                                        </Badge>
-                                    </div>
-                                </div>
-                                 <div>
-                                     <p className="text-xs text-muted-foreground">{option.summary}</p>
-                                 </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
-    );
-};
 
 function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
   const { titleInfo, kpis, priceChartData, stockLevelAnalysis, industry, optionsHeader, topSignalSummary, fairQualityOptions } = data;
@@ -355,7 +247,7 @@ function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
 
       <UpcomingEarnings ticker={ticker} />
 
-      <SignalTracker ticker={ticker} />
+      <ActiveSignalTracker ticker={ticker} />
 
       {stockLevelAnalysis && (
         <div className="flex justify-center mt-6">

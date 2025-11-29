@@ -1,172 +1,130 @@
-
-
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useToast } from '@/hooks/use-toast';
-import { getPerformanceSignalsByTicker } from '../../actions';
-import type { PerformanceSignal } from '@/lib/firebase-admin';
-import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown } from 'lucide-react';
-import Image from 'next/image';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import type { OptionsSignal } from '@/lib/firebase-admin';
+import { cn } from '@/lib/utils';
+import { ThumbsUp } from 'lucide-react';
 
-interface SignalTrackerProps {
-    ticker: string;
+const getSentimentClasses = (signal: string) => {
+    if (!signal) return 'text-muted-foreground border-border bg-card';
+    const lowerSignal = signal.toLowerCase();
+    if (lowerSignal.includes('bullish') || lowerSignal.includes('strong') || lowerSignal.includes('positive') || lowerSignal.includes('strengthening')) {
+        return 'text-green-500 border-green-500/20 bg-green-500/10';
+    }
+    if (lowerSignal.includes('bearish') || lowerSignal.includes('weak') || lowerSignal.includes('negative') || lowerSignal.includes('weakening') || lowerSignal.includes('underperforming')) {
+        return 'text-red-500 border-red-500/20 bg-red-500/10';
+    }
+    if (lowerSignal.includes('low') || lowerSignal.includes('cheap')) {
+        return 'text-green-500 border-green-500/20 bg-green-500/10';
+    }
+     if (lowerSignal.includes('high') || lowerSignal.includes('expensive')) {
+        return 'text-red-500 border-red-500/20 bg-red-500/10';
+    }
+    return 'text-muted-foreground border-border bg-card';
 }
 
-const getStatusBadgeVariant = (status?: string) => {
-    if (!status) return 'secondary';
-    const lowerStatus = status.toLowerCase();
-    if (lowerStatus === 'active') return 'default';
-    if (lowerStatus === 'expired') return 'outline';
-    return 'secondary';
-};
 
-function SignalTracker({ ticker }: SignalTrackerProps) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [signals, setSignals] = useState<PerformanceSignal[]>([]);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const signalsData = await getPerformanceSignalsByTicker(ticker);
-        setSignals(signalsData);
-      } catch (error) {
-        console.error(`Failed to fetch tracked signals for ${ticker}:`, error);
-        toast({
-          title: 'Error Fetching Data',
-          description: 'Could not load tracked signals. Please try again later.',
-          variant: 'destructive',
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [ticker, toast]);
-
-  const renderContent = () => {
-    if (isLoading) {
-      return (
-        <div className="space-y-2">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="grid grid-cols-4 gap-4">
-              <Skeleton className="h-5 w-full" />
-              <Skeleton className="h-5 w-full" />
-              <Skeleton className="h-5 w-full" />
-              <Skeleton className="h-5 w-full" />
-            </div>
-          ))}
-        </div>
-      );
+export const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
+    if (!options || options.length === 0) {
+        return null;
     }
 
-    if (signals.length === 0) {
-        return <p className="text-sm text-muted-foreground">No option signals are currently being tracked for {ticker}.</p>
-    }
-    
     return (
-      <>
-        {/* Desktop Table */}
-        <Table className="hidden md:table">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Contract</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Initial Price</TableHead>
-              <TableHead>Current Price</TableHead>
-              <TableHead className="text-right">Gain (%)</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {signals.map((signal) => {
-              const isGain = signal.percent_gain >= 0;
-              return (
-                <TableRow key={signal.id}>
-                  <TableCell>
-                    <div className="flex flex-col">
-                        <span className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</span>
-                        <span className="text-xs text-muted-foreground">Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={getStatusBadgeVariant(signal.status)}>
-                        {signal.status}
-                    </Badge>
-                  </TableCell>
-                   <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
-                   <TableCell>${signal.current_price.toFixed(2)}</TableCell>
-                   <TableCell className={cn("text-right font-semibold", isGain ? 'text-green-500' : 'text-red-500')}>
-                        {isGain ? '+' : ''}{signal.percent_gain.toFixed(2)}%
-                    </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 font-headline">
+                    <ThumbsUp className="text-muted-foreground" />
+                    Noteworthy Setups
+                </CardTitle>
+                <CardDescription>
+                    These options have a "Fair" setup quality. They might offer interesting opportunities but have some trade-offs compared to our top-rated signal.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                {/* Desktop Table */}
+                <div className="hidden md:block">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Contract</TableHead>
+                                <TableHead>Trend Signal</TableHead>
+                                <TableHead>Volatility</TableHead>
+                                <TableHead>AI Summary</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {options.map((option) => (
+                                <TableRow key={option.contract_symbol}>
+                                    <TableCell>
+                                        <div className="flex flex-col">
+                                            <span className="font-semibold">${option.strike_price.toFixed(2)} {option.option_type.toUpperCase()}</span>
+                                            <span className="text-xs text-muted-foreground">
+                                                Expires: {new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
+                                            {option.stock_price_trend_signal}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
+                                            {option.volatility_comparison_signal}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-xs text-muted-foreground max-w-xs">
+                                        {option.summary}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+                 {/* Mobile Cards */}
+                <div className="md:hidden space-y-4">
+                    {options.map((option) => (
+                        <Card key={option.contract_symbol} className="bg-background/50">
+                            <CardContent className="p-4 space-y-3">
+                                <div className="grid grid-cols-3 gap-4 text-sm">
+                                    <div className="col-span-1">
+                                        <p className="text-muted-foreground">Contract</p>
+                                        <p className="font-semibold">{option.option_type.toUpperCase()}</p>
+                                    </div>
+                                    <div className="col-span-1">
+                                        <p className="text-muted-foreground">Strike</p>
+                                        <p className="font-semibold">${option.strike_price.toFixed(2)}</p>
+                                    </div>
+                                     <div className="col-span-1">
+                                        <p className="text-muted-foreground">Expires</p>
+                                        <p className="font-semibold">{new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })}</p>
+                                    </div>
+                                </div>
 
-        {/* Mobile Cards */}
-        <div className="md:hidden space-y-4">
-          {signals.map((signal) => {
-            const isGain = signal.percent_gain >= 0;
-            return (
-              <Card key={signal.id} className="bg-background/50">
-                <CardContent className="p-4 space-y-3">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })}
-                      </p>
-                    </div>
-                    <Badge variant={getStatusBadgeVariant(signal.status)}>
-                      {signal.status}
-                    </Badge>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 text-center text-sm">
-                    <div>
-                      <p className="text-xs text-muted-foreground">Initial</p>
-                      <p className="font-medium">${signal.initial_price.toFixed(2)}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">Current</p>
-                      <p className="font-medium">${signal.current_price.toFixed(2)}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">Gain</p>
-                      <p className={cn("font-semibold", isGain ? 'text-green-500' : 'text-red-500')}>
-                        {isGain ? '+' : ''}{signal.percent_gain.toFixed(2)}%
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center text-sm">
+                                        <p className="text-muted-foreground">Stock Trend</p>
+                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
+                                            {option.stock_price_trend_signal}
+                                        </Badge>
+                                    </div>
+                                     <div className="flex justify-between items-center text-sm">
+                                        <p className="text-muted-foreground">Volatility</p>
+                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
+                                            {option.volatility_comparison_signal}
+                                        </Badge>
+                                    </div>
+                                </div>
+                                 <div>
+                                     <p className="text-xs text-muted-foreground">{option.summary}</p>
+                                 </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
     );
-  }
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Active Signal Tracker for {ticker}</CardTitle>
-        <CardDescription>
-          Performance of all option signals we are actively tracking for this stock, from signal date through expiration.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {renderContent()}
-      </CardContent>
-    </Card>
-  );
-}
-
-export default SignalTracker;
+};

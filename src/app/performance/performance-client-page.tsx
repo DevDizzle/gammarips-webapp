@@ -83,7 +83,7 @@ export default function PerformanceClientPage({ signals }: { signals: Performanc
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Company</TableHead>
+                                <TableHead>Trade</TableHead>
                                 <TableHead>Contract</TableHead>
                                 <TableHead>Signal Date</TableHead>
                                 <TableHead>Status</TableHead>

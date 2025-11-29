@@ -42,7 +42,7 @@ export default async function PerformancePage() {
                         The Rip Archive
                     </h1>
                     <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                        This is the complete ledger of every Rip our engine has flagged. We show the work. We post the wins, the losses, and the flat trades. This is live data. It is not a cherry-picked highlight reel. Click any ticker to view the full analysis.
+                        This is the complete ledger of every Call and Put contract our engine has flagged. We show the work. We post the wins, the losses, and the flat trades. This is live data. It is not a cherry-picked highlight reel. Click any trade to view the full analysis.
                     </p>
                 </header>
                 
@@ -60,6 +60,7 @@ export default async function PerformancePage() {
                                     Become a Ripper ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
                                 </Link>
                             </Button>
+                            <p className="text-xs text-muted-foreground mt-3">Billed monthly. Cancel anytime. 7-day money-back guarantee on your first month.</p>
                         </CardContent>
                     </Card>
                 </div>
@@ -67,3 +68,4 @@ export default async function PerformancePage() {
         </>
     );
 }
+

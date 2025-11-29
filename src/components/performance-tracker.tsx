@@ -22,35 +22,42 @@ const StatCard = ({ title, value, subtext }: { title: string; value: string; sub
     )
 };
 
+const BigStatCard = ({ title, value, subtext }: { title: string, value: string, subtext?: string }) => {
+    const isPositive = value.includes('+');
+    const isNegative = value.includes('-');
+    const valueColor = isPositive ? "text-green-500" : isNegative ? "text-red-500" : "text-foreground";
+
+     return (
+        <div className="flex flex-col items-center justify-center p-4 bg-background/50 rounded-lg">
+            <p className="text-sm text-muted-foreground">{title}</p>
+            <p className={cn("text-4xl font-bold", valueColor)}>{value}</p>
+            {subtext && <p className="text-xs text-muted-foreground mt-1">{subtext}</p>}
+        </div>
+    )
+};
+
 
 export async function PerformanceTracker() {
     const stats = await getPerformanceTrackerStatsAdmin();
-    const formatter = new Intl.NumberFormat('en-US', {
+    const compactFormatter = new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+        compactDisplay: 'short',
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
     });
+    
+    const netProfitsFormatted = `${stats.netProfits >= 0 ? '+' : ''}${compactFormatter.format(stats.netProfits)}`;
 
     return (
         <Link href="/performance" className="block group">
             <Card className="bg-transparent border-none shadow-none transition-colors">
                 <CardContent className="p-0">
                     <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                        <div className="bg-background/50 p-3 rounded-lg">
-                            <p className="text-sm text-muted-foreground">Initial Value</p>
-                            <p className="text-xl font-semibold">{formatter.format(stats.initialValue)}</p>
-                        </div>
-                        <div className="bg-background/50 p-3 rounded-lg">
-                            <p className="text-sm text-muted-foreground">Current Value</p>
-                            <p className="text-xl font-semibold">{formatter.format(stats.currentValue)}</p>
-                        </div>
-                        <div className="bg-background/50 p-3 rounded-lg">
-                            <p className="text-sm text-muted-foreground">Net Profits</p>
-                            <p className={cn("text-xl font-semibold", stats.netProfits >= 0 ? "text-green-500" : "text-red-500")}>
-                                {stats.netProfits >= 0 ? '+' : ''}{formatter.format(stats.netProfits)}
-                            </p>
-                        </div>
+                        <BigStatCard title="Initial Value" value={compactFormatter.format(stats.initialValue)} />
+                        <BigStatCard title="Current Value" value={compactFormatter.format(stats.currentValue)} />
+                        <BigStatCard title="Net Profits" value={netProfitsFormatted} subtext="Paper P&L" />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <StatCard 
@@ -102,4 +109,3 @@ export function PerformanceTrackerSkeleton() {
 }
 
 export default PerformanceTracker;
-

@@ -3,6 +3,7 @@
 
 
 
+
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -104,43 +105,45 @@ const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
             </CardHeader>
             <CardContent>
                 {/* Desktop Table */}
-                <Table className="hidden md:table">
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Contract</TableHead>
-                            <TableHead>Trend Signal</TableHead>
-                            <TableHead>Volatility</TableHead>
-                            <TableHead>AI Summary</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {options.map((option) => (
-                            <TableRow key={option.contract_symbol}>
-                                <TableCell>
-                                    <div className="flex flex-col">
-                                        <span className="font-semibold">${option.strike_price.toFixed(2)} {option.option_type.toUpperCase()}</span>
-                                        <span className="text-xs text-muted-foreground">
-                                            Expires: {new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
-                                        </span>
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
-                                        {option.stock_price_trend_signal}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell>
-                                    <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
-                                        {option.volatility_comparison_signal}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className="text-xs text-muted-foreground max-w-xs">
-                                    {option.summary}
-                                </TableCell>
+                <div className="hidden md:block">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Contract</TableHead>
+                                <TableHead>Trend Signal</TableHead>
+                                <TableHead>Volatility</TableHead>
+                                <TableHead>AI Summary</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {options.map((option) => (
+                                <TableRow key={option.contract_symbol}>
+                                    <TableCell>
+                                        <div className="flex flex-col">
+                                            <span className="font-semibold">${option.strike_price.toFixed(2)} {option.option_type.toUpperCase()}</span>
+                                            <span className="text-xs text-muted-foreground">
+                                                Expires: {new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
+                                            {option.stock_price_trend_signal}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
+                                            {option.volatility_comparison_signal}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-xs text-muted-foreground max-w-xs">
+                                        {option.summary}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
                  {/* Mobile Cards */}
                 <div className="md:hidden space-y-4">
                     {options.map((option) => (

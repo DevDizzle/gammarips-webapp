@@ -102,7 +102,7 @@ export default async function LandingPage() {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
                  <h2 className="text-3xl font-bold font-headline">Who GammaRips Is For (and Not For)</h2>
-                 <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">We built this tool for <span className="text-primary font-semibold">Rippers</span>. It is not a beginner playground or a generic signal service.</p>
+                 <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">We built this tool for Rippers. It is not a beginner playground or a generic signal service.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                 <Card className="bg-card/50">
@@ -113,10 +113,10 @@ export default async function LandingPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 text-muted-foreground">
-                    <p>✓ You are an active options trader. You place multiple trades per month.</p>
-                    <p>✓ You want a short, focused list of daily Rips. No complex labs or endless scrolling.</p>
-                    <p>✓ You understand risk. You are comfortable buying premium and managing your own trades.</p>
-                    <p>✓ You take trading seriously and treat it like a business,</p>
+                    <p>✓ You are an active options trader. You execute multiple trades per month.</p>
+                    <p>✓ You want specific contracts. You want a tight list of high-conviction Call & Put strikes, not a "choose your own adventure" lab.</p>
+                    <p>✓ You trade directional volatility. You are comfortable buying premium (Long Calls/Puts) and managing the risk of long options.</p>
+                    <p>✓ You treat trading like a business. You want data and logic, not excitement.</p>
                   </CardContent>
                 </Card>
                  <Card className="bg-card/50">
@@ -127,10 +127,10 @@ export default async function LandingPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 text-muted-foreground">
-                    <p>✗ You are a total beginner. You are still learning the basics of options.</p>
-                    <p>✗ You are a "tourist." You like to watch but rarely execute trades.</p>
-                    <p>✗ You only trade major indices (like SPY or QQQ). We focus exclusively on single-stock Rips (at this time).</p>
-                    <p>✗ You are a buy-and-hold investor. You don't trade volatility.</p>
+                    <p>✗ You are a total beginner. You are still learning what a "strike price" is.</p>
+                    <p>✗ You are a "tourist." You like to watch the market but rarely pull the trigger.</p>
+                    <p>✗ You only trade major indices. We focus exclusively on single-stock setups (no SPY/QQQ).</p>
+                    <p>✗ You represent a "theta gang" strategy. We hunt for explosive moves (buying premium), not sideways chop (selling premium).</p>
                   </CardContent>
                 </Card>
               </div>

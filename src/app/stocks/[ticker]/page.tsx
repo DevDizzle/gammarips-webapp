@@ -319,26 +319,15 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
 
         <Card className="text-center bg-primary/10 border-primary/20">
             <CardHeader>
-                <CardTitle className="font-headline text-2xl">Unlock Data-Driven Options Rippers</CardTitle>
+                <CardTitle className="font-headline text-2xl">Get the Daily Playbook</CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="max-w-md mx-auto space-y-3 text-left">
-                    <div className="flex items-center gap-3">
-                        <LineChart className="h-5 w-5 text-primary shrink-0"/>
-                        <span className="font-medium">Go beyond static reports with an interactive dashboard</span>
-                    </div>
-                     <div className="flex items-center gap-3">
-                        <Star className="h-5 w-5 text-primary shrink-0"/>
-                        <span className="font-medium">Access daily, top-rated Call & Put rippers</span>
-                    </div>
-                     <div className="flex items-center gap-3">
-                        <CheckCircle className="h-5 w-5 text-primary shrink-0"/>
-                        <span className="font-medium">Track performance for every signal we issue</span>
-                    </div>
-                </div>
-                <Button asChild size="lg" className="mt-6">
+                 <p className="mt-2 mb-4 max-w-md mx-auto text-muted-foreground">
+                    Become a Ripper to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
+                </p>
+                <Button asChild size="lg">
                     <Link href={`/dashboard`}>
-                        Get Instant Access ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
+                        Become a Ripper ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
                     </Link>
                 </Button>
             </CardContent>

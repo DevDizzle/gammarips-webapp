@@ -241,12 +241,12 @@ export default async function LandingPage() {
                 <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
                     <h2 className="text-3xl sm:text-4xl font-bold font-headline">Get the Daily Playbook</h2>
                     <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-                      Become a ripper to get full access to our daily ranked options, the interactive dashboard, and the complete AI analysis behind every signal.
+                      Become a Ripper to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
                     </p>
                     <div className="mt-8">
                         <Button asChild size="lg">
                              <Link href="/dashboard">
-                                Become a Ripper – $19/mo <ArrowRight className="ml-2 h-5 w-5"/>
+                                Become a Ripper ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
                             </Link>
                         </Button>
                          <p className="text-xs text-muted-foreground mt-3">Billed monthly, cancel anytime. 7-day money-back guarantee on your first month.</p>

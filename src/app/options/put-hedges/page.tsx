@@ -160,9 +160,9 @@ export default async function PutSetupsPage() {
             <div className="text-center">
                  <Card className="inline-block bg-primary/10 border-primary/20">
                     <CardContent className="p-6">
-                        <h3 className="text-xl font-semibold font-headline">Unlock the Full Put List</h3>
+                        <h3 className="text-xl font-semibold font-headline">Get the Daily Playbook</h3>
                         <p className="text-muted-foreground mt-2 mb-4 max-w-md mx-auto">
-                            Join GammaRips to access the full daily list. Get the interactive dashboard and the AI breakdowns behind every trade.
+                            Become a Ripper to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">

@@ -101,7 +101,7 @@ export function IndustryExplorer() {
                     Sector Explorer
                 </CardTitle>
                 <CardDescription>
-                    Browse all active Call and Put setups, grouped by GICS sector. Click any stock to see its full analysis dashboard.
+                    Browse all active Call and Put Rips grouped by sector. See where the money is flowing. Click any stock to see the full dashboard.
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -126,62 +126,113 @@ export function IndustryExplorer() {
                                     </div>
                                 </AccordionTrigger>
                                 <AccordionContent>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>Company</TableHead>
-                                                <TableHead>Industry</TableHead>
-                                                <TableHead>Contract</TableHead>
-                                                <TableHead>AI Outlook</TableHead>
-                                                <TableHead className="text-right">View</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {winners.map(winner => {
-                                                const imageUrl = winner.image_uri 
-                                                    ? convertGcsUriToUrl(winner.image_uri) 
-                                                    : `https://placehold.co/24x24/1e293b/a855f7?text=${winner.ticker[0]}`;
-                                                const signalMeta = getSignalMeta(winner.outlook_signal);
-                                                return (
-                                                    <TableRow key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer">
-                                                        <TableCell className="font-medium">
-                                                            <div className="flex items-center gap-3">
+                                    {/* Desktop Table */}
+                                    <div className="hidden md:block">
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow>
+                                                    <TableHead>Company</TableHead>
+                                                    <TableHead>Industry</TableHead>
+                                                    <TableHead>Contract</TableHead>
+                                                    <TableHead>AI Outlook</TableHead>
+                                                    <TableHead className="text-right">View</TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {winners.map(winner => {
+                                                    const imageUrl = winner.image_uri 
+                                                        ? convertGcsUriToUrl(winner.image_uri) 
+                                                        : `https://placehold.co/24x24/1e293b/a855f7?text=${winner.ticker[0]}`;
+                                                    const signalMeta = getSignalMeta(winner.outlook_signal);
+                                                    return (
+                                                        <TableRow key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer">
+                                                            <TableCell className="font-medium">
+                                                                <div className="flex items-center gap-3">
+                                                                    <Image 
+                                                                        src={imageUrl} 
+                                                                        alt={`${winner.company_name} logo`}
+                                                                        width={24}
+                                                                        height={24}
+                                                                        className="rounded-full"
+                                                                    />
+                                                                    <div>
+                                                                        <span className="font-semibold">{winner.ticker}</span>
+                                                                        <p className="text-xs text-muted-foreground truncate max-w-[150px]">{winner.company_name}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </TableCell>
+                                                            <TableCell className="text-xs text-muted-foreground">{winner.industry}</TableCell>
+                                                            <TableCell>
+                                                                <div className="flex flex-col">
+                                                                    <span className="font-semibold">${winner.strike_price.toFixed(2)} {winner.option_type.toUpperCase()}</span>
+                                                                    <span className="text-xs text-muted-foreground">Expires: {new Date(winner.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
+                                                                </div>
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                <div className={cn("flex items-center gap-1", signalMeta.color)}>
+                                                                    {signalMeta.icon}
+                                                                    <span>{winner.outlook_signal}</span>
+                                                                </div>
+                                                            </TableCell>
+                                                            <TableCell className="text-right">
+                                                                <Link href={`/dashboard/${winner.ticker.toUpperCase()}`} className="text-muted-foreground hover:text-primary">
+                                                                    <ChevronRight className="h-5 w-5" />
+                                                                </Link>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    );
+                                                })}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
+                                    
+                                    {/* Mobile Cards */}
+                                    <div className="md:hidden space-y-3">
+                                        {winners.map(winner => {
+                                            const imageUrl = winner.image_uri 
+                                                ? convertGcsUriToUrl(winner.image_uri) 
+                                                : `https://placehold.co/40x40/1e293b/a855f7?text=${winner.ticker[0]}`;
+                                            const signalMeta = getSignalMeta(winner.outlook_signal);
+                                            return (
+                                                 <Card key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer transition-colors hover:bg-muted/50">
+                                                    <CardContent className="p-4">
+                                                        <div className="flex items-center justify-between gap-4">
+                                                            <div className="flex items-center gap-3 flex-1 min-w-0">
                                                                 <Image 
                                                                     src={imageUrl} 
                                                                     alt={`${winner.company_name} logo`}
-                                                                    width={24}
-                                                                    height={24}
+                                                                    width={40}
+                                                                    height={40}
                                                                     className="rounded-full"
                                                                 />
-                                                                <div>
-                                                                    <span className="font-semibold">{winner.ticker}</span>
-                                                                    <p className="text-xs text-muted-foreground truncate max-w-[150px]">{winner.company_name}</p>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <p className="font-bold truncate">{winner.company_name}</p>
+                                                                    <p className="text-sm text-muted-foreground">{winner.ticker}</p>
                                                                 </div>
                                                             </div>
-                                                        </TableCell>
-                                                        <TableCell className="text-xs text-muted-foreground">{winner.industry}</TableCell>
-                                                        <TableCell>
-                                                            <div className="flex flex-col">
-                                                                <span className="font-semibold">${winner.strike_price.toFixed(2)} {winner.option_type.toUpperCase()}</span>
-                                                                <span className="text-xs text-muted-foreground">Expires: {new Date(winner.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
+                                                            <div className="flex-shrink-0">
+                                                                <ChevronRight className="h-5 w-5 text-muted-foreground" />
                                                             </div>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <div className={cn("flex items-center gap-1", signalMeta.color)}>
-                                                                {signalMeta.icon}
-                                                                <span>{winner.outlook_signal}</span>
+                                                        </div>
+                                                        <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                                                            <div>
+                                                                <p className="text-muted-foreground">Contract</p>
+                                                                <p className="font-semibold">${winner.strike_price.toFixed(2)} {winner.option_type.toUpperCase()}</p>
+                                                                <p className="text-xs text-muted-foreground">Expires: {new Date(winner.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</p>
                                                             </div>
-                                                        </TableCell>
-                                                        <TableCell className="text-right">
-                                                             <Link href={`/dashboard/${winner.ticker.toUpperCase()}`} className="text-muted-foreground hover:text-primary">
-                                                                <ChevronRight className="h-5 w-5" />
-                                                             </Link>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                );
-                                            })}
-                                        </TableBody>
-                                    </Table>
+                                                            <div>
+                                                                <p className="text-muted-foreground">AI Outlook</p>
+                                                                <div className={cn("flex items-center gap-1 font-semibold", signalMeta.color)}>
+                                                                    {signalMeta.icon}
+                                                                    <span>{winner.outlook_signal}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </CardContent>
+                                                </Card>
+                                            )
+                                        })}
+                                    </div>
                                 </AccordionContent>
                             </AccordionItem>
                         );

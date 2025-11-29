@@ -63,22 +63,22 @@ export async function PerformanceTracker() {
                         <StatCard 
                             title="ROI" 
                             value={`${stats.roi >= 0 ? '+' : ''}${stats.roi.toFixed(2)}%`}
-                            subtext={stats.signalCount > 0 ? `Across ${stats.signalCount} Rips` : ''}
+                            subtext={stats.signalCount > 0 ? `Across ${stats.signalCount} Setups` : ''}
                         />
                         <StatCard 
                             title="Win Rate" 
                             value={`${stats.winRate.toFixed(1)}%`}
-                            subtext="Rips with positive gain"
+                            subtext="Setups with positive gain"
                         />
                         <StatCard 
                             title="Avg. Winner" 
                             value={`${stats.averageWinnerGain >= 0 ? '+' : ''}${stats.averageWinnerGain.toFixed(2)}%`}
-                            subtext="Avg. gain on winning Rips"
+                            subtext="Avg. gain on winning Setups"
                         />
                         <StatCard 
                             title="Avg. Loser" 
                             value={`${stats.averageLoserGain.toFixed(2)}%`}
-                            subtext="Avg. loss on losing Rips"
+                            subtext="Avg. loss on losing Setups"
                         />
                     </div>
                      <p className="text-center text-xs text-muted-foreground mt-4 group-hover:underline">Click to view full performance history →</p>

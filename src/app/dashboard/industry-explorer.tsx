@@ -101,7 +101,7 @@ export function IndustryExplorer() {
                     Sector Explorer
                 </CardTitle>
                 <CardDescription>
-                    Browse all active Call and Put Rips grouped by sector. See where the money is flowing. Click any stock to see the full dashboard.
+                    Browse all active Call and Put contracts grouped by sector. See where the money is flowing. Click any stock to see the full dashboard.
                 </CardDescription>
             </CardHeader>
             <CardContent>

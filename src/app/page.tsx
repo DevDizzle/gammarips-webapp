@@ -83,10 +83,10 @@ export default async function LandingPage() {
           {/* Hero Section */}
           <section className="text-center py-20 sm:py-28 px-4">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight">
-              One Simple Options Playbook. Daily Rips.
+              One Simple Options Playbook.
             </h1>
             <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-              GammaRips uses AI to hunt for Rips. These are high-conviction options setups on stocks that are ready to move. You get a tight daily list of call & put Rips and clean AI breakdowns. No tourist signals. No 20-strategy zoo. Just the heat.
+              High-conviction Call & Put setups on stocks primed to move. You get a tight daily list of contracts and clean AI breakdowns. No complex strategies. Just the Rips.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
                <Suspense>

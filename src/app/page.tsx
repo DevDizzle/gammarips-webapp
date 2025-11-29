@@ -148,7 +148,7 @@ export default async function LandingPage() {
               <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
                 <h2 className="text-3xl font-bold font-headline">Live Performance. No Hiding.</h2>
                 <p className="mt-4 max-w-3xl mx-auto text-muted-foreground">
-                  Our models track the performance of every Rip. We show the wins, the losses, and the volatility in between. This is a live look at our data-driven edge. Past performance does not guarantee future results.
+                  Our models track the performance of every Call and Put setup we publish. We show the wins, the losses, and the flat trades. This is a live record of every contract we flagged. It is not a cherry-picked highlight reel. Past performance does not guarantee future results
                 </p>
                 <div className="mt-8">
                   <Suspense fallback={<PerformanceTrackerSkeleton />}>
@@ -171,23 +171,23 @@ export default async function LandingPage() {
               <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">1</div>
-                  <h3 className="mt-6 text-xl font-semibold">Grab Today’s Rips</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Get the Daily Contracts</h3>
                   <p className="mt-2 text-muted-foreground">
-                    Every session, we scan the Russell 1000 to surface a tight list of Call & Put Rips. These are setups where the stock, volatility, and options structure align. No 500-row spreadsheet. No 20-strategy zoo. Just the handful worth a look.
+                    Every session, we scan the Russell 1000 to find a tight list of specific Call and Put contracts. These are setups where the stock, volatility, and option strike price align. No 500-row spreadsheet. No 20-strategy zoo. Just the handful worth a look.
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">2</div>
-                  <h3 className="mt-6 text-xl font-semibold">Read the "Why"</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Check the Logic</h3>
                   <p className="mt-2 text-muted-foreground">
-                    Each Rip comes with a clean AI Breakdown covering trend, catalysts, and risk flags. You get the full story in 60 seconds. We give you context, not just a ticker and a "Greek salad" of data.
+                    Each contract comes with a clean AI Breakdown covering trend, catalysts, and risk flags. You get the full story in 60 seconds. We give you the market context. We do not just give you a ticker and a "Greek salad" of data.
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">3</div>
-                  <h3 className="mt-6 text-xl font-semibold">Run Your Own Playbook</h3>
+                  <h3 className="mt-6 text-xl font-semibold">Execute Your Trade</h3>
                   <p className="mt-2 text-muted-foreground">
-                    We are the research. You are the Ripper. You decide entries, sizing, stops, and exits. We hunt for the potential moves. You manage the risk.
+                    We provide the research. You are the trader. You decide your entry price, position size, and stop loss. We hunt for the potential moves. You manage the capital.
                   </p>
                 </div>
               </div>
@@ -220,7 +220,7 @@ export default async function LandingPage() {
                       </div>
                       <CardTitle>The "Rip Hunter" Protocol</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-muted-foreground">For those high-conviction stocks, the engine hunts for aggressive, high-gamma contracts. We prioritize explosive potential over "safe on paper" spreads.</CardContent>
+                    <CardContent className="text-muted-foreground">For those high-conviction stocks, the engine hunts for aggressive, high-gamma contracts. We look for setups geared toward buying premium (Long Calls/Puts). We prioritize explosive potential over "safe on paper" spreads.</CardContent>
                   </Card>
                   <Card className="bg-card/50 text-center">
                     <CardHeader className="items-center">

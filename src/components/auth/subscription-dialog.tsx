@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Loader2, Star } from 'lucide-react';
+import { Loader2, Zap } from 'lucide-react';
 
 type SubscriptionDialogProps = {
   open: boolean;
@@ -20,8 +20,8 @@ type SubscriptionDialogProps = {
 
 const features = [
     { 
-        title: "Daily Top-Rated Call & Put Rippers",
-        description: "Delivered to your inbox" 
+        title: "Daily Top-Rated Call & Put Contracts",
+        description: "Delivered to your dashboard & inbox" 
     },
     { 
         title: "Unlimited AI Analyst Briefings",
@@ -29,11 +29,11 @@ const features = [
     },
     {
         title: "Access to the Confluence Dashboard",
-        description: "Where data models align"
+        description: "Where stock conviction meets options data"
     },
     {
-        title: "Full Interactive Stock & Options Dashboards",
-        description: ""
+        title: "Full Interactive Data & Charts",
+        description: "Research tools to plan your trade"
     }
 ];
 
@@ -43,16 +43,16 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-headline text-2xl">
-            <Star className="text-primary" />
-            Maintain Your Analytical Edge
+            <Zap className="text-primary" />
+            Unlock the Full Playbook
           </DialogTitle>
           <DialogDescription>
-            Don't lose access to the powerful AI research tools you've been using. Upgrade to Pro to continue turning complex data into clear insights.
+            You hit a wall. Break through it. Upgrade to get the full daily list of Call & Put contracts and the deep-dive AI analysis behind every trade. Stop guessing.
           </DialogDescription>
         </DialogHeader>
         
         <div className="py-4">
-            <h3 className="mb-4 font-semibold text-foreground">What You Get with Pro:</h3>
+            <h3 className="mb-4 font-semibold text-foreground">What You Get:</h3>
             <ul className="space-y-4">
                 {features.map((feature) => (
                     <li key={feature.title} className="flex items-start gap-3">
@@ -69,9 +69,9 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
         <DialogFooter className="flex-col items-center gap-2">
             <Button onClick={onSubscribe} className="w-full" disabled={loading} size="lg">
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Yes, Continue My Pro Access - $19/month
+                Become a Ripper ($19/mo)
             </Button>
-            <p className="text-xs text-muted-foreground">Cancel anytime.</p>
+            <p className="text-xs text-muted-foreground">Cancel anytime. Secure your edge today.</p>
         </DialogFooter>
       </DialogContent>
     </Dialog>

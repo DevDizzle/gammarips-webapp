@@ -342,7 +342,6 @@ export async function getPerformanceSignalsByOptionType(
 ): Promise<PerformanceSignal[]> {
     noStore();
     try {
-        // Simpler query without the inequality on percent_gain
         const query = adminDb.collection('performance_tracker')
             .where('option_type', '==', optionType)
             .orderBy('percent_gain', order)
@@ -354,7 +353,7 @@ export async function getPerformanceSignalsByOptionType(
             return [];
         }
 
-        const signals: PerformanceSignal[] = [];
+        let signals: PerformanceSignal[] = [];
         snapshot.forEach(doc => {
             const data = doc.data();
             const signal = PerformanceSignalSchema.safeParse({ id: doc.id, ...data });
@@ -367,7 +366,7 @@ export async function getPerformanceSignalsByOptionType(
         
         // Filter for gainers in code and then take the limit
         if (order === 'desc') {
-            return signals.filter(s => s.percent_gain >= 0).slice(0, limit);
+            signals = signals.filter(s => s.percent_gain >= 0);
         }
 
         return signals.slice(0, limit);
@@ -382,18 +381,20 @@ export async function getPerformanceSignals(
   order: 'asc' | 'desc',
   limit: number
 ): Promise<PerformanceSignal[]> {
+  noStore();
   try {
-    const snapshot = await adminDb
+    const query = adminDb
       .collection('performance_tracker')
       .orderBy('percent_gain', order)
-      .limit(limit)
-      .get();
+      .limit(limit * 2); // Fetch more to allow filtering
+
+    const snapshot = await query.get();
 
     if (snapshot.empty) {
       return [];
     }
 
-    const signals: PerformanceSignal[] = [];
+    let signals: PerformanceSignal[] = [];
     snapshot.forEach(doc => {
       const data = doc.data();
       const signal = {
@@ -418,8 +419,12 @@ export async function getPerformanceSignals(
         console.warn(`Invalid performance signal data in Firestore for doc ${doc.id}:`, validation.error.flatten());
       }
     });
+    
+    if (order === 'desc') {
+        signals = signals.filter(s => s.percent_gain >= 0);
+    }
 
-    return signals;
+    return signals.slice(0, limit);
   } catch (error) {
     console.error('Error fetching performance signals:', error);
     return [];

@@ -1,5 +1,6 @@
 
-import { getPerformanceSignalsByOptionType } from '@/app/actions';
+
+import { getPerformanceSignals } from '@/app/actions';
 import type { PerformanceSignal } from '@/lib/firebase-admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -19,7 +20,7 @@ const convertGcsUriToUrl = (gcsUri: string) => {
   return `https://storage.googleapis.com/${bucket}/${encodedObject}`;
 };
 
-const PerformanceList = ({ signals, title, icon }: { signals: PerformanceSignal[], title: string, icon: React.ReactNode }) => {
+const PerformanceList = ({ signals }: { signals: PerformanceSignal[] }) => {
     if (signals.length === 0) {
         return null;
     }
@@ -28,8 +29,8 @@ const PerformanceList = ({ signals, title, icon }: { signals: PerformanceSignal[
         <Card className="flex-1 bg-card/50">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                    {icon}
-                    {title}
+                    <ArrowUp className="text-green-500" />
+                    Top Recent Gainers
                 </CardTitle>
             </CardHeader>
             <CardContent>
@@ -133,10 +134,7 @@ const PerformanceList = ({ signals, title, icon }: { signals: PerformanceSignal[
 
 
 export default async function MarketMovers() {
-    const [topCallGainers, topPutGainers] = await Promise.all([
-        getPerformanceSignalsByOptionType('call', 'desc', 5),
-        getPerformanceSignalsByOptionType('put', 'desc', 5)
-    ]);
+    const topGainers = await getPerformanceSignals('desc', 5);
 
     return (
         <section className="py-16 sm:py-24 bg-muted/50">
@@ -147,13 +145,10 @@ export default async function MarketMovers() {
                         Our models are constantly tracking the performance of our signals. Here's a live look at some of the top market movers identified by our AI. This is the data-driven edge we provide.
                     </p>
                 </div>
-                <div className="mt-12 flex flex-col lg:flex-row justify-center gap-8">
-                    <PerformanceList signals={topCallGainers} title="Top Gaining Calls" icon={<ArrowUp className="text-green-500" />} />
-                    <PerformanceList signals={topPutGainers} title="Top Gaining Puts" icon={<ArrowUp className="text-green-500" />} />
+                <div className="mt-12 max-w-4xl mx-auto">
+                    <PerformanceList signals={topGainers} />
                 </div>
             </div>
         </section>
     );
 }
-
-    

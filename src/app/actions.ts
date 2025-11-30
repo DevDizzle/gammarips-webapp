@@ -25,7 +25,6 @@ import {
     getRandomSellStockAdmin,
     getTopStocksAdmin,
     getTopOptionsAdmin,
-    getDashboardDataAdmin,
     getWinnersDashboardAdmin,
     getOptionsCandidatesAdmin,
     getTickerEventsAdmin,
@@ -37,7 +36,6 @@ import {
     saveFeedbackSurveyAdmin,
     getFairQualityOptionsAdmin,
     getWinnerForTickerAdmin,
-    getPerformanceSignalsByOptionType as getPerformanceSignalsByOptionTypeAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal, FeedbackSurveyData } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
@@ -59,14 +57,6 @@ export async function getOptionsSignals(ticker: string): Promise<OptionCandidate
 
 export async function getPerformanceSignals(order: 'asc' | 'desc', limit: number): Promise<PerformanceSignal[]> {
     return getPerformanceSignalsAdmin(order, limit);
-}
-
-export async function getPerformanceSignalsByOptionType(
-    optionType: 'call' | 'put',
-    order: 'asc' | 'desc',
-    limit: number
-): Promise<PerformanceSignal[]> {
-    return getPerformanceSignalsByOptionTypeAdmin(optionType, order, limit);
 }
 
 export async function getAllPerformanceSignals(): Promise<PerformanceSignal[]> {

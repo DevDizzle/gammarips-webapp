@@ -45,11 +45,11 @@ export default async function CallSetupsPage() {
                     Daily Call Rips
                 </h1>
                 <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                    This is a preview of our daily bullish Rips. These are Call options on Russell 1000 stocks scored by our AI engine. We hunt for upside momentum.
+                    This is a preview of our high-conviction Call contracts. We scan the Russell 1000 to find stocks primed for upside momentum. Scored by AI. Filtered for volatility.
                 </p>
                  <Button asChild variant="link" className="mt-2">
                     <Link href="/options/put-hedges">
-                        Looking for downside? View Put Rips <ArrowRight className="ml-2 h-4 w-4" />
+                        Hunting for downside? View Put Rips <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                 </Button>
             </header>
@@ -58,7 +58,7 @@ export default async function CallSetupsPage() {
                 <CardHeader>
                     <CardTitle>Today's Top Call Rips</CardTitle>
                     <CardDescription>
-                       A sample of the top-scoring bullish Rips from today's market analysis. Click any card to unlock the full dashboard.
+                       A sample of the top-scoring Call contracts from today's market analysis. Click any card to unlock the full dashboard.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -141,7 +141,7 @@ export default async function CallSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">The "Rip Hunter" Protocol</h3>
-                            <p className="text-muted-foreground">For these elite stocks, we deploy the Rip Hunter logic. We hunt for aggressive, high-gamma contracts with 3 to 60 days to expiry. We look for deep out-of-the-money setups that are primed for explosive acceleration. We prioritize directional potential over rigid safety filters.</p>
+                            <p className="text-muted-foreground">For these elite stocks, we deploy the Rip Hunter logic. We hunt for aggressive, high-gamma contracts with 3 to 60 days to expiry. We look for setups geared toward buying premium (Long Calls). We look for out-of-the-money strikes primed for explosive acceleration.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -150,7 +150,7 @@ export default async function CallSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">AI Validation & Ranking</h3>
-                            <p className="text-muted-foreground">Finally, our AI validates the trade. It applies a dynamic safety check. It relaxes liquidity rules for high-conviction breakouts to catch them early but enforces strict filters for standard setups. It boosts scores for unusual options activity where volume exceeds open interest. Only the most explosive opportunities make the daily list.</p>
+                            <p className="text-muted-foreground">Finally, our AI validates the trade. It applies a dynamic safety check. It relaxes liquidity rules for high-conviction breakouts to catch them early but enforces strict filters for standard setups. It boosts scores for unusual options activity where volume exceeds open interest. Only the most explosive contracts make the daily list.</p>
                         </div>
                     </div>
                 </CardContent>

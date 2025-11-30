@@ -45,11 +45,11 @@ export default async function PutSetupsPage() {
                     Daily Put Rips
                 </h1>
                 <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                    This is a preview of our daily bearish Rips. These are Put options on Russell 1000 stocks scored by our AI engine. We hunt for weakness and downside momentum.
+                    This is a preview of our high-conviction Put contracts. We scan the Russell 1000 to find stocks primed for downside momentum. Scored by AI. Filtered for weakness.
                 </p>
                 <Button asChild variant="link" className="mt-2">
                     <Link href="/options/call-setups">
-                        Looking for upside? View Call Rips <ArrowRight className="ml-2 h-4 w-4" />
+                        Hunting for upside? View Call Rips <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                 </Button>
             </header>
@@ -58,7 +58,7 @@ export default async function PutSetupsPage() {
                 <CardHeader>
                     <CardTitle>Today's Top Put Rips</CardTitle>
                     <CardDescription>
-                       A sample of the top-scoring bearish Rips from today's analysis. Click any card to unlock the full dashboard.
+                       A sample of the top-scoring Put contracts from today's market analysis. Click any card to unlock the full dashboard.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -141,7 +141,7 @@ export default async function PutSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">The "Hedge Hunter" Protocol</h3>
-                            <p className="text-muted-foreground">For these vulnerable targets, we deploy the Hedge Hunter logic. We hunt for aggressive, high-gamma Put contracts with 3 to 60 days to expiry. We look for deep out-of-the-money setups that are primed for rapid value expansion during a sell-off. We prioritize downside acceleration over safety.</p>
+                            <p className="text-muted-foreground">For these vulnerable targets, we deploy the Hedge Hunter logic. We hunt for aggressive, high-gamma contracts with 3 to 60 days to expiry. We look for setups geared toward buying premium (Long Puts) to profit from rapid value expansion during a sell-off.</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-4">
@@ -150,7 +150,7 @@ export default async function PutSetupsPage() {
                         </div>
                         <div>
                             <h3 className="font-semibold">AI Validation & Ranking</h3>
-                            <p className="text-muted-foreground">Finally, our AI validates the trade. It applies a dynamic safety check. It relaxes liquidity rules for high-conviction breakdowns to catch the move early but enforces strict filters for standard defensive plays. It boosts scores for unusual put activity where volume exceeds open interest. Only the most actionable downside plays make the daily list.</p>
+                            <p className="text-muted-foreground">Finally, our AI validates the trade. It applies a dynamic safety check. It relaxes liquidity rules for high-conviction breakdowns to catch the move early but enforces strict filters for standard defensive plays. It boosts scores for unusual put activity where volume exceeds open interest. Only the most actionable contracts make the daily list.</p>
                         </div>
                     </div>
                 </CardContent>

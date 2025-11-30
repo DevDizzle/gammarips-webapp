@@ -87,8 +87,8 @@ export default async function LandingPage() {
           {/* Hero Section */}
           <section className="relative text-center py-20 sm:py-28 px-4 flex items-center justify-center h-[60vh] min-h-[400px] bg-black">
             <Image
-                src="/hero-image.jpeg"
-                alt="Futuristic options trading interface"
+                src={hero.src}
+                alt={hero.alt}
                 fill
                 priority
                 className="object-cover opacity-30"

@@ -1,8 +1,3 @@
 
-{
-    "hero": {
-        "src": "/hero-image.jpeg",
-        "alt": "A futuristic, sleek options trading interface floating in a dark void, with data visualizations in charcoal, lime green, and gold.",
-        "hint": "A futuristic, sleek options trading interface floating in a dark void. Isometric view. The data visualization is clean and sharp, featuring candlestick patterns and volatility curves. The color palette is strictly deep charcoal (`hsl(224, 20%, 12%)`), vibrant lime green (`hsl(74, 80%, 50%)`), and sharp gold (`hsl(45, 80%, 50%)`). No clutter. The chart is ripping upwards with a digital trail of data points. Cyberpunk-lite but professional. Looks like a hedge fund terminal from the year 2030. Deep depth of field. Wide aspect ratio for web banner. --ar 16:9"
-    }
-}
+{}
+

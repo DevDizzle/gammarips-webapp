@@ -11,10 +11,8 @@ import Faq, { faqs } from "@/components/landing/faq";
 import SignalsPreview from "@/components/landing/signals-preview";
 import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
 import MarketMovers from "@/components/landing/market-movers";
-import placeholderImageData from '@/app/lib/placeholder-images.json';
 
 export default async function LandingPage() {
-  const { hero } = placeholderImageData;
   const softwareSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -85,16 +83,8 @@ export default async function LandingPage() {
 
         <main className="flex-1">
           {/* Hero Section */}
-           <section className="relative text-center h-[60vh] min-h-[400px] flex flex-col items-center justify-center bg-black">
-            <Image
-                src={hero.src}
-                alt={hero.alt}
-                fill
-                className="object-cover"
-                priority
-            />
-            <div className="absolute inset-0 bg-black/60 z-10" />
-            <div className="relative z-20 p-4">
+           <section className="relative text-center py-20 md:py-32 flex flex-col items-center justify-center bg-background">
+            <div className="relative z-10 p-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight text-white">
                 One Simple Options Playbook.
               </h1>

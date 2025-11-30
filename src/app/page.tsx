@@ -1,7 +1,6 @@
 
 import Link from "next/link";
 import { Suspense } from "react";
-import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Bot, Gem, Target, Github, Scale, Shield, LineChart, Star, Users, XCircle, Search, BrainCircuit, Zap } from "lucide-react";
@@ -83,7 +82,11 @@ export default async function LandingPage() {
 
         <main className="flex-1">
           {/* Hero Section */}
-           <section className="relative text-center py-20 md:py-32 flex flex-col items-center justify-center bg-background">
+          <section 
+            className="relative text-center py-20 md:py-32 flex flex-col items-center justify-center bg-cover bg-center min-h-[50vh] bg-black"
+            style={{ backgroundImage: 'url(/hero-image.jpeg)' }}
+          >
+            <div className="absolute inset-0 bg-black/60 z-0" />
             <div className="relative z-10 p-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight text-white">
                 One Simple Options Playbook.

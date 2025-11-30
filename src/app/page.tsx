@@ -82,7 +82,7 @@ export default async function LandingPage() {
 
         <main className="flex-1">
           {/* Hero Section */}
-          <section 
+          <section
             className="relative text-center py-20 md:py-32 flex flex-col items-center justify-center bg-cover bg-center min-h-[50vh] bg-black"
             style={{ backgroundImage: 'url(/hero-image.jpeg)' }}
           >
@@ -101,10 +101,30 @@ export default async function LandingPage() {
           <Suspense fallback={<div>Loading today's market movers...</div>}>
             <MarketMovers />
           </Suspense>
+          
+          {/* Performance Tracker Section */}
+          <section className="py-16 sm:py-24">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
+                <h2 className="text-3xl font-bold font-headline">Live Performance. No Hiding.</h2>
+                <p className="mt-4 max-w-3xl mx-auto text-muted-foreground">
+                  Our models track the performance of every Call and Put setup we publish. We show the wins, the losses, and the flat trades. This is a live record of every contract we flagged. It is not a cherry-picked highlight reel. Past performance does not guarantee future results
+                </p>
+                <div className="mt-8">
+                  <Suspense fallback={<PerformanceTrackerSkeleton />}>
+                    <PerformanceTracker />
+                  </Suspense>
+                </div>
+                <p className="mt-8 text-xs text-muted-foreground max-w-xl mx-auto">
+                  Performance tracking began on 11/28/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and daily until the contract expires.
+                </p>
+              </Card>
+            </div>
+          </section>
 
 
           {/* New "Who This Is For" Section */}
-          <section className="py-16 sm:py-24">
+          <section className="py-16 sm:py-24 bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
                  <h2 className="text-3xl font-bold font-headline">Who GammaRips Is For (and Not For)</h2>
@@ -147,26 +167,6 @@ export default async function LandingPage() {
           <Suspense fallback={<div>Loading today's signals...</div>}>
             <SignalsPreview />
           </Suspense>
-
-          {/* Performance Tracker Section */}
-          <section className="pb-16 sm:pb-24">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
-                <h2 className="text-3xl font-bold font-headline">Live Performance. No Hiding.</h2>
-                <p className="mt-4 max-w-3xl mx-auto text-muted-foreground">
-                  Our models track the performance of every Call and Put setup we publish. We show the wins, the losses, and the flat trades. This is a live record of every contract we flagged. It is not a cherry-picked highlight reel. Past performance does not guarantee future results
-                </p>
-                <div className="mt-8">
-                  <Suspense fallback={<PerformanceTrackerSkeleton />}>
-                    <PerformanceTracker />
-                  </Suspense>
-                </div>
-                <p className="mt-8 text-xs text-muted-foreground max-w-xl mx-auto">
-                  Performance tracking began on 11/28/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and daily until the contract expires.
-                </p>
-              </Card>
-            </div>
-          </section>
 
           {/* The Daily Routine Section */}
           <section className="pb-16 sm:pb-24">

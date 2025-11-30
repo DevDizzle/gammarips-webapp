@@ -85,7 +85,7 @@ export default async function LandingPage() {
 
         <main className="flex-1">
           {/* Hero Section */}
-          <section className="relative flex items-center justify-center text-center py-20 sm:py-28 px-4 h-[60vh] min-h-[400px] bg-black">
+          <section className="relative text-center h-[60vh] min-h-[400px] bg-black flex items-center justify-center">
             <Image
                 src={hero.src}
                 alt={hero.alt}
@@ -94,7 +94,7 @@ export default async function LandingPage() {
                 className="object-cover opacity-30 z-0"
                 data-ai-hint={hero.hint}
             />
-            <div className="relative z-10">
+            <div className="relative z-10 p-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight text-white">
                 One Simple Options Playbook.
               </h1>

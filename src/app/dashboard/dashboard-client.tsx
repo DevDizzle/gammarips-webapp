@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
@@ -10,9 +10,6 @@ import { SubscriptionDialog } from "@/components/auth/subscription-dialog";
 import { createCheckoutSession } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { loadStripe } from "@stripe/stripe-js";
-import { MailCheck } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -58,8 +55,19 @@ export default function DashboardPageClient({ children }: { children: React.Reac
         return <AuthDialog open={true} onOpenChange={() => router.push('/')} />;
     }
 
-    // 3. If user is not subscribed, show subscription dialog.
-    if (!dbUser?.isSubscribed) {
+    // 3. If user exists but their database record is still loading or doesn't exist, show loader.
+    // This can happen briefly after sign-up.
+    if (!dbUser) {
+        return (
+            <div className="flex justify-center items-center h-[calc(100vh-10rem)]">
+                <Loader2 className="h-10 w-10 animate-spin" />
+                <p className="ml-4">Finalizing account...</p>
+            </div>
+        )
+    }
+
+    // 4. If user is not subscribed, show subscription dialog.
+    if (!dbUser.isSubscribed) {
         return (
             <SubscriptionDialog
               open={true}
@@ -70,6 +78,6 @@ export default function DashboardPageClient({ children }: { children: React.Reac
         );
     }
 
-    // 4. If all checks pass, render the premium content
+    // 5. If all checks pass, render the premium content
     return <>{children}</>;
 }

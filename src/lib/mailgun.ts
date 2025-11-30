@@ -112,14 +112,14 @@ The GammaRips Team
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>Welcome to GammaRips!</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
                             <p style="font-size: 18px; color: #A0A0A0; margin-top: 12px;">Welcome, ${name}!</p>
                         </td>
                     </tr>
@@ -136,7 +136,7 @@ The GammaRips Team
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://gammarips.com/dashboard" style="background-color: #f5a623; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
+                            <a href="https://gammarips.com/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
                         </td>
                     </tr>
                      <tr>
@@ -191,26 +191,26 @@ The GammaRips Team
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>Thank You for Subscribing!</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
                             <p style="font-size: 18px; color: #A0A0A0; margin-top: 12px;">Thank You, ${name}!</p>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
                             <p style="font-size: 16px; line-height: 1.6;">Welcome to <strong>GammaRips Pro!</strong> We're thrilled to have you as a premium member. Your support helps us continue to build and improve the tools that power your research.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We are committed to providing you with the best AI-driven market insights available. If you have any questions, feedback, or ideas for new features, please don't hesitate to reach out. You can reply directly to this email or contact support anytime at <a href="mailto:admin@gammarips.com" style="color: #f5a623; text-decoration: none;">admin@gammarips.com</a>.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We are committed to providing you with the best AI-driven market insights available. If you have any questions, feedback, or ideas for new features, please don't hesitate to reach out. You can reply directly to this email or contact support anytime at <a href="mailto:admin@gammarips.com" style="color: hsl(74, 80%, 50%); text-decoration: none;">admin@gammarips.com</a>.</p>
                         </td>
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://gammarips.com/dashboard" style="background-color: #f5a623; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Explore Your Pro Dashboard</a>
+                            <a href="https://gammarips.com/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Explore Your Pro Dashboard</a>
                         </td>
                     </tr>
                      <tr>
@@ -267,14 +267,14 @@ The GammaRips Team
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>Your Access Requires Subscription</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
@@ -286,7 +286,7 @@ The GammaRips Team
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://gammarips.com/" style="background-color: #f5a623; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Upgrade to Pro - $19/month</a>
+                            <a href="https://gammarips.com/" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Upgrade to Pro - $19/month</a>
                         </td>
                     </tr>
                      <tr>
@@ -363,14 +363,14 @@ Founder, GammaRips
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>Share the edge: Give your friends 45 days of GammaRips</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
@@ -385,7 +385,7 @@ Founder, GammaRips
                             <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; color: #ffffff; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #393b4d; padding-bottom: 10px;">1. Share Directly with a Friend</h2>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 0;">Know someone specific who would benefit? Just copy your link and send it their way.</p>
                             <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 12px; text-align: center; margin-top: 8px; margin-bottom: 20px;">
-                                <a href="${referralLink}" style="font-family: monospace; font-size: 15px; color: #f5a623; text-decoration: none; word-break: break-all;">${referralLink}</a>
+                                <a href="${referralLink}" style="font-family: monospace; font-size: 15px; color: hsl(74, 80%, 50%); text-decoration: none; word-break: break-all;">${referralLink}</a>
                             </div>
                         </td>
                     </tr>
@@ -409,7 +409,7 @@ Founder, GammaRips
                              <p style="font-size: 14px; line-height: 1.6; margin-top: 20px; color: #A0A0A0;">You can also copy and paste the message below:</p>
                              <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 15px; margin-top: 8px;">
                                 <p style="font-size: 14px; line-height: 1.6; margin: 0;">I'm using GammaRips for AI-driven options trading insights. My link gets you an extended 45-day free trial (usually 7 days) if you want to check it out:</p>
-                                <p style="font-size: 14px; line-height: 1.6; margin: 10px 0 0;"><a href="${referralLink}" style="color: #f5a623; text-decoration: none;">${referralLink}</a></p>
+                                <p style="font-size: 14px; line-height: 1.6; margin: 10px 0 0;"><a href="${referralLink}" style="color: hsl(74, 80%, 50%); text-decoration: none;">${referralLink}</a></p>
                                 <p style="font-size: 14px; line-height: 1.6; margin: 10px 0 0; color: #A0A0A0;">#optionstrading #AI #fintech #tradingtools</p>
                             </div>
                         </td>
@@ -473,14 +473,14 @@ Founder, GammaRips
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>A personal check-in from GammaRips's founder</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
@@ -493,7 +493,7 @@ Founder, GammaRips
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://gammarips.com/feedback" style="background-color: #f5a623; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
+                            <a href="https://gammarips.com/feedback" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
                         </td>
                     </tr>
                      <tr>
@@ -553,14 +553,14 @@ The GammaRips Team
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>We've Received Your Feedback</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
@@ -569,7 +569,7 @@ The GammaRips Team
                             <p style="font-size: 16px; line-height: 1.6;">Thank you for contacting us! We've received your message and our team will review it shortly. We appreciate you taking the time to reach out.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">For your records, your reference ID is:</p>
                              <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 12px; text-align: center; margin-top: 8px;">
-                                <p style="font-family: monospace; font-size: 18px; color: #f5a623; margin: 0;">${trackingId}</p>
+                                <p style="font-family: monospace; font-size: 18px; color: hsl(74, 80%, 50%); margin: 0;">${trackingId}</p>
                             </div>
                         </td>
                     </tr>
@@ -626,14 +626,14 @@ The GammaRips Team
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>Response to your inquiry</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #050509; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050509;">
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1a1a1a; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #f5a623;">Rips</span></h1>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>

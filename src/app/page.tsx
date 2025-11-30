@@ -9,6 +9,7 @@ import HomePageClientContent from "./home-page-client-content";
 import Faq, { faqs } from "@/components/landing/faq";
 import SignalsPreview from "@/components/landing/signals-preview";
 import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
+import MarketMovers from "@/components/landing/market-movers";
 
 export default async function LandingPage() {
   const softwareSchema = {
@@ -88,17 +89,18 @@ export default async function LandingPage() {
             <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
               High-conviction Call & Put setups on stocks primed to move. You get a tight daily list of contracts and clean AI breakdowns. No complex strategies. Just the Rips.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
-               <Suspense>
-                <HomePageClientContent showButton={true} buttonText="Become a Ripper ($19/mo)"/>
-               </Suspense>
-            </div>
-             <p className="mt-3 text-sm text-muted-foreground">Flat monthly rate. Cancel anytime. 7-day money-back guarantee on your first month.</p>
+             <p className="mt-8 text-sm text-muted-foreground">Scroll down to see our recent performance.</p>
              <p className="mt-4 text-xs text-muted-foreground max-w-md mx-auto">GammaRips is an AI-driven options research tool, not a broker or advisor. Options are risky and can result in 100% loss of premium.</p>
           </section>
 
+          {/* Market Movers Section */}
+          <Suspense fallback={<div>Loading today's market movers...</div>}>
+            <MarketMovers />
+          </Suspense>
+
+
           {/* New "Who This Is For" Section */}
-          <section className="pb-16 sm:pb-24">
+          <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
                  <h2 className="text-3xl font-bold font-headline">Who GammaRips Is For (and Not For)</h2>

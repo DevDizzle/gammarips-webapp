@@ -28,7 +28,6 @@ import {
     getDashboardDataAdmin,
     getWinnersDashboardAdmin,
     getOptionsCandidatesAdmin,
-    getOptionsHeaderSignalAdmin,
     getTickerEventsAdmin,
     saveFeedbackAdmin,
     getPerformanceSignals as getPerformanceSignalsAdmin,
@@ -37,6 +36,7 @@ import {
     getAppStatusAdmin,
     saveFeedbackSurveyAdmin,
     getFairQualityOptionsAdmin,
+    getWinnerForTickerAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal, FeedbackSurveyData } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
@@ -111,35 +111,28 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
     const rawData = await getDashboardDataAdmin(ticker);
     if (!rawData) return null;
 
-    // --- Options Header Selection & Transformation ---
-    const topSignal = await getOptionsHeaderSignalAdmin(ticker);
-    const fairOptions = await getFairQualityOptionsAdmin(ticker);
+    const winnerContract = await getWinnerForTickerAdmin(ticker);
 
     const optionsHeader = (() => {
-        if (!topSignal) return null;
+        if (!winnerContract) return null;
 
-        const dte = Math.ceil((new Date(topSignal.expiration_date).getTime() - new Date(topSignal.run_date).getTime()) / (1000 * 60 * 60 * 24));
+        const dte = Math.ceil((new Date(winnerContract.expiration_date).getTime() - new Date(winnerContract.run_date).getTime()) / (1000 * 60 * 60 * 24));
 
         const header: any = {
-            companyName: topSignal.company_name,
-            ticker: topSignal.ticker,
-            runDate: topSignal.run_date,
-            optionType: topSignal.option_type,
-            contractSymbol: topSignal.contract_symbol,
-            expirationDate: topSignal.expiration_date,
-            strikePrice: topSignal.strike_price,
-            ivValue: topSignal.implied_volatility,
-            volatilitySignal: topSignal.volatility_comparison_signal,
+            companyName: winnerContract.company_name,
+            ticker: winnerContract.ticker,
+            runDate: winnerContract.run_date,
+            optionType: winnerContract.option_type,
+            contractSymbol: winnerContract.contract_symbol,
+            expirationDate: winnerContract.expiration_date,
+            strikePrice: winnerContract.strike_price,
+            setupQuality: winnerContract.setup_quality_signal,
+            trendSignal: winnerContract.outlook_signal, // From winners_dashboard
+            volatilitySignal: winnerContract.volatility_comparison_signal, // From winners_dashboard
+            topSignalSummary: winnerContract.summary,
             dte: dte,
         };
         
-        if (topSignal.setup_quality_signal) {
-            header.setupQuality = topSignal.setup_quality_signal;
-        }
-        if (topSignal.stock_price_trend_signal) {
-            header.trendSignal = topSignal.stock_price_trend_signal;
-        }
-
         return header;
     })();
     
@@ -167,8 +160,6 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
         ...rawData,
         industry,
         optionsHeader, // This will be null if no top signal is found
-        fairQualityOptions: fairOptions,
-        topSignalSummary: topSignal?.summary, // Pass summary separately
         stockLevelAnalysis, // Overwrite with new content
     };
 }

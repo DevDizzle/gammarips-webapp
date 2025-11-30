@@ -20,7 +20,6 @@ import DashboardPageClient from '../dashboard-client';
 import DataUpdatingPage from '@/components/layout/data-updating-page';
 import type { OptionsSignal } from '@/lib/firebase-admin';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { FairOptionsDisplay } from './noteworthy-options';
 
 interface TickerDashboardPageProps {
   params: {
@@ -83,7 +82,7 @@ const KpiCard = ({ title, value, subValue, signal, tooltip, icon, children }: { 
 );
 
 function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
-  const { titleInfo, kpis, priceChartData, stockLevelAnalysis, industry, optionsHeader, topSignalSummary, fairQualityOptions } = data;
+  const { titleInfo, kpis, priceChartData, stockLevelAnalysis, industry, optionsHeader } = data;
 
   // Calculate RSI change for display
   const rsiChange = kpis?.rsiMomentum?.currentRsi && kpis?.rsiMomentum?.rsi30DaysAgo
@@ -147,7 +146,7 @@ function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
                     <Star className="text-primary" />
                     Top-Rated Option
                 </CardTitle>
-                 <CardDescription>{topSignalSummary}</CardDescription>
+                 <CardDescription>{optionsHeader.topSignalSummary}</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -191,8 +190,6 @@ function TickerDashboard({ data, ticker }: { data: any, ticker: string }) {
             </CardContent>
         </Card>
       )}
-
-      <FairOptionsDisplay options={fairQualityOptions} />
 
       {/* KPI Section with Carousel */}
       <div className="-mx-4 sm:-mx-6 lg:hidden lg:-mx-8">

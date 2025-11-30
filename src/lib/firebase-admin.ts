@@ -155,6 +155,11 @@ const WinnerSchema = z.object({
     expiration_date: z.string(),
     options_score: z.number().optional().nullable(),
     contract_symbol: z.string(),
+    setup_quality_signal: z.string().optional(),
+    volatility_comparison_signal: z.string().optional(),
+    summary: z.string().optional(),
+    dashboard_json: z.string().optional().nullable(),
+    recommendation_analysis: z.string().optional().nullable(),
 });
 export type Winner = z.infer<typeof WinnerSchema>;
 
@@ -459,37 +464,34 @@ export async function saveFeedbackSurveyAdmin(uid: string, data: FeedbackSurveyD
     }
 }
 
-export async function getOptionsHeaderSignalAdmin(ticker: string): Promise<OptionsSignal | null> {
+export async function getWinnerForTickerAdmin(ticker: string): Promise<Winner | null> {
+    noStore();
     try {
-        const docRef = adminDb.collection("options_signals").doc(ticker.toUpperCase());
-        const docSnap = await docRef.get();
+        const snapshot = await adminDb.collection('winners_dashboard')
+            .where('ticker', '==', ticker.toUpperCase())
+            .limit(1)
+            .get();
 
-        if (!docSnap.exists) {
-            console.warn(`No options signals found for ticker: ${ticker}`);
+        if (snapshot.empty) {
+            console.warn(`No winner found for ticker: ${ticker}`);
             return null;
         }
-
-        const data = docSnap.data();
-        const allSignals = [...(data?.calls || []), ...(data?.puts || [])];
         
-        // Find the first signal with a "Strong" setup quality
-        const strongSignal = allSignals.find(signal => signal.setup_quality_signal === 'Strong');
+        const doc = snapshot.docs[0];
+        const data = doc.data();
 
-        if (!strongSignal) {
-             console.warn(`No "Strong" quality option signal found for ticker: ${ticker} to create header.`);
-             return null;
-        }
-
-        const validation = OptionsSignalSchema.safeParse(strongSignal);
+        const winnerData = { id: doc.id, ...data };
+        const validation = WinnerSchema.safeParse(winnerData);
 
         if (!validation.success) {
-            console.error(`Invalid "Strong" options signal data for ${ticker}:`, validation.error.flatten());
+            console.error(`Invalid winner data for ${ticker}:`, validation.error.flatten());
             return null;
         }
-        
+
         return validation.data;
+
     } catch (error) {
-        console.error(`Error fetching options header signal for ${ticker}:`, error);
+        console.error(`Error fetching winner for ticker ${ticker}:`, error);
         return null;
     }
 }
@@ -504,21 +506,7 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
              const data = doc.data();
              const winnerData: any = { // Use any to bypass strict checking before validation
                 id: doc.id,
-                company_name: data.company_name,
-                image_uri: data.image_uri,
-                industry: data.industry,
-                sector: data.sector,
-                last_close: data.last_close,
-                outlook_signal: data.outlook_signal,
-                run_date: data.run_date,
-                thirty_day_change_pct: data.thirty_day_change_pct,
-                ticker: data.ticker,
-                weighted_score: isNaN(data.weighted_score) ? null : data.weighted_score,
-                option_type: data.option_type,
-                strike_price: data.strike_price,
-                expiration_date: data.expiration_date,
-                options_score: data.options_score,
-                contract_symbol: data.contract_symbol,
+                ...data
             };
             const validation = WinnerSchema.safeParse(winnerData);
             if (validation.success) {
@@ -1320,5 +1308,3 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
-
-

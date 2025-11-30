@@ -342,11 +342,11 @@ export async function getPerformanceSignalsByOptionType(
 ): Promise<PerformanceSignal[]> {
     noStore();
     try {
+        // Simpler query without the inequality on percent_gain
         const query = adminDb.collection('performance_tracker')
             .where('option_type', '==', optionType)
-            .where('percent_gain', order === 'desc' ? '>=' : '<=', 0)
             .orderBy('percent_gain', order)
-            .limit(limit);
+            .limit(limit * 3); // Fetch more to allow for in-code filtering
 
         const snapshot = await query.get();
 
@@ -364,8 +364,13 @@ export async function getPerformanceSignalsByOptionType(
                 console.warn(`Invalid performance signal data for type ${optionType}:`, signal.error.flatten());
             }
         });
+        
+        // Filter for gainers in code and then take the limit
+        if (order === 'desc') {
+            return signals.filter(s => s.percent_gain >= 0).slice(0, limit);
+        }
 
-        return signals;
+        return signals.slice(0, limit);
 
     } catch (error) {
         console.error(`Error fetching performance signals for type ${optionType}:`, error);
@@ -795,45 +800,6 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
     } catch (error) {
         console.error(`Error fetching options candidates:`, error);
         return [];
-    }
-}
-
-
-
-export async function getDashboardDataAdmin(ticker: string): Promise<any | null> {
-    try {
-        const docRef = adminDb.collection("tickers").doc(ticker.toUpperCase());
-        const docSnap = await docRef.get();
-
-        if (!docSnap.exists) {
-            console.warn(`[getDashboardDataAdmin] No document found for ticker: ${ticker}`);
-            return null;
-        }
-        
-        const stockData = docSnap.data();
-        const gcsPath = stockData?.dashboard_json;
-
-        if (typeof gcsPath !== 'string' || !gcsPath.startsWith('gs://')) {
-             console.warn(`[getDashboardDataAdmin] No valid dashboard_json GCS path for ticker: ${ticker}. Path found: ${gcsPath}`);
-            return null;
-        }
-
-        console.log(`[getDashboardDataAdmin] Found GCS path for ${ticker}: ${gcsPath}`);
-        const content = await getGcsFileContentAdmin(gcsPath);
-        const dashboardData = JSON.parse(content);
-        
-        // Find the outlook signal from the winners_dashboard collection
-        const winnersSnapshot = await adminDb.collection('winners_dashboard').where('ticker', '==', ticker.toUpperCase()).limit(1).get();
-        if (!winnersSnapshot.empty) {
-            const winnerData = winnersSnapshot.docs[0].data();
-            dashboardData.outlookSignal = winnerData.outlook_signal;
-        }
-
-        return dashboardData;
-
-    } catch (error: any) {
-        console.error(`[getDashboardDataAdmin] Error fetching dashboard data for ${ticker}:`, error);
-        return null;
     }
 }
 
@@ -1346,3 +1312,4 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+

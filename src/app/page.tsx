@@ -85,20 +85,16 @@ export default async function LandingPage() {
 
         <main className="flex-1">
           {/* Hero Section */}
-          <section className="relative text-center h-[60vh] min-h-[400px] flex items-center justify-center bg-black">
-            <Image
-              src={hero.src}
-              alt={hero.alt}
-              fill
-              priority
-              className="object-cover opacity-30 z-0"
-              data-ai-hint={hero.hint}
-            />
+           <section
+            className="relative text-center h-[60vh] min-h-[400px] flex flex-col items-center justify-center bg-cover bg-center bg-black"
+            style={{ backgroundImage: `url(${hero.src})` }}
+          >
+            <div className="absolute inset-0 bg-black/60 z-0" />
             <div className="relative z-10 p-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight text-white">
                 One Simple Options Playbook.
               </h1>
-              <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+              <p className="mt-4 text-lg sm:text-xl text-neutral-200 max-w-3xl mx-auto">
                 High-conviction Call & Put setups on stocks primed to move. You get a tight daily list of contracts and clean AI breakdowns. No complex strategies. Just the Rips.
               </p>
             </div>
@@ -277,5 +273,3 @@ export default async function LandingPage() {
     </>
   );
 }
-
-    

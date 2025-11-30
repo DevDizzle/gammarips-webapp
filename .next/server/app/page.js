@@ -7,7 +7,7 @@ runtime.loadChunk("server/chunks/ssr/_1e7a92a5._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_96715ba7._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_next_dist_client_components_forbidden-error_ea7ea172.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_next_dist_client_components_unauthorized-error_c8949b27.js");
-runtime.loadChunk("server/chunks/ssr/node_modules_node-fetch_src_index_f4ad23b9.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_node-fetch_src_index_7119a7a4.js");
 runtime.loadChunk("server/chunks/ssr/[root-of-the-server]__f5ef78e7._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_next_da9eca2d._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_zod_6294a4bd._.js");

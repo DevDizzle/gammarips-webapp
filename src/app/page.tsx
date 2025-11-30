@@ -85,27 +85,22 @@ export default async function LandingPage() {
 
         <main className="flex-1">
           {/* Hero Section */}
-          <section className="text-center py-20 sm:py-28 px-4">
-            <div className="relative">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight">
+          <section className="relative text-center py-20 sm:py-28 px-4 flex items-center justify-center h-[60vh] min-h-[400px] bg-black">
+            <Image
+                src="/hero-image.jpeg"
+                alt="Futuristic options trading interface"
+                fill
+                priority
+                className="object-cover opacity-30"
+            />
+            <div className="relative z-10">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight text-white">
                 One Simple Options Playbook.
               </h1>
               <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
                 High-conviction Call & Put setups on stocks primed to move. You get a tight daily list of contracts and clean AI breakdowns. No complex strategies. Just the Rips.
               </p>
-              <div className="relative aspect-[16/9] max-w-5xl mx-auto mt-8 rounded-lg overflow-hidden border-2 border-primary/20 shadow-[0_0_50px_-10px_hsl(var(--primary)/0.3)]">
-                <Image 
-                  src={hero.src}
-                  alt={hero.alt}
-                  fill
-                  priority
-                  className="object-cover animate-in fade-in-0 duration-1000"
-                  data-ai-hint={hero.hint}
-                />
-              </div>
             </div>
-             <p className="mt-8 text-sm text-muted-foreground">Scroll down to see our recent performance.</p>
-             <p className="mt-4 text-xs text-muted-foreground max-w-md mx-auto">GammaRips is an AI-driven options research tool, not a broker or advisor. Options are risky and can result in 100% loss of premium.</p>
           </section>
 
           {/* Market Movers Section */}

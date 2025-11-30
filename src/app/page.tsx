@@ -85,14 +85,14 @@ export default async function LandingPage() {
 
         <main className="flex-1">
           {/* Hero Section */}
-          <section className="relative text-center h-[60vh] min-h-[400px] bg-black flex items-center justify-center">
+          <section className="relative text-center h-[60vh] min-h-[400px] flex items-center justify-center bg-black">
             <Image
-                src={hero.src}
-                alt={hero.alt}
-                fill
-                priority
-                className="object-cover opacity-30 z-0"
-                data-ai-hint={hero.hint}
+              src={hero.src}
+              alt={hero.alt}
+              fill
+              priority
+              className="object-cover opacity-30 z-0"
+              data-ai-hint={hero.hint}
             />
             <div className="relative z-10 p-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight text-white">
@@ -277,3 +277,5 @@ export default async function LandingPage() {
     </>
   );
 }
+
+    

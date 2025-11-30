@@ -1,6 +1,7 @@
 
 import Link from "next/link";
 import { Suspense } from "react";
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Bot, Gem, Target, Github, Scale, Shield, LineChart, Star, Users, XCircle, Search, BrainCircuit, Zap } from "lucide-react";
@@ -10,8 +11,10 @@ import Faq, { faqs } from "@/components/landing/faq";
 import SignalsPreview from "@/components/landing/signals-preview";
 import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
 import MarketMovers from "@/components/landing/market-movers";
+import placeholderImageData from '@/app/lib/placeholder-images.json';
 
 export default async function LandingPage() {
+  const { hero } = placeholderImageData;
   const softwareSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -83,12 +86,24 @@ export default async function LandingPage() {
         <main className="flex-1">
           {/* Hero Section */}
           <section className="text-center py-20 sm:py-28 px-4">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight">
-              One Simple Options Playbook.
-            </h1>
-            <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-              High-conviction Call & Put setups on stocks primed to move. You get a tight daily list of contracts and clean AI breakdowns. No complex strategies. Just the Rips.
-            </p>
+            <div className="relative">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight">
+                One Simple Options Playbook.
+              </h1>
+              <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+                High-conviction Call & Put setups on stocks primed to move. You get a tight daily list of contracts and clean AI breakdowns. No complex strategies. Just the Rips.
+              </p>
+              <div className="relative aspect-[16/9] max-w-5xl mx-auto mt-8 rounded-lg overflow-hidden border-2 border-primary/20 shadow-[0_0_50px_-10px_hsl(var(--primary)/0.3)]">
+                <Image 
+                  src={hero.src}
+                  alt={hero.alt}
+                  fill
+                  priority
+                  className="object-cover animate-in fade-in-0 duration-1000"
+                  data-ai-hint={hero.hint}
+                />
+              </div>
+            </div>
              <p className="mt-8 text-sm text-muted-foreground">Scroll down to see our recent performance.</p>
              <p className="mt-4 text-xs text-muted-foreground max-w-md mx-auto">GammaRips is an AI-driven options research tool, not a broker or advisor. Options are risky and can result in 100% loss of premium.</p>
           </section>
@@ -246,12 +261,7 @@ export default async function LandingPage() {
                       Become a Ripper to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
                     </p>
                     <div className="mt-8">
-                        <Button asChild size="lg">
-                             <Link href="/dashboard">
-                                Become a Ripper ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
-                            </Link>
-                        </Button>
-                         <p className="text-xs text-muted-foreground mt-3">Billed monthly, cancel anytime. 7-day money-back guarantee on your first month.</p>
+                        <HomePageClientContent showButton={true} buttonText="Become a Ripper ($19/mo)" />
                     </div>
                 </Card>
             </div>

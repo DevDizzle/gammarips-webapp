@@ -37,6 +37,7 @@ import {
     saveFeedbackSurveyAdmin,
     getFairQualityOptionsAdmin,
     getWinnerForTickerAdmin,
+    getPerformanceSignalsByOptionType as getPerformanceSignalsByOptionTypeAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal, FeedbackSurveyData } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
@@ -58,6 +59,14 @@ export async function getOptionsSignals(ticker: string): Promise<OptionCandidate
 
 export async function getPerformanceSignals(order: 'asc' | 'desc', limit: number): Promise<PerformanceSignal[]> {
     return getPerformanceSignalsAdmin(order, limit);
+}
+
+export async function getPerformanceSignalsByOptionType(
+    optionType: 'call' | 'put',
+    order: 'asc' | 'desc',
+    limit: number
+): Promise<PerformanceSignal[]> {
+    return getPerformanceSignalsByOptionTypeAdmin(optionType, order, limit);
 }
 
 export async function getAllPerformanceSignals(): Promise<PerformanceSignal[]> {
@@ -108,17 +117,17 @@ export async function getOptionsCandidates(ticker?: string): Promise<OptionCandi
 }
 
 export async function getDashboardData(ticker: string): Promise<any | null> {
-    const rawData = await getDashboardDataAdmin(ticker);
-    if (!rawData) return null;
-
     const winnerContract = await getWinnerForTickerAdmin(ticker);
 
+    if (!winnerContract) {
+        console.warn(`[getDashboardData] No winner contract found for ticker: ${ticker}`);
+        return null;
+    }
+
     const optionsHeader = (() => {
-        if (!winnerContract) return null;
-
         const dte = Math.ceil((new Date(winnerContract.expiration_date).getTime() - new Date(winnerContract.run_date).getTime()) / (1000 * 60 * 60 * 24));
-
-        const header: any = {
+        
+        return {
             companyName: winnerContract.company_name,
             ticker: winnerContract.ticker,
             runDate: winnerContract.run_date,
@@ -127,42 +136,40 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
             expirationDate: winnerContract.expiration_date,
             strikePrice: winnerContract.strike_price,
             setupQuality: winnerContract.setup_quality_signal,
-            trendSignal: winnerContract.outlook_signal, // From winners_dashboard
-            volatilitySignal: winnerContract.volatility_comparison_signal, // From winners_dashboard
+            trendSignal: winnerContract.outlook_signal,
+            volatilitySignal: winnerContract.volatility_comparison_signal,
             topSignalSummary: winnerContract.summary,
-            dte: dte,
+            dte: dte >= 0 ? dte : 0, // Ensure DTE is not negative
         };
-        
-        return header;
     })();
-    
-    // --- Fetch separate markdown for AI analysis & industry for header ---
-    const allStocks = await getStocksAdmin();
-    const stock = allStocks.find(s => s.id === ticker.toUpperCase());
-    let stockLevelAnalysis = rawData.stockLevelAnalysis; // Use original as fallback
-    let industry = null;
 
-    if (stock) {
-        if (stock.recommendation_analysis) {
-            try {
-                stockLevelAnalysis = await getGcsFileContentAdmin(stock.recommendation_analysis);
-            } catch (error) {
-                console.error(`Failed to fetch separate AI analysis for ${ticker}, using fallback.`, error);
-            }
-        }
-        if (stock.industry) {
-            industry = stock.industry;
+    let dashboardJson = null;
+    if (winnerContract.dashboard_json) {
+        try {
+            const content = await getGcsFileContentAdmin(winnerContract.dashboard_json);
+            dashboardJson = JSON.parse(content);
+        } catch (error) {
+            console.error(`Failed to fetch or parse dashboard_json for ${ticker}:`, error);
         }
     }
 
+    let stockLevelAnalysis = null;
+    if (winnerContract.recommendation_analysis) {
+        try {
+            stockLevelAnalysis = await getGcsFileContentAdmin(winnerContract.recommendation_analysis);
+        } catch (error) {
+            console.error(`Failed to fetch recommendation_analysis for ${ticker}:`, error);
+        }
+    }
 
     return {
-        ...rawData,
-        industry,
-        optionsHeader, // This will be null if no top signal is found
-        stockLevelAnalysis, // Overwrite with new content
+        ...(dashboardJson || {}), // Spread the dashboard JSON content
+        industry: winnerContract.industry,
+        optionsHeader,
+        stockLevelAnalysis,
     };
 }
+
 
 
 export async function handleGetRecommendation(uid: string, input: InitialRecommendationInput): Promise<InitialRecommendationOutput | { error: string; required?: 'subscription' | 'auth' } | { markdown: string, ticker?: string }> {

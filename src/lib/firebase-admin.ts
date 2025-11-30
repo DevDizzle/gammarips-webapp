@@ -335,6 +335,44 @@ export async function getAllPerformanceSignalsAdmin(): Promise<PerformanceSignal
     }
 }
 
+export async function getPerformanceSignalsByOptionType(
+    optionType: 'call' | 'put',
+    order: 'asc' | 'desc',
+    limit: number
+): Promise<PerformanceSignal[]> {
+    noStore();
+    try {
+        const query = adminDb.collection('performance_tracker')
+            .where('option_type', '==', optionType)
+            .where('percent_gain', order === 'desc' ? '>=' : '<=', 0)
+            .orderBy('percent_gain', order)
+            .limit(limit);
+
+        const snapshot = await query.get();
+
+        if (snapshot.empty) {
+            return [];
+        }
+
+        const signals: PerformanceSignal[] = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const signal = PerformanceSignalSchema.safeParse({ id: doc.id, ...data });
+            if (signal.success) {
+                signals.push(signal.data);
+            } else {
+                console.warn(`Invalid performance signal data for type ${optionType}:`, signal.error.flatten());
+            }
+        });
+
+        return signals;
+
+    } catch (error) {
+        console.error(`Error fetching performance signals for type ${optionType}:`, error);
+        return [];
+    }
+}
+
 export async function getPerformanceSignals(
   order: 'asc' | 'desc',
   limit: number

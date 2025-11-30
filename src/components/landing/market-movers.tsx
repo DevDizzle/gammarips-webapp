@@ -1,5 +1,5 @@
 
-import { getPerformanceSignals } from '@/app/actions';
+import { getPerformanceSignalsByOptionType } from '@/app/actions';
 import type { PerformanceSignal } from '@/lib/firebase-admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -133,13 +133,10 @@ const PerformanceList = ({ signals, title, icon }: { signals: PerformanceSignal[
 
 
 export default async function MarketMovers() {
-    const [topGainers, topLosers] = await Promise.all([
-        getPerformanceSignals('desc', 5),
-        getPerformanceSignals('asc', 5)
+    const [topCallGainers, topPutGainers] = await Promise.all([
+        getPerformanceSignalsByOptionType('call', 'desc', 5),
+        getPerformanceSignalsByOptionType('put', 'desc', 5)
     ]);
-    
-    // Reverse losers to show most negative first (asc query gives smallest numbers)
-    const sortedLosers = topLosers.sort((a,b) => a.percent_gain - b.percent_gain);
 
     return (
         <section className="py-16 sm:py-24 bg-muted/50">
@@ -151,8 +148,8 @@ export default async function MarketMovers() {
                     </p>
                 </div>
                 <div className="mt-12 flex flex-col lg:flex-row justify-center gap-8">
-                    <PerformanceList signals={topGainers} title="Top Gainers" icon={<ArrowUp className="text-green-500" />} />
-                    <PerformanceList signals={sortedLosers} title="Top Losers" icon={<ArrowDown className="text-red-500" />} />
+                    <PerformanceList signals={topCallGainers} title="Top Gaining Calls" icon={<ArrowUp className="text-green-500" />} />
+                    <PerformanceList signals={topPutGainers} title="Top Gaining Puts" icon={<ArrowUp className="text-green-500" />} />
                 </div>
             </div>
         </section>

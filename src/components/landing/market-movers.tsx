@@ -30,7 +30,7 @@ const PerformanceList = ({ signals }: { signals: PerformanceSignal[] }) => {
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <ArrowUp className="text-green-500" />
-                    Top Recent Gainers
+                    Top Recent Contracts
                 </CardTitle>
             </CardHeader>
             <CardContent>
@@ -137,18 +137,8 @@ export default async function MarketMovers() {
     const topGainers = await getPerformanceSignals('desc', 5);
 
     return (
-        <section className="py-16 sm:py-24 bg-muted/50">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center max-w-3xl mx-auto">
-                    <h2 className="text-3xl font-bold font-headline">See Our Results in Action</h2>
-                    <p className="mt-4 text-muted-foreground">
-                        Our models are constantly tracking the performance of our signals. Here's a live look at some of the top market movers identified by our AI. This is the data-driven edge we provide.
-                    </p>
-                </div>
-                <div className="mt-12 max-w-4xl mx-auto">
-                    <PerformanceList signals={topGainers} />
-                </div>
-            </div>
-        </section>
+        <PerformanceList signals={topGainers} />
     );
 }
+
+    

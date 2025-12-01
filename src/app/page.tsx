@@ -83,11 +83,15 @@ export default async function LandingPage() {
         <main className="flex-1">
           {/* Hero Section */}
           <section
-            className="relative text-center py-20 md:py-32 flex flex-col items-center justify-center bg-cover bg-center min-h-[50vh] bg-black"
-            style={{ backgroundImage: 'url(/hero-image.jpeg)' }}
+            className="relative text-center py-20 md:py-32 flex flex-col items-center justify-center bg-black min-h-[50vh]"
+            style={{
+              backgroundImage: 'url(/hero-image.jpeg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
           >
             <div className="absolute inset-0 bg-black/60 z-0" />
-            <div className="relative z-10 p-4">
+            <div className="relative z-10 p-4 flex flex-col items-center">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight text-white">
                 One Simple Options Playbook.
               </h1>
@@ -97,34 +101,33 @@ export default async function LandingPage() {
             </div>
           </section>
 
-          {/* Market Movers Section */}
-          <Suspense fallback={<div>Loading today's market movers...</div>}>
-            <MarketMovers />
-          </Suspense>
-          
-          {/* Performance Tracker Section */}
-          <section className="py-16 sm:py-24">
+          {/* Combined Live Performance and Top Contracts Section */}
+          <section className="py-16 sm:py-24 bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
-                <h2 className="text-3xl font-bold font-headline">Live Performance. No Hiding.</h2>
-                <p className="mt-4 max-w-3xl mx-auto text-muted-foreground">
-                  Our models track the performance of every Call and Put setup we publish. We show the wins, the losses, and the flat trades. This is a live record of every contract we flagged. It is not a cherry-picked highlight reel. Past performance does not guarantee future results
+              <div className="text-center max-w-3xl mx-auto">
+                <h2 className="text-3xl font-bold font-headline">The Rip Archive: Our Live Track Record</h2>
+                <p className="mt-4 text-muted-foreground">
+                  We track every Call and Put setup from entry to exit. This is the real-time scorecard for every contract active in our system—the wins, the losses, and the flat trades. Real P&L. No hiding. Click any trade to view the full analysis.
                 </p>
-                <div className="mt-8">
-                  <Suspense fallback={<PerformanceTrackerSkeleton />}>
+              </div>
+              <div className="mt-12 max-w-4xl mx-auto">
+                 <Suspense fallback={<PerformanceTrackerSkeleton />}>
                     <PerformanceTracker />
                   </Suspense>
-                </div>
-                <p className="mt-8 text-xs text-muted-foreground max-w-xl mx-auto">
+              </div>
+              <div className="mt-12 max-w-4xl mx-auto">
+                 <Suspense fallback={<div>Loading top contracts...</div>}>
+                    <MarketMovers />
+                  </Suspense>
+              </div>
+               <p className="mt-8 text-xs text-muted-foreground max-w-xl mx-auto text-center">
                   Performance tracking began on 11/28/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and daily until the contract expires.
                 </p>
-              </Card>
             </div>
           </section>
 
-
-          {/* New "Who This Is For" Section */}
-          <section className="py-16 sm:py-24 bg-muted/50">
+          {/* "Who This Is For" Section */}
+          <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
                  <h2 className="text-3xl font-bold font-headline">Who GammaRips Is For (and Not For)</h2>
@@ -270,3 +273,5 @@ export default async function LandingPage() {
     </>
   );
 }
+
+    

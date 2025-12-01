@@ -83,7 +83,7 @@ export default async function LandingPage() {
         <main className="flex-1">
           {/* Hero Section */}
           <section
-            className="relative flex flex-col items-center justify-center text-center py-20 md:py-32 bg-black"
+            className="relative flex flex-col items-center justify-center text-center py-20 md:py-32"
             style={{
               backgroundImage: 'url(/hero-image.jpeg)',
               backgroundSize: 'cover',
@@ -122,7 +122,7 @@ export default async function LandingPage() {
                   </Suspense>
               </div>
                <p className="mt-8 text-xs text-muted-foreground max-w-xl mx-auto text-center">
-                  Performance tracking began on 11/28/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and daily until the contract expires.
+                  Performance tracking began on 12/01/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and daily until the contract expires.
                 </p>
             </div>
           </section>
@@ -196,13 +196,8 @@ export default async function LandingPage() {
                   </p>
                 </div>
               </div>
-            </div>
-          </section>
-          
-          {/* Membership/Pricing Section */}
-          <section className="py-16 sm:py-24">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
+              <div className="mt-16 text-center">
+                <Card className="inline-block bg-primary/10 border-primary/20 p-8 sm:p-12">
                     <h2 className="text-3xl sm:text-4xl font-bold font-headline">Get the Daily Playbook</h2>
                     <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
                       Become a Ripper to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
@@ -211,6 +206,7 @@ export default async function LandingPage() {
                         <HomePageClientContent showButton={true} buttonText="Become a Ripper ($19/mo)" />
                     </div>
                 </Card>
+              </div>
             </div>
           </section>
           

@@ -25,7 +25,7 @@ export const faqs = [
     },
     {
         question: "What do I get immediately after signing up?",
-        answer: "You get instant access to: Today’s daily options playbook (our “Rip Hunter” breakout and hedge signals), the interactive research dashboard, AI-generated briefings that explain the “why” behind each stock, and our live performance tracker, which currently measures signals from November 28, 2025 onward."
+        answer: "You get instant access to: Today’s daily options playbook (our “Rip Hunter” breakout and hedge signals), the interactive research dashboard, AI-generated briefings that explain the “why” behind each stock, and our live performance tracker, which currently measures signals from December 1, 2025 onward."
     },
     {
         question: "Does GammaRips use AI to pick stocks?",
@@ -53,7 +53,7 @@ export const faqs = [
     },
     {
         question: "When did you start tracking performance for the current engine?",
-        answer: "We significantly upgraded our scoring logic in late 2025 and reset live performance tracking as of November 28, 2025. The performance charts you see on the site reflect signals from the current engine only. We keep earlier data internally for research but don’t want you judging the new engine by the old version’s behavior."
+        answer: "We significantly upgraded our scoring logic in late 2025 and reset live performance tracking as of December 1, 2025. The performance charts you see on the site reflect signals from the current engine only. We keep earlier data internally for research but don’t want you judging the new engine by the old version’s behavior."
     }
 ]
 

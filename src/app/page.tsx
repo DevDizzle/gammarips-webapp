@@ -83,7 +83,7 @@ export default async function LandingPage() {
         <main className="flex-1">
           {/* Hero Section */}
           <section
-            className="relative text-center py-20 md:py-32 flex flex-col items-center justify-center bg-black min-h-[50vh] bg-cover bg-center"
+            className="relative flex flex-col items-center justify-center text-center py-20 md:py-32 bg-cover bg-center bg-black"
             style={{
               backgroundImage: 'url(/hero-image.jpeg)',
             }}
@@ -164,11 +164,6 @@ export default async function LandingPage() {
             </div>
           </section>
 
-          {/* Signals Preview Section */}
-          <Suspense fallback={<div>Loading today's signals...</div>}>
-            <SignalsPreview />
-          </Suspense>
-
           {/* The Daily Routine Section */}
           <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -200,7 +195,22 @@ export default async function LandingPage() {
               </div>
             </div>
           </section>
-
+          
+          {/* Membership/Pricing Section */}
+          <section className="py-16 sm:py-24">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
+                    <h2 className="text-3xl sm:text-4xl font-bold font-headline">Get the Daily Playbook</h2>
+                    <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
+                      Become a Ripper to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
+                    </p>
+                    <div className="mt-8">
+                        <HomePageClientContent showButton={true} buttonText="Become a Ripper ($19/mo)" />
+                    </div>
+                </Card>
+            </div>
+          </section>
+          
           {/* Under the Hood Section */}
           <section className="py-16 sm:py-24 bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -241,21 +251,11 @@ export default async function LandingPage() {
                 </div>
             </div>
           </section>
-          
-          {/* Membership/Pricing Section */}
-          <section className="py-16 sm:py-24">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <Card className="bg-primary/10 border-primary/20 p-8 sm:p-12 text-center">
-                    <h2 className="text-3xl sm:text-4xl font-bold font-headline">Get the Daily Playbook</h2>
-                    <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-                      Become a Ripper to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
-                    </p>
-                    <div className="mt-8">
-                        <HomePageClientContent showButton={true} buttonText="Become a Ripper ($19/mo)" />
-                    </div>
-                </Card>
-            </div>
-          </section>
+
+          {/* Signals Preview Section */}
+          <Suspense fallback={<div>Loading today's signals...</div>}>
+            <SignalsPreview />
+          </Suspense>
           
           {/* FAQ Section */}
           <section className="py-16 sm:py-24 bg-muted/50">
@@ -271,5 +271,3 @@ export default async function LandingPage() {
     </>
   );
 }
-
-    

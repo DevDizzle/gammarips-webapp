@@ -83,11 +83,9 @@ export default async function LandingPage() {
         <main className="flex-1">
           {/* Hero Section */}
           <section
-            className="relative text-center py-20 md:py-32 flex flex-col items-center justify-center bg-black min-h-[50vh]"
+            className="relative text-center py-20 md:py-32 flex flex-col items-center justify-center bg-black min-h-[50vh] bg-cover bg-center"
             style={{
               backgroundImage: 'url(/hero-image.jpeg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
             }}
           >
             <div className="absolute inset-0 bg-black/60 z-0" />
@@ -127,10 +125,10 @@ export default async function LandingPage() {
           </section>
 
           {/* "Who This Is For" Section */}
-          <section className="py-16 sm:py-24">
+          <section className="py-16 sm:py-24 bg-black">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
-                 <h2 className="text-3xl font-bold font-headline">Who GammaRips Is For (and Not For)</h2>
+                 <h2 className="text-3xl font-bold font-headline text-white">Who GammaRips Is For (and Not For)</h2>
                  <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">We built this tool for Rippers. It is not a beginner playground or a generic signal service.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -172,7 +170,7 @@ export default async function LandingPage() {
           </Suspense>
 
           {/* The Daily Routine Section */}
-          <section className="pb-16 sm:pb-24">
+          <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center max-w-3xl mx-auto">
                 <h2 className="text-3xl font-bold font-headline">How to Use the Playbook</h2>

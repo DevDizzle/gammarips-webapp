@@ -83,9 +83,12 @@ export default async function LandingPage() {
         <main className="flex-1">
           {/* Hero Section */}
           <section
-            className="relative flex flex-col items-center justify-center text-center py-20 md:py-32 bg-cover bg-center bg-black"
+            className="relative flex flex-col items-center justify-center text-center py-20 md:py-32 bg-black"
             style={{
               backgroundImage: 'url(/hero-image.jpeg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              minHeight: '50vh',
             }}
           >
             <div className="absolute inset-0 bg-black/60 z-0" />

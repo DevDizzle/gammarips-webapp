@@ -45,6 +45,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { sendWelcomeEmail as sendWelcomeEmailAdmin, sendFeedbackAcknowledgmentEmail } from '@/lib/mailgun';
+import { unstable_noStore as noStore } from 'next/cache';
 
 
 export async function getAppStatus(): Promise<{ isUpdating: boolean }> {
@@ -107,6 +108,7 @@ export async function getOptionsCandidates(ticker?: string): Promise<OptionCandi
 }
 
 export async function getDashboardData(ticker: string): Promise<any | null> {
+    noStore();
     const winnerContract = await getWinnerForTickerAdmin(ticker);
 
     if (!winnerContract) {
@@ -114,26 +116,7 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
         return null;
     }
 
-    const optionsHeader = (() => {
-        const dte = Math.ceil((new Date(winnerContract.expiration_date).getTime() - new Date(winnerContract.run_date).getTime()) / (1000 * 60 * 60 * 24));
-        
-        return {
-            companyName: winnerContract.company_name,
-            ticker: winnerContract.ticker,
-            runDate: winnerContract.run_date,
-            optionType: winnerContract.option_type,
-            contractSymbol: winnerContract.contract_symbol,
-            expirationDate: winnerContract.expiration_date,
-            strikePrice: winnerContract.strike_price,
-            setupQuality: winnerContract.setup_quality_signal,
-            trendSignal: winnerContract.outlook_signal,
-            volatilitySignal: winnerContract.volatility_comparison_signal,
-            topSignalSummary: winnerContract.summary,
-            dte: dte >= 0 ? dte : 0, // Ensure DTE is not negative
-        };
-    })();
-
-    let dashboardJson = null;
+    let dashboardJson: any = {};
     if (winnerContract.dashboard_json) {
         try {
             const content = await getGcsFileContentAdmin(winnerContract.dashboard_json);
@@ -143,7 +126,7 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
         }
     }
 
-    let stockLevelAnalysis = null;
+    let stockLevelAnalysis: string | null = null;
     if (winnerContract.recommendation_analysis) {
         try {
             stockLevelAnalysis = await getGcsFileContentAdmin(winnerContract.recommendation_analysis);
@@ -152,11 +135,28 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
         }
     }
 
+    const optionsHeader = {
+        companyName: winnerContract.company_name,
+        ticker: winnerContract.ticker,
+        runDate: winnerContract.run_date,
+        optionType: winnerContract.option_type,
+        contractSymbol: winnerContract.contract_symbol,
+        expirationDate: winnerContract.expiration_date,
+        strikePrice: winnerContract.strike_price,
+        setupQuality: winnerContract.setup_quality_signal,
+        trendSignal: winnerContract.outlook_signal,
+        volatilitySignal: winnerContract.volatility_comparison_signal,
+        topSignalSummary: winnerContract.summary,
+        dte: Math.max(0, Math.ceil((new Date(winnerContract.expiration_date).getTime() - new Date(winnerContract.run_date).getTime()) / (1000 * 60 * 60 * 24))),
+    };
+
+    // Combine all data into the expected structure
     return {
-        ...(dashboardJson || {}), // Spread the dashboard JSON content
+        ...dashboardJson, // This will spread titleInfo, kpis, priceChartData if they exist
         industry: winnerContract.industry,
         optionsHeader,
         stockLevelAnalysis,
+        runDate: winnerContract.run_date, // Add runDate at the top level
     };
 }
 

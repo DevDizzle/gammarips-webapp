@@ -281,7 +281,7 @@ export default function TickerDashboardPage() {
       setError(null); // Reset error on new fetch
       try {
         const dashboardData = await getDashboardData(ticker.toUpperCase());
-        if (!dashboardData) {
+        if (!dashboardData || !dashboardData.titleInfo) {
           throw new Error(`Could not load dashboard data for ${ticker.toUpperCase()}.`);
         }
         setData(dashboardData);

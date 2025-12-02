@@ -203,6 +203,21 @@ export default async function LandingPage() {
               </div>
             </div>
           </section>
+
+          {/* First CTA Section */}
+          <section className="py-16 sm:py-24">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <Card className="inline-block bg-primary/10 border-primary/20 p-8 sm:p-12">
+                    <h2 className="text-3xl sm:text-4xl font-bold font-headline">Stop Guessing. Start Trading.</h2>
+                    <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
+                      Access the data-driven playbook used by serious options traders. Get today's top Call & Put contracts now.
+                    </p>
+                    <div className="mt-8">
+                        <HomePageClientContent showButton={true} buttonText="Become a Ripper ($19/mo)" />
+                    </div>
+                </Card>
+            </div>
+          </section>
           
           {/* Under the Hood Section */}
           <section className="py-16 sm:py-24 bg-muted/50">
@@ -255,16 +270,16 @@ export default async function LandingPage() {
             </div>
           </section>
           
-          {/* Final CTA Section */}
+          {/* Second CTA Section */}
           <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <Card className="inline-block bg-primary/10 border-primary/20 p-8 sm:p-12">
-                    <h2 className="text-3xl sm:text-4xl font-bold font-headline">Get the Daily Playbook</h2>
+                    <h2 className="text-3xl sm:text-4xl font-bold font-headline">Ready to Rip?</h2>
                     <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-                      Become a Ripper to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
+                      Join a community of data-driven traders. Get the tools and insights you need to find your edge in today's market.
                     </p>
                     <div className="mt-8">
-                        <HomePageClientContent showButton={true} buttonText="Become a Ripper ($19/mo)" />
+                        <HomePageClientContent showButton={true} buttonText="Get Instant Access ($19/mo)" />
                     </div>
                 </Card>
             </div>

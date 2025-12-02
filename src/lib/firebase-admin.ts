@@ -59,7 +59,7 @@ const StockSchema = z.object({
   industry: z.string().optional().nullable(),
   image_uri: z.string().optional(),
   bundle_gcs_path: z.string().optional(),
-  recommendation_analysis: z.string().optional(),
+  recommendation_analysis: z.string().optional().nullable(),
   recommendation: z.string().optional(),
   pages_json: z.string().optional(),
   dashboard_json: z.string().optional().nullable(),
@@ -612,6 +612,43 @@ export async function getStocksAdmin(): Promise<Stock[]> {
     // Return an empty array to allow the page to load instead of hanging.
     return [];
   }
+}
+
+export async function getStockDataAdmin(ticker: string): Promise<Stock | null> {
+    noStore();
+    try {
+        const docRef = adminDb.collection('tickers').doc(ticker.toUpperCase());
+        const docSnap = await docRef.get();
+        if (!docSnap.exists) {
+            console.warn(`[getStockDataAdmin] No stock found for ticker: ${ticker}`);
+            return null;
+        }
+
+        const data = docSnap.data() as any;
+         const stock = {
+            id: docSnap.id,
+            company_name: data.company_name,
+            industry: data.industry,
+            bundle_gcs_path: data.profile,
+            recommendation_analysis: data.recommendation_analysis,
+            recommendation: data.recommendation,
+            pages_json: data.pages_json,
+            image_uri: data.image_uri,
+            dashboard_json: data.dashboard_json,
+            weighted_score: data.weighted_score,
+        };
+        const validation = StockSchema.safeParse(stock);
+        if (validation.success) {
+            return validation.data;
+        } else {
+            console.error(`[getStockDataAdmin] Invalid stock data for ${ticker}:`, validation.error.flatten());
+            return null;
+        }
+
+    } catch (error) {
+        console.error(`[getStockDataAdmin] Error fetching stock data for ${ticker}:`, error);
+        return null;
+    }
 }
 
 export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[]> {
@@ -1317,4 +1354,5 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 

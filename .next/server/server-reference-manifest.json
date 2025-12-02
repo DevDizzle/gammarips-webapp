@@ -735,6 +735,17 @@
         "app/page": "rsc"
       }
     },
+    "400ddf6ccdee87604de663c34092fbfeb0adab126f": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/page": "rsc"
+      }
+    },
     "403cb2062e94b7908e6c800af54a396df09b3183b3": {
       "workers": {
         "app/dashboard/[ticker]/page": {

@@ -36,6 +36,7 @@ import {
     saveFeedbackSurveyAdmin,
     getFairQualityOptionsAdmin,
     getWinnerForTickerAdmin,
+    getStockDataAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal, FeedbackSurveyData } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
@@ -111,53 +112,77 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
     noStore();
     const winnerContract = await getWinnerForTickerAdmin(ticker);
 
-    if (!winnerContract) {
-        console.warn(`[getDashboardData] No winner contract found for ticker: ${ticker}`);
+    let gcsPath = winnerContract?.dashboard_json;
+    let analysisPath = winnerContract?.recommendation_analysis;
+    let industry = winnerContract?.industry;
+    let optionsHeader = null;
+
+    // If it's a winner, construct the options header
+    if (winnerContract) {
+        optionsHeader = {
+            companyName: winnerContract.company_name,
+            ticker: winnerContract.ticker,
+            runDate: winnerContract.run_date,
+            optionType: winnerContract.option_type,
+            contractSymbol: winnerContract.contract_symbol,
+            expirationDate: winnerContract.expiration_date,
+            strikePrice: winnerContract.strike_price,
+            setupQuality: winnerContract.setup_quality_signal,
+            trendSignal: winnerContract.outlook_signal,
+            volatilitySignal: winnerContract.volatility_comparison_signal,
+            topSignalSummary: winnerContract.summary,
+            dte: Math.max(0, Math.ceil((new Date(winnerContract.expiration_date).getTime() - new Date(winnerContract.run_date).getTime()) / (1000 * 60 * 60 * 24))),
+        };
+    }
+
+    // Fallback if not a winner or winner is missing paths
+    if (!gcsPath || !analysisPath) {
+        console.warn(`[getDashboardData] Winner contract for ${ticker} is incomplete. Falling back to tickers collection.`);
+        const stockData = await getStockDataAdmin(ticker);
+        if (!stockData) {
+            console.error(`[getDashboardData] No data found in tickers collection for ${ticker} either.`);
+            return null;
+        }
+        gcsPath = stockData.dashboard_json;
+        analysisPath = stockData.recommendation_analysis;
+        industry = stockData.industry;
+    }
+
+    // If we still don't have a path for the dashboard json, we can't proceed.
+    if (!gcsPath) {
+        console.error(`[getDashboardData] No dashboard_json path could be found for ${ticker}.`);
         return null;
     }
 
-    let dashboardJson: any = {};
-    if (winnerContract.dashboard_json) {
-        try {
-            const content = await getGcsFileContentAdmin(winnerContract.dashboard_json);
-            dashboardJson = JSON.parse(content);
-        } catch (error) {
-            console.error(`Failed to fetch or parse dashboard_json for ${ticker}:`, error);
+    try {
+        let dashboardJson: any = {};
+        let stockLevelAnalysis: string | null = null;
+
+        // Fetch dashboard JSON
+        dashboardJson = JSON.parse(await getGcsFileContentAdmin(gcsPath));
+        
+        // Fetch analysis markdown if path exists
+        if (analysisPath) {
+             try {
+                stockLevelAnalysis = await getGcsFileContentAdmin(analysisPath);
+            } catch (error) {
+                console.warn(`[getDashboardData] Could not fetch recommendation_analysis for ${ticker} from ${analysisPath}. Proceeding without it.`);
+            }
         }
+
+        // Combine all data into the expected structure
+        return {
+            ...dashboardJson,
+            industry,
+            optionsHeader, // This will be null if not a winner, which is handled by the frontend
+            stockLevelAnalysis,
+            runDate: dashboardJson.runDate,
+        };
+
+    } catch (error) {
+        console.error(`[getDashboardData] Final error fetching or parsing data for ${ticker}:`, error);
+        return null;
     }
-
-    let stockLevelAnalysis: string | null = null;
-    if (winnerContract.recommendation_analysis) {
-        try {
-            stockLevelAnalysis = await getGcsFileContentAdmin(winnerContract.recommendation_analysis);
-        } catch (error) {
-            console.error(`Failed to fetch recommendation_analysis for ${ticker}:`, error);
-        }
-    }
-
-    const optionsHeader = {
-        companyName: winnerContract.company_name,
-        ticker: winnerContract.ticker,
-        runDate: winnerContract.run_date,
-        optionType: winnerContract.option_type,
-        contractSymbol: winnerContract.contract_symbol,
-        expirationDate: winnerContract.expiration_date,
-        strikePrice: winnerContract.strike_price,
-        setupQuality: winnerContract.setup_quality_signal,
-        trendSignal: winnerContract.outlook_signal,
-        volatilitySignal: winnerContract.volatility_comparison_signal,
-        topSignalSummary: winnerContract.summary,
-        dte: Math.max(0, Math.ceil((new Date(winnerContract.expiration_date).getTime() - new Date(winnerContract.run_date).getTime()) / (1000 * 60 * 60 * 24))),
-    };
-
-    // Combine all data into the expected structure
-    return {
-        ...dashboardJson, // This will spread titleInfo, kpis, priceChartData if they exist
-        industry: winnerContract.industry,
-        optionsHeader,
-        stockLevelAnalysis,
-        runDate: winnerContract.run_date, // Add runDate at the top level
-    };
 }
 
 

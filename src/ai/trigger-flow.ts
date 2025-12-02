@@ -27,12 +27,12 @@ import {
 } from '@/lib/firebase-admin';
 import { summarizeForEmailPrompt } from '@/ai/flows/send-top-pick';
 
-const TEST_EMAIL = 'eraphealparra@gmail.com';
+const TEST_EMAIL = 'eraphaelparra@gmail.com';
 const TEST_NAME = 'Test User';
 
 async function testSendWelcomeEmail() {
     console.log('Testing: Welcome Email');
-    const { text, html } = buildWelcomeEmailContent(TEST_NAME);
+    const { text, html } = await buildWelcomeEmailContent(TEST_NAME);
     const result = await sendEmail({
         to: TEST_EMAIL,
         subject: '[TEST] Welcome to GammaRips!',
@@ -44,7 +44,7 @@ async function testSendWelcomeEmail() {
 
 async function testSendSubscriptionThankYouEmail() {
     console.log('Testing: Subscription Thank You Email');
-    const { text, html } = buildSubscriptionThankYouEmailContent(TEST_NAME);
+    const { text, html } = await buildSubscriptionThankYouEmailContent(TEST_NAME);
     const result = await sendEmail({
         to: TEST_EMAIL,
         subject: '[TEST] Thank You for Subscribing!',
@@ -56,7 +56,7 @@ async function testSendSubscriptionThankYouEmail() {
 
 async function testSendTrialReminderEmail() {
     console.log('Testing: Trial Reminder Email');
-    const { text, html } = buildTrialReminderEmailContent(TEST_NAME);
+    const { text, html } = await buildTrialReminderEmailContent(TEST_NAME);
     const result = await sendEmail({
         to: TEST_EMAIL,
         subject: '[TEST] Your GammaRips Access Requires Subscription',
@@ -69,7 +69,7 @@ async function testSendTrialReminderEmail() {
 async function testSendReferralEmail() {
     console.log('Testing: Referral Email');
     const referralLink = 'https://gammarips.com/?ref=TESTUSER123';
-    const { text, html } = buildReferralEmailContent(TEST_NAME, referralLink);
+    const { text, html } = await buildReferralEmailContent(TEST_NAME, referralLink);
     const result = await sendEmail({
         to: TEST_EMAIL,
         subject: '[TEST] Share the edge: Give your friends 45 days of GammaRips',
@@ -81,7 +81,7 @@ async function testSendReferralEmail() {
 
 async function testSendFeedbackRequestEmail() {
     console.log('Testing: Feedback Request Email');
-    const { text, html } = buildFeedbackRequestEmailContent(TEST_NAME);
+    const { text, html } = await buildFeedbackRequestEmailContent(TEST_NAME);
     const result = await sendEmail({
         to: TEST_EMAIL,
         subject: "[TEST] A personal check-in from GammaRips's founder",
@@ -94,7 +94,7 @@ async function testSendFeedbackRequestEmail() {
 async function testSendFeedbackAcknowledgmentEmail() {
     console.log('Testing: Feedback Acknowledgment Email');
     const trackingId = `PS-TEST-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-    const { text, html } = buildFeedbackAcknowledgmentEmailContent(trackingId);
+    const { text, html } = await buildFeedbackAcknowledgmentEmailContent(trackingId);
     const result = await sendEmail({
         to: TEST_EMAIL,
         subject: `[TEST] We've received your message (Ref: ${trackingId})`,
@@ -120,7 +120,7 @@ async function testSendDailySetups() {
 
         topLosers.sort((a,b) => a.percent_gain - b.percent_gain);
 
-        const { text, html } = buildDailySetupsEmailContent(winners, topGainers, topLosers);
+        const { text, html } = await buildDailySetupsEmailContent(winners, topGainers, topLosers);
         const result = await sendEmail({
             to: TEST_EMAIL,
             subject: '[TEST] Daily AI-Powered Market Briefing',
@@ -151,7 +151,7 @@ async function testSendTopPick() {
             return;
         }
 
-        const { text, html } = buildTopPickEmailContent(topPick, summary);
+        const { text, html } = await buildTopPickEmailContent(topPick, summary);
         
         const result = await sendEmail({
             to: TEST_EMAIL,

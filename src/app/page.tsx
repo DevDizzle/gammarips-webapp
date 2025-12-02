@@ -208,7 +208,7 @@ export default async function LandingPage() {
           <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <Card className="inline-block bg-primary/10 border-primary/20 p-8 sm:p-12">
-                    <h2 className="text-3xl sm:text-4xl font-bold font-headline">Stop Guessing. Start Trading.</h2>
+                    <h2 className="text-3xl sm:text-4xl font-bold font-headline">Unlock Today’s Contracts</h2>
                     <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
                       Access the data-driven playbook used by serious options traders. Get today's top Call & Put contracts now.
                     </p>

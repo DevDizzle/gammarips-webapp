@@ -239,14 +239,13 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
                 totalPercentGain += gain;
                 validSignalCount++;
                 
-                // Assuming an investment of $100 per contract for ROI calculation
-                totalInitialValue += initialPrice * 100;
+                totalInitialValue += initialPrice * 100; // Assume 100 shares for calculation
                 totalCurrentValue += currentPrice * 100;
 
                 if (gain > 0) {
                     winnersSum += gain;
                     winnerCount++;
-                } else if (gain < 0) {
+                } else if (gain <= 0) { // Include 0 gain in losers for win rate calc
                     losersSum += gain;
                     loserCount++;
                 }
@@ -384,48 +383,60 @@ export async function getPerformanceSignals(
 ): Promise<PerformanceSignal[]> {
   noStore();
   try {
-    const query = adminDb
-      .collection('performance_tracker')
-      .orderBy('percent_gain', order)
-      .limit(limit * 2); // Fetch more to allow filtering
-
-    const snapshot = await query.get();
-
+    const snapshot = await adminDb.collection('performance_tracker').get();
     if (snapshot.empty) {
       return [];
     }
 
-    let signals: PerformanceSignal[] = [];
+    const signals: PerformanceSignal[] = [];
     snapshot.forEach(doc => {
       const data = doc.data();
-      const signal = {
-        id: doc.id,
-        run_date: data.run_date,
-        ticker: data.ticker,
-        company_name: data.company_name,
-        image_uri: data.image_uri,
-        industry: data.industry,
-        contract_symbol: data.contract_symbol,
-        initial_price: data.initial_price,
-        current_price: data.current_price,
-        percent_gain: data.percent_gain,
-        option_type: data.option_type,
-        strike_price: data.strike_price,
-        expiration_date: data.expiration_date,
-      };
-      const validation = PerformanceSignalSchema.safeParse(signal);
-      if (validation.success) {
-        signals.push(validation.data);
-      } else {
-        console.warn(`Invalid performance signal data in Firestore for doc ${doc.id}:`, validation.error.flatten());
+      const initialPrice = data.initial_price;
+      const currentPrice = data.current_price;
+
+      if (typeof initialPrice === 'number' && initialPrice > 0 && typeof currentPrice === 'number') {
+        const calculatedGain = ((currentPrice - initialPrice) / initialPrice) * 100;
+        const signal = {
+          id: doc.id,
+          run_date: data.run_date,
+          ticker: data.ticker,
+          company_name: data.company_name,
+          image_uri: data.image_uri,
+          industry: data.industry,
+          contract_symbol: data.contract_symbol,
+          initial_price: initialPrice,
+          current_price: currentPrice,
+          percent_gain: calculatedGain, // Use calculated gain
+          option_type: data.option_type,
+          status: data.status,
+          strike_price: data.strike_price,
+          expiration_date: data.expiration_date,
+        };
+        const validation = PerformanceSignalSchema.safeParse(signal);
+        if (validation.success) {
+            signals.push(validation.data);
+        } else {
+            console.warn(`Invalid performance signal data in Firestore for doc ${doc.id}:`, validation.error.flatten());
+        }
       }
     });
     
+    // Now sort the array with calculated gains
+    signals.sort((a, b) => {
+        return order === 'desc' ? b.percent_gain - a.percent_gain : a.percent_gain - b.percent_gain;
+    });
+
+    let filteredSignals = signals;
     if (order === 'desc') {
-        signals = signals.filter(s => s.percent_gain >= 0);
+        // Filter for only positive gains for "Top Gainers"
+        filteredSignals = signals.filter(s => s.percent_gain >= 0);
+    } else {
+        // Filter for only negative gains for "Top Losers"
+        filteredSignals = signals.filter(s => s.percent_gain < 0);
     }
 
-    return signals.slice(0, limit);
+    return filteredSignals.slice(0, limit);
+
   } catch (error) {
     console.error('Error fetching performance signals:', error);
     return [];
@@ -1355,6 +1366,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 
 

@@ -167,6 +167,11 @@ export default async function LandingPage() {
             </div>
           </section>
 
+          {/* Signals Preview Section */}
+          <Suspense fallback={<div>Loading today's signals...</div>}>
+            <SignalsPreview />
+          </Suspense>
+
           {/* The Daily Routine Section */}
           <section className="py-16 sm:py-24">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -250,11 +255,6 @@ export default async function LandingPage() {
                 </div>
             </div>
           </section>
-
-          {/* Signals Preview Section */}
-          <Suspense fallback={<div>Loading today's signals...</div>}>
-            <SignalsPreview />
-          </Suspense>
           
           {/* FAQ Section */}
           <section className="py-16 sm:py-24 bg-muted/50">

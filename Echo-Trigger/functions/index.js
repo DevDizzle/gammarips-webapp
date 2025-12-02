@@ -73,8 +73,8 @@ const customerServiceAgentFlow = ai.defineFlow({
 
 async function sendAgentResponseEmail({ to, response, trackingId }) {
     const API_KEY = process.env.MAILGUN_SENDING_KEY;
-    const DOMAIN = 'gammarips.com';
-    const FROM = 'GammaRips <admin@gammarips.com>';
+    const DOMAIN = 'profitscout.app';
+    const FROM = 'GammaRips <admin@profitscout.app>';
     const REPLY_TO = process.env.MY_PERSONAL_EMAIL;
 
     if (!API_KEY || !REPLY_TO) {

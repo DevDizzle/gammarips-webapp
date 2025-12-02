@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { Buffer } from 'node:buffer';
@@ -17,9 +18,9 @@ export interface EmailOptions {
 
 export async function sendEmail(options: EmailOptions) {
   const API_KEY = process.env.MAILGUN_SENDING_KEY;
-  const DOMAIN = 'gammarips.com';
-  // Hardcode the default from address to the verified domain.
-  const DEFAULT_FROM = 'GammaRips <admin@gammarips.com>';
+  const DOMAIN = 'profitscout.app'; // Reverted to original domain
+  // Use GammaRips as sender name but profitscout.app as domain
+  const DEFAULT_FROM = 'GammaRips <admin@profitscout.app>'; 
 
   const FROM = options.from || DEFAULT_FROM;
   const TO =
@@ -98,7 +99,7 @@ You now have full access to our AI-powered options research dashboard. Here's wh
 - Dive deep into any stock with our AI Analyst Briefings.
 - Explore the interactive dashboard to find your next trade idea.
 
-Get started now: https://gammarips.com/dashboard
+Get started now: https://profitscout.app/dashboard
 
 Happy trading,
 The GammaRips Team
@@ -139,7 +140,7 @@ The GammaRips Team
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://gammarips.com/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
+                            <a href="https://profitscout.app/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
                         </td>
                     </tr>
                      <tr>
@@ -177,7 +178,7 @@ Welcome to GammaRips Pro! We're thrilled to have you as a premium member.
 
 Your support helps us continue to build and improve the tools that power your research. We're committed to providing you with the best AI-driven market insights available.
 
-If you have any questions, feedback, or ideas for how we can improve, please don't hesitate to reach out. You can reply directly to this email or contact us anytime at admin@gammarips.com.
+If you have any questions, feedback, or ideas for how we can improve, please don't hesitate to reach out. You can reply directly to this email or contact us anytime at admin@profitscout.app.
 
 Happy trading,
 The GammaRips Team
@@ -208,12 +209,12 @@ The GammaRips Team
                     <tr>
                         <td style="padding: 0 40px;">
                             <p style="font-size: 16px; line-height: 1.6;">Welcome to <strong>GammaRips Pro!</strong> We're thrilled to have you as a premium member. Your support helps us continue to build and improve the tools that power your research.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We are committed to providing you with the best AI-driven market insights available. If you have any questions, feedback, or ideas for new features, please don't hesitate to reach out. You can reply directly to this email or contact support anytime at <a href="mailto:admin@gammarips.com" style="color: hsl(74, 80%, 50%); text-decoration: none;">admin@gammarips.com</a>.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We are committed to providing you with the best AI-driven market insights available. If you have any questions, feedback, or ideas for new features, please don't hesitate to reach out. You can reply directly to this email or contact support anytime at <a href="mailto:admin@profitscout.app" style="color: hsl(74, 80%, 50%); text-decoration: none;">admin@profitscout.app</a>.</p>
                         </td>
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://gammarips.com/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Explore Your Pro Dashboard</a>
+                            <a href="https://profitscout.app/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Explore Your Pro Dashboard</a>
                         </td>
                     </tr>
                      <tr>
@@ -251,7 +252,7 @@ Your GammaRips access will require a subscription soon.
 
 Upgrade to Pro now to keep receiving daily options rippers and full access to your interactive dashboard.
 
-Upgrade to Pro: https://gammarips.com/
+Upgrade to Pro: https://profitscout.app/
 
 If you have any questions, just reply to this email.
 
@@ -289,7 +290,7 @@ The GammaRips Team
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://gammarips.com/" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Upgrade to Pro - $19/month</a>
+                            <a href="https://profitscout.app/" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Upgrade to Pro - $19/month</a>
                         </td>
                     </tr>
                      <tr>
@@ -458,7 +459,7 @@ You've been using the tool for about a week now, and I wanted to personally chec
 
 I would be grateful if you could take 60 seconds to share your initial thoughts. Your feedback goes directly to our product team (and me) to help us improve.
 
-Share Your Feedback: https://gammarips.com/feedback
+Share Your Feedback: https://profitscout.app/feedback
 
 All the best,
 Evan P.
@@ -496,7 +497,7 @@ Founder, GammaRips
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://gammarips.com/feedback" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
+                            <a href="https://profitscout.app/feedback" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
                         </td>
                     </tr>
                      <tr>
@@ -525,7 +526,7 @@ Founder, GammaRips
 export async function sendFeedbackRequestEmail({ to, name }: { to: string, name: string }) {
     const { text, html } = await buildFeedbackRequestEmailContent(name);
     return sendEmail({
-        from: 'GammaRips <admin@gammarips.com>',
+        from: 'GammaRips <admin@profitscout.app>', // Reverted
         to: `${name} <${to}>`,
         subject: `A personal check-in from GammaRips's founder`,
         text,
@@ -735,7 +736,7 @@ Top Losers:
 ${topLosers.map(s => `${s.ticker} | ${s.company_name} | ${s.percent_gain.toFixed(2)}%`).join('\n')}
 
 
-To see the full list and do your own research, visit your dashboard: https://gammarips.com/dashboard
+To see the full list and do your own research, visit your dashboard: https://profitscout.app/dashboard
     `;
 
     const htmlContent = `
@@ -849,7 +850,7 @@ To see the full list and do your own research, visit your dashboard: https://gam
                     </tr>
                     <tr>
                         <td align="center" style="padding: 40px;">
-                            <a href="https://gammarips.com/dashboard" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">View Full Dashboard</a>
+                            <a href="https://profitscout.app/dashboard" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">View Full Dashboard</a>
                         </td>
                     </tr>
                      <tr>
@@ -871,7 +872,7 @@ To see the full list and do your own research, visit your dashboard: https://gam
 
 
 export async function buildTopPickEmailContent(stock: Stock, summary: string): Promise<{ text: string; html: string }> {
-    const dashboardLink = `https://gammarips.com/dashboard/${stock.id}`;
+    const dashboardLink = `https://profitscout.app/dashboard/${stock.id}`;
     
     const textContent = `
 GammaRips AI Top Pick of the Day: ${stock.company_name} (${stock.id})

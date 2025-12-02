@@ -230,15 +230,16 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
 
         snapshot.forEach(doc => {
             const data = doc.data();
-            const gain = data.percent_gain;
             const initialPrice = data.initial_price;
             const currentPrice = data.current_price;
 
-            // Check if gain is a valid number before including it in calculations
-            if (typeof gain === 'number' && !isNaN(gain) && typeof initialPrice === 'number' && typeof currentPrice === 'number') {
+            if (typeof initialPrice === 'number' && initialPrice > 0 && typeof currentPrice === 'number') {
+                const gain = ((currentPrice - initialPrice) / initialPrice) * 100;
+                
                 totalPercentGain += gain;
                 validSignalCount++;
                 
+                // Assuming an investment of $100 per contract for ROI calculation
                 totalInitialValue += initialPrice * 100;
                 totalCurrentValue += currentPrice * 100;
 
@@ -1354,5 +1355,6 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 

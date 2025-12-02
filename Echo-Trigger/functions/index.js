@@ -46,7 +46,7 @@ const prompt = ai.definePrompt({
   name: 'customerServiceAgentPrompt',
   input: {schema: AnswerFeedbackInputSchema},
   output: {schema: AnswerFeedbackOutputSchema},
-  prompt: `You are an expert customer service agent for ProfitScout, an AI-powered options trading research tool. Your goal is to provide a helpful, empathetic, and professional response to user feedback. You MUST strictly adhere to the policies and tone outlined in the knowledge base. Never give financial advice.
+  prompt: `You are an expert customer service agent for GammaRips, an AI-powered options trading research tool. Your goal is to provide a helpful, empathetic, and professional response to user feedback. You MUST strictly adhere to the policies and tone outlined in the knowledge base. Never give financial advice.
 
 Knowledge Base:
 ---
@@ -73,15 +73,15 @@ const customerServiceAgentFlow = ai.defineFlow({
 
 async function sendAgentResponseEmail({ to, response, trackingId }) {
     const API_KEY = process.env.MAILGUN_SENDING_KEY;
-    const DOMAIN = 'profitscout.app';
-    const FROM = 'ProfitScout <admin@profitscout.app>';
+    const DOMAIN = 'gammarips.com';
+    const FROM = 'GammaRips <admin@gammarips.com>';
     const REPLY_TO = process.env.MY_PERSONAL_EMAIL;
 
     if (!API_KEY || !REPLY_TO) {
         throw new Error("Mailgun environment variables (MAILGUN_SENDING_KEY, MY_PERSONAL_EMAIL) are not set.");
     }
 
-    const html = `
+    const html = \`
     <!DOCTYPE html>
     <html>
     <body>
@@ -92,21 +92,21 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
         <p>If you have any further questions, please reply to this email.</p>
     </body>
     </html>
-    `;
-    const text = `Response to your inquiry (Ref: ${trackingId}):\n\n${response}\n\nIf you have further questions, reply to this email.`;
+    \`;
+    const text = \`Response to your inquiry (Ref: ${trackingId}):\n\n${response}\n\nIf you have further questions, reply to this email.\`;
 
     const form = new URLSearchParams();
     form.append('from', FROM);
     form.append('to', to);
-    form.append('subject', `Re: Your ProfitScout Inquiry (Ref: ${trackingId})`);
+    form.append('subject', \`Re: Your GammaRips Inquiry (Ref: ${trackingId})\`);
     form.append('text', text);
     form.append('html', html);
     form.append('h:Reply-To', REPLY_TO);
 
-    const resp = await fetch(`https://api.mailgun.net/v3/${DOMAIN}/messages`, {
+    const resp = await fetch(\`https://api.mailgun.net/v3/${DOMAIN}/messages\`, {
         method: 'POST',
         headers: {
-            'Authorization': 'Basic ' + Buffer.from(`api:${API_KEY}`).toString('base64'),
+            'Authorization': 'Basic ' + Buffer.from(\`api:${API_KEY}\`).toString('base64'),
             'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: form.toString(),
@@ -115,55 +115,55 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
     if (!resp.ok) {
         const details = await resp.json().catch(() => ({}));
         logger.error('Mailgun Failure', { status: resp.status, details });
-        throw new Error(`Mailgun API error: ${details.message || 'Failed to send'}`);
+        throw new Error(\`Mailgun API error: ${details.message || 'Failed to send'}\`);
     }
     return resp.json();
 }
 
 exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (event) => {
-  const snap = event.data;
+    const snap = event.data;
 
-  if (!snap) {
-    logger.error("processNewFeedback triggered without snapshot", { eventId: event.id });
-    return;
-  }
+    if (!snap) {
+        logger.error("processNewFeedback triggered without snapshot", { eventId: event.id });
+        return;
+    }
 
-  const newFeedback = snap.data();
-  const { feedbackId } = event.params;
+    const newFeedback = snap.data();
+    const { feedbackId } = event.params;
 
-  logger.info("Processing new feedback", { feedbackId });
+    logger.info("Processing new feedback", { feedbackId });
 
-  if (!newFeedback?.message || !newFeedback?.replyToEmail || !newFeedback?.trackingId) {
-    logger.error("Feedback document is missing required fields.", { feedbackId });
-    await snap.ref.set({
-      status: "error",
-      errorMessage: "Missing message, replyToEmail, or trackingId",
-      checkedAt: admin.firestore.FieldValue.serverTimestamp(),
-    }, { merge: true });
-    return;
-  }
+    if (!newFeedback?.message || !newFeedback?.replyToEmail || !newFeedback?.trackingId) {
+        logger.error("Feedback document is missing required fields.", { feedbackId });
+        await snap.ref.set({
+            status: "error",
+            errorMessage: "Missing message, replyToEmail, or trackingId",
+            checkedAt: admin.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+        return;
+    }
 
-  try {
-    const aiResponse = await customerServiceAgentFlow({
-      message: newFeedback.message,
-      trackingId: newFeedback.trackingId,
-    });
+    try {
+        const aiResponse = await customerServiceAgentFlow({
+            message: newFeedback.message,
+            trackingId: newFeedback.trackingId,
+        });
 
-    await sendAgentResponseEmail({
-      to: newFeedback.replyToEmail,
-      response: aiResponse.response,
-      trackingId: newFeedback.trackingId,
-    });
+        await sendAgentResponseEmail({
+            to: newFeedback.replyToEmail,
+            response: aiResponse.response,
+            trackingId: newFeedback.trackingId,
+        });
 
-    await snap.ref.set({
-      agentResponse: aiResponse.response,
-      status: "responded",
-      respondedAt: admin.firestore.FieldValue.serverTimestamp(),
-    }, { merge: true });
+        await snap.ref.set({
+            agentResponse: aiResponse.response,
+            status: "responded",
+            respondedAt: admin.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
 
-    logger.info("Successfully processed feedback", { feedbackId });
-  } catch (error) {
-    logger.error("Failed to process feedback", { feedbackId, error: error.message });
-    await snap.ref.set({ status: "error", errorMessage: error.message }, { merge: true });
-  }
+        logger.info("Successfully processed feedback", { feedbackId });
+    } catch (error) {
+        logger.error("Failed to process feedback", { feedbackId, error: error.message });
+        await snap.ref.set({ status: "error", errorMessage: error.message }, { merge: true });
+    }
 });

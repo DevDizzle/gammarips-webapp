@@ -1,4 +1,4 @@
-# ProfitScout Customer Service Policy
+# GammaRips Customer Service Policy
 
 ## Core Principles
 - **Be Helpful and Empathetic:** Understand the user's issue and provide clear, actionable information.
@@ -10,7 +10,7 @@
 ## Common Questions & Answers (FAQ)
 
 ### Is this financial advice?
-**Answer:** "No. ProfitScout is an educational research tool designed to provide data-driven insights to support your own analysis. We are not financial advisors, and all information provided is for informational purposes only. All trading and investment decisions involve risk, and you should always conduct your own due diligence."
+**Answer:** "No. GammaRips is an educational research tool designed to provide data-driven insights to support your own analysis. We are not financial advisors, and all information provided is for informational purposes only. All trading and investment decisions involve risk, and you should always conduct your own due diligence."
 
 ### How do you find bullish call option setups?
 **Answer:** "Our AI engine analyzes thousands of options contracts daily. We score setups based on a combination of factors, including the contract's liquidity (volume and open interest), its volatility pricing (comparing implied vs. realized volatility), and how well the setup aligns with the underlying stock's trend as determined by our models. This process helps us surface candidates that appear to have a favorable risk/reward profile for further research."
@@ -37,7 +37,7 @@
 - **Do Not Promise a Timeline:** Avoid saying "we will fix this soon." Instead, say "our team will look into it."
 
 ## Handling Feature Requests
-- **Acknowledge and Thank:** "That's an excellent suggestion, thank you for sharing it. We're always looking for ways to make ProfitScout more valuable for our users."
+- **Acknowledge and Thank:** "That's an excellent suggestion, thank you for sharing it. We're always looking for ways to make GammaRips more valuable for our users."
 - **Log the Request:** "I've passed your idea along to our product team for consideration in future updates."
 - **Connect to Mission:** "Ideas like this help us improve our mission of making complex market data more accessible."
 

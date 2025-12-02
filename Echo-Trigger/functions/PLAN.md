@@ -44,8 +44,8 @@ In the inline editor, select the `package.json` file. Replace its entire content
 
 ```json
 {
-  "name": "profitscout-cloud-functions",
-  "description": "Cloud Functions for the ProfitScout project.",
+  "name": "gammarips-cloud-functions",
+  "description": "Cloud Functions for the GammaRips project.",
   "main": "index.js",
   "dependencies": {
     "firebase-admin": "^12.0.0",
@@ -117,7 +117,7 @@ const prompt = ai.definePrompt({
   name: 'customerServiceAgentPrompt',
   input: {schema: AnswerFeedbackInputSchema},
   output: {schema: AnswerFeedbackOutputSchema},
-  prompt: `You are an expert customer service agent for ProfitScout, an AI-powered options trading research tool. Your goal is to provide a helpful, empathetic, and professional response to user feedback. You MUST strictly adhere to the policies and tone outlined in the knowledge base. Never give financial advice.
+  prompt: `You are an expert customer service agent for GammaRips, an AI-powered options trading research tool. Your goal is to provide a helpful, empathetic, and professional response to user feedback. You MUST strictly adhere to the policies and tone outlined in the knowledge base. Never give financial advice.
 
 Knowledge Base:
 ---
@@ -144,8 +144,8 @@ const customerServiceAgentFlow = ai.defineFlow({
 
 async function sendAgentResponseEmail({ to, response, trackingId }) {
     const API_KEY = process.env.MAILGUN_SENDING_KEY;
-    const DOMAIN = 'profitscout.app';
-    const FROM = 'ProfitScout <admin@profitscout.app>';
+    const DOMAIN = 'gammarips.com';
+    const FROM = 'GammaRips <admin@gammarips.com>';
     const REPLY_TO = process.env.MY_PERSONAL_EMAIL;
 
     if (!API_KEY || !REPLY_TO) {
@@ -169,7 +169,7 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
     const form = new URLSearchParams();
     form.append('from', FROM);
     form.append('to', to);
-    form.append('subject', \`Re: Your ProfitScout Inquiry (Ref: ${trackingId})\`);
+    form.append('subject', \`Re: Your GammaRips Inquiry (Ref: ${trackingId})\`);
     form.append('text', text);
     form.append('html', html);
     form.append('h:Reply-To', REPLY_TO);

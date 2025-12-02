@@ -4,7 +4,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { getEligibleEmailRecipientsAdmin, getTopPickAdmin, getGcsFileContentAdmin, type Stock } from '@/lib/firebase-admin';
-import { sendEmail } from '@/lib/mailgun';
+import { sendEmail, buildTopPickEmailContent } from '@/lib/mailgun';
 
 const SummarizeAnalysisInputSchema = z.object({
   analysisText: z.string().describe('The full AI analyst briefing text.'),
@@ -37,85 +37,6 @@ const SendTopPickOutputSchema = z.object({
   totalUsers: z.number(),
   topPickTicker: z.string().nullable(),
 });
-
-function buildTopPickEmailContent(stock: Stock, summary: string): { text: string; html: string } {
-    const dashboardLink = `https://profitscout.app/dashboard/${stock.id}`;
-    
-    const textContent = `
-ProfitScout AI Top Pick of the Day: ${stock.company_name} (${stock.id})
-
-Our AI has analyzed thousands of data points and identified ${stock.company_name} (${stock.id}) as today's top-rated setup based on our proprietary scoring model.
-
-AI Summary:
-${summary}
-
-This is just a glimpse of the full picture. To see the complete step-by-step AI analysis, key metrics, and the specific options contract our model flagged, view the full dashboard.
-
-View the Full Analysis: ${dashboardLink}
-
-Happy trading,
-The ProfitScout Team
-`;
-
-    const htmlContent = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>AI Top Pick of the Day: ${stock.id}</title>
-</head>
-<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
-        <tr>
-            <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
-                    <tr>
-                        <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Profit<span style="color: #BEFF0A;">Scout</span></h1>
-                            <p style="font-size: 16px; color: #A0A0A0; margin-top: 8px;">AI Top Pick of the Day</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 0 40px;">
-                             <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; color: #ffffff; margin: 0; text-align: center;">${stock.company_name} (${stock.id})</h2>
-                             <p style="text-align: center; font-size: 14px; color: #A0A0A0; margin-top: 8px;">
-                                Our AI has analyzed thousands of data points and identified ${stock.company_name} as today's top-rated setup based on our proprietary scoring model.
-                             </p>
-
-                            <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 20px; margin-top: 25px;">
-                                <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; color: #ffffff; margin: 0 0 10px 0;">AI Summary</h3>
-                                <p style="font-size: 16px; line-height: 1.6; margin:0;">${summary}</p>
-                            </div>
-                            
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">This is just a glimpse of the full picture. To see the complete step-by-step AI analysis, key metrics, and the specific options contract our model flagged, view the full dashboard.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="${dashboardLink}" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">View Full Analysis</a>
-                        </td>
-                    </tr>
-                     <tr>
-                        <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
-                            <p style="margin: 0;">This is not financial advice. All trading involves risk.</p>
-                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} ProfitScout. All rights reserved.</p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</body>
-</html>
-    `;
-
-    return { text: textContent, html: htmlContent };
-}
-
 
 export const sendTopPickFlow = ai.defineFlow(
   {
@@ -163,7 +84,7 @@ export const sendTopPickFlow = ai.defineFlow(
       if (user.email) {
         const result = await sendEmail({
             to: `${user.displayName || user.email} <${user.email}>`,
-            subject: `ProfitScout AI Top Pick of the Day: ${topPick.id}`,
+            subject: `GammaRips AI Top Pick of the Day: ${topPick.id}`,
             text,
             html,
         });
@@ -181,5 +102,3 @@ export const sendTopPickFlow = ai.defineFlow(
     return { sentCount, skippedCount, totalUsers: eligibleUsers.length, topPickTicker: topPick.id };
   }
 );
-
-    

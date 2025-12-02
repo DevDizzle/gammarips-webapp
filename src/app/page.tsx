@@ -94,10 +94,10 @@ export default async function LandingPage() {
             <div className="absolute inset-0 bg-black/60 z-0" />
             <div className="relative z-10 p-4 flex flex-col items-center">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight text-white">
-                One Simple Options Playbook.
+                High-Gamma Contracts. Ready to Rip.
               </h1>
               <p className="mt-4 text-lg sm:text-xl text-neutral-200 max-w-3xl mx-auto">
-                High-conviction Call & Put setups on stocks primed to move. You get a tight daily list of contracts and clean AI breakdowns. No complex strategies. Just the Rips.
+                We surface Call & Put contracts with high-gamma profiles, designed for explosive premium expansion. Our AI targets stocks primed to move, so you get setups positioned to rip. No complex strategies. Just the specific contracts you need.
               </p>
             </div>
           </section>
@@ -166,7 +166,7 @@ export default async function LandingPage() {
               </div>
             </div>
           </section>
-
+          
           {/* Signals Preview Section */}
           <Suspense fallback={<div>Loading today's signals...</div>}>
             <SignalsPreview />

@@ -245,7 +245,7 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
                 if (gain > 0) {
                     winnersSum += gain;
                     winnerCount++;
-                } else if (gain <= 0) { // Include 0 gain in losers for win rate calc
+                } else { // Include 0 gain and losses in loserCount for win rate calc
                     losersSum += gain;
                     loserCount++;
                 }
@@ -281,13 +281,6 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
 export async function getAllPerformanceSignalsAdmin(): Promise<PerformanceSignal[]> {
     noStore();
     try {
-        // Get today's date in YYYY-MM-DD format, corrected for timezone.
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
-        const todayStr = `${year}-${month}-${day}`;
-
         const snapshot = await adminDb.collection('performance_tracker').get();
         if (snapshot.empty) {
             return [];
@@ -296,9 +289,11 @@ export async function getAllPerformanceSignalsAdmin(): Promise<PerformanceSignal
         const signals: PerformanceSignal[] = [];
         snapshot.forEach(doc => {
             const data = doc.data();
-            
-            // Only include signals from before today
-            if (data.run_date && data.run_date !== todayStr) {
+            const initialPrice = data.initial_price;
+            const currentPrice = data.current_price;
+
+            if (typeof initialPrice === 'number' && initialPrice > 0 && typeof currentPrice === 'number') {
+                const calculatedGain = ((currentPrice - initialPrice) / initialPrice) * 100;
                 const signal = {
                     id: doc.id,
                     run_date: data.run_date,
@@ -307,9 +302,9 @@ export async function getAllPerformanceSignalsAdmin(): Promise<PerformanceSignal
                     image_uri: data.image_uri,
                     industry: data.industry,
                     contract_symbol: data.contract_symbol,
-                    initial_price: data.initial_price,
-                    current_price: data.current_price,
-                    percent_gain: data.percent_gain,
+                    initial_price: initialPrice,
+                    current_price: currentPrice,
+                    percent_gain: calculatedGain, // Use calculated gain
                     option_type: data.option_type,
                     status: data.status,
                     strike_price: data.strike_price,
@@ -1366,6 +1361,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 
 

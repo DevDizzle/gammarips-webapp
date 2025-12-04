@@ -47,21 +47,21 @@ const PerformanceList = ({ signals }: { signals: PerformanceSignal[] }) => {
                     <TableBody>
                         {signals.map(signal => {
                             const isGainer = signal.percent_gain >= 0;
-                            const imageUrl = signal.image_uri 
-                                ? convertGcsUriToUrl(signal.image_uri) 
-                                : `https://placehold.co/24x24/1e293b/a855f7?text=${signal.ticker[0]}`;
+                            const imageUrl = signal.image_uri ? convertGcsUriToUrl(signal.image_uri) : null;
                             
                             return (
-                                <TableRow key={signal.id}>
+                                <TableRow key={signal.contract_symbol}>
                                     <TableCell>
                                         <div className="flex items-center gap-3">
-                                            <Image 
-                                                src={imageUrl} 
-                                                alt={`${signal.company_name} logo`}
-                                                width={24}
-                                                height={24}
-                                                className="rounded-full"
-                                            />
+                                            {imageUrl && (
+                                                <Image 
+                                                    src={imageUrl} 
+                                                    alt={`${signal.company_name ?? signal.ticker} logo`}
+                                                    width={24}
+                                                    height={24}
+                                                    className="rounded-full"
+                                                />
+                                            )}
                                             <div>
                                                 <Link href={`/dashboard/${signal.ticker}`} className="font-bold hover:underline">{signal.ticker}</Link>
                                                 <p className="text-xs text-muted-foreground truncate max-w-[150px]">{signal.company_name}</p>
@@ -71,7 +71,7 @@ const PerformanceList = ({ signals }: { signals: PerformanceSignal[] }) => {
                                     <TableCell className="text-xs text-muted-foreground">{signal.industry}</TableCell>
                                     <TableCell>
                                         <div className="flex flex-col">
-                                            <span className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</span>
+                                            <span className="font-semibold">{signal.strike_price ? `$${signal.strike_price.toFixed(2)}` : 'N/A'} {signal.option_type?.toUpperCase()}</span>
                                             <span className="text-xs text-muted-foreground">Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
                                         </div>
                                     </TableCell>
@@ -88,23 +88,23 @@ const PerformanceList = ({ signals }: { signals: PerformanceSignal[] }) => {
                 <div className="md:hidden space-y-3">
                      {signals.map(signal => {
                         const isGainer = signal.percent_gain >= 0;
-                        const imageUrl = signal.image_uri 
-                            ? convertGcsUriToUrl(signal.image_uri) 
-                            : `https://placehold.co/40x40/1e293b/a855f7?text=${signal.ticker[0]}`;
+                        const imageUrl = signal.image_uri ? convertGcsUriToUrl(signal.image_uri) : null;
 
                         return (
-                            <Card key={signal.id} className="transition-colors hover:bg-muted/50">
+                            <Card key={signal.contract_symbol} className="transition-colors hover:bg-muted/50">
                                 <Link href={`/dashboard/${signal.ticker}`} className="block">
                                     <CardContent className="p-4">
                                         <div className="flex items-center justify-between gap-4">
                                             <div className="flex items-center gap-3 flex-1 min-w-0">
-                                                <Image 
-                                                    src={imageUrl} 
-                                                    alt={`${signal.company_name} logo`}
-                                                    width={40}
-                                                    height={40}
-                                                    className="rounded-full"
-                                                />
+                                                {imageUrl && (
+                                                    <Image 
+                                                        src={imageUrl} 
+                                                        alt={`${signal.company_name ?? signal.ticker} logo`}
+                                                        width={40}
+                                                        height={40}
+                                                        className="rounded-full"
+                                                    />
+                                                )}
                                                 <div className="flex-1 min-w-0">
                                                     <p className="font-bold truncate">{signal.company_name}</p>
                                                     <p className="text-sm text-muted-foreground">{signal.ticker}</p>
@@ -118,7 +118,7 @@ const PerformanceList = ({ signals }: { signals: PerformanceSignal[] }) => {
                                         </div>
                                         <div className="mt-4 border-t pt-3 text-sm">
                                             <p className="text-xs text-muted-foreground">Contract</p>
-                                            <p className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</p>
+                                            <p className="font-semibold">{signal.strike_price ? `$${signal.strike_price.toFixed(2)}` : 'N/A'} {signal.option_type?.toUpperCase()}</p>
                                             <p className="text-xs text-muted-foreground">Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</p>
                                         </div>
                                     </CardContent>

@@ -91,7 +91,7 @@ export default async function LandingPage() {
               minHeight: '50vh',
             }}
           >
-            <div className="absolute inset-0 bg-black/60 z-0" />
+            <div className="absolute inset-0 bg-black/50 z-0" />
             <div className="relative z-10 p-4 flex flex-col items-center">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight text-white">
                 High-Gamma Contracts. Ready to Rip.

@@ -31,7 +31,7 @@ import {
     saveFeedbackAdmin,
     getPerformanceSignals as getPerformanceSignalsAdmin,
     getAllPerformanceSignalsAdmin,
-    getPerformanceSignalsByTickerAdmin,
+    getPerformanceSignalsByTicker as getPerformanceSignalsByTickerAdmin,
     getAppStatusAdmin,
     saveFeedbackSurveyAdmin,
     getFairQualityOptionsAdmin,

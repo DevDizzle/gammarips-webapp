@@ -95,14 +95,22 @@ const OptionCandidateSchema = z.object({
 });
 export type OptionCandidate = z.infer<typeof OptionCandidateSchema>;
 
-// Simplified for the Active Signal Tracker component
+// This schema now includes all fields required by MarketMovers and SignalTracker
 const PerformanceSignalSchema = z.object({
+    id: z.string(),
     contract_symbol: z.string(),
+    ticker: z.string(),
+    company_name: z.string().optional().nullable(),
+    industry: z.string().optional().nullable(),
+    image_uri: z.string().optional().nullable(),
+    option_type: z.string().optional().nullable(),
+    strike_price: z.number(),
     initial_price: z.number(),
     current_price: z.number(),
     percent_gain: z.number(),
     run_date: z.string(),
     expiration_date: z.string(),
+    status: z.string().optional().nullable(),
 });
 export type PerformanceSignal = z.infer<typeof PerformanceSignalSchema>;
 
@@ -435,7 +443,7 @@ export async function getPerformanceSignals(
   }
 }
 
-export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promise<PerformanceSignal[]> {
+export async function getPerformanceSignalsByTicker(ticker: string): Promise<PerformanceSignal[]> {
     noStore();
     try {
         const snapshot = await adminDb.collection('performance_tracker')
@@ -456,12 +464,17 @@ export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promis
                 const calculatedGain = ((currentPrice - initialPrice) / initialPrice) * 100;
                 
                 const signalData = {
+                    id: doc.id,
                     contract_symbol: data.contract_symbol,
+                    ticker: data.ticker,
                     initial_price: initialPrice,
                     current_price: currentPrice,
                     percent_gain: calculatedGain,
                     run_date: data.run_date,
                     expiration_date: data.expiration_date,
+                    strike_price: data.strike_price,
+                    option_type: data.option_type,
+                    status: data.status,
                 };
                 
                 const validation = PerformanceSignalSchema.safeParse(signalData);
@@ -1360,6 +1373,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 
 

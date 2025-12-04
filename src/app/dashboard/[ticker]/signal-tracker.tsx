@@ -76,7 +76,7 @@ function ActiveSignalTracker({ ticker }: ActiveSignalTrackerProps) {
             {signals.map((signal) => {
               const isGain = signal.percent_gain >= 0;
               return (
-                <TableRow key={signal.id}>
+                <TableRow key={signal.contract_symbol}>
                   <TableCell className="font-mono text-xs">{signal.contract_symbol}</TableCell>
                   <TableCell>{new Date(signal.run_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</TableCell>
                   <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
@@ -98,7 +98,7 @@ function ActiveSignalTracker({ ticker }: ActiveSignalTrackerProps) {
           {signals.map((signal) => {
             const isGain = signal.percent_gain >= 0;
             return (
-              <Card key={signal.id} className="bg-background/50">
+              <Card key={signal.contract_symbol} className="bg-background/50">
                 <CardContent className="p-4 space-y-3">
                   <div>
                     <p className="text-xs text-muted-foreground">Contract</p>

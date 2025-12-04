@@ -95,21 +95,14 @@ const OptionCandidateSchema = z.object({
 });
 export type OptionCandidate = z.infer<typeof OptionCandidateSchema>;
 
+// Simplified for the Active Signal Tracker component
 const PerformanceSignalSchema = z.object({
-    id: z.string(),
-    ticker: z.string(),
-    company_name: z.string(),
-    image_uri: z.string().optional().nullable(),
-    industry: z.string(),
     contract_symbol: z.string(),
     initial_price: z.number(),
     current_price: z.number(),
     percent_gain: z.number(),
-    option_type: z.enum(['call', 'put']).optional(),
-    status: z.string().optional().nullable(),
-    strike_price: z.number(),
-    expiration_date: z.string(),
     run_date: z.string(),
+    expiration_date: z.string(),
 });
 export type PerformanceSignal = z.infer<typeof PerformanceSignalSchema>;
 
@@ -447,7 +440,6 @@ export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promis
     try {
         const snapshot = await adminDb.collection('performance_tracker')
             .where('ticker', '==', ticker.toUpperCase())
-            .orderBy('run_date', 'desc')
             .get();
 
         if (snapshot.empty) {
@@ -464,20 +456,12 @@ export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promis
                 const calculatedGain = ((currentPrice - initialPrice) / initialPrice) * 100;
                 
                 const signalData = {
-                    id: doc.id,
-                    ticker: data.ticker,
-                    company_name: data.company_name,
-                    image_uri: data.image_uri,
-                    industry: data.industry,
                     contract_symbol: data.contract_symbol,
                     initial_price: initialPrice,
                     current_price: currentPrice,
-                    percent_gain: calculatedGain, // Use calculated gain
-                    option_type: data.option_type,
-                    status: data.status,
-                    strike_price: data.strike_price,
-                    expiration_date: data.expiration_date,
+                    percent_gain: calculatedGain,
                     run_date: data.run_date,
+                    expiration_date: data.expiration_date,
                 };
                 
                 const validation = PerformanceSignalSchema.safeParse(signalData);
@@ -488,6 +472,8 @@ export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promis
                 }
             }
         });
+        
+        signals.sort((a, b) => new Date(b.run_date).getTime() - new Date(a.run_date).getTime());
         
         return signals;
 
@@ -1374,6 +1360,8 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
+
 
 
 

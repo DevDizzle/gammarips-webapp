@@ -8,31 +8,11 @@ import { useToast } from '@/hooks/use-toast';
 import { getPerformanceSignalsByTicker } from '@/app/actions';
 import type { PerformanceSignal } from '@/lib/firebase-admin';
 import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 
 interface ActiveSignalTrackerProps {
     ticker: string;
 }
-
-// Helper to convert GCS URI to a public URL
-const convertGcsUriToUrl = (gcsUri: string) => {
-  if (!gcsUri?.startsWith('gs://')) return '';
-  const withoutScheme = gcsUri.slice('gs://'.length);
-  const slash = withoutScheme.indexOf('/');
-  const bucket = slash === -1 ? withoutScheme : withoutScheme.slice(0, slash);
-  const object = slash === -1 ? '' : withoutScheme.slice(slash + 1);
-  const encodedObject = object.split('/').map(encodeURIComponent).join('/');
-  return `https://storage.googleapis.com/${bucket}/${encodedObject}`;
-};
-
-const getStatusBadgeVariant = (status?: string | null) => {
-    if (!status) return 'secondary';
-    const lowerStatus = status.toLowerCase();
-    if (lowerStatus === 'active') return 'default';
-    if (lowerStatus === 'expired') return 'outline';
-    return 'secondary';
-};
 
 function ActiveSignalTracker({ ticker }: ActiveSignalTrackerProps) {
   const [isLoading, setIsLoading] = useState(true);
@@ -85,8 +65,8 @@ function ActiveSignalTracker({ ticker }: ActiveSignalTrackerProps) {
         <Table className="hidden md:table">
           <TableHeader>
             <TableRow>
-              <TableHead>Contract</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Contract Symbol</TableHead>
+              <TableHead>Signal Date</TableHead>
               <TableHead>Initial Price</TableHead>
               <TableHead>Current Price</TableHead>
               <TableHead className="text-right">Gain (%)</TableHead>
@@ -97,22 +77,16 @@ function ActiveSignalTracker({ ticker }: ActiveSignalTrackerProps) {
               const isGain = signal.percent_gain >= 0;
               return (
                 <TableRow key={signal.id}>
-                  <TableCell>
-                    <div className="flex flex-col">
-                        <span className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</span>
-                        <span className="text-xs text-muted-foreground">Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
-                    </div>
+                  <TableCell className="font-mono text-xs">{signal.contract_symbol}</TableCell>
+                  <TableCell>{new Date(signal.run_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</TableCell>
+                  <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
+                  <TableCell>${signal.current_price.toFixed(2)}</TableCell>
+                  <TableCell className={cn("text-right font-semibold", isGain ? 'text-green-500' : 'text-red-500')}>
+                     <span className="flex items-center justify-end gap-1">
+                        {isGain ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+                        {signal.percent_gain.toFixed(2)}%
+                    </span>
                   </TableCell>
-                  <TableCell>
-                    <Badge variant={getStatusBadgeVariant(signal.status)}>
-                        {signal.status}
-                    </Badge>
-                  </TableCell>
-                   <TableCell>${signal.initial_price.toFixed(2)}</TableCell>
-                   <TableCell>${signal.current_price.toFixed(2)}</TableCell>
-                   <TableCell className={cn("text-right font-semibold", isGain ? 'text-green-500' : 'text-red-500')}>
-                        {isGain ? '+' : ''}{signal.percent_gain.toFixed(2)}%
-                    </TableCell>
                 </TableRow>
               );
             })}
@@ -126,16 +100,9 @@ function ActiveSignalTracker({ ticker }: ActiveSignalTrackerProps) {
             return (
               <Card key={signal.id} className="bg-background/50">
                 <CardContent className="p-4 space-y-3">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-semibold">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })}
-                      </p>
-                    </div>
-                    <Badge variant={getStatusBadgeVariant(signal.status)}>
-                      {signal.status}
-                    </Badge>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Contract</p>
+                    <p className="font-mono text-xs">{signal.contract_symbol}</p>
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-center text-sm">
                     <div>
@@ -148,8 +115,9 @@ function ActiveSignalTracker({ ticker }: ActiveSignalTrackerProps) {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Gain</p>
-                      <p className={cn("font-semibold", isGain ? 'text-green-500' : 'text-red-500')}>
-                        {isGain ? '+' : ''}{signal.percent_gain.toFixed(2)}%
+                      <p className={cn("font-semibold flex items-center justify-center gap-1", isGain ? 'text-green-500' : 'text-red-500')}>
+                         {isGain ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+                         {isGain ? '+' : ''}{signal.percent_gain.toFixed(2)}%
                       </p>
                     </div>
                   </div>

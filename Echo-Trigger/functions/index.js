@@ -121,7 +121,7 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
 }
 
 exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (event) => {
-    const snap = event.data.data;
+    const snap = event.data;
 
     if (!snap) {
         logger.error("processNewFeedback triggered without snapshot", { eventId: event.id });

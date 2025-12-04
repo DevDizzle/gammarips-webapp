@@ -81,7 +81,7 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
         throw new Error("Mailgun environment variables (MAILGUN_SENDING_KEY, MY_PERSONAL_EMAIL) are not set.");
     }
 
-    const html = \`
+    const html = `
     <!DOCTYPE html>
     <html>
     <body>
@@ -92,21 +92,21 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
         <p>If you have any further questions, please reply to this email.</p>
     </body>
     </html>
-    \`;
-    const text = \`Response to your inquiry (Ref: ${trackingId}):\n\n${response}\n\nIf you have further questions, reply to this email.\`;
+    `;
+    const text = `Response to your inquiry (Ref: ${trackingId}):\n\n${response}\n\nIf you have further questions, reply to this email.`;
 
     const form = new URLSearchParams();
     form.append('from', FROM);
     form.append('to', to);
-    form.append('subject', \`Re: Your GammaRips Inquiry (Ref: ${trackingId})\`);
+    form.append('subject', `Re: Your GammaRips Inquiry (Ref: ${trackingId})`);
     form.append('text', text);
     form.append('html', html);
     form.append('h:Reply-To', REPLY_TO);
 
-    const resp = await fetch(\`https://api.mailgun.net/v3/${DOMAIN}/messages\`, {
+    const resp = await fetch(`https://api.mailgun.net/v3/${DOMAIN}/messages`, {
         method: 'POST',
         headers: {
-            'Authorization': 'Basic ' + Buffer.from(\`api:${API_KEY}\`).toString('base64'),
+            'Authorization': 'Basic ' + Buffer.from(`api:${API_KEY}`).toString('base64'),
             'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: form.toString(),
@@ -115,13 +115,13 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
     if (!resp.ok) {
         const details = await resp.json().catch(() => ({}));
         logger.error('Mailgun Failure', { status: resp.status, details });
-        throw new Error(\`Mailgun API error: ${details.message || 'Failed to send'}\`);
+        throw new Error(`Mailgun API error: ${details.message || 'Failed to send'}`);
     }
     return resp.json();
 }
 
 exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (event) => {
-    const snap = event.data;
+    const snap = event.data.data;
 
     if (!snap) {
         logger.error("processNewFeedback triggered without snapshot", { eventId: event.id });

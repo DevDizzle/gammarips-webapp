@@ -294,7 +294,9 @@ export async function getAllPerformanceSignalsAdmin(): Promise<PerformanceSignal
 
             if (typeof initialPrice === 'number' && initialPrice > 0 && typeof currentPrice === 'number') {
                 const calculatedGain = ((currentPrice - initialPrice) / initialPrice) * 100;
-                const signal = {
+                
+                // Validate the document data first, excluding the to-be-calculated gain
+                const parsedData = {
                     id: doc.id,
                     run_date: data.run_date,
                     ticker: data.ticker,
@@ -304,14 +306,18 @@ export async function getAllPerformanceSignalsAdmin(): Promise<PerformanceSignal
                     contract_symbol: data.contract_symbol,
                     initial_price: initialPrice,
                     current_price: currentPrice,
-                    percent_gain: calculatedGain, // Use calculated gain
+                    // Temporarily set a dummy value that will be overwritten
+                    percent_gain: 0,
                     option_type: data.option_type,
                     status: data.status,
                     strike_price: data.strike_price,
                     expiration_date: data.expiration_date,
                 };
-                const validation = PerformanceSignalSchema.safeParse(signal);
+
+                const validation = PerformanceSignalSchema.safeParse(parsedData);
                 if (validation.success) {
+                    // Overwrite the dummy gain with the real calculated gain
+                    validation.data.percent_gain = calculatedGain;
                     signals.push(validation.data);
                 } else {
                     console.warn(`Invalid performance signal data in Firestore for doc ${doc.id}:`, validation.error.flatten());
@@ -391,24 +397,29 @@ export async function getPerformanceSignals(
 
       if (typeof initialPrice === 'number' && initialPrice > 0 && typeof currentPrice === 'number') {
         const calculatedGain = ((currentPrice - initialPrice) / initialPrice) * 100;
-        const signal = {
-          id: doc.id,
-          run_date: data.run_date,
-          ticker: data.ticker,
-          company_name: data.company_name,
-          image_uri: data.image_uri,
-          industry: data.industry,
-          contract_symbol: data.contract_symbol,
-          initial_price: initialPrice,
-          current_price: currentPrice,
-          percent_gain: calculatedGain, // Use calculated gain
-          option_type: data.option_type,
-          status: data.status,
-          strike_price: data.strike_price,
-          expiration_date: data.expiration_date,
+        
+        // Validate first
+        const parsedData = {
+            id: doc.id,
+            run_date: data.run_date,
+            ticker: data.ticker,
+            company_name: data.company_name,
+            image_uri: data.image_uri,
+            industry: data.industry,
+            contract_symbol: data.contract_symbol,
+            initial_price: initialPrice,
+            current_price: currentPrice,
+            percent_gain: 0, // Dummy value for validation
+            option_type: data.option_type,
+            status: data.status,
+            strike_price: data.strike_price,
+            expiration_date: data.expiration_date,
         };
-        const validation = PerformanceSignalSchema.safeParse(signal);
+        const validation = PerformanceSignalSchema.safeParse(parsedData);
+
         if (validation.success) {
+            // Overwrite dummy value with calculated gain
+            validation.data.percent_gain = calculatedGain;
             signals.push(validation.data);
         } else {
             console.warn(`Invalid performance signal data in Firestore for doc ${doc.id}:`, validation.error.flatten());
@@ -439,10 +450,11 @@ export async function getPerformanceSignals(
 }
 
 export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promise<PerformanceSignal[]> {
+    noStore();
     try {
         const snapshot = await adminDb.collection('performance_tracker')
             .where('ticker', '==', ticker.toUpperCase())
-            .orderBy('run_date', 'desc') // Sort by most recent signals first
+            .orderBy('run_date', 'desc')
             .get();
 
         if (snapshot.empty) {
@@ -452,27 +464,34 @@ export async function getPerformanceSignalsByTickerAdmin(ticker: string): Promis
         const signals: PerformanceSignal[] = [];
         snapshot.forEach(doc => {
             const data = doc.data();
-            const signal = {
-                id: doc.id,
-                run_date: data.run_date,
-                ticker: data.ticker,
-                company_name: data.company_name,
-                image_uri: data.image_uri,
-                industry: data.industry,
-                contract_symbol: data.contract_symbol,
-                initial_price: data.initial_price,
-                current_price: data.current_price,
-                percent_gain: data.percent_gain,
-                option_type: data.option_type,
-                status: data.status,
-                strike_price: data.strike_price,
-                expiration_date: data.expiration_date,
-            };
-            const validation = PerformanceSignalSchema.safeParse(signal);
-            if (validation.success) {
-                signals.push(validation.data);
-            } else {
-                console.warn(`Invalid performance signal data for ticker ${ticker}:`, validation.error.flatten());
+            const initialPrice = data.initial_price;
+            const currentPrice = data.current_price;
+
+            if (typeof initialPrice === 'number' && initialPrice > 0 && typeof currentPrice === 'number') {
+                const calculatedGain = ((currentPrice - initialPrice) / initialPrice) * 100;
+                const parsedData = {
+                    id: doc.id,
+                    run_date: data.run_date,
+                    ticker: data.ticker,
+                    company_name: data.company_name,
+                    image_uri: data.image_uri,
+                    industry: data.industry,
+                    contract_symbol: data.contract_symbol,
+                    initial_price: initialPrice,
+                    current_price: currentPrice,
+                    percent_gain: 0, // dummy value for validation
+                    option_type: data.option_type,
+                    status: data.status,
+                    strike_price: data.strike_price,
+                    expiration_date: data.expiration_date,
+                };
+                const validation = PerformanceSignalSchema.safeParse(parsedData);
+                if (validation.success) {
+                    validation.data.percent_gain = calculatedGain;
+                    signals.push(validation.data);
+                } else {
+                    console.warn(`Invalid performance signal data for ticker ${ticker} (doc ${doc.id}):`, validation.error.flatten());
+                }
             }
         });
         
@@ -1361,6 +1380,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 
 

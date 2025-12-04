@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -7,16 +5,26 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { getPerformanceSignalsByTicker } from '../../actions';
+import { getPerformanceSignalsByTicker } from '@/app/actions';
 import type { PerformanceSignal } from '@/lib/firebase-admin';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown } from 'lucide-react';
 import Image from 'next/image';
 
 interface ActiveSignalTrackerProps {
     ticker: string;
 }
+
+// Helper to convert GCS URI to a public URL
+const convertGcsUriToUrl = (gcsUri: string) => {
+  if (!gcsUri?.startsWith('gs://')) return '';
+  const withoutScheme = gcsUri.slice('gs://'.length);
+  const slash = withoutScheme.indexOf('/');
+  const bucket = slash === -1 ? withoutScheme : withoutScheme.slice(0, slash);
+  const object = slash === -1 ? '' : withoutScheme.slice(slash + 1);
+  const encodedObject = object.split('/').map(encodeURIComponent).join('/');
+  return `https://storage.googleapis.com/${bucket}/${encodedObject}`;
+};
 
 const getStatusBadgeVariant = (status?: string | null) => {
     if (!status) return 'secondary';

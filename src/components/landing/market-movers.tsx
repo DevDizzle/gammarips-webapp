@@ -1,5 +1,4 @@
 
-
 import { getPerformanceSignals } from '@/app/actions';
 import type { PerformanceSignal } from '@/lib/firebase-admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -47,21 +46,19 @@ const PerformanceList = ({ signals }: { signals: PerformanceSignal[] }) => {
                     <TableBody>
                         {signals.map(signal => {
                             const isGainer = signal.percent_gain >= 0;
-                            const imageUrl = signal.image_uri ? convertGcsUriToUrl(signal.image_uri) : null;
+                            const imageUrl = signal.image_uri ? convertGcsUriToUrl(signal.image_uri) : `https://placehold.co/24x24/1e293b/a855f7?text=${signal.ticker?.[0] || '?'}`;
                             
                             return (
                                 <TableRow key={signal.contract_symbol}>
                                     <TableCell>
                                         <div className="flex items-center gap-3">
-                                            {imageUrl && (
-                                                <Image 
-                                                    src={imageUrl} 
-                                                    alt={`${signal.company_name ?? signal.ticker} logo`}
-                                                    width={24}
-                                                    height={24}
-                                                    className="rounded-full"
-                                                />
-                                            )}
+                                            <Image 
+                                                src={imageUrl} 
+                                                alt={`${signal.company_name ?? signal.ticker} logo`}
+                                                width={24}
+                                                height={24}
+                                                className="rounded-full"
+                                            />
                                             <div>
                                                 <Link href={`/dashboard/${signal.ticker}`} className="font-bold hover:underline">{signal.ticker}</Link>
                                                 <p className="text-xs text-muted-foreground truncate max-w-[150px]">{signal.company_name}</p>
@@ -88,7 +85,7 @@ const PerformanceList = ({ signals }: { signals: PerformanceSignal[] }) => {
                 <div className="md:hidden space-y-3">
                      {signals.map(signal => {
                         const isGainer = signal.percent_gain >= 0;
-                        const imageUrl = signal.image_uri ? convertGcsUriToUrl(signal.image_uri) : null;
+                        const imageUrl = signal.image_uri ? convertGcsUriToUrl(signal.image_uri) : `https://placehold.co/40x40/1e293b/a855f7?text=${signal.ticker?.[0] || '?'}`;
 
                         return (
                             <Card key={signal.contract_symbol} className="transition-colors hover:bg-muted/50">
@@ -96,15 +93,13 @@ const PerformanceList = ({ signals }: { signals: PerformanceSignal[] }) => {
                                     <CardContent className="p-4">
                                         <div className="flex items-center justify-between gap-4">
                                             <div className="flex items-center gap-3 flex-1 min-w-0">
-                                                {imageUrl && (
-                                                    <Image 
-                                                        src={imageUrl} 
-                                                        alt={`${signal.company_name ?? signal.ticker} logo`}
-                                                        width={40}
-                                                        height={40}
-                                                        className="rounded-full"
-                                                    />
-                                                )}
+                                                <Image 
+                                                    src={imageUrl} 
+                                                    alt={`${signal.company_name ?? signal.ticker} logo`}
+                                                    width={40}
+                                                    height={40}
+                                                    className="rounded-full"
+                                                />
                                                 <div className="flex-1 min-w-0">
                                                     <p className="font-bold truncate">{signal.company_name}</p>
                                                     <p className="text-sm text-muted-foreground">{signal.ticker}</p>
@@ -140,5 +135,3 @@ export default async function MarketMovers() {
         <PerformanceList signals={topGainers} />
     );
 }
-
-    

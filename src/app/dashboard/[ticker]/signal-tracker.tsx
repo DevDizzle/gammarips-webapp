@@ -18,7 +18,7 @@ interface ActiveSignalTrackerProps {
     ticker: string;
 }
 
-const getStatusBadgeVariant = (status?: string) => {
+const getStatusBadgeVariant = (status?: string | null) => {
     if (!status) return 'secondary';
     const lowerStatus = status.toLowerCase();
     if (lowerStatus === 'active') return 'default';

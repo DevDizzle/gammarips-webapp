@@ -106,7 +106,7 @@ const PerformanceSignalSchema = z.object({
     current_price: z.number(),
     percent_gain: z.number(),
     option_type: z.enum(['call', 'put']).optional(),
-    status: z.string().optional(),
+    status: z.string().optional().nullable(),
     strike_price: z.number(),
     expiration_date: z.string(),
     run_date: z.string(),
@@ -1374,6 +1374,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 
 

@@ -167,6 +167,13 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
 }
 
 exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (event) => {
+    // FIX: Check if event.data exists before trying to access its properties.
+    // This handles health checks and other non-data events gracefully.
+    if (!event.data) {
+        logger.info("processNewFeedback triggered without event data. Likely a health check.", { eventId: event.id });
+        return;
+    }
+
     const snap = event.data.data;
 
     if (!snap) {

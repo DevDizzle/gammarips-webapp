@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { setUserSubscriptionStatusAdmin, getUserByStripeCustomerIdAdmin } from '@/lib/firebase-admin';
-import { sendSubscriptionThankYouEmail } from '@/lib/mailgun';
+import { sendWelcomeEmail } from '@/lib/mailgun';
 import type { DbUser } from '@/lib/firebase';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -12,22 +12,22 @@ const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const gaApiSecret = process.env.GA_API_SECRET!;
 
 
-async function handleSubscriptionChange(subscription: Stripe.Subscription, isSubscribed: boolean) {
+async function handleSubscriptionChange(subscription: Stripe.Subscription, isSubscribed: boolean, isNew: boolean = false) {
     const customerId = subscription.customer as string;
     const user = await getUserByStripeCustomerIdAdmin(customerId);
 
     if (user) {
         await setUserSubscriptionStatusAdmin(user.uid, isSubscribed);
         
-        // Send thank you email on new active subscription
-        if (isSubscribed && user.email) {
-            console.log(`Webhook: Sending subscription thank you email to ${user.email}`);
-            await sendSubscriptionThankYouEmail({
+        // Send the powerful new welcome email ONLY on a new active subscription.
+        if (isSubscribed && isNew && user.email) {
+            console.log(`Webhook: Sending welcome email to new subscriber ${user.email}`);
+            await sendWelcomeEmail({
                 to: user.email,
                 name: user.displayName || user.email.split('@')[0],
             }).catch(err => {
                 // Log error but don't fail the webhook processing
-                console.error(`Webhook: Failed to send subscription thank you email to ${user.email}`, err);
+                console.error(`Webhook: Failed to send welcome email to new subscriber ${user.email}`, err);
             });
         }
 
@@ -105,27 +105,32 @@ export async function POST(req: NextRequest) {
   // Handle the event
   switch (event.type) {
     case 'customer.subscription.created':
+        const subscriptionCreated = event.data.object as Stripe.Subscription;
+        await handleSubscriptionChange(subscriptionCreated, true, true);
+        break;
     case 'customer.subscription.updated':
         const subscriptionUpdated = event.data.object as Stripe.Subscription;
-        // We only care about the 'active' state for sending emails etc.
-        // handleSubscriptionChange handles this check.
+        // Check if the subscription is now active but wasn't before
+        // This handles cases like reactivations, but we don't treat it as a "new" sub for the welcome email.
         if (subscriptionUpdated.status === 'active') {
-             await handleSubscriptionChange(subscriptionUpdated, true);
+             await handleSubscriptionChange(subscriptionUpdated, true, false);
         } else {
             // For other statuses like 'past_due', we just update the DB.
-             await handleSubscriptionChange(subscriptionUpdated, false);
+             await handleSubscriptionChange(subscriptionUpdated, false, false);
         }
         break;
     case 'customer.subscription.deleted':
         const subscriptionDeleted = event.data.object as Stripe.Subscription;
-        await handleSubscriptionChange(subscriptionDeleted, false);
+        await handleSubscriptionChange(subscriptionDeleted, false, false);
         break;
     case 'checkout.session.completed':
         const session = event.data.object as Stripe.Checkout.Session;
+        // This event fires *before* customer.subscription.created for new subs.
+        // It's a reliable place to trigger the welcome email and GA event.
         if (session.mode === 'subscription' && session.subscription) {
             const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
-            // This will mark the user as subscribed AND send the thank you email
-            await handleSubscriptionChange(subscription, true); 
+            // The `true, true` flags mark the subscription as active and new, triggering the welcome email.
+            await handleSubscriptionChange(subscription, true, true); 
             await sendPurchaseEventToGA(session); // Send GA event
         }
         break;

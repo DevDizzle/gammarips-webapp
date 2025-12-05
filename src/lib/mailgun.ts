@@ -91,17 +91,27 @@ export async function sendEmail(options: EmailOptions) {
 
 export async function buildWelcomeEmailContent(name: string): Promise<{ text: string; html: string }> {
     const textContent = `
-Welcome to GammaRips, ${name}!
+Welcome to GammaRips, ${name}.
 
-You now have full access to our AI-powered options research dashboard. Here's what you can do right now:
+You stopped guessing. You started hunting.
 
-- View today's top-rated Call and Put rippers.
-- Dive deep into any stock with our AI Analyst Briefings.
-- Explore the interactive dashboard to find your next trade idea.
+You now have access to the one simple options playbook. No more scanning 500 tickers or chasing random noise. You have the high-gamma filter.
 
-Get started now: https://profitscout.app/dashboard
+Your Daily Routine Starts Now:
 
-Happy trading,
+1. Grab Today’s Contracts
+Log in to the dashboard to see the tight list of specific Call & Put setups our AI flagged for today. Look for the "Strongly Bullish" or "Bearish" tags.
+
+2. Read the "Why"
+Don't trade blindly. Click any card to read the AI Breakdown. Understand why the gamma profile, catalysts, and technicals align before you pull the trigger.
+
+3. Run Your Plan
+We provide the setups; you manage the trade. Decide your entry, size, and risk.
+
+The market is moving. Go see what’s primed to rip.
+
+Unlock Today’s Contracts: https://profitscout.app/dashboard
+
 The GammaRips Team
 `;
 
@@ -114,7 +124,7 @@ The GammaRips Team
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>Welcome to GammaRips!</title>
+    <title>Your daily contracts are ready.</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
@@ -122,25 +132,45 @@ The GammaRips Team
             <td align="center" style="padding: 20px;">
                 <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
-                        <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
-                            <p style="font-size: 18px; color: #A0A0A0; margin-top: 12px;">Welcome, ${name}!</p>
+                        <td style="padding: 40px;">
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: #ffffff; margin: 0;">You stopped guessing. You started hunting.</h1>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">Welcome to GammaRips, ${name}.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You now have access to the one simple options playbook. No more scanning 500 tickers or chasing random noise. You have the high-gamma filter.</p>
+                            
+                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; color: #ffffff; margin-top: 32px; margin-bottom: 20px; border-top: 1px solid #393b4d; padding-top: 32px;">Your Daily Routine Starts Now:</h2>
+                            
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="40" valign="top" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">1.</td>
+                                    <td valign="top">
+                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Grab Today’s Contracts</h3>
+                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Log in to the dashboard to see the tight list of specific Call & Put setups our AI flagged. Look for "Strongly Bullish" or "Bearish" tags.</p>
+                                    </td>
+                                </tr>
+                                <tr><td height="24"></td></tr>
+                                <tr>
+                                    <td width="40" valign="top" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">2.</td>
+                                    <td valign="top">
+                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Read the "Why"</h3>
+                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Don't trade blindly. Click any card to read the AI Breakdown. Understand why the gamma profile and catalysts align.</p>
+                                    </td>
+                                </tr>
+                                <tr><td height="24"></td></tr>
+                                 <tr>
+                                    <td width="40" valign="top" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">3.</td>
+                                    <td valign="top">
+                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Run Your Plan</h3>
+                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">We provide the setups; you manage the trade. Decide your entry, size, and risk.</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 32px; text-align: center;">The market is moving. Go see what’s primed to rip.</p>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 0 40px;">
-                            <p style="font-size: 16px; line-height: 1.6;">You now have full access to our complete suite of AI-powered research tools.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Here's what you can do right now:</p>
-                             <ul style="font-size: 16px; line-height: 1.6; margin-top: 16px; padding-left: 20px; color: #E0E0E0;">
-                                <li style="margin-bottom: 10px;">View today's top-rated Call & Put rippers.</li>
-                                <li style="margin-bottom: 10px;">Dive deep with our AI Analyst Briefings.</li>
-                                <li style="margin-bottom: 10px;">Explore the interactive dashboard.</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://profitscout.app/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
+                        <td align="center" style="padding: 20px 40px 40px;">
+                            <a href="https://profitscout.app/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Unlock Today’s Contracts</a>
                         </td>
                     </tr>
                      <tr>
@@ -164,81 +194,7 @@ export async function sendWelcomeEmail({ to, name }: { to: string, name: string 
     const { text, html } = await buildWelcomeEmailContent(name);
     return sendEmail({
         to: `${name} <${to}>`,
-        subject: `Welcome to GammaRips!`,
-        text,
-        html,
-    });
-}
-
-export async function buildSubscriptionThankYouEmailContent(name: string): Promise<{ text: string; html: string }> {
-    const textContent = `
-Thank You for Subscribing, ${name}!
-
-Welcome to GammaRips Pro! We're thrilled to have you as a premium member.
-
-Your support helps us continue to build and improve the tools that power your research. We're committed to providing you with the best AI-driven market insights available.
-
-If you have any questions, feedback, or ideas for how we can improve, please don't hesitate to reach out. You can reply directly to this email or contact us anytime at admin@profitscout.app.
-
-Happy trading,
-The GammaRips Team
-`;
-
-    const htmlContent = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>Thank You for Subscribing!</title>
-</head>
-<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
-        <tr>
-            <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
-                    <tr>
-                        <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
-                            <p style="font-size: 18px; color: #A0A0A0; margin-top: 12px;">Thank You, ${name}!</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 0 40px;">
-                            <p style="font-size: 16px; line-height: 1.6;">Welcome to <strong>GammaRips Pro!</strong> We're thrilled to have you as a premium member. Your support helps us continue to build and improve the tools that power your research.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We are committed to providing you with the best AI-driven market insights available. If you have any questions, feedback, or ideas for new features, please don't hesitate to reach out. You can reply directly to this email or contact support anytime at <a href="mailto:admin@profitscout.app" style="color: hsl(74, 80%, 50%); text-decoration: none;">admin@profitscout.app</a>.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="https://profitscout.app/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Explore Your Pro Dashboard</a>
-                        </td>
-                    </tr>
-                     <tr>
-                        <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
-                             <p style="margin: 0;">This is not financial advice. All trading involves risk.</p>
-                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</body>
-</html>
-`;
-
-    return { text: textContent, html: htmlContent };
-}
-
-export async function sendSubscriptionThankYouEmail({ to, name }: { to: string, name: string }) {
-    const { text, html } = await buildSubscriptionThankYouEmailContent(name);
-    return sendEmail({
-        to: `${name} <${to}>`,
-        subject: `Thank you for subscribing to GammaRips Pro!`,
+        subject: `Your daily contracts are ready.`,
         text,
         html,
     });

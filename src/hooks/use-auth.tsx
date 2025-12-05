@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
@@ -20,7 +21,7 @@ import { getDoc, doc } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { event as trackEvent } from '@/lib/gtag';
 import { useRouter } from 'next/navigation';
-import { handleWelcomeEmail, createCheckoutSession } from '@/app/actions';
+import { createCheckoutSession } from '@/app/actions';
 import { loadStripe } from '@stripe/stripe-js';
 
 const auth = getAuth(app);
@@ -78,7 +79,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (additionalInfo?.isNewUser) {
       trackEvent('sign_up', { method });
       
-      // Redirect new users to the processing page, which will handle the Stripe redirect.
+      // The welcome email is no longer sent on sign up.
+      // It is now sent via the Stripe webhook upon successful subscription.
       router.push('/auth/processing');
 
     } else {

@@ -1,10 +1,7 @@
-
 const admin = require("firebase-admin");
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const { setGlobalOptions } = require("firebase-functions/v2/options");
 const winston = require("winston");
-
-// Removed genkit, zod, fs, and resolve as the AI logic is now handled by the Next.js app.
 
 setGlobalOptions({
   region: "us-central1",
@@ -105,61 +102,88 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
 }
 
 exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (event) => {
-    // FIX: Check if event.data exists before trying to access its properties.
-    // This handles health checks and other non-data events gracefully.
-    if (!event.data) {
-        logger.info("processNewFeedback triggered without event data. Likely a health check.", { eventId: event.id });
-        return;
-    }
+  let snap;
+  let feedbackId = event.params?.feedbackId;
 
-    const snap = event.data.data;
-
-    if (!snap) {
-        logger.error("processNewFeedback triggered without snapshot data.", { eventId: event.id });
-        return;
-    }
-
-    const newFeedback = snap.data();
-    const { feedbackId } = event.params;
-
-    logger.info("Processing new feedback", { feedbackId });
-
-    if (!newFeedback?.message || !newFeedback?.replyToEmail || !newFeedback?.trackingId) {
-        logger.error("Feedback document is missing required fields.", { feedbackId });
-        await snap.ref.set({
-            status: "error",
-            errorMessage: "Missing message, replyToEmail, or trackingId",
-            checkedAt: admin.firestore.FieldValue.serverTimestamp(),
-        }, { merge: true });
-        return;
-    }
-
-    try {
-        // Call the centralized AI flow in the Next.js app
-        const aiResponse = await answerFeedbackViaApp({
-            message: newFeedback.message,
-            trackingId: newFeedback.trackingId,
-        });
-
-        if (!aiResponse || !aiResponse.response) {
-            throw new Error("AI agent did not return a valid response object.");
+  // Primary method: Check if event.data.data exists (standard for 2nd Gen)
+  if (event.data?.data) {
+    snap = event.data;
+  }
+  // Fallback for health checks or unusual event structures
+  else if (!event.data) {
+    logger.info("processNewFeedback triggered without event data. Likely a health check.", { eventId: event.id });
+    return;
+  }
+  // Fallback: if event.data is missing but subject exists, refetch the document.
+  // This handles cases where the event payload might be missing but the trigger context is present.
+  else {
+    const subject = event.subject || event.resource; // CloudEvent subject usually looks like "documents/feedback/XYZ"
+    if (subject) {
+      const match = subject.match(/documents\/feedback\/([^/]+)$/);
+      if (match) {
+        const docId = match[1];
+        feedbackId = feedbackId || docId;
+        logger.warn(`Refetching document due to missing event payload for feedbackId: ${docId}`);
+        const docRef = admin.firestore().doc(`feedback/${docId}`);
+        const docSnap = await docRef.get();
+        if (docSnap.exists) {
+          // Reconstruct a snapshot-like object for consistent processing
+          snap = {
+              data: () => docSnap.data(),
+              ref: docSnap.ref,
+          };
         }
-
-        await sendAgentResponseEmail({
-            to: newFeedback.replyToEmail,
-            response: aiResponse.response,
-            trackingId: newFeedback.trackingId,
-        });
-
-        await snap.ref.set({
-            agentResponse: aiResponse.response,
-            status: "responded",
-            respondedAt: admin.firestore.FieldValue.serverTimestamp(),
-        }, { merge: true });
-
-        logger.info("Successfully processed feedback", { feedbackId });
-    } catch (error) {
-        logger.error("Failed to process feedback", { feedbackId, error: error.message, stack: error.stack });
-        await snap.ref.set({ status: "error", errorMessage: error.message }, { merge: true });
+      }
     }
+  }
+
+
+  if (!snap) {
+    logger.error("processNewFeedback has no snapshot after fallback", {
+      eventId: event.id,
+      subject: event.subject,
+    });
+    return;
+  }
+
+  const newFeedback = snap.data();
+  if (!newFeedback?.message || !newFeedback?.replyToEmail || !newFeedback?.trackingId) {
+    logger.error("Feedback document is missing required fields.", { feedbackId, data: newFeedback });
+    await snap.ref.set({
+      status: "error",
+      errorMessage: "Missing message, replyToEmail, or trackingId",
+      checkedAt: admin.firestore.FieldValue.serverTimestamp(),
+    }, { merge: true });
+    return;
+  }
+
+  try {
+      logger.info("Processing new feedback", { feedbackId });
+      // Call the centralized AI flow in the Next.js app
+      const aiResponse = await answerFeedbackViaApp({
+          message: newFeedback.message,
+          trackingId: newFeedback.trackingId,
+      });
+
+      if (!aiResponse || !aiResponse.response) {
+          throw new Error("AI agent did not return a valid response object.");
+      }
+
+      await sendAgentResponseEmail({
+          to: newFeedback.replyToEmail,
+          response: aiResponse.response,
+          trackingId: newFeedback.trackingId,
+      });
+
+      await snap.ref.set({
+          agentResponse: aiResponse.response,
+          status: "responded",
+          respondedAt: admin.firestore.FieldValue.serverTimestamp(),
+      }, { merge: true });
+
+      logger.info("Successfully processed feedback", { feedbackId });
+  } catch (error) {
+      logger.error("Failed to process feedback", { feedbackId, error: error.message, stack: error.stack });
+      await snap.ref.set({ status: "error", errorMessage: error.message }, { merge: true });
+  }
 });

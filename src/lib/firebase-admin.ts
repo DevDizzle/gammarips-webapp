@@ -1067,40 +1067,6 @@ export async function getOrCreateUserAdmin(
   return newUser;
 }
 
-export async function getUsersForReferralEmailAdmin(): Promise<DbUser[]> {
-    const eligibleUsers: DbUser[] = [];
-    const daysIntervals = [14, 64, 128, 256];
-    const now = new Date();
-
-    try {
-        // Fetch all non-subscribed users
-        const snapshot = await adminDb.collection('users').where('isSubscribed', '==', false).get();
-
-        if (snapshot.empty) {
-            return [];
-        }
-
-        snapshot.forEach(doc => {
-            const user = doc.data() as DbUser;
-
-            if (user.email && user.createdAt && user.createdAt instanceof Timestamp) {
-                const createdAtDate = user.createdAt.toDate();
-                const diffTime = now.getTime() - createdAtDate.getTime();
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-                // Check if the difference in days is one of the specified intervals
-                if (daysIntervals.includes(diffDays)) {
-                    eligibleUsers.push(user);
-                }
-            }
-        });
-
-    } catch (error) {
-        console.error('Error fetching users for referral email:', error);
-    }
-    return eligibleUsers;
-}
-
 export async function getUsersForFeedbackEmailAdmin(): Promise<DbUser[]> {
     const eligibleUsers: DbUser[] = [];
     const daysIntervals = [7, 28, 112, 224];
@@ -1337,6 +1303,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 
 

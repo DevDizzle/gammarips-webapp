@@ -7,7 +7,6 @@ config();
 import { 
     sendEmail,
     buildWelcomeEmailContent,
-    buildReferralEmailContent,
     buildFeedbackRequestEmailContent,
     buildFeedbackAcknowledgmentEmailContent,
     buildAgentResponseEmailContent,
@@ -34,19 +33,6 @@ async function testSendWelcomeEmail() {
     const result = await sendEmail({
         to: TEST_EMAIL,
         subject: '[TEST] Welcome to GammaRips!',
-        text,
-        html,
-    });
-    console.log('Result:', result.ok ? 'Success' : `Failed (${result.status})`);
-}
-
-async function testSendReferralEmail() {
-    console.log('Testing: Referral Email');
-    const referralLink = 'https://gammarips.com/?ref=TESTUSER123';
-    const { text, html } = await buildReferralEmailContent(TEST_NAME, referralLink);
-    const result = await sendEmail({
-        to: TEST_EMAIL,
-        subject: '[TEST] Share the edge: Give your friends 45 days of GammaRips',
         text,
         html,
     });
@@ -142,7 +128,6 @@ async function testSendTopPick() {
 async function runAllEmailTests() {
     const allTests = [
         testSendWelcomeEmail,
-        testSendReferralEmail,
         testSendFeedbackRequestEmail,
         testSendFeedbackAcknowledgmentEmail,
         testSendDailySetups,

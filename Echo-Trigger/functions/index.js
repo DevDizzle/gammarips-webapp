@@ -1,12 +1,10 @@
+
 const admin = require("firebase-admin");
-const { genkit } = require("genkit");
-const { googleAI } = require("@genkit-ai/googleai");
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const { setGlobalOptions } = require("firebase-functions/v2/options");
 const winston = require("winston");
-const { z } = require("zod");
-const { readFileSync } = require("fs");
-const { resolve } = require("path");
+
+// Removed genkit, zod, fs, and resolve as the AI logic is now handled by the Next.js app.
 
 setGlobalOptions({
   region: "us-central1",
@@ -26,55 +24,41 @@ const logger = winston.createLogger({
 
 admin.initializeApp();
 
-const ai = genkit({
-  plugins: [googleAI()],
-});
+// This function now calls the Next.js app's endpoint where the real AI flow lives.
+async function answerFeedbackViaApp(input) {
+    const APP_URL = process.env.APP_HOSTING_URL;
+    const GENKIT_API_KEY = process.env.GENKIT_API_KEY;
 
-const knowledgeBasePath = resolve(__dirname, "knowledge", "customer-service-policy.md");
-const knowledgeBase = readFileSync(knowledgeBasePath, "utf-8");
-
-const AnswerFeedbackInputSchema = z.object({
-  message: z.string(),
-  trackingId: z.string(),
-});
-
-const AnswerFeedbackOutputSchema = z.object({
-  response: z.string(),
-});
-
-const prompt = ai.definePrompt({
-  name: 'customerServiceAgentPrompt',
-  input: {schema: AnswerFeedbackInputSchema},
-  output: {schema: AnswerFeedbackOutputSchema},
-  prompt: `You are an expert customer service agent for GammaRips, an AI-powered options trading research tool. Your goal is to provide a helpful, empathetic, and professional response to user feedback. You MUST strictly adhere to the policies and tone outlined in the knowledge base. Never give financial advice.
-
-Knowledge Base:
----
-{{{knowledgeBase}}}
----
-
-User's Message:
-"{{{message}}}"
-
-Generate a helpful response to the user.`,
-});
-
-const customerServiceAgentFlow = ai.defineFlow({
-    name: 'customerServiceAgentFlow',
-    inputSchema: AnswerFeedbackInputSchema,
-    outputSchema: AnswerFeedbackOutputSchema,
-}, async (input) => {
-    const { output } = await prompt({ ...input, knowledgeBase });
-    if (!output) {
-        throw new Error("AI Agent failed to generate an output.");
+    if (!APP_URL || !GENKIT_API_KEY) {
+        throw new Error("Missing required environment variables: APP_HOSTING_URL or GENKIT_API_KEY.");
     }
-    return output;
-});
+    
+    // The path corresponds to the `answerFeedback` flow.
+    const endpoint = `${APP_URL}/api/genkit/flow/answerFeedback`;
+
+    const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${GENKIT_API_KEY}`,
+        },
+        body: JSON.stringify({ input }),
+    });
+
+    if (!response.ok) {
+        const errorDetails = await response.text();
+        throw new Error(`Failed to call app AI flow: ${response.status} ${errorDetails}`);
+    }
+
+    const result = await response.json();
+    return result.output; // The output of the Genkit flow is nested here
+}
+
 
 async function sendAgentResponseEmail({ to, response, trackingId }) {
     const API_KEY = process.env.MAILGUN_SENDING_KEY;
     const DOMAIN = 'profitscout.app';
-    const FROM = 'GammaRips <admin@profitscout.app>';
+    const FROM = 'GammaRips <admin@profitscout.app>'; // Corrected branding
     const REPLY_TO = process.env.MY_PERSONAL_EMAIL;
 
     if (!API_KEY || !REPLY_TO) {
@@ -98,7 +82,7 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
     const form = new URLSearchParams();
     form.append('from', FROM);
     form.append('to', to);
-    form.append('subject', `Re: Your GammaRips Inquiry (Ref: ${trackingId})`);
+    form.append('subject', `Re: Your GammaRips Inquiry (Ref: ${trackingId})`); // Corrected branding
     form.append('text', text);
     form.append('html', html);
     form.append('h:Reply-To', REPLY_TO);
@@ -121,10 +105,11 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
 }
 
 exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (event) => {
-    const snap = event.data;
+    // This is the correct way to get the snapshot for a 2nd Gen function
+    const snap = event.data.data;
 
     if (!snap) {
-        logger.error("processNewFeedback triggered without snapshot", { eventId: event.id });
+        logger.error("processNewFeedback triggered without snapshot data.", { eventId: event.id });
         return;
     }
 
@@ -144,10 +129,15 @@ exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (e
     }
 
     try {
-        const aiResponse = await customerServiceAgentFlow({
+        // Call the centralized AI flow in the Next.js app
+        const aiResponse = await answerFeedbackViaApp({
             message: newFeedback.message,
             trackingId: newFeedback.trackingId,
         });
+
+        if (!aiResponse || !aiResponse.response) {
+            throw new Error("AI agent did not return a valid response object.");
+        }
 
         await sendAgentResponseEmail({
             to: newFeedback.replyToEmail,
@@ -163,7 +153,7 @@ exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (e
 
         logger.info("Successfully processed feedback", { feedbackId });
     } catch (error) {
-        logger.error("Failed to process feedback", { feedbackId, error: error.message });
+        logger.error("Failed to process feedback", { feedbackId, error: error.message, stack: error.stack });
         await snap.ref.set({ status: "error", errorMessage: error.message }, { merge: true });
     }
 });

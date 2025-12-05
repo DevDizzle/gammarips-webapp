@@ -40,7 +40,7 @@ This is the most critical step. The function must be event-driven.
 
 ### Step 4: Update package.json
 
-In the inline editor, select the `package.json` file. Replace its entire contents with the following JSON to declare the necessary dependencies.
+In the inline editor, select the `package.json` file. Replace its entire contents with the following JSON to declare the necessary dependencies. **Note:** We have removed Genkit and Zod, as they are no longer needed in the function itself.
 
 ```json
 {
@@ -50,10 +50,7 @@ In the inline editor, select the `package.json` file. Replace its entire content
   "dependencies": {
     "firebase-admin": "^12.0.0",
     "firebase-functions": "^5.0.1",
-    "@genkit-ai/googleai": "^1.14.1",
-    "genkit": "^1.14.1",
-    "winston": "^3.13.0",
-    "zod": "^3.24.2"
+    "winston": "^3.13.0"
   },
   "engines": {
     "node": "20"
@@ -70,14 +67,9 @@ Select the `index.js` file in the editor. Replace its entire contents with the c
 
 ```javascript
 const admin = require("firebase-admin");
-const { genkit } = require("genkit");
-const { googleAI } = require("@genkit-ai/googleai");
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const { setGlobalOptions } = require("firebase-functions/v2/options");
 const winston = require("winston");
-const { z } = require("zod");
-const { readFileSync } = require("fs");
-const { resolve } = require("path");
 
 setGlobalOptions({
   region: "us-central1",
@@ -97,50 +89,33 @@ const logger = winston.createLogger({
 
 admin.initializeApp();
 
-const ai = genkit({
-  plugins: [googleAI()],
-});
+async function answerFeedbackViaApp(input) {
+    const APP_URL = process.env.APP_HOSTING_URL;
+    const GENKIT_API_KEY = process.env.GENKIT_API_KEY;
 
-const knowledgeBasePath = resolve(__dirname, "knowledge", "customer-service-policy.md");
-const knowledgeBase = readFileSync(knowledgeBasePath, "utf-8");
-
-const AnswerFeedbackInputSchema = z.object({
-  message: z.string(),
-  trackingId: z.string(),
-});
-
-const AnswerFeedbackOutputSchema = z.object({
-  response: z.string(),
-});
-
-const prompt = ai.definePrompt({
-  name: 'customerServiceAgentPrompt',
-  input: {schema: AnswerFeedbackInputSchema},
-  output: {schema: AnswerFeedbackOutputSchema},
-  prompt: `You are an expert customer service agent for GammaRips, an AI-powered options trading research tool. Your goal is to provide a helpful, empathetic, and professional response to user feedback. You MUST strictly adhere to the policies and tone outlined in the knowledge base. Never give financial advice.
-
-Knowledge Base:
----
-{{{knowledgeBase}}}
----
-
-User's Message:
-"{{{message}}}"
-
-Generate a helpful response to the user.`,
-});
-
-const customerServiceAgentFlow = ai.defineFlow({
-    name: 'customerServiceAgentFlow',
-    inputSchema: AnswerFeedbackInputSchema,
-    outputSchema: AnswerFeedbackOutputSchema,
-}, async (input) => {
-    const { output } = await prompt({ ...input, knowledgeBase });
-    if (!output) {
-        throw new Error("AI Agent failed to generate an output.");
+    if (!APP_URL || !GENKIT_API_KEY) {
+        throw new Error("Missing required environment variables: APP_HOSTING_URL or GENKIT_API_KEY.");
     }
-    return output;
-});
+    
+    const endpoint = `${APP_URL}/api/genkit/flow/answerFeedback`;
+
+    const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${GENKIT_API_KEY}`,
+        },
+        body: JSON.stringify({ input }),
+    });
+
+    if (!response.ok) {
+        const errorDetails = await response.text();
+        throw new Error(`Failed to call app AI flow: ${response.status} ${errorDetails}`);
+    }
+
+    const result = await response.json();
+    return result.output;
+}
 
 async function sendAgentResponseEmail({ to, response, trackingId }) {
     const API_KEY = process.env.MAILGUN_SENDING_KEY;
@@ -152,7 +127,7 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
         throw new Error("Mailgun environment variables (MAILGUN_SENDING_KEY, MY_PERSONAL_EMAIL) are not set.");
     }
 
-    const html = \`
+    const html = `
     <!DOCTYPE html>
     <html>
     <body>
@@ -163,21 +138,21 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
         <p>If you have any further questions, please reply to this email.</p>
     </body>
     </html>
-    \`;
-    const text = \`Response to your inquiry (Ref: ${trackingId}):\n\n${response}\n\nIf you have further questions, reply to this email.\`;
+    `;
+    const text = `Response to your inquiry (Ref: ${trackingId}):\n\n${response}\n\nIf you have further questions, reply to this email.`;
 
     const form = new URLSearchParams();
     form.append('from', FROM);
     form.append('to', to);
-    form.append('subject', \`Re: Your GammaRips Inquiry (Ref: ${trackingId})\`);
+    form.append('subject', `Re: Your GammaRips Inquiry (Ref: ${trackingId})`);
     form.append('text', text);
     form.append('html', html);
     form.append('h:Reply-To', REPLY_TO);
 
-    const resp = await fetch(\`https://api.mailgun.net/v3/${DOMAIN}/messages\`, {
+    const resp = await fetch(`https://api.mailgun.net/v3/${DOMAIN}/messages`, {
         method: 'POST',
         headers: {
-            'Authorization': 'Basic ' + Buffer.from(\`api:${API_KEY}\`).toString('base64'),
+            'Authorization': 'Basic ' + Buffer.from(`api:${API_KEY}`).toString('base64'),
             'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: form.toString(),
@@ -186,16 +161,16 @@ async function sendAgentResponseEmail({ to, response, trackingId }) {
     if (!resp.ok) {
         const details = await resp.json().catch(() => ({}));
         logger.error('Mailgun Failure', { status: resp.status, details });
-        throw new Error(\`Mailgun API error: ${details.message || 'Failed to send'}\`);
+        throw new Error(`Mailgun API error: ${details.message || 'Failed to send'}`);
     }
     return resp.json();
 }
 
 exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (event) => {
-    const snap = event.data;
+    const snap = event.data.data;
 
     if (!snap) {
-        logger.error("processNewFeedback triggered without snapshot", { eventId: event.id });
+        logger.error("processNewFeedback triggered without snapshot data.", { eventId: event.id });
         return;
     }
 
@@ -215,10 +190,14 @@ exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (e
     }
 
     try {
-        const aiResponse = await customerServiceAgentFlow({
+        const aiResponse = await answerFeedbackViaApp({
             message: newFeedback.message,
             trackingId: newFeedback.trackingId,
         });
+
+        if (!aiResponse || !aiResponse.response) {
+            throw new Error("AI agent did not return a valid response object.");
+        }
 
         await sendAgentResponseEmail({
             to: newFeedback.replyToEmail,
@@ -234,7 +213,7 @@ exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (e
 
         logger.info("Successfully processed feedback", { feedbackId });
     } catch (error) {
-        logger.error("Failed to process feedback", { feedbackId, error: error.message });
+        logger.error("Failed to process feedback", { feedbackId, error: error.message, stack: error.stack });
         await snap.ref.set({ status: "error", errorMessage: error.message }, { merge: true });
     }
 });
@@ -244,13 +223,15 @@ exports.processNewFeedback = onDocumentCreated("feedback/{feedbackId}", async (e
 
 ### Step 6: Set Environment Variables
 
-This function requires access to secret keys.
+This function requires access to secret keys. **This is a critical new step.**
 
 1.  Under "Runtime, build and connections settings", find the **"Runtime environment variables"** tab.
 2.  Click **"Add variable"** and add the following keys and their corresponding secret values:
     *   `MAILGUN_SENDING_KEY`: [Your Mailgun API Key]
     *   `MY_PERSONAL_EMAIL`: [Your personal email for the "Reply-To" header]
     *   `GEMINI_API_KEY`: [Your Google AI/Gemini API Key]
+    *   `APP_HOSTING_URL`: [The URL of your deployed Next.js app (e.g., `https://your-app-name-xxxx.web.app`)]
+    *   `GENKIT_API_KEY`: [A strong, randomly generated secret key you create. This will be used to secure the Genkit API endpoint on your Next.js app.]
 
 ---
 

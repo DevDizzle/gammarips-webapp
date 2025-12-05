@@ -27,11 +27,7 @@ const AnswerFeedbackOutputSchema = z.object({
 });
 export type AnswerFeedbackOutput = z.infer<typeof AnswerFeedbackOutputSchema>;
 
-export async function answerFeedback(input: AnswerFeedbackInput): Promise<AnswerFeedbackOutput> {
-  return customerServiceAgentFlow(input);
-}
-
-const prompt = ai.definePrompt({
+const customerServiceAgentPrompt = ai.definePrompt({
   name: 'customerServiceAgentPrompt',
   input: {schema: AnswerFeedbackInputSchema},
   output: {schema: AnswerFeedbackOutputSchema},
@@ -59,14 +55,31 @@ You MUST strictly adhere to the policies and tone outlined in the knowledge base
 Generate a helpful response to the user.`,
 });
 
-const customerServiceAgentFlow = ai.defineFlow(
+// This is the main flow that will be called by the Cloud Function.
+// Note the `name` change to match the endpoint path.
+export const answerFeedback = ai.defineFlow(
   {
-    name: 'customerServiceAgentFlow',
+    name: 'answerFeedback', // This name is used to create the API endpoint path.
     inputSchema: AnswerFeedbackInputSchema,
     outputSchema: AnswerFeedbackOutputSchema,
+    auth: {
+      // Secure the endpoint with an API key.
+      // The key must be passed in the Authorization header: `Bearer <key>`
+      policy: (auth, input) => {
+        if (!process.env.GENKIT_API_KEY) {
+          throw new Error('GENKIT_API_KEY is not set.');
+        }
+        if (auth.apiKey !== process.env.GENKIT_API_KEY) {
+          throw new Error('Invalid API key.');
+        }
+      },
+    },
   },
   async input => {
-    const {output} = await prompt({ ...input, knowledgeBase });
-    return output!;
+    const {output} = await customerServiceAgentPrompt({ ...input, knowledgeBase });
+    if (!output) {
+      throw new Error('AI agent failed to generate a response.');
+    }
+    return output;
   }
 );

@@ -1067,42 +1067,6 @@ export async function getOrCreateUserAdmin(
   return newUser;
 }
 
-export async function getUsersForTrialReminderAdmin(): Promise<DbUser[]> {
-    const eligibleUsers: DbUser[] = [];
-    try {
-        const now = new Date();
-        const startOf25DaysAgo = new Date(now.getTime() - (25 * 24 * 60 * 60 * 1000));
-        startOf25DaysAgo.setHours(0, 0, 0, 0);
-
-        const endOf25DaysAgo = new Date(startOf25DaysAgo);
-        endOf25DaysAgo.setHours(23, 59, 59, 999);
-        
-        const startTimestamp = Timestamp.fromDate(startOf25DaysAgo);
-        const endTimestamp = Timestamp.fromDate(endOf25DaysAgo);
-
-        const snapshot = await adminDb.collection('users')
-            .where('isSubscribed', '==', false)
-            .where('createdAt', '>=', startTimestamp)
-            .where('createdAt', '<=', endTimestamp)
-            .get();
-
-        if (snapshot.empty) {
-            return [];
-        }
-
-        snapshot.forEach(doc => {
-            const user = doc.data() as DbUser;
-            if (user.email) {
-                eligibleUsers.push(user);
-            }
-        });
-
-    } catch (error) {
-        console.error('Error fetching users for trial reminder:', error);
-    }
-    return eligibleUsers;
-}
-
 export async function getUsersForReferralEmailAdmin(): Promise<DbUser[]> {
     const eligibleUsers: DbUser[] = [];
     const daysIntervals = [14, 64, 128, 256];
@@ -1373,6 +1337,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 
 

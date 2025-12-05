@@ -7,8 +7,6 @@ config();
 import { 
     sendEmail,
     buildWelcomeEmailContent,
-    buildSubscriptionThankYouEmailContent,
-    buildTrialReminderEmailContent,
     buildReferralEmailContent,
     buildFeedbackRequestEmailContent,
     buildFeedbackAcknowledgmentEmailContent,
@@ -36,30 +34,6 @@ async function testSendWelcomeEmail() {
     const result = await sendEmail({
         to: TEST_EMAIL,
         subject: '[TEST] Welcome to GammaRips!',
-        text,
-        html,
-    });
-    console.log('Result:', result.ok ? 'Success' : `Failed (${result.status})`);
-}
-
-async function testSendSubscriptionThankYouEmail() {
-    console.log('Testing: Subscription Thank You Email');
-    const { text, html } = await buildSubscriptionThankYouEmailContent(TEST_NAME);
-    const result = await sendEmail({
-        to: TEST_EMAIL,
-        subject: '[TEST] Thank You for Subscribing!',
-        text,
-        html,
-    });
-    console.log('Result:', result.ok ? 'Success' : `Failed (${result.status})`);
-}
-
-async function testSendTrialReminderEmail() {
-    console.log('Testing: Trial Reminder Email');
-    const { text, html } = await buildTrialReminderEmailContent(TEST_NAME);
-    const result = await sendEmail({
-        to: TEST_EMAIL,
-        subject: '[TEST] Your GammaRips Access Requires Subscription',
         text,
         html,
     });
@@ -168,8 +142,6 @@ async function testSendTopPick() {
 async function runAllEmailTests() {
     const allTests = [
         testSendWelcomeEmail,
-        testSendSubscriptionThankYouEmail,
-        testSendTrialReminderEmail,
         testSendReferralEmail,
         testSendFeedbackRequestEmail,
         testSendFeedbackAcknowledgmentEmail,

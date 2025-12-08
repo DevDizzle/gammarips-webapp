@@ -185,16 +185,16 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
     roi: number;
     signalCount: number;
     winRate: number;
-    averageWinnerGain: number;
-    averageLoserGain: number;
+    winnerRoi: number;
+    loserRoi: number;
 }> {
     noStore(); // Opt out of caching for this specific function
     const defaultStats = {
         roi: 0,
         signalCount: 0,
         winRate: 0,
-        averageWinnerGain: 0,
-        averageLoserGain: 0,
+        winnerRoi: 0,
+        loserRoi: 0,
     };
 
     try {
@@ -204,13 +204,15 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
             return defaultStats;
         }
 
-        let winnersSum = 0;
-        let losersSum = 0;
-        let winnerCount = 0;
-        let loserCount = 0;
-        let validSignalCount = 0;
         let totalInitialValue = 0;
         let totalCurrentValue = 0;
+        let totalInitialValueWinners = 0;
+        let totalCurrentValueWinners = 0;
+        let totalInitialValueLosers = 0;
+        let totalCurrentValueLosers = 0;
+        
+        let validSignalCount = 0;
+        let winnerCount = 0;
 
         snapshot.forEach(doc => {
             const data = doc.data();
@@ -218,19 +220,17 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
             const currentPrice = data.current_price;
 
             if (typeof initialPrice === 'number' && initialPrice > 0 && typeof currentPrice === 'number') {
-                const percentGain = ((currentPrice - initialPrice) / initialPrice) * 100;
-                
                 validSignalCount++;
-                
                 totalInitialValue += initialPrice;
                 totalCurrentValue += currentPrice;
 
-                if (percentGain > 0) {
-                    winnersSum += percentGain;
+                if (currentPrice > initialPrice) {
                     winnerCount++;
-                } else { // Include 0 gain and losses in loserCount for win rate calc
-                    losersSum += percentGain;
-                    loserCount++;
+                    totalInitialValueWinners += initialPrice;
+                    totalCurrentValueWinners += currentPrice;
+                } else {
+                    totalInitialValueLosers += initialPrice;
+                    totalCurrentValueLosers += currentPrice;
                 }
             }
         });
@@ -239,14 +239,23 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
             return defaultStats;
         }
 
-        const capitalWeightedRoi = ((totalCurrentValue - totalInitialValue) / totalInitialValue) * 100;
+        const roi = ((totalCurrentValue - totalInitialValue) / totalInitialValue) * 100;
+        const winRate = (winnerCount / validSignalCount) * 100;
+        
+        const winnerRoi = totalInitialValueWinners > 0
+            ? ((totalCurrentValueWinners - totalInitialValueWinners) / totalInitialValueWinners) * 100
+            : 0;
+            
+        const loserRoi = totalInitialValueLosers > 0
+            ? ((totalCurrentValueLosers - totalInitialValueLosers) / totalInitialValueLosers) * 100
+            : 0;
 
         return {
+            roi,
             signalCount: validSignalCount,
-            winRate: (winnerCount / validSignalCount) * 100,
-            averageWinnerGain: winnerCount > 0 ? winnersSum / winnerCount : 0,
-            averageLoserGain: loserCount > 0 ? losersSum / loserCount : 0,
-            roi: capitalWeightedRoi, 
+            winRate,
+            winnerRoi,
+            loserRoi,
         };
 
     } catch (error) {
@@ -1280,6 +1289,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 
 

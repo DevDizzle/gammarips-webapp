@@ -1,5 +1,6 @@
 
 
+
 import { getPerformanceTrackerStatsAdmin } from "@/lib/firebase-admin";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { TrendingUp } from "lucide-react";
@@ -41,14 +42,14 @@ export async function PerformanceTracker() {
                             subtext="Setups with positive gain"
                         />
                         <StatCard 
-                            title="Avg. Winner" 
-                            value={`${stats.averageWinnerGain >= 0 ? '+' : ''}${stats.averageWinnerGain.toFixed(2)}%`}
-                            subtext="Avg. gain on winning Setups"
+                            title="Winner ROI" 
+                            value={`${stats.winnerRoi >= 0 ? '+' : ''}${stats.winnerRoi.toFixed(2)}%`}
+                            subtext="ROI on winning Setups"
                         />
                         <StatCard 
-                            title="Avg. Loser" 
-                            value={`${stats.averageLoserGain.toFixed(2)}%`}
-                            subtext="Avg. loss on losing Setups"
+                            title="Loser ROI" 
+                            value={`${stats.loserRoi.toFixed(2)}%`}
+                            subtext="ROI on losing Setups"
                         />
                     </div>
                      <p className="text-center text-xs text-muted-foreground mt-4 group-hover:underline">Click to view full performance history →</p>
@@ -79,6 +80,7 @@ export function PerformanceTrackerSkeleton() {
 }
 
 export default PerformanceTracker;
+
 
 
 

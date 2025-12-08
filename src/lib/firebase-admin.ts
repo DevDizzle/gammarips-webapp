@@ -187,9 +187,6 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
     winRate: number;
     averageWinnerGain: number;
     averageLoserGain: number;
-    initialValue: number;
-    currentValue: number;
-    netProfits: number;
     roi: number;
 }> {
     noStore(); // Opt out of caching for this specific function
@@ -199,9 +196,6 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
         winRate: 0,
         averageWinnerGain: 0,
         averageLoserGain: 0,
-        initialValue: 0,
-        currentValue: 0,
-        netProfits: 0,
         roi: 0,
     };
 
@@ -218,6 +212,8 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
         let winnerCount = 0;
         let loserCount = 0;
         let validSignalCount = 0;
+        let totalInitialValue = 0;
+        let totalCurrentValue = 0;
 
         snapshot.forEach(doc => {
             const data = doc.data();
@@ -230,6 +226,9 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
                 totalPercentGainSum += percentGain;
                 validSignalCount++;
                 
+                totalInitialValue += initialPrice;
+                totalCurrentValue += currentPrice;
+
                 if (percentGain > 0) {
                     winnersSum += percentGain;
                     winnerCount++;
@@ -240,13 +239,11 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
             }
         });
         
-        if (validSignalCount === 0) {
+        if (validSignalCount === 0 || totalInitialValue === 0) {
             return defaultStats;
         }
 
-        // The ROI is the SUM of all individual percentage gains, not the average.
-        // The SQL query SUM(...) is what this now reflects.
-        const roi = totalPercentGainSum;
+        const capitalWeightedRoi = ((totalCurrentValue - totalInitialValue) / totalInitialValue) * 100;
 
         return {
             averageGain: totalPercentGainSum / validSignalCount,
@@ -254,10 +251,7 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
             winRate: (winnerCount / validSignalCount) * 100,
             averageWinnerGain: winnerCount > 0 ? winnersSum / winnerCount : 0,
             averageLoserGain: loserCount > 0 ? losersSum / loserCount : 0,
-            initialValue: 0, // This is no longer calculated
-            currentValue: 0, // This is no longer calculated
-            netProfits: 0, // This is no longer calculated
-            roi: roi, 
+            roi: capitalWeightedRoi, 
         };
 
     } catch (error) {
@@ -1291,6 +1285,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 
 

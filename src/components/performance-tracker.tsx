@@ -31,7 +31,7 @@ export async function PerformanceTracker() {
                 <CardContent className="p-0">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <StatCard 
-                            title="ROI" 
+                            title="Total ROI" 
                             value={`${stats.roi >= 0 ? '+' : ''}${stats.roi.toFixed(2)}%`}
                             subtext={stats.signalCount > 0 ? `Across ${stats.signalCount} Setups` : ''}
                         />
@@ -79,4 +79,5 @@ export function PerformanceTrackerSkeleton() {
 }
 
 export default PerformanceTracker;
+
 

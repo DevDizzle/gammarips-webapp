@@ -182,21 +182,19 @@ export async function getAppStatusAdmin(): Promise<{ isUpdating: boolean }> {
 }
 
 export async function getPerformanceTrackerStatsAdmin(): Promise<{
-    averageGain: number;
+    roi: number;
     signalCount: number;
     winRate: number;
     averageWinnerGain: number;
     averageLoserGain: number;
-    roi: number;
 }> {
     noStore(); // Opt out of caching for this specific function
     const defaultStats = {
-        averageGain: 0,
+        roi: 0,
         signalCount: 0,
         winRate: 0,
         averageWinnerGain: 0,
         averageLoserGain: 0,
-        roi: 0,
     };
 
     try {
@@ -206,7 +204,6 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
             return defaultStats;
         }
 
-        let totalPercentGainSum = 0;
         let winnersSum = 0;
         let losersSum = 0;
         let winnerCount = 0;
@@ -223,7 +220,6 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
             if (typeof initialPrice === 'number' && initialPrice > 0 && typeof currentPrice === 'number') {
                 const percentGain = ((currentPrice - initialPrice) / initialPrice) * 100;
                 
-                totalPercentGainSum += percentGain;
                 validSignalCount++;
                 
                 totalInitialValue += initialPrice;
@@ -246,7 +242,6 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
         const capitalWeightedRoi = ((totalCurrentValue - totalInitialValue) / totalInitialValue) * 100;
 
         return {
-            averageGain: totalPercentGainSum / validSignalCount,
             signalCount: validSignalCount,
             winRate: (winnerCount / validSignalCount) * 100,
             averageWinnerGain: winnerCount > 0 ? winnersSum / winnerCount : 0,
@@ -1285,6 +1280,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 
 

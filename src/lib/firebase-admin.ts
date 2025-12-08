@@ -131,14 +131,6 @@ const OptionsSignalSchema = z.object({
 });
 export type OptionsSignal = z.infer<typeof OptionsSignalSchema>;
 
-const TickerOptionsDataSchema = z.object({
-    calls: z.array(OptionsSignalSchema),
-    puts: z.array(OptionsSignalSchema),
-    company_name: z.string(),
-    ticker: z.string(),
-});
-export type TickerOptionsData = z.infer<typeof TickerOptionsDataSchema>;
-
 const WinnerSchema = z.object({
     id: z.string(),
     company_name: z.string(),
@@ -226,8 +218,6 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
         let winnerCount = 0;
         let loserCount = 0;
         let validSignalCount = 0;
-        let totalInitialValue = 0;
-        let totalCurrentValue = 0;
 
         snapshot.forEach(doc => {
             const data = doc.data();
@@ -240,9 +230,6 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
                 totalPercentGain += gain;
                 validSignalCount++;
                 
-                totalInitialValue += initialPrice * 100; // Assume 100 shares for calculation
-                totalCurrentValue += currentPrice * 100;
-
                 if (gain > 0) {
                     winnersSum += gain;
                     winnerCount++;
@@ -257,19 +244,18 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
             return defaultStats;
         }
 
-        const netProfits = totalCurrentValue - totalInitialValue;
-        const roi = totalInitialValue > 0 ? (netProfits / totalInitialValue) * 100 : 0;
+        const averageGain = totalPercentGain / validSignalCount;
 
         return {
-            averageGain: totalPercentGain / validSignalCount,
+            averageGain: averageGain,
             signalCount: validSignalCount,
             winRate: (winnerCount / validSignalCount) * 100,
             averageWinnerGain: winnerCount > 0 ? winnersSum / winnerCount : 0,
             averageLoserGain: loserCount > 0 ? losersSum / loserCount : 0,
-            initialValue: totalInitialValue,
-            currentValue: totalCurrentValue,
-            netProfits: netProfits,
-            roi: roi,
+            initialValue: 0, // This is no longer calculated
+            currentValue: 0, // This is no longer calculated
+            netProfits: 0, // This is no longer calculated
+            roi: averageGain, // ROI is now the average percentage gain
         };
 
     } catch (error) {
@@ -1303,6 +1289,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+
 
 
 

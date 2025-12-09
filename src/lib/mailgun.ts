@@ -485,11 +485,11 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>The Daily Playbook: Tomorrow’s contracts are ready.</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #1a1b26; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #1a1b26;">
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #282A3A; border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
                     <tr>
                         <td align="center" style="padding: 30px 20px;">
                             <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: #ffffff; margin: 0;">Market Closed. Data Processed.</h1>
@@ -498,7 +498,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
                     <tr>
                         <td style="padding: 0 40px;">
                              <p style="font-size: 16px; line-height: 1.6;">The session is over. Our engine has processed the day's volatility. Do your research now. Get your trade ideas locked in before tomorrow's opening bell.</p>
-                             <p style="font-size: 16px; line-height: 1.6; margin-top: 10px;">First, let's look at the scoreboard. Here are the top-performing contracts from our playbook today. This is the volatility we hunt.</p>
+                             <p style="font-size: 16px; line-height: 1.6; margin-top: 10px;">First, let's look at the scoreboard. Here are the top-performing contracts from our playbook. This is the volatility we hunt.</p>
                             
                             <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 5px;">The Scoreboard</h2>
                             <p style="font-size: 14px; color: #A0A0A0; margin-top: 0; margin-bottom: 15px;">Live performance of our top active contracts.</p>
@@ -604,11 +604,11 @@ The GammaRips Team
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>AI Top Pick of the Day: ${stock.id}</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #1a1b26; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #1a1b26;">
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #282A3A; border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
                     <tr>
                         <td align="center" style="padding: 30px 20px;">
                              <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: #ffffff; margin: 0;">AI Top Pick of the Day</h1>
@@ -654,3 +654,4 @@ The GammaRips Team
 
     return { text: textContent, html: htmlContent };
 }
+

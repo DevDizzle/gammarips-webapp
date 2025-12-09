@@ -1251,12 +1251,14 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     noStore();
     try {
         const snapshot = await adminDb.collection('winners_dashboard')
+            .where('recommendation_analysis', '!=', null)
+            .orderBy('recommendation_analysis') // Firestore requires ordering by the field in the inequality
             .orderBy('weighted_score', 'desc')
             .limit(1)
             .get();
 
         if (snapshot.empty) {
-            console.warn('No stocks found in winners_dashboard to determine a top pick.');
+            console.warn('No stocks found in winners_dashboard with a valid recommendation_analysis to determine a top pick.');
             return null;
         }
 
@@ -1291,3 +1293,4 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+

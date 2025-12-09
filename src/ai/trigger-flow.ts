@@ -82,7 +82,7 @@ async function testSendDailySetups() {
         const { text, html } = await buildDailySetupsEmailContent(winners, topGainers, topLosers);
         const result = await sendEmail({
             to: TEST_EMAIL,
-            subject: '[TEST] Top Trade Ideas for Today',
+            subject: '[TEST] The Daily Playbook: Tomorrow’s contracts are ready.',
             text,
             html,
         });

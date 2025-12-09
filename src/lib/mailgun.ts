@@ -211,16 +211,21 @@ export async function sendWelcomeEmail({ to, name }: { to: string, name: string 
 }
 
 export async function buildFeedbackRequestEmailContent(name: string): Promise<{ text: string; html: string }> {
-    const textContent = `I'm Evan Parra, the founder of GammaRips.
+    const textContent = `
+Hi ${name},
 
-You've been using the tool for about a week now, and I wanted to personally check in. As an early user, your perspective is incredibly valuable for shaping what we build next.
+I’m Evan, the founder of GammaRips.
 
-I would be grateful if you could take 60 seconds to share your initial thoughts. Your feedback goes directly to our product team (and me) to help us improve.
+You’ve had access to the Playbook for a week now. I want to check in and see if the daily contracts are matching your trading style.
+
+We build this tool for Rippers, not for Wall Street. We want to know exactly what is working and what we need to fix.
+
+If you have a minute, let me know your honest thoughts.
 
 Share Your Feedback: https://profitscout.app/feedback
 
 All the best,
-Evan P.
+Evan
 Founder, GammaRips
 `;
 
@@ -233,7 +238,7 @@ Founder, GammaRips
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>A personal check-in from GammaRips's founder</title>
+    <title>One week in. How is the data?</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
@@ -241,32 +246,23 @@ Founder, GammaRips
             <td align="center" style="padding: 20px;">
                 <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
-                        <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                        <td style="padding: 40px;">
+                            <p style="font-size: 16px; line-height: 1.6; margin: 0;">Hi ${name},</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">I’m Evan, the founder of GammaRips.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You’ve had access to the Playbook for a week now. I want to check in and see if the daily contracts are matching your trading style.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We build this tool for Rippers, not for Wall Street. We want to know exactly what is working and what we need to fix.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">If you have a minute, let me know your honest thoughts.</p>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 0 40px;">
-                            
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I'm Evan Parra, the founder of GammaRips.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You've been using the tool for about a week now, and I wanted to personally check in. As an early user, your perspective is incredibly valuable for shaping what we build next.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">I would be grateful if you could take 60 seconds to share your initial thoughts. Your feedback goes directly to our product team (and me) to help us improve.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" style="padding: 30px 40px 40px;">
+                        <td align="center" style="padding: 20px 40px 30px;">
                             <a href="https://profitscout.app/feedback" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
                         </td>
                     </tr>
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
                             <p style="margin: 0;">All the best,</p>
-                            <p style="margin-top: 4px;">Evan P.<br>Founder, GammaRips</p>
-                        </td>
-                    </tr>
-                     <tr>
-                        <td style="padding: 0 40px 20px; text-align: center; font-size: 12px; color: #A0A0A0; border-top: 1px solid #393b4d; padding-top: 20px;">
-                             <p style="margin: 0;">&copy; 2025 GammaRips. All rights reserved.</p>
+                            <p style="margin-top: 4px;">Evan<br>Founder, GammaRips</p>
                         </td>
                     </tr>
                 </table>
@@ -284,9 +280,9 @@ Founder, GammaRips
 export async function sendFeedbackRequestEmail({ to, name }: { to: string, name: string }) {
     const { text, html } = await buildFeedbackRequestEmailContent(name);
     return sendEmail({
-        from: 'GammaRips <admin@profitscout.app>', // Reverted
+        from: 'Evan at GammaRips <admin@profitscout.app>',
         to: `${name} <${to}>`,
-        subject: `A personal check-in from GammaRips's founder`,
+        subject: `One week in. How is the data?`,
         text,
         html,
     });
@@ -472,7 +468,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
             </tr>
         `).join('');
     
-    let textContent = `Top Trade Ideas for Today\n\nThe market has closed, and our AI has just finished processing the day's fresh data.\n`;
+    let textContent = `Top Trade Ideas for Today\n\nThe market has closed. Our AI has processed the day's data to find tomorrow's potential rips. Do your research tonight to get your trade ideas locked in before the opening bell.\n`;
 
     textContent += `
 Top Recent Gainers:

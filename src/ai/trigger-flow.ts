@@ -31,7 +31,7 @@ async function testSendWelcomeEmail() {
     const { text, html } = await buildWelcomeEmailContent(TEST_NAME);
     const result = await sendEmail({
         to: TEST_EMAIL,
-        subject: '[TEST] Welcome to GammaRips!',
+        subject: '[TEST] Welcome to GammaRips. Here is your daily routine.',
         text,
         html,
     });
@@ -43,7 +43,7 @@ async function testSendFeedbackRequestEmail() {
     const { text, html } = await buildFeedbackRequestEmailContent(TEST_NAME);
     const result = await sendEmail({
         to: TEST_EMAIL,
-        subject: "[TEST] A personal check-in from GammaRips's founder",
+        subject: "[TEST] One week in. How is the data?",
         text,
         html,
     });

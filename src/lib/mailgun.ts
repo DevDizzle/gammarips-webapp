@@ -90,28 +90,31 @@ export async function sendEmail(options: EmailOptions) {
 
 export async function buildWelcomeEmailContent(name: string): Promise<{ text: string; html: string }> {
     const textContent = `
-Welcome to GammaRips, ${name}.
+Hi ${name},
 
-You stopped guessing. You started hunting.
+Thanks for joining GammaRips. You now have full access to the Daily Playbook.
 
-You now have access to the one simple options playbook. No more scanning 500 tickers or chasing random noise. You have the high-gamma filter.
+Our goal is to make your research process simple and data-driven. Here is how to get the most out of the platform every morning:
 
-Your Daily Routine Starts Now:
+1. Check the Dashboard
+Log in to see the daily list of high-gamma Call & Put contracts. We filter the market down to the handful of setups that matter.
 
-1. Grab Today’s Contracts
-Log in to the dashboard to see the tight list of specific Call & Put setups our AI flagged for today. Look for the "Strongly Bullish" or "Bearish" tags.
+2. Read the Briefing
+Don't trade blindly. Click any card to read the AI Breakdown. You’ll see the fundamentals, catalysts, and risks behind every trade in plain English.
 
-2. Read the "Why"
-Don't trade blindly. Click any card to read the AI Breakdown. Understand why the gamma profile, catalysts, and technicals align before you pull the trigger.
+3. Plan Your Trade
+We provide the conviction; you manage the risk. Use the data to validate your entry and exit points.
 
-3. Run Your Plan
-We provide the setups; you manage the trade. Decide your entry, size, and risk.
+Go to Your Dashboard: https://profitscout.app/dashboard
 
-The market is moving. Go see what’s primed to rip.
+Join the Conversation
+Follow us for real-time updates and community discussion:
+- X: https://x.com/GammaRipsAI
+- Reddit: https://www.reddit.com/r/GammaRips/
 
-Unlock Today’s Contracts: https://profitscout.app/dashboard
-
-The GammaRips Team
+Welcome aboard,
+Evan P.
+Founder, GammaRips
 `;
 
     const htmlContent = `
@@ -123,7 +126,7 @@ The GammaRips Team
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>Your daily contracts are ready.</title>
+    <title>Welcome to GammaRips</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
@@ -132,50 +135,58 @@ The GammaRips Team
                 <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td style="padding: 40px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: #ffffff; margin: 0;">You stopped guessing. You started hunting.</h1>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">Welcome to GammaRips, ${name}.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You now have access to the one simple options playbook. No more scanning 500 tickers or chasing random noise. You have the high-gamma filter.</p>
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: #ffffff; margin: 0;">Hi ${name},</h1>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">Thanks for joining GammaRips. You now have full access to the Daily Playbook.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Our goal is to make your research process simple and data-driven. Here is how to get the most out of the platform every morning:</p>
                             
-                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; color: #ffffff; margin-top: 32px; margin-bottom: 20px; border-top: 1px solid #393b4d; padding-top: 32px;">Your Daily Routine Starts Now:</h2>
-                            
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 32px;">
                                 <tr>
                                     <td width="40" valign="top" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">1.</td>
                                     <td valign="top">
-                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Grab Today’s Contracts</h3>
-                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Log in to the dashboard to see the tight list of specific Call & Put setups our AI flagged. Look for "Strongly Bullish" or "Bearish" tags.</p>
+                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Check the Dashboard</h3>
+                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Log in to see the daily list of high-gamma Call & Put contracts. We filter the market down to the handful of setups that matter.</p>
                                     </td>
                                 </tr>
                                 <tr><td height="24"></td></tr>
                                 <tr>
                                     <td width="40" valign="top" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">2.</td>
                                     <td valign="top">
-                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Read the "Why"</h3>
-                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Don't trade blindly. Click any card to read the AI Breakdown. Understand why the gamma profile and catalysts align.</p>
+                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Read the Briefing</h3>
+                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Don't trade blindly. Click any card to read the AI Breakdown. You’ll see the fundamentals, catalysts, and risks behind every trade in plain English.</p>
                                     </td>
                                 </tr>
                                 <tr><td height="24"></td></tr>
                                  <tr>
                                     <td width="40" valign="top" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">3.</td>
                                     <td valign="top">
-                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Run Your Plan</h3>
-                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">We provide the setups; you manage the trade. Decide your entry, size, and risk.</p>
+                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Plan Your Trade</h3>
+                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">We provide the conviction; you manage the risk. Use the data to validate your entry and exit points.</p>
                                     </td>
                                 </tr>
                             </table>
-
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 32px; text-align: center;">The market is moving. Go see what’s primed to rip.</p>
                         </td>
                     </tr>
                     <tr>
-                        <td align="center" style="padding: 20px 40px 40px;">
-                            <a href="https://profitscout.app/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Unlock Today’s Contracts</a>
+                        <td align="center" style="padding: 20px 40px 30px;">
+                            <a href="https://profitscout.app/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
                         </td>
                     </tr>
                      <tr>
-                        <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
-                             <p style="margin: 0;">This is not financial advice. All trading involves risk.</p>
-                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
+                        <td style="padding: 0 40px 20px;">
+                             <p style="font-size: 14px; line-height: 1.6; color: #A0A0A0; text-align: center; border-top: 1px solid #393b4d; padding-top: 30px;">
+                                Join the Conversation<br>
+                                Follow us for real-time updates and community discussion:
+                            </p>
+                            <p style="text-align: center; margin-top: 16px;">
+                                <a href="https://x.com/GammaRipsAI" style="color: hsl(74, 80%, 50%); text-decoration: none; margin: 0 10px;">Follow on X</a> |
+                                <a href="https://www.reddit.com/r/GammaRips/" style="color: hsl(74, 80%, 50%); text-decoration: none; margin: 0 10px;">Join us on Reddit</a>
+                            </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td style="padding: 20px 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
+                            <p style="margin: 0;">Welcome aboard,</p>
+                            <p style="margin-top: 4px;">Evan P.<br>Founder, GammaRips</p>
                         </td>
                     </tr>
                 </table>
@@ -193,7 +204,7 @@ export async function sendWelcomeEmail({ to, name }: { to: string, name: string 
     const { text, html } = await buildWelcomeEmailContent(name);
     return sendEmail({
         to: `${name} <${to}>`,
-        subject: `Your daily contracts are ready.`,
+        subject: `Welcome to GammaRips. Here is your daily routine.`,
         text,
         html,
     });

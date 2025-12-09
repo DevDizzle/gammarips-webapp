@@ -1250,37 +1250,39 @@ export async function getFairQualityOptionsAdmin(ticker: string): Promise<Option
 export async function getTopPickAdmin(): Promise<Stock | null> {
     noStore();
     try {
-        const snapshot = await adminDb.collection('tickers')
+        const snapshot = await adminDb.collection('winners_dashboard')
             .orderBy('weighted_score', 'desc')
             .limit(1)
             .get();
 
         if (snapshot.empty) {
-            console.warn('No stocks found in tickers collection to determine a top pick.');
+            console.warn('No stocks found in winners_dashboard to determine a top pick.');
             return null;
         }
 
         const doc = snapshot.docs[0];
         const data = doc.data();
         
+        // Construct a Stock-like object from the Winner data
         const stock: Stock = {
-            id: doc.id,
+            id: data.ticker,
             company_name: data.company_name,
             industry: data.industry,
             image_uri: data.image_uri,
-            bundle_gcs_path: data.profile,
             recommendation_analysis: data.recommendation_analysis,
-            recommendation: data.recommendation,
-            pages_json: data.pages_json,
             dashboard_json: data.dashboard_json,
             weighted_score: data.weighted_score,
+            // Fields not in WinnerSchema, so set to optional/null
+            bundle_gcs_path: undefined,
+            recommendation: data.outlook_signal, // map outlook_signal to recommendation
+            pages_json: undefined,
         };
         
         const validation = StockSchema.safeParse(stock);
         if (validation.success) {
             return validation.data;
         } else {
-            console.error(`Invalid top pick stock data for ${doc.id}:`, validation.error.flatten());
+            console.error(`Invalid top pick winner data for ${doc.id}:`, validation.error.flatten());
             return null;
         }
     } catch (error) {
@@ -1289,21 +1291,3 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

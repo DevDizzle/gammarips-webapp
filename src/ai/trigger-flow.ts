@@ -9,7 +9,6 @@ import {
     buildWelcomeEmailContent,
     buildFeedbackRequestEmailContent,
     buildFeedbackAcknowledgmentEmailContent,
-    buildAgentResponseEmailContent,
     buildDailySetupsEmailContent,
     buildTopPickEmailContent
 } from '@/lib/mailgun';
@@ -83,7 +82,7 @@ async function testSendDailySetups() {
         const { text, html } = await buildDailySetupsEmailContent(winners, topGainers, topLosers);
         const result = await sendEmail({
             to: TEST_EMAIL,
-            subject: '[TEST] Daily AI-Powered Market Briefing',
+            subject: '[TEST] Top Trade Ideas for Today',
             text,
             html,
         });

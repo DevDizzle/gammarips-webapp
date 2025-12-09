@@ -37,7 +37,7 @@ export const sendDailySetupsFlow = ai.defineFlow(
         return { sentCount: 0, skippedCount: eligibleUsers.length, totalUsers: eligibleUsers.length };
     }
 
-    const { text, html } = buildDailySetupsEmailContent(winners, topGainers, topLosers);
+    const { text, html } = await buildDailySetupsEmailContent(winners, topGainers, topLosers);
 
     for (const user of eligibleUsers) {
       if (user.email) {
@@ -61,3 +61,4 @@ export const sendDailySetupsFlow = ai.defineFlow(
     return { sentCount, skippedCount, totalUsers: eligibleUsers.length };
   }
 );
+

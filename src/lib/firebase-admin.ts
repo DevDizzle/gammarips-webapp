@@ -1250,43 +1250,60 @@ export async function getFairQualityOptionsAdmin(ticker: string): Promise<Option
 export async function getTopPickAdmin(): Promise<Stock | null> {
     noStore();
     try {
-        const snapshot = await adminDb.collection('winners_dashboard')
-            .where('recommendation_analysis', '!=', null)
-            .orderBy('recommendation_analysis') // Firestore requires ordering by the field in the inequality
+        // Step 1: Get the top winner from winners_dashboard
+        const winnerSnapshot = await adminDb.collection('winners_dashboard')
             .orderBy('weighted_score', 'desc')
             .limit(1)
             .get();
 
-        if (snapshot.empty) {
-            console.warn('No stocks found in winners_dashboard with a valid recommendation_analysis to determine a top pick.');
+        if (winnerSnapshot.empty) {
+            console.warn('No stocks found in winners_dashboard to determine a top pick.');
+            return null;
+        }
+        const topWinner = winnerSnapshot.docs[0].data();
+        const topTicker = topWinner.ticker;
+
+        if (!topTicker) {
+            console.warn('Top winner document is missing a ticker.');
             return null;
         }
 
-        const doc = snapshot.docs[0];
-        const data = doc.data();
+        // Step 2: Use the ticker to fetch the corresponding document from the tickers collection
+        const stockDoc = await adminDb.collection('tickers').doc(topTicker).get();
+
+        if (!stockDoc.exists) {
+            console.warn(`Could not find a matching stock in 'tickers' collection for top winner: ${topTicker}`);
+            return null;
+        }
+        const stockData = stockDoc.data()!;
+
+        // Step 3: Check for recommendation_analysis and construct the Stock object
+        if (!stockData.recommendation_analysis) {
+            console.warn(`Top pick stock ${topTicker} is missing a recommendation_analysis path in the 'tickers' collection.`);
+            return null;
+        }
         
-        // Construct a Stock-like object from the Winner data
         const stock: Stock = {
-            id: data.ticker,
-            company_name: data.company_name,
-            industry: data.industry,
-            image_uri: data.image_uri,
-            recommendation_analysis: data.recommendation_analysis,
-            dashboard_json: data.dashboard_json,
-            weighted_score: data.weighted_score,
-            // Fields not in WinnerSchema, so set to optional/null
-            bundle_gcs_path: undefined,
-            recommendation: data.outlook_signal, // map outlook_signal to recommendation
-            pages_json: undefined,
+            id: stockDoc.id,
+            company_name: stockData.company_name,
+            industry: stockData.industry,
+            image_uri: stockData.image_uri,
+            recommendation_analysis: stockData.recommendation_analysis,
+            dashboard_json: stockData.dashboard_json,
+            weighted_score: stockData.weighted_score,
+            bundle_gcs_path: stockData.profile,
+            recommendation: stockData.recommendation,
+            pages_json: stockData.pages_json,
         };
         
         const validation = StockSchema.safeParse(stock);
         if (validation.success) {
             return validation.data;
         } else {
-            console.error(`Invalid top pick winner data for ${doc.id}:`, validation.error.flatten());
+            console.error(`Invalid top pick stock data for ${topTicker}:`, validation.error.flatten());
             return null;
         }
+
     } catch (error) {
         console.error('Error fetching top pick from admin:', error);
         return null;
@@ -1294,3 +1311,6 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
 }
     
 
+
+
+    

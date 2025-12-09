@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { Buffer } from 'node:buffer';
@@ -441,17 +442,15 @@ export async function sendAgentResponseEmail({ to, response, trackingId }: { to:
 
 
 export async function buildDailySetupsEmailContent(winners: Winner[], topGainers: PerformanceSignal[], topLosers: PerformanceSignal[]): Promise<{ text: string; html: string }> {
-    const topBullish = winners.filter(w => w.option_type === 'call').slice(0, 5);
-    const topBearish = winners.filter(w => w.option_type === 'put').slice(0, 5);
+    const topBullish = winners.filter(w => w.option_type === 'call').sort((a,b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1)).slice(0, 5);
+    const topBearish = winners.filter(w => w.option_type === 'put').sort((a,b) => (a.weighted_score ?? Infinity) - (b.weighted_score ?? Infinity)).slice(0, 5);
 
     const generateSetupTableRows = (setups: Winner[]) => 
         setups.map(s => `
             <tr>
                 <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">${s.ticker}</td>
-                <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">${s.company_name}</td>
-                <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">${s.option_type.toUpperCase()}</td>
-                <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">$${s.strike_price.toFixed(2)}</td>
-                <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">${new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}</td>
+                <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">$${s.strike_price.toFixed(2)} ${s.option_type.toUpperCase()}</td>
+                <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">${new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })}</td>
                 <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">${s.outlook_signal}</td>
             </tr>
         `).join('');
@@ -460,7 +459,6 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
         signals.map(s => `
              <tr>
                 <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">${s.ticker}</td>
-                <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">${s.company_name}</td>
                 <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">$${s.strike_price.toFixed(2)} ${s.option_type?.toUpperCase()}</td>
                 <td style="padding: 12px; text-align: right; border-bottom: 1px solid #393b4d; color: ${s.percent_gain >= 0 ? '#22c55e' : '#ef4444'}; font-weight: bold;">
                     ${s.percent_gain >= 0 ? '+' : ''}${s.percent_gain.toFixed(2)}%
@@ -468,20 +466,13 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
             </tr>
         `).join('');
     
-    let textContent = `Top Trade Ideas for Today\n\nThe market has closed. Our AI has processed the day's data to find tomorrow's potential rips. Do your research tonight to get your trade ideas locked in before the opening bell.\n`;
+    let textContent = `The Daily Playbook: Tomorrow’s contracts are ready.\n\n The session is over. Our engine has processed the day's volatility. Do your research now. Get your trade ideas locked in before tomorrow's opening bell. \n\n First, let's look at the scoreboard. Here are the top-performing contracts from our playbook today. This is the volatility we hunt.\n\n`;
 
-    textContent += `
-Top Recent Gainers:
-${topGainers.map(s => `${s.ticker} | ${s.company_name} | +${s.percent_gain.toFixed(2)}%`).join('\n')}
-
-Top 5 Bullish Call Setups:
-${topBullish.map(s => `${s.ticker} | ${s.company_name} | ${s.option_type.toUpperCase()} | $${s.strike_price.toFixed(2)} | Expires: ${new Date(s.expiration_date).toLocaleDateString()} | ${s.outlook_signal}`).join('\n')}
-
-Top 5 Bearish Put Setups:
-${topBearish.map(s => `${s.ticker} | ${s.company_name} | ${s.option_type.toUpperCase()} | $${s.strike_price.toFixed(2)} | Expires: ${new Date(s.expiration_date).toLocaleDateString()} | ${s.outlook_signal}`).join('\n')}
-
-To see the full list and do your own research, visit your dashboard: https://profitscout.app/dashboard
-    `;
+    textContent += `Today's Scorecard:\n${topGainers.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type?.toUpperCase()} | +${s.percent_gain.toFixed(2)}%`).join('\n')}\n\n`;
+    textContent += `Missed these? Don't chase yesterday's moves. We have identified the high-gamma contracts primed for tomorrow.\nReview these setups tonight. Check the AI breakdown. Have your plan locked in before the opening bell.\n\n`;
+    textContent += `Top 5 Bullish Call Contracts:\n${topBullish.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type.toUpperCase()} | Expires: ${new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })} | ${s.outlook_signal}`).join('\n')}\n\n`;
+    textContent += `Top 5 Bearish Put Contracts:\n${topBearish.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type.toUpperCase()} | Expires: ${new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })} | ${s.outlook_signal}`).join('\n')}\n\n`;
+    textContent += `Unlock the Full Playbook: https://profitscout.app/dashboard`;
 
     const htmlContent = `
 <!DOCTYPE html>
@@ -492,45 +483,46 @@ To see the full list and do your own research, visit your dashboard: https://pro
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>Top Trade Ideas for Today</title>
+    <title>The Daily Playbook: Tomorrow’s contracts are ready.</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+<body style="margin: 0; padding: 0; background-color: #1a1b26; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #1a1b26;">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #282A3A; border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
                     <tr>
-                        <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #BEFF0A;">Rips</span></h1>
-                            <p style="font-size: 16px; color: #A0A0A0; margin-top: 8px;">Top Trade Ideas for Today</p>
+                        <td align="center" style="padding: 30px 20px;">
+                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: #ffffff; margin: 0;">Market Closed. Data Processed.</h1>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
-                            <p style="font-size: 16px; line-height: 1.6;">The market has closed. Our AI has processed the day's data to find tomorrow's potential rips. Do your research tonight to get your trade ideas locked in before the opening bell.</p>
+                             <p style="font-size: 16px; line-height: 1.6;">The session is over. Our engine has processed the day's volatility. Do your research now. Get your trade ideas locked in before tomorrow's opening bell.</p>
+                             <p style="font-size: 16px; line-height: 1.6; margin-top: 10px;">First, let's look at the scoreboard. Here are the top-performing contracts from our playbook today. This is the volatility we hunt.</p>
                             
-                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px;">Top Recent Gainers</h2>
+                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid hsl(74, 80%, 50%); padding-bottom: 5px;">Today's Scorecard</h2>
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">
                                 <thead>
                                      <tr style="color: #A0A0A0; font-size: 12px; text-transform: uppercase;">
                                         <th style="padding: 8px; text-align: left; border-bottom: 1px solid #393b4d;">Ticker</th>
-                                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #393b4d;">Company</th>
-                                        <th style="padding: 8px; text-align: right; border-bottom: 1px solid #393b4d;">Gain</th>
+                                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #393b4d;">Contract</th>
+                                        <th style="padding: 8px; text-align: right; border-bottom: 1px solid #393b4d;">Top Intraday Gain</th>
                                      </tr>
                                 </thead>
                                 <tbody>${generatePerformanceTableRows(topGainers)}</tbody>
                             </table>
                             
-                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px;">Top 5 Bullish Call Setups</h2>
+                             <p style="font-size: 16px; line-height: 1.6; margin-top: 30px;">Missed these? Don't chase yesterday's moves. We have identified the high-gamma contracts primed for tomorrow.</p>
+                             <p style="font-size: 16px; line-height: 1.6; margin-top: 10px;">Review these setups tonight. Check the AI breakdown. Have your plan locked in before the opening bell.</p>
+
+                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid hsl(74, 80%, 50%); padding-bottom: 5px;">Top 5 Bullish Call Contracts</h2>
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">
                                 <thead>
                                     <tr style="color: #A0A0A0; font-size: 12px; text-transform: uppercase;">
                                         <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Ticker</th>
-                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Company</th>
-                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Type</th>
-                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Strike</th>
-                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Expires</th>
-                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Outlook</th>
+                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Contract</th>
+                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Expiry</th>
+                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">AI Outlook</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -538,16 +530,14 @@ To see the full list and do your own research, visit your dashboard: https://pro
                                 </tbody>
                             </table>
 
-                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px;">Top 5 Bearish Put Setups</h2>
+                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid hsl(74, 80%, 50%); padding-bottom: 5px;">Top 5 Bearish Put Contracts</h2>
                              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">
                                 <thead>
                                      <tr style="color: #A0A0A0; font-size: 12px; text-transform: uppercase;">
                                         <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Ticker</th>
-                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Company</th>
-                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Type</th>
-                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Strike</th>
-                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Expires</th>
-                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Outlook</th>
+                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Contract</th>
+                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Expiry</th>
+                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">AI Outlook</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -558,12 +548,12 @@ To see the full list and do your own research, visit your dashboard: https://pro
                     </tr>
                     <tr>
                         <td align="center" style="padding: 40px;">
-                            <a href="https://profitscout.app/dashboard" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">View Full Dashboard</a>
+                            <a href="https://profitscout.app/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Unlock the Full Playbook</a>
                         </td>
                     </tr>
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
-                            <p style="margin: 0;">This is not financial advice. All trading involves risk.</p>
+                            <p style="margin: 0;">This is not financial advice. All trading involves risk. Past performance does not guarantee future results.</p>
                             <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
                         </td>
                     </tr>
@@ -609,25 +599,24 @@ The GammaRips Team
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <title>AI Top Pick of the Day: ${stock.id}</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
+<body style="margin: 0; padding: 0; background-color: #1a1b26; font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #1a1b26;">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #1F212E; border-radius: 8px; overflow: hidden;">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #282A3A; border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
                     <tr>
-                        <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #BEFF0A;">Rips</span></h1>
-                            <p style="font-size: 16px; color: #A0A0A0; margin-top: 8px;">AI Top Pick of the Day</p>
+                        <td align="center" style="padding: 30px 20px;">
+                             <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: #ffffff; margin: 0;">AI Top Pick of the Day</h1>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
                              <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; color: #ffffff; margin: 0; text-align: center;">${stock.company_name} (${stock.id})</h2>
                              <p style="text-align: center; font-size: 14px; color: #A0A0A0; margin-top: 8px;">
-                                Our AI has analyzed thousands of data points and identified ${stock.company_name} as today's top-rated setup based on our proprietary scoring model.
+                                Our AI has analyzed thousands of data points and identified this as today's top-rated setup based on our proprietary scoring model.
                              </p>
 
-                            <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 20px; margin-top: 25px;">
+                            <div style="background-color: #1F212E; border: 1px solid #393b4d; border-radius: 8px; padding: 20px; margin-top: 25px;">
                                 <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; color: #ffffff; margin: 0 0 10px 0;">AI Summary</h3>
                                 <p style="font-size: 16px; line-height: 1.6; margin:0;">${summary}</p>
                             </div>
@@ -637,13 +626,18 @@ The GammaRips Team
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px 40px;">
-                            <a href="${dashboardLink}" style="background-color: #BEFF0A; color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">View Full Analysis</a>
+                            <a href="${dashboardLink}" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">View Full Analysis</a>
                         </td>
                     </tr>
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
                             <p style="margin: 0;">This is not financial advice. All trading involves risk.</p>
-                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
+                             <div style="margin-top: 20px;">
+                                <a href="https://x.com/GammaRipsAI" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">X (Twitter)</a>
+                                <a href="https://www.reddit.com/r/GammaRips/" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Reddit</a>
+                                <a href="https://profitscout.app/privacy" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Privacy Policy</a>
+                            </div>
+                            <p style="margin-top: 8px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
                         </td>
                     </tr>
                 </table>

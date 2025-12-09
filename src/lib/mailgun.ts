@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { Buffer } from 'node:buffer';
@@ -437,7 +436,6 @@ export async function sendAgentResponseEmail({ to, response, trackingId }: { to:
 export async function buildDailySetupsEmailContent(winners: Winner[], topGainers: PerformanceSignal[], topLosers: PerformanceSignal[]): Promise<{ text: string; html: string }> {
     const topBullish = winners.filter(w => w.option_type === 'call').slice(0, 5);
     const topBearish = winners.filter(w => w.option_type === 'put').slice(0, 5);
-    const topGainer = topGainers.length > 0 ? topGainers[0] : null;
 
     const generateSetupTableRows = (setups: Winner[]) => 
         setups.map(s => `
@@ -463,26 +461,17 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
             </tr>
         `).join('');
     
-    let textContent = `Today's Top-Rated Options Setups\n\nThe market has closed, and our AI has just finished processing the day's fresh data.\n`;
-
-    if (topGainer) {
-        textContent = `Yesterday's Top Signal Gained +${topGainer.percent_gain.toFixed(2)}%\n\nOur AI model flagged ${topGainer.ticker} (${topGainer.company_name}) as a top setup, and it returned a ${topGainer.percent_gain.toFixed(2)}% gain. See today's new setups below.\n\n` + textContent;
-    }
+    let textContent = `Top Trade Ideas for Today\n\nThe market has closed, and our AI has just finished processing the day's fresh data.\n`;
 
     textContent += `
+Top Recent Gainers:
+${topGainers.map(s => `${s.ticker} | ${s.company_name} | +${s.percent_gain.toFixed(2)}%`).join('\n')}
+
 Top 5 Bullish Call Setups:
 ${topBullish.map(s => `${s.ticker} | ${s.company_name} | ${s.option_type.toUpperCase()} | $${s.strike_price.toFixed(2)} | Expires: ${new Date(s.expiration_date).toLocaleDateString()} | ${s.outlook_signal}`).join('\n')}
 
 Top 5 Bearish Put Setups:
 ${topBearish.map(s => `${s.ticker} | ${s.company_name} | ${s.option_type.toUpperCase()} | $${s.strike_price.toFixed(2)} | Expires: ${new Date(s.expiration_date).toLocaleDateString()} | ${s.outlook_signal}`).join('\n')}
-
-Performance Spotlight:
-Top Gainers:
-${topGainers.map(s => `${s.ticker} | ${s.company_name} | +${s.percent_gain.toFixed(2)}%`).join('\n')}
-
-Top Losers:
-${topLosers.map(s => `${s.ticker} | ${s.company_name} | ${s.percent_gain.toFixed(2)}%`).join('\n')}
-
 
 To see the full list and do your own research, visit your dashboard: https://profitscout.app/dashboard
     `;
@@ -496,7 +485,7 @@ To see the full list and do your own research, visit your dashboard: https://pro
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <title>Today's Top-Rated Options Setups</title>
+    <title>Top Trade Ideas for Today</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #282A3A; font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #282A3A;">
@@ -506,26 +495,24 @@ To see the full list and do your own research, visit your dashboard: https://pro
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
                             <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: #BEFF0A;">Rips</span></h1>
-                            <p style="font-size: 16px; color: #A0A0A0; margin-top: 8px;">Today's AI-Powered Market Briefing</p>
+                            <p style="font-size: 16px; color: #A0A0A0; margin-top: 8px;">Top Trade Ideas for Today</p>
                         </td>
                     </tr>
-                    ${topGainer ? `
-                    <tr>
-                        <td style="padding: 0 40px 20px;">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #BEFF0A1A; border: 1px solid #BEFF0A33; border-radius: 8px;">
-                                <tr>
-                                    <td style="padding: 20px;">
-                                        <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; color: #ffffff; margin: 0;">Yesterday's Top Signal Gained +${topGainer.percent_gain.toFixed(2)}%</h2>
-                                        <p style="font-size: 14px; color: #A0A0A0; margin-top: 8px;">Our AI model flagged ${topGainer.ticker} (${topGainer.company_name}) as a top setup, and it returned a <strong>${topGainer.percent_gain.toFixed(2)}% gain</strong>. See today's new setups below.</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    ` : ''}
                     <tr>
                         <td style="padding: 0 40px;">
                             <p style="font-size: 16px; line-height: 1.6;">The market has closed, and our AI has just finished processing the day's fresh data. Here are the top-rated Call and Put setups identified for tomorrow's trading day.</p>
+                            
+                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px;">Top Recent Gainers</h2>
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">
+                                <thead>
+                                     <tr style="color: #A0A0A0; font-size: 12px; text-transform: uppercase;">
+                                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #393b4d;">Ticker</th>
+                                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #393b4d;">Company</th>
+                                        <th style="padding: 8px; text-align: right; border-bottom: 1px solid #393b4d;">Gain</th>
+                                     </tr>
+                                </thead>
+                                <tbody>${generatePerformanceTableRows(topGainers)}</tbody>
+                            </table>
                             
                             <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px;">Top 5 Bullish Call Setups</h2>
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">
@@ -561,40 +548,6 @@ To see the full list and do your own research, visit your dashboard: https://pro
                                 </tbody>
                             </table>
                         </td>
-                    </tr>
-                    <tr>
-                         <td style="padding: 40px 40px 0;">
-                             <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 0; margin-bottom: 15px;">Performance Spotlight</h2>
-                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td width="48%" valign="top">
-                                        <h3 style="font-size: 16px; color: #ffffff; margin-bottom: 10px;">Top 5 Recent Gainers</h3>
-                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">
-                                            <thead>
-                                                 <tr style="color: #A0A0A0; font-size: 12px; text-transform: uppercase;">
-                                                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid #393b4d;">Ticker</th>
-                                                    <th style="padding: 8px; text-align: right; border-bottom: 1px solid #393b4d;">Gain</th>
-                                                 </tr>
-                                            </thead>
-                                            <tbody>${generatePerformanceTableRows(topGainers.slice(0, 5))}</tbody>
-                                        </table>
-                                    </td>
-                                    <td width="4%"></td>
-                                    <td width="48%" valign="top">
-                                        <h3 style="font-size: 16px; color: #ffffff; margin-bottom: 10px;">Top 5 Recent Losers</h3>
-                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">
-                                              <thead>
-                                                 <tr style="color: #A0A0A0; font-size: 12px; text-transform: uppercase;">
-                                                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid #393b4d;">Ticker</th>
-                                                    <th style="padding: 8px; text-align: right; border-bottom: 1px solid #393b4d;">Gain</th>
-                                                 </tr>
-                                            </thead>
-                                            <tbody>${generatePerformanceTableRows(topLosers.slice(0, 5))}</tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                         </td>
                     </tr>
                     <tr>
                         <td align="center" style="padding: 40px;">

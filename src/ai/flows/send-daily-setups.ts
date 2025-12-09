@@ -43,7 +43,7 @@ export const sendDailySetupsFlow = ai.defineFlow(
       if (user.email) {
         const result = await sendEmail({
             to: `${user.displayName || user.email} <${user.email}>`,
-            subject: 'Today\'s AI-Powered Market Briefing',
+            subject: 'Top Trade Ideas for Today',
             text,
             html,
         });

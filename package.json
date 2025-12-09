@@ -12,7 +12,8 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/stripe/webhook",
-    "cleanup:users": "tsx src/admin/cleanup-users.ts"
+    "cleanup:users": "tsx src/admin/cleanup-users.ts",
+    "test:emails": "tsx src/ai/trigger-flow.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.11.0",

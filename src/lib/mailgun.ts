@@ -500,7 +500,7 @@ To see the full list and do your own research, visit your dashboard: https://pro
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
-                            <p style="font-size: 16px; line-height: 1.6;">The market has closed, and our AI has just finished processing the day's fresh data. Here are the top-rated Call and Put setups identified for tomorrow's trading day.</p>
+                            <p style="font-size: 16px; line-height: 1.6;">The market has closed. Our AI has processed the day's data to find tomorrow's potential rips. Do your research tonight to get your trade ideas locked in before the opening bell.</p>
                             
                             <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px;">Top Recent Gainers</h2>
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">

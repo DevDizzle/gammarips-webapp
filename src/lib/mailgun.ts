@@ -554,6 +554,10 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
                     </tr>
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
+                             <div style="margin-bottom: 20px; border-top: 1px solid #393b4d; padding-top: 30px;">
+                                <a href="https://x.com/GammaRipsAI" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Follow on X</a> &bull;
+                                <a href="https://www.reddit.com/r/GammaRips/" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Join on Reddit</a>
+                            </div>
                             <p style="margin: 0;">This is not financial advice. All trading involves risk. Past performance does not guarantee future results.</p>
                             <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
                         </td>
@@ -632,8 +636,7 @@ The GammaRips Team
                     </tr>
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
-                            <p style="margin: 0;">This is not financial advice. All trading involves risk.</p>
-                             <div style="margin-top: 20px;">
+                            <div style="margin-top: 20px;">
                                 <a href="https://x.com/GammaRipsAI" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">X (Twitter)</a>
                                 <a href="https://www.reddit.com/r/GammaRips/" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Reddit</a>
                                 <a href="https://profitscout.app/privacy" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Privacy Policy</a>

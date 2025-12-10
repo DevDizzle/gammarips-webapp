@@ -81,7 +81,7 @@ export default function FeedbackPage() {
             <CardHeader className="items-center text-center">
                 <CheckCircle className="h-12 w-12 text-green-500 mb-4" />
                 <CardTitle>Thank You for Your Feedback!</CardTitle>
-                <CardDescription>Your insights are incredibly valuable and will help us make ProfitScout even better.</CardDescription>
+                <CardDescription>Your insights are incredibly valuable and will help us make GammaRips even better.</CardDescription>
             </CardHeader>
             <CardContent className="text-center">
                 <Button onClick={() => router.push('/dashboard')}>Return to Dashboard</Button>
@@ -96,14 +96,14 @@ export default function FeedbackPage() {
       <CardHeader>
         <CardTitle>Share Your Feedback</CardTitle>
         <CardDescription>
-          Your answers will help us improve ProfitScout. This will only take a minute.
+          Your answers will help us improve GammaRips. This will only take a minute.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Question 1 */}
           <div className="space-y-3">
-            <Label className="font-semibold">So far, how valuable has ProfitScout been to you?</Label>
+            <Label className="font-semibold">So far, how valuable has GammaRips been to you?</Label>
             <RadioGroup value={perceivedValue} onValueChange={setPerceivedValue} required>
               <div className="flex items-center space-x-2"><RadioGroupItem value="very-valuable" id="q1-very" /><Label htmlFor="q1-very">Very valuable</Label></div>
               <div className="flex items-center space-x-2"><RadioGroupItem value="somewhat-valuable" id="q1-somewhat" /><Label htmlFor="q1-somewhat">Somewhat valuable</Label></div>
@@ -114,7 +114,7 @@ export default function FeedbackPage() {
 
           {/* Question 2 */}
           <div className="space-y-3">
-            <Label htmlFor="q2-most-useful" className="font-semibold">What, if anything, have you found most useful about ProfitScout so far?</Label>
+            <Label htmlFor="q2-most-useful" className="font-semibold">What, if anything, have you found most useful about GammaRips so far?</Label>
             <Textarea
                 id="q2-most-useful"
                 value={mostUseful}
@@ -125,7 +125,7 @@ export default function FeedbackPage() {
           
           {/* Question 3 */}
           <div className="space-y-3">
-            <Label htmlFor="q3-improvement" className="font-semibold">What is the #1 thing we could improve or add to make ProfitScout more useful for you?</Label>
+            <Label htmlFor="q3-improvement" className="font-semibold">What is the #1 thing we could improve or add to make GammaRips more useful for you?</Label>
             <Textarea
                 id="q3-improvement"
                 value={improvementSuggestion}

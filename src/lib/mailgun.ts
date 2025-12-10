@@ -18,8 +18,8 @@ export interface EmailOptions {
 
 export async function sendEmail(options: EmailOptions) {
   const API_KEY = process.env.MAILGUN_SENDING_KEY;
-  const DOMAIN = 'profitscout.app'; // Reverted to original domain
-  // Use GammaRips as sender name but profitscout.app as domain
+  const DOMAIN = 'profitscout.app'; // Keep verified sending domain
+  // Use GammaRips as sender name
   const DEFAULT_FROM = 'GammaRips <admin@profitscout.app>'; 
 
   const FROM = options.from || DEFAULT_FROM;
@@ -106,7 +106,7 @@ Don't trade blindly. Click any card to read the AI Breakdown. You’ll see the f
 3. Plan Your Trade
 We provide the conviction; you manage the risk. Use the data to validate your entry and exit points.
 
-Go to Your Dashboard: https://profitscout.app/dashboard
+Go to Your Dashboard: https://gammarips.com/dashboard
 
 Join the Conversation
 Follow us for real-time updates and community discussion:
@@ -169,7 +169,7 @@ Founder, GammaRips
                     </tr>
                     <tr>
                         <td align="center" style="padding: 20px 40px 30px;">
-                            <a href="https://profitscout.app/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
+                            <a href="https://gammarips.com/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
                         </td>
                     </tr>
                      <tr>
@@ -223,7 +223,7 @@ We build this tool for Rippers, not for Wall Street. We want to know exactly wha
 
 If you have a minute, let me know your honest thoughts.
 
-Share Your Feedback: https://profitscout.app/feedback
+Share Your Feedback: https://gammarips.com/feedback
 
 All the best,
 Evan
@@ -257,7 +257,7 @@ Founder, GammaRips
                     </tr>
                     <tr>
                         <td align="center" style="padding: 20px 40px 30px;">
-                            <a href="https://profitscout.app/feedback" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
+                            <a href="https://gammarips.com/feedback" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
                         </td>
                     </tr>
                      <tr>
@@ -472,7 +472,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
     textContent += `Missed these? Don't chase yesterday's moves. We have identified the high-gamma contracts primed for tomorrow.\nReview these setups tonight. Check the AI breakdown. Have your plan locked in before the opening bell.\n\n`;
     textContent += `Top 5 Bullish Call Contracts:\n${topBullish.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type.toUpperCase()} | Expires: ${new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })} | ${s.outlook_signal}`).join('\n')}\n\n`;
     textContent += `Top 5 Bearish Put Contracts:\n${topBearish.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type.toUpperCase()} | Expires: ${new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })} | ${s.outlook_signal}`).join('\n')}\n\n`;
-    textContent += `Unlock the Full Playbook: https://profitscout.app/dashboard`;
+    textContent += `Unlock the Full Playbook: https://gammarips.com/dashboard`;
 
     const htmlContent = `
 <!DOCTYPE html>
@@ -549,7 +549,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
                     </tr>
                     <tr>
                         <td align="center" style="padding: 40px;">
-                            <a href="https://profitscout.app/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Unlock the Full Playbook</a>
+                            <a href="https://gammarips.com/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Unlock the Full Playbook</a>
                         </td>
                     </tr>
                      <tr>
@@ -575,7 +575,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
 
 
 export async function buildTopPickEmailContent(stock: Stock, summary: string): Promise<{ text: string; html: string }> {
-    const dashboardLink = `https://profitscout.app/dashboard/${stock.id}`;
+    const dashboardLink = `https://gammarips.com/dashboard/${stock.id}`;
     
     const textContent = `
 GammaRips AI Top Pick of the Day: ${stock.company_name} (${stock.id})
@@ -638,8 +638,10 @@ The GammaRips Team
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
                             <div style="margin-top: 20px;">
                                 <a href="https://x.com/GammaRipsAI" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">X (Twitter)</a>
+                                &bull;
                                 <a href="https://www.reddit.com/r/GammaRips/" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Reddit</a>
-                                <a href="https://profitscout.app/privacy" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Privacy Policy</a>
+                                &bull;
+                                <a href="https://gammarips.com/privacy" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Privacy Policy</a>
                             </div>
                             <p style="margin-top: 8px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
                         </td>
@@ -654,4 +656,3 @@ The GammaRips Team
 
     return { text: textContent, html: htmlContent };
 }
-

@@ -119,7 +119,7 @@ async function answerFeedbackViaApp(input) {
 
 async function sendAgentResponseEmail({ to, response, trackingId }) {
     const API_KEY = process.env.MAILGUN_SENDING_KEY;
-    const DOMAIN = 'profitscout.app';
+    const DOMAIN = 'profitscout.app'; // Keep verified domain
     const FROM = 'GammaRips <admin@profitscout.app>';
     const REPLY_TO = process.env.MY_PERSONAL_EMAIL;
 

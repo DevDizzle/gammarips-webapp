@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { getStocksAdmin } from '@/lib/firebase-admin';
 
-const BASE_URL = 'https://gammarips.com'; // Replace with your production URL
+const BASE_URL = 'https://gammarips.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 1. Static pages
@@ -13,6 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/privacy',
     '/options/call-setups',
     '/options/put-hedges',
+    '/performance',
   ].map((route) => ({
     url: `${BASE_URL}${route}`,
     lastModified: new Date().toISOString(),
@@ -24,7 +25,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Include all stocks from the database. The page component will handle
   // showing a "not found" state if the data is stale, but the page URL will exist.
   const allStocks = await getStocksAdmin();
-  const stockRoutes: MetadataRoute.Sitemap = allStocks.map((stock) => ({
+  const stockRoutes: MetadataRoute.Sitemap = allStocks
+    .filter(stock => stock.pages_json) // Only include stocks that have a page generated
+    .map((stock) => ({
     url: `${BASE_URL}/stocks/${stock.id.toUpperCase()}`,
     lastModified: new Date().toISOString(),
     changeFrequency: 'weekly',

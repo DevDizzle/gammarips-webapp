@@ -11,7 +11,7 @@ import RootLayoutClient from './root-layout-client';
 import { getAppStatus } from './actions';
 import DataUpdatingPage from '@/components/layout/data-updating-page';
 
-const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://gammarips.com';
+const siteUrl = 'https://gammarips.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl), 

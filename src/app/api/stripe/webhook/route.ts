@@ -61,7 +61,7 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
                     currency: session.currency?.toUpperCase() || 'USD',
                     items: [{
                         item_id: item.price?.product as string,
-                        item_name: 'ProfitScout Pro Subscription',
+                        item_name: 'GammaRips Pro Subscription',
                         price: (item.price?.unit_amount || 0) / 100,
                         quantity: 1,
                     }]

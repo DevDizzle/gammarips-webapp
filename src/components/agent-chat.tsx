@@ -19,6 +19,7 @@ import { getGroundedAnswer } from '@/ai/flows/grounded-qa-flow';
 import { Markdown } from './markdown';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { GeminiIcon } from './icons/GeminiIcon';
 
 interface Message {
   id: string;
@@ -94,13 +95,13 @@ export default function AgentChat() {
           className="fixed bottom-6 right-6 bg-primary text-primary-foreground h-14 w-14 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-transform hover:scale-110"
           aria-label="Open AI Chat"
         >
-          <MessageCircle className="h-7 w-7" />
+          <GeminiIcon className="h-7 w-7" />
         </button>
       </SheetTrigger>
       <SheetContent className="flex flex-col p-0">
         <SheetHeader className="p-4 border-b">
           <SheetTitle className="flex items-center gap-2">
-            <Bot />
+            <GeminiIcon className="h-6 w-6" />
             Research Assistant
           </SheetTitle>
           <SheetDescription>
@@ -120,7 +121,7 @@ export default function AgentChat() {
                 {m.role === 'assistant' && (
                   <Avatar className="h-8 w-8 shrink-0">
                     <AvatarFallback className="bg-primary text-primary-foreground">
-                      <Bot size={20} />
+                      <GeminiIcon size={20} />
                     </AvatarFallback>
                   </Avatar>
                 )}
@@ -161,7 +162,7 @@ export default function AgentChat() {
               <div className="flex items-start gap-3">
                  <Avatar className="h-8 w-8 shrink-0">
                     <AvatarFallback className="bg-primary text-primary-foreground">
-                      <Bot size={20} />
+                      <GeminiIcon size={20} />
                     </AvatarFallback>
                   </Avatar>
                 <div className="p-3 rounded-lg bg-muted/50 flex items-center gap-2">

@@ -1,12 +1,15 @@
 'use server';
 /**
  * @fileOverview A Genkit flow for answering financial questions with Google Search grounding.
+ *
+ * - getGroundedAnswer - A function that takes a user's question and returns a fact-checked answer.
+ * - GroundedQaInput - The input type for the getGroundedAnswer function.
+ * - GroundedQaOutput - The return type for the getGroundedAnswer function.
  */
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-
-// IMPORTANT: no googleSearch import; it's configured via model config.tools
+import { googleAI } from '@genkit-ai/google-genai';
 
 const GroundedQaInputSchema = z.object({
   question: z
@@ -17,66 +20,70 @@ export type GroundedQaInput = z.infer<typeof GroundedQaInputSchema>;
 
 const GroundedQaOutputSchema = z.object({
   answer: z.string().describe('The AI-generated, search-grounded answer.'),
-  sources: z.array(z.string()).optional().describe('An array of source URLs used for grounding.'),
+  sources: z
+    .array(z.string())
+    .optional()
+    .describe('An array of source URLs used for grounding.'),
 });
 export type GroundedQaOutput = z.infer<typeof GroundedQaOutputSchema>;
 
+// System prompt for the grounded QA agent
 const groundedQaPrompt = `
-You are a highly knowledgeable financial analysis assistant specializing in options contracts.
-Your task is to analyze the provided options contract details and general market data from the
-search results to answer the user's question.
+You are a highly knowledgeable financial analysis assistant specializing in options contracts. Your task is to analyze the provided options contract details and general market data from Google Search grounding results to answer the user's question.
 
-Instructions:
-1. Analyze the user's query about options contracts.
-2. Use only information grounded in the Google Search results; do not invent facts.
-3. Focus on factual analysis: key metrics (strike, expiry, IV, premium), risks, and status.
-4. Do NOT provide investment recommendations or financial advice.
-5. If the search results do not contain enough information, say so clearly.
-6. Include citations inline using the provided source links (e.g. [1], [2]) and map them to the
-   "sources" list you receive from the tool, in order.
-7. Follow all financial regulations and disclaimers.
+**Instructions:**
+1. **Analyze the user's query** about options contracts.
+2. **Utilize only the information provided via Google Search grounding** to formulate your response. Do not use prior knowledge about non-public information.
+3. **Focus on factual analysis**, such as identifying key metrics (strike price, expiration date, implied volatility, premium), potential risks, or explaining a specific contract's current status based on the data.
+4. **Do not provide investment recommendations or financial advice.**
+5. **If the grounded results do not contain enough information**, state this limitation clearly.
+6. **Include citations** for all factual claims using the provided source links.
+7. **Adhere strictly to all financial regulations and disclaimers.**
 
-User Question:
+**User Question:**
 {{question}}
 
-Financial Disclaimer:
-This information is for educational and informational purposes only and does not constitute
-financial advice, investment recommendations, or an offer to buy or sell any options contracts.
-Options trading involves significant risk and is not suitable for all investors.
+**Financial Disclaimer:**
+This information is for educational and informational purposes only and does not constitute financial advice, investment recommendations, or an offer to buy or sell any options contracts. Options trading involves significant risk and is not suitable for all investors. Consult with a qualified financial advisor before making investment decisions.
 `;
 
-// Prompt that uses Gemini 2.5 Pro + Google Search grounding
-const groundedQaAgent = ai.definePrompt(
-  {
-    name: 'groundedQaAgent',
-    input: { schema: GroundedQaInputSchema },
-    output: { schema: GroundedQaOutputSchema },
-    // Use Gemini 2.5 Pro through the Google GenAI plugin
-    model: 'googleai/gemini-2.5-pro',
-    // This is the important part: enable Google Search grounding as a model tool
-    config: {
-      tools: [{ googleSearch: {} }],
-    },
-    prompt: groundedQaPrompt,
-  }
-);
+// Define the prompt using Gemini 2.5 Pro + Google Search grounding
+const groundedQaAgent = ai.definePrompt({
+  name: 'groundedQaAgent',
+  input: { schema: GroundedQaInputSchema },
+  // We rely on plain text + raw grounding metadata instead of structured output.
+  model: googleAI.model('gemini-2.5-pro'),
+  config: {
+    // Enable Grounding with Google Search
+    // Docs pattern: tools: [{ googleSearch: {} }]
+    // https://firebase.google.com/docs/ai-logic/grounding-google-search
+    tools: [{ googleSearch: {} }],
+  },
+  prompt: groundedQaPrompt,
+});
 
-// Helper to extract grounded source URLs from raw Gemini response
-function extractGroundingSources(raw: unknown): string[] {
-  try {
-    const candidate =
-      (raw as any)?.candidates?.[0] ??
-      (raw as any)?.response?.candidates?.[0];
+/**
+ * Extracts grounded source URLs from the raw Gemini response.
+ * Looks at candidates[0].groundingMetadata.groundingChunks[].web.uri
+ */
+function extractGroundedSources(raw: any): string[] {
+  if (!raw) return [];
 
-    const groundingMetadata = candidate?.groundingMetadata;
-    const webSources: any[] = groundingMetadata?.webSearchSources ?? [];
+  const candidates =
+    raw?.response?.candidates ?? // shape used by Firebase AI Logic Web docs
+    raw?.candidates ??
+    [];
 
-    return webSources
-      .map((s) => s.uri || s.url)
-      .filter((u: unknown): u is string => typeof u === 'string');
-  } catch {
-    return [];
-  }
+  const groundingMetadata = candidates[0]?.groundingMetadata;
+  const groundingChunks = groundingMetadata?.groundingChunks as
+    | Array<{ web?: { uri?: string; title?: string } }>
+    | undefined;
+
+  if (!groundingChunks || !Array.isArray(groundingChunks)) return [];
+
+  return groundingChunks
+    .map((chunk) => chunk.web?.uri)
+    .filter((uri): uri is string => typeof uri === 'string');
 }
 
 export const groundedQaFlow = ai.defineFlow(
@@ -88,21 +95,26 @@ export const groundedQaFlow = ai.defineFlow(
   async (input) => {
     try {
       const llmResponse = await groundedQaAgent(input);
-      const output = llmResponse.output;
 
-      if (!output) {
-        throw new Error('The model did not return a valid structured response.');
+      const baseAnswer: string =
+        (llmResponse as any).text ??
+        (llmResponse as any).output?.answer ??
+        '';
+
+      if (!baseAnswer) {
+        throw new Error('The model did not return a valid text response.');
       }
 
-      const baseAnswer = output.answer;
-      const raw = llmResponse.raw;
-      const sources = extractGroundingSources(raw);
+      const sources = extractGroundedSources((llmResponse as any).raw);
 
       const disclaimerText =
-        'This information is for educational and informational purposes only and does not ' +
-        'constitute financial advice. All trading involves risk.';
+        'This information is for educational and informational purposes only and does not constitute financial advice. All trading involves risk.';
 
-      const finalAnswer = baseAnswer.includes('This information is for educational and informational purposes only')
+      const alreadyHasDisclaimer = baseAnswer
+        .toLowerCase()
+        .includes('educational and informational purposes');
+
+      const finalAnswer = alreadyHasDisclaimer
         ? baseAnswer
         : `${baseAnswer}\n\n**Disclaimer:** ${disclaimerText}`;
 
@@ -111,11 +123,20 @@ export const groundedQaFlow = ai.defineFlow(
         sources,
       };
     } catch (error) {
+      // Log the full error for debugging
       console.error('[Grounded QA Flow Error]', error);
+      if (error instanceof Error) {
+        console.error('Error Message:', error.message);
+        console.error('Error Stack:', error.stack);
+        // Log raw response if available in the error object (common in API errors)
+        if ((error as any).response) {
+            console.error('Error Response:', JSON.stringify((error as any).response, null, 2));
+        }
+      }
+
       return {
         answer:
-          "I'm sorry, but I encountered an error while trying to find an answer to your question. " +
-          'The search query may have failed or returned no relevant data. Please try rephrasing your question.',
+          "I'm sorry, but I encountered an error while trying to answer your question using grounded search. The query may have failed or returned insufficient data. Please try rephrasing your question or narrowing the scope.",
         sources: [],
       };
     }
@@ -127,6 +148,8 @@ export const groundedQaFlow = ai.defineFlow(
  * @param question The user's question.
  * @returns A promise that resolves to the grounded answer and its sources.
  */
-export async function getGroundedAnswer(question: string): Promise<GroundedQaOutput> {
+export async function getGroundedAnswer(
+  question: string
+): Promise<GroundedQaOutput> {
   return groundedQaFlow({ question });
 }

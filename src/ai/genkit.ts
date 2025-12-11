@@ -1,13 +1,14 @@
 import { genkit } from 'genkit';
 import { googleAI } from '@genkit-ai/google-genai';
 
-// Single Genkit instance for app
 export const ai = genkit({
   plugins: [
     googleAI({
-      // optional: you can pass { experimental_debugTraces: true } etc.
+      // Uses your AI Studio key. Make sure GEMINI_API_KEY is set in the env.
+      apiKey: process.env.GEMINI_API_KEY,
     }),
   ],
-  // Default model – can override per prompt/flow if you want
+
+  // Optional default model – flows/prompts can override.
   model: googleAI.model('gemini-2.5-pro'),
 });

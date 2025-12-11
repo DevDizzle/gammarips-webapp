@@ -219,7 +219,7 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
             const initialPrice = data.initial_price;
             const currentPrice = data.current_price;
 
-            if (typeof initialPrice === 'number' && initialPrice > 0 && typeof currentPrice === 'number') {
+            if (typeof initialPrice === 'number' && isFinite(initialPrice) && initialPrice > 0 && typeof currentPrice === 'number' && isFinite(currentPrice)) {
                 validSignalCount++;
                 totalInitialValue += initialPrice;
                 totalCurrentValue += currentPrice;
@@ -251,11 +251,11 @@ export async function getPerformanceTrackerStatsAdmin(): Promise<{
             : 0;
 
         return {
-            roi,
+            roi: isFinite(roi) ? roi : 0,
             signalCount: validSignalCount,
-            winRate,
-            winnerRoi,
-            loserRoi,
+            winRate: isFinite(winRate) ? winRate : 0,
+            winnerRoi: isFinite(winnerRoi) ? winnerRoi : 0,
+            loserRoi: isFinite(loserRoi) ? loserRoi : 0,
         };
 
     } catch (error) {
@@ -1250,7 +1250,6 @@ export async function getFairQualityOptionsAdmin(ticker: string): Promise<Option
 export async function getTopPickAdmin(): Promise<Stock | null> {
     noStore();
     try {
-        // Step 1: Get the top winner from winners_dashboard
         const winnerSnapshot = await adminDb.collection('winners_dashboard')
             .orderBy('weighted_score', 'desc')
             .limit(1)
@@ -1268,7 +1267,6 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
             return null;
         }
 
-        // Step 2: Use the ticker to fetch the corresponding document from the tickers collection
         const stockDoc = await adminDb.collection('tickers').doc(topTicker).get();
 
         if (!stockDoc.exists) {
@@ -1276,12 +1274,6 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
             return null;
         }
         const stockData = stockDoc.data()!;
-
-        // Step 3: Check for recommendation_analysis and construct the Stock object
-        if (!stockData.recommendation_analysis) {
-            console.warn(`Top pick stock ${topTicker} is missing a recommendation_analysis path in the 'tickers' collection.`);
-            return null;
-        }
         
         const stock: Stock = {
             id: stockDoc.id,
@@ -1295,6 +1287,12 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
             recommendation: stockData.recommendation,
             pages_json: stockData.pages_json,
         };
+        
+        // Final check to ensure the analysis path exists, as this is critical for the email.
+        if (!stock.recommendation_analysis) {
+            console.warn(`Top pick stock ${topTicker} is missing a recommendation_analysis path in the 'tickers' collection.`);
+            return null;
+        }
         
         const validation = StockSchema.safeParse(stock);
         if (validation.success) {

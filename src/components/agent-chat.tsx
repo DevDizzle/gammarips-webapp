@@ -20,7 +20,7 @@ import { getGroundedAnswer } from '@/ai/flows/grounded-qa-flow';
 import { Markdown } from './markdown';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { GeminiIcon } from './icons/GeminiIcon';
+import GeminiIcon from './icons/GeminiIcon';
 
 interface Message {
   id: string;

@@ -1,22 +1,34 @@
-
 import React from 'react';
 
-export const GeminiIcon: React.FC<React.SVGProps<SVGSVGElement> & { size?: number }> = ({ size = 24, ...props }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z" />
-    <path d="M17.5 17.5a8.5 8.5 0 0 1-11 0" />
-    <path d="M6.5 17.5a8.5 8.5 0 0 0 11 0" />
-    <path d="m17.2 7-10.4 10.4" />
-  </svg>
-);
+// Define props extending standard SVG attributes for maximum flexibility
+// allowing things like onClick, className, aria-labels, etc.
+interface GeminiIconProps extends React.SVGProps<SVGSVGElement> {
+  size?: number | string;
+}
+
+const GeminiIcon: React.FC<GeminiIconProps> = ({
+  size = 24, // Default size
+  className = '',
+  ...props
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      // Using currentColor allows controlling color via CSS text-color
+      color="currentColor"
+      className={className}
+      {...props}
+    >
+      <path
+        d="M12 24C12 24 8.85214 15.1479 0 12C8.85214 8.85214 12 0 12 0C12 0 15.1479 8.85214 24 12C15.1479 15.1479 12 24 12 24Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
+
+export default GeminiIcon;

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -95,13 +96,13 @@ export default function AgentChat() {
           className="fixed bottom-6 right-6 bg-primary text-primary-foreground h-14 w-14 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-transform hover:scale-110"
           aria-label="Open AI Chat"
         >
-          <GeminiIcon className="h-7 w-7" />
+          <GeminiIcon size={28} />
         </button>
       </SheetTrigger>
       <SheetContent className="flex flex-col p-0">
         <SheetHeader className="p-4 border-b">
           <SheetTitle className="flex items-center gap-2">
-            <GeminiIcon className="h-6 w-6" />
+            <GeminiIcon />
             Research Assistant
           </SheetTitle>
           <SheetDescription>

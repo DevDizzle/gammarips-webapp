@@ -92,7 +92,7 @@ const ChatInterface = ({
                 className={cn(
                   'p-3 rounded-2xl text-sm max-w-[85%] shadow-sm',
                   m.role === 'user'
-                    ? 'bg-primary text-primary-foreground rounded-br-none'
+                    ? 'bg-muted rounded-br-none'
                     : 'bg-muted rounded-bl-none'
                 )}
               >

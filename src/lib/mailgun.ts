@@ -18,7 +18,7 @@ export interface EmailOptions {
 
 export async function sendEmail(options: EmailOptions) {
   const API_KEY = process.env.MAILGUN_SENDING_KEY;
-  const DOMAIN = 'gammarips.com'; // Use your new verified domain
+  const DOMAIN = 'mg.gammarips.com'; // Use your new verified domain
   // Use GammaRips as sender name with the new support email
   const DEFAULT_FROM = 'GammaRips <support@gammarips.com>'; 
 

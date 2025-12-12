@@ -15,6 +15,8 @@ import '@/ai/flows/customer-service-agent';
 import '@/ai/flows/send-top-pick';
 import '@/ai/flows/grounded-qa-flow';
 import '@/ai/flows/test-gemini';
+import '@/ai/flows/customer-service-agent';
+import '@/ai/flows/chat-router'; // Register the router
 
 // 👈 Genkit CLI expects a default export of the ai instance
 export default ai;

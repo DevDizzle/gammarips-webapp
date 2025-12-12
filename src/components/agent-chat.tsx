@@ -5,22 +5,16 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetFooter,
-  SheetDescription,
-} from '@/components/ui/sheet';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Bot, Loader2, MessageCircle, Send, User } from 'lucide-react';
-import { getGroundedAnswer } from '@/ai/flows/grounded-qa-flow';
+import { Loader2, Send, User, X, Minimize2, Sparkles } from 'lucide-react';
+import { submitChatQuery } from '@/app/actions/chat-actions';
 import { Markdown } from './markdown';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import GeminiIcon from './icons/GeminiIcon';
+import { useChat } from '@/components/layout/chat-context';
+import { Drawer } from 'vaul';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 interface Message {
   id: string;
@@ -29,8 +23,147 @@ interface Message {
   sources?: string[];
 }
 
+interface ChatInterfaceProps {
+  className?: string;
+  activeTicker: string | null;
+  setIsOpen: (open: boolean) => void;
+  isDesktop: boolean;
+  messages: Message[];
+  isLoading: boolean;
+  input: string;
+  setInput: (value: string) => void;
+  handleSubmit: (e: React.FormEvent) => void;
+  scrollAreaRef: React.RefObject<HTMLDivElement>;
+  endOfMessagesRef: React.RefObject<HTMLDivElement>;
+}
+
+const ChatInterface = ({
+  className,
+  activeTicker,
+  setIsOpen,
+  isDesktop,
+  messages,
+  isLoading,
+  input,
+  setInput,
+  handleSubmit,
+  scrollAreaRef,
+  endOfMessagesRef
+}: ChatInterfaceProps) => (
+  <div className={cn("flex flex-col h-full bg-background", className)}>
+    {/* Header */}
+    <div className="flex items-center justify-between p-4 border-b bg-muted/30 backdrop-blur-sm">
+      <div className="flex items-center gap-2">
+        <div className="p-1.5 bg-primary/10 rounded-md text-primary">
+          <GeminiIcon size={18} />
+        </div>
+        <div>
+          <h3 className="font-semibold text-sm">GammaRips</h3>
+          {activeTicker && (
+            <p className="text-xs text-muted-foreground">Context: <span className="font-medium text-primary">{activeTicker}</span></p>
+          )}
+        </div>
+      </div>
+      <div className="flex items-center gap-1">
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsOpen(false)}>
+          {isDesktop ? <Minimize2 size={16} /> : <X size={16} />}
+        </Button>
+      </div>
+    </div>
+
+    {/* Messages */}
+    <div className="flex-1 overflow-hidden relative">
+      <ScrollArea className="h-full px-4 py-4" ref={scrollAreaRef}>
+         <div className="space-y-6 pb-4">
+          {messages.map((m) => (
+            <div
+              key={m.id}
+              className={cn(
+                'flex items-start gap-3',
+                m.role === 'user' && 'justify-end'
+              )}
+            >
+              {m.role === 'assistant' && (
+                <Avatar className="h-7 w-7 shrink-0 mt-1">
+                  <AvatarFallback className="bg-primary/10 text-primary text-xs">AI</AvatarFallback>
+                </Avatar>
+              )}
+              <div
+                className={cn(
+                  'p-3 rounded-2xl text-sm max-w-[85%] shadow-sm',
+                  m.role === 'user'
+                    ? 'bg-primary text-primary-foreground rounded-br-none'
+                    : 'bg-muted rounded-bl-none'
+                )}
+              >
+                <Markdown content={m.content} className="prose-sm dark:prose-invert" />
+                {m.sources && m.sources.length > 0 && (
+                  <div className="mt-3 pt-2 border-t border-border/50 text-xs opacity-80">
+                    <p className="font-medium mb-1 flex items-center gap-1"><Sparkles size={10} /> Sources</p>
+                    <ul className="space-y-1">
+                      {m.sources.slice(0, 3).map((source, index) => (
+                        <li key={index} className="truncate max-w-[200px]">
+                          <Link href={source} target="_blank" className="hover:underline flex items-center gap-1">
+                            • {new URL(source).hostname}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+              {m.role === 'user' && (
+                <Avatar className="h-7 w-7 shrink-0 mt-1">
+                  <AvatarFallback className="bg-muted text-muted-foreground text-xs">You</AvatarFallback>
+                </Avatar>
+              )}
+            </div>
+          ))}
+          
+          {isLoading && (
+             <div className="flex items-start gap-3 animate-pulse">
+              <Avatar className="h-7 w-7 shrink-0 mt-1">
+                <AvatarFallback className="bg-primary/10 text-primary text-xs">AI</AvatarFallback>
+              </Avatar>
+              <div className="bg-muted rounded-2xl rounded-bl-none p-3 flex items-center gap-2">
+                 <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                 <span className="text-xs text-muted-foreground">Analyzing data...</span>
+              </div>
+            </div>
+          )}
+          <div ref={endOfMessagesRef} />
+         </div>
+      </ScrollArea>
+    </div>
+
+    {/* Input */}
+    <div className="p-4 border-t bg-background">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2 relative">
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={activeTicker ? `Ask about ${activeTicker}...` : "Ask a question..."}
+          className="pr-10 h-11 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary/20 transition-all"
+          disabled={isLoading}
+        />
+        <Button 
+          type="submit" 
+          disabled={isLoading || !input.trim()} 
+          size="icon"
+          className="absolute right-1 top-1 h-9 w-9 rounded-md transition-all hover:scale-105"
+        >
+          <Send size={16} />
+        </Button>
+      </form>
+      <p className="text-[10px] text-center text-muted-foreground mt-2 opacity-60">
+        AI can make mistakes. Check important info.
+      </p>
+    </div>
+  </div>
+);
+
 export default function AgentChat() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen, activeTicker } = useChat();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -38,25 +171,23 @@ export default function AgentChat() {
       id: 'init',
       role: 'assistant',
       content:
-        "Hello! I'm the GammaRips research assistant. Ask me anything about options contracts, financial markets, or how our tools work. How can I help you today?",
+        "Hello! I'm your GammaRips AI analyst. I can help you analyze setups, check stock outlooks, or answer support questions.",
     },
   ]);
-
+  const isDesktop = useMediaQuery("(min-width: 768px)");
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
+  // Auto-scroll to bottom
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({
-        top: scrollAreaRef.current.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
-  }, [messages]);
+    endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
+    // Add User Message
     const userMessage: Message = {
       id: crypto.randomUUID(),
       role: 'user',
@@ -67,21 +198,41 @@ export default function AgentChat() {
     setIsLoading(true);
 
     try {
-      const response = await getGroundedAnswer(input);
+      // If we have an active ticker and the user didn't mention it, prepend it for context
+      // (This is a simple client-side context injection)
+      let finalQuery = input;
+      if (activeTicker && !input.toUpperCase().includes(activeTicker)) {
+         finalQuery = `Regarding ${activeTicker}: ${input}`;
+      }
+      
+      // Prepare history for the router (convert to Genkit format)
+      // We only send the last few messages to save tokens/latency
+      const history = messages.slice(-5).map(m => ({
+        role: m.role === 'user' ? 'user' : 'model',
+        content: m.content
+      })) as { role: 'user' | 'model'; content: string }[];
+
+      // Call the Server Action
+      const response = await submitChatQuery(finalQuery, history);
+      
       const assistantMessage: Message = {
         id: crypto.randomUUID(),
         role: 'assistant',
         content: response.answer,
-        sources: response.sources,
+        // The router currently returns { response, source }, we might need to adjust if we want grounded sources back.
+        // For now, grounded sources are embedded in the text or not passed separately by the router wrapper.
+        // If we want sources, we should update the RouterOutputSchema to include them.
+        // For now, let's leave sources undefined or parse them if we add them to Router.
+        sources: undefined, 
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
-      console.error('Error fetching grounded answer:', error);
+      console.error('Error fetching answer:', error);
       const errorMessage: Message = {
         id: crypto.randomUUID(),
         role: 'assistant',
         content:
-          "I'm sorry, but I encountered an error while trying to process your request. Please try again later.",
+          "I'm sorry, I'm having trouble connecting to the research engine right now. Please try again in a moment.",
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
@@ -89,106 +240,76 @@ export default function AgentChat() {
     }
   };
 
-  return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger asChild>
-        <button
-          className="fixed bottom-6 right-6 bg-primary text-primary-foreground h-14 w-14 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-transform hover:scale-110"
-          aria-label="Open AI Chat"
-        >
-          <GeminiIcon size={28} />
-        </button>
-      </SheetTrigger>
-      <SheetContent className="flex flex-col p-0">
-        <SheetHeader className="p-4 border-b">
-          <SheetTitle className="flex items-center gap-2">
-            <GeminiIcon />
-            Research Assistant
-          </SheetTitle>
-          <SheetDescription>
-            Powered by Gemini 2.5 Pro with Google Search grounding.
-          </SheetDescription>
-        </SheetHeader>
-        <ScrollArea className="flex-1" ref={scrollAreaRef}>
-          <div className="p-4 space-y-6">
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={cn(
-                  'flex items-start gap-3',
-                  m.role === 'user' && 'justify-end'
-                )}
-              >
-                {m.role === 'assistant' && (
-                  <Avatar className="h-8 w-8 shrink-0">
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      <GeminiIcon size={20} />
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-                <div
-                  className={cn(
-                    'p-3 rounded-lg max-w-sm',
-                    m.role === 'user'
-                      ? 'bg-primary/20'
-                      : 'bg-muted/50'
-                  )}
-                >
-                  <Markdown content={m.content} className="text-sm" />
-                  {m.sources && m.sources.length > 0 && (
-                    <div className="mt-2 text-xs">
-                      <h4 className="font-semibold mb-1">Sources:</h4>
-                      <ul className="list-disc list-inside space-y-1">
-                        {m.sources.map((source, index) => (
-                          <li key={index}>
-                            <Link href={source} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline truncate block">
-                              {new URL(source).hostname}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-                {m.role === 'user' && (
-                  <Avatar className="h-8 w-8 shrink-0">
-                    <AvatarFallback>
-                      <User size={20} />
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex items-start gap-3">
-                 <Avatar className="h-8 w-8 shrink-0">
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      <GeminiIcon size={20} />
-                    </AvatarFallback>
-                  </Avatar>
-                <div className="p-3 rounded-lg bg-muted/50 flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin"/>
-                    <span className="text-sm text-muted-foreground">Thinking...</span>
-                </div>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
-        <SheetFooter className="p-4 border-t">
-          <form onSubmit={handleSubmit} className="flex w-full gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about a stock or contract..."
-              disabled={isLoading}
-            />
-            <Button type="submit" disabled={isLoading || !input.trim()} size="icon">
-              <Send className="h-4 w-4" />
-              <span className="sr-only">Send</span>
+  // Desktop: Render ONLY if open, as a fixed side panel (handled by parent layout or conditional here?)
+  // Actually, for the "Push" effect, the Layout needs to know about this. 
+  // For now, we will render it as a fixed overlay on the right for Desktop if we don't refactor the whole layout yet.
+  // Better yet, let's use the Drawer for Mobile and a fixed positioning for Desktop for now to ensure it works without breaking layout.
+  
+  if (isDesktop) {
+     if (!isOpen) {
+        return (
+            <Button
+                onClick={() => setIsOpen(true)}
+                className="fixed bottom-8 right-8 h-14 w-14 rounded-full shadow-2xl z-50 animate-in zoom-in duration-300"
+                size="icon"
+            >
+                <GeminiIcon size={28} />
+                <span className="sr-only">Open Chat</span>
             </Button>
-          </form>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+        );
+     }
+     return (
+        <div className="fixed top-0 right-0 h-full w-[400px] bg-background border-l z-40 shadow-2xl animate-in slide-in-from-right duration-300">
+            <ChatInterface 
+              className="border-l border-border/50 shadow-xl"
+              activeTicker={activeTicker}
+              setIsOpen={setIsOpen}
+              isDesktop={isDesktop}
+              messages={messages}
+              isLoading={isLoading}
+              input={input}
+              setInput={setInput}
+              handleSubmit={handleSubmit}
+              scrollAreaRef={scrollAreaRef}
+              endOfMessagesRef={endOfMessagesRef}
+            />
+        </div>
+     );
+  }
+
+  // Mobile: Drawer
+  return (
+    <Drawer.Root open={isOpen} onOpenChange={setIsOpen} shouldScaleBackground>
+        {!isOpen && (
+            <Drawer.Trigger asChild>
+                <Button
+                    className="fixed bottom-20 right-4 h-12 w-12 rounded-full shadow-lg z-50 md:hidden"
+                    size="icon"
+                >
+                    <GeminiIcon size={24} />
+                </Button>
+            </Drawer.Trigger>
+        )}
+        <Drawer.Portal>
+            <Drawer.Overlay className="fixed inset-0 bg-black/40 z-50" />
+            <Drawer.Content className="bg-background flex flex-col rounded-t-[10px] h-[85vh] fixed bottom-0 left-0 right-0 z-50 outline-none">
+                <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-muted mt-4 mb-2" />
+                <div className="flex-1 min-h-0">
+                    <ChatInterface 
+                      activeTicker={activeTicker}
+                      setIsOpen={setIsOpen}
+                      isDesktop={isDesktop}
+                      messages={messages}
+                      isLoading={isLoading}
+                      input={input}
+                      setInput={setInput}
+                      handleSubmit={handleSubmit}
+                      scrollAreaRef={scrollAreaRef}
+                      endOfMessagesRef={endOfMessagesRef}
+                    />
+                </div>
+            </Drawer.Content>
+        </Drawer.Portal>
+    </Drawer.Root>
   );
 }

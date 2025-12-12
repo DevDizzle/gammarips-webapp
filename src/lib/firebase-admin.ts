@@ -64,6 +64,11 @@ const StockSchema = z.object({
   pages_json: z.string().optional(),
   dashboard_json: z.string().optional().nullable(),
   weighted_score: z.number().optional(),
+  news: z.string().optional().nullable(),
+  financials: z.string().optional().nullable(),
+  earnings_transcript: z.string().optional().nullable(),
+  mda: z.string().optional().nullable(),
+  technicals: z.string().optional().nullable(),
 });
 export type Stock = z.infer<typeof StockSchema>;
 
@@ -603,6 +608,11 @@ export async function getStocksAdmin(): Promise<Stock[]> {
             image_uri: data.image_uri,
             dashboard_json: data.dashboard_json,
             weighted_score: data.weighted_score,
+            news: data.news,
+            financials: data.financials,
+            earnings_transcript: data.earnings_transcript,
+            mda: data.mda,
+            technicals: data.technicals,
         };
         const validation = StockSchema.safeParse(stock);
         if (validation.success) {
@@ -641,6 +651,11 @@ export async function getStockDataAdmin(ticker: string): Promise<Stock | null> {
             image_uri: data.image_uri,
             dashboard_json: data.dashboard_json,
             weighted_score: data.weighted_score,
+            news: data.news,
+            financials: data.financials,
+            earnings_transcript: data.earnings_transcript,
+            mda: data.mda,
+            technicals: data.technicals,
         };
         const validation = StockSchema.safeParse(stock);
         if (validation.success) {

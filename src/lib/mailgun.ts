@@ -18,9 +18,9 @@ export interface EmailOptions {
 
 export async function sendEmail(options: EmailOptions) {
   const API_KEY = process.env.MAILGUN_SENDING_KEY;
-  const DOMAIN = 'profitscout.app'; // Keep verified sending domain
-  // Use GammaRips as sender name
-  const DEFAULT_FROM = 'GammaRips <admin@profitscout.app>'; 
+  const DOMAIN = 'gammarips.com'; // Use your new verified domain
+  // Use GammaRips as sender name with the new support email
+  const DEFAULT_FROM = 'GammaRips <support@gammarips.com>'; 
 
   const FROM = options.from || DEFAULT_FROM;
   const TO =
@@ -34,8 +34,6 @@ export async function sendEmail(options: EmailOptions) {
   }
 
   // Build form-data manually as URL-encoded form
-  // NOTE: Mailgun accepts either multipart/form-data or application/x-www-form-urlencoded.
-  // We're going to send x-www-form-urlencoded because it's simple and works reliably.
   const form = new URLSearchParams();
   form.append('from', FROM);
   form.append('to', TO);
@@ -71,9 +69,6 @@ export async function sendEmail(options: EmailOptions) {
   );
 
   if (!resp.ok) {
-    // Mailgun returns JSON on errors like:
-    // { "message": "'from' parameter is missing" } or
-    // { "message": "Domain ... is not allowed to send ..." }
     const details = await resp.json().catch(() => ({}));
     console.error('[Mailgun Failure]', resp.status, details);
     return {
@@ -281,7 +276,7 @@ Founder, GammaRips
 export async function sendFeedbackRequestEmail({ to, name }: { to: string, name: string }) {
     const { text, html } = await buildFeedbackRequestEmailContent(name);
     return sendEmail({
-        from: 'Evan at GammaRips <admin@profitscout.app>',
+        from: 'Evan at GammaRips <support@gammarips.com>', // Updated sender
         to: `${name} <${to}>`,
         subject: `One week in. How is the data?`,
         text,
@@ -356,6 +351,7 @@ export async function sendFeedbackAcknowledgmentEmail({ to, trackingId }: { to: 
         subject: `We've received your message (Ref: ${trackingId})`,
         text,
         html,
+        replyTo: 'support@gammarips.com', // Ensure replies go to support
     });
 }
 
@@ -424,19 +420,13 @@ The GammaRips Team
 
 export async function sendAgentResponseEmail({ to, response, trackingId }: { to: string, response: string, trackingId: string }) {
     const { text, html } = await buildAgentResponseEmailContent({ userEmail: to, response, trackingId });
-    const MY_EMAIL = process.env.MY_PERSONAL_EMAIL;
-
-    if (!MY_EMAIL) {
-        console.error('[Mailgun Error] Missing MY_PERSONAL_EMAIL for Reply-To');
-        // Proceed without Reply-To if not set, but log error
-    }
-
+    
     return sendEmail({
         to,
         subject: `Re: Your GammaRips Inquiry (Ref: ${trackingId})`,
         text,
         html,
-        replyTo: MY_EMAIL,
+        replyTo: 'support@gammarips.com',
     });
 }
 

@@ -9,6 +9,7 @@ import RootLayoutClient from './root-layout-client';
 import { getAppStatus } from './actions';
 import DataUpdatingPage from '@/components/layout/data-updating-page';
 import AgentChat from '@/components/agent-chat';
+import { ChatProvider } from "@/components/layout/chat-context";
 
 const siteUrl = 'https://gammarips.com';
 
@@ -95,13 +96,15 @@ export default async function RootLayout({
       </head>
       <body>
         <AuthProvider>
-          <RootLayoutClient>
-            <main className='flex-grow'>{children}</main>
-          </RootLayoutClient>
-          <Footer />
-          <Toaster />
-          <CookieConsentBanner />
-          <AgentChat />
+          <ChatProvider>
+            <RootLayoutClient>
+              <main className='flex-grow'>{children}</main>
+            </RootLayoutClient>
+            <Footer />
+            <Toaster />
+            <CookieConsentBanner />
+            <AgentChat />
+          </ChatProvider>
         </AuthProvider>
       </body>
     </html>

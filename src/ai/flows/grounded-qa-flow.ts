@@ -10,6 +10,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { googleAI } from '@genkit-ai/google-genai';
+import { fetchGammaRipsData } from '@/ai/tools/financial-data';
 
 const GroundedQaInputSchema = z.object({
   question: z
@@ -29,22 +30,17 @@ export type GroundedQaOutput = z.infer<typeof GroundedQaOutputSchema>;
 
 // System prompt for the grounded QA agent
 const groundedQaPrompt = `
-You are a highly knowledgeable financial analysis assistant specializing in options contracts. Your task is to analyze the provided options contract details and general market data from Google Search grounding results to answer the user's question.
+You are a concise, helpful financial analyst. Your goal is to give the user a quick, actionable snapshot of the situation and guide them to the next step.
 
-**Instructions:**
-1. **Analyze the user's query** about options contracts.
-2. **Utilize only the information provided via Google Search grounding** to formulate your response. Do not use prior knowledge about non-public information.
-3. **Focus on factual analysis**, such as identifying key metrics (strike price, expiration date, implied volatility, premium), potential risks, or explaining a specific contract's current status based on the data.
-4. **Do not provide investment recommendations or financial advice.**
-5. **If the grounded results do not contain enough information**, state this limitation clearly.
-6. **Include citations** for all factual claims using the provided source links.
-7. **Adhere strictly to all financial regulations and disclaimers.**
+**Directives:**
+1.  **BE CONCISE:** Keep your answer **under 150 words**. Use bullet points for readability.
+2.  **CHECK PROPRIETARY DATA:** If the user asks about a stock (e.g., AAPL, TSLA), **ALWAYS use the \`fetchGammaRipsData\` tool** first.
+3.  **DECISION SUPPORT:** Don't just list facts. Help the user evaluate the potential trade by briefly highlighting **1-2 key Bullish factors and 1-2 key Bearish factors** based on the data.
+4.  **ENGAGE:** **Always end with 1 short, relevant follow-up question** to keep the conversation going (e.g., "Should we look at the support levels?" or "Want to check the option volume?").
+5.  **NO FINANCIAL ADVICE:** Phrase analysis as "educational observations" or "market data," not "you should buy."
 
 **User Question:**
 {{question}}
-
-**Financial Disclaimer:**
-This information is for educational and informational purposes only and does not constitute financial advice, investment recommendations, or an offer to buy or sell any options contracts. Options trading involves significant risk and is not suitable for all investors. Consult with a qualified financial advisor before making investment decisions.
 `;
 
 // Define the prompt using Gemini 2.5 Pro + Google Search grounding
@@ -54,10 +50,13 @@ const groundedQaAgent = ai.definePrompt({
   // We rely on plain text + raw grounding metadata instead of structured output.
   model: googleAI.model('gemini-2.5-pro'),
   config: {
-    // Enable Grounding with Google Search
+    // Enable Grounding with Google Search AND our custom tool
     // Docs pattern: tools: [{ googleSearch: {} }]
     // https://firebase.google.com/docs/ai-logic/grounding-google-search
-    tools: [{ googleSearch: {} }],
+    tools: [
+      { googleSearch: {} },
+      fetchGammaRipsData
+    ],
   },
   prompt: groundedQaPrompt,
 });

@@ -121,23 +121,28 @@ Founder, GammaRips
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <title>Welcome to GammaRips</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
+                     <tr>
+                        <td align="center" style="padding: 40px 20px;">
+                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                        </td>
+                    </tr>
                     <tr>
-                        <td style="padding: 40px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: #ffffff; margin: 0;">Hi ${name},</h1>
+                        <td style="padding: 0 40px 40px;">
+                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">Thanks for joining GammaRips. You now have full access to the Daily Playbook.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Our goal is to make your research process simple and data-driven. Here is how to get the most out of the platform every morning:</p>
                             
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 32px;">
                                 <tr>
-                                    <td width="40" valign="top" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">1.</td>
+                                    <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">1.</td>
                                     <td valign="top">
                                         <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Check the Dashboard</h3>
                                         <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Log in to see the daily list of high-gamma Call & Put contracts. We filter the market down to the handful of setups that matter.</p>
@@ -145,7 +150,7 @@ Founder, GammaRips
                                 </tr>
                                 <tr><td height="24"></td></tr>
                                 <tr>
-                                    <td width="40" valign="top" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">2.</td>
+                                    <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">2.</td>
                                     <td valign="top">
                                         <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Read the Briefing</h3>
                                         <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Don't trade blindly. Click any card to read the AI Breakdown. You’ll see the fundamentals, catalysts, and risks behind every trade in plain English.</p>
@@ -153,7 +158,7 @@ Founder, GammaRips
                                 </tr>
                                 <tr><td height="24"></td></tr>
                                  <tr>
-                                    <td width="40" valign="top" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">3.</td>
+                                    <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">3.</td>
                                     <td valign="top">
                                         <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Plan Your Trade</h3>
                                         <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">We provide the conviction; you manage the risk. Use the data to validate your entry and exit points.</p>
@@ -163,7 +168,7 @@ Founder, GammaRips
                         </td>
                     </tr>
                     <tr>
-                        <td align="center" style="padding: 20px 40px 30px;">
+                        <td align="center" style="padding: 0 40px 30px;">
                             <a href="https://gammarips.com/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
                         </td>
                     </tr>
@@ -233,16 +238,21 @@ Founder, GammaRips
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <title>One week in. How is the data?</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
+                     <tr>
+                        <td align="center" style="padding: 40px 20px;">
+                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                        </td>
+                    </tr>
                     <tr>
-                        <td style="padding: 40px;">
+                        <td style="padding: 0 40px;">
                             <p style="font-size: 16px; line-height: 1.6; margin: 0;">Hi ${name},</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">I’m Evan, the founder of GammaRips.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You’ve had access to the Playbook for a week now. I want to check in and see if the daily contracts are matching your trading style.</p>
@@ -251,7 +261,7 @@ Founder, GammaRips
                         </td>
                     </tr>
                     <tr>
-                        <td align="center" style="padding: 20px 40px 30px;">
+                        <td align="center" style="padding: 30px 40px 30px;">
                             <a href="https://gammarips.com/feedback" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Share Your Feedback</a>
                         </td>
                     </tr>
@@ -278,7 +288,7 @@ export async function sendFeedbackRequestEmail({ to, name }: { to: string, name:
     return sendEmail({
         from: 'Evan at GammaRips <support@gammarips.com>', // Updated sender
         to: `${name} <${to}>`,
-        subject: `One week in. How is the data?`,
+        subject: `GammaRips: One week in. How is the data?`,
         text,
         html,
     });
@@ -304,22 +314,22 @@ The GammaRips Team
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <title>We've Received Your Feedback</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
-                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; color: #ffffff; margin-top: 0;">Message Received</h2>
+                            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; color: #ffffff; margin-top: 0;">Message Received</h2>
                             <p style="font-size: 16px; line-height: 1.6;">Thank you for contacting us! We've received your message and our team will review it shortly. We appreciate you taking the time to reach out.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">For your records, your reference ID is:</p>
                              <div style="background-color: #282A3A; border: 1px solid #393b4d; border-radius: 8px; padding: 12px; text-align: center; margin-top: 8px;">
@@ -378,22 +388,22 @@ The GammaRips Team
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <title>Response to your inquiry</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
-                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; color: #ffffff; margin-top: 0;">Response to Your Inquiry (Ref: ${trackingId})</h2>
+                            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; color: #ffffff; margin-top: 0;">Response to Your Inquiry (Ref: ${trackingId})</h2>
                             <div style="font-size: 16px; line-height: 1.6; color: #E0E0E0; border-left: 2px solid #393b4d; padding-left: 15px; margin-top: 20px;">
                                 ${response.replace(/\n/g, '<br>')}
                             </div>
@@ -472,17 +482,22 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <title>The Daily Playbook: Tomorrow’s contracts are ready.</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
                     <tr>
-                        <td align="center" style="padding: 30px 20px;">
-                            <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: #ffffff; margin: 0;">Market Closed. Data Processed.</h1>
+                        <td align="center" style="padding: 40px 20px 10px;">
+                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 10px 20px 30px;">
+                            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">The Daily Playbook</h2>
                         </td>
                     </tr>
                     <tr>
@@ -490,9 +505,9 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
                              <p style="font-size: 16px; line-height: 1.6;">The session is over. Our engine has processed the day's volatility. Do your research now. Get your trade ideas locked in before tomorrow's opening bell.</p>
                              <p style="font-size: 16px; line-height: 1.6; margin-top: 10px;">First, let's look at the scoreboard. Here are the top-performing contracts from our playbook. This is the volatility we hunt.</p>
                             
-                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 5px;">The Scoreboard</h2>
+                            <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; color: #ffffff; margin-top: 30px; margin-bottom: 5px;">The Scoreboard</h3>
                             <p style="font-size: 14px; color: #A0A0A0; margin-top: 0; margin-bottom: 15px;">Live performance of our top active contracts.</p>
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0; font-size: 14px;">
                                 <thead>
                                      <tr style="color: #A0A0A0; font-size: 12px; text-transform: uppercase;">
                                         <th style="padding: 8px; text-align: left; border-bottom: 1px solid #393b4d;">Ticker</th>
@@ -506,8 +521,8 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
                              <p style="font-size: 16px; line-height: 1.6; margin-top: 30px;">Missed these? Don't chase yesterday's moves. We have identified the high-gamma contracts primed for tomorrow.</p>
                              <p style="font-size: 16px; line-height: 1.6; margin-top: 10px;">Review these setups tonight. Check the AI breakdown. Have your plan locked in before the opening bell.</p>
 
-                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid hsl(74, 80%, 50%); padding-bottom: 5px;">Top 5 Bullish Call Contracts</h2>
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">
+                            <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; color: #ffffff; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid hsl(74, 80%, 50%); padding-bottom: 5px;">Top 5 Bullish Call Contracts</h3>
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0; font-size: 14px;">
                                 <thead>
                                     <tr style="color: #A0A0A0; font-size: 12px; text-transform: uppercase;">
                                         <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Ticker</th>
@@ -521,8 +536,8 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
                                 </tbody>
                             </table>
 
-                            <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; color: #ffffff; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid hsl(74, 80%, 50%); padding-bottom: 5px;">Top 5 Bearish Put Contracts</h2>
-                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0;">
+                            <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; color: #ffffff; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid hsl(74, 80%, 50%); padding-bottom: 5px;">Top 5 Bearish Put Contracts</h3>
+                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0; font-size: 14px;">
                                 <thead>
                                      <tr style="color: #A0A0A0; font-size: 12px; text-transform: uppercase;">
                                         <th style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">Ticker</th>
@@ -591,28 +606,33 @@ The GammaRips Team
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <title>AI Top Pick of the Day: ${stock.id}</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
                     <tr>
-                        <td align="center" style="padding: 30px 20px;">
-                             <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: #ffffff; margin: 0;">AI Top Pick of the Day</h1>
+                        <td align="center" style="padding: 40px 20px 10px;">
+                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 10px 20px 30px;">
+                             <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">AI Top Pick of the Day</h2>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px;">
-                             <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; color: #ffffff; margin: 0; text-align: center;">${stock.company_name} (${stock.id})</h2>
+                             <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 28px; color: #ffffff; margin: 0; text-align: center;">${stock.company_name} (${stock.id})</h3>
                              <p style="text-align: center; font-size: 14px; color: #A0A0A0; margin-top: 8px;">
                                 Our AI has analyzed thousands of data points and identified this as today's top-rated setup based on our proprietary scoring model.
                              </p>
 
                             <div style="background-color: #1F212E; border: 1px solid #393b4d; border-radius: 8px; padding: 20px; margin-top: 25px;">
-                                <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; color: #ffffff; margin: 0 0 10px 0;">AI Summary</h3>
+                                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 18px; color: #ffffff; margin: 0 0 10px 0;">AI Summary</h3>
                                 <p style="font-size: 16px; line-height: 1.6; margin:0;">${summary}</p>
                             </div>
                             

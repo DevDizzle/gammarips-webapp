@@ -55,7 +55,7 @@ const ChatInterface = ({
     <div className="flex items-center justify-between p-4 border-b bg-muted/30 backdrop-blur-sm">
       <div className="flex items-center gap-3">
         <div className="p-1 bg-primary/10 rounded-md text-primary">
-          <GeminiIcon size={20} />
+          <GeminiIcon size={16} />
         </div>
         <div>
           <h3 className="font-semibold text-sm">GammaRips</h3>
@@ -313,5 +313,7 @@ export default function AgentChat() {
     </Drawer.Root>
   );
 }
+
+    
 
     

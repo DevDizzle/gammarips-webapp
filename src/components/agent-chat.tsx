@@ -53,15 +53,15 @@ const ChatInterface = ({
   <div className={cn("flex flex-col h-full bg-background", className)}>
     {/* Header */}
     <div className="flex items-center justify-between p-4 border-b bg-muted/30 backdrop-blur-sm">
-      <div className="flex items-center gap-2">
-        <div className="p-1.5 bg-primary/10 rounded-md text-primary">
-          <GeminiIcon size={18} />
+      <div className="flex items-center gap-3">
+        <div className="p-1 bg-primary/10 rounded-md text-primary">
+          <GeminiIcon size={24} />
         </div>
         <div>
           <h3 className="font-semibold text-sm">GammaRips</h3>
-          {activeTicker && (
-            <p className="text-xs text-muted-foreground">Context: <span className="font-medium text-primary">{activeTicker}</span></p>
-          )}
+          <p className="text-xs text-muted-foreground flex items-center gap-1">
+            Powered by Gemini
+          </p>
         </div>
       </div>
       <div className="flex items-center gap-1">
@@ -313,3 +313,5 @@ export default function AgentChat() {
     </Drawer.Root>
   );
 }
+
+    

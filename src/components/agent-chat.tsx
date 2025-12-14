@@ -90,10 +90,10 @@ const ChatInterface = ({
               )}
               <div
                 className={cn(
-                  'p-3 rounded-2xl text-sm max-w-[85%] shadow-sm',
+                  'p-3 rounded-2xl text-sm max-w-[85%]',
                   m.role === 'user'
                     ? 'bg-muted rounded-br-none'
-                    : 'bg-muted rounded-bl-none'
+                    : 'bg-background rounded-bl-none'
                 )}
               >
                 <Markdown content={m.content} className="prose-sm dark:prose-invert" />
@@ -253,7 +253,7 @@ export default function AgentChat() {
                 className="fixed bottom-8 right-8 h-14 w-14 rounded-full shadow-2xl z-50 animate-in zoom-in duration-300"
                 size="icon"
             >
-                <GeminiIcon size={36} />
+                <Sparkles size={28} />
                 <span className="sr-only">Open Chat</span>
             </Button>
         );
@@ -286,7 +286,7 @@ export default function AgentChat() {
                     className="fixed bottom-20 right-4 h-12 w-12 rounded-full shadow-lg z-50 md:hidden"
                     size="icon"
                 >
-                    <GeminiIcon size={28} />
+                    <Sparkles size={24} />
                 </Button>
             </Drawer.Trigger>
         )}

@@ -55,7 +55,7 @@ const ChatInterface = ({
     <div className="flex items-center justify-between p-4 border-b bg-muted/30 backdrop-blur-sm">
       <div className="flex items-center gap-3">
         <div className="p-1 bg-primary/10 rounded-md text-primary">
-          <GeminiIcon size={24} />
+          <GeminiIcon size={20} />
         </div>
         <div>
           <h3 className="font-semibold text-sm">GammaRips</h3>
@@ -253,7 +253,7 @@ export default function AgentChat() {
                 className="fixed bottom-8 right-8 h-14 w-14 rounded-full shadow-2xl z-50 animate-in zoom-in duration-300"
                 size="icon"
             >
-                <GeminiIcon size={28} />
+                <GeminiIcon size={36} />
                 <span className="sr-only">Open Chat</span>
             </Button>
         );
@@ -286,7 +286,7 @@ export default function AgentChat() {
                     className="fixed bottom-20 right-4 h-12 w-12 rounded-full shadow-lg z-50 md:hidden"
                     size="icon"
                 >
-                    <GeminiIcon size={24} />
+                    <GeminiIcon size={28} />
                 </Button>
             </Drawer.Trigger>
         )}

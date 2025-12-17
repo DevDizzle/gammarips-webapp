@@ -10,13 +10,15 @@ import {
     buildFeedbackRequestEmailContent,
     buildFeedbackAcknowledgmentEmailContent,
     buildDailySetupsEmailContent,
-    buildTopPickEmailContent
+    buildTopPickEmailContent,
+    buildMidDayMoversEmailContent
 } from '@/lib/mailgun';
 import { 
     getWinnersDashboardAdmin, 
     getPerformanceSignals as getPerformanceSignalsAdmin, 
     getTopPickAdmin, 
     getGcsFileContentAdmin, 
+    getMidDayMoversAdmin,
     type Stock, 
     type Winner, 
     type PerformanceSignal 
@@ -124,6 +126,28 @@ async function testSendTopPick() {
     }
 }
 
+async function testSendMidDayMovers() {
+    console.log('Testing: Mid-Day Movers Email');
+    try {
+        const movers = await getMidDayMoversAdmin();
+        if (movers.length === 0) {
+            console.warn('No mid-day movers found for yesterday. Cannot generate a realistic test email.');
+            return;
+        }
+        
+        const { text, html } = await buildMidDayMoversEmailContent(movers);
+        const result = await sendEmail({
+            to: TEST_EMAIL,
+            subject: "[TEST] GammaRips Mid-Day Movers: See What's Ripping",
+            text,
+            html,
+        });
+        console.log('Result:', result.ok ? 'Success' : `Failed (${result.status})`);
+    } catch (error) {
+        console.error('An error occurred while sending the test "Mid-Day Movers" email:', error);
+    }
+}
+
 async function runAllEmailTests() {
     const allTests = [
         testSendWelcomeEmail,
@@ -131,6 +155,7 @@ async function runAllEmailTests() {
         testSendFeedbackAcknowledgmentEmail,
         testSendDailySetups,
         testSendTopPick,
+        testSendMidDayMovers,
     ];
 
     for (const test of allTests) {

@@ -1,5 +1,6 @@
 
 
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -583,6 +584,19 @@ export async function saveFeedbackSurveyAdmin(uid: string, data: FeedbackSurveyD
     } catch (error) {
         console.error("Error writing feedback survey to Firestore with Admin SDK: ", error);
         throw new Error("Could not save survey to the database.");
+    }
+}
+
+export async function saveCancellationFeedbackAdmin(uid: string, feedback: string): Promise<void> {
+    try {
+        await adminDb.collection("cancellation_feedback").add({
+            uid,
+            feedback,
+            submittedAt: FieldValue.serverTimestamp(),
+        });
+    } catch (error) {
+        console.error("Error writing cancellation feedback to Firestore with Admin SDK: ", error);
+        throw new Error("Could not save cancellation feedback.");
     }
 }
 
@@ -1391,4 +1405,5 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
 
 
     
+
 

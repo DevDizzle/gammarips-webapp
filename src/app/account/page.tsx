@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -6,33 +7,70 @@ import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { createStripePortalLink, sendPasswordReset } from '@/app/actions';
+import { createStripePortalLink, sendPasswordReset, handleCancellationIntent } from '@/app/actions';
 import { Loader2 } from 'lucide-react';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+
+function CancellationForm() {
+    const { user } = useAuth();
+    const router = useRouter();
+    const { toast } = useToast();
+    const [feedback, setFeedback] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleProceedToCancel = async () => {
+        if (!user || !feedback.trim()) return;
+
+        setLoading(true);
+        try {
+            const { portalUrl } = await handleCancellationIntent(user.uid, feedback);
+            router.push(portalUrl);
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: error.message || 'Could not access the customer portal. Please contact support.',
+                variant: 'destructive',
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="space-y-4 rounded-lg border border-destructive/50 bg-destructive/10 p-4">
+            <h3 className="font-semibold">We're sorry to see you go</h3>
+            <p className="text-sm text-muted-foreground">
+                Before you cancel, could you please share why GammaRips wasn't the right fit for you? Your feedback is vital for us to improve.
+            </p>
+            <Textarea
+                placeholder="e.g., Too expensive, not enough signals, missing a feature..."
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                className="bg-background/50"
+                disabled={loading}
+            />
+            <Button
+                onClick={handleProceedToCancel}
+                disabled={loading || feedback.trim().length < 5}
+                className="w-full"
+                variant="secondary"
+            >
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Proceed to Cancellation
+            </Button>
+        </div>
+    );
+}
+
 
 export default function AccountPage() {
   const { user, dbUser, loading: authLoading } = useAuth();
   const [loadingPortal, setLoadingPortal] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-
-  const handleManageSubscription = async () => {
-    if (!user) return;
-    setLoadingPortal(true);
-    try {
-      const { portalUrl } = await createStripePortalLink(user.uid);
-      router.push(portalUrl);
-    } catch (error: any) {
-      toast({
-        title: 'Error',
-        description: error.message || 'Could not access the customer portal. Please contact support.',
-        variant: 'destructive',
-      });
-      setLoadingPortal(false);
-    }
-  };
 
   const handlePasswordReset = async () => {
     if (!user?.email) return;
@@ -105,10 +143,7 @@ export default function AccountPage() {
           </CardHeader>
           <CardContent>
             {dbUser?.isSubscribed ? (
-                <Button onClick={handleManageSubscription} disabled={loadingPortal}>
-                    {loadingPortal && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Manage Subscription & Billing
-                </Button>
+                <CancellationForm />
             ) : (
                 <p className="text-sm text-muted-foreground">
                     You can manage your subscription once you upgrade to Pro.

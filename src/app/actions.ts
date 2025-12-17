@@ -1,5 +1,6 @@
 
 
+
 'use server';
 
 import {
@@ -37,6 +38,7 @@ import {
     getFairQualityOptionsAdmin,
     getWinnerForTickerAdmin,
     getStockDataAdmin,
+    saveCancellationFeedbackAdmin,
 } from '@/lib/firebase-admin';
 import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal, FeedbackSurveyData } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
@@ -374,4 +376,23 @@ export async function handleFeedbackSurvey(uid: string, data: FeedbackSurveyData
         console.error(`Failed to save feedback survey for user ${uid}`, error);
         throw new Error(error.message || "Could not save survey.");
     }
+}
+
+export async function handleCancellationIntent(uid: string, feedback: string): Promise<{ portalUrl: string }> {
+    const user = await getOrCreateUserAdmin(uid);
+    const stripeCustomerId = user.stripeCustomerId;
+
+    if (!stripeCustomerId) {
+        throw new Error('User does not have a Stripe Customer ID.');
+    }
+
+    // Save the feedback
+    await saveCancellationFeedbackAdmin(uid, feedback);
+
+    // Generate and return the portal URL
+    const origin = headers().get('origin')!;
+    const returnUrl = `${origin}/account`;
+    const portalUrl = await createStripePortalSession(stripeCustomerId, returnUrl);
+
+    return { portalUrl };
 }

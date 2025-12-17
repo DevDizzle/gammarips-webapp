@@ -12,6 +12,7 @@ import { randomUUID } from 'crypto';
 import { unstable_noStore as noStore } from 'next/cache';
 import { config } from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
+import { format, subDays } from 'date-fns';
 
 
 // Load environment variables from .env file
@@ -433,6 +434,69 @@ export async function getPerformanceSignals(
     return [];
   }
 }
+
+export async function getMidDayMoversAdmin(): Promise<PerformanceSignal[]> {
+    noStore();
+    try {
+        const yesterday = subDays(new Date(), 1);
+        const yesterdayStr = format(yesterday, 'yyyy-MM-dd');
+
+        const querySnapshot = await adminDb.collection('performance_tracker')
+            .where('run_date', '==', yesterdayStr)
+            .get();
+
+        if (querySnapshot.empty) {
+            console.log(`No performance signals found for run_date: ${yesterdayStr}`);
+            return [];
+        }
+
+        const signals: PerformanceSignal[] = [];
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+            const initialPrice = data.initial_price;
+            const currentPrice = data.current_price;
+
+            if (typeof initialPrice === 'number' && initialPrice > 0 && typeof currentPrice === 'number') {
+                const calculatedGain = ((currentPrice - initialPrice) / initialPrice) * 100;
+                
+                if (calculatedGain > 0) { // Only include positive gains
+                    const signalData = {
+                        id: doc.id,
+                        run_date: data.run_date,
+                        ticker: data.ticker,
+                        company_name: data.company_name,
+                        image_uri: data.image_uri,
+                        industry: data.industry,
+                        contract_symbol: data.contract_symbol,
+                        initial_price: initialPrice,
+                        current_price: currentPrice,
+                        percent_gain: calculatedGain,
+                        option_type: data.option_type,
+                        status: data.status,
+                        strike_price: data.strike_price,
+                        expiration_date: data.expiration_date,
+                    };
+                    const validation = PerformanceSignalSchema.safeParse(signalData);
+                    if (validation.success) {
+                        signals.push(validation.data);
+                    } else {
+                        console.warn(`Invalid mid-day mover data in Firestore for doc ${doc.id}:`, validation.error.flatten());
+                    }
+                }
+            }
+        });
+
+        // Sort by percent_gain descending and take the top 4
+        signals.sort((a, b) => b.percent_gain - a.percent_gain);
+        
+        return signals.slice(0, 4);
+
+    } catch (error) {
+        console.error('Error fetching mid-day movers:', error);
+        return [];
+    }
+}
+
 
 export async function getPerformanceSignalsByTicker(ticker: string): Promise<PerformanceSignal[]> {
     noStore();
@@ -1327,3 +1391,4 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
 
 
     
+

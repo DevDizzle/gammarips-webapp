@@ -17,3 +17,7 @@ scheduledJobs:
     timeZone: America/New_York
     httpTarget:
       uri: /api/cron/send-top-pick
+  - schedule: "0 12 * * 1-5" # 12:00 PM ET on Mon-Fri
+    timeZone: America/New_York
+    httpTarget:
+      uri: /api/cron/send-midday-movers

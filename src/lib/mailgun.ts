@@ -666,3 +666,86 @@ The GammaRips Team
 
     return { text: textContent, html: htmlContent };
 }
+
+
+export async function buildMidDayMoversEmailContent(movers: PerformanceSignal[]): Promise<{ text: string; html: string }> {
+    const generateMoversTableRows = (signals: PerformanceSignal[]) =>
+        signals.map(s => `
+             <tr>
+                <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">${s.ticker}</td>
+                <td style="padding: 12px; text-align: left; border-bottom: 1px solid #393b4d;">$${s.strike_price.toFixed(2)} ${s.option_type?.toUpperCase()}</td>
+                <td style="padding: 12px; text-align: right; border-bottom: 1px solid #393b4d; color: #22c55e; font-weight: bold;">
+                    +${s.percent_gain.toFixed(2)}%
+                </td>
+            </tr>
+        `).join('');
+    
+    let textContent = `Mid-Day Movers: Catching Up\n\nHere are yesterday's top signals that are on the move today.\n\n`;
+    textContent += `Top 4 Movers:\n${movers.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type?.toUpperCase()} | +${s.percent_gain.toFixed(2)}%`).join('\n')}\n\n`;
+    textContent += `See the full performance tracker on the dashboard: https://gammarips.com/performance`;
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <title>Mid-Day Movers</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
+                    <tr>
+                        <td align="center" style="padding: 40px 20px 10px;">
+                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 10px 20px 30px;">
+                            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Mid-Day Movers</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px;">
+                             <p style="font-size: 16px; line-height: 1.6;">Here are yesterday's top signals that are on the move today. See what's ripping and what's dipping from the previous session's playbook.</p>
+                            
+                            <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; color: #ffffff; margin-top: 30px; margin-bottom: 5px;">Top 4 Movers</h3>
+                            <p style="font-size: 14px; color: #A0A0A0; margin-top: 0; margin-bottom: 15px;">Today's biggest gainers from yesterday's signals.</p>
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; color: #E0E0E0; font-size: 14px;">
+                                <thead>
+                                     <tr style="color: #A0A0A0; font-size: 12px; text-transform: uppercase;">
+                                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #393b4d;">Ticker</th>
+                                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #393b4d;">Contract</th>
+                                        <th style="padding: 8px; text-align: right; border-bottom: 1px solid #393b4d;">Gain</th>
+                                     </tr>
+                                </thead>
+                                <tbody>${generateMoversTableRows(movers)}</tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 40px;">
+                            <a href="https://gammarips.com/performance" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">View Full Performance Tracker</a>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
+                            <p style="margin: 0;">This is not financial advice. All trading involves risk. Past performance does not guarantee future results.</p>
+                            <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+    `;
+
+    return { text: textContent, html: htmlContent };
+}

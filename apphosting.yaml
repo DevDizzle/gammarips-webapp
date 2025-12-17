@@ -13,3 +13,7 @@ scheduledJobs:
     timeZone: America/New_York
     httpTarget:
       uri: /api/cron/send-daily-setups
+  - schedule: "0 8 * * 1-5" # 8:00 AM ET on Mon-Fri
+    timeZone: America/New_York
+    httpTarget:
+      uri: /api/cron/send-top-pick

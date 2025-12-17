@@ -9,7 +9,7 @@ runConfig:
 # Defines server-side cron jobs for the application.
 # https://firebase.google.com/docs/app-hosting/scheduled-jobs
 scheduledJobs:
-  - schedule: "0 17 * * 1-5" # 5:00 PM ET on weekdays
+  - schedule: "0 20 * * 1-4" # 8:00 PM ET on Mon, Tue, Wed, Thu
     timeZone: America/New_York
     httpTarget:
       uri: /api/cron/send-daily-setups

@@ -11,10 +11,6 @@
       "**/node_modules/**"
     ]
   },
-  "functions": {
-    "source": "Echo-Trigger/functions",
-    "runtime": "nodejs20"
-  },
   "apphosting": {
     "project": {
       "auth": {

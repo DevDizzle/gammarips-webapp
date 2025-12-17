@@ -1,9 +1,15 @@
 # Settings to manage and configure a Firebase App Hosting backend.
 # https://firebase.google.com/docs/app-hosting/configure
 
-# Triggering a redeploy at user request.
-
 runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
   maxInstances: 1
+
+# Defines server-side cron jobs for the application.
+# https://firebase.google.com/docs/app-hosting/scheduled-jobs
+scheduledJobs:
+  - schedule: "0 17 * * 1-5" # 5:00 PM ET on weekdays
+    timeZone: America/New_York
+    httpTarget:
+      uri: /api/cron/send-daily-setups

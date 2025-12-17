@@ -105,7 +105,7 @@ Go to Your Dashboard: https://gammarips.com/dashboard
 
 Join the Conversation
 Follow us for real-time updates and community discussion:
-- X: https://x.com/GammaRipsAI
+- X: https://x.com/GammaRips
 - Reddit: https://www.reddit.com/r/GammaRips/
 
 Welcome aboard,
@@ -179,7 +179,7 @@ Founder, GammaRips
                                 Follow us for real-time updates and community discussion:
                             </p>
                             <p style="text-align: center; margin-top: 16px;">
-                                <a href="https://x.com/GammaRipsAI" style="color: hsl(74, 80%, 50%); text-decoration: none; margin: 0 10px;">Follow on X</a> |
+                                <a href="https://x.com/GammaRips" style="color: hsl(74, 80%, 50%); text-decoration: none; margin: 0 10px;">Follow on X</a> |
                                 <a href="https://www.reddit.com/r/GammaRips/" style="color: hsl(74, 80%, 50%); text-decoration: none; margin: 0 10px;">Join us on Reddit</a>
                             </p>
                         </td>
@@ -560,7 +560,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
                              <div style="margin-bottom: 20px; border-top: 1px solid #393b4d; padding-top: 30px;">
-                                <a href="https://x.com/GammaRipsAI" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Follow on X</a> &bull;
+                                <a href="https://x.com/GammaRips" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Follow on X</a> &bull;
                                 <a href="https://www.reddit.com/r/GammaRips/" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Join on Reddit</a>
                             </div>
                             <p style="margin: 0;">This is not financial advice. All trading involves risk. Past performance does not guarantee future results.</p>
@@ -647,7 +647,7 @@ The GammaRips Team
                      <tr>
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
                             <div style="margin-top: 20px;">
-                                <a href="https://x.com/GammaRipsAI" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">X (Twitter)</a>
+                                <a href="https://x.com/GammaRips" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">X (Twitter)</a>
                                 &bull;
                                 <a href="https://www.reddit.com/r/GammaRips/" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Reddit</a>
                                 &bull;

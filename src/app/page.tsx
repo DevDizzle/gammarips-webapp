@@ -122,7 +122,7 @@ export default async function LandingPage() {
                   </Suspense>
               </div>
                <p className="mt-8 text-xs text-muted-foreground max-w-xl mx-auto text-center">
-                  Performance tracking began on 12/09/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices after the next day’s open (~10:00 a.m. ET) and daily until the contract expires.
+                  Performance tracking began on 12/09/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices multiple times throughout the day, starting after the next day’s open (~10:00 a.m. ET) and continuing daily until the contract expires.
                 </p>
             </div>
           </section>

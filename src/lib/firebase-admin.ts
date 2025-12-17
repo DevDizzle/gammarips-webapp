@@ -12,8 +12,8 @@ import { randomUUID } from 'crypto';
 import { unstable_noStore as noStore } from 'next/cache';
 import { config } from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
-import { format } from 'date-fns';
-import { subDays as subDaysTz } from 'date-fns-tz';
+import { format, subDays } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 
 
 // Load environment variables from .env file
@@ -440,9 +440,10 @@ export async function getMidDayMoversAdmin(): Promise<PerformanceSignal[]> {
     noStore();
     try {
         const timeZone = 'America/New_York';
-        const nowInET = new Date(); // This will be run on a server, assume UTC
-        const yesterday = subDaysTz(nowInET, 1, timeZone);
-        const yesterdayStr = format(yesterday, 'yyyy-MM-dd');
+        const now = new Date();
+        const nowInET = toZonedTime(now, timeZone);
+        const yesterdayInET = subDays(nowInET, 1);
+        const yesterdayStr = format(yesterdayInET, 'yyyy-MM-dd');
 
         console.log(`[getMidDayMoversAdmin] Fetching signals for run_date: ${yesterdayStr}`);
 
@@ -1435,6 +1436,8 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
 
 
     
+
+
 
 
 

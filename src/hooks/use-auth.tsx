@@ -17,7 +17,7 @@ import {
 } from 'firebase/auth';
 import { app, getOrCreateUser, type DbUser } from '@/lib/firebase';
 import { useToast } from './use-toast';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, onSnapshot } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { event as trackEvent } from '@/lib/gtag';
 import { useRouter } from 'next/navigation';
@@ -50,23 +50,44 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    let unsubscribeSnapshot: (() => void) | null = null;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      
       if (user) {
         const userDocRef = doc(db, 'users', user.uid);
-        const userDocSnap = await getDoc(userDocRef);
-        if (userDocSnap.exists()) {
-          setDbUser(userDocSnap.data() as DbUser);
-        } else {
-          console.warn(`Authenticated user ${user.uid} not found in Firestore. A new record will be created if they sign in again.`);
-        }
+        
+        // Use onSnapshot for real-time updates
+        unsubscribeSnapshot = onSnapshot(userDocRef, (docSnap) => {
+          if (docSnap.exists()) {
+            setDbUser(docSnap.data() as DbUser);
+          } else {
+            console.warn(`Authenticated user ${user.uid} not found in Firestore. A new record will be created if they sign in again.`);
+            setDbUser(null);
+          }
+          setLoading(false);
+        }, (error) => {
+            console.error("Error listening to user document:", error);
+            setLoading(false);
+        });
+
       } else {
+        if (unsubscribeSnapshot) {
+            unsubscribeSnapshot();
+            unsubscribeSnapshot = null;
+        }
         setDbUser(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+        unsubscribeAuth();
+        if (unsubscribeSnapshot) {
+            unsubscribeSnapshot();
+        }
+    };
   }, []);
 
   const handleSuccessfulAuth = async (userCredential: UserCredential, method: 'Google' | 'Email') => {

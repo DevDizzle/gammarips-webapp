@@ -1,6 +1,5 @@
 
 
-
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -13,7 +12,8 @@ import { randomUUID } from 'crypto';
 import { unstable_noStore as noStore } from 'next/cache';
 import { config } from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
-import { format, subDays } from 'date-fns';
+import { format } from 'date-fns';
+import { subDays as subDaysTz } from 'date-fns-tz';
 
 
 // Load environment variables from .env file
@@ -439,8 +439,12 @@ export async function getPerformanceSignals(
 export async function getMidDayMoversAdmin(): Promise<PerformanceSignal[]> {
     noStore();
     try {
-        const yesterday = subDays(new Date(), 1);
+        const timeZone = 'America/New_York';
+        const nowInET = new Date(); // This will be run on a server, assume UTC
+        const yesterday = subDaysTz(nowInET, 1, timeZone);
         const yesterdayStr = format(yesterday, 'yyyy-MM-dd');
+
+        console.log(`[getMidDayMoversAdmin] Fetching signals for run_date: ${yesterdayStr}`);
 
         const querySnapshot = await adminDb.collection('performance_tracker')
             .where('run_date', '==', yesterdayStr)
@@ -1340,6 +1344,32 @@ export async function getFairQualityOptionsAdmin(ticker: string): Promise<Option
     }
 }
 
+export async function activateInsiderUser(token: string): Promise<{ success: boolean; error?: string; uid?: string }> {
+  try {
+    const usersRef = adminDb.collection('users');
+    const snapshot = await usersRef.where('insiderActivationToken', '==', token).limit(1).get();
+
+    if (snapshot.empty) {
+      return { success: false, error: 'Invalid or expired activation token.' };
+    }
+
+    const userDoc = snapshot.docs[0];
+    const uid = userDoc.id;
+
+    // Update the user: set isSubscribed to true and remove the token
+    await userDoc.ref.update({
+      isSubscribed: true,
+      insiderActivationToken: FieldValue.delete(),
+      subscriptionStatus: 'insider_active', // Optional: track that they are an insider
+    });
+
+    return { success: true, uid };
+  } catch (error) {
+    console.error('Error activating insider user:', error);
+    return { success: false, error: 'Internal server error during activation.' };
+  }
+}
+
 export async function getTopPickAdmin(): Promise<Stock | null> {
     noStore();
     try {
@@ -1405,5 +1435,6 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
 
 
     
+
 
 

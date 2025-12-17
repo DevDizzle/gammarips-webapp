@@ -61,6 +61,7 @@ const UserSchema = z.object({
     message: "Expected Firestore Timestamp",
   }).optional(),
   stripeCustomerId: z.string().optional().nullable(),
+  insiderActivationToken: z.string().optional().nullable(),
 });
 export type DbUser = z.infer<typeof UserSchema>;
 

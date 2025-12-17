@@ -674,6 +674,105 @@ The GammaRips Team
 }
 
 
+export async function buildInsiderInvitationEmailContent(name: string, activationLink: string): Promise<{ text: string; html: string }> {
+    const textContent = `
+Hi ${name},
+
+You signed up for GammaRips a while back but never got a chance to really dig in.
+
+We're launching an exclusive "Insiders Program" for a small group of experienced traders, and your profile stood out.
+
+We'll give you 3 months of full Pro access for free. No credit card required.
+
+In return, we ask for two things:
+1. Honest Feedback: A brief call or a detailed email after a few weeks. We want to know what you love, what you hate, and what we need to build next.
+2. One Honest Share: If you find the tool valuable, share one of your wins or your thoughts on the platform on X (Twitter) or Reddit.
+
+This is a limited, one-time offer.
+
+Activate Insider Access: ${activationLink}
+
+Best,
+Evan P.
+Founder, GammaRips
+`;
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <title>An Invitation to the GammaRips Insider Program</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <div style="display: none; max-height: 0px; overflow: hidden;">&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌</div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden; border: 1px solid #393b4d;">
+                    <tr>
+                        <td align="center" style="padding: 40px 20px 10px;">
+                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px;">
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 20px;">Hi ${name},</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You signed up for GammaRips a while back but never got a chance to really dig in.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We're launching an exclusive "Insiders Program" for a small group of experienced traders, and your profile stood out.</p>
+                            
+                            <div style="background-color: #1F212E; border: 1px solid #393b4d; border-radius: 8px; padding: 20px; margin-top: 25px;">
+                                <p style="font-size: 18px; line-height: 1.6; margin: 0; color: #ffffff; font-weight: 500;">
+                                    We'll give you <span style="color: hsl(74, 80%, 50%);">3 months of full Pro access for free</span>. No credit card required.
+                                </p>
+                            </div>
+
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">In return, we ask for two things:</p>
+                            <ol style="font-size: 16px; line-height: 1.6; color: #E0E0E0; padding-left: 20px;">
+                                <li style="margin-bottom: 10px;"><strong>Honest Feedback:</strong> A brief call or a detailed email after a few weeks. We want to know what you love, what you hate, and what we need to build next.</li>
+                                <li><strong>One Honest Share:</strong> If you find the tool valuable, share one of your wins or your thoughts on the platform on X (Twitter) or Reddit.</li>
+                            </ol>
+                            
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">This is a limited, one-time offer.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 30px 40px 40px;">
+                            <a href="${activationLink}" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Activate Insider Access</a>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td style="padding: 0 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
+                            <p style="margin: 0;">Best,</p>
+                            <p style="margin-top: 4px;">Evan P.<br>Founder, GammaRips</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+`;
+
+    return { text: textContent, html: htmlContent };
+}
+
+export async function sendInsiderInvitationEmail({ to, name, activationLink }: { to: string, name: string, activationLink: string }) {
+    const { text, html } = await buildInsiderInvitationEmailContent(name, activationLink);
+    return sendEmail({
+        to: `${name} <${to}>`,
+        subject: `An Invitation to the GammaRips Insider Program`,
+        text,
+        html,
+    });
+}
+
+
 export async function buildMidDayMoversEmailContent(movers: PerformanceSignal[]): Promise<{ text: string; html: string }> {
     const generateMoversTableRows = (signals: PerformanceSignal[]) =>
         signals.map(s => `

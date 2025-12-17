@@ -169,4 +169,8 @@ async function runAllEmailTests() {
     process.exit(0);
 }
 
-runAllEmailTests();
+// To run all tests, uncomment the line below and comment out the single test line.
+// runAllEmailTests();
+
+// To run a single test, call it directly.
+testSendMidDayMovers();

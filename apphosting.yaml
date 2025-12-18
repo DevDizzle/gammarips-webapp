@@ -1,6 +1,12 @@
 # Settings to manage and configure a Firebase App Hosting backend.
 # https://firebase.google.com/docs/app-hosting/configure
 
+# Grant the App Hosting scheduler permissions to invoke the service.
+iam:
+  serviceAccount: scheduler
+  roles:
+    - roles/run.invoker
+
 runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.

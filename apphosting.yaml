@@ -21,3 +21,9 @@ scheduledJobs:
     timeZone: America/New_York
     httpTarget:
       uri: /api/cron/send-midday-movers
+
+# Make secrets available to the run environment.
+# https://firebase.google.com/docs/app-hosting/configure#secrets
+secretEnv:
+  - secret: CRON_SECRET
+    env: CRON_SECRET

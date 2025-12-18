@@ -8,14 +8,17 @@ export async function GET(request: NextRequest) {
 
   const authHeader = request.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  
+  if (!isDevelopment) {
+    if (!cronSecret) {
+      console.error('CRON_SECRET is not set in environment variables.');
+      return NextResponse.json({ error: 'Internal server configuration error.' }, { status: 500 });
+    }
 
-  if (!cronSecret) {
-    console.error('CRON_SECRET is not set in environment variables.');
-    return NextResponse.json({ error: 'Internal server configuration error.' }, { status: 500 });
-  }
-
-  if (authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+    if (authHeader !== `Bearer ${cronSecret}`) {
+      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+    }
   }
 
   try {

@@ -11,7 +11,8 @@ import {
     buildFeedbackAcknowledgmentEmailContent,
     buildDailySetupsEmailContent,
     buildTopPickEmailContent,
-    buildMidDayMoversEmailContent
+    buildMidDayMoversEmailContent,
+    buildInsiderInvitationEmailContent
 } from '@/lib/mailgun';
 import { 
     getWinnersDashboardAdmin, 
@@ -142,10 +143,22 @@ async function testSendMidDayMovers() {
             text,
             html,
         });
-        console.log('Result:', result.ok ? 'Success' : `Failed (${result.status})`);
+        console.log('Result:', result.ok ? 'Success' : `Failed (${result-status})`);
     } catch (error) {
         console.error('An error occurred while sending the test "Mid-Day Movers" email:', error);
     }
+}
+
+async function testSendEarlyAdopterEmail() {
+    console.log('Testing: Early Adopter Email');
+    const { text, html } = await buildInsiderInvitationEmailContent(TEST_NAME, 'https://gammarips.com/dashboard');
+    const result = await sendEmail({
+        to: TEST_EMAIL,
+        subject: '[TEST] Good News: GammaRips is Now Free',
+        text,
+        html,
+    });
+    console.log('Result:', result.ok ? 'Success' : `Failed (${result.status})`);
 }
 
 async function runAllEmailTests() {
@@ -156,6 +169,7 @@ async function runAllEmailTests() {
         testSendDailySetups,
         testSendTopPick,
         testSendMidDayMovers,
+        testSendEarlyAdopterEmail
     ];
 
     for (const test of allTests) {
@@ -170,7 +184,8 @@ async function runAllEmailTests() {
 }
 
 // To run all tests, uncomment the line below and comment out the single test line.
-// runAllEmailTests();
+runAllEmailTests();
 
 // To run a single test, call it directly.
-testSendMidDayMovers();
+// testSendMidDayMovers();
+// testSendEarlyAdopterEmail();

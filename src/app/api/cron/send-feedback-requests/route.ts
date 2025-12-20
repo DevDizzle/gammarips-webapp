@@ -16,10 +16,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Internal server configuration error.' }, { status: 500 });
     }
 
-    const isScheduler = request.headers.get('x-cloud-scheduler') === 'true';
     const isAuthorized = authHeader === `Bearer ${cronSecret}`;
 
-    if (!isScheduler && !isAuthorized) {
+    if (!isAuthorized) {
       return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
     }
   }

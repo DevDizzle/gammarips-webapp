@@ -4,7 +4,7 @@ import { sendTopPickFlow } from '@/ai/flows/send-top-pick';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export async function GET(request: NextRequest) {
-  noStore(); // Ensure this function is always executed dynamically
+  noStore(); // Ensure this function is always executed a dynamically
 
   const authHeader = request.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
@@ -16,10 +16,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Internal server configuration error.' }, { status: 500 });
     }
 
-    const isScheduler = request.headers.get('x-cloud-scheduler') === 'true';
     const isAuthorized = authHeader === `Bearer ${cronSecret}`;
 
-    if (!isScheduler && !isAuthorized) {
+    if (!isAuthorized) {
       return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
     }
   }

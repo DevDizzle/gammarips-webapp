@@ -53,7 +53,7 @@ export const faqs = [
     },
     {
         question: "When did you start tracking performance for the current engine?",
-        answer: "We significantly upgraded our scoring logic in late 2025 and reset live performance tracking as of December 9, 2025. The performance charts you see on the site reflect signals from the current engine only. We keep earlier data internally for research but don’t want you judging the new engine by the old version’s behavior."
+        answer: "We significantly upgraded our scoring logic in late 2025 and reset live performance tracking as of December 22, 2025. The performance charts you see on the site reflect signals from the current engine only. We keep earlier data internally for research but don’t want you judging the new engine by the old version’s behavior."
     }
 ]
 

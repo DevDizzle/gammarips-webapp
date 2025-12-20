@@ -13,6 +13,7 @@ import { AuthDialog } from '@/components/auth/auth-dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { FREE_MODE } from '@/lib/config';
 
 function CancellationForm() {
     const { user } = useAuth();
@@ -136,13 +137,19 @@ export default function AccountPage() {
           <CardHeader>
             <CardTitle>Subscription</CardTitle>
             <CardDescription>
-                {dbUser?.isSubscribed 
+                {FREE_MODE 
+                  ? "You are currently on the Early Adopter Free Tier."
+                  : dbUser?.isSubscribed 
                     ? `You are currently on the Pro plan.` 
                     : "You are not currently subscribed to a Pro plan."}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {dbUser?.isSubscribed ? (
+            {FREE_MODE ? (
+               <p className="text-sm text-muted-foreground">
+                  Enjoy full access to GammaRips for free during our beta period.
+               </p>
+            ) : dbUser?.isSubscribed ? (
                 <CancellationForm />
             ) : (
                 <p className="text-sm text-muted-foreground">

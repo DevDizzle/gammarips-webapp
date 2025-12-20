@@ -21,16 +21,16 @@ export default async function LandingPage() {
     "operatingSystem": "Web",
     "offers": {
       "@type": "Offer",
-      "price": "19.00",
+      "price": "0.00",
       "priceCurrency": "USD",
       "priceSpecification": {
         "@type": "UnitPriceSpecification",
-        "price": "19.00",
+        "price": "0.00",
         "priceCurrency": "USD",
         "billingIncrement": "month",
         "unitText": "month"
       },
-      "description": "Monthly subscription, cancel anytime. 7-day money-back guarantee on your first month."
+      "description": "Free for early adopters."
     },
     "aggregateRating": {
       "@type": "AggregateRating",
@@ -122,7 +122,7 @@ export default async function LandingPage() {
                   </Suspense>
               </div>
                <p className="mt-8 text-xs text-muted-foreground max-w-xl mx-auto text-center">
-                  Performance tracking began on 12/09/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices multiple times throughout the day, starting after the next day’s open (~10:00 a.m. ET) and continuing daily until the contract expires.
+                  Performance tracking began on 12/22/2025. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices multiple times throughout the day, starting after the next day’s open (~10:00 a.m. ET) and continuing daily until the contract expires.
                 </p>
             </div>
           </section>
@@ -213,7 +213,7 @@ export default async function LandingPage() {
                       Access the data-driven playbook used by serious options traders. Get today's top Call & Put contracts now.
                     </p>
                     <div className="mt-8">
-                        <HomePageClientContent showButton={true} buttonText="Become a Ripper ($19/mo)" />
+                        <HomePageClientContent showButton={true} buttonText="Get Started for Free" />
                     </div>
                 </Card>
             </div>
@@ -279,7 +279,7 @@ export default async function LandingPage() {
                       Join a community of data-driven traders. Get the tools and insights you need to find your edge in today's market.
                     </p>
                     <div className="mt-8">
-                        <HomePageClientContent showButton={true} buttonText="Get Instant Access ($19/mo)" />
+                        <HomePageClientContent showButton={true} buttonText="Get Instant Access" />
                     </div>
                 </Card>
             </div>

@@ -11,6 +11,8 @@ import { createCheckoutSession } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { loadStripe } from "@stripe/stripe-js";
 
+import { FREE_MODE } from "@/lib/config";
+
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function DashboardPageClient({ children }: { children: React.ReactNode }) {
@@ -66,8 +68,8 @@ export default function DashboardPageClient({ children }: { children: React.Reac
         )
     }
 
-    // 4. If user is not subscribed, show subscription dialog.
-    if (!dbUser.isSubscribed) {
+    // 4. If user is not subscribed and we are NOT in free mode, show subscription dialog.
+    if (!dbUser.isSubscribed && !FREE_MODE) {
         return (
             <SubscriptionDialog
               open={true}

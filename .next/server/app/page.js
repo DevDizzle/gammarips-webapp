@@ -6,7 +6,7 @@ runtime.loadChunk("server/chunks/ssr/src_app_896cde._.js");
 runtime.loadChunk("server/chunks/ssr/_d221af._.js");
 runtime.loadChunk("server/chunks/ssr/src_app_globals_b80590.css");
 runtime.loadChunk("server/chunks/ssr/node_modules_16929d._.js");
-runtime.loadChunk("server/chunks/ssr/[root of the server]__690f2b._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__4890f8._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_next_176963._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_zod_3080d5._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_@genkit-ai_core_lib_b0b34c._.js");
@@ -34,6 +34,6 @@ runtime.loadChunk("server/chunks/ssr/node_modules_@firebase_firestore_dist_index
 runtime.loadChunk("server/chunks/ssr/node_modules_@opentelemetry_5d8ac1._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_@firebase_68bf1c._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_078892._.js");
-runtime.loadChunk("server/chunks/ssr/node_modules_node-fetch_src_index_af02f0.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_node-fetch_src_index_34e039.js");
 runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/firebase-admin.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/lib/mailgun.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/initial-recommendation.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE4 => \"[project]/src/ai/flows/follow-up-questions.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE5 => \"[project]/src/app/actions/chat-actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);
 module.exports = runtime.getOrInstantiateRuntimeModule("[project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { METADATA_0 => \"[project]/src/app/favicon.ico.mjs { IMAGE => \\\"[project]/src/app/favicon.ico [app-rsc] (static)\\\" } [app-rsc] (structured image object, ecmascript, Next.js server component)\", MODULE_1 => \"[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_2 => \"[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)\", MODULE_3 => \"[project]/src/app/page.tsx [app-rsc] (ecmascript, Next.js server component)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH).exports;

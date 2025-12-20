@@ -49,6 +49,7 @@ import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth'
 import { app } from '@/lib/firebase';
 import { sendWelcomeEmail as sendWelcomeEmailAdmin, sendFeedbackAcknowledgmentEmail } from '@/lib/mailgun';
 import { unstable_noStore as noStore } from 'next/cache';
+import { FREE_MODE } from '@/lib/config';
 
 
 export async function getAppStatus(): Promise<{ isUpdating: boolean }> {
@@ -203,7 +204,7 @@ export async function handleGetRecommendation(uid: string, input: InitialRecomme
     const user = await getOrCreateUserAdmin(uid);
     console.log(JSON.stringify({ traceId, msg: 'Successfully got or created user.', isSubscribed: user.isSubscribed, usageCount: user.usageCount }));
     
-    if (user.usageCount >= 5 && !user.isSubscribed) {
+    if (!FREE_MODE && user.usageCount >= 5 && !user.isSubscribed) {
       console.warn(JSON.stringify({ traceId, warning: 'Usage limit reached', required: 'subscription' }));
       return { error: 'Usage limit reached', required: 'subscription' };
     }

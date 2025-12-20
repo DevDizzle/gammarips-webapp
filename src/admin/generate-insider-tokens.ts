@@ -3,7 +3,6 @@ import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as Ad
 import admin from 'firebase-admin';
 import { getFirestore as getAdminFirestore } from 'firebase-admin/firestore';
 import { config } from 'dotenv';
-import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
 import { sendInsiderInvitationEmail } from '../lib/mailgun';
 
@@ -36,8 +35,8 @@ if (!getAdminApps().length) {
 
 const adminDb = getAdminFirestore(adminApp);
 
-async function generateInsiderTokens() {
-  console.log('Starting insider token generation and email dispatch...');
+async function sendEarlyAdopterEmail() {
+  console.log('Starting early adopter email dispatch...');
 
   try {
     const usersCollection = adminDb.collection('users');
@@ -48,9 +47,8 @@ async function generateInsiderTokens() {
       return;
     }
 
-    const updates: Promise<any>[] = [];
-    const csvRows: string[] = ['Email,Name,Activation Link,Email Status'];
-    const baseUrl = 'https://gammarips.com'; // Updated to production URL
+    const csvRows: string[] = ['Email,Name,Email Status'];
+    const dashboardLink = 'https://gammarips.com/dashboard'; 
 
     let count = 0;
     let emailSuccessCount = 0;
@@ -58,65 +56,55 @@ async function generateInsiderTokens() {
 
     for (const doc of snapshot.docs) {
       const data = doc.data();
-      const usageCount = data.usageCount || 0;
       const isSubscribed = data.isSubscribed || false;
 
       // Filter: not subscribed and has email
       if (!isSubscribed && data.email) {
-        const token = uuidv4();
-        const name = data.displayName || 'Trader';
-        const link = `${baseUrl}/auth/activate-insider?token=${token}`;
+        const name = data.displayName || data.email.split('@')[0];
         
-        // 1. Queue Database Update
-        updates.push(doc.ref.update({ insiderActivationToken: token }));
-
-        // 2. Send Email
-        console.log(`Sending invitation to ${data.email}...`);
+        // Send Email
+        console.log(`Sending early adopter email to ${data.email}...`);
         try {
             const result = await sendInsiderInvitationEmail({
                 to: data.email,
                 name: name,
-                activationLink: link
+                activationLink: dashboardLink // Repurposing this field for the simple dashboard link
             });
             
             if (result.ok) {
                 console.log(`✅ Email sent to ${data.email}`);
-                csvRows.push(`${data.email},"${name}",${link},Sent`);
+                csvRows.push(`${data.email},"${name}",Sent`);
                 emailSuccessCount++;
             } else {
                 console.error(`❌ Failed to send to ${data.email}:`, result.details || result.status);
-                csvRows.push(`${data.email},"${name}",${link},Failed`);
+                csvRows.push(`${data.email},"${name}",Failed`);
                 emailFailCount++;
             }
         } catch (emailError) {
             console.error(`❌ Error sending to ${data.email}:`, emailError);
-            csvRows.push(`${data.email},"${name}",${link},Error`);
+            csvRows.push(`${data.email},"${name}",Error`);
             emailFailCount++;
         }
 
         count++;
-        // 3. Rate Limit Delay
+        // Rate Limit Delay
         await new Promise(r => setTimeout(r, 200));
       }
     }
 
     if (count === 0) {
-        console.log("No eligible users found (usageCount < 2 and not subscribed).");
+        console.log("No eligible users found (not subscribed with a valid email).");
         return;
     }
 
     console.log(`Finished processing ${count} users.`);
-    console.log(`Updating database records...`);
-
-    await Promise.all(updates);
 
     // Write CSV
-    fs.writeFileSync('insider_tokens.csv', csvRows.join('\n'));
+    fs.writeFileSync('early_adopter_emails.csv', csvRows.join('\n'));
 
-    console.log(`Database updated.`);
     console.log(`Emails Sent: ${emailSuccessCount}`);
     console.log(`Emails Failed: ${emailFailCount}`);
-    console.log(`CSV report created at: ${process.cwd()}/insider_tokens.csv`);
+    console.log(`CSV report created at: ${process.cwd()}/early_adopter_emails.csv`);
 
   } catch (error) {
     console.error('An error occurred:', error);
@@ -125,5 +113,4 @@ async function generateInsiderTokens() {
   }
 }
 
-generateInsiderTokens();
-
+sendEarlyAdopterEmail();

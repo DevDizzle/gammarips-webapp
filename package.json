@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/stripe/webhook",
     "cleanup:users": "tsx src/admin/cleanup-users.ts",
-    "test:emails": "tsx src/ai/trigger-flow.ts"
+    "test:emails": "tsx src/ai/trigger-flow.ts",
+    "send:early-adopters": "tsx src/admin/send-early-adopter-email.ts"
   },
   "dependencies": {
     "@genkit-ai/google-genai": "^1.25.0",

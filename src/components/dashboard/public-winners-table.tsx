@@ -6,20 +6,16 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { BlurGate } from '@/components/ui/blur-gate';
-import { ArrowUp, ArrowDown, ChevronRight, Loader2 } from 'lucide-react';
+import { ArrowUp, ArrowDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { PublicDashboardData } from '@/app/dashboard/actions';
 import type { Winner, PerformanceSignal } from '@/lib/firebase-admin';
-import { useAuthModal } from '@/components/auth/auth-modal-provider';
 import { useAuth } from '@/hooks/use-auth';
 import { getWinnersDashboard, getPerformanceSignals } from '@/app/actions';
 import { WatchlistButton } from '@/components/dashboard/watchlist-button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-
-type ViewType = 'bullish' | 'bearish' | 'gainers' | 'losers';
 
 // Helper to convert GCS URI to a public URL
 const convertGcsUriToUrl = (gcsUri: string) => {
@@ -38,7 +34,6 @@ interface PublicWinnersTableProps {
 
 export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
   const router = useRouter();
-  const { openAuthModal } = useAuthModal();
   const { user } = useAuth();
 
   const [fullWinners, setFullWinners] = useState<Winner[] | null>(null);
@@ -273,29 +268,27 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
         )
     }
 
-    const items = [
-        { type: 'bullish', title: `Top Call Setups (${data.bullish.total})`, data: data.bullish, filter: 'call' as const },
-        { type: 'bearish', title: `Top Put Setups (${data.bearish.total})`, data: data.bearish, filter: 'put' as const },
-        { type: 'gainers', title: `Top Gainers (${data.gainers.total})`, data: data.gainers, fullList: fullGainers },
-        { type: 'losers', title: `Top Losers (${data.losers.total})`, data: data.losers, fullList: fullLosers },
-    ];
-    
     return (
-        <Accordion type="single" collapsible className="w-full" defaultValue="bullish">
-            {items.map(item => (
-                <AccordionItem value={item.type} key={item.type}>
-                    <AccordionTrigger className="text-base font-semibold hover:no-underline">
-                        {item.title}
-                    </AccordionTrigger>
-                    <AccordionContent className="p-0">
-                       {(item.type === 'bullish' || item.type === 'bearish') 
-                            ? renderWinnersList(item.data.items as Winner[], item.data.total, item.filter)
-                            : renderPerformanceList(item.data.items as PerformanceSignal[], item.data.total, item.fullList as PerformanceSignal[] | null)
-                        }
-                    </AccordionContent>
-                </AccordionItem>
-            ))}
-        </Accordion>
+        <Tabs defaultValue="bullish">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto">
+                <TabsTrigger value="bullish">Top Calls ({data.bullish.total})</TabsTrigger>
+                <TabsTrigger value="bearish">Top Puts ({data.bearish.total})</TabsTrigger>
+                <TabsTrigger value="gainers">Top Gainers ({data.gainers.total})</TabsTrigger>
+                <TabsTrigger value="losers">Top Losers ({data.losers.total})</TabsTrigger>
+            </TabsList>
+            <TabsContent value="bullish" className="mt-4">
+                {renderWinnersList(data.bullish.items, data.bullish.total, 'call')}
+            </TabsContent>
+            <TabsContent value="bearish" className="mt-4">
+                {renderWinnersList(data.bearish.items, data.bearish.total, 'put')}
+            </TabsContent>
+            <TabsContent value="gainers" className="mt-4">
+                {renderPerformanceList(data.gainers.items, data.gainers.total, fullGainers)}
+            </TabsContent>
+            <TabsContent value="losers" className="mt-4">
+                {renderPerformanceList(data.losers.items, data.losers.total, fullLosers)}
+            </TabsContent>
+        </Tabs>
     );
   }
 

@@ -241,7 +241,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
         </BlurGate>
 
         {user && allSignals.length > 10 && (
-            <div className="text-center">
+            <div className="text-center pt-4">
                  <Button variant="outline" onClick={() => setShowAll(!showAll)}>
                     {showAll ? 'Show Less' : `Show All (${allSignals.length})`}
                  </Button>
@@ -398,7 +398,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
         </BlurGate>
 
          {user && allWinners.length > 10 && (
-            <div className="text-center">
+            <div className="text-center pt-4">
                  <Button variant="outline" onClick={() => setShowAll(!showAll)}>
                     {showAll ? 'Show Less' : `Show All (${allWinners.length})`}
                  </Button>
@@ -449,7 +449,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
           )}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-4">
         <div className="mb-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {buttons.map(({label, view}) => (
@@ -470,3 +470,5 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
     </Card>
   );
 }
+
+    

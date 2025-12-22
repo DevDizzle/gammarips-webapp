@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -48,7 +49,7 @@ export function NewsFeedWidget() {
         </div>
       </CardHeader>
       <CardContent className="p-0 flex-1">
-        <ScrollArea className="h-[400px] sm:h-[600px]">
+        <ScrollArea className="h-full">
             <div className="flex flex-col">
                 {loading ? (
                     Array.from({ length: 5 }).map((_, i) => (

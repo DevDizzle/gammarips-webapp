@@ -15,6 +15,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { getWinnersDashboard, getPerformanceSignals } from '@/app/actions';
 import { WatchlistButton } from '@/components/dashboard/watchlist-button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '../ui/button';
 
 
 // Helper to convert GCS URI to a public URL
@@ -32,6 +33,8 @@ interface PublicWinnersTableProps {
   data: PublicDashboardData;
 }
 
+const TRUNCATE_LIMIT = 5;
+
 export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
   const router = useRouter();
   const { user } = useAuth();
@@ -40,6 +43,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
   const [fullGainers, setFullGainers] = useState<PerformanceSignal[] | null>(null);
   const [fullLosers, setFullLosers] = useState<PerformanceSignal[] | null>(null);
   const [loadingFullData, setLoadingFullData] = useState(false);
+  const [expandedTabs, setExpandedTabs] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     async function fetchFullData() {
@@ -81,9 +85,28 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
     }
     return { color: 'text-muted-foreground', icon: null };
   };
+
+  const ShowAllButton = ({ listKey, fullCount }: { listKey: string, fullCount: number }) => {
+    if (expandedTabs[listKey] || fullCount <= TRUNCATE_LIMIT) return null;
+    return (
+        <div className="text-center pt-2">
+            <Button variant="link" onClick={() => setExpandedTabs(prev => ({...prev, [listKey]: true}))}>
+                Show All {fullCount}
+            </Button>
+        </div>
+    );
+  };
   
-  const renderPerformanceList = (publicSignals: PerformanceSignal[], total: number, fullList: PerformanceSignal[] | null) => {
-    const allSignals = user && fullList ? fullList : publicSignals.slice(0, 3);
+  const renderPerformanceList = (tabKey: string, publicSignals: PerformanceSignal[], total: number, fullList: PerformanceSignal[] | null) => {
+    const isExpanded = !!expandedTabs[tabKey];
+    let signalsToShow: PerformanceSignal[];
+
+    if (user && fullList) {
+        signalsToShow = isExpanded ? fullList : fullList.slice(0, TRUNCATE_LIMIT);
+    } else {
+        signalsToShow = publicSignals.slice(0, 3); // Public view is always truncated
+    }
+
     const isLocked = !user;
 
     return (
@@ -98,7 +121,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {allSignals.map(signal => {
+                {signalsToShow.map(signal => {
                     const isGainer = signal.percent_gain >= 0;
                     const imageUrl = signal.image_uri 
                     ? convertGcsUriToUrl(signal.image_uri) 
@@ -148,7 +171,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
         <BlurGate isLocked={isLocked} message={`Join to see all ${total} movers`}>
             {isLocked && (
                 <div className="mt-4 space-y-2 opacity-50 grayscale">
-                    {Array.from({ length: Math.min(3, total - allSignals.length) }).map((_, i) => (
+                    {Array.from({ length: Math.min(3, total - signalsToShow.length) }).map((_, i) => (
                         <div key={i} className="flex items-center justify-between p-2 border rounded-lg h-[57px]">
                             <div className="flex items-center gap-3">
                                 <div className="h-6 w-6 rounded-full bg-muted" />
@@ -163,17 +186,22 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
                 </div>
             )}
         </BlurGate>
+        {user && <ShowAllButton listKey={tabKey} fullCount={total} />}
       </div>
     );
   };
   
-  const renderWinnersList = (publicWinners: Winner[], total: number, filterType: 'call' | 'put') => {
-    let allWinners = publicWinners;
+  const renderWinnersList = (tabKey: string, publicWinners: Winner[], total: number, filterType: 'call' | 'put') => {
+    const isExpanded = !!expandedTabs[tabKey];
+    let winnersToShow: Winner[];
+
     if (user && fullWinners) {
-        allWinners = fullWinners.filter(w => w.option_type.toLowerCase().includes(filterType));
+        let filtered = fullWinners.filter(w => w.option_type.toLowerCase().includes(filterType));
+        winnersToShow = isExpanded ? filtered : filtered.slice(0, TRUNCATE_LIMIT);
     } else {
-        allWinners = allWinners.slice(0, 3);
+        winnersToShow = publicWinners.slice(0, 3); // Public view is always truncated
     }
+
     const isLocked = !user;
     
     return (
@@ -188,7 +216,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
             </TableRow>
             </TableHeader>
             <TableBody>
-            {allWinners.map(winner => {
+            {winnersToShow.map(winner => {
                 const imageUrl = winner.image_uri 
                     ? convertGcsUriToUrl(winner.image_uri) 
                     : `https://placehold.co/24x24/1e293b/a855f7?text=${winner.ticker[0]}`;
@@ -240,7 +268,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
         <BlurGate isLocked={isLocked} message="Unlock full daily winners list">
             {isLocked && (
                 <div className="mt-4 space-y-2 opacity-50 grayscale">
-                    {Array.from({ length: Math.min(3, total - allWinners.length) }).map((_, i) => (
+                    {Array.from({ length: Math.min(3, total - winnersToShow.length) }).map((_, i) => (
                             <div key={i} className="flex items-center justify-between p-2 border rounded-lg h-[57px]">
                             <div className="flex items-center gap-3">
                                 <div className="h-6 w-6 rounded-full bg-muted" />
@@ -255,6 +283,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
                 </div>
             )}
         </BlurGate>
+        {user && <ShowAllButton listKey={tabKey} fullCount={total} />}
       </div>
     );
   }
@@ -277,16 +306,16 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
                 <TabsTrigger value="losers">Top Losers ({data.losers.total})</TabsTrigger>
             </TabsList>
             <TabsContent value="bullish" className="mt-4">
-                {renderWinnersList(data.bullish.items, data.bullish.total, 'call')}
+                {renderWinnersList('bullish', data.bullish.items, data.bullish.total, 'call')}
             </TabsContent>
             <TabsContent value="bearish" className="mt-4">
-                {renderWinnersList(data.bearish.items, data.bearish.total, 'put')}
+                {renderWinnersList('bearish', data.bearish.items, data.bearish.total, 'put')}
             </TabsContent>
             <TabsContent value="gainers" className="mt-4">
-                {renderPerformanceList(data.gainers.items, data.gainers.total, fullGainers)}
+                {renderPerformanceList('gainers', data.gainers.items, data.gainers.total, fullGainers)}
             </TabsContent>
             <TabsContent value="losers" className="mt-4">
-                {renderPerformanceList(data.losers.items, data.losers.total, fullLosers)}
+                {renderPerformanceList('losers', data.losers.items, data.losers.total, fullLosers)}
             </TabsContent>
         </Tabs>
     );

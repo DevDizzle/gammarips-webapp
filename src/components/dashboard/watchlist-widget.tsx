@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -11,6 +12,7 @@ import { getUserWatchlist, removeFromWatchlist } from '@/app/actions/watchlist';
 import type { WatchlistItem } from '@/lib/firebase-admin';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { ScrollArea } from '../ui/scroll-area';
 
 export function WatchlistWidget() {
   const { openAuthModal } = useAuthModal();
@@ -74,74 +76,75 @@ export function WatchlistWidget() {
                 </Button>
             </CardHeader>
             <CardContent className="flex-1 overflow-y-auto p-0 scrollbar-thin">
-                {items.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full p-6 text-center space-y-4 text-muted-foreground">
-                        <ListTodo className="h-12 w-12 opacity-20" />
-                        <p className="text-sm">Your watchlist is empty.</p>
-                        <p className="text-xs">Click the star on any contract to track it.</p>
-                    </div>
-                ) : (
-                    <div className="divide-y">
-                        {items.map(item => {
-                            const entryPrice = item.initial_price;
-                            const currentPrice = item.current_price;
-                            
-                            // Calculate ROI if we have both prices
-                            let roi = null;
-                            let isGainer = false;
-                            
-                            if (entryPrice && currentPrice) {
-                                roi = ((currentPrice - entryPrice) / entryPrice) * 100;
-                                isGainer = roi >= 0;
-                            }
+                <ScrollArea className="h-full">
+                    {items.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center h-full p-6 text-center space-y-4 text-muted-foreground">
+                            <ListTodo className="h-12 w-12 opacity-20" />
+                            <p className="text-sm">Your watchlist is empty.</p>
+                            <p className="text-xs">Click the star on any contract to track it.</p>
+                        </div>
+                    ) : (
+                        <div className="divide-y">
+                            {items.map(item => {
+                                const entryPrice = item.initial_price;
+                                const currentPrice = item.current_price;
+                                
+                                let roi = null;
+                                let isGainer = false;
+                                
+                                if (entryPrice && currentPrice) {
+                                    roi = ((currentPrice - entryPrice) / entryPrice) * 100;
+                                    isGainer = roi >= 0;
+                                }
 
-                            return (
-                                <div key={item.id} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
-                                    <div className="space-y-1">
-                                        <div className="flex items-center gap-2">
-                                            <span className="font-bold">{item.ticker}</span>
-                                            {item.type === 'option' && (
-                                                <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-medium">OPTION</span>
-                                            )}
+                                return (
+                                    <div key={item.id} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
+                                        <div className="space-y-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-bold">{item.ticker}</span>
+                                                {item.type === 'option' && (
+                                                    <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-medium">OPTION</span>
+                                                )}
+                                            </div>
+                                            <div className="text-xs text-muted-foreground truncate max-w-[180px]">
+                                                {item.company_name || item.contract_symbol || 'Asset'}
+                                            </div>
+                                            <div className="flex items-center gap-3 text-xs font-mono mt-1">
+                                                {entryPrice && (
+                                                    <span className="text-muted-foreground">
+                                                        Entry: <span className="text-foreground">${entryPrice.toFixed(2)}</span>
+                                                    </span>
+                                                )}
+                                                {currentPrice && (
+                                                    <span className="text-muted-foreground">
+                                                        Curr: <span className="text-foreground">${currentPrice.toFixed(2)}</span>
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div className="text-xs text-muted-foreground truncate max-w-[180px]">
-                                            {item.company_name || item.contract_symbol || 'Asset'}
-                                        </div>
-                                        <div className="flex items-center gap-3 text-xs font-mono mt-1">
-                                            {entryPrice && (
-                                                <span className="text-muted-foreground">
-                                                    Entry: <span className="text-foreground">${entryPrice.toFixed(2)}</span>
+                                        <div className="flex flex-col items-end gap-1">
+                                            {roi !== null ? (
+                                                <span className={cn("text-sm font-bold", isGainer ? "text-green-500" : "text-red-500")}>
+                                                    {isGainer ? '+' : ''}{roi.toFixed(2)}%
                                                 </span>
+                                            ) : (
+                                                <span className="text-xs text-muted-foreground">-</span>
                                             )}
-                                            {currentPrice && (
-                                                <span className="text-muted-foreground">
-                                                    Curr: <span className="text-foreground">${currentPrice.toFixed(2)}</span>
-                                                </span>
-                                            )}
+                                            <Button 
+                                                variant="ghost" 
+                                                size="icon" 
+                                                className="h-6 w-6 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                                onClick={() => handleRemove(item.id)}
+                                            >
+                                                <Trash2 className="h-3 w-3" />
+                                            </Button>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col items-end gap-1">
-                                         {roi !== null ? (
-                                            <span className={cn("text-sm font-bold", isGainer ? "text-green-500" : "text-red-500")}>
-                                                {isGainer ? '+' : ''}{roi.toFixed(2)}%
-                                            </span>
-                                        ) : (
-                                            <span className="text-xs text-muted-foreground">-</span>
-                                        )}
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
-                                            className="h-6 w-6 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                                            onClick={() => handleRemove(item.id)}
-                                        >
-                                            <Trash2 className="h-3 w-3" />
-                                        </Button>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
+                                );
+                            })}
+                        </div>
+                    )}
+                </ScrollArea>
             </CardContent>
         </Card>
       );

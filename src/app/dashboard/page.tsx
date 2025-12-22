@@ -2,7 +2,6 @@
 import { getPublicDashboardData } from './actions';
 import { IndicesTicker } from '@/components/dashboard/indices-ticker';
 import { PublicWinnersTable } from '@/components/dashboard/public-winners-table';
-import { PerformanceMovers } from '@/components/dashboard/performance-movers';
 import { NewsFeedWidget } from '@/components/dashboard/news-feed';
 import { WatchlistWidget } from '@/components/dashboard/watchlist-widget';
 
@@ -27,26 +26,16 @@ export default async function DashboardPage() {
         {/* Main Column: 66% */}
         <div className="lg:col-span-2 space-y-6">
            <PublicWinnersTable data={dashboardData} />
-           
-           {/* Top Gainers & Losers */}
-           <PerformanceMovers 
-              gainers={dashboardData.gainers.items} 
-              losers={dashboardData.losers.items} 
-           />
         </div>
 
         {/* Sidebar Column: 33% */}
         <div className="lg:col-span-1 space-y-6">
             
             {/* Watchlist Widget (Personalized/Gated) */}
-            {/* <div className="h-[300px]">
-                <WatchlistWidget />
-            </div> */}
+            <WatchlistWidget />
 
             {/* News Feed (Contextual) */}
-            <div className="h-[500px]">
-                <NewsFeedWidget />
-            </div>
+            <NewsFeedWidget />
 
         </div>
       </div>

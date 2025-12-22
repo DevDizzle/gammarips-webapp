@@ -13,7 +13,7 @@ import { useAuthModal } from '@/components/auth/auth-modal-provider';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 
-const INITIAL_VISIBLE_COUNT = 5;
+const INITIAL_VISIBLE_COUNT = 4;
 
 export function NewsFeedWidget() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -45,18 +45,13 @@ export function NewsFeedWidget() {
         <CardTitle>Market News</CardTitle>
         <CardDescription>
           Breaking headlines and analysis from top financial news sources, filtered for quality.
-          {!user && (
-            <Button variant="link" size="sm" className="text-xs h-auto p-0 mt-1" onClick={() => openAuthModal('signUp')}>
-                Sign up to customize your feed.
-            </Button>
-          )}
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0 flex-1">
         <ScrollArea className="h-full">
             <div className="flex flex-col">
                 {loading ? (
-                    Array.from({ length: 5 }).map((_, i) => (
+                    Array.from({ length: 4 }).map((_, i) => (
                         <div key={i} className="p-4 border-b space-y-2">
                              <div className="h-4 bg-muted rounded w-3/4 animate-pulse" />
                              <div className="h-3 bg-muted rounded w-1/2 animate-pulse" />

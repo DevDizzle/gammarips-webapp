@@ -186,7 +186,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
                 </div>
             )}
         </BlurGate>
-        {user && <ShowAllButton listKey={tabKey} fullCount={total} />}
+        {user && !isExpanded && total > TRUNCATE_LIMIT && <ShowAllButton listKey={tabKey} fullCount={total} />}
       </div>
     );
   };
@@ -283,7 +283,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
                 </div>
             )}
         </BlurGate>
-        {user && <ShowAllButton listKey={tabKey} fullCount={total} />}
+        {user && !isExpanded && total > TRUNCATE_LIMIT && <ShowAllButton listKey={tabKey} fullCount={total} />}
       </div>
     );
   }
@@ -338,3 +338,5 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
     </Card>
   );
 }
+
+    

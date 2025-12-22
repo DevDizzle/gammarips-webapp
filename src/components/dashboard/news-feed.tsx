@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { getSmartNews } from '@/app/dashboard/actions';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ExternalLink, Newspaper } from 'lucide-react';
 import Image from 'next/image';
@@ -25,7 +25,8 @@ export function NewsFeedWidget() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getSmartNews();
+        // Fetch more initially to support the "Show More" button
+        const data = await getSmartNews({ limit: 20 });
         setNews(data);
       } catch (error) {
         console.error("Failed to fetch news", error);
@@ -40,18 +41,16 @@ export function NewsFeedWidget() {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3 border-b">
-        <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-lg">
-                <Newspaper className="h-5 w-5 text-primary" />
-                Market News
-            </CardTitle>
-            {!user && (
-                <Button variant="ghost" size="sm" className="text-xs h-8" onClick={() => openAuthModal('signUp')}>
-                    Customize Feed
-                </Button>
-            )}
-        </div>
+       <CardHeader>
+        <CardTitle>Market News</CardTitle>
+        <CardDescription>
+          Breaking headlines and analysis from top financial news sources, filtered for quality.
+          {!user && (
+            <Button variant="link" size="sm" className="text-xs h-auto p-0 mt-1" onClick={() => openAuthModal('signUp')}>
+                Sign up to customize your feed.
+            </Button>
+          )}
+        </CardDescription>
       </CardHeader>
       <CardContent className="p-0 flex-1">
         <ScrollArea className="h-full">
@@ -124,3 +123,5 @@ export function NewsFeedWidget() {
     </Card>
   );
 }
+
+    

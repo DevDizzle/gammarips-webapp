@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { getSmartNews } from '@/app/dashboard/actions';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ExternalLink, Newspaper } from 'lucide-react';
 import Image from 'next/image';
@@ -13,9 +13,12 @@ import { useAuthModal } from '@/components/auth/auth-modal-provider';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 
+const INITIAL_VISIBLE_COUNT = 5;
+
 export function NewsFeedWidget() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const { openAuthModal } = useAuthModal();
   const { user } = useAuth();
 
@@ -32,6 +35,8 @@ export function NewsFeedWidget() {
     };
     fetchData();
   }, []);
+
+  const visibleNews = isExpanded ? news : news.slice(0, INITIAL_VISIBLE_COUNT);
 
   return (
     <Card className="h-full flex flex-col">
@@ -58,8 +63,8 @@ export function NewsFeedWidget() {
                              <div className="h-3 bg-muted rounded w-1/2 animate-pulse" />
                         </div>
                     ))
-                ) : news.length > 0 ? (
-                    news.map((item) => (
+                ) : visibleNews.length > 0 ? (
+                    visibleNews.map((item) => (
                         <a 
                             key={item.id} 
                             href={item.article_url} 
@@ -109,6 +114,13 @@ export function NewsFeedWidget() {
             </div>
         </ScrollArea>
       </CardContent>
+      {!isExpanded && news.length > INITIAL_VISIBLE_COUNT && (
+        <CardFooter className="p-2 border-t">
+          <Button variant="link" className="w-full" onClick={() => setIsExpanded(true)}>
+            Show More
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 }

@@ -1,23 +1,22 @@
-
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useToast } from '@/hooks/use-toast';
-import { getWinnersDashboard, getPerformanceSignals } from '../actions';
-import type { Winner, PerformanceSignal } from '@/lib/firebase-admin';
-import { ArrowDown, ArrowUp, ChevronRight, Trophy } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { BlurGate } from '@/components/ui/blur-gate';
+import { ArrowUp, ArrowDown, ChevronRight, Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import type { PublicDashboardData } from '@/app/dashboard/actions';
+import type { Winner, PerformanceSignal } from '@/lib/firebase-admin';
+import { useAuthModal } from '@/components/auth/auth-modal-provider';
+import { useAuth } from '@/hooks/use-auth';
+import { getWinnersDashboard, getPerformanceSignals } from '@/app/actions';
+import { WatchlistButton } from '@/components/dashboard/watchlist-button';
 
 type ViewType = 'bullish' | 'bearish' | 'gainers' | 'losers';
-
 
 // Helper to convert GCS URI to a public URL
 const convertGcsUriToUrl = (gcsUri: string) => {
@@ -30,92 +29,55 @@ const convertGcsUriToUrl = (gcsUri: string) => {
   return `https://storage.googleapis.com/${bucket}/${encodedObject}`;
 };
 
-function TodaysWinners() {
-  const [isLoading, setIsLoading] = useState(true);
+interface PublicWinnersTableProps {
+  data: PublicDashboardData;
+}
+
+export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
   const [activeView, setActiveView] = useState<ViewType>('bullish');
-  const [allWinners, setAllWinners] = useState<Winner[]>([]);
-  const [topGainers, setTopGainers] = useState<PerformanceSignal[]>([]);
-  const [topLosers, setTopLosers] = useState<PerformanceSignal[]>([]);
-  const { toast } = useToast();
   const router = useRouter();
+  const { openAuthModal } = useAuthModal();
+  const { user } = useAuth();
+
+  const [fullWinners, setFullWinners] = useState<Winner[] | null>(null);
+  const [fullGainers, setFullGainers] = useState<PerformanceSignal[] | null>(null);
+  const [fullLosers, setFullLosers] = useState<PerformanceSignal[] | null>(null);
+  const [loadingFullData, setLoadingFullData] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+
+  // Reset showAll when view changes
+  useEffect(() => {
+    setShowAll(false);
+  }, [activeView]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const [winnersData, gainersData, losersData] = await Promise.all([
-          getWinnersDashboard(),
-          getPerformanceSignals('desc', 10),
-          getPerformanceSignals('asc', 10)
-        ]);
-        setAllWinners(winnersData);
-        setTopGainers(gainersData);
-        setTopLosers(losersData);
-      } catch (error) {
-        console.error('Failed to fetch market hub data:', error);
-        toast({
-          title: 'Error Fetching Data',
-          description: 'Could not load market data. Please try again later.',
-          variant: 'destructive',
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [toast]);
-  
-  const getTopUniqueTickers = (winners: Winner[], sortOrder: 'asc' | 'desc'): Winner[] => {
-    // 1. De-duplicate winners by ticker
-    const uniqueWinnersMap = new Map<string, Winner>();
-    winners.forEach(winner => {
-        const existing = uniqueWinnersMap.get(winner.ticker);
-        // For bearish (asc), we keep the one with the lowest score.
-        // For bullish (desc), we keep the one with the highest score.
-        const shouldReplace = sortOrder === 'asc'
-            ? (winner.weighted_score ?? Infinity) < (existing?.weighted_score ?? Infinity)
-            : (winner.weighted_score ?? -1) > (existing?.weighted_score ?? -1);
-
-        if (!existing || shouldReplace) {
-            uniqueWinnersMap.set(winner.ticker, winner);
+    async function fetchFullData() {
+        if (!user) return;
+        setLoadingFullData(true);
+        try {
+            const [winners, gainers, losers] = await Promise.all([
+                getWinnersDashboard(),
+                getPerformanceSignals('desc', 50),
+                getPerformanceSignals('asc', 50)
+            ]);
+            setFullWinners(winners);
+            setFullGainers(gainers);
+            setFullLosers(losers);
+        } catch (error) {
+            console.error("Failed to fetch full dashboard data", error);
+        } finally {
+            setLoadingFullData(false);
         }
-    });
-    const uniqueWinners = Array.from(uniqueWinnersMap.values());
-
-    // 2. Sort the unique winners by score
-    return uniqueWinners.sort((a, b) => {
-        const scoreA = a.weighted_score ?? (sortOrder === 'asc' ? Infinity : -1);
-        const scoreB = b.weighted_score ?? (sortOrder === 'asc' ? Infinity : -1);
-        return sortOrder === 'asc' ? scoreA - scoreB : scoreB - a.weighted_score;
-    });
-  };
-
-  const { bullishWinners, bearishWinners, lastUpdated } = useMemo(() => {
-    const bullish = allWinners.filter(w => w.option_type.toLowerCase().includes('call'));
-    const bearish = allWinners.filter(w => w.option_type.toLowerCase().includes('put'));
-
-    const allBullish = getTopUniqueTickers(bullish, 'desc');
-    const allBearish = getTopUniqueTickers(bearish, 'asc');
-    
-    let updatedDate: string | null = null;
-    if (allWinners.length > 0) {
-      try {
-        updatedDate = new Date(allWinners[0].run_date).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            timeZone: 'UTC' // Important for consistency
-        });
-      } catch (e) {
-          console.error("Failed to parse run_date:", allWinners[0].run_date);
-      }
     }
-      
-    return { bullishWinners: allBullish, bearishWinners: allBearish, lastUpdated: updatedDate };
-  }, [allWinners]);
+
+    if (user && !fullWinners) {
+        fetchFullData();
+    }
+  }, [user, fullWinners]);
+
 
   const handleRowClick = (ticker: string) => {
-    router.push(`/dashboard/${ticker.toUpperCase()}`);
+     router.push(`/dashboard/${ticker.toUpperCase()}`);
   };
 
   const getSignalMeta = (signal: string) => {
@@ -129,31 +91,49 @@ function TodaysWinners() {
     return { color: 'text-muted-foreground', icon: null };
   };
 
-  const renderPerformanceList = (signals: PerformanceSignal[]) => {
-    if (signals.length === 0) {
-        return <p className="text-sm text-muted-foreground text-center py-4">No performance signals available at this time.</p>;
-    }
+  const renderPerformanceList = (publicSignals: PerformanceSignal[], total: number, fullList: PerformanceSignal[] | null) => {
+    // If logged in and data fetched, use full list. Otherwise use public list.
+    const allSignals = user && fullList ? fullList : publicSignals;
+    // Determine how many to show
+    const displaySignals = showAll ? allSignals : allSignals.slice(0, 10);
+
+    // Lock only if NOT logged in
+    const isLocked = !user;
+    const lockedCount = isLocked ? Math.max(0, total - publicSignals.length) : 0;
+
     return (
-      <>
+      <div className="relative">
         {/* Desktop Table */}
         <Table className="hidden md:table">
             <TableHeader>
                 <TableRow>
+                    <TableHead className="w-[40px]"></TableHead>
                     <TableHead>Company</TableHead>
                     <TableHead>Industry</TableHead>
                     <TableHead>Contract</TableHead>
-                    <TableHead className="text-right">Percent Gain</TableHead>
+                    <TableHead className="text-right">Entry</TableHead>
+                    <TableHead className="text-right">Current</TableHead>
+                    <TableHead className="text-right">ROI</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {signals.map(signal => {
+                {displaySignals.map(signal => {
                     const isGainer = signal.percent_gain >= 0;
-                     const imageUrl = signal.image_uri 
+                    const imageUrl = signal.image_uri 
                     ? convertGcsUriToUrl(signal.image_uri) 
                     : `https://placehold.co/24x24/1e293b/a855f7?text=${signal.ticker[0]}`;
                 
                     return (
-                        <TableRow key={signal.id} onClick={() => handleRowClick(signal.ticker)} className="cursor-pointer">
+                        <TableRow key={signal.id} onClick={() => handleRowClick(signal.ticker)} className="cursor-pointer hover:bg-muted/50">
+                            <TableCell className="px-1">
+                                <WatchlistButton 
+                                    ticker={signal.ticker} 
+                                    contractSymbol={signal.contract_symbol}
+                                    type="option"
+                                    price={signal.current_price}
+                                    companyName={signal.company_name ?? undefined}
+                                />
+                            </TableCell>
                             <TableCell className="font-medium">
                                 <div className="flex items-center gap-3">
                                     <Image 
@@ -176,6 +156,12 @@ function TodaysWinners() {
                                     <span className="text-xs text-muted-foreground">Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
                                 </div>
                             </TableCell>
+                            <TableCell className="text-right font-mono text-xs">
+                                ${signal.initial_price.toFixed(2)}
+                            </TableCell>
+                            <TableCell className="text-right font-mono text-xs">
+                                ${signal.current_price.toFixed(2)}
+                            </TableCell>
                             <TableCell className={cn("text-right font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
                                 {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
                             </TableCell>
@@ -185,9 +171,9 @@ function TodaysWinners() {
             </TableBody>
         </Table>
 
-        {/* Mobile Cards - Vertical Stack */}
+        {/* Mobile Cards */}
         <div className="md:hidden space-y-3">
-             {signals.map(signal => {
+             {displaySignals.map(signal => {
                 const isGainer = signal.percent_gain >= 0;
                 const imageUrl = signal.image_uri 
                     ? convertGcsUriToUrl(signal.image_uri) 
@@ -198,6 +184,13 @@ function TodaysWinners() {
                         <CardContent className="p-4">
                             <div className="flex items-center justify-between gap-4">
                                 <div className="flex items-center gap-3 flex-1 min-w-0">
+                                    <WatchlistButton 
+                                        ticker={signal.ticker} 
+                                        contractSymbol={signal.contract_symbol}
+                                        type="option"
+                                        price={signal.current_price}
+                                        companyName={signal.company_name ?? undefined}
+                                    />
                                     <Image 
                                         src={imageUrl} 
                                         alt={`${signal.company_name} logo`}
@@ -214,34 +207,65 @@ function TodaysWinners() {
                                     <p className={cn("font-semibold", isGainer ? "text-green-500" : "text-red-500")}>
                                         {isGainer ? '+' : ''}{signal.percent_gain.toFixed(2)}%
                                     </p>
-                                    <p className="text-xs text-muted-foreground">Gain</p>
+                                    <div className="text-[10px] text-muted-foreground flex flex-col">
+                                        <span>E: ${signal.initial_price.toFixed(2)}</span>
+                                        <span>C: ${signal.current_price.toFixed(2)}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="mt-4 border-t pt-3">
-                                <p className="text-xs text-muted-foreground">Contract</p>
-                                <p className="font-semibold text-sm">${signal.strike_price.toFixed(2)} {signal.option_type?.toUpperCase()}</p>
-                                <p className="text-xs text-muted-foreground">Expires: {new Date(signal.expiration_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</p>
                             </div>
                         </CardContent>
                     </Card>
                 )
             })}
         </div>
-      </>
+
+        {/* The Gate */}
+        <BlurGate isLocked={isLocked} message={`Join to see all ${total} movers`}>
+            {isLocked && (
+                <div className="mt-4 space-y-2 opacity-50 grayscale">
+                    {Array.from({ length: 2 }).map((_, i) => (
+                        <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
+                            <div className="flex items-center gap-3">
+                                <div className="h-8 w-8 rounded-full bg-muted" />
+                                <div className="space-y-1">
+                                    <div className="h-4 w-24 bg-muted rounded" />
+                                    <div className="h-3 w-16 bg-muted rounded" />
+                                </div>
+                            </div>
+                            <div className="h-6 w-12 bg-muted rounded" />
+                        </div>
+                    ))}
+                </div>
+            )}
+        </BlurGate>
+
+        {user && allSignals.length > 10 && (
+            <div className="mt-4 text-center">
+                 <Button variant="outline" onClick={() => setShowAll(!showAll)}>
+                    {showAll ? 'Show Less' : `Show All (${allSignals.length})`}
+                 </Button>
+            </div>
+        )}
+      </div>
     );
   };
   
-  const renderWinnersList = (winners: Winner[]) => {
-    if (winners.length === 0) {
-      return <p className="text-sm text-muted-foreground text-center py-4">No setups found for this category today.</p>;
+  const renderWinnersList = (publicWinners: Winner[], total: number, filterType: 'call' | 'put') => {
+    // If logged in and data fetched, filter the full list.
+    let allWinners = publicWinners;
+    if (user && fullWinners) {
+        allWinners = fullWinners.filter(w => w.option_type.toLowerCase().includes(filterType));
     }
+
+    const displayWinners = showAll ? allWinners : allWinners.slice(0, 10);
+    const isLocked = !user;
     
     return (
-      <>
-        {/* Desktop Table */}
+      <div className="relative">
         <Table className="hidden md:table">
             <TableHeader>
             <TableRow>
+                <TableHead className="w-[40px]"></TableHead>
                 <TableHead>Company</TableHead>
                 <TableHead>Industry</TableHead>
                 <TableHead>Contract</TableHead>
@@ -249,14 +273,23 @@ function TodaysWinners() {
             </TableRow>
             </TableHeader>
             <TableBody>
-            {winners.map(winner => {
+            {displayWinners.map(winner => {
                 const imageUrl = winner.image_uri 
                     ? convertGcsUriToUrl(winner.image_uri) 
                     : `https://placehold.co/24x24/1e293b/a855f7?text=${winner.ticker[0]}`;
                 const signalMeta = getSignalMeta(winner.outlook_signal);
                 
                 return (
-                    <TableRow key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer">
+                    <TableRow key={winner.id} onClick={() => handleRowClick(winner.ticker)} className="cursor-pointer hover:bg-muted/50">
+                        <TableCell className="px-1">
+                             <WatchlistButton 
+                                ticker={winner.ticker} 
+                                contractSymbol={winner.contract_symbol}
+                                type="option"
+                                // Winner object doesn't have current option price usually, so undefined
+                                companyName={winner.company_name}
+                            />
+                        </TableCell>
                         <TableCell className="font-medium">
                             <div className="flex items-center gap-3">
                                 <Image 
@@ -291,9 +324,8 @@ function TodaysWinners() {
             </TableBody>
         </Table>
 
-        {/* Mobile Cards - Vertical Stack */}
         <div className="md:hidden space-y-3">
-            {winners.map(winner => {
+            {displayWinners.map(winner => {
                 const imageUrl = winner.image_uri 
                     ? convertGcsUriToUrl(winner.image_uri) 
                     : `https://placehold.co/40x40/1e293b/a855f7?text=${winner.ticker[0]}`;
@@ -304,6 +336,12 @@ function TodaysWinners() {
                         <CardContent className="p-4">
                             <div className="flex items-center justify-between gap-4">
                                 <div className="flex items-center gap-3 flex-1 min-w-0">
+                                    <WatchlistButton 
+                                        ticker={winner.ticker} 
+                                        contractSymbol={winner.contract_symbol}
+                                        type="option"
+                                        companyName={winner.company_name}
+                                    />
                                     <Image 
                                         src={imageUrl} 
                                         alt={`${winner.company_name} logo`}
@@ -320,7 +358,7 @@ function TodaysWinners() {
                                     <ChevronRight className="h-5 w-5 text-muted-foreground" />
                                 </div>
                             </div>
-                            <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                             <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
                                 <div>
                                     <p className="text-muted-foreground">Contract</p>
                                     <p className="font-semibold">${winner.strike_price.toFixed(2)} {winner.option_type.toUpperCase()}</p>
@@ -338,99 +376,55 @@ function TodaysWinners() {
                 )
             })}
         </div>
-      </>
+
+        <BlurGate isLocked={isLocked} message="Unlock full daily winners list">
+            {isLocked && (
+                <div className="mt-4 space-y-2 opacity-50 grayscale">
+                    {Array.from({ length: 3 }).map((_, i) => (
+                            <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
+                            <div className="flex items-center gap-3">
+                                <div className="h-8 w-8 rounded-full bg-muted" />
+                                <div className="space-y-1">
+                                    <div className="h-4 w-24 bg-muted rounded" />
+                                    <div className="h-3 w-16 bg-muted rounded" />
+                                </div>
+                            </div>
+                            <div className="h-6 w-12 bg-muted rounded" />
+                        </div>
+                    ))}
+                </div>
+            )}
+        </BlurGate>
+
+         {user && allWinners.length > 10 && (
+            <div className="mt-4 text-center">
+                 <Button variant="outline" onClick={() => setShowAll(!showAll)}>
+                    {showAll ? 'Show Less' : `Show All (${allWinners.length})`}
+                 </Button>
+            </div>
+        )}
+      </div>
     );
   }
 
-  const renderSkeleton = (isPerformance: boolean = false) => (
-    <div className="space-y-4">
-        <div className="hidden md:block">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                       {isPerformance ? (
-                           <>
-                               <TableHead><Skeleton className="h-5 w-32" /></TableHead>
-                               <TableHead><Skeleton className="h-5 w-28" /></TableHead>
-                               <TableHead><Skeleton className="h-5 w-48" /></TableHead>
-                               <TableHead className="text-right"><Skeleton className="h-5 w-24 ml-auto" /></TableHead>
-                           </>
-                       ) : (
-                           <>
-                                <TableHead><Skeleton className="h-5 w-32" /></TableHead>
-                                <TableHead><Skeleton className="h-5 w-28" /></TableHead>
-                                <TableHead><Skeleton className="h-5 w-24" /></TableHead>
-                                <TableHead><Skeleton className="h-5 w-36" /></TableHead>
-                           </>
-                       )}
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {Array.from({ length: 5 }).map((_, i) => (
-                        <TableRow key={i}>
-                            {isPerformance ? (
-                                <>
-                                    <TableCell><Skeleton className="h-5 w-40" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-48" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-20 ml-auto" /></TableCell>
-                                </>
-                            ) : (
-                                <>
-                                    <TableCell><Skeleton className="h-5 w-40" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-32" /></TableCell>
-                                </>
-                            )}
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </div>
-        <div className="md:hidden space-y-3">
-             {Array.from({ length: 3 }).map((_, i) => (
-                <Card key={i}>
-                    <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <Skeleton className="h-10 w-10 rounded-full" />
-                                <div>
-                                    <Skeleton className="h-5 w-32" />
-                                    <Skeleton className="h-4 w-16 mt-1" />
-                                </div>
-                            </div>
-                            <Skeleton className="h-5 w-5" />
-                        </div>
-                        <div className="mt-4 grid grid-cols-2 gap-4">
-                            <div>
-                                <Skeleton className="h-4 w-20 mb-1" />
-                                <Skeleton className="h-5 w-24" />
-                            </div>
-                            <div>
-                                <Skeleton className="h-4 w-20 mb-1" />
-                                <Skeleton className="h-5 w-28" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            ))}
-        </div>
-    </div>
-  );
-
   const renderActiveView = () => {
-    if (isLoading) return renderSkeleton(activeView === 'gainers' || activeView === 'losers');
+    if (loadingFullData && user) {
+        return (
+            <div className="flex justify-center items-center h-48">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        )
+    }
 
     switch (activeView) {
         case 'bullish':
-            return renderWinnersList(bullishWinners);
+            return renderWinnersList(data.bullish.items, data.bullish.total, 'call');
         case 'bearish':
-            return renderWinnersList(bearishWinners);
+            return renderWinnersList(data.bearish.items, data.bearish.total, 'put');
         case 'gainers':
-            return renderPerformanceList(topGainers);
+            return renderPerformanceList(data.gainers.items, data.gainers.total, fullGainers);
         case 'losers':
-            return renderPerformanceList(topLosers);
+            return renderPerformanceList(data.losers.items, data.losers.total, fullLosers);
         default:
             return null;
     }
@@ -444,18 +438,18 @@ function TodaysWinners() {
   ];
 
   return (
-    <Card className="lg:col-span-2">
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>Market Hub</CardTitle>
         <CardDescription>
-          Here are today's highest-conviction setups and top-performing contracts. Click any row to unlock the full analysis. Rankings are for research, not investment advice.
-          {lastUpdated && !isLoading && (
-            <span className="block text-xs text-muted-foreground mt-2">Data Last Updated: {lastUpdated} (Market Close)</span>
+          Daily high-conviction setups and top-performing contracts. Rankings are for research, not investment advice.
+          {data.lastUpdated && (
+            <span className="block text-xs text-muted-foreground mt-2">Data Last Updated: {data.lastUpdated}</span>
           )}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="mt-4">
+        <div className="mb-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {buttons.map(({label, view}) => (
                     <Button 
@@ -470,12 +464,8 @@ function TodaysWinners() {
             </div>
         </div>
         
-        <div className="mt-4">
-          {renderActiveView()}
-        </div>
+        {renderActiveView()}
       </CardContent>
     </Card>
   );
 }
-
-export default TodaysWinners;

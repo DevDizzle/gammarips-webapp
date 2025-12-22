@@ -1,6 +1,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AuthDialog } from '@/components/auth/auth-dialog';
@@ -13,7 +14,7 @@ interface HomePageClientContentProps {
   buttonText?: string;
 }
 
-export default function HomePageClientContent({ showButton = false, buttonText = "Get Instant Access ($19/mo)" }: HomePageClientContentProps) {
+export default function HomePageClientContent({ showButton = false, buttonText = "Explore the Dashboard" }: HomePageClientContentProps) {
   const searchParams = useSearchParams();
   const { user, loading } = useAuth();
 
@@ -29,11 +30,21 @@ export default function HomePageClientContent({ showButton = false, buttonText =
   }, [searchParams]);
 
   // While loading, show nothing to avoid layout shifts. The root layout client handles the loader.
-  if (loading || user) {
+  if (loading) {
     return null;
   }
 
   if (showButton) {
+     if (user) {
+       return (
+         <Button asChild size="lg">
+           <Link href="/dashboard">
+             Go to Dashboard <ArrowRight className="ml-2 h-5 w-5" />
+           </Link>
+         </Button>
+       );
+     }
+
      return (
         <>
             <AuthDialog

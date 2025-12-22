@@ -91,7 +91,8 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
 
 export async function POST(req: NextRequest) {
   const buf = await req.text();
-  const sig = headers().get('Stripe-Signature')!;
+  const headersList = await headers();
+  const sig = headersList.get('Stripe-Signature')!;
 
   let event: Stripe.Event;
 

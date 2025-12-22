@@ -45,6 +45,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { AuthModalProvider } from '@/components/auth/auth-modal-provider';
+
 const GA_MEASUREMENT_ID = 'G-KPGTJDBC6N';
 const AW_MEASUREMENT_ID = 'AW-17603675875';
 
@@ -97,13 +99,15 @@ export default async function RootLayout({
       <body>
         <AuthProvider>
           <ChatProvider>
-            <RootLayoutClient>
-              <main className='flex-grow'>{children}</main>
-            </RootLayoutClient>
-            <Footer />
-            <Toaster />
-            <CookieConsentBanner />
-            <AgentChat />
+            <AuthModalProvider>
+              <RootLayoutClient>
+                <main className='flex-grow'>{children}</main>
+              </RootLayoutClient>
+              <Footer />
+              <Toaster />
+              <CookieConsentBanner />
+              <AgentChat />
+            </AuthModalProvider>
           </ChatProvider>
         </AuthProvider>
       </body>

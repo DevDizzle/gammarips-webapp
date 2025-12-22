@@ -20,12 +20,12 @@ export const faqs = [
         answer: "Yes. We treat unusual options activity (UOA)-for example, volume that’s large relative to open interest or recent averages-as a conviction booster in our scoring. It’s one of several inputs into the signal, not the only thing we look at, so you’re not just chasing raw flow without context."
     },
     {
-        question: "How does the $19/month membership work?",
-        answer: "Membership is a flat $19 per month, billed monthly with no long-term contract. You can cancel anytime. We also offer a 7-day money-back guarantee on your first month-if you don’t find GammaRips useful, email us within the first 7 days and we’ll refund that first payment."
+        question: "How do I get started?",
+        answer: "Simply create an account to access the dashboard. You'll get immediate access to our daily options playbook, interactive research tools, and AI-generated briefings. No long-term commitments required."
     },
     {
-        question: "What do I get immediately after signing up?",
-        answer: "You get instant access to: Today’s daily options playbook (our “Rip Hunter” breakout and hedge signals), the interactive research dashboard, AI-generated briefings that explain the “why” behind each stock, and our live performance tracker, which currently measures signals from December 9, 2025 onward."
+        question: "What do I get immediately after joining?",
+        answer: "You get instant access to: Today’s daily options playbook (our “Rip Hunter” breakout and hedge signals), the interactive research dashboard, AI-generated briefings that explain the “why” behind each stock, and our live performance tracker."
     },
     {
         question: "Does GammaRips use AI to pick stocks?",

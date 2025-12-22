@@ -69,9 +69,9 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
         <DialogFooter className="flex-col items-center gap-2">
             <Button onClick={onSubscribe} className="w-full" disabled={loading} size="lg">
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Become a Ripper ($19/mo)
+                Join the Rippers
             </Button>
-            <p className="text-xs text-muted-foreground">Cancel anytime. Secure your edge today.</p>
+            <p className="text-xs text-muted-foreground">Get started today. Secure your edge.</p>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -29,7 +29,7 @@ const convertGcsUriToUrl = (gcsUri: string) => {
 async function getBearishSetups(): Promise<Winner[]> {
     const allWinners = await getWinnersDashboard();
     return allWinners
-        .filter(w => w.option_type.toLowerCase() === 'put' && w.outlook_signal.toLowerCase().includes('bearish'))
+        .filter((w: Winner) => w.option_type.toLowerCase() === 'put' && w.outlook_signal.toLowerCase().includes('bearish'))
         .sort((a, b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1));
 }
 
@@ -162,14 +162,14 @@ export default async function PutSetupsPage() {
                     <CardContent className="p-6">
                         <h3 className="text-xl font-semibold font-headline">Get the Daily Playbook</h3>
                         <p className="text-muted-foreground mt-2 mb-4 max-w-md mx-auto">
-                            Become a Ripper to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
+                            Join the community of Rippers to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
                         </p>
                         <Button asChild size="lg">
                              <Link href="/dashboard">
-                                Become a Ripper ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
+                                Explore the Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
                             </Link>
                         </Button>
-                         <p className="text-xs text-muted-foreground mt-3">Billed monthly. Cancel anytime. GammaRips is an AI-powered options research tool, not a broker or advisor.</p>
+                         <p className="text-xs text-muted-foreground mt-3">GammaRips is an AI-powered options research tool, not a broker or advisor.</p>
                     </CardContent>
                 </Card>
             </div>

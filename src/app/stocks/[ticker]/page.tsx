@@ -9,6 +9,7 @@ import { ArrowRight, TrendingUp, TrendingDown, Minus, AlertTriangle, CalendarDay
 import { UserNav } from '@/components/auth/user-nav';
 import { ShareButtons } from '@/components/share-buttons';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { z } from 'zod';
 
 interface StockSeoPageProps {
   params: {
@@ -16,35 +17,27 @@ interface StockSeoPageProps {
   };
 }
 
-// Updated data structure to match the new JSON format
-interface StockSeoData {
-  symbol: string;
-  date: string;
-  seo: {
-    title: string;
-    metaDescription: string;
-    keywords: string[];
-    h1: string;
-  };
-  fullAnalysis: {
-    about: string;
-    newsSummary: string;
-    technicals: string;
-    'md&a': string;
-    earningsCall: string;
-    financials: string;
-    fundamentals?: string;
-  };
-  teaser: {
-    signal: string;
-    summary: string;
-    metrics: {
-      [key: string]: string;
-    };
-  };
-  relatedStocks: string[];
-  schemaOrg: object; // Keep it generic to accept any valid schema
-}
+// Validation Schema for the SEO JSON
+const StockSeoDataSchema = z.object({
+  symbol: z.string(),
+  date: z.string(),
+  seo: z.object({
+    title: z.string(),
+    metaDescription: z.string(),
+    keywords: z.array(z.string()).optional().default([]),
+    h1: z.string(),
+  }),
+  fullAnalysis: z.record(z.string()).optional().default({}), // Allows arbitrary keys, defaults to empty object
+  teaser: z.object({
+    signal: z.string().optional().default("Neutral"),
+    summary: z.string().optional().default("No summary available."),
+    metrics: z.record(z.string()).optional().default({}), // Safety for metrics
+  }).optional().default({ signal: "Neutral", summary: "", metrics: {} }),
+  relatedStocks: z.array(z.string()).optional().default([]),
+  schemaOrg: z.record(z.any()).optional().default({}), // Generic object for schema.org
+});
+
+type StockSeoData = z.infer<typeof StockSeoDataSchema>;
 
 
 const DAYS_THRESHOLD = 30; // Only consider files from the last 30 days as recent
@@ -82,25 +75,43 @@ async function getStockData(ticker: string): Promise<StockSeoData | null> {
 
         // Extract date from a filename like 'TICKER_page_YYYY-MM-DD.json'
         const dateMatch = gcsPath.match(/_(\d{4}-\d{2}-\d{2})\.json$/);
-        if (!dateMatch || !dateMatch[1]) {
-            console.warn(`[getStockData] Could not extract date from GCS path: ${gcsPath}`);
-            // Fallback to trying to parse JSON even if date is missing, but it won't be recent
-             const content = await getGcsFileContentAdmin(gcsPath);
-             return JSON.parse(content) as StockSeoData;
-        }
-
-        const fileDate = dateMatch[1];
-        if (!isRecentDate(fileDate)) {
-            console.warn(`[getStockData] GCS file for ${ticker} is not recent (older than ${DAYS_THRESHOLD} days). Path: ${gcsPath}`);
-             return null;
+        
+        // Optimistic check: if filename has a date, check recency before fetching
+        if (dateMatch && dateMatch[1]) {
+             const fileDate = dateMatch[1];
+             if (!isRecentDate(fileDate)) {
+                console.warn(`[getStockData] GCS file for ${ticker} is not recent (older than ${DAYS_THRESHOLD} days). Path: ${gcsPath}`);
+                return null;
+             }
+        } else {
+             console.warn(`[getStockData] Could not extract date from GCS path: ${gcsPath}. Proceeding with fetch/validation.`);
         }
 
         const content = await getGcsFileContentAdmin(gcsPath);
-        return JSON.parse(content) as StockSeoData;
+        
+        let parsedJson;
+        try {
+            parsedJson = JSON.parse(content);
+        } catch (e) {
+            console.warn(`[getStockData] Failed to parse JSON content for ${ticker}:`, e);
+            return null;
+        }
+
+        // Validate with Zod
+        const result = StockSeoDataSchema.safeParse(parsedJson);
+        
+        if (!result.success) {
+            console.error(`[getStockData] Data validation failed for ${ticker}:`, result.error.flatten());
+            // In strict mode we might return null, but for robustness we could return partial data or just null.
+            // Returning null is safer to prevent rendering broken pages.
+            return null;
+        }
+
+        return result.data;
 
     } catch (error: any) {
-        if (error.code === 404 || error instanceof SyntaxError) {
-             console.warn(`[getStockData] Could not find or parse SEO JSON for ${ticker}. Error: ${error.message}`);
+        if (error.code === 404) {
+             console.warn(`[getStockData] GCS file not found for ${ticker}. Path: ${error.message}`);
              return null;
         }
         console.error(`[getStockData] Unexpected error for ${ticker}:`, error);
@@ -172,6 +183,9 @@ export const revalidate = 3600;
 
 
 const SignalIndicator = ({ signal }: { signal: string }) => {
+    if (!signal) {
+        return <span className="font-bold text-lg text-gray-500 flex items-center gap-2"><Minus size={20} /> N/A</span>;
+    }
     const lowerSignal = signal.toLowerCase();
     const baseClasses = "font-bold text-lg flex items-center gap-2";
     if (lowerSignal.includes('buy') || lowerSignal.includes('bullish')) {
@@ -290,13 +304,13 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
         <Card className="mb-8 bg-card/50">
             <CardHeader>
                 <CardTitle className="flex justify-between items-start">
-                    <span>AI Signal: <SignalIndicator signal={teaser.signal} /></span>
+                    <span>AI Signal: <SignalIndicator signal={teaser?.signal || "N/A"} /></span>
                 </CardTitle>
-                <CardDescription>{teaser.summary}</CardDescription>
+                <CardDescription>{teaser?.summary || "No summary available."}</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                    {Object.entries(teaser.metrics).map(([key, value]) => (
+                    {teaser?.metrics && Object.entries(teaser.metrics).map(([key, value]) => (
                         <div key={key} className="p-4 bg-background rounded-lg">
                             <p className="text-sm font-medium text-muted-foreground">{key.replace(/([A-Z])/g, ' $1').trim()}</p>
                             <p className="text-lg font-semibold">
@@ -312,7 +326,7 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
 
         <div className="space-y-8 mb-8">
             <h2 className="text-2xl font-bold font-headline text-center">Full Analysis Breakdown</h2>
-            {Object.entries(fullAnalysis).map(([key, value]) => (
+            {fullAnalysis && Object.entries(fullAnalysis).map(([key, value]) => (
                 <AnalysisSectionCard key={key} title={key} content={value} />
             ))}
         </div>
@@ -323,11 +337,11 @@ export default async function StockSeoPage({ params }: StockSeoPageProps) {
             </CardHeader>
             <CardContent>
                  <p className="mt-2 mb-4 max-w-md mx-auto text-muted-foreground">
-                    Become a Ripper to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
+                    Join the community of Rippers to get full access to our daily ranked Call & Put contracts. Unlock the interactive dashboard and the complete AI analysis behind every trade.
                 </p>
                 <Button asChild size="lg">
                     <Link href={`/dashboard`}>
-                        Become a Ripper ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
+                        Explore the Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
                     </Link>
                 </Button>
             </CardContent>

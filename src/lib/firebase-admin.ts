@@ -1432,12 +1432,72 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+const WatchlistItemSchema = z.object({
+  id: z.string(),
+  ticker: z.string(),
+  contract_symbol: z.string().optional().nullable(),
+  type: z.enum(['stock', 'option']),
+  addedAt: z.string(), // ISO String
+  initial_price: z.number().optional().nullable(),
+  current_price: z.number().optional().nullable(), // Added for real-time tracking
+  company_name: z.string().optional().nullable(), // For UI convenience
+});
+export type WatchlistItem = z.infer<typeof WatchlistItemSchema>;
 
+export async function addToWatchlistAdmin(uid: string, item: Omit<WatchlistItem, 'id' | 'addedAt'>): Promise<WatchlistItem | null> {
+    try {
+        const watchlistRef = adminDb.collection('users').doc(uid).collection('watchlist');
+        
+        // Check if already exists to prevent duplicates
+        const q = item.contract_symbol 
+            ? watchlistRef.where('contract_symbol', '==', item.contract_symbol)
+            : watchlistRef.where('ticker', '==', item.ticker).where('type', '==', 'stock');
+            
+        const snapshot = await q.get();
+        if (!snapshot.empty) {
+            return null; // Already exists
+        }
 
+        const newItem = {
+            ...item,
+            addedAt: new Date().toISOString(),
+        };
 
-    
+        const docRef = await watchlistRef.add(newItem);
+        return { id: docRef.id, ...newItem };
+    } catch (error) {
+        console.error('Error adding to watchlist:', error);
+        return null;
+    }
+}
 
+export async function removeFromWatchlistAdmin(uid: string, itemId: string): Promise<boolean> {
+    try {
+        await adminDb.collection('users').doc(uid).collection('watchlist').doc(itemId).delete();
+        return true;
+    } catch (error) {
+        console.error('Error removing from watchlist:', error);
+        return false;
+    }
+}
 
-
-
-
+export async function getUserWatchlistAdmin(uid: string): Promise<WatchlistItem[]> {
+    try {
+        const snapshot = await adminDb.collection('users').doc(uid).collection('watchlist').orderBy('addedAt', 'desc').get();
+        const items: WatchlistItem[] = [];
+        
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const item = { id: doc.id, ...data };
+            const validation = WatchlistItemSchema.safeParse(item);
+            if (validation.success) {
+                items.push(validation.data);
+            }
+        });
+        
+        return items;
+    } catch (error) {
+        console.error('Error fetching watchlist:', error);
+        return [];
+    }
+}

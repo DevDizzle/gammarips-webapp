@@ -143,7 +143,7 @@ async function testSendMidDayMovers() {
             text,
             html,
         });
-        console.log('Result:', result.ok ? 'Success' : `Failed (${result-status})`);
+        console.log('Result:', result.ok ? 'Success' : `Failed (${result.status})`);
     } catch (error) {
         console.error('An error occurred while sending the test "Mid-Day Movers" email:', error);
     }

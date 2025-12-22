@@ -51,7 +51,7 @@ export function IndustryExplorer() {
 
                 // 1. De-duplicate winners by ticker, keeping only the one with the highest score
                 const uniqueWinnersMap = new Map<string, Winner>();
-                allWinners.forEach(winner => {
+                allWinners.forEach((winner: Winner) => {
                     const existing = uniqueWinnersMap.get(winner.ticker);
                     if (!existing || (winner.weighted_score ?? -1) > (existing.weighted_score ?? -1)) {
                         uniqueWinnersMap.set(winner.ticker, winner);

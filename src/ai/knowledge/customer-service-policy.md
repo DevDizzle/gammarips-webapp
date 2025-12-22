@@ -18,17 +18,17 @@
 ### Do you track unusual options flow?
 **Answer:** "While we don't display a real-time 'unusual options flow' feed, our AI Analyst Briefing does incorporate significant volume and activity spikes into its analysis. When there's a notable surge in trading volume for a stock, it's often highlighted as a key point in the technicals or news summary sections, providing similar context to what unusual options flow tools identify."
 
-### What happens after my 30-day free trial?
-**Answer:** "After your 30-day free trial, you'll be invited to upgrade to our Pro plan for $19/month to maintain full access to all features, including new daily setups and the complete interactive dashboard. If you choose not to upgrade, you'll still have limited access to some parts of the dashboard."
+### How do I access the full features?
+**Answer:** "Simply create an account to access the dashboard. You'll get immediate access to our daily options playbook, interactive research tools, and AI-generated briefings."
 
-### How do I cancel my subscription?
-**Answer:** "You can manage your subscription at any time from your Account page. There is a link there that will take you to our secure billing portal where you can cancel, update your payment method, or view your billing history. If you cancel, your Pro access will continue until the end of your current billing period."
+### How do I manage my account?
+**Answer:** "You can manage your account and preferences at any time from your Account page. If you have any questions about your access, feel free to contact our support team."
 
 ### My dashboard isn't loading or a stock is missing.
 **Answer:** "Our AI engine processes vast amounts of market data daily. Occasionally, this process can be delayed, or data for a specific stock might not meet our quality checks for that day. If the dashboard is showing a 'Data Refresh in Progress' message, please check back in a few minutes. If a specific stock is missing, it likely means it didn't have a high-scoring setup for the day, but you can still search for it to see its historical data."
 
 ### How does the referral program work?
-**Answer:** "Our referral program is a way for you to give friends an extended 45-day free trial, which is much longer than our standard 7-day public trial. You can find your unique referral link in the emails we send about it. There is currently no credit or reward for the referrer, but it's a great way to share the tool with your network."
+**Answer:** "Our referral program is a way for you to share GammaRips with friends. You can find your unique referral link in the emails we send about it. It's a great way to share the tool with your network."
 
 ## Handling Negative Feedback or Bugs
 - **Acknowledge and Validate:** "Thank you for bringing this to our attention. I understand how frustrating that must be."

@@ -19,19 +19,6 @@ export default async function LandingPage() {
     "description": "One simple playbook for daily options rippers. GammaRips uses AI to hunt for high-conviction options ideas on stocks that are ready to move.",
     "applicationCategory": "FinancialApplication",
     "operatingSystem": "Web",
-    "offers": {
-      "@type": "Offer",
-      "price": "0.00",
-      "priceCurrency": "USD",
-      "priceSpecification": {
-        "@type": "UnitPriceSpecification",
-        "price": "0.00",
-        "priceCurrency": "USD",
-        "billingIncrement": "month",
-        "unitText": "month"
-      },
-      "description": "Free for early adopters."
-    },
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.9",
@@ -99,6 +86,9 @@ export default async function LandingPage() {
               <p className="mt-4 text-lg sm:text-xl text-neutral-200 max-w-3xl mx-auto">
                 We surface Call & Put contracts with high-gamma profiles, designed for explosive premium expansion. Our AI targets stocks primed to move, so you get setups positioned to rip. No complex strategies. Just the specific contracts you need.
               </p>
+              <div className="mt-10">
+                <HomePageClientContent showButton={true} buttonText="Explore the Dashboard" />
+              </div>
             </div>
           </section>
 
@@ -213,7 +203,7 @@ export default async function LandingPage() {
                       Access the data-driven playbook used by serious options traders. Get today's top Call & Put contracts now.
                     </p>
                     <div className="mt-8">
-                        <HomePageClientContent showButton={true} buttonText="Get Started for Free" />
+                        <HomePageClientContent showButton={true} buttonText="Explore the Dashboard" />
                     </div>
                 </Card>
             </div>
@@ -279,7 +269,7 @@ export default async function LandingPage() {
                       Join a community of data-driven traders. Get the tools and insights you need to find your edge in today's market.
                     </p>
                     <div className="mt-8">
-                        <HomePageClientContent showButton={true} buttonText="Get Instant Access" />
+                        <HomePageClientContent showButton={true} buttonText="Get Started Now" />
                     </div>
                 </Card>
             </div>

@@ -184,7 +184,7 @@ export default function AboutPage() {
                     <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Go from analysis to informed decision. Instantly access today's data-driven Call and Put Rips.</p>
                     <Button asChild size="lg">
                         <Link href="/dashboard">
-                            Become a Ripper ($19/mo) <ArrowRight className="ml-2 h-5 w-5"/>
+                            Explore the Dashboard <ArrowRight className="ml-2 h-5 w-5"/>
                         </Link>
                     </Button>
                 </CardContent>

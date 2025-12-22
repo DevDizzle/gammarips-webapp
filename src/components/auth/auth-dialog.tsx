@@ -85,7 +85,7 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
           <DialogDescription>
              {isSignIn 
                 ? 'Welcome back. Sign in to access your dashboard.' 
-                : 'Unlock the full Daily Playbook. Get the Rips, the interactive dashboard, and the deep-dive AI analysis. Just $19/mo. Cancel anytime.'
+                : 'Unlock the full Daily Playbook. Get the Rips, the interactive dashboard, and the deep-dive AI analysis.'
              }
           </DialogDescription>
         </DialogHeader>

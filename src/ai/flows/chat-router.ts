@@ -108,4 +108,4 @@ export const chatRouterFlow = ai.defineFlow(
       };
     }
   }
-);
+) as any;

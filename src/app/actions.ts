@@ -1,6 +1,3 @@
-
-
-
 'use server';
 
 import {
@@ -13,10 +10,6 @@ import {
   type FollowUpQuestionInput,
   type FollowUpQuestionOutput,
 } from '@/ai/flows/follow-up-questions';
-import {
-  summarizeFeedback,
-  type SummarizeFeedbackInput,
-} from '@/ai/flows/feedback-summarization';
 import { 
     getStocksAdmin, 
     getOrCreateUserAdmin,
@@ -35,16 +28,15 @@ import {
     getPerformanceSignalsByTicker as getPerformanceSignalsByTickerAdmin,
     getAppStatusAdmin,
     saveFeedbackSurveyAdmin,
-    getFairQualityOptionsAdmin,
     getWinnerForTickerAdmin,
     getStockDataAdmin,
     saveCancellationFeedbackAdmin,
+    handleWinSubmission as handleWinSubmissionAdmin,
 } from '@/lib/firebase-admin';
-import type { Stock, EconomicEvent, OptionCandidate, Winner, TickerOptionsData, OptionsSignal, TickerEvent, PerformanceSignal, FeedbackSurveyData } from '@/lib/firebase-admin';
+import type { Stock, OptionCandidate, Winner, TickerEvent, PerformanceSignal, FeedbackSurveyData } from '@/lib/firebase-admin';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { randomUUID } from 'crypto';
-import { getAuth } from 'firebase-admin/auth';
 import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { sendWelcomeEmail as sendWelcomeEmailAdmin, sendFeedbackAcknowledgmentEmail } from '@/lib/mailgun';
@@ -148,7 +140,7 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
         }
         gcsPath = stockData.dashboard_json;
         analysisPath = stockData.recommendation_analysis;
-        industry = stockData.industry;
+        industry = stockData.industry ?? undefined;
     }
 
     // If we still don't have a path for the dashboard json, we can't proceed.
@@ -189,7 +181,6 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
 }
 
 
-
 export async function handleGetRecommendation(uid: string, input: InitialRecommendationInput): Promise<InitialRecommendationOutput | { error: string; required?: 'subscription' | 'auth' } | { markdown: string, ticker?: string }> {
   const traceId = randomUUID();
   console.log(JSON.stringify({
@@ -200,25 +191,19 @@ export async function handleGetRecommendation(uid: string, input: InitialRecomme
   }));
   
   try {
-    console.log(JSON.stringify({ traceId, msg: 'Attempting to get or create user using Admin SDK.' }));
     const user = await getOrCreateUserAdmin(uid);
-    console.log(JSON.stringify({ traceId, msg: 'Successfully got or created user.', isSubscribed: user.isSubscribed, usageCount: user.usageCount }));
     
     if (!FREE_MODE && user.usageCount >= 5 && !user.isSubscribed) {
-      console.warn(JSON.stringify({ traceId, warning: 'Usage limit reached', required: 'subscription' }));
       return { error: 'Usage limit reached', required: 'subscription' };
     }
     
     // Don't increment usage for subscribed users
     if (!user.isSubscribed) {
-      console.log(JSON.stringify({ traceId, msg: 'Attempting to increment user usage with Admin SDK.' }));
       await incrementUserUsageAdmin(uid);
-      console.log(JSON.stringify({ traceId, msg: 'Successfully incremented user usage.' }));
     }
     
     // AI TOP PICK FLOW: Get a random "BUY" or "SELL" stock
     if (input.uris.length === 0 && !input.ticker) {
-        console.log(JSON.stringify({ traceId, msg: `AI Top Pick flow: fetching random ${input.recommendationType} stock.` }));
         const stock = input.recommendationType === 'SELL' 
             ? await getRandomSellStockAdmin() 
             : await getRandomBuyStockAdmin();
@@ -240,7 +225,6 @@ export async function handleGetRecommendation(uid: string, input: InitialRecomme
       const stock = allStocks.find(s => s.id === input.ticker);
 
       if (stock && stock.recommendation_analysis) {
-        console.log(JSON.stringify({ traceId, msg: 'Single stock flow: fetching markdown content.' }));
         const markdownContent = await getGcsFileContentAdmin(stock.recommendation_analysis);
         return { markdown: markdownContent, ticker: stock.id };
       }
@@ -248,9 +232,7 @@ export async function handleGetRecommendation(uid: string, input: InitialRecomme
 
     // Fallback to original Genkit flow for other cases (multi-stock, etc.)
     const flowInput = { ...input, traceId };
-    console.log(JSON.stringify({ traceId, msg: 'Calling getInitialRecommendation flow.' }));
     const result: InitialRecommendationOutput = await getInitialRecommendation(flowInput);
-    console.log(JSON.stringify({ traceId, msg: 'Successfully received result from getInitialRecommendation flow.' }));
     
     return result;
 
@@ -289,7 +271,7 @@ export async function handleFeedback(uid: string | null, message: string, replyT
   let userData: { uid: string, email: string | null } | null = null;
   if (uid) {
     const user = await getOrCreateUserAdmin(uid);
-    userData = { uid: user.uid, email: user.email };
+    userData = { uid: user.uid, email: user.email ?? null };
   }
   const { trackingId } = await saveFeedbackAdmin(message, replyToEmail, userData);
   
@@ -320,7 +302,8 @@ export async function handleWelcomeEmail(email: string, name: string): Promise<{
 
 export async function createCheckoutSession(uid: string, gaClientId: string | null): Promise<{ sessionId: string }> {
     const user = await getOrCreateUserAdmin(uid);
-    const origin = headers().get('origin')!;
+    const headersList = await headers();
+    const origin = headersList.get('origin')!;
 
     const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
     if (!priceId) {
@@ -352,7 +335,8 @@ export async function createStripePortalLink(uid: string): Promise<{ portalUrl: 
     throw new Error('User does not have a Stripe Customer ID.');
   }
 
-  const origin = headers().get('origin')!;
+  const headersList = await headers();
+  const origin = headersList.get('origin')!;
   const returnUrl = `${origin}/account`;
 
   const portalUrl = await createStripePortalSession(stripeCustomerId, returnUrl);
@@ -366,7 +350,7 @@ export async function sendPasswordReset(email: string): Promise<void> {
 }
 
 export async function handleWinSubmission(uid: string, formData: FormData): Promise<{ success: boolean, error?: string }> {
-    return handleWinSubmission(uid, formData);
+    return handleWinSubmissionAdmin(uid, formData);
 }
 
 export async function handleFeedbackSurvey(uid: string, data: FeedbackSurveyData): Promise<{success: boolean}> {
@@ -391,7 +375,8 @@ export async function handleCancellationIntent(uid: string, feedback: string): P
     await saveCancellationFeedbackAdmin(uid, feedback);
 
     // Generate and return the portal URL
-    const origin = headers().get('origin')!;
+    const headersList = await headers();
+    const origin = headersList.get('origin')!;
     const returnUrl = `${origin}/account`;
     const portalUrl = await createStripePortalSession(stripeCustomerId, returnUrl);
 

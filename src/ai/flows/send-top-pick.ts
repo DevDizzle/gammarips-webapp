@@ -75,7 +75,7 @@ export const sendTopPickFlow = ai.defineFlow(
     const summary = output.summary;
 
     // 4. Build the email content
-    const { text, html } = buildTopPickEmailContent(topPick, summary);
+    const { text, html } = await buildTopPickEmailContent(topPick, summary);
     
     // 5. Get all users and send the email
     const eligibleUsers = await getEligibleEmailRecipientsAdmin();

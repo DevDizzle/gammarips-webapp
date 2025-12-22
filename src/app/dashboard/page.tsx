@@ -14,30 +14,17 @@ export default async function DashboardPage() {
   const dashboardData = await getPublicDashboardData();
 
   return (
-    <div className="container mx-auto p-4 space-y-4 md:space-y-6 max-w-7xl">
+    <div className="container mx-auto p-4 space-y-6 max-w-5xl">
       {/* Top Bar: Indices Ticker */}
       <section>
         <IndicesTicker />
       </section>
 
-      {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        
-        {/* Main Column: 66% */}
-        <div className="lg:col-span-2 space-y-6">
-           <PublicWinnersTable data={dashboardData} />
-        </div>
-
-        {/* Sidebar Column: 33% */}
-        <div className="lg:col-span-1 space-y-6">
-            
-            {/* Watchlist Widget (Personalized/Gated) */}
-            {/* <WatchlistWidget /> */}
-
-            {/* News Feed (Contextual) */}
-            <NewsFeedWidget />
-
-        </div>
+      {/* Main content stack */}
+      <div className="space-y-6">
+        <PublicWinnersTable data={dashboardData} />
+        <NewsFeedWidget />
+        {/* <WatchlistWidget /> */}
       </div>
     </div>
   );

@@ -1,30 +1,24 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
 import { getSmartNews } from '@/app/dashboard/actions';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { ExternalLink, Newspaper } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import type { NewsItem } from '@/lib/polygon';
 import { formatDistanceToNow } from 'date-fns';
-import { useAuthModal } from '@/components/auth/auth-modal-provider';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/use-auth';
 
-const INITIAL_VISIBLE_COUNT = 4;
+const INITIAL_VISIBLE_COUNT = 3;
 
 export function NewsFeedWidget() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
-  const { openAuthModal } = useAuthModal();
-  const { user } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch more initially to support the "Show More" button
         const data = await getSmartNews({ limit: 20 });
         setNews(data);
       } catch (error) {
@@ -43,27 +37,29 @@ export function NewsFeedWidget() {
        <CardHeader>
         <CardTitle>Market News</CardTitle>
         <CardDescription>
-          Breaking headlines and analysis from top financial news sources, filtered for quality.
+          Breaking headlines and analysis from top financial news sources.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 p-4 sm:p-6 pt-0 flex flex-col">
+      <CardContent className="flex-1 p-0 pt-0 flex flex-col">
         <div className="flex-1">
           {loading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="py-3 border-b space-y-2 last:border-b-0">
-                       <div className="h-4 bg-muted rounded w-3/4 animate-pulse" />
-                       <div className="h-3 bg-muted rounded w-1/2 animate-pulse" />
-                  </div>
-              ))
+              <div className="p-4 sm:p-6 space-y-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="py-3 space-y-2">
+                        <div className="h-4 bg-muted rounded w-3/4 animate-pulse" />
+                        <div className="h-3 bg-muted rounded w-1/2 animate-pulse" />
+                    </div>
+                ))}
+              </div>
           ) : visibleNews.length > 0 ? (
-              <div className="-mx-4 -mt-4 sm:-mx-6">
+              <div className="divide-y">
                 {visibleNews.map((item) => (
                     <a 
                         key={item.id} 
                         href={item.article_url} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="block p-4 border-b hover:bg-muted/50 transition-colors group"
+                        className="block p-4 hover:bg-muted/50 transition-colors group"
                     >
                         <div className="flex gap-3">
                             <div className="flex-1 min-w-0">
@@ -101,15 +97,15 @@ export function NewsFeedWidget() {
                 ))}
               </div>
           ) : (
-              <div className="flex items-center justify-center h-full text-center text-muted-foreground text-sm">
+              <div className="flex items-center justify-center h-full text-center text-muted-foreground text-sm p-6">
                   No news available right now.
               </div>
           )}
         </div>
         {!isExpanded && news.length > INITIAL_VISIBLE_COUNT && (
-            <div className="pt-2 text-center">
+            <div className="p-4 pt-2 text-center">
                 <Button variant="link" className="w-full" onClick={() => setIsExpanded(true)}>
-                    Show More
+                    Show All {news.length} Articles
                 </Button>
             </div>
         )}

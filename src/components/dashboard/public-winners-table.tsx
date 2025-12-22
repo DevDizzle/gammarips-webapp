@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -240,7 +241,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
         </BlurGate>
 
         {user && allSignals.length > 10 && (
-            <div className="mt-4 text-center">
+            <div className="text-center">
                  <Button variant="outline" onClick={() => setShowAll(!showAll)}>
                     {showAll ? 'Show Less' : `Show All (${allSignals.length})`}
                  </Button>
@@ -397,7 +398,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
         </BlurGate>
 
          {user && allWinners.length > 10 && (
-            <div className="mt-4 text-center">
+            <div className="text-center">
                  <Button variant="outline" onClick={() => setShowAll(!showAll)}>
                     {showAll ? 'Show Less' : `Show All (${allWinners.length})`}
                  </Button>

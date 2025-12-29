@@ -442,17 +442,27 @@ export async function getMidDayMoversAdmin(): Promise<PerformanceSignal[]> {
         const timeZone = 'America/New_York';
         const now = new Date();
         const nowInET = toZonedTime(now, timeZone);
-        const yesterdayInET = subDays(nowInET, 1);
-        const yesterdayStr = format(yesterdayInET, 'yyyy-MM-dd');
+        
+        let lookbackDays = 1;
+        const dayOfWeek = nowInET.getDay(); // 0 is Sunday, 1 is Monday, ...
+        
+        if (dayOfWeek === 1) { // Monday
+            lookbackDays = 3; // Go back to Friday
+        } else if (dayOfWeek === 0) { // Sunday
+            lookbackDays = 2; // Go back to Friday
+        }
 
-        console.log(`[getMidDayMoversAdmin] Fetching signals for run_date: ${yesterdayStr}`);
+        const targetDateInET = subDays(nowInET, lookbackDays);
+        const targetDateStr = format(targetDateInET, 'yyyy-MM-dd');
+
+        console.log(`[getMidDayMoversAdmin] Fetching signals for run_date: ${targetDateStr} (Lookback: ${lookbackDays} days)`);
 
         const querySnapshot = await adminDb.collection('performance_tracker')
-            .where('run_date', '==', yesterdayStr)
+            .where('run_date', '==', targetDateStr)
             .get();
 
         if (querySnapshot.empty) {
-            console.log(`No performance signals found for run_date: ${yesterdayStr}`);
+            console.log(`No performance signals found for run_date: ${targetDateStr}`);
             return [];
         }
 
@@ -603,6 +613,25 @@ export async function saveCancellationFeedbackAdmin(uid: string, feedback: strin
         console.error("Error writing cancellation feedback to Firestore with Admin SDK: ", error);
         throw new Error("Could not save cancellation feedback.");
     }
+}
+
+export async function logChatInteractionAdmin(
+  uid: string | null,
+  message: string,
+  response: string,
+  source?: string
+) {
+  try {
+    await adminDb.collection("chat_logs").add({
+      uid: uid || 'anonymous',
+      message,
+      response,
+      source: source || null,
+      createdAt: FieldValue.serverTimestamp(),
+    });
+  } catch (error) {
+    console.error("Failed to log chat interaction:", error);
+  }
 }
 
 export async function getWinnerForTickerAdmin(ticker: string): Promise<Winner | null> {
@@ -1153,7 +1182,7 @@ export async function getOrCreateUserAdmin(
 
 export async function getUsersForFeedbackEmailAdmin(): Promise<DbUser[]> {
     const eligibleUsers: DbUser[] = [];
-    const daysIntervals = [7, 28, 112, 224];
+    const daysIntervals = [7, 14, 30, 90, 180];
     const now = new Date();
     const thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000;
 
@@ -1241,7 +1270,50 @@ export async function getSubscribedUsersAdmin(): Promise<DbUser[]> {
 
 export async function incrementUserUsageAdmin(uid: string) {
   const userRef = adminDb.collection('users').doc(uid);
-  await userRef.update({ usageCount: FieldValue.increment(1) });
+  
+  try {
+    await adminDb.runTransaction(async (transaction) => {
+      const userDoc = await transaction.get(userRef);
+      if (!userDoc.exists) {
+        return;
+      }
+
+      const userData = userDoc.data() as DbUser;
+      const now = new Date();
+      const timeZone = 'America/New_York';
+      
+      let incrementDays = 0;
+      
+      // Check if we need to increment daysActive
+      if (!userData.lastActiveAt) {
+          incrementDays = 1;
+      } else {
+          // Compare dates in ET
+          const lastActiveDate = toZonedTime(userData.lastActiveAt.toDate(), timeZone);
+          const currentDate = toZonedTime(now, timeZone);
+          
+          const lastActiveDay = format(lastActiveDate, 'yyyy-MM-dd');
+          const currentDay = format(currentDate, 'yyyy-MM-dd');
+
+          if (lastActiveDay !== currentDay) {
+              incrementDays = 1;
+          }
+      }
+
+      const updates: any = {
+          usageCount: FieldValue.increment(1),
+          lastActiveAt: FieldValue.serverTimestamp(),
+      };
+
+      if (incrementDays > 0) {
+          updates.daysActive = FieldValue.increment(incrementDays);
+      }
+
+      transaction.update(userRef, updates);
+    });
+  } catch (error) {
+    console.error(`Failed to increment usage for user ${uid}:`, error);
+  }
 }
 
 export async function setUserSubscriptionStatusAdmin(

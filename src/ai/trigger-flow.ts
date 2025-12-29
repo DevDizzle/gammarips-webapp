@@ -34,7 +34,7 @@ async function testSendWelcomeEmail() {
     const { text, html } = await buildWelcomeEmailContent(TEST_NAME);
     const result = await sendEmail({
         to: TEST_EMAIL,
-        subject: '[TEST] Welcome to GammaRips. Here is your daily routine.',
+        subject: 'Welcome to GammaRips. Here is your daily routine.',
         text,
         html,
     });
@@ -46,7 +46,7 @@ async function testSendFeedbackRequestEmail() {
     const { text, html } = await buildFeedbackRequestEmailContent(TEST_NAME);
     const result = await sendEmail({
         to: TEST_EMAIL,
-        subject: "[TEST] One week in. How is the data?",
+        subject: "One week in. How is the data?",
         text,
         html,
     });
@@ -59,7 +59,7 @@ async function testSendFeedbackAcknowledgmentEmail() {
     const { text, html } = await buildFeedbackAcknowledgmentEmailContent(trackingId);
     const result = await sendEmail({
         to: TEST_EMAIL,
-        subject: `[TEST] We've received your message (Ref: ${trackingId})`,
+        subject: `We've received your message (Ref: ${trackingId})`,
         text,
         html,
     });
@@ -85,7 +85,7 @@ async function testSendDailySetups() {
         const { text, html } = await buildDailySetupsEmailContent(winners, topGainers, topLosers);
         const result = await sendEmail({
             to: TEST_EMAIL,
-            subject: '[TEST] The Daily Playbook: Tomorrow’s contracts are ready.',
+            subject: 'The Daily Playbook: Tomorrow’s contracts are ready.',
             text,
             html,
         });
@@ -117,7 +117,7 @@ async function testSendTopPick() {
         
         const result = await sendEmail({
             to: TEST_EMAIL,
-            subject: `[TEST] GammaRips AI Top Pick of the Day: ${topPick.id}`,
+            subject: `GammaRips AI Top Pick of the Day: ${topPick.id}`,
             text,
             html,
         });
@@ -139,7 +139,7 @@ async function testSendMidDayMovers() {
         const { text, html } = await buildMidDayMoversEmailContent(movers);
         const result = await sendEmail({
             to: TEST_EMAIL,
-            subject: "[TEST] GammaRips Mid-Day Movers: See What's Ripping",
+            subject: "GammaRips Mid-Day Movers: See What's Ripping",
             text,
             html,
         });
@@ -154,7 +154,7 @@ async function testSendEarlyAdopterEmail() {
     const { text, html } = await buildInsiderInvitationEmailContent(TEST_NAME, 'https://gammarips.com/dashboard');
     const result = await sendEmail({
         to: TEST_EMAIL,
-        subject: '[TEST] Good News: GammaRips is Now Free',
+        subject: 'Good News: GammaRips is Now Free',
         text,
         html,
     });

@@ -6,26 +6,21 @@ import { unstable_noStore as noStore } from 'next/cache';
 export async function GET(request: NextRequest) {
   noStore(); // Ensure this function is always executed dynamically
 
-  const authHeader = request.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
+  const { searchParams } = new URL(request.url);
+  const cronKey = searchParams.get('cronKey');
+  const testEmail = searchParams.get('testEmail') || undefined;
+
+  const headerAuth = request.headers.get('X-Cloud-Scheduler');
+  const isAuthorized = headerAuth === 'true' || cronKey === 'GammaRipsCron2025';
   const isDevelopment = process.env.NODE_ENV === 'development';
-  
-  if (!isDevelopment) {
-    if (!cronSecret) {
-      console.error('CRON_SECRET is not set in environment variables.');
-      return NextResponse.json({ error: 'Internal server configuration error.' }, { status: 500 });
-    }
 
-    const isAuthorized = authHeader === `Bearer ${cronSecret}`;
-
-    if (!isAuthorized) {
-      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
-    }
+  if (!isDevelopment && !isAuthorized) {
+    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
   }
 
   try {
-    console.log('Cron job triggered: Starting sendMidDayMoversFlow...');
-    const result = await sendMidDayMoversFlow();
+    console.log('Cron job triggered: Starting sendMidDayMoversFlow...', { testEmail });
+    const result = await sendMidDayMoversFlow({ testEmail });
     console.log('sendMidDayMoversFlow completed successfully.', result);
     return NextResponse.json({ success: true, ...result });
   } catch (error: any) {

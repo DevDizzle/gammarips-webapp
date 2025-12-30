@@ -25,6 +25,7 @@ import {
     type PerformanceSignal 
 } from '@/lib/firebase-admin';
 import { summarizeForEmailPrompt } from '@/ai/flows/send-top-pick';
+import { format } from 'date-fns';
 
 const TEST_EMAIL = 'eraphaelparra@gmail.com';
 const TEST_NAME = 'Test User';
@@ -83,9 +84,12 @@ async function testSendDailySetups() {
         topLosers.sort((a,b) => a.percent_gain - b.percent_gain);
 
         const { text, html } = await buildDailySetupsEmailContent(winners, topGainers, topLosers);
+        const today = format(new Date(), 'MMMM d');
+        const subject = `The Daily Playbook for ${today}`;
+
         const result = await sendEmail({
             to: TEST_EMAIL,
-            subject: 'The Daily Playbook: Tomorrow’s contracts are ready.',
+            subject: subject,
             text,
             html,
         });

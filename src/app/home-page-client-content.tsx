@@ -35,28 +35,20 @@ export default function HomePageClientContent({ showButton = false, buttonText =
   }
 
   if (showButton) {
-     if (user) {
-       return (
+     return (
+       <>
+         <AuthDialog
+            open={showAuthDialog}
+            onOpenChange={setShowAuthDialog}
+            defaultView={authDialogDefaultView}
+         />
          <Button asChild size="lg">
            <Link href="/dashboard">
-             Go to Dashboard <ArrowRight className="ml-2 h-5 w-5" />
+             {buttonText} <ArrowRight className="ml-2 h-5 w-5" />
            </Link>
          </Button>
-       );
-     }
-
-     return (
-        <>
-            <AuthDialog
-                open={showAuthDialog}
-                onOpenChange={setShowAuthDialog}
-                defaultView={authDialogDefaultView}
-            />
-            <Button onClick={() => setShowAuthDialog(true)} size="lg">
-                {buttonText} <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-        </>
-     )
+       </>
+     );
   }
 
   return (

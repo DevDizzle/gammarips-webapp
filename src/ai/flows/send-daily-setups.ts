@@ -5,6 +5,7 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { getEligibleEmailRecipientsAdmin, getWinnersDashboardAdmin, type Winner, getPerformanceSignals as getPerformanceSignalsAdmin, type PerformanceSignal } from '@/lib/firebase-admin';
 import { sendEmail, buildDailySetupsEmailContent } from '@/lib/mailgun';
+import { format } from 'date-fns';
 
 const SendDailySetupsOutputSchema = z.object({
   sentCount: z.number(),
@@ -15,15 +16,31 @@ const SendDailySetupsOutputSchema = z.object({
 export const sendDailySetupsFlow = ai.defineFlow(
   {
     name: 'sendDailySetupsFlow',
-    inputSchema: z.void(),
+    inputSchema: z.object({
+      testEmail: z.string().email().optional(),
+    }).optional(),
     outputSchema: SendDailySetupsOutputSchema,
   },
-  async () => {
+  async (input) => {
     let sentCount = 0;
     let skippedCount = 0;
 
-    const [eligibleUsers, winners, topGainers, topLosers] = await Promise.all([
-        getEligibleEmailRecipientsAdmin(),
+    let eligibleUsers: any[] = [];
+    if (input?.testEmail) {
+        eligibleUsers = [{
+            uid: 'test-user',
+            email: input.testEmail,
+            displayName: 'Test User',
+            isAnonymous: false,
+            isSubscribed: true,
+            usageCount: 0,
+        }];
+        console.log(`Running in TEST mode. Sending email only to ${input.testEmail}`);
+    } else {
+        eligibleUsers = await getEligibleEmailRecipientsAdmin();
+    }
+
+    const [winners, topGainers, topLosers] = await Promise.all([
         getWinnersDashboardAdmin(),
         getPerformanceSignalsAdmin('desc', 5),
         getPerformanceSignalsAdmin('asc', 5)
@@ -38,12 +55,14 @@ export const sendDailySetupsFlow = ai.defineFlow(
     }
 
     const { text, html } = await buildDailySetupsEmailContent(winners, topGainers, topLosers);
+    const today = format(new Date(), 'MMMM d');
+    const subject = `The Daily Playbook for ${today}`;
 
     for (const user of eligibleUsers) {
       if (user.email) {
         const result = await sendEmail({
             to: `${user.displayName || user.email} <${user.email}>`,
-            subject: 'The Daily Playbook: Tomorrow’s contracts are ready.',
+            subject: subject,
             text,
             html,
         });
@@ -61,4 +80,3 @@ export const sendDailySetupsFlow = ai.defineFlow(
     return { sentCount, skippedCount, totalUsers: eligibleUsers.length };
   }
 );
-

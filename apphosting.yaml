@@ -27,6 +27,10 @@ scheduledJobs:
     timeZone: America/New_York
     httpTarget:
       uri: /api/cron/send-midday-movers
+  - schedule: "0 10 * * *" # 10:00 AM ET every day
+    timeZone: America/New_York
+    httpTarget:
+      uri: /api/cron/send-feedback-requests
 
 # Make secrets available to the run environment.
 # https://firebase.google.com/docs/app-hosting/configure#secrets

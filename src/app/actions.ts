@@ -70,11 +70,8 @@ export async function getWinnersDashboard(): Promise<Winner[]> {
 
 export async function incrementDashboardViewCount(uid: string): Promise<{success: boolean}> {
   try {
-    const user = await getOrCreateUserAdmin(uid);
-    // Only increment for non-subscribed users
-    if (!user.isSubscribed) {
-        await incrementUserUsageAdmin(uid);
-    }
+    // Increment usage for everyone to track deep dives
+    await incrementUserUsageAdmin(uid);
     return { success: true };
   } catch (error) {
     console.error(`Failed to increment dashboard view for user ${uid}`, error);
@@ -197,10 +194,8 @@ export async function handleGetRecommendation(uid: string, input: InitialRecomme
       return { error: 'Usage limit reached', required: 'subscription' };
     }
     
-    // Don't increment usage for subscribed users
-    if (!user.isSubscribed) {
-      await incrementUserUsageAdmin(uid);
-    }
+    // Increment usage for everyone (tracking)
+    await incrementUserUsageAdmin(uid);
     
     // AI TOP PICK FLOW: Get a random "BUY" or "SELL" stock
     if (input.uris.length === 0 && !input.ticker) {

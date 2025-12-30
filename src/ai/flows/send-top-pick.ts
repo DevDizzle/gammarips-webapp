@@ -41,27 +41,42 @@ const SendTopPickOutputSchema = z.object({
 export const sendTopPickFlow = ai.defineFlow(
   {
     name: 'sendTopPickFlow',
-    inputSchema: z.void(),
+    inputSchema: z.object({
+      testEmail: z.string().email().optional(),
+    }).optional(),
     outputSchema: SendTopPickOutputSchema,
   },
-  async () => {
+  async (input) => {
     let sentCount = 0;
     let skippedCount = 0;
+
+    let eligibleUsers: any[] = [];
+    if (input?.testEmail) {
+        eligibleUsers = [{
+            uid: 'test-user',
+            email: input.testEmail,
+            displayName: 'Test User',
+            isAnonymous: false,
+            isSubscribed: true,
+            usageCount: 0,
+        }];
+        console.log(`Running in TEST mode. Sending email only to ${input.testEmail}`);
+    } else {
+        eligibleUsers = await getEligibleEmailRecipientsAdmin();
+    }
 
     // 1. Get the top pick stock
     const topPick = await getTopPickAdmin();
 
     if (!topPick) {
       console.warn('No top pick found for today. Skipping "Top Pick" email.');
-      const allUsers = await getEligibleEmailRecipientsAdmin();
-      return { sentCount: 0, skippedCount: allUsers.length, totalUsers: allUsers.length, topPickTicker: null };
+      return { sentCount: 0, skippedCount: eligibleUsers.length, totalUsers: eligibleUsers.length, topPickTicker: null };
     }
     
     // 2. Get the full analysis text
     if (!topPick.recommendation_analysis) {
         console.error(`Top pick ${topPick.id} is missing recommendation_analysis path. Skipping email.`);
-        const allUsers = await getEligibleEmailRecipientsAdmin();
-        return { sentCount: 0, skippedCount: allUsers.length, totalUsers: allUsers.length, topPickTicker: topPick.id };
+        return { sentCount: 0, skippedCount: eligibleUsers.length, totalUsers: eligibleUsers.length, topPickTicker: topPick.id };
     }
     const analysisText = await getGcsFileContentAdmin(topPick.recommendation_analysis);
 
@@ -69,17 +84,14 @@ export const sendTopPickFlow = ai.defineFlow(
     const { output } = await summarizeForEmailPrompt({ analysisText });
     if (!output?.summary) {
         console.error(`AI failed to generate a summary for ${topPick.id}. Skipping email.`);
-        const allUsers = await getEligibleEmailRecipientsAdmin();
-        return { sentCount: 0, skippedCount: allUsers.length, totalUsers: allUsers.length, topPickTicker: topPick.id };
+        return { sentCount: 0, skippedCount: eligibleUsers.length, totalUsers: eligibleUsers.length, topPickTicker: topPick.id };
     }
     const summary = output.summary;
 
     // 4. Build the email content
     const { text, html } = await buildTopPickEmailContent(topPick, summary);
     
-    // 5. Get all users and send the email
-    const eligibleUsers = await getEligibleEmailRecipientsAdmin();
-    
+    // 5. Send the email
     for (const user of eligibleUsers) {
       if (user.email) {
         const result = await sendEmail({

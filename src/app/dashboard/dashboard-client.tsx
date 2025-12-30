@@ -54,7 +54,7 @@ export default function DashboardPageClient({ children }: { children: React.Reac
     
     // 2. If user is not logged in, show the authentication dialog
     if (!user) {
-        return <AuthDialog open={true} onOpenChange={() => router.push('/')} />;
+        return <AuthDialog open={true} onOpenChange={() => router.push('/dashboard')} />;
     }
 
     // 3. If user exists but their database record is still loading or doesn't exist, show loader.

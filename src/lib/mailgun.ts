@@ -218,7 +218,7 @@ Hi ${name},
 
 I’m Evan, the founder of GammaRips.
 
-You’ve had access to the Playbook for a week now. I want to check in and see if the daily contracts are matching your trading style.
+You’ve been using the Playbook for a while now. I want to check in and see if the daily contracts are matching your trading style.
 
 We build this tool for Rippers, not for Wall Street. We want to know exactly what is working and what we need to fix.
 
@@ -240,7 +240,7 @@ Founder, GammaRips
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
-    <title>One week in. How is the data?</title>
+    <title>How is the data working for you?</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <div style="display: none; max-height: 0px; overflow: hidden;">&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌</div>
@@ -257,7 +257,7 @@ Founder, GammaRips
                         <td style="padding: 0 40px;">
                             <p style="font-size: 16px; line-height: 1.6; margin: 0;">Hi ${name},</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">I’m Evan, the founder of GammaRips.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You’ve had access to the Playbook for a week now. I want to check in and see if the daily contracts are matching your trading style.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">You’ve been using the Playbook for a while now. I want to check in and see if the daily contracts are matching your trading style.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We build this tool for Rippers, not for Wall Street. We want to know exactly what is working and what we need to fix.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">If you have a minute, let me know your honest thoughts.</p>
                         </td>
@@ -290,7 +290,7 @@ export async function sendFeedbackRequestEmail({ to, name }: { to: string, name:
     return sendEmail({
         from: 'Evan at GammaRips <support@gammarips.com>', // Updated sender
         to: `${name} <${to}>`,
-        subject: `GammaRips: One week in. How is the data?`,
+        subject: `GammaRips: How is the data working for you?`,
         text,
         html,
     });

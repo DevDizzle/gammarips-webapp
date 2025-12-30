@@ -4,6 +4,7 @@ import { IndicesTicker } from '@/components/dashboard/indices-ticker';
 import { PublicWinnersTable } from '@/components/dashboard/public-winners-table';
 import { NewsFeedWidget } from '@/components/dashboard/news-feed';
 import { WatchlistWidget } from '@/components/dashboard/watchlist-widget';
+import { DashboardUsageTracker } from '@/components/dashboard/dashboard-usage-tracker';
 
 export const metadata = {
   title: 'Market Dashboard | GammaRips',
@@ -15,6 +16,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="container mx-auto p-4 space-y-6 max-w-5xl">
+      <DashboardUsageTracker />
       {/* Top Bar: Indices Ticker */}
       <section>
         <IndicesTicker />

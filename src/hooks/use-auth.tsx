@@ -23,6 +23,7 @@ import { event as trackEvent } from '@/lib/gtag';
 import { useRouter } from 'next/navigation';
 import { createCheckoutSession } from '@/app/actions';
 import { loadStripe } from '@stripe/stripe-js';
+import { FREE_MODE } from '@/lib/config';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -100,9 +101,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (additionalInfo?.isNewUser) {
       trackEvent('sign_up', { method });
       
-      // The welcome email is no longer sent on sign up.
-      // It is now sent via the Stripe webhook upon successful subscription.
-      router.push('/auth/processing');
+      if (FREE_MODE) {
+          toast({ title: "Welcome to ProfitScout!", description: "Account created successfully." });
+          router.push('/dashboard');
+      } else {
+          // The welcome email is no longer sent on sign up.
+          // It is now sent via the Stripe webhook upon successful subscription.
+          router.push('/auth/processing');
+      }
 
     } else {
        toast({ title: "Successfully signed in." });

@@ -1,6 +1,7 @@
 'use server';
 
 import { chatRouterFlow } from '@/ai/flows/chat-router';
+import { logChatInteractionAdmin } from '@/lib/firebase-admin';
 
 export type ChatMessage = {
   role: 'user' | 'model';
@@ -9,13 +10,17 @@ export type ChatMessage = {
 
 export async function submitChatQuery(
   input: string,
-  history: ChatMessage[] = []
+  history: ChatMessage[] = [],
+  uid?: string
 ) {
   try {
     const result = await chatRouterFlow({
       userInput: input,
       history: history,
     });
+
+    // Log the interaction
+    logChatInteractionAdmin(uid || null, input, result.response, result.source).catch(console.error);
 
     return {
       success: true,

@@ -57,6 +57,10 @@ const UserSchema = z.object({
   isAnonymous: z.boolean(),
   isSubscribed: z.boolean(),
   usageCount: z.number().int().nonnegative(),
+  lastActiveAt: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data), {
+    message: "Expected Firestore Timestamp",
+  }).optional(),
+  daysActive: z.number().int().nonnegative().optional(),
   createdAt: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data), { // Allow server-side Timestamps
     message: "Expected Firestore Timestamp",
   }).optional(),

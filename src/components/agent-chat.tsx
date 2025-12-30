@@ -15,6 +15,8 @@ import GeminiIcon from './icons/GeminiIcon';
 import { useChat } from '@/components/layout/chat-context';
 import { Drawer } from 'vaul';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { useAuth } from '@/hooks/use-auth';
+import { incrementDashboardViewCount } from '@/app/actions';
 
 interface Message {
   id: string;
@@ -164,6 +166,7 @@ const ChatInterface = ({
 
 export default function AgentChat() {
   const { isOpen, setIsOpen, activeTicker } = useChat();
+  const { user } = useAuth();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -197,6 +200,10 @@ export default function AgentChat() {
     setInput('');
     setIsLoading(true);
 
+    if (user) {
+        incrementDashboardViewCount(user.uid).catch(console.error);
+    }
+
     try {
       // If we have an active ticker and the user didn't mention it, prepend it for context
       // (This is a simple client-side context injection)
@@ -213,7 +220,7 @@ export default function AgentChat() {
       })) as { role: 'user' | 'model'; content: string }[];
 
       // Call the Server Action
-      const response = await submitChatQuery(finalQuery, history);
+      const response = await submitChatQuery(finalQuery, history, user?.uid);
       
       const assistantMessage: Message = {
         id: crypto.randomUUID(),

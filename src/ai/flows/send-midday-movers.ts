@@ -16,28 +16,42 @@ const SendMidDayMoversOutputSchema = z.object({
 export const sendMidDayMoversFlow = ai.defineFlow(
   {
     name: 'sendMidDayMoversFlow',
-    inputSchema: z.void(),
+    inputSchema: z.object({
+      testEmail: z.string().email().optional(),
+    }).optional(),
     outputSchema: SendMidDayMoversOutputSchema,
   },
-  async () => {
+  async (input) => {
     let sentCount = 0;
     let skippedCount = 0;
+
+    let eligibleUsers: any[] = [];
+    if (input?.testEmail) {
+        eligibleUsers = [{
+            uid: 'test-user',
+            email: input.testEmail,
+            displayName: 'Test User',
+            isAnonymous: false,
+            isSubscribed: true,
+            usageCount: 0,
+        }];
+        console.log(`Running in TEST mode. Sending email only to ${input.testEmail}`);
+    } else {
+        eligibleUsers = await getEligibleEmailRecipientsAdmin();
+    }
 
     // 1. Get the top movers from yesterday
     const movers = await getMidDayMoversAdmin();
 
     if (movers.length === 0) {
       console.warn('No mid-day movers found for yesterday. Skipping email.');
-      const allUsers = await getEligibleEmailRecipientsAdmin();
-      return { sentCount: 0, skippedCount: allUsers.length, totalUsers: allUsers.length, moversFound: 0 };
+      return { sentCount: 0, skippedCount: eligibleUsers.length, totalUsers: eligibleUsers.length, moversFound: 0 };
     }
 
     // 2. Build the email content
     const { text, html } = await buildMidDayMoversEmailContent(movers);
     
-    // 3. Get all eligible users and send the email
-    const eligibleUsers = await getEligibleEmailRecipientsAdmin();
-    
+    // 3. Send the email
     for (const user of eligibleUsers) {
       if (user.email) {
         const result = await sendEmail({

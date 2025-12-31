@@ -45,9 +45,8 @@ export async function sendEmail(options: EmailOptions) {
    if (options.replyTo) {
     form.append('h:Reply-To', options.replyTo);
   }
-  // Explicitly disable test mode to prevent '[TEST]' prefix in subjects
+  // Explicitly set testmode to false to prevent [TEST] prefix.
   form.append('o:testmode', 'false');
-
 
   // Basic auth header: "api:KEY"
   const authHeader =

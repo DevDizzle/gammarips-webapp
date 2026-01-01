@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { getEligibleEmailRecipientsAdmin, getWinnersDashboardAdmin, type Winner, getPerformanceSignals as getPerformanceSignalsAdmin, type PerformanceSignal } from '@/lib/firebase-admin';
 import { sendEmail, buildDailySetupsEmailContent } from '@/lib/mailgun';
 import { format } from 'date-fns';
+import { isMarketHoliday } from '@/lib/market-holidays';
 
 const SendDailySetupsOutputSchema = z.object({
   sentCount: z.number(),
@@ -24,6 +25,13 @@ export const sendDailySetupsFlow = ai.defineFlow(
   async (input) => {
     let sentCount = 0;
     let skippedCount = 0;
+    
+    // Holiday Check: Exit early if it's a market holiday.
+    if (isMarketHoliday()) {
+        console.log('Skipping daily setups email: Today is a market holiday.');
+        const allUsers = await getEligibleEmailRecipientsAdmin();
+        return { sentCount: 0, skippedCount: allUsers.length, totalUsers: allUsers.length };
+    }
 
     let eligibleUsers: any[] = [];
     if (input?.testEmail) {

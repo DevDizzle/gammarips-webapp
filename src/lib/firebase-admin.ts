@@ -682,7 +682,8 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
             if (validation.success) {
                 winners.push(validation.data);
             } else {
-                console.error("Invalid winner data from Firestore:", validation.error.flatten());
+                // Improved logging
+                console.error(`Invalid winner data in Firestore for doc ${doc.id}:`, JSON.stringify(validation.error.flatten(), null, 2));
             }
         });
         
@@ -1573,3 +1574,4 @@ export async function getUserWatchlistAdmin(uid: string): Promise<WatchlistItem[
         return [];
     }
 }
+

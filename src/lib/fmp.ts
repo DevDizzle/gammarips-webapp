@@ -103,34 +103,11 @@ export async function getMarketIndices(): Promise<MarketIndex[]> {
 
 /**
  * Fetches or calculates a Put/Call Ratio (PCR).
- * Since a direct "Market PCR" endpoint is rare, we use SPY's sentiment/options data if available,
- * or return a standard neutral value if the specific endpoint is not accessible.
+ * The proxy API was unreliable, so this now returns a fixed value.
+ * We can replace this with a reliable data source in the future.
  */
 export async function getPutCallRatio(): Promise<number> {
-    if (!FMP_API_KEY) return 0.85;
-
-    try {
-        // Try to get stock sentiment or options volume for SPY to derive a proxy
-        // Using a social sentiment endpoint as a proxy for "sentiment" if options data is gated
-        const response = await fetch(`https://financialmodelingprep.com/api/v4/social-sentiment?symbol=SPY&apikey=${FMP_API_KEY}`, {
-            next: { revalidate: 300 }
-        });
-        
-        if (response.ok) {
-             const data = await response.json();
-             if (data && data.length > 0) {
-                 // Calculate a ratio based on sentiment (bullish/bearish)
-                 // This is a PROXY for PCR. High sentiment = Low PCR (Bullish).
-                 // sentimentScore usually -1 to 1.
-                 // PCR ~ 1 - (sentiment * 0.5)
-                 const sentiment = data[0].stocktwitsSentiment || 0.5;
-                 return Number((1.5 - sentiment).toFixed(2)); // Rough mapping
-             }
-        }
-    } catch (e) {
-        // console.warn("Failed to fetch PCR proxy, using default.");
-    }
-
-    // Default to a slightly bullish/neutral market PCR if data fails
-    return 0.85; 
+    // The previous proxy fetch was unreliable. Returning the requested
+    // value of 0.90 directly until a better source is found.
+    return 0.90;
 }

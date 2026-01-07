@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -7,16 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { getTickerEvents } from '../../actions';
+import { getEconomicEvents } from '../actions';
 import type { TickerEvent } from '@/lib/firebase-admin';
-import { CalendarDays } from 'lucide-react';
+import { CalendarDays, Globe } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-interface UpcomingEarningsProps {
-    ticker: string;
-}
-
-function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
+export default function EconomicEventsWidget() {
   const [isLoading, setIsLoading] = useState(true);
   const [events, setEvents] = useState<TickerEvent[]>([]);
   const { toast } = useToast();
@@ -25,13 +20,21 @@ function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const eventsData = await getTickerEvents(ticker, 'ticker');
-        setEvents(eventsData);
+        const eventsData = await getEconomicEvents();
+        // Get events for the next 30 days
+        const upcomingEvents = eventsData.filter(event => {
+            const eventDate = new Date(event.event_date);
+            const now = new Date();
+            const thirtyDaysFromNow = new Date();
+            thirtyDaysFromNow.setDate(now.getDate() + 30);
+            return eventDate >= now && eventDate <= thirtyDaysFromNow;
+        }).slice(0, 5); // Limit to 5
+        setEvents(upcomingEvents);
       } catch (error) {
-        console.error(`Failed to fetch events for ${ticker}:`, error);
+        console.error(`Failed to fetch economic events:`, error);
         toast({
           title: 'Error Fetching Events',
-          description: 'Could not load upcoming events. Please try again later.',
+          description: 'Could not load upcoming economic events.',
           variant: 'destructive',
         });
       } finally {
@@ -39,13 +42,12 @@ function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
       }
     };
     fetchData();
-  }, [ticker, toast]);
+  }, [toast]);
 
   const renderSkeleton = () => (
     <div className="space-y-2">
-      {Array.from({ length: 2 }).map((_, i) => (
-        <div key={i} className="grid grid-cols-3 gap-4">
-          <Skeleton className="h-5 w-full" />
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div key={i} className="grid grid-cols-2 gap-4">
           <Skeleton className="h-5 w-full" />
           <Skeleton className="h-5 w-full" />
         </div>
@@ -57,8 +59,8 @@ function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><CalendarDays /> Upcoming Catalysts</CardTitle>
-                 <CardDescription>Loading key dates for {ticker}...</CardDescription>
+                <CardTitle className="flex items-center gap-2"><Globe /> Economic Calendar</CardTitle>
+                 <CardDescription>Loading key dates...</CardDescription>
             </CardHeader>
             <CardContent>
                 {renderSkeleton()}
@@ -68,15 +70,15 @@ function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
   }
 
   if (events.length === 0) {
-    return null; // Don't render the card if there are no ticker-specific events
+    return null; // Don't render the card if there are no upcoming events
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><CalendarDays /> Upcoming {ticker} Catalysts</CardTitle>
+        <CardTitle className="flex items-center gap-2"><Globe /> Upcoming Economic Events</CardTitle>
         <CardDescription>
-            Key dates that could impact {ticker}'s stock price.
+            Key market-wide dates that could impact volatility across all stocks.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -90,7 +92,7 @@ function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
             <TableBody>
                 {events.map(event => (
                     <TableRow key={event.id}>
-                        <TableCell className="font-medium">{new Date(event.event_date).toLocaleDateString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'UTC' })}</TableCell>
+                        <TableCell className="font-medium">{new Date(event.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</TableCell>
                         <TableCell>{event.event_name}</TableCell>
                     </TableRow>
                 ))}
@@ -100,5 +102,3 @@ function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
     </Card>
   );
 }
-
-export default UpcomingEarnings;

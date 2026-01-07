@@ -140,13 +140,13 @@ export type OptionsSignal = z.infer<typeof OptionsSignalSchema>;
 
 const WinnerSchema = z.object({
     id: z.string(),
-    company_name: z.string(),
+    company_name: z.string().nullable(),
     image_uri: z.string().optional().nullable(),
-    industry: z.string(),
+    industry: z.string().nullable(),
     sector: z.string().optional().nullable(),
     last_close: z.number(),
-    outlook_signal: z.string(),
-    run_date: z.string(),
+    outlook_signal: z.string().nullable(),
+    run_date: z.string().nullable(),
     thirty_day_change_pct: z.number(),
     ticker: z.string(),
     weighted_score: z.number().nullable(),
@@ -784,55 +784,44 @@ export async function getStockDataAdmin(ticker: string): Promise<Stock | null> {
     }
 }
 
-export async function getTickerEventsAdmin(ticker: string): Promise<TickerEvent[]> {
+export async function getTickerEventsAdmin(ticker?: string, type: 'all' | 'ticker' | 'economic' = 'all'): Promise<TickerEvent[]> {
     try {
         const eventsCollectionRef = adminDb.collection('calendar_events');
         const allEvents: TickerEvent[] = [];
 
-        // 1. Get all ticker-specific events
-        const tickerQuery = eventsCollectionRef.where('entity', '==', ticker.toUpperCase());
-        const tickerSnapshot = await tickerQuery.get();
-        tickerSnapshot.forEach(doc => {
-            const data = doc.data();
-            const event = {
-                id: doc.id,
-                event_name: data.event_name,
-                event_date: data.event_date,
-                event_type: data.event_type,
-                ticker: data.entity,
-            };
-            const validation = TickerEventSchema.safeParse(event);
-            if (validation.success) {
-                allEvents.push(validation.data);
-            } else {
-                console.warn(`Invalid ticker-specific event data for ${ticker}:`, validation.error.flatten());
-            }
-        });
+        // 1. Fetch Ticker-Specific Events if needed
+        if ((type === 'all' || type === 'ticker') && ticker) {
+            const tickerQuery = eventsCollectionRef.where('entity', '==', ticker.toUpperCase());
+            const tickerSnapshot = await tickerQuery.get();
+            tickerSnapshot.forEach(doc => {
+                const data = doc.data();
+                const event = TickerEventSchema.safeParse({ id: doc.id, ticker: data.entity, ...data });
+                if (event.success) {
+                    allEvents.push(event.data);
+                } else {
+                    console.warn(`Invalid ticker-specific event data for ${ticker}:`, event.error.flatten());
+                }
+            });
+        }
 
-        // 2. Get all general economic events (entity is null)
-        const economicQuery = eventsCollectionRef.where('entity', '==', null);
-        const economicSnapshot = await economicQuery.get();
-        economicSnapshot.forEach(doc => {
-            const data = doc.data();
-            const event = {
-                id: doc.id,
-                event_name: data.event_name,
-                event_date: data.event_date,
-                event_type: data.event_type,
-                ticker: data.entity,
-            };
-             const validation = TickerEventSchema.safeParse(event);
-            if (validation.success) {
-                allEvents.push(validation.data);
-            } else {
-                console.warn(`Invalid economic event data:`, validation.error.flatten());
-            }
-        });
+        // 2. Fetch General Economic Events if needed
+        if (type === 'all' || type === 'economic') {
+            const economicQuery = eventsCollectionRef.where('entity', '==', null);
+            const economicSnapshot = await economicQuery.get();
+            economicSnapshot.forEach(doc => {
+                const data = doc.data();
+                const event = TickerEventSchema.safeParse({ id: doc.id, ticker: data.entity, ...data });
+                if (event.success) {
+                    allEvents.push(event.data);
+                } else {
+                    console.warn(`Invalid economic event data:`, event.error.flatten());
+                }
+            });
+        }
 
         // Remove duplicates and filter out specific events
         const filteredEvents = allEvents.filter(event => !event.event_name.includes('CPI s.a'));
         const uniqueEvents = Array.from(new Map(filteredEvents.map(e => [`${e.event_name}|${e.event_date}`, e])).values());
-
 
         // Sort all merged events by date
         uniqueEvents.sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
@@ -1574,4 +1563,3 @@ export async function getUserWatchlistAdmin(uid: string): Promise<WatchlistItem[
         return [];
     }
 }
-

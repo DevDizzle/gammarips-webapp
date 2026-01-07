@@ -5,6 +5,7 @@ import { PublicWinnersTable } from '@/components/dashboard/public-winners-table'
 import { NewsFeedWidget } from '@/components/dashboard/news-feed';
 import { WatchlistWidget } from '@/components/dashboard/watchlist-widget';
 import { DashboardUsageTracker } from '@/components/dashboard/dashboard-usage-tracker';
+import EconomicEventsWidget from './economic-events-widget';
 
 export const metadata = {
   title: 'Market Dashboard | GammaRips',
@@ -26,6 +27,7 @@ export default async function DashboardPage() {
       <div className="space-y-6">
         <PublicWinnersTable data={dashboardData} />
         <NewsFeedWidget />
+        <EconomicEventsWidget />
         {/* <WatchlistWidget /> */}
       </div>
     </div>

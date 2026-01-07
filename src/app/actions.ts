@@ -1,3 +1,4 @@
+
 'use server';
 
 import {
@@ -84,8 +85,12 @@ export async function getStocks(): Promise<Stock[]> {
     return getStocksAdmin();
 }
 
-export async function getTickerEvents(ticker: string): Promise<TickerEvent[]> {
-    return getTickerEventsAdmin(ticker);
+export async function getTickerEvents(ticker: string, type: 'ticker' | 'economic'): Promise<TickerEvent[]> {
+    return getTickerEventsAdmin(ticker, type);
+}
+
+export async function getEconomicEvents(): Promise<TickerEvent[]> {
+    return getTickerEventsAdmin(undefined, 'economic');
 }
 
 export async function getTopStocks(type: 'BUY' | 'SELL', limit: number): Promise<Stock[]> {

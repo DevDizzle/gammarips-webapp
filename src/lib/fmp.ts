@@ -1,4 +1,5 @@
-import 'server-only';
+
+'use server';
 
 const FMP_API_KEY = process.env.FMP_API_KEY;
 const BASE_URL = 'https://financialmodelingprep.com/api/v3';
@@ -102,12 +103,35 @@ export async function getMarketIndices(): Promise<MarketIndex[]> {
 }
 
 /**
- * Fetches or calculates a Put/Call Ratio (PCR).
- * The proxy API was unreliable, so this now returns a fixed value.
- * We can replace this with a reliable data source in the future.
+ * Fetches the latest CBOE Total Put/Call Ratio.
  */
 export async function getPutCallRatio(): Promise<number> {
-    // The previous proxy fetch was unreliable. Returning the requested
-    // value of 0.90 directly until a better source is found.
-    return 0.90;
+    if (!FMP_API_KEY) {
+        console.error("FMP_API_KEY is missing for Put/Call Ratio fetch.");
+        return 0.90; // Return a neutral default if key is missing
+    }
+
+    try {
+        const response = await fetch(`${BASE_URL}/pcr?apikey=${FMP_API_KEY}`, {
+            next: { revalidate: 300 } // Cache for 5 minutes
+        });
+
+        if (!response.ok) {
+            throw new Error(`FMP PCR API error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        // The API returns an array, we want the most recent (first) item's 'pcr' value
+        if (Array.isArray(data) && data.length > 0 && data[0].pcr) {
+            return data[0].pcr;
+        }
+        
+        console.warn("FMP PCR API returned empty or invalid data.");
+        return 0.90;
+
+    } catch (error) {
+        console.error("Failed to fetch Put/Call Ratio:", error);
+        return 0.90; // Return default on error
+    }
 }

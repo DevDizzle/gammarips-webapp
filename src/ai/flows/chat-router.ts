@@ -99,8 +99,7 @@ export const chatRouterFlow = ai.defineFlow(
       // Call Financial Analyst (Grounded QA)
       const result = await groundedQaFlow({
         question: input.userInput,
-        // groundedQaFlow currently takes just { question }, we will pass that.
-        // TODO: Update groundedQaFlow to accept history in the future.
+        history: input.history
       });
       return {
         response: result.answer,

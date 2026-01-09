@@ -1,3 +1,4 @@
+
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import { getFirestore, collection, getDocs, doc, setDoc, getDoc, serverTimestamp, increment, addDoc, Timestamp } from "firebase/firestore";
@@ -14,6 +15,17 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
+
+// Runtime validation to ensure environment variables are loaded
+if (
+  !firebaseConfig.apiKey ||
+  !firebaseConfig.authDomain ||
+  !firebaseConfig.projectId
+) {
+  throw new Error(
+    'Firebase client environment variables are not set. Please create a .env file in the root of your project and add the NEXT_PUBLIC_FIREBASE_* variables. Refer to the README.md for a complete list.'
+  );
+}
 
 
 // Initialize Firebase for the client

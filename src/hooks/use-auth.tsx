@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode, useMemo } from 'react';
 import {
   getAuth,
   onAuthStateChanged,
@@ -21,19 +21,16 @@ import { getDoc, doc, onSnapshot } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { event as trackEvent } from '@/lib/gtag';
 import { useRouter } from 'next/navigation';
-import { createCheckoutSession } from '@/app/actions';
-import { loadStripe } from '@stripe/stripe-js';
 import { FREE_MODE } from '@/lib/config';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
 
 interface AuthContextType {
   user: User | null;
   dbUser: DbUser | null;
   loading: boolean;
+  isPro: boolean;
   signInWithGoogle: () => Promise<void>;
   signUpWithEmail: (email: string, password: string) => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
@@ -49,6 +46,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const router = useRouter();
+
+  const isPro = useMemo(() => {
+    if (!dbUser?.proUntil) return false;
+    try {
+        // proUntil is a Firestore Timestamp
+        return dbUser.proUntil.toDate() > new Date();
+    } catch {
+        // Fallback for safety
+        return false;
+    }
+  }, [dbUser]);
 
   useEffect(() => {
     let unsubscribeSnapshot: (() => void) | null = null;
@@ -102,7 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       trackEvent('sign_up', { method });
       
       if (FREE_MODE) {
-          toast({ title: "Welcome to ProfitScout!", description: "Account created successfully." });
+          toast({ title: "Welcome to GammaRips!", description: "Account created successfully." });
           router.push('/dashboard');
       } else {
           // The welcome email is no longer sent on sign up.
@@ -187,7 +195,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, dbUser, loading, signInWithGoogle, signUpWithEmail, signInWithEmail, signOut, sendVerificationEmail }}>
+    <AuthContext.Provider value={{ user, dbUser, loading, isPro, signInWithGoogle, signUpWithEmail, signInWithEmail, signOut, sendVerificationEmail }}>
       {children}
     </AuthContext.Provider>
   );

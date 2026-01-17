@@ -59,18 +59,18 @@ export function ExecutionDeck({ data }: { data: DashboardDataV2 }) {
                          {/* Key Stats Grid */}
                         <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
                             <div className="p-3 bg-background rounded-lg border">
-                                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">Strike</p>
-                                <p className="font-mono text-lg sm:text-2xl font-bold tracking-tight">${tradeSetup.suggestedOption.strike}</p>
+                                <p className="text-xs text-muted-foreground">Strike</p>
+                                <p className="text-2xl font-bold tracking-tight">${tradeSetup.suggestedOption.strike}</p>
                             </div>
                             <div className="p-3 bg-background rounded-lg border">
-                                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">Expires</p>
-                                <p className="font-mono text-lg sm:text-2xl font-bold tracking-tight truncate">
+                                <p className="text-xs text-muted-foreground">Expires</p>
+                                <p className="text-2xl font-bold tracking-tight truncate">
                                     {new Date(tradeSetup.suggestedOption.expirationDate).toLocaleDateString('en-US', {month:'short', day:'numeric', timeZone: 'UTC'})}
                                 </p>
                             </div>
                             <div className="p-3 bg-background rounded-lg border">
-                                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">DTE</p>
-                                <p className="font-mono text-lg sm:text-2xl font-bold tracking-tight">{tradeSetup.suggestedOption.dte}</p>
+                                <p className="text-xs text-muted-foreground">DTE</p>
+                                <p className="text-2xl font-bold tracking-tight">{tradeSetup.suggestedOption.dte}</p>
                             </div>
                         </div>
 

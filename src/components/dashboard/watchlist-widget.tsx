@@ -45,6 +45,7 @@ export function WatchlistWidget() {
     };
     window.addEventListener('watchlist-updated', handleUpdate);
     return () => window.removeEventListener('watchlist-updated', handleUpdate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleRemove = async (itemId: string) => {
@@ -54,7 +55,7 @@ export function WatchlistWidget() {
           setItems(prev => prev.filter(i => i.id !== itemId));
           toast({ title: "Removed from watchlist" });
           window.dispatchEvent(new Event('watchlist-updated'));
-      } catch (e) {
+      } catch {
           toast({ title: "Failed to remove", variant: "destructive" });
       }
   };

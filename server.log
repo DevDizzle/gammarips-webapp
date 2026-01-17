@@ -1508,3 +1508,19 @@ Cron job triggered: Starting sendDailySetupsFlow...
   id: '<20251223123032.662f70edd5cebeb8@mg.gammarips.com>',
   message: 'Queued. Thank you.'
 }
+
+> nextn@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.0.7 (Turbopack)
+   - Local:        http://localhost:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 6.9s
+ ○ Compiling / ...
+ ✓ Compiled / in 63.7s
+ GET / 200 in 73321ms
+ ○ Compiling /api/cron/send-midday-movers ...
+ ✓ Compiled /api/cron/send-midday-movers in 23.6s
+Cron job triggered: Starting sendMidDayMoversFlow... { testEmail: 'test@example.com' }

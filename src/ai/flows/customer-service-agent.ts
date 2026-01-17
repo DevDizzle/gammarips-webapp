@@ -1,10 +1,10 @@
+
 'use server';
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { googleAI } from '@genkit-ai/google-genai';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { getSupportPolicy } from '@/ai/tools/profitscout';
 
 // Input/Output Schemas
 const CustomerServiceInputSchema = z.object({
@@ -19,23 +19,13 @@ const CustomerServiceOutputSchema = z.object({
   answer: z.string().describe("The helpful, policy-compliant response.")
 });
 
-// Helper to load the knowledge base
-async function getPolicyContent(): Promise<string> {
-  try {
-    const filePath = join(process.cwd(), 'src/ai/knowledge/customer-service-policy.md');
-    return await readFile(filePath, 'utf-8');
-  } catch (error) {
-    console.error("Failed to load customer service policy:", error);
-    return "Policy file unavailable. Please answer politely based on general professional customer service standards.";
-  }
-}
-
 // Prompt Definition
 export const customerServiceAgent = ai.definePrompt({
   name: 'customerServiceAgent',
-  model: googleAI.model('gemini-2.5-flash-lite'), // Fast, cost-effective model for text tasks
+  model: googleAI.model('gemini-2.0-flash'), // Fast, cost-effective model for text tasks
   input: { schema: CustomerServiceInputSchema },
   config: {
+    tools: [getSupportPolicy],
     temperature: 0.3, // Low temperature for consistent, policy-adherent answers
   },
   prompt: `
@@ -44,15 +34,10 @@ Your goal is to be helpful, professional, and empathetic while strictly adhering
 
 **Directives:**
 1.  **BE CONCISE:** Keep your answer **under 100 words**. Be direct and solution-oriented. Avoid excessive pleasantries.
-2.  **FOLLOW POLICY:** Use the provided "Customer Service Policy" as your source of truth.
+2.  **CHECK POLICY:** You have access to the \`get_support_policy\` tool. **Always check this tool** for the latest policy details regarding refunds, accounts, and privacy before answering.
 3.  **FORMATTING:** Use bullet points if explaining steps.
 4.  **ENGAGE:** **Always end with 1 short, relevant follow-up question** to ensure the user's issue is fully resolved (e.g., "Did that fix the login issue?" or "Do you need help upgrading?").
 5.  **NO FINANCIAL ADVICE:** If asked about market moves (e.g., "Is AAPL a buy?"), politely redirect them to the dashboard.
-
-**Customer Service Policy / Knowledge Base:**
-"""
-{{policy}}
-"""
 
 **Conversation History:**
 {{#each history}}
@@ -74,21 +59,73 @@ export const customerServiceFlow = ai.defineFlow(
     outputSchema: CustomerServiceOutputSchema,
   },
   async (input) => {
-    // 1. Load Policy
-    const policyText = await getPolicyContent();
+    // Helper to run the agent loop
+    const currentHistory = input.history || [];
+    const currentQuestion = input.question;
+    
+    // Max turns to prevent infinite loops
+    const MAX_TURNS = 5;
 
-    // 2. Generate Response
-    // We pass the policy text into the prompt template dynamically
-    const response = await customerServiceAgent({
-      ...input,
-      // @ts-ignore - 'policy' is injected into the prompt template but not strictly in the InputSchema to keep the API clean. 
-      // In Genkit, extra props passed to the prompt function are available in the template.
-      policy: policyText 
-    });
+    for (let i = 0; i < MAX_TURNS; i++) {
+      // 1. Generate Response
+      const response = await customerServiceAgent({
+        question: currentQuestion,
+        history: currentHistory
+      });
 
-    // 3. Extract Text
-    const text = response.text || "I apologize, I'm having trouble processing your request right now.";
+      // 2. Handle Tool Requests
+      if (response.toolRequests && response.toolRequests.length > 0) {
+        const toolRequest = response.toolRequests[0]; // Assume single tool call for now
+        const tool = toolRequest.tool;
+        
+        // Execute the tool
+        // Note: In a real robust setup, we'd use a tool map. 
+        // Here we know we only have getSupportPolicy or similar.
+        let toolOutput = "Tool execution failed.";
+        
+        try {
+          if (tool.name === 'get_support_policy') {
+             // @ts-expect-error - Tool output type mismatch
+             toolOutput = await getSupportPolicy(toolRequest.input);
+          } else {
+             toolOutput = `Unknown tool: ${tool.name}`;
+          }
+        } catch (err: any) {
+          toolOutput = `Error executing tool: ${err.message}`;
+        }
 
-    return { answer: text };
+        // Add the interaction to history for the next turn
+        // We simulate the model's tool call and the tool's response in the history
+        // Note: Genkit's history format is typically just user/model. 
+        // For tool use, we append the tool result as context or a user message with data.
+        // A simple way is to append the tool output as a "system" or "data" injection to the prompt context.
+        // Since our prompt template just iterates history, we can append a model message (the tool call thought)
+        // and a user message (the tool result).
+        
+        // However, a cleaner way for this simple prompt-based agent is to 
+        // just append the tool result to the conversation context as if the system provided it.
+        
+        currentHistory.push({
+          role: 'model',
+          content: `Checking policy for: ${JSON.stringify(toolRequest.input)}`
+        });
+        
+        currentHistory.push({
+          role: 'user', // "System" context often injected as user message in simple chat models
+          content: `POLICY DATA RETURNED: ${toolOutput}`
+        });
+
+        // Continue loop
+        continue;
+      }
+
+      // 3. Extract Text (Final Answer)
+      const text = response.text;
+      if (text) {
+        return { answer: text };
+      }
+    }
+
+    return { answer: "I apologize, I'm having trouble retrieving the policy information right now." };
   }
 );

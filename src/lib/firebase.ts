@@ -34,7 +34,7 @@ const db = getFirestore(app);
 export const auth = getAuth(app);
 
 
-const StockSchema = z.object({
+export const StockSchema = z.object({
   id: z.string(), // Document ID is the ticker
   company_name: z.string(),
   bundle_gcs_path: z.string(),
@@ -62,7 +62,7 @@ export async function saveFeedback(
 }
 
 // User Management
-const UserSchema = z.object({
+export const UserSchema = z.object({
   uid: z.string(),
   email: z.string().email().optional().nullable(),
   displayName: z.string().optional().nullable(),
@@ -78,6 +78,9 @@ const UserSchema = z.object({
   }).optional(),
   stripeCustomerId: z.string().optional().nullable(),
   insiderActivationToken: z.string().optional().nullable(),
+  plan: z.enum(['free', 'trial', 'pro']).optional(),
+  proUntil: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data)).optional(),
+  trialEnd: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data)).optional(),
 });
 export type DbUser = z.infer<typeof UserSchema>;
 
@@ -101,15 +104,23 @@ export async function getOrCreateUser(
     return userData;
   }
 
+  // 14-Day Trial Logic
+  const now = new Date();
+  const trialEndDate = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days from now
+  const trialEndTimestamp = Timestamp.fromDate(trialEndDate);
+
   const newUser: Omit<DbUser, 'createdAt'> & { createdAt: any } = {
     uid,
     email: email ?? null,
     displayName: displayName ?? null,
     isAnonymous,
-    isSubscribed: false,
+    isSubscribed: false, // Legacy field, kept for compatibility
     usageCount: 0,
     createdAt: serverTimestamp(),
     stripeCustomerId: stripeCustomerId ?? null,
+    plan: 'trial',
+    trialEnd: trialEndTimestamp,
+    proUntil: trialEndTimestamp, // Grant access immediately
   };
 
   await setDoc(userRef, newUser);

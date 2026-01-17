@@ -3,7 +3,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { getEligibleEmailRecipientsAdmin, getWinnersDashboardAdmin, type Winner, getPerformanceSignals as getPerformanceSignalsAdmin, type PerformanceSignal } from '@/lib/firebase-admin';
+import { getEligibleEmailRecipientsAdmin, getWinnersDashboardAdmin, getPerformanceSignals as getPerformanceSignalsAdmin } from '@/lib/firebase-admin';
 import { sendEmail, buildDailySetupsEmailContent } from '@/lib/mailgun';
 import { format } from 'date-fns';
 import { isMarketHoliday } from '@/lib/market-holidays';

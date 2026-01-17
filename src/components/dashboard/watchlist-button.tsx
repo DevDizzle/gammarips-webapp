@@ -49,7 +49,7 @@ export function WatchlistButton({ ticker, contractSymbol, type, price, companyNa
                 toast({ title: "Already in watchlist" });
                 setAdded(true);
             }
-        } catch (error) {
+        } catch {
             toast({ title: "Failed to add", variant: "destructive" });
         } finally {
             setLoading(false);

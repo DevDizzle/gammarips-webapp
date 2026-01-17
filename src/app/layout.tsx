@@ -6,10 +6,13 @@ import Footer from '@/components/layout/footer';
 import Script from 'next/script';
 import CookieConsentBanner from '@/components/cookie-consent-banner';
 import RootLayoutClient from './root-layout-client';
-import { getAppStatus } from './actions';
-import DataUpdatingPage from '@/components/layout/data-updating-page';
-import AgentChat from '@/components/agent-chat';
-import { ChatProvider } from "@/components/layout/chat-context";
+import { Inter, Space_Grotesk } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk', display: 'swap' });
+
+// import AgentChat from '@/components/agent-chat';
+// import { ChatProvider } from "@/components/layout/chat-context";
 
 const siteUrl = 'https://gammarips.com';
 
@@ -50,6 +53,15 @@ import { AuthModalProvider } from '@/components/auth/auth-modal-provider';
 const GA_MEASUREMENT_ID = 'G-KPGTJDBC6N';
 const AW_MEASUREMENT_ID = 'AW-17603675875';
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "GammaRips",
+  "url": "https://gammarips.com",
+  "logo": "https://gammarips.com/icon.png",
+  "description": "AI-powered research tool that helps traders identify and analyze high-potential options setups."
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -59,9 +71,10 @@ export default async function RootLayout({
     <html lang="en" className="dark">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
         
         <Script
           strategy="beforeInteractive"
@@ -96,9 +109,9 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body>
+      <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
         <AuthProvider>
-          <ChatProvider>
+          {/* <ChatProvider> */}
             <AuthModalProvider>
               <RootLayoutClient>
                 <main className='flex-grow'>{children}</main>
@@ -106,9 +119,9 @@ export default async function RootLayout({
               <Footer />
               <Toaster />
               <CookieConsentBanner />
-              <AgentChat />
+              {/* <AgentChat /> */}
             </AuthModalProvider>
-          </ChatProvider>
+          {/* </ChatProvider> */}
         </AuthProvider>
       </body>
     </html>

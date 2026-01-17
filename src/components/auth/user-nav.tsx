@@ -18,12 +18,10 @@ import { useState } from 'react';
 import { AuthDialog } from './auth-dialog';
 import { Skeleton } from '../ui/skeleton';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 export function UserNav() {
   const { user, signOut, loading } = useAuth();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
-  const pathname = usePathname();
 
   if (loading) {
     return <Skeleton className="h-9 w-24 rounded-md" />;
@@ -53,14 +51,6 @@ export function UserNav() {
   return (
     <>
     <div className="flex items-center gap-2">
-      {pathname !== '/dashboard' && (
-        <Button asChild variant="ghost">
-            <Link href="/dashboard">
-                <LayoutDashboard className="mr-2 h-4 w-4" />
-                Dashboard
-            </Link>
-        </Button>
-      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -83,10 +73,10 @@ export function UserNav() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <Link href="/dashboard">
+            <Link href="/">
                <DropdownMenuItem>
                     <LayoutDashboard className="mr-2 h-4 w-4" />
-                    <span>Dashboard</span>
+                    <span>Home</span>
                 </DropdownMenuItem>
             </Link>
             <Link href="/account">

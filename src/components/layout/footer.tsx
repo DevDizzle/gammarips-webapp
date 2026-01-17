@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
 import { XIcon } from '@/components/icons/XIcon';
-import { Github } from 'lucide-react';
 
 const Footer = () => {
   return (

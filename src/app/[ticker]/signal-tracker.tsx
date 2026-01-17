@@ -56,7 +56,13 @@ function ActiveSignalTracker({ ticker }: ActiveSignalTrackerProps) {
     }
 
     if (signals.length === 0) {
-        return <p className="text-sm text-muted-foreground">No option signals are currently being tracked for {ticker}.</p>
+        return (
+            <Card className="bg-muted/30 border-dashed">
+                <CardContent className="p-6 text-center">
+                    <p className="text-sm text-muted-foreground">No option signals are currently being tracked for {ticker}.</p>
+                </CardContent>
+            </Card>
+        );
     }
     
     return (

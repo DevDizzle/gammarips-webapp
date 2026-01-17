@@ -1,282 +1,68 @@
-
 import Link from "next/link";
-import { Suspense } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Bot, Gem, Target, Github, Scale, Shield, LineChart, Star, Users, XCircle, Search, BrainCircuit, Zap } from "lucide-react";
 import { UserNav } from "@/components/auth/user-nav";
-import HomePageClientContent from "./home-page-client-content";
-import Faq, { faqs } from "@/components/landing/faq";
-import SignalsPreview from "@/components/landing/signals-preview";
-import PerformanceTracker, { PerformanceTrackerSkeleton } from "@/components/performance-tracker";
-import MarketMovers from "@/components/landing/market-movers";
+import { TickerSearch } from "@/components/ticker-search";
+import { Hero } from "@/components/landing/hero";
+import { MarketHub } from "@/components/landing/market-hub";
+import { PerformanceTile } from "@/components/landing/performance-tile";
+import EconomicEventsWidget from "@/components/dashboard/economic-events-widget";
+import { NewsFeedWidget } from "@/components/dashboard/news-feed";
+import { getLandingPageData } from "@/app/landing-page-actions";
+import { DashboardUsageTracker } from "@/components/dashboard/dashboard-usage-tracker";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "GammaRips | Daily AI Options Analysis & Market Research",
+  description: "Real-time AI options signals, gamma exposure analysis, and market performance tracking.",
+};
 
 export default async function LandingPage() {
-  const softwareSchema = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "GammaRips",
-    "description": "One simple playbook for daily options rippers. GammaRips uses AI to hunt for high-conviction options ideas on stocks that are ready to move.",
-    "applicationCategory": "FinancialApplication",
-    "operatingSystem": "Web",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "88"
-    },
-    "softwareHelp": {
-      "@type": "CreativeWork",
-      "url": "https://gammarips.com/about"
-    }
-  };
-
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqs.map(faq => ({
-      "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": faq.answer
-      }
-    }))
-  };
+  const data = await getLandingPageData();
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <Suspense>
-        <HomePageClientContent />
-      </Suspense>
-      <div className="flex flex-col min-h-screen bg-background">
-        {/* Header */}
-        <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold font-headline">
-              <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
-            </Link>
+    <div className="flex flex-col min-h-screen bg-background">
+      <DashboardUsageTracker />
+      
+      {/* Header */}
+      <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 border-b">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold font-headline">
+            <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <TickerSearch />
             <UserNav />
           </div>
-        </header>
+        </div>
+      </header>
 
-        <main className="flex-1">
-          {/* Hero Section */}
-          <section
-            className="relative flex flex-col items-center justify-center text-center py-20 md:py-32"
-            style={{
-              backgroundImage: 'url(/hero-image.jpeg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              minHeight: '50vh',
-            }}
-          >
-            <div className="absolute inset-0 bg-black/40 z-0" />
-            <div className="relative z-10 p-4 flex flex-col items-center">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline tracking-tight text-white">
-                High-Gamma Contracts. Ready to Rip.
-              </h1>
-              <p className="mt-4 text-lg sm:text-xl text-neutral-200 max-w-3xl mx-auto">
-                We surface Call & Put contracts with high-gamma profiles, designed for explosive premium expansion. Our AI targets stocks primed to move, so you get setups positioned to rip. No complex strategies. Just the specific contracts you need.
-              </p>
-              <div className="mt-10">
-                <HomePageClientContent showButton={true} buttonText="Explore the Dashboard" />
-              </div>
+      <main className="flex-1 container mx-auto px-4 py-8 space-y-6 max-w-5xl">
+        <Hero />
+        
+        <div className="space-y-6">
+            <section id="market-hub">
+                <MarketHub data={data} />
+            </section>
+            
+            <section id="performance">
+                <PerformanceTile data={data} />
+            </section>
+            
+            <div className="space-y-6">
+                <section id="economic-calendar">
+                    <EconomicEventsWidget />
+                </section>
+                <section id="market-news">
+                    <NewsFeedWidget />
+                </section>
             </div>
-          </section>
-
-          {/* Combined Live Performance and Top Contracts Section */}
-          <section className="py-16 sm:py-24 bg-muted/50">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center max-w-3xl mx-auto">
-                <h2 className="text-3xl font-bold font-headline">The Rip Archive: Our Live Track Record</h2>
-                <p className="mt-4 text-muted-foreground">
-                  We track every Call and Put setup from entry to exit. This is the real-time scorecard for every contract active in our system—the wins, the losses, and the flat trades. Real P&L. No hiding. Click any trade to view the full analysis.
-                </p>
-              </div>
-              <div className="mt-12 max-w-4xl mx-auto">
-                 <Suspense fallback={<PerformanceTrackerSkeleton />}>
-                    <PerformanceTracker />
-                  </Suspense>
-              </div>
-              <div className="mt-12 max-w-4xl mx-auto">
-                 <Suspense fallback={<div>Loading top contracts...</div>}>
-                    <MarketMovers />
-                  </Suspense>
-              </div>
-               <p className="mt-8 text-xs text-muted-foreground max-w-xl mx-auto text-center">
-                  Performance tracking began on 01/07/2026. We track each Rip from the moment it is picked (late afternoon ET). We use the NBBO mid price (bid+ask)/2 during regular options hours. We update prices multiple times throughout the day, starting after the next day’s open (~10:00 a.m. ET) and continuing daily until the contract expires.
-                </p>
-            </div>
-          </section>
-
-          {/* "Who This Is For" Section */}
-          <section className="py-16 sm:py-24 bg-black">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-12">
-                 <h2 className="text-3xl font-bold font-headline text-white">Who GammaRips Is For (and Not For)</h2>
-                 <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">We built this tool for Rippers. It is not a beginner playground or a generic signal service.</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <Card className="bg-card/50">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-3 text-green-400">
-                      <CheckCircle />
-                      This Is For You If...
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3 text-muted-foreground">
-                    <p>✓ You are an active options trader. You execute multiple trades per month.</p>
-                    <p>✓ You want specific contracts. You want a tight list of high-conviction Call & Put strikes, not a "choose your own adventure" lab.</p>
-                    <p>✓ You trade directional volatility. You are comfortable buying premium (Long Calls/Puts) and managing the risk of long options.</p>
-                    <p>✓ You treat trading like a business. You want data and logic, not excitement.</p>
-                  </CardContent>
-                </Card>
-                 <Card className="bg-card/50">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-3 text-red-400">
-                      <XCircle />
-                      This Is Not For You If...
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3 text-muted-foreground">
-                    <p>✗ You are a total beginner. You are still learning what a "strike price" is.</p>
-                    <p>✗ You are a "tourist." You like to watch the market but rarely pull the trigger.</p>
-                    <p>✗ You only trade major indices. We focus exclusively on single-stock setups (no SPY/QQQ).</p>
-                    <p>✗ You represent a "theta gang" strategy. We hunt for explosive moves (buying premium), not sideways chop (selling premium).</p>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </section>
-          
-          {/* Signals Preview Section */}
-          <Suspense fallback={<div>Loading today's signals...</div>}>
-            <SignalsPreview />
-          </Suspense>
-
-          {/* The Daily Routine Section */}
-          <section className="py-16 sm:py-24">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center max-w-3xl mx-auto">
-                <h2 className="text-3xl font-bold font-headline">How to Use the Playbook</h2>
-              </div>
-              <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-                <div className="text-center">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">1</div>
-                  <h3 className="mt-6 text-xl font-semibold">Get the Daily Contracts</h3>
-                  <p className="mt-2 text-muted-foreground">
-                    Every session, we scan the Russell 1000 to find a tight list of specific Call and Put contracts. These are setups where the stock, volatility, and option strike price align. No 500-row spreadsheet. No 20-strategy zoo. Just the handful worth a look.
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">2</div>
-                  <h3 className="mt-6 text-xl font-semibold">Check the Logic</h3>
-                  <p className="mt-2 text-muted-foreground">
-                    Each contract comes with a clean AI Breakdown covering trend, catalysts, and risk flags. You get the full story in 60 seconds. We give you the market context. We do not just give you a ticker and a "Greek salad" of data.
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary text-primary-foreground mx-auto font-bold text-xl">3</div>
-                  <h3 className="mt-6 text-xl font-semibold">Execute Your Trade</h3>
-                  <p className="mt-2 text-muted-foreground">
-                    We provide the research. You are the trader. You decide your entry price, position size, and stop loss. We hunt for the potential moves. You manage the capital.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* First CTA Section */}
-          <section className="py-16 sm:py-24">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <Card className="inline-block bg-primary/10 border-primary/20 p-8 sm:p-12">
-                    <h2 className="text-3xl sm:text-4xl font-bold font-headline">Unlock Today’s Contracts</h2>
-                    <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-                      Access the data-driven playbook used by serious options traders. Get today's top Call & Put contracts now.
-                    </p>
-                    <div className="mt-8">
-                        <HomePageClientContent showButton={true} buttonText="Explore the Dashboard" />
-                    </div>
-                </Card>
-            </div>
-          </section>
-          
-          {/* Under the Hood Section */}
-          <section className="py-16 sm:py-24 bg-muted/50">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center max-w-3xl mx-auto">
-                  <h2 className="text-3xl font-bold font-headline">Real Logic. No Black Box.</h2>
-                  <p className="mt-4 text-muted-foreground">
-                    We do not scan for random options volume in a vacuum. Here is how the engine actually works.
-                  </p>
-                </div>
-                <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <Card className="bg-card/50 text-center">
-                    <CardHeader className="items-center">
-                       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <Search className="h-6 w-6" />
-                      </div>
-                      <CardTitle>Stock First, Options Second</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-muted-foreground">If the underlying stock is not ready to move, the option chain does not matter. We identify the top strongest stocks using our AI conviction score first. Then we look for the trade.</CardContent>
-                  </Card>
-                  <Card className="bg-card/50 text-center">
-                    <CardHeader className="items-center">
-                       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <Zap className="h-6 w-6" />
-                      </div>
-                      <CardTitle>The "Rip Hunter" Protocol</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-muted-foreground">For those high-conviction stocks, the engine hunts for aggressive, high-gamma contracts. We look for setups geared toward buying premium (Long Calls/Puts). We prioritize explosive potential over "safe on paper" spreads.</CardContent>
-                  </Card>
-                  <Card className="bg-card/50 text-center">
-                    <CardHeader className="items-center">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <BrainCircuit className="h-6 w-6" />
-                      </div>
-                      <CardTitle>AI Without the Hype</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-muted-foreground">Our AI reads the boring stuff like earnings transcripts, SEC filings, and dense reports. It translates them into plain English risk notes. It is not a magic money machine. It is an analyst that never sleeps.</CardContent>
-                  </Card>
-                </div>
-            </div>
-          </section>
-          
-          {/* FAQ Section */}
-          <section className="py-16 sm:py-24 bg-muted/50">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
-                <div className="text-center">
-                    <h2 className="text-3xl font-bold font-headline">Frequently Asked Questions</h2>
-                </div>
-                <Faq />
-            </div>
-          </section>
-          
-          {/* Second CTA Section */}
-          <section className="py-16 sm:py-24">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <Card className="inline-block bg-primary/10 border-primary/20 p-8 sm:p-12">
-                    <h2 className="text-3xl sm:text-4xl font-bold font-headline">Ready to Rip?</h2>
-                    <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-                      Join a community of data-driven traders. Get the tools and insights you need to find your edge in today's market.
-                    </p>
-                    <div className="mt-8">
-                        <HomePageClientContent showButton={true} buttonText="Get Started Now" />
-                    </div>
-                </Card>
-            </div>
-          </section>
-
-        </main>
-      </div>
-    </>
+        </div>
+      </main>
+      
+      <footer className="py-6 text-center text-xs text-muted-foreground border-t mt-12">
+        <div className="container">
+          <p>© {new Date().getFullYear()} GammaRips. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
   );
 }

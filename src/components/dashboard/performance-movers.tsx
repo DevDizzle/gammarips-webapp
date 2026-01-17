@@ -75,7 +75,7 @@ export function PerformanceMovers({ gainers, losers }: PerformanceMoversProps) {
                             className="rounded-full"
                         />
                         <div>
-                            <Link href={`/dashboard/${signal.ticker}`} className="font-semibold hover:underline">
+                            <Link href={`/${signal.ticker}`} className="font-semibold hover:underline">
                             {signal.ticker}
                             </Link>
                             <div className="text-xs text-muted-foreground truncate max-w-[120px]">
@@ -129,7 +129,7 @@ export function PerformanceMovers({ gainers, losers }: PerformanceMoversProps) {
                                 className="rounded-full"
                             />
                             <div className="flex-1 min-w-0">
-                                <Link href={`/dashboard/${signal.ticker}`} className="font-bold hover:underline block truncate">
+                                <Link href={`/${signal.ticker}`} className="font-bold hover:underline block truncate">
                                     {signal.company_name}
                                 </Link>
                                 <div className="text-xs text-muted-foreground">

@@ -2,14 +2,10 @@
 'use client';
 
 import { useAuth } from "@/hooks/use-auth";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
 export default function RootLayoutClient({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth();
-    const router = useRouter();
-    const pathname = usePathname();
 
     // The automatic redirect from '/' to '/dashboard' for logged-in users has been removed
     // to allow users to visit the homepage even when authenticated.

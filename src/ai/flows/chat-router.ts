@@ -3,8 +3,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { googleAI } from '@genkit-ai/google-genai';
-import { customerServiceFlow } from './customer-service-agent';
-import { groundedQaFlow } from './grounded-qa-flow';
+import { profitScoutAgent } from '@/ai/agents/profit-scout-agent';
 
 // Input/Output Schemas for the Router
 const RouterInputSchema = z.object({
@@ -23,7 +22,7 @@ const RouterOutputSchema = z.object({
 // Define the Classification Prompt
 const classificationPrompt = ai.definePrompt({
   name: 'intentClassifier',
-  model: googleAI.model('gemini-2.5-flash-lite'), // Fast model for classification
+  model: googleAI.model('gemini-2.0-flash'), // Fast model for classification
   input: { 
     schema: z.object({
       userInput: z.string(),
@@ -86,23 +85,23 @@ export const chatRouterFlow = ai.defineFlow(
 
     // 2. Route to the correct agent
     if (intent === 'SERVICE') {
-      // Call Customer Service Agent
-      const result = await customerServiceFlow({
+      // Call ProfitScout Agent (Unified)
+      const result = await profitScoutAgent({
         question: input.userInput,
         history: input.history
       });
       return {
-        response: result.answer,
+        response: result.text,
         source: 'customer_service'
       };
     } else {
-      // Call Financial Analyst (Grounded QA)
-      const result = await groundedQaFlow({
+      // Call Financial Analyst (ProfitScout Agent)
+      const result = await profitScoutAgent({
         question: input.userInput,
         history: input.history
       });
       return {
-        response: result.answer,
+        response: result.text,
         source: 'financial_analyst'
       };
     }

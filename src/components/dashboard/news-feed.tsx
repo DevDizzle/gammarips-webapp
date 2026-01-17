@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getSmartNews } from '@/app/dashboard/actions';
+import { getSmartNews } from '@/app/landing-page-actions';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
@@ -71,6 +71,7 @@ export function NewsFeedWidget() {
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-1">
                                             {item.publisher?.favicon_url && (
+                                                /* eslint-disable-next-line @next/next/no-img-element */
                                                 <img src={item.publisher.favicon_url} alt={item.publisher.name} className="w-4 h-4 rounded-full" />
                                             )}
                                             <span className="text-xs text-muted-foreground font-medium">{item.publisher.name}</span>

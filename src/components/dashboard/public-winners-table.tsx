@@ -72,7 +72,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
 
 
   const handleRowClick = (ticker: string) => {
-     router.push(`/dashboard/${ticker.toUpperCase()}`);
+     router.push(`/${ticker.toUpperCase()}`);
   };
 
   const getSignalMeta = (signal: string) => {
@@ -196,7 +196,7 @@ export function PublicWinnersTable({ data }: PublicWinnersTableProps) {
     let winnersToShow: Winner[];
 
     if (user && fullWinners) {
-        let filtered = fullWinners.filter(w => w.option_type.toLowerCase().includes(filterType));
+        const filtered = fullWinners.filter(w => w.option_type.toLowerCase().includes(filterType));
         winnersToShow = isExpanded ? filtered : filtered.slice(0, TRUNCATE_LIMIT);
     } else {
         winnersToShow = publicWinners.slice(0, 3); // Public view is always truncated

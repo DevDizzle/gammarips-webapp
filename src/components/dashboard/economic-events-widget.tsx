@@ -6,10 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { getEconomicEvents } from '../actions';
+import { getEconomicEvents } from '@/app/actions';
 import type { TickerEvent } from '@/lib/firebase-admin';
-import { CalendarDays, Globe } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Globe } from 'lucide-react';
 
 export default function EconomicEventsWidget() {
   const [isLoading, setIsLoading] = useState(true);

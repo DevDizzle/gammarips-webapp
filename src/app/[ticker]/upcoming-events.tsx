@@ -7,10 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { getTickerEvents } from '../../actions';
+import { getTickerEvents } from '@/app/actions';
 import type { TickerEvent } from '@/lib/firebase-admin';
 import { CalendarDays } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 
 interface UpcomingEarningsProps {
     ticker: string;
@@ -68,7 +67,16 @@ function UpcomingEarnings({ ticker }: UpcomingEarningsProps) {
   }
 
   if (events.length === 0) {
-    return null; // Don't render the card if there are no ticker-specific events
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><CalendarDays /> Upcoming {ticker} Catalysts</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p className="text-sm text-muted-foreground">No specific catalyst events found for {ticker} in the near term.</p>
+            </CardContent>
+        </Card>
+    ); 
   }
 
   return (

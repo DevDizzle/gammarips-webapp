@@ -7,7 +7,7 @@ const BASE_URL = 'https://financialmodelingprep.com/api/v3';
 export interface MarketIndex {
   symbol: string;
   name: string;
-  price: number;
+  price: number | null;
   changesPercentage: number;
   change: number;
 }
@@ -105,10 +105,10 @@ export async function getMarketIndices(): Promise<MarketIndex[]> {
 /**
  * Fetches the latest CBOE Total Put/Call Ratio.
  */
-export async function getPutCallRatio(): Promise<number> {
+export async function getPutCallRatio(): Promise<number | null> {
     if (!FMP_API_KEY) {
         console.error("FMP_API_KEY is missing for Put/Call Ratio fetch.");
-        return 0.90; // Return a neutral default if key is missing
+        return null; // Return null if key is missing
     }
 
     try {
@@ -128,10 +128,10 @@ export async function getPutCallRatio(): Promise<number> {
         }
         
         console.warn("FMP PCR API returned empty or invalid data.");
-        return 0.90;
+        return null;
 
     } catch (error) {
         console.error("Failed to fetch Put/Call Ratio:", error);
-        return 0.90; // Return default on error
+        return null; // Return null on error
     }
 }

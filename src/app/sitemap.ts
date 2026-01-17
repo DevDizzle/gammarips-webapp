@@ -7,13 +7,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 1. Static pages
   const staticRoutes = [
     '',
-    '/dashboard',
     '/about',
     '/terms',
     '/privacy',
-    '/options/call-setups',
-    '/options/put-hedges',
-    '/performance',
   ].map((route) => ({
     url: `${BASE_URL}${route}`,
     lastModified: new Date().toISOString(),
@@ -26,9 +22,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // showing a "not found" state if the data is stale, but the page URL will exist.
   const allStocks = await getStocksAdmin();
   const stockRoutes: MetadataRoute.Sitemap = allStocks
-    .filter(stock => stock.pages_json) // Only include stocks that have a page generated
+    .filter(stock => stock.dashboard_json) // Only include stocks that have a dashboard generated
     .map((stock) => ({
-    url: `${BASE_URL}/stocks/${stock.id.toUpperCase()}`,
+    url: `${BASE_URL}/${stock.id.toUpperCase()}`,
     lastModified: new Date().toISOString(),
     changeFrequency: 'weekly',
     priority: 0.9,

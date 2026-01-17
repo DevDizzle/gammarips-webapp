@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { ChevronsUpDown, Search } from 'lucide-react';
 import Image from 'next/image';
 
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -84,7 +83,7 @@ export function TickerSearch() {
 
   const handleSelect = (ticker: string) => {
     setOpen(false);
-    router.push(`/dashboard/${ticker}`);
+    router.push(`/${ticker}`);
   };
 
   if (loading) {

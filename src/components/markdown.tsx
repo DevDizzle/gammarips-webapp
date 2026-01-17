@@ -12,7 +12,7 @@ export function Markdown({ content, className }: MarkdownProps) {
       rehypePlugins={[rehypeRaw]}
       skipHtml={false}
       // Let data:/blob: URLs through (instead of being sanitized to "")
-      urlTransform={(url, key) => {
+      urlTransform={(url) => {
         if (typeof url !== "string") return url as any;
         if (url.startsWith("data:") || url.startsWith("blob:")) return url;
         return url; // keep default for http/https
@@ -26,6 +26,7 @@ export function Markdown({ content, className }: MarkdownProps) {
 
           const alt = (props as any).alt ?? (node as any)?.properties?.alt ?? "";
           return (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={src}
               alt={alt}

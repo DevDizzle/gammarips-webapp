@@ -1,13 +1,11 @@
 
 import { getWinnersDashboard } from '@/app/actions';
 import type { Winner } from '@/lib/firebase-admin';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import Link from 'next/link';
-import { Badge } from '../ui/badge';
 
 // Helper to convert GCS URI to a public URL
 const convertGcsUriToUrl = (gcsUri: string) => {

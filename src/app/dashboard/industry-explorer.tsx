@@ -86,7 +86,7 @@ export function IndustryExplorer() {
     }, []);
 
     const handleRowClick = (ticker: string) => {
-        router.push(`/dashboard/${ticker.toUpperCase()}`);
+        router.push(`/${ticker.toUpperCase()}`);
     };
 
     if (loading) {
@@ -175,7 +175,7 @@ export function IndustryExplorer() {
                                                                 </div>
                                                             </TableCell>
                                                             <TableCell className="text-right">
-                                                                <Link href={`/dashboard/${winner.ticker.toUpperCase()}`} className="text-muted-foreground hover:text-primary">
+                                                                <Link href={`/${winner.ticker.toUpperCase()}`} className="text-muted-foreground hover:text-primary">
                                                                     <ChevronRight className="h-5 w-5" />
                                                                 </Link>
                                                             </TableCell>

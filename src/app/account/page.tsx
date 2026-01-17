@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { createStripePortalLink, sendPasswordReset, handleCancellationIntent } from '@/app/actions';
+import { sendPasswordReset, handleCancellationIntent } from '@/app/actions';
 import { Loader2 } from 'lucide-react';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 import { Label } from '@/components/ui/label';
@@ -69,7 +69,6 @@ function CancellationForm() {
 
 export default function AccountPage() {
   const { user, dbUser, loading: authLoading } = useAuth();
-  const [loadingPortal, setLoadingPortal] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 

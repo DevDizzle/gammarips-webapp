@@ -71,11 +71,11 @@ export async function getWinnersDashboard(): Promise<Winner[]> {
 
 export async function incrementDashboardViewCount(uid: string): Promise<{success: boolean}> {
   try {
-    // Increment usage for everyone to track deep dives
+    // Increment usage for everyone (tracking)
     await incrementUserUsageAdmin(uid);
     return { success: true };
-  } catch (error) {
-    console.error(`Failed to increment dashboard view for user ${uid}`, error);
+  } catch {
+    console.error(`Failed to increment dashboard view for user ${uid}`);
     // Don't throw, as this is a non-critical background task
     return { success: false };
   }
@@ -105,16 +105,18 @@ export async function getOptionsCandidates(ticker?: string): Promise<OptionCandi
     return getOptionsCandidatesAdmin(ticker);
 }
 
-export async function getDashboardData(ticker: string): Promise<any | null> {
+import type { DashboardDataV2, AnalysisSection } from '@/lib/types/dashboard-v2';
+
+export async function getDashboardData(ticker: string): Promise<DashboardDataV2 | null> {
     noStore();
     const winnerContract = await getWinnerForTickerAdmin(ticker);
 
     let gcsPath = winnerContract?.dashboard_json;
-    let analysisPath = winnerContract?.recommendation_analysis;
-    let industry = winnerContract?.industry;
+    // We still check analysisPath for legacy fallback
+    let analysisPath = winnerContract?.recommendation_analysis; 
     let optionsHeader = null;
 
-    // If it's a winner, construct the options header
+    // If it's a winner, construct the options header (Legacy Logic)
     if (winnerContract) {
         optionsHeader = {
             companyName: winnerContract.company_name,
@@ -133,7 +135,7 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
     }
 
     // Fallback if not a winner or winner is missing paths
-    if (!gcsPath || !analysisPath) {
+    if (!gcsPath) {
         console.warn(`[getDashboardData] Winner contract for ${ticker} is incomplete. Falling back to tickers collection.`);
         const stockData = await getStockDataAdmin(ticker);
         if (!stockData) {
@@ -142,42 +144,99 @@ export async function getDashboardData(ticker: string): Promise<any | null> {
         }
         gcsPath = stockData.dashboard_json;
         analysisPath = stockData.recommendation_analysis;
-        industry = stockData.industry ?? undefined;
     }
 
-    // If we still don't have a path for the dashboard json, we can't proceed.
     if (!gcsPath) {
         console.error(`[getDashboardData] No dashboard_json path could be found for ${ticker}.`);
         return null;
     }
 
     try {
-        let dashboardJson: any = {};
-        let stockLevelAnalysis: string | null = null;
-
-        // Fetch dashboard JSON
-        dashboardJson = JSON.parse(await getGcsFileContentAdmin(gcsPath));
+        // Fetch dashboard JSON (Could be V1 or V2)
+        const dashboardJson = JSON.parse(await getGcsFileContentAdmin(gcsPath));
         
-        // Fetch analysis markdown if path exists
+        // Construct the suggestedOption object from optionsHeader (Winner Data)
+        const suggestedOption = optionsHeader ? {
+            type: optionsHeader.optionType,
+            strike: optionsHeader.strikePrice,
+            expirationDate: optionsHeader.expirationDate,
+            contractSymbol: optionsHeader.contractSymbol,
+            dte: optionsHeader.dte,
+            setupQuality: optionsHeader.setupQuality,
+            summary: optionsHeader.topSignalSummary
+        } : undefined;
+
+        // CHECK: Is this V2 Data? (Has 'analysis' object)
+        if (dashboardJson.analysis) {
+            // It is V2.
+            // INJECT: Ensure suggestedOption is present if we have a winner contract
+            if (suggestedOption) {
+                dashboardJson.analysis.tradeSetup = {
+                    ...dashboardJson.analysis.tradeSetup,
+                    suggestedOption
+                };
+            }
+
+            return {
+                ...dashboardJson,
+                ticker: ticker.toUpperCase(),
+            } as DashboardDataV2;
+        }
+
+        // --- LEGACY ADAPTER (V1 -> V2) ---
+        
+        let stockLevelAnalysis: string | null = null;
         if (analysisPath) {
              try {
                 stockLevelAnalysis = await getGcsFileContentAdmin(analysisPath);
-            } catch (error) {
-                console.warn(`[getDashboardData] Could not fetch recommendation_analysis for ${ticker} from ${analysisPath}. Proceeding without it.`);
+            } catch {
+                console.warn(`[getDashboardData] Legacy: Could not fetch .md for ${ticker}.`);
             }
         }
 
-        // Combine all data into the expected structure
-        return {
-            ...dashboardJson,
-            industry,
-            optionsHeader, // This will be null if not a winner, which is handled by the frontend
-            stockLevelAnalysis,
-            runDate: dashboardJson.runDate,
+        const analysis: AnalysisSection = {
+            summary: {
+                signal: optionsHeader?.trendSignal || "Neutral",
+                score: 50,
+                confidence: "Medium"
+            },
+            fundamentalThesis: stockLevelAnalysis ? {
+                headline: "Market Analysis",
+                content: stockLevelAnalysis,
+                catalysts: []
+            } : undefined,
+            tradeSetup: optionsHeader ? {
+                signal: optionsHeader.trendSignal,
+                confidence: "Medium",
+                strategy: optionsHeader.optionType === 'call' ? 'Long Call' : 'Long Put',
+                catalyst: "Technical Setup",
+                suggestedOption // Injected here
+            } : undefined
         };
 
+        const v2Data: DashboardDataV2 = {
+            ticker: ticker.toUpperCase(),
+            runDate: dashboardJson.runDate || new Date().toISOString().split('T')[0],
+            titleInfo: dashboardJson.titleInfo || {
+                companyName: optionsHeader?.companyName || ticker,
+                ticker: ticker,
+                asOfDate: dashboardJson.runDate
+            },
+            kpis: dashboardJson.kpis,
+            priceChartData: dashboardJson.priceChartData,
+            analysis: analysis,
+            seo: {
+                title: `${ticker} Analysis`,
+                metaDescription: `AI Analysis for ${ticker}`,
+                keywords: [ticker, "Stocks"],
+                h1: `${ticker} Dashboard`
+            }
+        };
+
+        return v2Data;
+
     } catch (error) {
-        console.error(`[getDashboardData] Final error fetching or parsing data for ${ticker}:`, error);
+        console.error(`[getDashboardData] Final error fetching data for ${ticker}:`, error);
         return null;
     }
 }

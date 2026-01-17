@@ -2,8 +2,7 @@
 
 
 import { getPerformanceTrackerStatsAdmin } from "@/lib/firebase-admin";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { TrendingUp } from "lucide-react";
+import { Card, CardContent, CardHeader } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 import { cn } from "@/lib/utils";
 import Link from "next/link";

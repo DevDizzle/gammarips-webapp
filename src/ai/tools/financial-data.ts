@@ -1,13 +1,11 @@
-'use server';
+
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import {
   getStockDataAdmin,
   getWinnerForTickerAdmin,
-  getGcsFileContentAdmin,
-  type Stock,
-  type Winner
+  getGcsFileContentAdmin
 } from '@/lib/firebase-admin';
 
 const FinancialDataInputSchema = z.object({

@@ -1,4 +1,4 @@
-'use server';
+
 
 import { isSameDay, parseISO } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';

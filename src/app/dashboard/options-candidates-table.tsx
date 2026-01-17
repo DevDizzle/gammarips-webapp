@@ -11,7 +11,6 @@ import { useToast } from '@/hooks/use-toast';
 import { getOptionsCandidates } from '../actions';
 import type { OptionCandidate } from '@/lib/firebase-admin';
 import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 
 // Helper to convert GCS URI to a public URL
@@ -53,7 +52,7 @@ function OptionsCandidatesTable() {
   }, [toast]);
 
   const handleRowClick = (ticker: string) => {
-    router.push(`/dashboard/${ticker.toUpperCase()}`);
+    router.push(`/${ticker.toUpperCase()}`);
   };
 
   const getSignalMeta = (signal: string) => {

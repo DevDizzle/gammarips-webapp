@@ -3,7 +3,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { getEligibleEmailRecipientsAdmin, getTopPickAdmin, getGcsFileContentAdmin, type Stock } from '@/lib/firebase-admin';
+import { getEligibleEmailRecipientsAdmin, getTopPickAdmin, getGcsFileContentAdmin } from '@/lib/firebase-admin';
 import { sendEmail, buildTopPickEmailContent } from '@/lib/mailgun';
 
 const SummarizeAnalysisInputSchema = z.object({

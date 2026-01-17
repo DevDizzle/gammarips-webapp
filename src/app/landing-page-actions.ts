@@ -1,8 +1,9 @@
+
 'use server';
 
 import { getMarketIndices as fetchMarketIndices, getPutCallRatio, type MarketIndex } from '@/lib/fmp';
-import { getSmartNews as fetchSmartNews, type NewsItem } from '@/lib/polygon';
-import { getWinnersDashboardAdmin, getPerformanceSignals, type Winner, type PerformanceSignal } from '@/lib/firebase-admin';
+import { getSmartNews as fetchSmartNews } from '@/lib/polygon';
+import { getWinnersDashboardAdmin, getPerformanceSignals, getPerformanceTrackerStatsAdmin, type Winner, type PerformanceSignal, type PerformanceStats } from '@/lib/firebase-admin';
 
 /**
  * Fetches the global market indices and key metrics (SPY, VIX, PCR, US10Y, Oil)
@@ -13,18 +14,19 @@ export async function getMarketIndices(): Promise<MarketIndex[]> {
     getPutCallRatio()
   ]);
 
-  // Create the PCR object
-  const pcrIndex: MarketIndex = {
+  const allMetrics: MarketIndex[] = [...indices];
+
+  // Always add PCR, even if null (to maintain grid alignment)
+  allMetrics.push({
     symbol: 'PCR',
     name: 'Put/Call Ratio',
-    price: pcr,
-    changesPercentage: 0, // N/A for now
+    price: pcr, // can be null
+    changesPercentage: 0,
     change: 0
-  };
+  });
 
   // Combine and Sort: SPY, ^VIX, PCR, ^TNX, CLUSD
   const order = ['SPY', '^VIX', 'PCR', '^TNX', 'CLUSD'];
-  const allMetrics = [...indices, pcrIndex];
 
   return allMetrics.sort((a, b) => {
     return order.indexOf(a.symbol) - order.indexOf(b.symbol);
@@ -34,57 +36,60 @@ export async function getMarketIndices(): Promise<MarketIndex[]> {
 /**
  * Fetches filtered news.
  */
-export async function getSmartNews(tickers?: string[]) {
-  if (tickers && tickers.length > 0) {
-      return await fetchSmartNews({ ticker: tickers[0] });
+export async function getSmartNews(params?: string[] | { limit?: number }) {
+  if (Array.isArray(params) && params.length > 0) {
+      return await fetchSmartNews({ ticker: params[0] });
+  }
+  if (params && !Array.isArray(params)) {
+      return await fetchSmartNews(params);
   }
   return await fetchSmartNews();
 }
 
-export interface PublicDashboardData {
+export interface LandingPageData {
   bullish: { items: Winner[], total: number };
   bearish: { items: Winner[], total: number };
   gainers: { items: PerformanceSignal[], total: number };
   losers: { items: PerformanceSignal[], total: number };
+  performanceStats: PerformanceStats;
   lastUpdated: string | null;
 }
 
 /**
- * Fetches the "Public" version of the dashboard data.
+ * Fetches the data for the unified landing page.
  * Returns top 3 items for each category and total counts.
  */
-export async function getPublicDashboardData(): Promise<PublicDashboardData> {
+export async function getLandingPageData(): Promise<LandingPageData> {
   try {
-    const [allWinners, topGainers, topLosers] = await Promise.all([
+    const [allWinners, topGainers, topLosers, performanceStats] = await Promise.all([
       getWinnersDashboardAdmin(),
       getPerformanceSignals('desc', 10),
-      getPerformanceSignals('asc', 10)
+      getPerformanceSignals('asc', 10),
+      getPerformanceTrackerStatsAdmin()
     ]);
 
     // Process Winners (Bullish/Bearish)
+    // Filter for CALL/PUT
     const bullish: Winner[] = allWinners.filter((w: Winner) => w.option_type.toLowerCase().includes('call'));
     const bearish: Winner[] = allWinners.filter((w: Winner) => w.option_type.toLowerCase().includes('put'));
 
-    // Helper to sort and slice
-    // We explicitly type 'list' as Winner[] to avoid generic inference issues, 
-    // or we can make it generic but TypeScript sometimes struggles with mixed constraints.
-    // Since we only use it for Winners here:
-    const processList = (list: Winner[], sortDesc: boolean) => {
-        const sorted = [...list].sort((a, b) => {
-            const scoreA = a.weighted_score ?? 0;
-            const scoreB = b.weighted_score ?? 0;
-            return sortDesc ? scoreB - scoreA : scoreA - scoreB;
-        });
+    // Sort by weighted_score (descending)
+    const sortByScore = (list: Winner[]) => {
+        return [...list].sort((a, b) => (b.weighted_score ?? 0) - (a.weighted_score ?? 0));
+    };
+
+    const processList = (list: Winner[]) => {
+        const sorted = sortByScore(list);
         return {
-            items: sorted.slice(0, 10),
+            items: sorted.slice(0, 5), // Top 5
             total: list.length
         };
     };
 
     // Helper for performance signals
-    const processPerf = (list: PerformanceSignal[]) => ({
+    const processPerf = (list: PerformanceSignal[], totalCount: number) => ({
         items: list.slice(0, 10),
-        total: list.length
+        total: totalCount
     });
 
     // Get last updated date
@@ -97,24 +102,26 @@ export async function getPublicDashboardData(): Promise<PublicDashboardData> {
                 day: 'numeric',
                 timeZone: 'UTC'
             });
-        } catch (e) {}
+        } catch {}
     }
 
     return {
-      bullish: processList(bullish, true),
-      bearish: processList(bearish, true),
-      gainers: processPerf(topGainers),
-      losers: processPerf(topLosers),
+      bullish: processList(bullish),
+      bearish: processList(bearish),
+      gainers: processPerf(topGainers, performanceStats.winnerCount),
+      losers: processPerf(topLosers, performanceStats.loserCount),
+      performanceStats,
       lastUpdated
     };
 
   } catch (error) {
-    console.error("Failed to fetch public dashboard data:", error);
+    console.error("Failed to fetch landing page data:", error);
     return {
         bullish: { items: [], total: 0 },
         bearish: { items: [], total: 0 },
         gainers: { items: [], total: 0 },
         losers: { items: [], total: 0 },
+        performanceStats: { roi: 0, winRate: 0, winnerRoi: 0, loserRoi: 0, signalCount: 0, winnerCount: 0, loserCount: 0 },
         lastUpdated: null
     };
   }

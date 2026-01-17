@@ -7,31 +7,39 @@ import * as https from "https";
 let globalMcpClient: Client | null = null;
 
 export async function getMcpClient() {
-  // Use the local proxy to bypass Cloud Run 421 errors
-  // The proxy handles the connection to the external MCP_SERVER_URL using fetch
-  const port = process.env.PORT || '3000';
-  const proxyUrl = `http://127.0.0.1:${port}/api/mcp-proxy`;
+  const mcpServerUrl = process.env.MCP_SERVER_URL;
   
-  // Ensure the actual target is set for the proxy to use
-  if (!process.env.MCP_SERVER_URL) {
-    console.warn("⚠️ MCP_SERVER_URL is missing. Proxy will fail.");
+  if (!mcpServerUrl) {
+    console.error("⚠️ MCP_SERVER_URL is missing.");
+    throw new Error("MCP_SERVER_URL is not set in environment variables");
   }
 
   if (globalMcpClient) {
     return globalMcpClient;
   }
 
-  console.log(`🔌 Connecting to ProfitScout MCP via Proxy at ${proxyUrl}...`);
+  // Ensure the URL ends with /sse as per standard FastMCP setup
+  let sseUrl = mcpServerUrl;
+  if (sseUrl.endsWith('/')) {
+    sseUrl = sseUrl.slice(0, -1);
+  }
+  if (!sseUrl.endsWith('/sse')) {
+    sseUrl += '/sse';
+  }
 
-  // Custom Agent (standard settings)
+  console.log(`🔌 Connecting to ProfitScout MCP at ${sseUrl}...`);
+
+  // Force HTTP/1.1 to avoid Cloud Run 421 errors
+  // See: https://github.com/modelcontextprotocol/python-sdk/issues/137#issuecomment-2579696950
   const agent = new https.Agent({
     keepAlive: true,
   });
 
-  // @ts-ignore
-  const transport = new SSEClientTransport(new URL(proxyUrl), { 
+  const transport = new SSEClientTransport(new URL(sseUrl), { 
+    // @ts-expect-error - EventSource types mismatch between dom and node
     eventSourceClass: EventSource,
     eventSourceInit: {
+      withCredentials: false,
       https: { agent }
     }
   });
@@ -55,7 +63,6 @@ export async function getMcpClient() {
     return client;
   } catch (error) {
     console.error("❌ Failed to connect to MCP Server:", error);
-    // Return null or throw depending on how we want to handle failures
     throw error;
   }
 }

@@ -19,10 +19,7 @@ import {
     getPerformanceSignals as getPerformanceSignalsAdmin, 
     getTopPickAdmin, 
     getGcsFileContentAdmin, 
-    getMidDayMoversAdmin,
-    type Stock, 
-    type Winner, 
-    type PerformanceSignal 
+    getMidDayMoversAdmin
 } from '@/lib/firebase-admin';
 import { summarizeForEmailPrompt } from '@/ai/flows/send-top-pick';
 import { format } from 'date-fns';

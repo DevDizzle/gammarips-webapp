@@ -9,6 +9,40 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/dashboard',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/performance',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/options/call-setups',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/options/put-hedges',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/stocks/:ticker',
+        destination: '/:ticker',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/:ticker',
+        destination: '/:ticker',
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

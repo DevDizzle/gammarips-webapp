@@ -31,57 +31,60 @@ export type GroundedQaOutput = z.infer<typeof GroundedQaOutputSchema>;
 // --- System Prompt ---
 
 const profitScoutPrompt = `
-You are **ProfitScout**, an elite AI trading assistant specialized in identifying high-probability options trading opportunities.
-Your goal is to provide actionable intelligence by synthesizing technical, fundamental, and news data.
+You are **ProfitScout**, the Lead Options Strategist and an elite AI trading assistant. Your mission is to identify, validate, and present high-probability options trading opportunities.
+
+**Core Objective:** Provide actionable, data-backed intelligence. Do not just report data; synthesize it into a trade thesis.
+
+**The ProfitScout Protocol (Workflow):**
+
+1.  **Pulse Check (Context):**
+    *   Start by understanding the environment. Use \`get_macro_thesis\` to gauge market sentiment and \`get_winners_dashboard\` to see what is moving *today*.
+2.  **Hunt (Discovery):**
+    *   Use \`search_opportunities\` to find setups matching specific criteria (e.g., "Tech stocks with high IV").
+3.  **Deep Dive (Validation):**
+    *   For any specific ticker, execute a 360° review.
+    *   **The Master Tool:** \`get_stock_analysis\` (Technicals, Fundamentals, News, Business).
+    *   **The "Dark Matter":** \`analyze_market_structure\` (Vol/OI Walls, Gamma Exposure) - *Critical for options levels.*
+    *   **The Catalyst:** \`get_market_events\` (Earnings, Econ dates) and \`get_news_analysis\` (Sentiment).
+    *   **The Insider View:** \`get_mda_analysis\` or \`get_transcript_analysis\` for nuance.
 
 **Your Toolkit:**
-1.  **Market Pulse:**
-    -   \`get_winners_dashboard\`: **ALWAYS START HERE** for general market inquiries (e.g., "What's good?", "Top plays").
-    -   \`search_opportunities\`: Find stocks matching specific criteria.
-2.  **Deep Dive:**
-    -   \`get_stock_analysis\`: The **MASTER TOOL**. Use this for comprehensive reports on specific tickers.
-3.  **External Knowledge:**
-    -   **Google Search**: Use this for the latest news, macro events, or data not covered by internal tools.
+
+| Category | Tool | Best For |
+| :--- | :--- | :--- |
+| **Discovery** | \`get_winners_dashboard\` | **ALWAYS START HERE**. The "Hot List" of high-gamma setups. |
+| | \`search_opportunities\` | Finding needles in the haystack (Scanner). |
+| **Analysis** | \`get_stock_analysis\` | **Comprehensive Report**. The starting point for single-ticker research. |
+| | \`analyze_market_structure\` | **Support/Resistance**. Finds Vol/OI walls. Essential for strike selection. |
+| | \`get_technical_analysis\` | Detailed charts, indicators (RSI, MACD), and trends. |
+| **Context** | \`get_macro_thesis\` | "Why is the market red?" Daily briefing. |
+| | \`get_market_events\` | Avoiding earnings surprises. |
+| **Alpha** | \`get_mda_analysis\` | 10-K/10-Q insights. |
+| | \`get_transcript_analysis\` | Earnings call tone and management confidence. |
+| **Support** | \`web_search\` | **Fact Verification & News**. Use to verify facts or find current information not covered by other tools. |
+| | \`get_support_policy\` | **Policy Questions**. Use for inquiries about refunds, account access, privacy, or terms. |
 
 **Operational Rules:**
--   **Data First:** Never hallucinate prices. Verify with tools.
--   **Style:** Be professional, concise, and "Wall Street Smart". Use bullet points.
--   **Risk:** Always imply risk. These are probabilities, not certainties.
--   **Follow-up:** End with a relevant question to guide the user (e.g., "Want to see the chart?").
+
+*   **Data First:** Never guess. If you don't have the price/IV, call the tool.
+*   **Web Search:** If you need to verify facts or find current information, use the \`web_search\` tool.
+*   **Policies:** If the user asks about our policies (refunds, data, etc.), use the \`get_support_policy\` tool.
+*   **Structure:**
+    *   **The Setup:** (What is the opportunity?)
+    *   **The Data:** (Why? Technicals, Flow, Fundamentals)
+    *   **The Risks:** (Earnings coming up? Bearish macro?)
+    *   **The Verdict:** (Bullish/Bearish/Neutral + Key Levels)
+*   **Tone:** "Wall Street Smart". Professional, concise, high-conviction but risk-aware.
+*   **Options Focus:** Always consider Implied Volatility (IV) and Expiry (DTE).
 
 **Context:**
-History: {{history}}
+History:
+{{#each history}}
+{{role}}: {{content}}
+{{/each}}
+
 Current Question: {{question}}
 `;
-
-// --- Agent Definition ---
-
-const profitScoutAgent = ai.definePrompt({
-  name: 'profitScoutAgent',
-  input: { schema: GroundedQaInputSchema },
-  model: googleAI.model('gemini-2.0-flash'), // Using Flash for speed/cost balance, or Pro for reasoning
-  config: {
-    tools: [
-      { googleSearch: {} },
-      ...profitScoutTools
-    ],
-    temperature: 0.4, // Lower temperature for more analytical responses
-  },
-  prompt: profitScoutPrompt,
-});
-
-/**
- * Helper to extract sources from Google Search grounding metadata
- */
-function extractGroundedSources(raw: any): string[] {
-  if (!raw) return [];
-  const candidates = raw?.response?.candidates ?? raw?.candidates ?? [];
-  const chunks = candidates[0]?.groundingMetadata?.groundingChunks;
-  if (!chunks || !Array.isArray(chunks)) return [];
-  return chunks
-    .map((c: any) => c.web?.uri)
-    .filter((uri: any) => typeof uri === 'string');
-}
 
 // --- Main Flow ---
 
@@ -92,24 +95,70 @@ export const groundedQaFlow = ai.defineFlow(
     outputSchema: GroundedQaOutputSchema,
   },
   async (input) => {
+    const history = input.history || [];
+    const question = input.question;
+    
+    // Construct the system prompt manually
+    const historyText = history.map(h => `${h.role}: ${h.content}`).join('\n');
+    const systemPrompt = profitScoutPrompt
+      .replace('{{history}}', '') // We handled history loop in the template logic previously, but here we inject text
+      .replace('{{#each history}}\n{{role}}: {{content}}\n{{/each}}', historyText)
+      .replace('{{question}}', question);
+
     try {
-      const llmResponse = await profitScoutAgent(input);
+      console.log(`[ProfitScout] Generating with tools...`);
       
-      const text = (llmResponse as any).text || (llmResponse as any).output?.answer || '';
-      const sources = extractGroundedSources((llmResponse as any).raw);
+      // Use ai.generate directly
+      const llmResponse = await ai.generate({
+        model: googleAI.model('gemini-2.0-flash'),
+        tools: profitScoutTools,
+        config: {
+          temperature: 0.1,
+        },
+        prompt: systemPrompt,
+      });
 
-      // Add standard disclaimer if missing
-      const disclaimer = "\n\n**Disclaimer:** Content is for educational purposes only, not financial advice.";
-      const finalAnswer = text.toLowerCase().includes('educational purposes') 
-        ? text 
-        : text + disclaimer;
+      console.log(`[ProfitScout] Response received.`);
+      
+      // Check for Tool Requests (Genkit generate returns them in the output)
+      const toolRequests = llmResponse.toolRequests;
+      
+      if (toolRequests && toolRequests.length > 0) {
+        console.log(`[ProfitScout] Tool Requests Found: ${toolRequests.length}`);
+        
+        // Execute tools
+        // Genkit's ai.generate doesn't automatically loop unless you use a specific loop utility,
+        // but since we are refactoring, let's just handle the first turn of tools for now to prove it works.
+        // For a full agent, we'd loop.
+        
+        // Let's loop manually for one turn to get the data
+        const toolRequest = toolRequests[0];
+        const tool = toolRequest.tool;
+        console.log(`[ProfitScout] Executing ${tool.name} with args:`, toolRequest.input);
+        
+        // Execute the tool directly using the action
+        const toolOutput = await tool.action(toolRequest.input);
+        console.log(`[ProfitScout] Tool Output:`, toolOutput);
 
-      return {
-        answer: finalAnswer,
-        sources,
+        // Feed back to model
+        const followUp = await ai.generate({
+          model: googleAI.model('gemini-2.0-flash'),
+          tools: profitScoutTools, // Keep tools available
+          prompt: `${systemPrompt}\n\nModel Tool Call: ${tool.name}(${JSON.stringify(toolRequest.input)})\nTool Output: ${toolOutput}\n\nBased on this, answer the user.`,
+        });
+        
+        const finalAnswer = followUp.text;
+        return { answer: finalAnswer, sources: [] };
+      }
+
+      // No tool used
+      return { 
+        answer: llmResponse.text || "I analyzed the data but couldn't generate a final response.", 
+        sources: [] 
       };
+
     } catch (error) {
-      console.error('[ProfitScout Agent Error]', error);
+      console.error('[ProfitScout Agent Error] Full Details:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
       return {
         answer: "I'm having trouble connecting to the market data feed right now. Please try again in a moment.",
         sources: []

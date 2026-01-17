@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { UserNav } from '@/components/auth/user-nav';
 import Link from 'next/link';
 import { TickerSearch } from '@/components/ticker-search';
-import { AuthProvider } from '@/hooks/use-auth';
 import { getAppStatus } from '../actions';
 import DataUpdatingPage from '@/components/layout/data-updating-page';
 

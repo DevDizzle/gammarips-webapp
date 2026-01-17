@@ -102,7 +102,7 @@ Don't trade blindly. Click any card to read the AI Breakdown. You’ll see the f
 3. Plan Your Trade
 We provide the conviction; you manage the risk. Use the data to validate your entry and exit points.
 
-Go to Your Dashboard: https://gammarips.com/dashboard
+Go to Your Dashboard: https://gammarips.com/
 
 Join the Conversation
 Follow us for real-time updates and community discussion:
@@ -171,7 +171,7 @@ Founder, GammaRips
                     </tr>
                     <tr>
                         <td align="center" style="padding: 0 40px 30px;">
-                            <a href="https://gammarips.com/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
+                            <a href="https://gammarips.com/" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Go to Your Dashboard</a>
                         </td>
                     </tr>
                      <tr>
@@ -370,7 +370,7 @@ export async function sendFeedbackAcknowledgmentEmail({ to, trackingId }: { to: 
 }
 
 
-export async function buildAgentResponseEmailContent({ userEmail, response, trackingId }: { userEmail: string, response: string, trackingId: string }): Promise<{ text: string; html: string }> {
+export async function buildAgentResponseEmailContent({ response, trackingId }: { response: string, trackingId: string }): Promise<{ text: string; html: string }> {
     const textContent = `
 Hello,
 
@@ -446,7 +446,7 @@ export async function sendAgentResponseEmail({ to, response, trackingId }: { to:
 }
 
 
-export async function buildDailySetupsEmailContent(winners: Winner[], topGainers: PerformanceSignal[], topLosers: PerformanceSignal[]): Promise<{ text: string; html: string }> {
+export async function buildDailySetupsEmailContent(winners: Winner[], topGainers: PerformanceSignal[]): Promise<{ text: string; html: string }> {
     const topBullish = winners.filter(w => w.option_type === 'call').sort((a,b) => (b.weighted_score ?? -1) - (a.weighted_score ?? -1)).slice(0, 5);
     const topBearish = winners.filter(w => w.option_type === 'put').sort((a,b) => (a.weighted_score ?? Infinity) - (b.weighted_score ?? Infinity)).slice(0, 5);
 
@@ -477,7 +477,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
     textContent += `Missed these? Don't chase yesterday's moves. We have identified the high-gamma contracts primed for tomorrow.\nReview these setups tonight. Check the AI breakdown. Have your plan locked in before the opening bell.\n\n`;
     textContent += `Top 5 Bullish Call Contracts:\n${topBullish.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type.toUpperCase()} | Expires: ${new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })} | ${s.outlook_signal}`).join('\n')}\n\n`;
     textContent += `Top 5 Bearish Put Contracts:\n${topBearish.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type.toUpperCase()} | Expires: ${new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })} | ${s.outlook_signal}`).join('\n')}\n\n`;
-    textContent += `Unlock the Full Playbook: https://gammarips.com/dashboard`;
+    textContent += `Unlock the Full Playbook: https://gammarips.com/`;
 
     const htmlContent = `
 <!DOCTYPE html>
@@ -560,7 +560,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
                     </tr>
                     <tr>
                         <td align="center" style="padding: 40px;">
-                            <a href="https://gammarips.com/dashboard" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Unlock the Full Playbook</a>
+                            <a href="https://gammarips.com/" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Unlock the Full Playbook</a>
                         </td>
                     </tr>
                      <tr>
@@ -586,7 +586,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
 
 
 export async function buildTopPickEmailContent(stock: Stock, summary: string): Promise<{ text: string; html: string }> {
-    const dashboardLink = `https://gammarips.com/dashboard/${stock.id}`;
+    const dashboardLink = `https://gammarips.com/${stock.id}`;
     
     const textContent = `
 GammaRips AI Top Pick of the Day: ${stock.company_name} (${stock.id})

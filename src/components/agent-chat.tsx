@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Loader2, Send, User, X, Minimize2, Sparkles } from 'lucide-react';
+import { Loader2, Send, X, Minimize2, Sparkles } from 'lucide-react';
 import { submitChatQuery } from '@/app/actions/chat-actions';
 import { Markdown } from './markdown';
 import { cn } from '@/lib/utils';

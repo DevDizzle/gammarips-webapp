@@ -2,11 +2,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 
 interface HomePageClientContentProps {
@@ -16,7 +16,7 @@ interface HomePageClientContentProps {
 
 export default function HomePageClientContent({ showButton = false, buttonText = "Explore the Dashboard" }: HomePageClientContentProps) {
   const searchParams = useSearchParams();
-  const { user, loading } = useAuth();
+  const { loading } = useAuth();
 
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [authDialogDefaultView, setAuthDialogDefaultView] = useState<'signIn' | 'signUp'>('signUp');

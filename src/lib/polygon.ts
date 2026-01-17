@@ -26,16 +26,6 @@ interface FetchNewsOptions {
   limit?: number;
 }
 
-const ALLOW_LIST = new Set([
-  'Benzinga',
-  'Reuters',
-  'Bloomberg',
-  'The Wall Street Journal',
-  'CNBC',
-  'MarketWatch',
-  'Yahoo Finance'
-]);
-
 const BLOCK_LIST = new Set([
   'The Motley Fool',
   'GlobeNewswire',

@@ -1,11 +1,11 @@
 
 import { getPerformanceSignals } from '@/app/actions';
 import type { PerformanceSignal } from '@/lib/firebase-admin';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import { ArrowUp, ArrowDown, ChevronRight } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import Link from 'next/link';
 
 // Helper to convert GCS URI to a public URL
@@ -60,7 +60,7 @@ const PerformanceList = ({ signals }: { signals: PerformanceSignal[] }) => {
                                                 className="rounded-full"
                                             />}
                                             <div>
-                                                <Link href={`/dashboard/${signal.ticker}`} className="font-bold hover:underline">{signal.ticker}</Link>
+                                                <Link href={`/${signal.ticker}`} className="font-bold hover:underline">{signal.ticker}</Link>
                                                 <p className="text-xs text-muted-foreground truncate max-w-[150px]">{signal.company_name}</p>
                                             </div>
                                         </div>
@@ -89,7 +89,7 @@ const PerformanceList = ({ signals }: { signals: PerformanceSignal[] }) => {
 
                         return (
                             <Card key={signal.contract_symbol} className="transition-colors hover:bg-muted/50">
-                                <Link href={`/dashboard/${signal.ticker}`} className="block">
+                                <Link href={`/${signal.ticker}`} className="block">
                                     <CardContent className="p-4">
                                         <div className="flex items-center justify-between gap-4">
                                             <div className="flex items-center gap-3 flex-1 min-w-0">

@@ -5,7 +5,6 @@ import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { setUserSubscriptionStatusAdmin, getUserByStripeCustomerIdAdmin } from '@/lib/firebase-admin';
 import { sendWelcomeEmail } from '@/lib/mailgun';
-import type { DbUser } from '@/lib/firebase';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;

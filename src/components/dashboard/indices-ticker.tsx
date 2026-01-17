@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getMarketIndices } from '@/app/dashboard/actions';
+import { getMarketIndices } from '@/app/landing-page-actions';
 import { Card } from '@/components/ui/card';
 import { ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -42,6 +42,8 @@ export function IndicesTicker() {
 
   const formatValue = (index: MarketIndex) => {
     const { symbol, price } = index;
+    if (price === null || price === undefined) return 'N/A';
+    
     if (symbol === '^TNX') return `${price.toFixed(2)}%`;
     if (symbol === 'PCR') return price.toFixed(2);
     if (symbol === '^VIX') return price.toFixed(2);
@@ -49,7 +51,8 @@ export function IndicesTicker() {
     return `$${price.toFixed(2)}`;
   };
   
-  const getPcrSentiment = (pcrValue: number): { text: string; className: string } => {
+  const getPcrSentiment = (pcrValue: number | null): { text: string; className: string } => {
+    if (pcrValue === null) return { text: 'N/A', className: 'text-muted-foreground' };
     if (pcrValue > 1.0) {
       return { text: 'Bearish', className: 'text-red-500' };
     }
@@ -74,7 +77,7 @@ export function IndicesTicker() {
 
   return (
     <div className="w-full">
-      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide md:grid md:grid-cols-5 md:overflow-visible md:pb-0">
+      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide md:grid md:grid-cols-5 md:overflow-visible md:pb-0 w-full justify-stretch">
         {indices.map((index) => {
            const isPositive = index.changesPercentage > 0;
            const isNegative = index.changesPercentage < 0;

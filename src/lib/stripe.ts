@@ -14,7 +14,7 @@ export async function createStripeCheckoutSession(
     cancelUrl: string,
     metadata?: { [key: string]: string }
   ) {
-    let user = await getOrCreateUserAdmin(uid);
+    const user = await getOrCreateUserAdmin(uid);
     let customerId = user.stripeCustomerId;
 
     // Create a new Stripe customer if one doesn't exist

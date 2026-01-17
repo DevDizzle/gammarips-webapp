@@ -12,6 +12,14 @@ const SearchSchema = z.object({
   criteria: z.string().describe("Natural language description of what to find (e.g., 'tech stocks with high volatility', 'semiconductor sector')."),
 });
 
+const WebSearchSchema = z.object({
+  query: z.string().describe("The search query to find information on the internet."),
+});
+
+const PolicySchema = z.object({
+  topic: z.string().describe("The policy topic (e.g., 'refund', 'contact', 'privacy')."),
+});
+
 const EmptySchema = z.object({});
 
 // --- Tool Definitions ---
@@ -56,9 +64,35 @@ export const searchOpportunities = ai.defineTool(
   }
 );
 
+export const webSearch = ai.defineTool(
+  {
+    name: 'web_search',
+    description: `Search the public internet for information. Use this for general queries, recent news not covered by stock analysis, or fact-checking.`,
+    inputSchema: WebSearchSchema,
+    outputSchema: z.string(),
+  },
+  async ({ query }) => {
+    return await callMcpTool('web_search', { query });
+  }
+);
+
+export const getSupportPolicy = ai.defineTool(
+  {
+    name: 'get_support_policy',
+    description: `Retrieve official company policy information (refunds, contact info, terms).`,
+    inputSchema: PolicySchema,
+    outputSchema: z.string(),
+  },
+  async ({ topic }) => {
+    return await callMcpTool('get_support_policy', { query: topic });
+  }
+);
+
 // --- Export as a set for the agent ---
 export const profitScoutTools = [
   getWinnersDashboard,
   getStockAnalysis,
-  searchOpportunities
+  searchOpportunities,
+  webSearch,
+  getSupportPolicy
 ];

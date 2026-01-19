@@ -2,34 +2,98 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { AuthDialog } from './auth-dialog';
+import { SubscriptionDialog } from './subscription-dialog';
+import { useAuth } from '@/hooks/use-auth';
+import { useToast } from '@/hooks/use-toast';
+import { createCheckoutSession } from '@/app/actions';
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 interface AuthModalContextType {
   openAuthModal: (view?: 'signIn' | 'signUp') => void;
   closeAuthModal: () => void;
+  openSubscriptionModal: () => void;
+  closeSubscriptionModal: () => void;
 }
 
 const AuthModalContext = createContext<AuthModalContextType | undefined>(undefined);
 
 export function AuthModalProvider({ children }: { children: ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [view, setView] = useState<'signIn' | 'signUp'>('signUp');
+  // Auth Dialog State
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authView, setAuthView] = useState<'signIn' | 'signUp'>('signUp');
 
+  // Subscription Dialog State
+  const [isSubOpen, setIsSubOpen] = useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
+
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  // Auth Handlers
   const openAuthModal = (initialView: 'signIn' | 'signUp' = 'signUp') => {
-    setView(initialView);
-    setIsOpen(true);
+    setAuthView(initialView);
+    setIsAuthOpen(true);
   };
 
   const closeAuthModal = () => {
-    setIsOpen(false);
+    setIsAuthOpen(false);
+  };
+
+  // Subscription Handlers
+  const openSubscriptionModal = () => {
+    if (!user) {
+        openAuthModal('signUp');
+        return;
+    }
+    setIsSubOpen(true);
+  };
+
+  const closeSubscriptionModal = () => {
+    setIsSubOpen(false);
+  };
+
+  const handleSubscribe = async () => {
+    if (!user) return;
+    setIsSubscribing(true);
+    try {
+      const gaClientId = localStorage.getItem('ga_client_id');
+      const { sessionId } = await createCheckoutSession(user.uid, gaClientId);
+      const stripe = await stripePromise;
+      if (stripe) {
+        const { error } = await stripe.redirectToCheckout({ sessionId });
+        if (error) throw error;
+      }
+    } catch (error: any) {
+      toast({
+        title: "Subscription Error",
+        description: error.message || "Could not initiate subscription.",
+        variant: "destructive",
+      });
+      setIsSubscribing(false); 
+    }
+    // Note: We don't set isSubscribing(false) on success because the page redirects
   };
 
   return (
-    <AuthModalContext.Provider value={{ openAuthModal, closeAuthModal }}>
+    <AuthModalContext.Provider value={{ 
+        openAuthModal, 
+        closeAuthModal,
+        openSubscriptionModal,
+        closeSubscriptionModal
+    }}>
       {children}
       <AuthDialog 
-        open={isOpen} 
-        onOpenChange={setIsOpen} 
-        defaultView={view}
+        open={isAuthOpen} 
+        onOpenChange={setIsAuthOpen} 
+        defaultView={authView}
+      />
+      <SubscriptionDialog
+        open={isSubOpen}
+        onOpenChange={setIsSubOpen}
+        onSubscribe={handleSubscribe}
+        loading={isSubscribing}
       />
     </AuthModalContext.Provider>
   );

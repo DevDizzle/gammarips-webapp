@@ -33,7 +33,7 @@ const TRUNCATE_LIMIT = 5;
 
 export function MarketHub({ data }: { data: LandingPageData }) {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isPro } = useAuth();
 
   const [fullWinners, setFullWinners] = useState<Winner[] | null>(null);
   const [loadingFullData, setLoadingFullData] = useState(false);
@@ -41,7 +41,7 @@ export function MarketHub({ data }: { data: LandingPageData }) {
 
   useEffect(() => {
     async function fetchFullData() {
-        if (!user) return;
+        if (!isPro) return; // Only fetch full data if user is Pro
         setLoadingFullData(true);
         try {
             const winners = await getWinnersDashboard();
@@ -53,10 +53,10 @@ export function MarketHub({ data }: { data: LandingPageData }) {
         }
     }
 
-    if (user && !fullWinners) {
+    if (isPro && !fullWinners) {
         fetchFullData();
     }
-  }, [user, fullWinners]);
+  }, [isPro, fullWinners]);
 
 
   const handleRowClick = (ticker: string) => {
@@ -91,7 +91,7 @@ export function MarketHub({ data }: { data: LandingPageData }) {
     const isExpanded = !!expandedTabs[tabKey];
     let winnersToShow: Winner[];
 
-    if (user && fullWinners) {
+    if (isPro && fullWinners) {
         const filtered = fullWinners.filter(w => w.option_type.toLowerCase().includes(filterType));
         filtered.sort((a,b) => (b.weighted_score ?? 0) - (a.weighted_score ?? 0));
         winnersToShow = isExpanded ? filtered : filtered.slice(0, TRUNCATE_LIMIT);
@@ -99,7 +99,7 @@ export function MarketHub({ data }: { data: LandingPageData }) {
         winnersToShow = publicWinners.slice(0, TRUNCATE_LIMIT);
     }
 
-    const isLocked = !user;
+    const isLocked = !isPro;
     
     return (
       <div className="relative">
@@ -181,13 +181,13 @@ export function MarketHub({ data }: { data: LandingPageData }) {
                 </div>
             )}
         </BlurGate>
-        {user && <ExpandToggle listKey={tabKey} count={total} />}
+        {isPro && <ExpandToggle listKey={tabKey} count={total} />}
       </div>
     );
   };
 
   const renderContent = () => {
-    if (loadingFullData && user) {
+    if (loadingFullData && isPro) {
         return (
             <div className="flex justify-center items-center h-48">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />

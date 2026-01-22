@@ -1,4 +1,4 @@
-import { getDashboardData } from '@/app/actions';
+import { getDashboardData, getOptionsSignals } from '@/app/actions';
 import { ExecutionDeck } from '@/components/dashboard/execution-deck';
 import { KpiCarousel } from '@/components/dashboard/kpi-carousel';
 import { AnalystBrief } from '@/components/dashboard/analyst-brief';
@@ -8,6 +8,8 @@ import UpcomingEarnings from './upcoming-events';
 import ActiveSignalTracker from './signal-tracker';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { FairOptionsDisplay } from './noteworthy-options';
+import type { OptionsSignal } from '@/lib/firebase-admin';
 
 type Props = {
   params: Promise<{ ticker: string }>;
@@ -28,23 +30,114 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: data.seo.title,
     description: data.seo.metaDescription,
     keywords: data.seo.keywords,
+    alternates: {
+      canonical: `/${ticker.toUpperCase()}`,
+    },
   };
 }
 
 export default async function Page({ params }: Props) {
   const { ticker } = await params;
-  const data = await getDashboardData(ticker);
+  
+  // Fetch dashboard data and other options signals in parallel
+  const [data, otherOptions] = await Promise.all([
+    getDashboardData(ticker),
+    getOptionsSignals(ticker)
+  ]);
 
   if (!data) {
     return notFound();
   }
 
+  // --- Dynamic Schema.org Generation ---
+  let schema: any = null;
+  const graph: any[] = [];
+
+  // Add Article schema for the main analysis
+  if (data.analysis?.optionsBrief?.headline) {
+    graph.push({
+      "@type": "NewsArticle",
+      "headline": data.analysis.optionsBrief.headline,
+      "author": {
+        "@type": "Organization",
+        "name": "GammaRips"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "GammaRips",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://gammarips.com/icon.png"
+        }
+      },
+      "datePublished": data.runDate,
+      "dateModified": data.runDate,
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://gammarips.com/${data.ticker}`
+      },
+      // Strip HTML tags for a clean articleBody for Schema
+      "articleBody": data.analysis.optionsBrief.content.replace(/<[^>]*>?/gm, ''),
+      "description": data.seo.metaDescription,
+    });
+  }
+
+  // Add FAQ schema if available in the data payload
+  const faqData = (data as any).faq;
+  if (faqData && Array.isArray(faqData) && faqData.length > 0) {
+    graph.push({
+      "@type": "FAQPage",
+      "mainEntity": faqData.map((item: {question: string, answer: string}) => ({
+        "@type": "Question",
+        "name": item.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.answer
+        }
+      }))
+    });
+  }
+
+  // Finalize schema structure
+  if (graph.length > 1) {
+    schema = {
+      "@context": "https://schema.org",
+      "@graph": graph
+    };
+  } else if (graph.length === 1) {
+    schema = {
+      "@context": "https://schema.org",
+      ...graph[0]
+    };
+  }
+  // --- End Schema Generation ---
+
+  // Filter out the main signal and map other options to the required format
+  const fairQualityOptions: OptionsSignal[] = otherOptions
+    .filter(o => o.contract_symbol !== data.analysis?.tradeSetup?.suggestedOption?.contractSymbol)
+    .map(o => ({
+        id: o.id,
+        contract_symbol: o.contract_symbol,
+        expiration_date: o.expiration_date,
+        implied_volatility: o.implied_volatility ?? 0,
+        volatility_comparison_signal: 'N/A', // This field is not available in OptionCandidate
+        option_type: o.option_type,
+        run_date: data.runDate,
+        setup_quality_signal: 'Fair',
+        stock_price_trend_signal: o.stock_outlook_signal,
+        strike_price: o.strike,
+        summary: `This contract has a favorable setup based on our analysis.`,
+        ticker: o.ticker,
+        company_name: o.company_name
+    })).slice(0, 3); // Limit to 3
+
+
   return (
     <div className="space-y-8 container py-6 mx-auto max-w-5xl">
-      {data.schemaOrg && (
+      {schema && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(data.schemaOrg) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       )}
       <ExecutionDeck data={data} />
@@ -72,6 +165,8 @@ export default async function Page({ params }: Props) {
 
         <AnalystBrief analysis={data.analysis} />
 
+        <FairOptionsDisplay options={fairQualityOptions} />
+
         <UpcomingEarnings ticker={ticker} />
         
         <ActiveSignalTracker ticker={ticker} />
@@ -79,4 +174,3 @@ export default async function Page({ params }: Props) {
     </div>
   );
 }
-

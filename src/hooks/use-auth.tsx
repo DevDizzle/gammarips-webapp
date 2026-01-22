@@ -48,14 +48,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   const isPro = useMemo(() => {
-    if (!dbUser?.proUntil) return false;
-    try {
-        // proUntil is a Firestore Timestamp
-        return dbUser.proUntil.toDate() > new Date();
-    } catch {
-        // Fallback for safety
-        return false;
+    // If we are in "Free Mode" (Growth Mode), everyone is Pro.
+    if (FREE_MODE) return true;
+
+    if (!dbUser) return false;
+
+    // If the user has an active Stripe subscription, they are Pro.
+    if (dbUser.isSubscribed) return true;
+
+    // If the user is in their trial period (proUntil > Now), they are Pro.
+    if (dbUser.proUntil) {
+        try {
+            return dbUser.proUntil.toDate() > new Date();
+        } catch {
+            return false;
+        }
     }
+
+    return false;
   }, [dbUser]);
 
   useEffect(() => {
@@ -109,14 +119,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (additionalInfo?.isNewUser) {
       trackEvent('sign_up', { method });
       
-      if (FREE_MODE) {
-          toast({ title: "Welcome to GammaRips!", description: "Account created successfully." });
-          router.push('/dashboard');
-      } else {
-          // The welcome email is no longer sent on sign up.
-          // It is now sent via the Stripe webhook upon successful subscription.
-          router.push('/auth/processing');
-      }
+      // Reverse Trial Mode: Everyone gets 14 days free, so go straight to dashboard.
+      toast({ title: "Welcome to GammaRips!", description: "Account created successfully." });
+      router.push('/dashboard');
 
     } else {
        toast({ title: "Successfully signed in." });

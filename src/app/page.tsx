@@ -13,6 +13,9 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "GammaRips | Daily AI Options Analysis & Market Research",
   description: "Real-time AI options signals, gamma exposure analysis, and market performance tracking.",
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export default async function LandingPage() {

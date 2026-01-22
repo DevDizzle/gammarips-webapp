@@ -68,17 +68,8 @@ export default function DashboardPageClient({ children }: { children: React.Reac
         )
     }
 
-    // 4. If user is not subscribed and we are NOT in free mode, show subscription dialog.
-    if (!dbUser.isSubscribed && !FREE_MODE) {
-        return (
-            <SubscriptionDialog
-              open={true}
-              onOpenChange={() => router.push('/')} // Redirect to home on close
-              onSubscribe={handleSubscribe}
-              loading={isSubscribing}
-            />
-        );
-    }
+    // 4. (Hard Gate Removed) - We now allow non-subscribed users to access the dashboard
+    // and rely on "Soft Locks" (ProLock component) to limit access to premium features.
 
     // 5. If all checks pass, render the premium content
     return <>{children}</>;

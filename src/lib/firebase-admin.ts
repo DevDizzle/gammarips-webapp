@@ -1211,10 +1211,20 @@ export async function incrementUserUsageAdmin(uid: string) {
 
 export async function setUserSubscriptionStatusAdmin(
   uid: string,
-  isSubscribed: boolean
+  isSubscribed: boolean,
+  currentPeriodEnd?: number
 ) {
   const userRef = adminDb.collection('users').doc(uid);
-  await userRef.set({ isSubscribed }, { merge: true });
+  
+  let updates: any = { isSubscribed };
+
+  if (isSubscribed && currentPeriodEnd) {
+      // Add a grace period of 2 days to avoid race conditions with renewals
+      const proUntilDate = new Date((currentPeriodEnd * 1000) + (2 * 24 * 60 * 60 * 1000));
+      updates.proUntil = Timestamp.fromDate(proUntilDate);
+  }
+
+  await userRef.set(updates, { merge: true });
 }
 
 export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): Promise<DbUser | null> {

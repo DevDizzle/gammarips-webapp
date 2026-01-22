@@ -1,1 +1,1 @@
-export const FREE_MODE = true;
+export const FREE_MODE = false;

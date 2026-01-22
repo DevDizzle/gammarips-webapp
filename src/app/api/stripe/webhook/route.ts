@@ -16,7 +16,7 @@ async function handleSubscriptionChange(subscription: Stripe.Subscription, isSub
     const user = await getUserByStripeCustomerIdAdmin(customerId);
 
     if (user) {
-        await setUserSubscriptionStatusAdmin(user.uid, isSubscribed);
+        await setUserSubscriptionStatusAdmin(user.uid, isSubscribed, subscription.current_period_end);
         
         // Send the powerful new welcome email ONLY on a new active subscription.
         if (isSubscribed && isNew && user.email) {

@@ -21,8 +21,7 @@ const getSentimentClasses = (signal: string) => {
 }
 
 export function ExecutionDeck({ data }: { data: DashboardDataV2 }) {
-    const { titleInfo, analysis, industry, runDate } = data;
-    const { summary, tradeSetup } = analysis;
+    const { titleInfo, summary, tradeSetup, industry, runDate } = data;
     const { isPro } = useAuth();
     const { openSubscriptionModal } = useAuthModal();
 

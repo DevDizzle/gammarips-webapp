@@ -2,6 +2,8 @@ import { getDashboardData, getOptionsSignals } from '@/app/actions';
 import { ExecutionDeck } from '@/components/dashboard/execution-deck';
 import { KpiCarousel } from '@/components/dashboard/kpi-carousel';
 import { AnalystBrief } from '@/components/dashboard/analyst-brief';
+import { DeepDiveAnalysis } from '@/components/dashboard/deep-dive-analysis';
+import { FAQSection } from '@/components/dashboard/faq-section';
 import { PriceChart } from '@/components/price-chart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import UpcomingEarnings from './upcoming-events';
@@ -53,11 +55,25 @@ export default async function Page({ params }: Props) {
   let schema: any = null;
   const graph: any[] = [];
 
+  // Determine Article Content
+  const headline = data.optionsBrief?.headline || data.fundamentalThesis?.headline;
+  let articleBody = data.optionsBrief?.content?.replace(/<[^>]*>?/gm, '') || "";
+  
+  if (!articleBody && data.fullAnalysis) {
+      // Fallback: Construct body from Deep Dive Analysis
+      const parts = [
+          data.fullAnalysis.technicals,
+          data.fullAnalysis.fundamentals,
+          data.fullAnalysis.news
+      ].filter(Boolean);
+      articleBody = parts.join(" ").replace(/<[^>]*>?/gm, '');
+  }
+
   // Add Article schema for the main analysis
-  if (data.analysis?.optionsBrief?.headline) {
+  if (headline) {
     graph.push({
       "@type": "NewsArticle",
-      "headline": data.analysis.optionsBrief.headline,
+      "headline": headline,
       "author": {
         "@type": "Organization",
         "name": "GammaRips"
@@ -77,17 +93,17 @@ export default async function Page({ params }: Props) {
         "@id": `https://gammarips.com/${data.ticker}`
       },
       // Strip HTML tags for a clean articleBody for Schema
-      "articleBody": data.analysis.optionsBrief.content.replace(/<[^>]*>?/gm, ''),
+      "articleBody": articleBody.substring(0, 5000), // Limit length for safety
       "description": data.seo.metaDescription,
     });
   }
 
   // Add FAQ schema if available in the data payload
-  const faqData = (data as any).faq;
+  const faqData = data.faq;
   if (faqData && Array.isArray(faqData) && faqData.length > 0) {
     graph.push({
       "@type": "FAQPage",
-      "mainEntity": faqData.map((item: {question: string, answer: string}) => ({
+      "mainEntity": faqData.map((item) => ({
         "@type": "Question",
         "name": item.question,
         "acceptedAnswer": {
@@ -114,7 +130,7 @@ export default async function Page({ params }: Props) {
 
   // Filter out the main signal and map other options to the required format
   const fairQualityOptions: OptionsSignal[] = otherOptions
-    .filter(o => o.contract_symbol !== data.analysis?.tradeSetup?.suggestedOption?.contractSymbol)
+    .filter(o => o.contract_symbol !== data.tradeSetup?.suggestedOption?.contractSymbol)
     .map(o => ({
         id: o.id,
         contract_symbol: o.contract_symbol,
@@ -163,7 +179,14 @@ export default async function Page({ params }: Props) {
             </CardContent>
         </Card>
 
-        <AnalystBrief analysis={data.analysis} />
+        <AnalystBrief 
+            optionsBrief={data.optionsBrief} 
+            fundamentalThesis={data.fundamentalThesis} 
+        />
+
+        {data.fullAnalysis && <DeepDiveAnalysis analysis={data.fullAnalysis} />}
+        
+        {data.faq && <FAQSection faqs={data.faq} />}
 
         <FairOptionsDisplay options={fairQualityOptions} />
 

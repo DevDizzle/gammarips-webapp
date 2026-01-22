@@ -105,7 +105,7 @@ export async function getOptionsCandidates(ticker?: string): Promise<OptionCandi
     return getOptionsCandidatesAdmin(ticker);
 }
 
-import type { DashboardDataV2, AnalysisSection } from '@/lib/types/dashboard-v2';
+import type { DashboardDataV2 } from '@/lib/types/dashboard-v2';
 
 export async function getDashboardData(ticker: string): Promise<DashboardDataV2 | null> {
     noStore();
@@ -166,24 +166,43 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
             summary: optionsHeader.topSignalSummary
         } : undefined;
 
-        // CHECK: Is this V2 Data? (Has 'analysis' object)
-        if (dashboardJson.analysis) {
-            // It is V2.
-            // INJECT: Ensure suggestedOption is present if we have a winner contract
-            if (suggestedOption) {
-                dashboardJson.analysis.tradeSetup = {
-                    ...dashboardJson.analysis.tradeSetup,
+        // --- CASE A: Flattened Data (New Backend) ---
+        // Check if root properties exist
+        if (dashboardJson.tradeSetup || dashboardJson.fundamentalThesis || dashboardJson.fullAnalysis) {
+             if (suggestedOption) {
+                dashboardJson.tradeSetup = {
+                    ...dashboardJson.tradeSetup,
                     suggestedOption
                 };
             }
-
             return {
                 ...dashboardJson,
                 ticker: ticker.toUpperCase(),
             } as DashboardDataV2;
         }
 
-        // --- LEGACY ADAPTER (V1 -> V2) ---
+        // --- CASE B: Nested Data (Previous V2) ---
+        if (dashboardJson.analysis) {
+            // Flatten logic
+            const { analysis, ...rest } = dashboardJson;
+            
+            // Inject suggestedOption into the extracted tradeSetup
+            const tradeSetup = suggestedOption ? {
+                ...analysis.tradeSetup,
+                suggestedOption
+            } : analysis.tradeSetup;
+
+            return {
+                ...rest,
+                ticker: ticker.toUpperCase(),
+                summary: analysis.summary,
+                fundamentalThesis: analysis.fundamentalThesis,
+                optionsBrief: analysis.optionsBrief,
+                tradeSetup: tradeSetup,
+            } as DashboardDataV2;
+        }
+
+        // --- CASE C: LEGACY ADAPTER (V1 -> V2) ---
         
         let stockLevelAnalysis: string | null = null;
         if (analysisPath) {
@@ -194,7 +213,18 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
             }
         }
 
-        const analysis: AnalysisSection = {
+        const v2Data: DashboardDataV2 = {
+            ticker: ticker.toUpperCase(),
+            runDate: dashboardJson.runDate || new Date().toISOString().split('T')[0],
+            titleInfo: dashboardJson.titleInfo || {
+                companyName: optionsHeader?.companyName || ticker,
+                ticker: ticker,
+                asOfDate: dashboardJson.runDate
+            },
+            kpis: dashboardJson.kpis,
+            priceChartData: dashboardJson.priceChartData,
+            
+            // Flattened Analysis Construction
             summary: {
                 signal: optionsHeader?.trendSignal || "Neutral",
                 score: 50,
@@ -211,20 +241,8 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
                 strategy: optionsHeader.optionType === 'call' ? 'Long Call' : 'Long Put',
                 catalyst: "Technical Setup",
                 suggestedOption // Injected here
-            } : undefined
-        };
+            } : undefined,
 
-        const v2Data: DashboardDataV2 = {
-            ticker: ticker.toUpperCase(),
-            runDate: dashboardJson.runDate || new Date().toISOString().split('T')[0],
-            titleInfo: dashboardJson.titleInfo || {
-                companyName: optionsHeader?.companyName || ticker,
-                ticker: ticker,
-                asOfDate: dashboardJson.runDate
-            },
-            kpis: dashboardJson.kpis,
-            priceChartData: dashboardJson.priceChartData,
-            analysis: analysis,
             seo: {
                 title: `${ticker} Analysis`,
                 metaDescription: `AI Analysis for ${ticker}`,

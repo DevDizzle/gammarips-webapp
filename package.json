@@ -14,7 +14,8 @@
     "cleanup:users": "tsx src/admin/cleanup-users.ts",
     "test:emails": "tsx src/ai/trigger-flow.ts",
     "send:early-adopters": "tsx src/admin/send-early-adopter-email.ts",
-    "get:top-users": "tsx src/admin/get-top-users.ts"
+    "get:top-users": "tsx src/admin/get-top-users.ts",
+    "get:min-date": "tsx src/admin/get-min-perf-date.ts"
   },
   "dependencies": {
     "@genkit-ai/google-genai": "^1.25.0",

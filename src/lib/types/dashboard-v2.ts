@@ -48,15 +48,18 @@ export interface TradeSetup {
   };
 }
 
-export interface AnalysisSection {
-  summary: {
-    signal: string;
-    score: number;
-    confidence: string;
-  };
-  optionsBrief?: OptionsBrief;
-  fundamentalThesis?: FundamentalThesis;
-  tradeSetup?: TradeSetup;
+export interface FullAnalysis {
+    news?: string;
+    technicals?: string;
+    "md&a"?: string;
+    transcript?: string;
+    financials?: string;
+    fundamentals?: string;
+}
+
+export interface FAQItem {
+    question: string;
+    answer: string;
 }
 
 export interface KPI {
@@ -95,7 +98,22 @@ export interface DashboardDataV2 {
     thirtyDayChange: KPI;
   };
   priceChartData: PriceChartData;
-  analysis: AnalysisSection;
+  
+  // Flattened Analysis Structure
+  summary?: {
+      signal: string;
+      score: number;
+      confidence: string;
+  };
+  tradeSetup?: TradeSetup;
+  marketStructure?: MarketStructure;
+  fundamentalThesis?: FundamentalThesis;
+  optionsBrief?: OptionsBrief; // Legacy / Specific V1
+  
+  // New Rich Content
+  fullAnalysis?: FullAnalysis;
+  faq?: FAQItem[];
+
   seo: {
     title: string;
     metaDescription: string;
@@ -103,4 +121,12 @@ export interface DashboardDataV2 {
     h1: string;
   };
   schemaOrg?: Record<string, any>;
+  
+  // Backward compatibility (Optional)
+  analysis?: {
+      summary: any;
+      optionsBrief?: OptionsBrief;
+      fundamentalThesis?: FundamentalThesis;
+      tradeSetup?: TradeSetup;
+  };
 }

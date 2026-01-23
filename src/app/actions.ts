@@ -115,29 +115,33 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
     // We still check analysisPath for legacy fallback
     let analysisPath = winnerContract?.recommendation_analysis; 
     let optionsHeader = null;
+    let stockData: Stock | null = null;
 
     // If it's a winner, construct the options header (Legacy Logic)
     if (winnerContract) {
+        const runDate = winnerContract.run_date || new Date().toISOString();
+        const expirationDate = winnerContract.expiration_date; // Assuming expiration_date is required string in schema, checked: it is z.string()
+        
         optionsHeader = {
             companyName: winnerContract.company_name,
             ticker: winnerContract.ticker,
-            runDate: winnerContract.run_date,
+            runDate: runDate,
             optionType: winnerContract.option_type,
             contractSymbol: winnerContract.contract_symbol,
-            expirationDate: winnerContract.expiration_date,
+            expirationDate: expirationDate,
             strikePrice: winnerContract.strike_price,
             setupQuality: winnerContract.setup_quality_signal,
-            trendSignal: winnerContract.outlook_signal,
+            trendSignal: winnerContract.outlook_signal || 'Neutral',
             volatilitySignal: winnerContract.volatility_comparison_signal,
             topSignalSummary: winnerContract.summary,
-            dte: Math.max(0, Math.ceil((new Date(winnerContract.expiration_date).getTime() - new Date(winnerContract.run_date).getTime()) / (1000 * 60 * 60 * 24))),
+            dte: Math.max(0, Math.ceil((new Date(expirationDate).getTime() - new Date(runDate).getTime()) / (1000 * 60 * 60 * 24))),
         };
     }
 
     // Fallback if not a winner or winner is missing paths
     if (!gcsPath) {
         console.warn(`[getDashboardData] Winner contract for ${ticker} is incomplete. Falling back to tickers collection.`);
-        const stockData = await getStockDataAdmin(ticker);
+        stockData = await getStockDataAdmin(ticker);
         if (!stockData) {
             console.error(`[getDashboardData] No data found in tickers collection for ${ticker} either.`);
             return null;
@@ -176,14 +180,31 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
                 };
             }
             
-            // Inject image_uri into titleInfo if available from source
-            if (dashboardJson.titleInfo) {
-                dashboardJson.titleInfo.image_uri = winnerContract?.image_uri || stockData?.image_uri;
-            }
+            // Construct robust titleInfo using GCS data with Firestore fallbacks
+            const defaultTitleInfo = {
+                companyName: winnerContract?.company_name || stockData?.company_name || ticker,
+                ticker: ticker.toUpperCase(),
+                asOfDate: winnerContract?.run_date || new Date().toISOString().split('T')[0],
+                image_uri: winnerContract?.image_uri || stockData?.image_uri,
+            };
+
+            const titleInfo = {
+                ...defaultTitleInfo,
+                ...(dashboardJson.titleInfo || {})
+            };
+
+            // Ensure runDate is present
+            const runDate = dashboardJson.runDate || winnerContract?.run_date || new Date().toISOString().split('T')[0];
+
+            // Ensure industry is present if available
+            const industry = dashboardJson.industry || winnerContract?.industry || stockData?.industry;
 
             return {
                 ...dashboardJson,
                 ticker: ticker.toUpperCase(),
+                titleInfo,
+                runDate,
+                industry,
             } as DashboardDataV2;
         }
 
@@ -250,7 +271,7 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
                 catalysts: []
             } : undefined,
             tradeSetup: optionsHeader ? {
-                signal: optionsHeader.trendSignal,
+                signal: optionsHeader.trendSignal || "Neutral",
                 confidence: "Medium",
                 strategy: optionsHeader.optionType === 'call' ? 'Long Call' : 'Long Put',
                 catalyst: "Technical Setup",

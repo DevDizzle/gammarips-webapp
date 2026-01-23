@@ -842,12 +842,12 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
                 image_uri: data.image_uri,
                 option_type: data.option_type,
                 expiration_date: data.expiration_date,
-                strike: data.strike ?? data.strike_price ?? 0, // Robust mapping for strike vs strike_price
+                strike: Number(data.strike ?? data.strike_price ?? 0), // Robust mapping for strike vs strike_price
                 last_price: data.last_price,
                 volume: data.volume,
                 implied_volatility: data.implied_volatility,
                 options_score: data.options_score,
-                stock_outlook_signal: data.stock_outlook_signal,
+                stock_outlook_signal: data.stock_outlook_signal ?? data.outlook_signal,
             };
             const validation = OptionCandidateSchema.safeParse(candidateData);
             if (validation.success) {
@@ -859,7 +859,7 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
         
         // If fetching all, sort by score. If by ticker, maybe another sort order?
         if (!ticker) {
-            candidates.sort((a, b) => b.options_score - a.options_score);
+            candidates.sort((a, b) => (b.options_score ?? 0) - (a.options_score ?? 0));
         }
         
         return candidates;

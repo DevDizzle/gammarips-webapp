@@ -39,12 +39,12 @@ export const OptionCandidateSchema = z.object({
   image_uri: z.string().optional().nullable(),
   option_type: z.enum(['call', 'put']),
   expiration_date: z.string(),
-  strike: z.number(),
-  last_price: z.number().nullable(),
-  volume: z.number().nullable(),
+  strike: z.preprocess((val) => (typeof val === 'string' ? parseFloat(val) : val), z.number()),
+  last_price: z.number().nullable().optional(),
+  volume: z.number().nullable().optional(),
   implied_volatility: z.number().optional().nullable(),
-  options_score: z.number(),
-  stock_outlook_signal: z.string(),
+  options_score: z.number().optional(),
+  stock_outlook_signal: z.string().optional(),
 });
 export type OptionCandidate = z.infer<typeof OptionCandidateSchema>;
 

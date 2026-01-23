@@ -175,6 +175,12 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
                     suggestedOption
                 };
             }
+            
+            // Inject image_uri into titleInfo if available from source
+            if (dashboardJson.titleInfo) {
+                dashboardJson.titleInfo.image_uri = winnerContract?.image_uri || stockData?.image_uri;
+            }
+
             return {
                 ...dashboardJson,
                 ticker: ticker.toUpperCase(),
@@ -192,8 +198,15 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
                 suggestedOption
             } : analysis.tradeSetup;
 
+            // Ensure titleInfo has image_uri
+            const titleInfo = {
+                ...rest.titleInfo,
+                image_uri: winnerContract?.image_uri || stockData?.image_uri
+            };
+
             return {
                 ...rest,
+                titleInfo,
                 ticker: ticker.toUpperCase(),
                 summary: analysis.summary,
                 fundamentalThesis: analysis.fundamentalThesis,
@@ -219,7 +232,8 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
             titleInfo: dashboardJson.titleInfo || {
                 companyName: optionsHeader?.companyName || ticker,
                 ticker: ticker,
-                asOfDate: dashboardJson.runDate
+                asOfDate: dashboardJson.runDate,
+                image_uri: winnerContract?.image_uri || stockData?.image_uri
             },
             kpis: dashboardJson.kpis,
             priceChartData: dashboardJson.priceChartData,

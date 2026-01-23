@@ -842,7 +842,7 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
                 image_uri: data.image_uri,
                 option_type: data.option_type,
                 expiration_date: data.expiration_date,
-                strike: data.strike_price, // Changed from strike to strike_price
+                strike: data.strike ?? data.strike_price ?? 0, // Robust mapping for strike vs strike_price
                 last_price: data.last_price,
                 volume: data.volume,
                 implied_volatility: data.implied_volatility,

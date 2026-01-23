@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  return {
+  const metadata: Metadata = {
     title: data.seo.title,
     description: data.seo.metaDescription,
     keywords: data.seo.keywords,
@@ -36,6 +36,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `/${ticker.toUpperCase()}`,
     },
   };
+
+  // Add Dynamic OpenGraph Image (Ticker Logo)
+  if (data.titleInfo.image_uri) {
+      metadata.openGraph = {
+          images: [{ url: data.titleInfo.image_uri }],
+      };
+      metadata.twitter = {
+          card: 'summary', // Use summary card for small logo + text
+          images: [data.titleInfo.image_uri],
+      };
+  }
+
+  return metadata;
 }
 
 export default async function Page({ params }: Props) {

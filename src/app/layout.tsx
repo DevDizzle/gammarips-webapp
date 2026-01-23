@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     siteName: 'GammaRips',
     images: [
       {
-        url: `${siteUrl}/gammarips-og.png`,
+        url: `${siteUrl}/profitscout-og.png`,
         width: 1200,
         height: 630,
         alt: 'GammaRips AI-Powered Options Research',
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'GammaRips | AI-Powered Options Research Tool',
     description: 'AI-powered research tool for options traders.',
-    images: [`${siteUrl}/gammarips-og.png`],
+    images: [`${siteUrl}/profitscout-og.png`],
   },
 };
 

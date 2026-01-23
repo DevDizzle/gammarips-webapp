@@ -89,6 +89,7 @@ export interface DashboardDataV2 {
     companyName: string;
     ticker: string;
     asOfDate: string;
+    image_uri?: string;
   };
   kpis: {
     trendStrength: KPI;

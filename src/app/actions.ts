@@ -234,6 +234,7 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
                 optionsBrief: analysis.optionsBrief,
                 tradeSetup: tradeSetup,
                 fullAnalysis: analysis.fullAnalysis,
+                marketStructure: dashboardJson.marketStructure,
             } as DashboardDataV2;
         }
 
@@ -275,7 +276,6 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
                 signal: optionsHeader.trendSignal || "Neutral",
                 confidence: "Medium",
                 strategy: optionsHeader.optionType === 'call' ? 'Long Call' : 'Long Put',
-                catalyst: "Technical Setup",
                 suggestedOption // Injected here
             } : undefined,
 

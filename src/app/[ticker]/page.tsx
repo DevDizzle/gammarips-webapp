@@ -1,4 +1,4 @@
-import { getDashboardData, getOptionsSignals } from '@/app/actions';
+import { getDashboardData } from '@/app/actions';
 import { ExecutionDeck } from '@/components/dashboard/execution-deck';
 import { KpiCarousel } from '@/components/dashboard/kpi-carousel';
 import { AnalystBrief } from '@/components/dashboard/analyst-brief';
@@ -10,8 +10,8 @@ import UpcomingEarnings from './upcoming-events';
 import ActiveSignalTracker from './signal-tracker';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { FairOptionsDisplay } from './noteworthy-options';
-import type { OptionsSignal } from '@/lib/firebase-admin';
+import { ActiveContracts } from './noteworthy-options';
+import type { MarketStructure } from '@/lib/types/dashboard-v2';
 
 type Props = {
   params: Promise<{ ticker: string }>;
@@ -54,11 +54,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { ticker } = await params;
   
-  // Fetch dashboard data and other options signals in parallel
-  const [data, otherOptions] = await Promise.all([
-    getDashboardData(ticker),
-    getOptionsSignals(ticker)
-  ]);
+  // Fetch all dashboard data from a single source
+  const data = await getDashboardData(ticker);
 
   if (!data) {
     return notFound();
@@ -69,18 +66,20 @@ export default async function Page({ params }: Props) {
   const graph: any[] = [];
 
   // Determine Article Content
-  const headline = data.optionsBrief?.headline || data.fundamentalThesis?.headline;
-  let articleBody = data.optionsBrief?.content?.replace(/<[^>]*>?/gm, '') || "";
+  const headline = data.seo?.h1 || data.optionsBrief?.headline || data.fundamentalThesis?.headline;
   
-  if (!articleBody && data.fullAnalysis) {
-      // Fallback: Construct body from Deep Dive Analysis
-      const parts = [
-          data.fullAnalysis.technicals,
-          data.fullAnalysis.fundamentals,
-          data.fullAnalysis.news
-      ].filter(Boolean);
-      articleBody = parts.join(" ").replace(/<[^>]*>?/gm, '');
-  }
+  // Construct comprehensive article body for SEO
+  const contentParts = [
+      data.optionsBrief?.content,
+      data.fundamentalThesis?.content,
+      data.fullAnalysis?.technicals,
+      data.fullAnalysis?.financials,
+      data.fullAnalysis?.["md&a"],
+      data.fullAnalysis?.transcript,
+      data.fullAnalysis?.news
+  ].filter(Boolean);
+
+  const articleBody = contentParts.join(" ").replace(/<[^>]*>?/gm, '');
 
   // Add Article schema for the main analysis
   if (headline) {
@@ -141,25 +140,8 @@ export default async function Page({ params }: Props) {
   }
   // --- End Schema Generation ---
 
-  // Filter out the main signal and map other options to the required format
-  const fairQualityOptions: OptionsSignal[] = otherOptions
-    .filter(o => o.contract_symbol !== data.tradeSetup?.suggestedOption?.contractSymbol)
-    .map(o => ({
-        id: o.id,
-        contract_symbol: o.contract_symbol,
-        expiration_date: o.expiration_date,
-        implied_volatility: o.implied_volatility ?? 0,
-        volatility_comparison_signal: 'N/A', // This field is not available in OptionCandidate
-        option_type: o.option_type,
-        run_date: data.runDate,
-        setup_quality_signal: 'Fair',
-        stock_price_trend_signal: o.stock_outlook_signal,
-        strike_price: o.strike,
-        summary: `This contract has a favorable setup based on our analysis.`,
-        ticker: o.ticker,
-        company_name: o.company_name
-    })).slice(0, 3); // Limit to 3
-
+  // Get active contracts from the market structure data, sourced from dashboard_json
+  const activeContracts = data.marketStructure?.top_active_contracts || [];
 
   return (
     <div className="space-y-8 container py-6 mx-auto max-w-5xl">
@@ -201,7 +183,7 @@ export default async function Page({ params }: Props) {
         
         {data.faq && <FAQSection faqs={data.faq} />}
 
-        <FairOptionsDisplay options={fairQualityOptions} />
+        <ActiveContracts contracts={activeContracts} />
 
         <UpcomingEarnings ticker={ticker} />
         

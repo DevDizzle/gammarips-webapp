@@ -34,7 +34,7 @@ export const OptionCandidateSchema = z.object({
   id: z.string(),
   contract_symbol: z.string(),
   ticker: z.string(),
-  company_name: z.string(),
+  company_name: z.string().optional().nullable(),
   industry: z.string().optional().nullable(),
   image_uri: z.string().optional().nullable(),
   option_type: z.enum(['call', 'put']),

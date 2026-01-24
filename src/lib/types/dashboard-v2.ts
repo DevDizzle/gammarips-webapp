@@ -122,6 +122,7 @@ export interface DashboardDataV2 {
     h1: string;
   };
   schemaOrg?: Record<string, any>;
+  industry?: string | null;
   
   // Backward compatibility (Optional)
   analysis?: {

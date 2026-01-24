@@ -1,33 +1,14 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { OptionsSignal } from '@/lib/firebase-admin';
-import { cn } from '@/lib/utils';
-import { ThumbsUp } from 'lucide-react';
+import { Activity } from 'lucide-react';
+import type { MarketStructure } from '@/lib/types/dashboard-v2';
 
-const getSentimentClasses = (signal: string) => {
-    if (!signal) return 'text-muted-foreground border-border bg-card';
-    const lowerSignal = signal.toLowerCase();
-    if (lowerSignal.includes('bullish') || lowerSignal.includes('strong') || lowerSignal.includes('positive') || lowerSignal.includes('strengthening')) {
-        return 'text-green-500 border-green-500/20 bg-green-500/10';
-    }
-    if (lowerSignal.includes('bearish') || lowerSignal.includes('weak') || lowerSignal.includes('negative') || lowerSignal.includes('weakening') || lowerSignal.includes('underperforming')) {
-        return 'text-red-500 border-red-500/20 bg-red-500/10';
-    }
-    if (lowerSignal.includes('low') || lowerSignal.includes('cheap')) {
-        return 'text-green-500 border-green-500/20 bg-green-500/10';
-    }
-     if (lowerSignal.includes('high') || lowerSignal.includes('expensive')) {
-        return 'text-red-500 border-red-500/20 bg-red-500/10';
-    }
-    return 'text-muted-foreground border-border bg-card';
-}
+type ActiveContract = MarketStructure['top_active_contracts'][0];
 
-
-export const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) => {
-    if (!options || options.length === 0) {
+export const ActiveContracts = ({ contracts }: { contracts: ActiveContract[] }) => {
+    if (!contracts || contracts.length === 0) {
         return null;
     }
 
@@ -35,11 +16,11 @@ export const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) =>
         <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-headline">
-                    <ThumbsUp className="text-muted-foreground" />
-                    Noteworthy Setups
+                    <Activity className="text-muted-foreground" />
+                    Most Active Contracts
                 </CardTitle>
                 <CardDescription>
-                    These options have a "Fair" setup quality. They might offer interesting opportunities but have some trade-offs compared to our top-rated signal.
+                    The most traded options contracts for this stock today, indicating high trader interest or institutional positioning.
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -49,35 +30,27 @@ export const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) =>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Contract</TableHead>
-                                <TableHead>Trend Signal</TableHead>
-                                <TableHead>Volatility</TableHead>
-                                <TableHead>AI Summary</TableHead>
+                                <TableHead className="text-right">Volume</TableHead>
+                                <TableHead className="text-right">Open Interest</TableHead>
+                                <TableHead className="text-right">Last Price</TableHead>
+                                <TableHead className="text-right">Implied Vol.</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {options.map((option) => (
-                                <TableRow key={option.contract_symbol}>
+                            {contracts.map((contract, index) => (
+                                <TableRow key={index}>
                                     <TableCell>
                                         <div className="flex flex-col">
-                                            <span className="font-semibold">${option.strike_price.toFixed(2)} {option.option_type.toUpperCase()}</span>
+                                            <span className="font-semibold">${contract.strike.toFixed(2)} {contract.option_type.toUpperCase()}</span>
                                             <span className="text-xs text-muted-foreground">
-                                                Expires: {new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
+                                                Expires: {new Date(contract.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
                                             </span>
                                         </div>
                                     </TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
-                                            {option.stock_price_trend_signal}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
-                                            {option.volatility_comparison_signal}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="text-xs text-muted-foreground max-w-xs">
-                                        {option.summary}
-                                    </TableCell>
+                                    <TableCell className="text-right font-mono">{contract.volume.toLocaleString()}</TableCell>
+                                    <TableCell className="text-right font-mono">{contract.open_interest.toLocaleString()}</TableCell>
+                                    <TableCell className="text-right font-mono">${contract.last_price.toFixed(2)}</TableCell>
+                                    <TableCell className="text-right font-mono">{(contract.implied_volatility * 100).toFixed(1)}%</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -85,41 +58,35 @@ export const FairOptionsDisplay = ({ options }: { options: OptionsSignal[] }) =>
                 </div>
                  {/* Mobile Cards */}
                 <div className="md:hidden space-y-4">
-                    {options.map((option) => (
-                        <Card key={option.contract_symbol} className="bg-background/50">
+                    {contracts.map((contract, index) => (
+                        <Card key={index} className="bg-background/50">
                             <CardContent className="p-4 space-y-3">
-                                <div className="grid grid-cols-3 gap-4 text-sm">
-                                    <div className="col-span-1">
-                                        <p className="text-muted-foreground">Contract</p>
-                                        <p className="font-semibold">{option.option_type.toUpperCase()}</p>
+                                <div className="flex justify-between items-start">
+                                    <div className="flex flex-col">
+                                        <span className="font-semibold">${contract.strike.toFixed(2)} {contract.option_type.toUpperCase()}</span>
+                                        <span className="text-xs text-muted-foreground">
+                                            Expires: {new Date(contract.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })}
+                                        </span>
                                     </div>
-                                    <div className="col-span-1">
-                                        <p className="text-muted-foreground">Strike</p>
-                                        <p className="font-semibold">${option.strike_price.toFixed(2)}</p>
-                                    </div>
-                                     <div className="col-span-1">
-                                        <p className="text-muted-foreground">Expires</p>
-                                        <p className="font-semibold">{new Date(option.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })}</p>
+                                    <div className="text-right">
+                                        <p className="font-semibold font-mono">${contract.last_price.toFixed(2)}</p>
+                                        <p className="text-xs text-muted-foreground">Last Price</p>
                                     </div>
                                 </div>
-
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center text-sm">
-                                        <p className="text-muted-foreground">Stock Trend</p>
-                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.stock_price_trend_signal || ''))}>
-                                            {option.stock_price_trend_signal}
-                                        </Badge>
+                                <div className="grid grid-cols-3 gap-2 text-center text-sm border-t pt-3">
+                                     <div>
+                                        <p className="text-xs text-muted-foreground">Volume</p>
+                                        <p className="font-semibold font-mono">{contract.volume.toLocaleString()}</p>
                                     </div>
-                                     <div className="flex justify-between items-center text-sm">
-                                        <p className="text-muted-foreground">Volatility</p>
-                                        <Badge variant="outline" className={cn("text-xs", getSentimentClasses(option.volatility_comparison_signal || ''))}>
-                                            {option.volatility_comparison_signal}
-                                        </Badge>
+                                     <div>
+                                        <p className="text-xs text-muted-foreground">Open Int.</p>
+                                        <p className="font-semibold font-mono">{contract.open_interest.toLocaleString()}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-muted-foreground">Imp. Vol.</p>
+                                        <p className="font-semibold font-mono">{(contract.implied_volatility * 100).toFixed(1)}%</p>
                                     </div>
                                 </div>
-                                 <div>
-                                     <p className="text-xs text-muted-foreground">{option.summary}</p>
-                                 </div>
                             </CardContent>
                         </Card>
                     ))}

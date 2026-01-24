@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { DashboardDataV2 } from '@/lib/types/dashboard-v2';
-import { cn } from '@/lib/utils';
+import { cn, cleanPriceStrings } from '@/lib/utils';
 import { Star, Clock, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/use-auth';
@@ -32,29 +32,46 @@ export function ExecutionDeck({ data }: { data: DashboardDataV2 }) {
         timeZone: 'UTC',
     });
 
+    // SEO Optimization: Use the specific SEO H1 if available, otherwise default to Company (Ticker)
+    const hasSeoH1 = !!data.seo?.h1;
+    const mainHeadline = cleanPriceStrings(data.seo?.h1 || `${titleInfo.companyName} (${data.ticker})`);
+
     return (
         <header className="space-y-6">
             <div className="space-y-4">
-                <div className="flex flex-col gap-1">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-3xl font-bold font-headline tracking-tight flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <span className="truncate">{titleInfo.companyName} ({data.ticker})</span>
-                            {industry && <Badge variant="secondary">{industry}</Badge>}
+                <div className="flex flex-col gap-2">
+                    {/* Context Label (Only if we are using a custom SEO Headline) */}
+                    {hasSeoH1 && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium uppercase tracking-wider">
+                            <span>{titleInfo.companyName} ({data.ticker})</span>
+                            {industry && <Badge variant="secondary" className="text-[10px] h-5 px-1.5">{industry}</Badge>}
+                        </div>
+                    )}
+
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                        <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-tight text-balance max-w-3xl">
+                            {mainHeadline}
+                            {/* If no SEO H1, render industry badge inline as before */}
+                            {!hasSeoH1 && industry && (
+                                <Badge variant="secondary" className="ml-3 align-middle">{industry}</Badge>
+                            )}
                         </h1>
+
                          {isPro ? (
-                            <Badge variant="outline" className="text-green-500 border-green-500/30 bg-green-500/10 gap-1">
+                            <Badge variant="outline" className="text-green-500 border-green-500/30 bg-green-500/10 gap-1 shrink-0 mt-1">
                                 <Zap className="w-3 h-3 fill-green-500" /> Pro Access
                             </Badge>
                         ) : (
                             <Badge 
                                 variant="outline" 
-                                className="text-yellow-500 border-yellow-500/30 bg-yellow-500/10 gap-1 cursor-pointer hover:bg-yellow-500/20"
+                                className="text-yellow-500 border-yellow-500/30 bg-yellow-500/10 gap-1 cursor-pointer hover:bg-yellow-500/20 shrink-0 mt-1"
                                 onClick={openSubscriptionModal}
                             >
                                 <Clock className="w-3 h-3" /> Delayed Data
                             </Badge>
                         )}
                     </div>
+                    
                     <p className="text-muted-foreground text-sm">
                         Signal Data as of: {formattedRunDate}
                     </p>
@@ -102,7 +119,7 @@ export function ExecutionDeck({ data }: { data: DashboardDataV2 }) {
                                         Strategy Summary
                                     </h4>
                                     <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
-                                        {tradeSetup.suggestedOption.summary}
+                                        {cleanPriceStrings(tradeSetup.suggestedOption.summary)}
                                     </p>
                                 </div>
                             )}

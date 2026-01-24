@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Markdown } from '@/components/markdown';
 import { OptionsBrief, FundamentalThesis } from '@/lib/types/dashboard-v2';
 import { ProLock } from '@/components/ui/pro-lock';
+import { cleanPriceStrings } from '@/lib/utils';
 
 interface AnalystBriefProps {
     optionsBrief?: OptionsBrief;
@@ -18,7 +19,7 @@ export function AnalystBrief({ optionsBrief, fundamentalThesis }: AnalystBriefPr
             {optionsBrief && (
                 <Card className="border-l-4 border-l-primary shadow-sm bg-card/50">
                     <CardHeader>
-                        <CardTitle>{optionsBrief.headline}</CardTitle>
+                        <CardTitle>{cleanPriceStrings(optionsBrief.headline)}</CardTitle>
                         <CardDescription>
                            Daily Derivatives Outlook & Gamma Exposure
                         </CardDescription>
@@ -35,7 +36,7 @@ export function AnalystBrief({ optionsBrief, fundamentalThesis }: AnalystBriefPr
             {fundamentalThesis && (
                 <Card className="shadow-sm">
                     <CardHeader>
-                        <CardTitle>{fundamentalThesis.headline}</CardTitle>
+                        <CardTitle>{cleanPriceStrings(fundamentalThesis.headline)}</CardTitle>
                         <CardDescription>
                             Macro & Fundamental Catalysts
                         </CardDescription>

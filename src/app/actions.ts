@@ -233,6 +233,7 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
                 fundamentalThesis: analysis.fundamentalThesis,
                 optionsBrief: analysis.optionsBrief,
                 tradeSetup: tradeSetup,
+                fullAnalysis: analysis.fullAnalysis,
             } as DashboardDataV2;
         }
 

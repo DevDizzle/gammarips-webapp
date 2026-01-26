@@ -186,31 +186,35 @@ export function MarketHub({ data }: { data: LandingPageData }) {
     );
   };
 
-  const renderContent = () => {
-    if (loadingFullData && isPro) {
-        return (
-            <div className="flex justify-center items-center h-48">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-        )
+      const renderContent = () => {
+      if (loadingFullData && isPro) {
+          return (
+              <div className="flex justify-center items-center h-48">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+          )
+      }
+  
+      // Determine default tab based on highest score
+      const topBullishScore = data.bullish.items[0]?.weighted_score ?? -1;
+      const topBearishScore = data.bearish.items[0]?.weighted_score ?? -1;
+      const defaultTab = topBearishScore > topBullishScore ? "bearish" : "bullish";
+  
+      return (
+          <Tabs defaultValue={defaultTab}>
+              <TabsList className="grid w-full grid-cols-2 h-auto mb-4">
+                  <TabsTrigger value="bullish">Top Calls ({data.bullish.total})</TabsTrigger>
+                  <TabsTrigger value="bearish">Top Puts ({data.bearish.total})</TabsTrigger>
+              </TabsList>
+              <TabsContent value="bullish">
+                  {renderWinnersList('bullish', data.bullish.items, data.bullish.total, 'call')}
+              </TabsContent>
+              <TabsContent value="bearish">
+                  {renderWinnersList('bearish', data.bearish.items, data.bearish.total, 'put')}
+              </TabsContent>
+          </Tabs>
+      );
     }
-
-    return (
-        <Tabs defaultValue="bullish">
-            <TabsList className="grid w-full grid-cols-2 h-auto mb-4">
-                <TabsTrigger value="bullish">Top Calls ({data.bullish.total})</TabsTrigger>
-                <TabsTrigger value="bearish">Top Puts ({data.bearish.total})</TabsTrigger>
-            </TabsList>
-            <TabsContent value="bullish">
-                {renderWinnersList('bullish', data.bullish.items, data.bullish.total, 'call')}
-            </TabsContent>
-            <TabsContent value="bearish">
-                {renderWinnersList('bearish', data.bearish.items, data.bearish.total, 'put')}
-            </TabsContent>
-        </Tabs>
-    );
-  }
-
   return (
     <div className="space-y-6">
         <section>

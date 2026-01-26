@@ -234,7 +234,7 @@ export async function getDashboardData(ticker: string): Promise<DashboardDataV2 
                 optionsBrief: analysis.optionsBrief,
                 tradeSetup: tradeSetup,
                 fullAnalysis: analysis.fullAnalysis,
-                marketStructure: dashboardJson.marketStructure,
+                marketStructure: dashboardJson.marketStructure || analysis.marketStructure || analysis.optionsBrief?.marketStructure,
             } as DashboardDataV2;
         }
 

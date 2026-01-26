@@ -1,3 +1,4 @@
+
 'use server';
 
 import { initializeApp as initializeAdminApp, getApps as getAdminApps, App as AdminApp, type ServiceAccount } from 'firebase-admin/app';
@@ -1407,6 +1408,24 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
     }
 }
     
+export async function getPerformanceTrackingStartDateAdmin(): Promise<string | null> {
+    noStore();
+    try {
+        const snapshot = await adminDb.collection('performance_tracker')
+            .orderBy('run_date', 'asc')
+            .limit(1)
+            .get();
+
+        if (snapshot.empty) {
+            return null;
+        }
+        const firstDoc = snapshot.docs[0];
+        return firstDoc.data().run_date as string;
+    } catch (error) {
+        console.error('Error fetching performance tracking start date:', error);
+        return null;
+    }
+}
 
 export async function addToWatchlistAdmin(uid: string, item: Omit<WatchlistItem, 'id' | 'addedAt'>): Promise<WatchlistItem | null> {
     try {

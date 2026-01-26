@@ -3,7 +3,7 @@
 
 import { getMarketIndices as fetchMarketIndices, getPutCallRatio, type MarketIndex } from '@/lib/fmp';
 import { getSmartNews as fetchSmartNews } from '@/lib/polygon';
-import { getWinnersDashboardAdmin, getPerformanceSignals, getPerformanceTrackerStatsAdmin, getPerformanceTrackingStartDateAdmin, type Winner, type PerformanceSignal, type PerformanceStats } from '@/lib/firebase-admin';
+import { getWinnersDashboardAdmin, getPerformanceSignals, getPerformanceTrackerStatsAdmin, type Winner, type PerformanceSignal, type PerformanceStats } from '@/lib/firebase-admin';
 
 /**
  * Fetches the global market indices and key metrics (SPY, VIX, PCR, US10Y, Oil)
@@ -53,7 +53,6 @@ export interface LandingPageData {
   losers: { items: PerformanceSignal[], total: number };
   performanceStats: PerformanceStats;
   lastUpdated: string | null;
-  trackingStartDate: string | null;
 }
 
 /**
@@ -62,12 +61,11 @@ export interface LandingPageData {
  */
 export async function getLandingPageData(): Promise<LandingPageData> {
   try {
-    const [allWinners, topGainers, topLosers, performanceStats, trackingStartDate] = await Promise.all([
+    const [allWinners, topGainers, topLosers, performanceStats] = await Promise.all([
       getWinnersDashboardAdmin(),
       getPerformanceSignals('desc', 10),
       getPerformanceSignals('asc', 10),
-      getPerformanceTrackerStatsAdmin(),
-      getPerformanceTrackingStartDateAdmin()
+      getPerformanceTrackerStatsAdmin()
     ]);
 
     // Process Winners (Bullish/Bearish)
@@ -107,18 +105,6 @@ export async function getLandingPageData(): Promise<LandingPageData> {
         } catch {}
     }
 
-    let formattedStartDate: string | null = null;
-    if (trackingStartDate) {
-        try {
-            formattedStartDate = new Date(trackingStartDate).toLocaleDateString('en-US', {
-                month: 'numeric',
-                day: 'numeric',
-                year: 'numeric',
-                timeZone: 'UTC'
-            });
-        } catch {}
-    }
-
     return {
       bullish: processList(bullish),
       bearish: processList(bearish),
@@ -126,7 +112,6 @@ export async function getLandingPageData(): Promise<LandingPageData> {
       losers: processPerf(topLosers, performanceStats.loserCount),
       performanceStats,
       lastUpdated,
-      trackingStartDate: formattedStartDate
     };
 
   } catch (error) {
@@ -138,7 +123,6 @@ export async function getLandingPageData(): Promise<LandingPageData> {
         losers: { items: [], total: 0 },
         performanceStats: { roi: 0, winRate: 0, winnerRoi: 0, loserRoi: 0, signalCount: 0, winnerCount: 0, loserCount: 0 },
         lastUpdated: null,
-        trackingStartDate: null
     };
   }
 }

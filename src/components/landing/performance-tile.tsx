@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -189,6 +188,9 @@ export function PerformanceTile({ data }: { data: LandingPageData }) {
         <CardTitle>Performance Tracker</CardTitle>
         <CardDescription>
             Historical performance of all AI-generated signals.
+            <span className="block text-xs text-muted-foreground mt-1">
+                Tracking as of 01/27/2026
+            </span>
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">

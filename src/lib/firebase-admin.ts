@@ -28,47 +28,62 @@ import {
 export type { Stock, TickerEvent, OptionCandidate, PerformanceSignal, OptionsSignal, Winner, FeedbackSurveyData, WatchlistItem };
 
 
-// Load environment variables from .env file
+// Load environment variables from .env file (for local dev)
 config();
 
-let adminApp: AdminApp;
+// Lazy initialization - only initialize when actually needed at runtime
+let adminApp: AdminApp | null = null;
+let adminDb: ReturnType<typeof getAdminFirestore> | null = null;
+let adminStorage: ReturnType<typeof getAdminStorage> | null = null;
 
-// Updated logic to use individual environment variables from .env file
-const projectId = process.env.FIREBASE_PROJECT_ID;
-const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-// Replace escaped newlines from environment variable, which is a common issue with .env files
-const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+function getAdminApp(): AdminApp {
+  if (adminApp) return adminApp;
+  
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
+  if (!projectId || !clientEmail || !privateKey) {
+    throw new Error('Firebase server environment variables (FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY) are not set.');
+  }
 
-if (!projectId || !clientEmail || !privateKey) {
-  throw new Error('Firebase server environment variables (FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY) are not set. Please add them to your .env file.');
+  const serviceAccount: ServiceAccount = {
+    projectId,
+    clientEmail,
+    privateKey,
+  };
+
+  if (!getAdminApps().length) {
+    adminApp = initializeAdminApp({
+      credential: admin.credential.cert(serviceAccount),
+      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    });
+  } else {
+    adminApp = getAdminApps()[0]!;
+  }
+  
+  return adminApp;
 }
 
-const serviceAccount: ServiceAccount = {
-  projectId,
-  clientEmail,
-  privateKey,
-};
-
-if (!getAdminApps().length) {
-  // The storageBucket property is removed to allow the SDK to dynamically
-  // access the bucket specified in the GCS URI.
-  adminApp = initializeAdminApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  });
-} else {
-  adminApp = getAdminApps()[0]!;
+function getDb() {
+  if (!adminDb) {
+    adminDb = getAdminFirestore(getAdminApp());
+  }
+  return adminDb;
 }
 
-const adminDb = getAdminFirestore(adminApp);
-const adminStorage = getAdminStorage(adminApp);
+function getStorage() {
+  if (!adminStorage) {
+    adminStorage = getAdminStorage(getAdminApp());
+  }
+  return adminStorage;
+}
 
 
 export async function getAppStatusAdmin(): Promise<{ isUpdating: boolean }> {
   noStore();
   try {
-    const docRef = adminDb.collection('app_config').doc('status');
+    const docRef = getDb().collection('app_config').doc('status');
     const docSnap = await docRef.get();
     if (docSnap.exists) {
       return { isUpdating: docSnap.data()?.isUpdating === true };
@@ -105,7 +120,7 @@ export async function getPerformanceTrackerStatsAdmin(): Promise <PerformanceSta
     };
 
     try {
-        const snapshot = await adminDb.collection('performance_tracker').get();
+        const snapshot = await getDb().collection('performance_tracker').get();
 
         if (snapshot.empty) {
             return defaultStats;
@@ -179,7 +194,7 @@ export async function getPerformanceTrackerStatsAdmin(): Promise <PerformanceSta
 export async function getAllPerformanceSignalsAdmin(): Promise<PerformanceSignal[]> {
     noStore();
     try {
-        const snapshot = await adminDb.collection('performance_tracker').get();
+        const snapshot = await getDb().collection('performance_tracker').get();
         if (snapshot.empty) {
             return [];
         }
@@ -237,7 +252,7 @@ export async function getPerformanceSignalsByOptionType(
 ): Promise<PerformanceSignal[]> {
     noStore();
     try {
-        const query = adminDb.collection('performance_tracker')
+        const query = getDb().collection('performance_tracker')
             .where('option_type', '==', optionType)
             .orderBy('percent_gain', order)
             .limit(limit * 3); // Fetch more to allow for in-code filtering
@@ -278,7 +293,7 @@ export async function getPerformanceSignals(
 ): Promise<PerformanceSignal[]> {
   noStore();
   try {
-    const snapshot = await adminDb.collection('performance_tracker').get();
+    const snapshot = await getDb().collection('performance_tracker').get();
     if (snapshot.empty) {
       return [];
     }
@@ -361,7 +376,7 @@ export async function getMidDayMoversAdmin(): Promise<PerformanceSignal[]> {
 
         console.log(`[getMidDayMoversAdmin] Fetching signals for run_date: ${targetDateStr} (Lookback: ${lookbackDays} days)`);
 
-        const querySnapshot = await adminDb.collection('performance_tracker')
+        const querySnapshot = await getDb().collection('performance_tracker')
             .where('run_date', '==', targetDateStr)
             .get();
 
@@ -421,7 +436,7 @@ export async function getMidDayMoversAdmin(): Promise<PerformanceSignal[]> {
 export async function getPerformanceSignalsByTicker(ticker: string): Promise<PerformanceSignal[]> {
     noStore();
     try {
-        const snapshot = await adminDb.collection('performance_tracker')
+        const snapshot = await getDb().collection('performance_tracker')
             .where('ticker', '==', ticker.toUpperCase())
             .get();
 
@@ -478,7 +493,7 @@ export async function saveFeedbackAdmin(
 ): Promise<{ trackingId: string }> {
   try {
     const trackingId = `PS-${uuidv4().split('-')[0].toUpperCase()}`;
-    await adminDb.collection("feedback").add({
+    await getDb().collection("feedback").add({
       message,
       replyToEmail,
       user,
@@ -495,7 +510,7 @@ export async function saveFeedbackAdmin(
 
 export async function saveFeedbackSurveyAdmin(uid: string, data: FeedbackSurveyData): Promise<void> {
     try {
-        await adminDb.collection("feedback_surveys").add({
+        await getDb().collection("feedback_surveys").add({
             ...data,
             uid,
             submittedAt: FieldValue.serverTimestamp(),
@@ -508,7 +523,7 @@ export async function saveFeedbackSurveyAdmin(uid: string, data: FeedbackSurveyD
 
 export async function saveCancellationFeedbackAdmin(uid: string, feedback: string): Promise<void> {
     try {
-        await adminDb.collection("cancellation_feedback").add({
+        await getDb().collection("cancellation_feedback").add({
             uid,
             feedback,
             submittedAt: FieldValue.serverTimestamp(),
@@ -526,7 +541,7 @@ export async function logChatInteractionAdmin(
   source?: string
 ) {
   try {
-    await adminDb.collection("chat_logs").add({
+    await getDb().collection("chat_logs").add({
       uid: uid || 'anonymous',
       message,
       response,
@@ -541,7 +556,7 @@ export async function logChatInteractionAdmin(
 export async function getWinnerForTickerAdmin(ticker: string): Promise<Winner | null> {
     noStore();
     try {
-        const snapshot = await adminDb.collection('winners_dashboard')
+        const snapshot = await getDb().collection('winners_dashboard')
             .where('ticker', '==', ticker.toUpperCase())
             .limit(1)
             .get();
@@ -574,7 +589,7 @@ export async function getWinnerForTickerAdmin(ticker: string): Promise<Winner | 
 export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
     noStore();
     try {
-        const querySnapshot = await adminDb.collection("winners_dashboard").get();
+        const querySnapshot = await getDb().collection("winners_dashboard").get();
         const winners: Winner[] = [];
         querySnapshot.docs.forEach(doc => {
              const data = doc.data();
@@ -609,7 +624,7 @@ export async function getWinnersDashboardAdmin(): Promise<Winner[]> {
 // This function now uses the Admin SDK and should only be called from the server (e.g., in a Server Action)
 export async function getStocksAdmin(): Promise<Stock[]> {
   try {
-    const querySnapshot = await adminDb.collection("tickers").get();
+    const querySnapshot = await getDb().collection("tickers").get();
     const stocks: Stock[] = [];
     querySnapshot.forEach((doc) => {
         const data = doc.data();
@@ -649,7 +664,7 @@ export async function getStocksAdmin(): Promise<Stock[]> {
 export async function getStockDataAdmin(ticker: string): Promise<Stock | null> {
     noStore();
     try {
-        const docRef = adminDb.collection('tickers').doc(ticker.toUpperCase());
+        const docRef = getDb().collection('tickers').doc(ticker.toUpperCase());
         const docSnap = await docRef.get();
         if (!docSnap.exists) {
             console.warn(`[getStockDataAdmin] No stock found for ticker: ${ticker}`);
@@ -690,7 +705,7 @@ export async function getStockDataAdmin(ticker: string): Promise<Stock | null> {
 
 export async function getTickerEventsAdmin(ticker?: string, type: 'all' | 'ticker' | 'economic' = 'all'): Promise<TickerEvent[]> {
     try {
-        const eventsCollectionRef = adminDb.collection('calendar_events');
+        const eventsCollectionRef = getDb().collection('calendar_events');
         const allEvents: TickerEvent[] = [];
 
         // 1. Fetch Ticker-Specific Events if needed
@@ -742,7 +757,7 @@ export async function getTickerEventsAdmin(ticker?: string, type: 'all' | 'ticke
 export async function getTopStocksAdmin(type: 'BUY' | 'SELL', limit: number): Promise<Stock[]> {
     try {
         const order = type === 'BUY' ? 'desc' : 'asc';
-        const querySnapshot = await adminDb.collection('tickers')
+        const querySnapshot = await getDb().collection('tickers')
             .orderBy('weighted_score', order)
             .limit(limit)
             .get();
@@ -779,7 +794,7 @@ export async function getTopStocksAdmin(type: 'BUY' | 'SELL', limit: number): Pr
 
 export async function getTopOptionsAdmin(type: 'CALL' | 'PUT', limit: number): Promise<OptionCandidate[]> {
     try {
-        const querySnapshot = await adminDb.collection('options_candidates')
+        const querySnapshot = await getDb().collection('options_candidates')
             .where('type', '==', type)
             .orderBy('options_score', 'desc')
             .limit(limit)
@@ -819,7 +834,7 @@ export async function getTopOptionsAdmin(type: 'CALL' | 'PUT', limit: number): P
 
 export async function getOptionsCandidatesAdmin(ticker?: string): Promise<OptionCandidate[]> {
     try {
-        const candidatesCollection = adminDb.collection('options_candidates');
+        const candidatesCollection = getDb().collection('options_candidates');
         let query;
 
         if (ticker) {
@@ -873,7 +888,7 @@ export async function getOptionsCandidatesAdmin(ticker?: string): Promise<Option
 
 export async function getSeoPageGcsPathAdmin(ticker: string): Promise<string | null> {
     try {
-        const docRef = adminDb.collection("tickers").doc(ticker.toUpperCase());
+        const docRef = getDb().collection("tickers").doc(ticker.toUpperCase());
         const docSnap = await docRef.get();
 
         if (!docSnap.exists) {
@@ -899,7 +914,7 @@ export async function getSeoPageGcsPathAdmin(ticker: string): Promise<string | n
 
 export async function getRandomBuyStockAdmin(): Promise<Stock | null> {
     try {
-        const q = adminDb.collection("tickers").where("recommendation", "==", "BUY");
+        const q = getDb().collection("tickers").where("recommendation", "==", "BUY");
         const querySnapshot = await q.get();
         if (querySnapshot.empty) {
             console.warn("No stocks with 'BUY' recommendation found.");
@@ -943,7 +958,7 @@ export async function getRandomBuyStockAdmin(): Promise<Stock | null> {
 
 export async function getRandomSellStockAdmin(): Promise<Stock | null> {
     try {
-        const q = adminDb.collection("tickers").where("recommendation", "==", "SELL");
+        const q = getDb().collection("tickers").where("recommendation", "==", "SELL");
         const querySnapshot = await q.get();
         if (querySnapshot.empty) {
             console.warn("No stocks with 'SELL' recommendation found.");
@@ -1009,7 +1024,7 @@ function parseGcsUri(uri: string): { bucketName: string, filePath: string } {
 export async function getGcsFileContentAdmin(uri: string): Promise<string> {
     try {
         const { bucketName, filePath } = parseGcsUri(uri);
-        const bucket = adminStorage.bucket(bucketName);
+        const bucket = getStorage().bucket(bucketName);
         const file = bucket.file(filePath);
         const [contents] = await file.download();
         return contents.toString('utf8');
@@ -1047,7 +1062,7 @@ export async function getOrCreateUserAdmin(
   email?: string,
   stripeCustomerId?: string
 ): Promise<DbUser> {
-  const userRef = adminDb.collection('users').doc(uid);
+  const userRef = getDb().collection('users').doc(uid);
   const userSnap = await userRef.get();
 
   if (userSnap.exists) {
@@ -1081,7 +1096,7 @@ export async function getUsersForFeedbackEmailAdmin(): Promise<DbUser[]> {
     const thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000;
 
     try {
-        const snapshot = await adminDb.collection('users').get();
+        const snapshot = await getDb().collection('users').get();
 
         if (snapshot.empty) {
             return [];
@@ -1121,7 +1136,7 @@ export async function getUsersForFeedbackEmailAdmin(): Promise<DbUser[]> {
 export async function getEligibleEmailRecipientsAdmin(): Promise<DbUser[]> {
     const allUsers: DbUser[] = [];
     try {
-        const snapshot = await adminDb.collection('users').get();
+        const snapshot = await getDb().collection('users').get();
         if (snapshot.empty) {
             return [];
         }
@@ -1143,7 +1158,7 @@ export async function getEligibleEmailRecipientsAdmin(): Promise<DbUser[]> {
 export async function getSubscribedUsersAdmin(): Promise<DbUser[]> {
     const subscribedUsers: DbUser[] = [];
     try {
-        const snapshot = await adminDb.collection('users').where('isSubscribed', '==', true).get();
+        const snapshot = await getDb().collection('users').where('isSubscribed', '==', true).get();
         if (snapshot.empty) {
             console.log('No subscribed users found.');
             return [];
@@ -1163,10 +1178,10 @@ export async function getSubscribedUsersAdmin(): Promise<DbUser[]> {
 }
 
 export async function incrementUserUsageAdmin(uid: string) {
-  const userRef = adminDb.collection('users').doc(uid);
+  const userRef = getDb().collection('users').doc(uid);
   
   try {
-    await adminDb.runTransaction(async (transaction) => {
+    await getDb().runTransaction(async (transaction) => {
       const userDoc = await transaction.get(userRef);
       if (!userDoc.exists) {
         return;
@@ -1215,7 +1230,7 @@ export async function setUserSubscriptionStatusAdmin(
   isSubscribed: boolean,
   currentPeriodEnd?: number
 ) {
-  const userRef = adminDb.collection('users').doc(uid);
+  const userRef = getDb().collection('users').doc(uid);
   
   let updates: any = { isSubscribed };
 
@@ -1229,7 +1244,7 @@ export async function setUserSubscriptionStatusAdmin(
 }
 
 export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): Promise<DbUser | null> {
-    const usersRef = adminDb.collection('users');
+    const usersRef = getDb().collection('users');
     const q = await usersRef.where('stripeCustomerId', '==', stripeCustomerId).limit(1).get();
     
     if (!q.empty) {
@@ -1250,7 +1265,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     }
 
     // Upload image to GCS
-    const bucket = adminStorage.bucket();
+    const bucket = getStorage().bucket();
     const fileName = `user-wins/${uid}/${randomUUID()}-${screenshot.name}`;
     const file = bucket.file(fileName);
     const stream = file.createWriteStream({
@@ -1268,7 +1283,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     const imageUrl = `gs://${bucket.name}/${fileName}`;
 
     // Save metadata to Firestore
-    await adminDb.collection('user_wins').add({
+    await getDb().collection('user_wins').add({
       uid,
       userDisplayName: user.displayName,
       userEmail: user.email,
@@ -1290,7 +1305,7 @@ export async function handleWinSubmission(uid: string, formData: FormData): Prom
     
 export async function getFairQualityOptionsAdmin(ticker: string): Promise<OptionsSignal[]> {
     try {
-        const docRef = adminDb.collection("options_signals").doc(ticker.toUpperCase());
+        const docRef = getDb().collection("options_signals").doc(ticker.toUpperCase());
         const docSnap = await docRef.get();
 
         if (!docSnap.exists) {
@@ -1323,7 +1338,7 @@ export async function getFairQualityOptionsAdmin(ticker: string): Promise<Option
 
 export async function activateInsiderUser(token: string): Promise<{ success: boolean; error?: string; uid?: string }> {
   try {
-    const usersRef = adminDb.collection('users');
+    const usersRef = getDb().collection('users');
     const snapshot = await usersRef.where('insiderActivationToken', '==', token).limit(1).get();
 
     if (snapshot.empty) {
@@ -1350,7 +1365,7 @@ export async function activateInsiderUser(token: string): Promise<{ success: boo
 export async function getTopPickAdmin(): Promise<Stock | null> {
     noStore();
     try {
-        const winnerSnapshot = await adminDb.collection('winners_dashboard')
+        const winnerSnapshot = await getDb().collection('winners_dashboard')
             .orderBy('weighted_score', 'desc')
             .limit(1)
             .get();
@@ -1367,7 +1382,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
             return null;
         }
 
-        const stockDoc = await adminDb.collection('tickers').doc(topTicker).get();
+        const stockDoc = await getDb().collection('tickers').doc(topTicker).get();
 
         if (!stockDoc.exists) {
             console.warn(`Could not find a matching stock in 'tickers' collection for top winner: ${topTicker}`);
@@ -1411,7 +1426,7 @@ export async function getTopPickAdmin(): Promise<Stock | null> {
 export async function getPerformanceTrackingStartDateAdmin(): Promise<string | null> {
     noStore();
     try {
-        const snapshot = await adminDb.collection('performance_tracker')
+        const snapshot = await getDb().collection('performance_tracker')
             .orderBy('run_date', 'asc')
             .limit(1)
             .get();
@@ -1429,7 +1444,7 @@ export async function getPerformanceTrackingStartDateAdmin(): Promise<string | n
 
 export async function addToWatchlistAdmin(uid: string, item: Omit<WatchlistItem, 'id' | 'addedAt'>): Promise<WatchlistItem | null> {
     try {
-        const watchlistRef = adminDb.collection('users').doc(uid).collection('watchlist');
+        const watchlistRef = getDb().collection('users').doc(uid).collection('watchlist');
         
         // Check if already exists to prevent duplicates
         const q = item.contract_symbol 
@@ -1456,7 +1471,7 @@ export async function addToWatchlistAdmin(uid: string, item: Omit<WatchlistItem,
 
 export async function removeFromWatchlistAdmin(uid: string, itemId: string): Promise<boolean> {
     try {
-        await adminDb.collection('users').doc(uid).collection('watchlist').doc(itemId).delete();
+        await getDb().collection('users').doc(uid).collection('watchlist').doc(itemId).delete();
         return true;
     } catch (error) {
         console.error('Error removing from watchlist:', error);
@@ -1466,7 +1481,7 @@ export async function removeFromWatchlistAdmin(uid: string, itemId: string): Pro
 
 export async function getUserWatchlistAdmin(uid: string): Promise<WatchlistItem[]> {
     try {
-        const snapshot = await adminDb.collection('users').doc(uid).collection('watchlist').orderBy('addedAt', 'desc').get();
+        const snapshot = await getDb().collection('users').doc(uid).collection('watchlist').orderBy('addedAt', 'desc').get();
         const items: WatchlistItem[] = [];
         
         snapshot.forEach(doc => {

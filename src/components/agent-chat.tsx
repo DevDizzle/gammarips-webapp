@@ -247,6 +247,9 @@ export default function AgentChat() {
     }
   };
 
+  // Restrict to logged-in users
+  if (!user) return null;
+
   // Desktop: Render ONLY if open, as a fixed side panel (handled by parent layout or conditional here?)
   // Actually, for the "Push" effect, the Layout needs to know about this. 
   // For now, we will render it as a fixed overlay on the right for Desktop if we don't refactor the whole layout yet.

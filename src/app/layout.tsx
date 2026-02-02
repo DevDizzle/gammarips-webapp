@@ -11,8 +11,8 @@ import { Inter, Space_Grotesk } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk', display: 'swap' });
 
-// import AgentChat from '@/components/agent-chat';
-// import { ChatProvider } from "@/components/layout/chat-context";
+import AgentChat from '@/components/agent-chat';
+import { ChatProvider } from "@/components/layout/chat-context";
 
 const siteUrl = 'https://gammarips.com';
 
@@ -111,7 +111,7 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
         <AuthProvider>
-          {/* <ChatProvider> */}
+          <ChatProvider>
             <AuthModalProvider>
               <RootLayoutClient>
                 <main className='flex-grow'>{children}</main>
@@ -119,9 +119,9 @@ export default async function RootLayout({
               <Footer />
               <Toaster />
               <CookieConsentBanner />
-              {/* <AgentChat /> */}
+              <AgentChat />
             </AuthModalProvider>
-          {/* </ChatProvider> */}
+          </ChatProvider>
         </AuthProvider>
       </body>
     </html>

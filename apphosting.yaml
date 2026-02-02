@@ -7,6 +7,10 @@ iam:
   roles:
     - roles/run.invoker
 
+env:
+  - variable: MCP_SERVER_URL
+    value: https://profitscout-mcp-2lshkth7qq-uc.a.run.app
+
 runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.

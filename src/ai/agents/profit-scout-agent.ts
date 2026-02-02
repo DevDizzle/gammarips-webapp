@@ -166,7 +166,7 @@ export const profitScoutAgent = ai.defineFlow(
         console.log(`[ProfitScout] Turn ${i + 1}`);
         
         const response = await ai.generate({
-            model: googleAI.model('gemini-2.0-flash'),
+            model: googleAI.model('gemini-3-flash-preview'),
             tools: tools,
             messages: messages,
             config: { temperature: 0.1 },

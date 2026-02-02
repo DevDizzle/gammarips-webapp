@@ -13,8 +13,10 @@ async function main() {
     });
 
     console.log('Response:', response.text);
+    process.exit(0);
   } catch (error) {
     console.error('Error running agent:', error);
+    process.exit(1);
   }
 }
 

@@ -1,6 +1,6 @@
-# Firebase Studio
+# gammarips-webapp
 
-This is a NextJS starter in Firebase Studio.
+A Next.js 15 financial analytics platform ('GammaRips') powered by MCP-based AI agents for real-time, institutional-grade stock picking. Features a frictionless 'Growth Mode' onboarding strategy and a pure Model Context Protocol architecture for dynamic market analysis.
 
 ## Getting Started
 
@@ -64,3 +64,4 @@ CRON_SECRET="YOUR_CRON_SECRET"
 
 # Model Context Protocol Server (if used)
 MCP_SERVER_URL="YOUR_MCP_SERVER_URL"
+```

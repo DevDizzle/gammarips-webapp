@@ -9,7 +9,25 @@ iam:
 
 env:
   - variable: MCP_SERVER_URL
-    value: https://profitscout-mcp-2lshkth7qq-uc.a.run.app
+    value: https://profitscout-mcp-469352939749.us-central1.run.app
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyAqZq_gQLIxGSw3en_P7tgv6UfPlcKybDk
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: profitscout-fida8.firebaseapp.com
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: profitscout-fida8
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: profitscout-fida8.firebasestorage.app
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: "406581297632"
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: 1:406581297632:web:c24bda744fd33784b96b85
+  - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+    value: pk_live_51Rrp1v9rAjmDTprozdVxjqH7hFntQlAovc71LiE4theOZQfuDtcUvCcDPcIq1t0EHIBZn9MVb7h43fnns82hqEai00js1IxoBK
+  - variable: NEXT_PUBLIC_STRIPE_PRICE_ID
+    value: price_1SB4zD9rAjmDTprowECByAKk
+  - variable: NEXT_PUBLIC_GA_MEASUREMENT_ID
+    value: G-KPGTJDBC6N
 
 runConfig:
   # Increase this value if you'd like to automatically spin up
@@ -47,3 +65,23 @@ secretEnv:
     env: FIREBASE_CLIENT_EMAIL
   - secret: FIREBASE_PRIVATE_KEY
     env: FIREBASE_PRIVATE_KEY
+  - secret: GEMINI_API_KEY
+    env: GEMINI_API_KEY
+  - secret: GOOGLE_API_KEY
+    env: GOOGLE_API_KEY
+  - secret: STRIPE_SECRET_KEY
+    env: STRIPE_SECRET_KEY
+  - secret: STRIPE_WEBHOOK_SECRET
+    env: STRIPE_WEBHOOK_SECRET
+  - secret: MAILGUN_SENDING_KEY
+    env: MAILGUN_SENDING_KEY
+  - secret: MAILGUN_DOMAIN
+    env: MAILGUN_DOMAIN
+  - secret: MAILGUN_API_KEY
+    env: MAILGUN_API_KEY
+  - secret: FMP_API_KEY
+    env: FMP_API_KEY
+  - secret: POLYGON_API_KEY
+    env: POLYGON_API_KEY
+  - secret: GA_API_SECRET
+    env: GA_API_SECRET

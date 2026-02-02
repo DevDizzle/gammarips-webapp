@@ -41,3 +41,9 @@ scheduledJobs:
 secretEnv:
   - secret: CRON_SECRET
     env: CRON_SECRET
+  - secret: FIREBASE_PROJECT_ID
+    env: FIREBASE_PROJECT_ID
+  - secret: FIREBASE_CLIENT_EMAIL
+    env: FIREBASE_CLIENT_EMAIL
+  - secret: FIREBASE_PRIVATE_KEY
+    env: FIREBASE_PRIVATE_KEY

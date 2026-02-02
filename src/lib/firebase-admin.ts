@@ -1500,3 +1500,4 @@ export async function getUserWatchlistAdmin(uid: string): Promise<WatchlistItem[
     }
 }
 // Trigger redeploy Mon Feb  2 06:54:59 PM UTC 2026
+// Force redeploy for secrets Mon Feb  2 07:08:23 PM UTC 2026

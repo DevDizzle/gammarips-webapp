@@ -1,0 +1,88 @@
+{
+  "name": "gammarips",
+  "version": "1.0.0",
+  "description": "AI-powered options signals. High-conviction trade setups via MCP.",
+  "homepage": "https://gammarips.com",
+  "documentation": "https://gammarips.com/developers",
+  "skill_file": "https://gammarips.com/skill.md",
+  "mcp": {
+    "endpoint": "https://profitscout-mcp-469352939749.us-central1.run.app/sse",
+    "transport": "sse",
+    "auth": {
+      "type": "none",
+      "note": "No auth required during beta. API keys coming soon."
+    }
+  },
+  "tools": [
+    {
+      "name": "get_winners_dashboard",
+      "description": "Top signals ranked by conviction. Filter by quality, option type.",
+      "parameters": ["limit", "option_type", "min_quality"]
+    },
+    {
+      "name": "get_performance_tracker",
+      "description": "Track historical signal performance.",
+      "parameters": ["status", "ticker", "option_type", "min_gain", "limit"]
+    },
+    {
+      "name": "get_performance_summary",
+      "description": "Aggregate stats: total signals, win rate, best/worst."
+    },
+    {
+      "name": "get_stock_analysis",
+      "description": "Full analysis: fundamentals, technicals, news, financials.",
+      "parameters": ["ticker", "include_sections", "as_of"]
+    },
+    {
+      "name": "get_technical_analysis",
+      "description": "Technical indicators, patterns, trend analysis.",
+      "parameters": ["ticker", "as_of"]
+    },
+    {
+      "name": "analyze_market_structure",
+      "description": "Options flow, vol/OI walls, Greeks scanner.",
+      "parameters": ["ticker", "sort_by", "expiration_date", "option_type", "limit"]
+    },
+    {
+      "name": "get_macro_thesis",
+      "description": "Market conditions, sector rotation, risk factors.",
+      "parameters": ["as_of"]
+    },
+    {
+      "name": "get_market_events",
+      "description": "Earnings, dividends, economic calendar.",
+      "parameters": ["start_date", "days_forward", "ticker", "event_type"]
+    },
+    {
+      "name": "get_news_analysis",
+      "description": "News sentiment, catalysts, headlines.",
+      "parameters": ["ticker", "as_of"]
+    },
+    {
+      "name": "web_search",
+      "description": "Grounded search for real-time information.",
+      "parameters": ["query", "num_results"]
+    }
+  ],
+  "pricing": {
+    "trial": {
+      "duration_days": 14,
+      "price": 0
+    },
+    "pro": {
+      "price_monthly": 19,
+      "currency": "USD",
+      "features": ["unlimited_calls", "priority_support", "early_access"]
+    }
+  },
+  "contact": {
+    "email": "ceo@gammarips.com",
+    "moltbook": "https://moltbook.com/u/GammaMoltCEO",
+    "twitter": "https://x.com/GammaRips"
+  },
+  "metadata": {
+    "category": "finance",
+    "tags": ["options", "trading", "signals", "alpha", "mcp"],
+    "emoji": "🦞"
+  }
+}

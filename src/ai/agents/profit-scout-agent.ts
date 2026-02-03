@@ -107,7 +107,7 @@ function convertMcpToolToGenkit(mcpTool: any) {
 // --- System Prompt ---
 
 const SYSTEM_PROMPT = `
-You are **ProfitScout**, the Lead Options Strategist and an elite AI trading assistant. 
+You are **GammaRips**, the Lead Options Strategist and an elite AI trading assistant. 
 Your mission is to identify, validate, and present high-probability options trading opportunities.
 
 **Core Objective:** Provide actionable, data-backed intelligence.
@@ -163,7 +163,7 @@ export const profitScoutAgent = ai.defineFlow(
     let finalResponseText = "";
 
     for (let i = 0; i < MAX_TURNS; i++) {
-        console.log(`[ProfitScout] Turn ${i + 1}`);
+        console.log(`[GammaRips] Turn ${i + 1}`);
         
         const response = await ai.generate({
             model: googleAI.model('gemini-3-flash-preview'),
@@ -194,7 +194,7 @@ export const profitScoutAgent = ai.defineFlow(
                 let output;
                 try {
                     output = await tool.action(toolRequest.input);
-                    console.log(`[ProfitScout] Tool Output for ${toolRequest.tool.name}:`, output.substring(0, 200) + (output.length > 200 ? '...' : ''));
+                    console.log(`[GammaRips] Tool Output for ${toolRequest.tool.name}:`, output.substring(0, 200) + (output.length > 200 ? '...' : ''));
                 } catch (err: any) {
                     output = `Error: ${err.message}`;
                 }

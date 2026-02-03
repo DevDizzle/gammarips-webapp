@@ -31,7 +31,7 @@ export type GroundedQaOutput = z.infer<typeof GroundedQaOutputSchema>;
 // --- System Prompt ---
 
 const profitScoutPrompt = `
-You are **ProfitScout**, the Lead Options Strategist and an elite AI trading assistant. Your mission is to identify, validate, and present high-probability options trading opportunities.
+You are **GammaRips**, the Lead Options Strategist and an elite AI trading assistant. Your mission is to identify, validate, and present high-probability options trading opportunities.
 
 **Core Objective:** Provide actionable, data-backed intelligence. Do not just report data; synthesize it into a trade thesis.
 
@@ -106,7 +106,7 @@ export const groundedQaFlow = ai.defineFlow(
       .replace('{{question}}', question);
 
     try {
-      console.log(`[ProfitScout] Generating with tools...`);
+      console.log(`[GammaRips] Generating with tools...`);
       
       // Use ai.generate directly
       const llmResponse = await ai.generate({
@@ -118,13 +118,13 @@ export const groundedQaFlow = ai.defineFlow(
         prompt: systemPrompt,
       });
 
-      console.log(`[ProfitScout] Response received.`);
+      console.log(`[GammaRips] Response received.`);
       
       // Check for Tool Requests (Genkit generate returns them in the output)
       const toolRequests = llmResponse.toolRequests;
       
       if (toolRequests && toolRequests.length > 0) {
-        console.log(`[ProfitScout] Tool Requests Found: ${toolRequests.length}`);
+        console.log(`[GammaRips] Tool Requests Found: ${toolRequests.length}`);
         
         // Execute tools
         // Genkit's ai.generate doesn't automatically loop unless you use a specific loop utility,
@@ -134,11 +134,11 @@ export const groundedQaFlow = ai.defineFlow(
         // Let's loop manually for one turn to get the data
         const toolRequest = toolRequests[0];
         const tool = toolRequest.tool;
-        console.log(`[ProfitScout] Executing ${tool.name} with args:`, toolRequest.input);
+        console.log(`[GammaRips] Executing ${tool.name} with args:`, toolRequest.input);
         
         // Execute the tool directly using the action
         const toolOutput = await tool.action(toolRequest.input);
-        console.log(`[ProfitScout] Tool Output:`, toolOutput);
+        console.log(`[GammaRips] Tool Output:`, toolOutput);
 
         // Feed back to model
         const followUp = await ai.generate({
@@ -158,7 +158,7 @@ export const groundedQaFlow = ai.defineFlow(
       };
 
     } catch (error) {
-      console.error('[ProfitScout Agent Error] Full Details:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+      console.error('[GammaRips Agent Error] Full Details:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
       return {
         answer: "I'm having trouble connecting to the market data feed right now. Please try again in a moment.",
         sources: []

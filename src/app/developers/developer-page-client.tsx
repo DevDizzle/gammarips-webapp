@@ -48,9 +48,12 @@ export function DeveloperPageClient() {
                 {isPro ? (
                   <div className="space-y-2">
                     <p className="text-green-500 font-semibold">✓ You have full API access</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground mb-2">
                       MCP Endpoint: <code className="text-primary">https://profitscout-mcp-469352939749.us-central1.run.app/sse</code>
                     </p>
+                    <Link href="/account">
+                      <Button variant="outline" size="sm">Get Your API Key →</Button>
+                    </Link>
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -112,22 +115,39 @@ export function DeveloperPageClient() {
         <section className="space-y-6">
           <h2 className="text-2xl font-bold font-headline">Quick Start</h2>
           
+          <div className="p-6 rounded-lg border-2 border-primary bg-card space-y-4">
+            <h3 className="font-semibold">0. Get Your API Key</h3>
+            <p className="text-sm text-muted-foreground">
+              Subscribe and generate your API key from your account dashboard.
+            </p>
+            {user ? (
+              <Link href="/account">
+                <Button>Go to Account → Generate Key</Button>
+              </Link>
+            ) : (
+              <Button onClick={() => setAuthOpen(true)}>
+                Subscribe to Get API Key
+              </Button>
+            )}
+          </div>
+
           <div className="p-6 rounded-lg border bg-card space-y-4">
             <h3 className="font-semibold">1. MCP Endpoint</h3>
             <code className="block p-3 bg-muted rounded text-sm overflow-x-auto">
               https://profitscout-mcp-469352939749.us-central1.run.app/sse
             </code>
             <p className="text-sm text-muted-foreground">
-              Transport: SSE (Server-Sent Events) • Auth: None required during beta
+              Transport: SSE (Server-Sent Events) • Auth: API Key (X-API-Key header)
             </p>
           </div>
 
           <div className="p-6 rounded-lg border bg-card space-y-4">
             <h3 className="font-semibold">2. Get Today&apos;s Signals</h3>
             <pre className="p-3 bg-muted rounded text-sm overflow-x-auto">
-{`# Using mcporter CLI
-mcporter call \
-  "https://profitscout-mcp-469352939749.us-central1.run.app/sse.get_winners_dashboard" \
+{`# Include your API key in requests
+mcporter call \\
+  --header "X-API-Key: YOUR_API_KEY" \\
+  "https://profitscout-mcp-469352939749.us-central1.run.app/sse.get_winners_dashboard" \\
   limit:10 min_quality:High`}
             </pre>
           </div>
@@ -135,7 +155,8 @@ mcporter call \
           <div className="p-6 rounded-lg border bg-card space-y-4">
             <h3 className="font-semibold">3. Track Performance</h3>
             <pre className="p-3 bg-muted rounded text-sm overflow-x-auto">
-{`mcporter call \
+{`mcporter call \\
+  --header "X-API-Key: YOUR_API_KEY" \\
   "https://profitscout-mcp-469352939749.us-central1.run.app/sse.get_performance_summary"`}
             </pre>
           </div>

@@ -14,6 +14,9 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { FREE_MODE } from '@/lib/config';
+import { generateApiKey, hashApiKey } from '@/lib/api-key';
+import { doc, updateDoc, serverTimestamp, getFirestore } from 'firebase/firestore';
+import { app } from '@/lib/firebase';
 
 function CancellationForm() {
     const { user } = useAuth();
@@ -68,9 +71,57 @@ function CancellationForm() {
 
 
 export default function AccountPage() {
-  const { user, dbUser, loading: authLoading } = useAuth();
+  const { user, dbUser, loading: authLoading, isPro } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
+  
+  const [newApiKey, setNewApiKey] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const db = getFirestore(app);
+
+  const handleGenerateApiKey = async () => {
+    if (!user) return;
+    setGenerating(true);
+    
+    try {
+      const apiKey = generateApiKey();
+      const apiKeyHash = hashApiKey(apiKey);
+      
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        apiKeyHash: apiKeyHash,
+        apiKeyCreatedAt: serverTimestamp(),
+      });
+      
+      setNewApiKey(apiKey);
+    } catch (error) {
+      console.error('Error generating API key:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to generate API key. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleRegenerateApiKey = async () => {
+    if (confirm('This will invalidate your existing API key. Any agents using the old key will stop working. Continue?')) {
+      setNewApiKey(null);
+      await handleGenerateApiKey();
+    }
+  };
+
+  const handleCopyKey = () => {
+    if (newApiKey) {
+      navigator.clipboard.writeText(newApiKey);
+      toast({
+        title: 'Copied!',
+        description: 'API key copied to clipboard.',
+      });
+    }
+  };
 
   const handlePasswordReset = async () => {
     if (!user?.email) return;
@@ -158,6 +209,77 @@ export default function AccountPage() {
             
           </CardContent>
         </Card>
+
+        {/* API Access Section */}
+        <section className="p-6 rounded-lg border bg-card space-y-4">
+          <h2 className="text-xl font-bold">API Access</h2>
+          
+          {!isPro ? (
+            <div className="space-y-2">
+              <p className="text-muted-foreground">
+                Subscribe to generate an API key for MCP access.
+              </p>
+              {/* Show subscribe button or link */}
+            </div>
+          ) : !dbUser?.apiKeyHash ? (
+            <div className="space-y-4">
+              <p className="text-muted-foreground">
+                Generate an API key to connect your AI agent to GammaRips MCP.
+              </p>
+              <Button onClick={handleGenerateApiKey} disabled={generating}>
+                {generating ? 'Generating...' : 'Generate API Key'}
+              </Button>
+            </div>
+          ) : newApiKey ? (
+            <div className="space-y-4">
+              <div className="p-4 bg-green-500/10 border border-green-500 rounded">
+                <p className="text-sm font-semibold text-green-400 mb-2">
+                  ⚠️ Copy this key now — you won't see it again!
+                </p>
+                <code className="block p-3 bg-muted rounded text-sm break-all font-mono">
+                  {newApiKey}
+                </code>
+                <div className="flex gap-2 mt-3">
+                  <Button variant="outline" size="sm" onClick={handleCopyKey}>
+                    Copy to Clipboard
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => setNewApiKey(null)}>
+                    Done
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-green-500">
+                <span>✓</span>
+                <span className="font-semibold">API Key Active</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Created: {dbUser.apiKeyCreatedAt?.toDate?.()?.toLocaleDateString() || 'Unknown'}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Key prefix: <code className="text-primary">gr_live_••••••••</code>
+              </p>
+              <Button variant="outline" size="sm" onClick={handleRegenerateApiKey}>
+                Regenerate Key
+              </Button>
+              <p className="text-xs text-muted-foreground">
+                Regenerating will invalidate your current key immediately.
+              </p>
+            </div>
+          )}
+          
+          <div className="pt-4 border-t mt-4">
+            <p className="text-sm font-semibold mb-2">MCP Endpoint:</p>
+            <code className="block p-2 bg-muted rounded text-sm font-mono">
+              https://profitscout-mcp-469352939749.us-central1.run.app/sse
+            </code>
+            <p className="text-xs text-muted-foreground mt-2">
+              Use header: <code>X-API-Key: your_key_here</code>
+            </p>
+          </div>
+        </section>
       </div>
     </div>
   );

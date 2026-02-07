@@ -81,6 +81,8 @@ export const UserSchema = z.object({
   plan: z.enum(['free', 'trial', 'pro']).optional(),
   proUntil: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data)).optional(),
   trialEnd: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data)).optional(),
+  apiKeyHash: z.string().optional(),
+  apiKeyCreatedAt: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data)).optional(),
 });
 export type DbUser = z.infer<typeof UserSchema>;
 

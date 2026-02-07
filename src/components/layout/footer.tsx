@@ -16,26 +16,26 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground">Navigate</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
-              <li><Link href="/dashboard" className="text-muted-foreground hover:text-primary">Dashboard</Link></li>
-              <li><Link href="/performance" className="text-muted-foreground hover:text-primary">Performance</Link></li>
-              <li><Link href="/options/call-setups" className="text-muted-foreground hover:text-primary">Top Calls</Link></li>
-              <li><Link href="/options/put-hedges" className="text-muted-foreground hover:text-primary">Top Puts</Link></li>
+              <li><Link href="/" className="text-muted-foreground hover:text-primary transition-colors">Home</Link></li>
+              <li><Link href="/weekly-picks" className="text-muted-foreground hover:text-primary transition-colors">Weekly Picks</Link></li>
+              <li><Link href="/learn" className="text-muted-foreground hover:text-primary transition-colors">Learn</Link></li>
+              <li><Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">Blog</Link></li>
+              <li><Link href="/developers" className="text-muted-foreground hover:text-primary transition-colors">Developers</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold text-foreground">Legal</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="/about" className="text-muted-foreground hover:text-primary">About Us</Link></li>
-              <li><Link href="/privacy" className="text-muted-foreground hover:text-primary">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="text-muted-foreground hover:text-primary">Terms of Service</Link></li>
+              <li><Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">About Us</Link></li>
+              <li><Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors">Terms of Service</Link></li>
             </ul>
           </div>
           <div>
              <h4 className="font-semibold text-foreground">Follow Us</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><a href="https://x.com/GammaRips" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><XIcon className="h-4 w-4" /></a></li>
-              <li><a href="/about#contact" className="text-muted-foreground hover:text-primary">Contact Us</a></li>
+              <li><a href="https://x.com/GammaRips" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">X (formerly Twitter)</a></li>
+              <li><a href="/about#contact" className="text-muted-foreground hover:text-primary transition-colors">Contact Us</a></li>
             </ul>
           </div>
         </div>

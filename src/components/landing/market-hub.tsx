@@ -63,7 +63,8 @@ export function MarketHub({ data }: { data: LandingPageData }) {
      router.push(`/${ticker.toUpperCase()}`);
   };
 
-  const getSignalMeta = (signal: string) => {
+  const getSignalMeta = (signal: string | null) => {
+    if (!signal) return { color: 'text-muted-foreground', icon: null };
     const lowerSignal = signal.toLowerCase();
     if (lowerSignal.includes('bullish')) {
       return { color: 'text-green-500', icon: <ArrowUp className="h-4 w-4" /> };

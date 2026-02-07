@@ -683,7 +683,7 @@ Good news! We've made a big change to our platform.
 
 GammaRips is now free for all early adopters. That includes you.
 
-You now have full, unlimited access to the Daily Playbook, our AI analysis, and the interactive dashboard. No trial period, no credit card required.
+You now have full, unlimited access to the Daily Playbook, our AI analysis, and the interactive dashboard. No strings attached.
 
 We're doing this to gather feedback from a core group of traders as we continue to build out the platform.
 
@@ -729,7 +729,7 @@ Founder, GammaRips
                                 </p>
                             </div>
 
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">You now have full, unlimited access to the Daily Playbook, our AI analysis, and the interactive dashboard. No trial period, no credit card required.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">You now have full, unlimited access to the Daily Playbook, our AI analysis, and the interactive dashboard. No strings attached.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We're doing this to gather feedback from a core group of traders as we continue to build out the platform.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Log in now to see today's top Call & Put contracts.</p>
                         </td>

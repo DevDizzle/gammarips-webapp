@@ -54,7 +54,7 @@ export default function TermsPage() {
             <li><strong>Plans &amp; Renewal.</strong> Paid plans renew automatically each billing cycle unless canceled before renewal.</li>
             <li><strong>Pricing Changes.</strong> We may change prices on future cycles after reasonable notice.</li>
             <li><strong>Trials.</strong> Trial access (if offered) converts to a paid plan unless canceled before trial end.</li>
-            <li><strong>No Refunds.</strong> Except where required by law, fees are non-refundable and non-creditable once a cycle begins.</li>
+            <li><strong>All Sales Final.</strong> Except where required by law, fees are final and non-creditable once a cycle begins.</li>
             <li><strong>Taxes.</strong> Prices exclude applicable taxes; you are responsible for any taxes due.</li>
           </ul>
 

@@ -24,16 +24,20 @@ const features = [
         description: "Delivered to your dashboard & inbox" 
     },
     { 
-        title: "Unlimited AI Analyst Briefings",
-        description: "Synthesizing filings, calls, & news"
+        title: "AI Chat",
+        description: "Ask questions about any ticker, setup, or strategy — instant analysis"
     },
     {
-        title: "Access to the Confluence Dashboard",
-        description: "Where stock conviction meets options data"
+        title: "Russell 1000 Coverage",
+        description: "Every stock scanned daily for momentum, flow, and opportunity"
     },
     {
-        title: "Full Interactive Data & Charts",
-        description: "Research tools to plan your trade"
+        title: "Full Confluence Dashboard",
+        description: "Where stock conviction meets options flow"
+    },
+    {
+        title: "MCP Server Access",
+        description: "Connect your preferred AI agent for in-depth analysis"
     }
 ];
 
@@ -47,7 +51,7 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
             Unlock the Full Playbook
           </DialogTitle>
           <DialogDescription>
-            You hit a wall. Break through it. Upgrade to get the full daily list of Call & Put contracts and the deep-dive AI analysis behind every trade. Stop guessing.
+            You've seen what the signals can do. Now get the whole picture. Upgrade for daily contracts, AI analysis, and the tools to trade smarter.
           </DialogDescription>
         </DialogHeader>
         
@@ -66,12 +70,15 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
             </ul>
         </div>
         
-        <DialogFooter className="flex-col items-center gap-2">
+        <DialogFooter className="flex-col items-center gap-2 text-center">
             <Button onClick={onSubscribe} className="w-full" disabled={loading} size="lg">
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Join the Rippers
+                Let's Rip
             </Button>
-            <p className="text-xs text-muted-foreground">Get started today. Secure your edge.</p>
+            <div className="space-y-1">
+                <p className="text-xs text-muted-foreground">Get started today. Secure your edge.</p>
+                <p className="text-[10px] text-muted-foreground/60">Options trading involves significant risk. For educational purposes only.</p>
+            </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

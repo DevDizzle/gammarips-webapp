@@ -12,35 +12,6 @@ export function DeveloperPageClient() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Header */}
-      <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 border-b">
-        <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold font-headline">
-            <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link 
-              href="/skill.md"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              skill.md
-            </Link>
-            <Link 
-              href="/mcp.json"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              mcp.json
-            </Link>
-            <Link 
-              href="/"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              ← Home
-            </Link>
-          </div>
-        </div>
-      </header>
-
       <main className="container mx-auto px-4 py-12 max-w-4xl space-y-16">
         
         {/* Hero */}
@@ -58,7 +29,7 @@ export function DeveloperPageClient() {
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <span className="px-3 py-1 bg-muted rounded-full">✓ 17 MCP Tools</span>
             <span className="px-3 py-1 bg-muted rounded-full">✓ SSE Transport</span>
-            <span className="px-3 py-1 bg-muted rounded-full">✓ 14-Day Free Trial</span>
+            <span className="px-3 py-1 bg-muted rounded-full">✓ Cancel Anytime</span>
           </div>
         </section>
 
@@ -83,7 +54,7 @@ export function DeveloperPageClient() {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    <p className="text-yellow-500">Your trial has expired</p>
+                    <p className="text-yellow-500">Your subscription has expired</p>
                     <Link href="/account">
                       <Button>Subscribe to Continue →</Button>
                     </Link>
@@ -93,10 +64,10 @@ export function DeveloperPageClient() {
             ) : (
               <div className="space-y-4">
                 <p className="text-muted-foreground">
-                  Start your 14-day free trial. No credit card required.
+                  Get full access for $19/mo. Cancel anytime.
                 </p>
                 <Button size="lg" onClick={() => setAuthOpen(true)}>
-                  Sign Up Free →
+                  Get Started →
                 </Button>
                 <p className="text-xs text-muted-foreground">
                   Already have an account?{" "}
@@ -217,25 +188,16 @@ mcporter call \
         <section className="space-y-6">
           <h2 className="text-2xl font-bold font-headline">Pricing</h2>
           
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="p-6 rounded-lg border bg-card">
-              <div className="text-sm text-muted-foreground mb-2">Free Trial</div>
-              <div className="text-3xl font-bold mb-4">14 days</div>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ Full API access</li>
-                <li>✓ All 17 tools included</li>
-                <li>✓ No credit card required</li>
-                <li>✓ Unlimited calls during trial</li>
-              </ul>
-            </div>
+          <div className="max-w-md mx-auto">
             <div className="p-6 rounded-lg border-2 border-primary bg-card relative">
               <div className="absolute -top-3 right-4 px-2 py-0.5 bg-primary text-primary-foreground text-xs font-bold rounded">
-                MOST POPULAR
+                EARLY ACCESS
               </div>
               <div className="text-sm text-primary mb-2">Pro</div>
               <div className="text-3xl font-bold mb-4">$19<span className="text-lg text-muted-foreground">/mo</span></div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ Unlimited API calls</li>
+                <li>✓ Unlimited API access</li>
+                <li>✓ All 17 tools included</li>
                 <li>✓ Priority support</li>
                 <li>✓ Early access to new tools</li>
                 <li>✓ Direct line to GammaMolt</li>
@@ -262,7 +224,7 @@ mcporter call \
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             {!user && (
               <Button size="lg" onClick={() => setAuthOpen(true)}>
-                Start Free Trial
+                Get Started
               </Button>
             )}
             <Link 
@@ -278,21 +240,6 @@ mcporter call \
         </section>
 
       </main>
-
-      {/* Footer */}
-      <footer className="border-t mt-16">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-            <p>© 2026 GammaRips. Built by agents, for agents.</p>
-            <div className="flex gap-6">
-              <Link href="/skill.md" className="hover:text-foreground transition-colors">skill.md</Link>
-              <Link href="/mcp.json" className="hover:text-foreground transition-colors">mcp.json</Link>
-              <a href="https://x.com/GammaRips" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Twitter</a>
-              <a href="https://moltbook.com/u/GammaMoltCEO" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Moltbook</a>
-            </div>
-          </div>
-        </div>
-      </footer>
 
       {/* Auth Dialog */}
       <AuthDialog open={authOpen} onOpenChange={setAuthOpen} defaultView="signUp" />

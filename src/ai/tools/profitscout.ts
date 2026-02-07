@@ -17,7 +17,7 @@ const WebSearchSchema = z.object({
 });
 
 const PolicySchema = z.object({
-  topic: z.string().describe("The policy topic (e.g., 'refund', 'contact', 'privacy')."),
+  topic: z.string().describe("The policy topic (e.g., 'billing', 'contact', 'privacy')."),
 });
 
 const EmptySchema = z.object({});
@@ -79,7 +79,7 @@ export const webSearch = ai.defineTool(
 export const getSupportPolicy = ai.defineTool(
   {
     name: 'get_support_policy',
-    description: `Retrieve official company policy information (refunds, contact info, terms).`,
+    description: `Retrieve official company policy information (billing, contact info, terms).`,
     inputSchema: PolicySchema,
     outputSchema: z.string(),
   },

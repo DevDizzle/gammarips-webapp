@@ -104,7 +104,7 @@ export async function getOrCreateUser(
     return userData;
   }
 
-  // 14-Day Trial Logic
+  // Trial Logic
   const now = new Date();
   const trialEndDate = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days from now
   const trialEndTimestamp = Timestamp.fromDate(trialEndDate);

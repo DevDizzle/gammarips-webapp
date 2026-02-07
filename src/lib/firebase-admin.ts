@@ -24,6 +24,18 @@ import {
   WatchlistItemSchema, type WatchlistItem
 } from './schemas';
 
+export interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  publishedAt: string;
+  author: string;
+  tags: string[];
+  featured: boolean;
+  ogImage: string | null;
+}
+
 // Re-export types
 export type { Stock, TickerEvent, OptionCandidate, PerformanceSignal, OptionsSignal, Winner, FeedbackSurveyData, WatchlistItem };
 
@@ -1103,7 +1115,7 @@ export async function getUsersForFeedbackEmailAdmin(): Promise<DbUser[]> {
             const isAtInterval = daysIntervals.includes(diffDays);
 
             if (isAtInterval) {
-                 // Check if the user is either a paid subscriber OR in their free trial
+                 // Check if the user is either a paid subscriber OR in their introductory period
                 const isInTrial = diffTime <= thirtyDaysInMillis;
                 if (user.isSubscribed || isInTrial) {
                     eligibleUsers.push(user);
@@ -1183,7 +1195,7 @@ export async function incrementUserUsageAdmin(uid: string) {
           incrementDays = 1;
       } else {
           // Compare dates in ET
-          const lastActiveDate = toZonedTime(userData.lastActiveAt.toDate(), timeZone);
+          const lastActiveDate = toZonedTime((userData.lastActiveAt as Timestamp).toDate(), timeZone);
           const currentDate = toZonedTime(now, timeZone);
           
           const lastActiveDay = format(lastActiveDate, 'yyyy-MM-dd');
@@ -1223,6 +1235,10 @@ export async function setUserSubscriptionStatusAdmin(
       // Add a grace period of 2 days to avoid race conditions with renewals
       const proUntilDate = new Date((currentPeriodEnd * 1000) + (2 * 24 * 60 * 60 * 1000));
       updates.proUntil = Timestamp.fromDate(proUntilDate);
+  } else if (!isSubscribed) {
+      // If subscription is not active (cancelled, unpaid, deleted), revoke access immediately
+      // by removing the proUntil field.
+      updates.proUntil = FieldValue.delete();
   }
 
   await userRef.set(updates, { merge: true });
@@ -1483,4 +1499,78 @@ export async function getUserWatchlistAdmin(uid: string): Promise<WatchlistItem[
         console.error('Error fetching watchlist:', error);
         return [];
     }
+}
+
+export async function getBlogPostsAdmin(): Promise<BlogPost[]> {
+  try {
+    const snapshot = await adminDb.collection('blogPosts')
+      .orderBy('publishedAt', 'desc')
+      .get();
+    
+    const posts: BlogPost[] = [];
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      // Handle timestamp conversion
+      let publishedAt = new Date().toISOString();
+      if (data.publishedAt) {
+          if (data.publishedAt instanceof Timestamp) {
+              publishedAt = data.publishedAt.toDate().toISOString();
+          } else if (typeof data.publishedAt === 'string') {
+              publishedAt = data.publishedAt;
+          }
+      }
+
+      posts.push({
+        slug: doc.id,
+        title: data.title || 'Untitled',
+        excerpt: data.excerpt || '',
+        content: data.content || '',
+        publishedAt,
+        author: data.author || 'GammaRips Team',
+        tags: data.tags || [],
+        featured: data.featured || false,
+        ogImage: data.ogImage || null,
+      });
+    });
+    return posts;
+  } catch (error) {
+    console.error("Error fetching blog posts:", error);
+    return [];
+  }
+}
+
+export async function getBlogPostAdmin(slug: string): Promise<BlogPost | null> {
+  try {
+    const docSnap = await adminDb.collection('blogPosts').doc(slug).get();
+    if (!docSnap.exists) {
+      return null;
+    }
+    const data = docSnap.data();
+     if (!data) return null;
+
+     // Handle timestamp conversion
+      let publishedAt = new Date().toISOString();
+      if (data.publishedAt) {
+          if (data.publishedAt instanceof Timestamp) {
+              publishedAt = data.publishedAt.toDate().toISOString();
+          } else if (typeof data.publishedAt === 'string') {
+              publishedAt = data.publishedAt;
+          }
+      }
+
+    return {
+      slug: docSnap.id,
+      title: data.title || 'Untitled',
+      excerpt: data.excerpt || '',
+      content: data.content || '',
+      publishedAt,
+      author: data.author || 'GammaRips Team',
+      tags: data.tags || [],
+      featured: data.featured || false,
+      ogImage: data.ogImage || null,
+    };
+  } catch (error) {
+    console.error(`Error fetching blog post ${slug}:`, error);
+    return null;
+  }
 }

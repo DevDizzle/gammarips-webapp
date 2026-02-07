@@ -1,7 +1,9 @@
 
 import type {NextConfig} from 'next';
+import createMDX from '@next/mdx';
 
 const nextConfig: NextConfig = {
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   /* config options here */
   typescript: {
     ignoreBuildErrors: true,
@@ -92,9 +94,19 @@ const nextConfig: NextConfig = {
         hostname: 'i-invdn-com.investing.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'files.catbox.moe',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
 };
 
-export default nextConfig;
+const withMDX = createMDX({
+  // Add markdown plugins here, as desired
+});
+
+export default withMDX(nextConfig);

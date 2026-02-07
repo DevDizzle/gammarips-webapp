@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   },
   description: 'GammaRips is an AI-powered research tool that helps traders identify and analyze high-potential options setups on Russell 1000 stocks using structured data signals.',
   keywords: ['options trading', 'stock options', 'AI trading', 'options analysis', 'research tool', 'Russell 1000', 'call options', 'put options', 'stock market analysis'],
+  alternates: {
+    canonical: './',
+  },
   openGraph: {
     title: 'GammaRips | AI-Powered Options Research Tool',
     description: 'AI-powered research tool for options traders.',
@@ -55,11 +58,26 @@ const AW_MEASUREMENT_ID = 'AW-17603675875';
 
 const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "GammaRips",
-  "url": "https://gammarips.com",
-  "logo": "https://gammarips.com/icon.png",
-  "description": "AI-powered research tool that helps traders identify and analyze high-potential options setups."
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "GammaRips",
+      "url": "https://gammarips.com",
+      "logo": "https://gammarips.com/icon.png",
+      "description": "AI-powered research tool that helps traders identify and analyze high-potential options setups."
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "GammaRips",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+  ]
 };
 
 export default async function RootLayout({

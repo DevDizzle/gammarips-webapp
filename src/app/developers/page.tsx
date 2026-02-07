@@ -4,7 +4,7 @@ import { DeveloperPageClient } from "./developer-page-client";
 
 export const metadata: Metadata = {
   title: "GammaRips MCP API | AI Options Signals for Agents & Developers",
-  description: "Connect your AI agent to GammaRips MCP. Get high-conviction options signals, performance tracking, and market analysis. 14-day free trial, then $19/mo.",
+  description: "Connect your AI agent to GammaRips MCP. Get high-conviction options signals, performance tracking, and market analysis. $19/mo.",
   keywords: ["MCP", "options trading", "AI signals", "trading API", "options analysis", "gamma exposure", "agent API", "LLM tools"],
   openGraph: {
     title: "GammaRips MCP | AI Options Signals API",
@@ -29,5 +29,36 @@ export const metadata: Metadata = {
 };
 
 export default function DevelopersPage() {
-  return <DeveloperPageClient />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebAPI",
+    "name": "GammaRips MCP API",
+    "description": "Model Context Protocol (MCP) API for retrieving high-conviction options trading signals, technical analysis, and market sentiment for AI agents.",
+    "url": "https://gammarips.com/developers",
+    "documentation": "https://gammarips.com/skill.md",
+    "termsOfService": "https://gammarips.com/terms",
+    "provider": {
+      "@type": "Organization",
+      "name": "GammaRips",
+      "url": "https://gammarips.com",
+      "logo": "https://gammarips.com/icon.png"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "19.00",
+      "priceCurrency": "USD",
+      "priceValidUntil": "2026-12-31",
+      "availability": "https://schema.org/OnlineOnly"
+    }
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <DeveloperPageClient />
+    </>
+  );
 }

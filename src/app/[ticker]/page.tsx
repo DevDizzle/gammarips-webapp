@@ -12,6 +12,10 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { ActiveContracts } from './noteworthy-options';
 import type { MarketStructure } from '@/lib/types/dashboard-v2';
+import Link from 'next/link';
+import { ChevronRight, Home, BookOpen } from 'lucide-react';
+import { RelatedTickers } from '@/components/related-tickers';
+import { Button } from '@/components/ui/button';
 
 type Props = {
   params: Promise<{ ticker: string }>;
@@ -151,6 +155,20 @@ export default async function Page({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       )}
+      
+      {/* Breadcrumbs */}
+      <nav className="flex items-center text-sm text-muted-foreground mb-4" aria-label="Breadcrumb">
+        <Link href="/" className="hover:text-foreground flex items-center">
+            <Home className="h-4 w-4 mr-1"/> Home
+        </Link>
+        <ChevronRight className="h-4 w-4 mx-2" />
+        <Link href="/dashboard" className="hover:text-foreground">
+            Dashboard
+        </Link>
+        <ChevronRight className="h-4 w-4 mx-2" />
+        <span className="text-foreground font-medium">{ticker.toUpperCase()}</span>
+      </nav>
+
       <ExecutionDeck data={data} />
       
       <KpiCarousel kpis={data.kpis} />
@@ -188,6 +206,37 @@ export default async function Page({ params }: Props) {
         <UpcomingEarnings ticker={ticker} />
         
         <ActiveSignalTracker ticker={ticker} />
+
+        {/* Internal Linking Section */}
+        <div className="grid md:grid-cols-2 gap-8 pt-8 border-t">
+            <RelatedTickers ticker={ticker} />
+            
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg">Learn More</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                        New to options flow? Understand how we analyze these signals.
+                    </p>
+                    <ul className="space-y-2">
+                        <li>
+                            <Link href="/learn/what-is-options-flow" className="text-sm text-primary hover:underline flex items-center">
+                                <BookOpen className="h-4 w-4 mr-2" /> What is Options Flow?
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/learn/understanding-gamma-exposure" className="text-sm text-primary hover:underline flex items-center">
+                                <BookOpen className="h-4 w-4 mr-2" /> Understanding Gamma Exposure
+                            </Link>
+                        </li>
+                    </ul>
+                     <Button variant="outline" size="sm" asChild className="w-full mt-2">
+                        <Link href="/learn">View GammaRips Academy</Link>
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
       </div>
     </div>
   );

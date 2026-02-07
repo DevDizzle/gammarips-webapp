@@ -53,6 +53,7 @@ export interface LandingPageData {
   losers: { items: PerformanceSignal[], total: number };
   performanceStats: PerformanceStats;
   lastUpdated: string | null;
+  trackingStartDate?: string;
 }
 
 /**
@@ -94,7 +95,7 @@ export async function getLandingPageData(): Promise<LandingPageData> {
 
     // Get last updated date
     let lastUpdated: string | null = null;
-    if (allWinners.length > 0) {
+    if (allWinners.length > 0 && allWinners[0].run_date) {
         try {
             lastUpdated = new Date(allWinners[0].run_date).toLocaleDateString('en-US', {
                 year: 'numeric',
@@ -112,6 +113,7 @@ export async function getLandingPageData(): Promise<LandingPageData> {
       losers: processPerf(topLosers, performanceStats.loserCount),
       performanceStats,
       lastUpdated,
+      trackingStartDate: '2024-01-01', // Hardcoded or fetched from config/db
     };
 
   } catch (error) {

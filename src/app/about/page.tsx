@@ -192,6 +192,28 @@ export default function AboutPage() {
         </section>
 
         <Separator className="my-12 sm:my-16" />
+
+        {/* Developers Section */}
+        <section>
+          <Card className="text-center bg-zinc-900 border-zinc-800">
+            <CardHeader>
+              <CardTitle className="font-headline text-2xl">Building an Agent?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4 max-w-xl mx-auto">
+                Our entire platform is built on the Model Context Protocol (MCP). You can connect your own AI agents to the same high-conviction signals that power our dashboard.
+              </p>
+              <Button asChild size="lg" variant="secondary">
+                <Link href="/developers">
+                  <Bot className="mr-2 h-5 w-5"/>
+                  Explore Developer API
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </section>
+
+        <Separator className="my-12 sm:my-16" />
         
         {/* FAQ Section */}
         <section id="faq" className="scroll-mt-20">

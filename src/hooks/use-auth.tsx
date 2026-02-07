@@ -119,7 +119,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (additionalInfo?.isNewUser) {
       trackEvent('sign_up', { method });
       
-      // Reverse Trial Mode: Everyone gets 14 days free, so go straight to dashboard.
       toast({ title: "Welcome to GammaRips!", description: "Account created successfully." });
       router.push('/dashboard');
 

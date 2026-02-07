@@ -29,7 +29,7 @@ export function DeveloperPageClient() {
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <span className="px-3 py-1 bg-muted rounded-full">✓ 17 MCP Tools</span>
             <span className="px-3 py-1 bg-muted rounded-full">✓ SSE Transport</span>
-            <span className="px-3 py-1 bg-muted rounded-full">✓ Cancel Anytime</span>
+            <span className="px-3 py-1 bg-muted rounded-full">✓ $19/mo</span>
           </div>
         </section>
 
@@ -64,10 +64,10 @@ export function DeveloperPageClient() {
             ) : (
               <div className="space-y-4">
                 <p className="text-muted-foreground">
-                  Get full access for $19/mo. Cancel anytime.
+                  Get instant access to all 17 MCP tools for $19/mo.
                 </p>
                 <Button size="lg" onClick={() => setAuthOpen(true)}>
-                  Get Started →
+                  Subscribe Now →
                 </Button>
                 <p className="text-xs text-muted-foreground">
                   Already have an account?{" "}
@@ -189,19 +189,20 @@ mcporter call \
           <h2 className="text-2xl font-bold font-headline">Pricing</h2>
           
           <div className="max-w-md mx-auto">
-            <div className="p-6 rounded-lg border-2 border-primary bg-card relative">
-              <div className="absolute -top-3 right-4 px-2 py-0.5 bg-primary text-primary-foreground text-xs font-bold rounded">
-                EARLY ACCESS
-              </div>
+            <div className="p-6 rounded-lg border-2 border-primary bg-card">
               <div className="text-sm text-primary mb-2">Pro</div>
               <div className="text-3xl font-bold mb-4">$19<span className="text-lg text-muted-foreground">/mo</span></div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ Unlimited API access</li>
-                <li>✓ All 17 tools included</li>
+                <li>✓ Full API access</li>
+                <li>✓ All 17 MCP tools</li>
+                <li>✓ Unlimited API calls</li>
                 <li>✓ Priority support</li>
                 <li>✓ Early access to new tools</li>
                 <li>✓ Direct line to GammaMolt</li>
               </ul>
+              <Button className="w-full mt-6" size="lg" onClick={() => setAuthOpen(true)}>
+                Subscribe Now
+              </Button>
             </div>
           </div>
         </section>
@@ -224,7 +225,7 @@ mcporter call \
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             {!user && (
               <Button size="lg" onClick={() => setAuthOpen(true)}>
-                Get Started
+                Subscribe - $19/mo
               </Button>
             )}
             <Link 

@@ -4,11 +4,11 @@ import { DeveloperPageClient } from "./developer-page-client";
 
 export const metadata: Metadata = {
   title: "GammaRips MCP API | AI Options Signals for Agents & Developers",
-  description: "Connect your AI agent to GammaRips MCP. Get high-conviction options signals, performance tracking, and market analysis. $19/mo.",
+  description: "Connect your AI agent to GammaRips MCP. High-conviction options signals, performance tracking, and market analysis. $19/mo.",
   keywords: ["MCP", "options trading", "AI signals", "trading API", "options analysis", "gamma exposure", "agent API", "LLM tools"],
   openGraph: {
     title: "GammaRips MCP | AI Options Signals API",
-    description: "High-conviction options signals for AI agents. +114% avg gain. Connect via MCP.",
+    description: "High-conviction options signals for AI agents. 64% win rate. $19/mo. Connect via MCP.",
     url: "https://gammarips.com/developers",
     siteName: "GammaRips",
     type: "website",

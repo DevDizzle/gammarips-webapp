@@ -104,23 +104,17 @@ export async function getOrCreateUser(
     return userData;
   }
 
-  // Trial Logic
-  const now = new Date();
-  const trialEndDate = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days from now
-  const trialEndTimestamp = Timestamp.fromDate(trialEndDate);
-
+  // No trial by default. Paid only.
   const newUser: Omit<DbUser, 'createdAt'> & { createdAt: any } = {
     uid,
     email: email ?? null,
     displayName: displayName ?? null,
     isAnonymous,
-    isSubscribed: false, // Legacy field, kept for compatibility
+    isSubscribed: false,
     usageCount: 0,
     createdAt: serverTimestamp(),
     stripeCustomerId: stripeCustomerId ?? null,
-    plan: 'trial',
-    trialEnd: trialEndTimestamp,
-    proUntil: trialEndTimestamp, // Grant access immediately
+    plan: 'free',
   };
 
   await setDoc(userRef, newUser);

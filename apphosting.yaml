@@ -9,7 +9,7 @@ iam:
 
 env:
   - variable: MCP_SERVER_URL
-    value: https://profitscout-mcp-2lshkth7qq-uc.a.run.app
+    value: https://gammarips-mcp-406581297632.us-central1.run.app
 
 runConfig:
   # Increase this value if you'd like to automatically spin up
@@ -41,3 +41,5 @@ scheduledJobs:
 secretEnv:
   - secret: CRON_SECRET
     env: CRON_SECRET
+  - secret: MCP_API_KEY
+    env: MCP_API_KEY

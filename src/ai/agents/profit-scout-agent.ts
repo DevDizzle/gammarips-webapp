@@ -1,7 +1,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { googleAI } from '@genkit-ai/google-genai';
-import { getMcpClient } from '@/lib/mcp-client';
+import { getMcpClient, resetMcpClient } from '@/lib/mcp-client';
 
 // --- Types ---
 
@@ -142,8 +142,16 @@ export const profitScoutAgent = ai.defineFlow(
         const mcpToolsList = await client.listTools();
         tools = mcpToolsList.tools.map(convertMcpToolToGenkit);
     } catch (e) {
-        console.error("Failed to fetch MCP tools:", e);
-        return { text: "I'm currently unable to access my market data tools. Please check the system status." };
+        console.error("Failed to fetch MCP tools, retrying...", e);
+        resetMcpClient();
+        try {
+            const client = await getMcpClient();
+            const mcpToolsList = await client.listTools();
+            tools = mcpToolsList.tools.map(convertMcpToolToGenkit);
+        } catch (retryError) {
+             console.error("Retry failed:", retryError);
+             return { text: "I'm currently unable to access my market data tools. Please check the system status." };
+        }
     }
 
     // 2. Initialize Conversation History

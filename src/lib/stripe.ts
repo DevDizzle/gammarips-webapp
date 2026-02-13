@@ -27,7 +27,7 @@ export async function createStripeCheckoutSession(
         });
         customerId = customer.id;
         // Update user in Firebase with the new Stripe Customer ID
-        await getOrCreateUserAdmin(uid, user.isAnonymous, user.displayName, user.email || undefined, customerId);
+        await getOrCreateUserAdmin(uid, user.isAnonymous, (user.displayName || undefined) as string | undefined, (user.email || undefined) as string | undefined, customerId);
     }
   
     const session = await stripe.checkout.sessions.create({

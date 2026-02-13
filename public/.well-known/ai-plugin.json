@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "GammaRips Overnight Edge",
+  "name_for_model": "gammarips_overnight_edge",
+  "description_for_human": "See where institutional money moved overnight, before the market opens.",
+  "description_for_model": "Query overnight institutional options flow data. Returns scored signals with direction, dollar flow, technicals, and AI-analyzed catalysts for 5,000+ tickers. Updated daily by 6 AM EST.",
+  "auth": {
+    "type": "service_http",
+    "authorization_type": "bearer"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://gammarips.com/openapi.json"
+  },
+  "logo_url": "https://gammarips.com/icon.png",
+  "contact_email": "ceo@gammarips.com",
+  "legal_info_url": "https://gammarips.com/terms"
+}

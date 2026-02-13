@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // If the user is in their trial period (proUntil > Now), they are Pro.
     if (dbUser.proUntil) {
         try {
-            return dbUser.proUntil.toDate() > new Date();
+            return (dbUser.proUntil as any).toDate() > new Date();
         } catch {
             return false;
         }

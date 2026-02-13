@@ -21,17 +21,16 @@ export function PublicHeader() {
   const [open, setOpen] = useState(false);
 
   const links = [
-    { href: '/weekly-picks', label: 'Weekly Picks' },
-    { href: '/learn', label: 'Learn' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/developers', label: 'Developers' },
+    { href: '/signals', label: 'Signals' },
+    { href: '/reports', label: 'Reports' },
+    { href: '/history', label: 'History' },
   ];
 
   return (
-    <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 border-b">
+    <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold font-headline shrink-0">
-            <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
+          <Link href="/" className="text-2xl font-bold font-headline shrink-0 flex items-center gap-2">
+            <span className="text-foreground">Overnight</span><span className="text-primary">Edge</span>
           </Link>
           
           <div className="flex items-center gap-2 sm:gap-4">
@@ -65,7 +64,7 @@ export function PublicHeader() {
               <SheetContent side="right" className="w-[250px] sm:w-[300px] bg-background">
                 <SheetHeader>
                   <SheetTitle className="text-left font-headline">
-                    <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
+                    <span className="text-foreground">Overnight</span><span className="text-primary">Edge</span>
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col gap-4 mt-8">

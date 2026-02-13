@@ -31,7 +31,15 @@ function CancellationForm() {
         setLoading(true);
         try {
             const { portalUrl } = await handleCancellationIntent(user.uid, feedback);
-            router.push(portalUrl);
+            if (portalUrl) {
+                router.push(portalUrl);
+            } else {
+                toast({
+                    title: "Error",
+                    description: "Could not create customer portal session.",
+                    variant: "destructive",
+                });
+            }
         } catch (error: any) {
             toast({
                 title: 'Error',
@@ -256,7 +264,7 @@ export default function AccountPage() {
                 <span className="font-semibold">API Key Active</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Created: {dbUser.apiKeyCreatedAt?.toDate?.()?.toLocaleDateString() || 'Unknown'}
+                Created: {(dbUser.apiKeyCreatedAt as any)?.toDate?.()?.toLocaleDateString() || 'Unknown'}
               </p>
               <p className="text-sm text-muted-foreground">
                 Key prefix: <code className="text-primary">gr_live_••••••••</code>
@@ -273,7 +281,7 @@ export default function AccountPage() {
           <div className="pt-4 border-t mt-4">
             <p className="text-sm font-semibold mb-2">MCP Endpoint:</p>
             <code className="block p-2 bg-muted rounded text-sm font-mono">
-              https://profitscout-mcp-469352939749.us-central1.run.app/sse
+              https://gammarips-mcp-406581297632.us-central1.run.app/sse
             </code>
             <p className="text-xs text-muted-foreground mt-2">
               Use header: <code>X-API-Key: your_key_here</code>

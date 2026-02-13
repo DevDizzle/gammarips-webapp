@@ -11,33 +11,27 @@ import { Inter, Space_Grotesk } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk', display: 'swap' });
 
-import AgentChat from '@/components/agent-chat';
-import { ChatProvider } from "@/components/layout/chat-context";
-
 const siteUrl = 'https://gammarips.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl), 
-  title: {
-    default: 'GammaRips | AI-Powered Options Research Tool',
-    template: `%s | GammaRips`,
-  },
-  description: 'GammaRips is an AI-powered research tool that helps traders identify and analyze high-potential options setups on Russell 1000 stocks using structured data signals.',
-  keywords: ['options trading', 'stock options', 'AI trading', 'options analysis', 'research tool', 'Russell 1000', 'call options', 'put options', 'stock market analysis'],
+  title: "The Overnight Edge | GammaRips",
+  description: "Institutional options flow analysis delivered before the market opens.",
+  keywords: ['options trading', 'stock options', 'AI trading', 'options analysis', 'institutional flow', 'pre-market signals', 'overnight edge'],
   alternates: {
     canonical: './',
   },
   openGraph: {
-    title: 'GammaRips | AI-Powered Options Research Tool',
-    description: 'AI-powered research tool for options traders.',
+    title: 'The Overnight Edge | GammaRips',
+    description: 'Institutional options flow analysis delivered before the market opens.',
     url: siteUrl,
-    siteName: 'GammaRips',
+    siteName: 'The Overnight Edge',
     images: [
       {
         url: `${siteUrl}/profitscout-og.png`,
         width: 1200,
         height: 630,
-        alt: 'GammaRips AI-Powered Options Research',
+        alt: 'The Overnight Edge',
       },
     ],
     locale: 'en_US',
@@ -45,8 +39,8 @@ export const metadata: Metadata = {
   },
    twitter: {
     card: 'summary_large_image',
-    title: 'GammaRips | AI-Powered Options Research Tool',
-    description: 'AI-powered research tool for options traders.',
+    title: 'The Overnight Edge | GammaRips',
+    description: 'Institutional options flow analysis delivered before the market opens.',
     images: [`${siteUrl}/profitscout-og.png`],
   },
 };
@@ -61,21 +55,32 @@ const organizationSchema = {
   "@graph": [
     {
       "@type": "Organization",
-      "name": "GammaRips",
+      "name": "The Overnight Edge",
       "url": "https://gammarips.com",
       "logo": "https://gammarips.com/icon.png",
       "description": "AI-powered research tool that helps traders identify and analyze high-potential options setups."
     },
     {
       "@type": "SoftwareApplication",
-      "name": "GammaRips",
+      "name": "The Overnight Edge",
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      }
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "The Overnight Edge",
+          "price": "49.00",
+          "priceCurrency": "USD",
+          "url": "https://gammarips.com/#pricing"
+        },
+        {
+          "@type": "Offer", 
+          "name": "The War Room",
+          "price": "149.00",
+          "priceCurrency": "USD",
+          "url": "https://gammarips.com/#pricing"
+        }
+      ]
     }
   ]
 };
@@ -129,7 +134,6 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
         <AuthProvider>
-          <ChatProvider>
             <AuthModalProvider>
               <RootLayoutClient>
                 <main className='flex-grow'>{children}</main>
@@ -137,9 +141,7 @@ export default async function RootLayout({
               <Footer />
               <Toaster />
               <CookieConsentBanner />
-              <AgentChat />
             </AuthModalProvider>
-          </ChatProvider>
         </AuthProvider>
       </body>
     </html>

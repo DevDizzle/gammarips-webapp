@@ -62,7 +62,7 @@ export const sendDailySetupsFlow = ai.defineFlow(
         return { sentCount: 0, skippedCount: eligibleUsers.length, totalUsers: eligibleUsers.length };
     }
 
-    const { text, html } = await buildDailySetupsEmailContent(winners, topGainers, topLosers);
+    const { text, html } = await buildDailySetupsEmailContent(winners, topGainers);
     const today = format(new Date(), 'MMMM d');
     const subject = `The Daily Playbook for ${today}`;
 

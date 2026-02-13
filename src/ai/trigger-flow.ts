@@ -80,7 +80,7 @@ async function testSendDailySetups() {
 
         topLosers.sort((a,b) => a.percent_gain - b.percent_gain);
 
-        const { text, html } = await buildDailySetupsEmailContent(winners, topGainers, topLosers);
+        const { text, html } = await buildDailySetupsEmailContent(winners, topGainers);
         const today = format(new Date(), 'MMMM d');
         const subject = `The Daily Playbook for ${today}`;
 

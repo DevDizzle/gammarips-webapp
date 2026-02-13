@@ -1,5 +1,5 @@
 
-import { getPerformanceSignals } from '@/app/actions';
+import { getPerformanceSignalsAction as getPerformanceSignals } from '@/app/actions';
 import type { PerformanceSignal } from '@/lib/firebase-admin';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';

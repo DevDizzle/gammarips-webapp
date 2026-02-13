@@ -79,11 +79,12 @@ export function SubmissionDialog({ open, onOpenChange }: SubmissionDialogProps) 
     setStatus('loading');
 
     const formData = new FormData();
+    formData.append('uid', user.uid);
     formData.append('screenshot', screenshot);
     formData.append('tickers', tickers);
     formData.append('percentGain', percentGain);
 
-    const result = await handleWinSubmission(user.uid, formData);
+    const result = await handleWinSubmission(formData);
 
     if (result.success) {
       setStatus('success');

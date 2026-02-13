@@ -13,34 +13,94 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Old footer pages → new locations
       {
-        source: '/dashboard',
+        source: '/about',
         destination: '/',
         permanent: true,
       },
       {
-        source: '/performance',
+        source: '/about-us', 
         destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/learn',
+        destination: '/signals',
+        permanent: true,
+      },
+      {
+        source: '/weekly-picks',
+        destination: '/signals',
+        permanent: true,
+      },
+      {
+        source: '/privacy-policy',
+        destination: '/privacy',
+        permanent: true,
+      },
+      {
+        source: '/terms-of-service',
+        destination: '/terms',
+        permanent: true,
+      },
+      // Old individual stock pages → new filtered signals view
+      {
+        source: '/stocks/:ticker',
+        destination: '/signals?ticker=:ticker',
+        permanent: true, // 301
+      },
+      {
+        source: '/stock/:ticker',
+        destination: '/signals?ticker=:ticker',
+        permanent: true,
+      },
+      {
+        source: '/analysis/:ticker',
+        destination: '/signals?ticker=:ticker',
+        permanent: true,
+      },
+      // Old blog posts → signals (or keep blog if we rebuild it)
+      {
+        source: '/blog/daily-outlook-:slug',
+        destination: '/signals',
+        permanent: true,
+      },
+      {
+        source: '/blog/:slug',
+        destination: '/',
+        permanent: true,
+      },
+      // Old dashboard → signals
+      {
+        source: '/dashboard',
+        destination: '/signals',
+        permanent: true,
+      },
+      {
+        source: '/winners',
+        destination: '/signals?direction=BULLISH',
+        permanent: true,
+      },
+      // Clean up previous redirects that point to root or old paths
+      {
+        source: '/performance',
+        destination: '/signals',
         permanent: true,
       },
       {
         source: '/options/call-setups',
-        destination: '/',
+        destination: '/signals?direction=BULLISH',
         permanent: true,
       },
       {
         source: '/options/put-hedges',
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/stocks/:ticker',
-        destination: '/:ticker',
+        destination: '/signals?direction=BEARISH',
         permanent: true,
       },
       {
         source: '/dashboard/:ticker',
-        destination: '/:ticker',
+        destination: '/signals?ticker=:ticker',
         permanent: true,
       },
     ];

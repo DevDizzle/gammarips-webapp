@@ -434,7 +434,7 @@ The GammaRips Team
 
 
 export async function sendAgentResponseEmail({ to, response, trackingId }: { to: string, response: string, trackingId: string }) {
-    const { text, html } = await buildAgentResponseEmailContent({ userEmail: to, response, trackingId });
+    const { text, html } = await buildAgentResponseEmailContent({ response, trackingId });
     
     return sendEmail({
         to,

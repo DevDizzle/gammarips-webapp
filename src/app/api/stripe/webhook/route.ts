@@ -11,12 +11,17 @@ const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const gaApiSecret = process.env.GA_API_SECRET!;
 
 
-async function handleSubscriptionChange(subscription: Stripe.Subscription, isSubscribed: boolean, isNew: boolean = false) {
+async function handleSubscriptionChange(
+    subscription: Stripe.Subscription, 
+    isSubscribed: boolean, 
+    isNew: boolean = false,
+    plan?: 'free' | 'edge' | 'warroom'
+) {
     const customerId = subscription.customer as string;
     const user = await getUserByStripeCustomerIdAdmin(customerId);
 
     if (user) {
-        await setUserSubscriptionStatusAdmin(user.uid, isSubscribed, subscription.current_period_end);
+        await setUserSubscriptionStatusAdmin(user.uid, isSubscribed, subscription.current_period_end, plan);
         
         // Send the powerful new welcome email ONLY on a new active subscription.
         if (isSubscribed && isNew && user.email) {
@@ -60,7 +65,7 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
                     currency: session.currency?.toUpperCase() || 'USD',
                     items: [{
                         item_id: item.price?.product as string,
-                        item_name: 'GammaRips Pro Subscription',
+                        item_name: 'Overnight Edge Subscription',
                         price: (item.price?.unit_amount || 0) / 100,
                         quantity: 1,
                     }]
@@ -106,16 +111,15 @@ export async function POST(req: NextRequest) {
   switch (event.type) {
     case 'customer.subscription.created':
         const subscriptionCreated = event.data.object as Stripe.Subscription;
+        // We rely on checkout.session.completed for plan info usually, 
+        // but this handles purely backend subscription creations if any.
         await handleSubscriptionChange(subscriptionCreated, true, true);
         break;
     case 'customer.subscription.updated':
         const subscriptionUpdated = event.data.object as Stripe.Subscription;
-        // Check if the subscription is now active but wasn't before
-        // This handles cases like reactivations, but we don't treat it as a "new" sub for the welcome email.
         if (subscriptionUpdated.status === 'active') {
              await handleSubscriptionChange(subscriptionUpdated, true, false);
         } else {
-            // For other statuses like 'past_due', we just update the DB.
              await handleSubscriptionChange(subscriptionUpdated, false, false);
         }
         break;
@@ -125,13 +129,11 @@ export async function POST(req: NextRequest) {
         break;
     case 'checkout.session.completed':
         const session = event.data.object as Stripe.Checkout.Session;
-        // This event fires *before* customer.subscription.created for new subs.
-        // It's a reliable place to trigger the welcome email and GA event.
         if (session.mode === 'subscription' && session.subscription) {
             const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
-            // The `true, true` flags mark the subscription as active and new, triggering the welcome email.
-            await handleSubscriptionChange(subscription, true, true); 
-            await sendPurchaseEventToGA(session); // Send GA event
+            const plan = session.metadata?.plan as 'edge' | 'warroom' | undefined;
+            await handleSubscriptionChange(subscription, true, true, plan); 
+            await sendPurchaseEventToGA(session); 
         }
         break;
     default:

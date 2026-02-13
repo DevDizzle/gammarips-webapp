@@ -21,7 +21,7 @@ export default function EconomicEventsWidget() {
       try {
         const eventsData = await getEconomicEvents();
         // Get events for the next 30 days
-        const upcomingEvents = eventsData.filter(event => {
+        const upcomingEvents = eventsData.filter((event: any) => {
             const eventDate = new Date(event.event_date);
             const now = new Date();
             const thirtyDaysFromNow = new Date();

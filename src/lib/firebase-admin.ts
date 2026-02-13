@@ -73,9 +73,183 @@ if (!getAdminApps().length) {
   adminApp = getAdminApps()[0]!;
 }
 
-const adminDb = getAdminFirestore(adminApp);
-const adminStorage = getAdminStorage(adminApp);
+// ... existing imports
 
+export async function addEmailSubscriber(email: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const subscribersRef = adminDb.collection('email_subscribers');
+    
+    // Check for duplicate
+    const existing = await subscribersRef.where('email', '==', email.toLowerCase()).limit(1).get();
+    if (!existing.empty) {
+      return { success: true }; // Don't reveal if already subscribed
+    }
+
+    await subscribersRef.add({
+      email: email.toLowerCase(),
+      source: 'website',
+      status: 'active',
+      subscribedAt: FieldValue.serverTimestamp(),
+      welcomeSent: false,
+      drip1Sent: false,
+      drip2Sent: false,
+      drip3Sent: false,
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error subscribing email:', error);
+    return { success: false, error: 'Failed to subscribe. Please try again.' };
+  }
+}
+
+export async function unsubscribeEmailAdmin(email: string): Promise<{ success: boolean }> {
+  try {
+    const subscribersRef = adminDb.collection('email_subscribers');
+    const snapshot = await subscribersRef.where('email', '==', email.toLowerCase()).limit(1).get();
+    
+    if (!snapshot.empty) {
+      await snapshot.docs[0].ref.update({
+        status: 'unsubscribed',
+        unsubscribedAt: FieldValue.serverTimestamp(),
+      });
+    }
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error unsubscribing:', error);
+    return { success: true };
+  }
+}
+
+// ... existing code
+
+
+// --- Overnight Edge Data Functions ---
+
+export interface OvernightSignal {
+  id: string;
+  ticker: string;
+  scan_date: string;
+  signal_score: number;
+  direction: 'bull' | 'bear';
+  move_pct: number;
+  new_positioning_usd: number;
+  vol_oi_ratio: number;
+  active_strikes: number;
+  call_dollar_uoa: number;
+  put_dollar_uoa: number;
+  // Enrichment fields (optional — only present for score >= 6)
+  news_summary?: string;
+  technical_analysis?: string;
+  ai_thesis?: string;
+  key_levels?: { support: number[]; resistance: number[] };
+  recommended_contract?: string;
+  contract_score?: number;
+  risk_reward?: string;
+}
+
+export interface OvernightSummary {
+  scan_date: string;
+  total_signals: number;
+  bull_count: number;
+  bear_count: number;
+  top_themes: string[];
+  headline: string;
+  market_narrative: string;
+  generated_at: any;
+}
+
+export async function getAllOvernightSummaries(limit: number = 30): Promise<OvernightSummary[]> {
+  noStore();
+  try {
+    const snapshot = await adminDb.collection('overnight_summaries')
+      .orderBy('scan_date', 'desc')
+      .limit(limit)
+      .get();
+    return snapshot.docs.map(doc => doc.data() as OvernightSummary);
+  } catch (error) {
+    console.error('Error fetching overnight summaries:', error);
+    return [];
+  }
+}
+
+export async function getOvernightSummary(scanDate: string): Promise<OvernightSummary | null> {
+  noStore();
+  try {
+    const docRef = adminDb.collection('overnight_summaries').doc(scanDate);
+    const docSnap = await docRef.get();
+    if (!docSnap.exists) return null;
+    return docSnap.data() as OvernightSummary;
+  } catch (error) {
+    console.error(`Error fetching summary for ${scanDate}:`, error);
+    return null;
+  }
+}
+
+export async function getLatestOvernightSummary(): Promise<OvernightSummary | null> {
+  noStore();
+  try {
+    const snapshot = await adminDb.collection('overnight_summaries')
+      .orderBy('scan_date', 'desc')
+      .limit(1)
+      .get();
+    if (snapshot.empty) return null;
+    return snapshot.docs[0].data() as OvernightSummary;
+  } catch (error) {
+    console.error('Error fetching overnight summary:', error);
+    return null;
+  }
+}
+
+export async function getOvernightSignals(
+  scanDate: string,
+  direction?: 'bull' | 'bear',
+  minScore: number = 6,
+  limit: number = 20
+): Promise<OvernightSignal[]> {
+  noStore();
+  try {
+    let query = adminDb.collection('overnight_signals')
+      .where('scan_date', '==', scanDate)
+      .where('signal_score', '>=', minScore);
+
+    const snapshot = await query.get();
+    let signals: OvernightSignal[] = [];
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      // Ensure direction matches if specified (in case Firestore index issue or just safety)
+      // The query doesn't filter by direction to avoid composite index requirement for now if not needed,
+      // but the prompt logic says: if (!direction || data.direction === direction)
+      const signalData = data as OvernightSignal;
+      signalData.id = doc.id;
+      
+      if (!direction || signalData.direction === direction) {
+        signals.push(signalData);
+      }
+    });
+
+    // Sort by score desc, then by absolute move
+    signals.sort((a, b) => b.signal_score - a.signal_score || Math.abs(b.move_pct) - Math.abs(a.move_pct));
+    return signals.slice(0, limit);
+  } catch (error) {
+    console.error('Error fetching overnight signals:', error);
+    return [];
+  }
+}
+
+export async function getSignalByTicker(scanDate: string, ticker: string): Promise<OvernightSignal | null> {
+  noStore();
+  try {
+    const docRef = adminDb.collection('overnight_signals').doc(`${scanDate}_${ticker}`);
+    const docSnap = await docRef.get();
+    if (!docSnap.exists) return null;
+    return { id: docSnap.id, ...docSnap.data() } as OvernightSignal;
+  } catch (error) {
+    console.error(`Error fetching signal for ${ticker}:`, error);
+    return null;
+  }
+}
 
 export async function getAppStatusAdmin(): Promise<{ isUpdating: boolean }> {
   noStore();
@@ -1225,11 +1399,16 @@ export async function incrementUserUsageAdmin(uid: string) {
 export async function setUserSubscriptionStatusAdmin(
   uid: string,
   isSubscribed: boolean,
-  currentPeriodEnd?: number
+  currentPeriodEnd?: number,
+  plan?: 'free' | 'edge' | 'warroom'
 ) {
   const userRef = adminDb.collection('users').doc(uid);
   
   let updates: any = { isSubscribed };
+
+  if (plan) {
+      updates.plan = plan;
+  }
 
   if (isSubscribed && currentPeriodEnd) {
       // Add a grace period of 2 days to avoid race conditions with renewals
@@ -1239,6 +1418,7 @@ export async function setUserSubscriptionStatusAdmin(
       // If subscription is not active (cancelled, unpaid, deleted), revoke access immediately
       // by removing the proUntil field.
       updates.proUntil = FieldValue.delete();
+      updates.plan = 'free'; // Downgrade to free
   }
 
   await userRef.set(updates, { merge: true });

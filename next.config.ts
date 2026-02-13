@@ -1,4 +1,3 @@
-
 import type {NextConfig} from 'next';
 import createMDX from '@next/mdx';
 
@@ -19,13 +18,8 @@ const nextConfig: NextConfig = {
       { source: '/options/:path*', destination: '/', permanent: true },
       // Old footer pages → new locations
       {
-        source: '/about',
-        destination: '/',
-        permanent: true,
-      },
-      {
         source: '/about-us', 
-        destination: '/',
+        destination: '/about',
         permanent: true,
       },
       {

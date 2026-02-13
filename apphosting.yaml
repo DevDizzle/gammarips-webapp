@@ -8,30 +8,28 @@ iam:
     - roles/run.invoker
 
 env:
+  # Public environment variables (values)
   - variable: MCP_SERVER_URL
     value: https://gammarips-mcp-406581297632.us-central1.run.app
 
 runConfig:
-  # Increase this value if you'd like to automatically spin up
-  # more instances in response to increased traffic.
   maxInstances: 1
 
 # Defines server-side cron jobs for the application.
-# https://firebase.google.com/docs/app-hosting/scheduled-jobs
 scheduledJobs:
-  - schedule: "0 20 * * 1-4" # 8:00 PM ET on Mon, Tue, Wed, Thu
+  - schedule: "0 20 * * 1-4"
     timeZone: America/New_York
     httpTarget:
       uri: /api/cron/send-daily-setups
-  - schedule: "0 8 * * 1-5" # 8:00 AM ET on Mon-Fri
+  - schedule: "0 8 * * 1-5"
     timeZone: America/New_York
     httpTarget:
       uri: /api/cron/send-top-pick
-  - schedule: "0 13 * * 1-5" # 1:00 PM ET on Mon-Fri
+  - schedule: "0 13 * * 1-5"
     timeZone: America/New_York
     httpTarget:
       uri: /api/cron/send-midday-movers
-  - schedule: "0 10 * * *" # 10:00 AM ET every day
+  - schedule: "0 10 * * *"
     timeZone: America/New_York
     httpTarget:
       uri: /api/cron/send-feedback-requests

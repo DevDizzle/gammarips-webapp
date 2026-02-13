@@ -36,3 +36,4 @@ Thumbs.db
 
 # TypeScript cache
 *.tsbuildinfo
+firebase-debug.log

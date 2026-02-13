@@ -1,150 +1,112 @@
 import Link from "next/link";
-import { getLandingPageData } from "./landing-page-actions";
+import { UserNav } from "@/components/auth/user-nav";
 import { Hero } from "@/components/landing/hero";
-import { SignalsTable } from "@/components/overnight/signals-table";
-import { PublicHeader } from "@/components/layout/public-header";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import Faq from "@/components/landing/faq";
 import { Metadata } from "next";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: 'The Overnight Edge | GammaRips',
-  description: 'Institutional options flow analysis delivered before the market opens.',
+  title: "GammaRips | The Overnight Edge — Institutional Options Flow Intelligence",
+  description: "Every night, we scan institutional options flow across 5,230+ tickers. See what smart money did while you slept — before the market opens.",
+  alternates: {
+    canonical: '/',
+  },
 };
 
-import { EmailCapture } from "@/components/email-capture";
+const steps = [
+  { icon: <Scan className="h-6 w-6 text-primary" />, title: 'Scan', desc: '5,230+ tickers scanned at 4 AM EST' },
+  { icon: <Brain className="h-6 w-6 text-primary" />, title: 'Score', desc: 'Signals scored 1-10 on institutional conviction' },
+  { icon: <Sparkles className="h-6 w-6 text-primary" />, title: 'Enrich', desc: 'AI-powered thesis, contracts, key levels' },
+  { icon: <Send className="h-6 w-6 text-primary" />, title: 'Deliver', desc: 'Ready before the opening bell' },
+];
 
-export default async function LandingPage() {
-  const { summary, bullSignals, bearSignals, recentReports } = await getLandingPageData();
-
+export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <PublicHeader />
-
-      <main className="flex-1">
-        {/* Hero Section */}
-        <Hero 
-          headline={summary?.headline} 
-          narrative={summary?.market_narrative} 
-        />
-
-        {/* Summary Bar */}
-        {summary && (
-          <section className="bg-muted/30 border-y py-4">
-            <div className="container px-4 mx-auto flex flex-wrap gap-6 justify-center text-sm md:text-base">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-muted-foreground">Scanned:</span>
-                <span className="font-mono font-bold">{summary.total_signals} Tickers</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-muted-foreground">Bullish:</span>
-                <span className="font-mono font-bold text-green-500">{summary.bull_count}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-muted-foreground">Bearish:</span>
-                <span className="font-mono font-bold text-red-500">{summary.bear_count}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                 <span className="font-semibold text-muted-foreground">Generated:</span>
-                 <span className="font-mono text-muted-foreground">{new Date(summary.generated_at?.toDate?.() || summary.generated_at).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', timeZone: 'America/New_York' })} ET</span>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Email Capture */}
-        <section className="py-8 container px-4 mx-auto max-w-xl">
-            <EmailCapture />
-        </section>
-
-        {/* Signals Tables */}
-        <section className="py-12 md:py-16 container px-4 mx-auto">
-          <div className="grid lg:grid-cols-2 gap-8">
-            <SignalsTable 
-              title="Top Bull Signals" 
-              signals={bullSignals} 
-            />
-            <SignalsTable 
-              title="Top Bear Signals" 
-              signals={bearSignals} 
-            />
+    <div className="flex flex-col min-h-screen bg-background">
+      {/* Header */}
+      <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 border-b">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold font-headline">
+            <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
+          </Link>
+          <nav className="hidden md:flex items-center gap-6 text-sm">
+            <Link href="/how-it-works" className="text-muted-foreground hover:text-primary">How It Works</Link>
+            <Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing</Link>
+            <Link href="/scorecard" className="text-muted-foreground hover:text-primary">Scorecard</Link>
+            <Link href="/about" className="text-muted-foreground hover:text-primary">About</Link>
+          </nav>
+          <div className="flex items-center gap-4">
+            <UserNav />
           </div>
+        </div>
+      </header>
+
+      <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
+        <Hero />
+
+        {/* How It Works Summary */}
+        <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {steps.map((step) => (
+            <Card key={step.title} className="bg-card/50 text-center">
+              <CardContent className="p-5">
+                <div className="flex justify-center mb-3">{step.icon}</div>
+                <h3 className="font-bold font-headline">{step.title}</h3>
+                <p className="text-xs text-muted-foreground mt-1">{step.desc}</p>
+              </CardContent>
+            </Card>
+          ))}
         </section>
 
-        {/* Recent Reports */}
-        {recentReports && recentReports.length > 0 && (
-            <section className="py-12 bg-muted/5 border-y">
-                <div className="container px-4 mx-auto">
-                    <div className="flex items-center justify-between mb-8">
-                        <h2 className="text-2xl font-bold font-headline">Recent Reports</h2>
-                        <Button variant="ghost" asChild>
-                            <Link href="/reports">View Archive &rarr;</Link>
-                        </Button>
-                    </div>
-                    <div className="grid md:grid-cols-3 gap-6">
-                        {recentReports
-                            .filter(r => r.scan_date !== summary?.scan_date)
-                            .slice(0, 3)
-                            .map(report => (
-                                <Card key={report.scan_date} className="hover:border-primary/50 transition-colors h-full">
-                                    <Link href={`/reports/${report.scan_date}`} className="block h-full">
-                                        <CardHeader>
-                                            <div className="text-sm text-muted-foreground mb-1">
-                                                {new Date(report.scan_date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'UTC' })}
-                                            </div>
-                                            <CardTitle className="text-lg leading-tight line-clamp-2">
-                                                {report.headline || "Daily Overnight Signals"}
-                                            </CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                <span className="text-green-500 font-medium">{report.bull_count} Bull</span>
-                                                <span>•</span>
-                                                <span className="text-red-500 font-medium">{report.bear_count} Bear</span>
-                                            </div>
-                                        </CardContent>
-                                    </Link>
-                                </Card>
-                            ))
-                        }
-                    </div>
-                </div>
-            </section>
-        )}
-
-        {/* Themes */}
-        {summary?.top_themes && summary.top_themes.length > 0 && (
-          <section className="py-8 bg-muted/10 border-y">
-             <div className="container px-4 mx-auto text-center">
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">Overnight Themes</h3>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {summary.top_themes.map((theme, i) => (
-                    <Badge key={i} variant="outline" className="text-base py-1 px-3 border-primary/20 bg-primary/5">
-                      {theme}
-                    </Badge>
-                  ))}
-                </div>
-             </div>
-          </section>
-        )}
-
-        {/* CTA */}
-        <section className="py-20 md:py-32 text-center container px-4">
-          <h2 className="text-3xl md:text-5xl font-bold font-headline mb-6">
-            Don't Trade Alone.
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-            Get the full analysis, strike prices, and key levels for every signal.
+        {/* Value Props */}
+        <section className="text-center space-y-4">
+          <h2 className="text-3xl font-bold font-headline">What Smart Money Did Last Night</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Our scanner analyzes overnight institutional options flow — volume, open interest, unusual activity, dollar flow — across the entire market. Every signal is timestamped and publicly tracked. No cherry-picking.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-             <Button size="lg" className="h-12 px-8 text-lg" asChild>
-                <Link href="#pricing">Unlock All Signals</Link>
-              </Button>
-              <Button size="lg" variant="outline" className="h-12 px-8 text-lg" asChild>
-                <Link href="/signals">View Dashboard</Link>
-              </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <Button asChild size="lg">
+              <Link href="/pricing">
+                Get The Overnight Edge <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/how-it-works">Learn How It Works</Link>
+            </Button>
           </div>
+        </section>
+
+        {/* Pricing Summary */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="bg-card/50 text-center">
+            <CardContent className="p-6">
+              <p className="text-2xl font-bold font-headline">Free</p>
+              <p className="text-sm text-muted-foreground mt-2">Daily signal previews, top movers, market themes</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-card/50 text-center border-primary/30">
+            <CardContent className="p-6">
+              <p className="text-sm text-primary font-semibold">THE OVERNIGHT EDGE</p>
+              <p className="text-2xl font-bold font-headline">$49/mo</p>
+              <p className="text-sm text-muted-foreground mt-2">Full AI thesis, recommended contracts, key levels</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-card/50 text-center">
+            <CardContent className="p-6">
+              <p className="text-sm text-muted-foreground font-semibold">THE WAR ROOM</p>
+              <p className="text-2xl font-bold font-headline">$149/mo</p>
+              <p className="text-sm text-muted-foreground mt-2">Real-time alerts, direct analyst access, priority signals</p>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* FAQ */}
+        <section>
+          <div className="text-center">
+            <h2 className="text-3xl font-bold font-headline">Frequently Asked Questions</h2>
+          </div>
+          <Faq />
         </section>
       </main>
     </div>

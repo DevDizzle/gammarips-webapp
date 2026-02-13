@@ -1,76 +1,134 @@
 'use server';
 
 import { 
-  getStocksAdmin, 
-  handleWinSubmission as handleWinSubmissionAdmin,
-  incrementUserUsageAdmin,
-  getTickerEventsAdmin,
-  getPerformanceSignals,
-  getOrCreateUserAdmin
-} from "@/lib/firebase-admin";
-import { getAuth } from "firebase-admin/auth";
-import { createStripeCheckoutSession, createStripePortalSession } from "@/lib/stripe";
+    getOrCreateUserAdmin,
+    incrementUserUsageAdmin,
+    saveFeedbackAdmin,
+    getAppStatusAdmin,
+    saveFeedbackSurveyAdmin,
+    saveCancellationFeedbackAdmin,
+} from '@/lib/firebase-admin';
+import type { FeedbackSurveyData } from '@/lib/schemas';
+import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
+import { headers } from 'next/headers';
+import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { app } from '@/lib/firebase';
+import { sendWelcomeEmail as sendWelcomeEmailAdmin, sendFeedbackAcknowledgmentEmail } from '@/lib/mailgun';
 
-export async function getStocks() {
-  return await getStocksAdmin();
+export async function getAppStatus(): Promise<{ isUpdating: boolean }> {
+    return getAppStatusAdmin();
 }
 
-export async function handleWinSubmission(formData: FormData) {
-   // We need the UID, which usually comes from auth context. 
-   // In a server action, we might need to verify the token or pass the UID.
-   // For now, let's assume the UID is passed in the form data or we can get it if we had session management.
-   // But wait, the original handleWinSubmission took (uid, formData).
-   
-   // Let's assume the client passes the UID in formData for now, or we'll need a different approach.
-   const uid = formData.get('uid') as string;
-   if (!uid) return { success: false, error: "User ID missing" };
-   
-   return await handleWinSubmissionAdmin(uid, formData);
-}
-
-export async function incrementDashboardViewCount(uid: string) {
+export async function incrementDashboardViewCount(uid: string): Promise<{success: boolean}> {
+  try {
     await incrementUserUsageAdmin(uid);
+    return { success: true };
+  } catch {
+    console.error(`Failed to increment dashboard view for user ${uid}`);
+    return { success: false };
+  }
 }
 
-export async function getEconomicEvents() {
-    return await getTickerEventsAdmin(undefined, 'economic');
-}
-
-export async function getPerformanceSignalsAction(order: 'asc' | 'desc', limit: number) {
-    return await getPerformanceSignals(order, limit);
-}
-
-// Placeholder for deprecated actions to prevent build errors
-export async function sendPasswordReset(email: string) {
-    console.warn("sendPasswordReset is deprecated/not implemented");
-    return { success: false, error: "Not implemented" };
-}
-
-export async function handleCancellationIntent(uid: string, feedback: string) {
+export async function handleFeedback(uid: string | null, message: string, replyToEmail: string): Promise<{success: boolean}> {
+  let userData: { uid: string, email: string | null } | null = null;
+  if (uid) {
     const user = await getOrCreateUserAdmin(uid);
-    if (!user.stripeCustomerId) {
-        // Fallback or error
-         console.warn("User has no stripe customer ID for portal");
-         return { success: false, portalUrl: null }; 
-    }
-    const portalUrl = await createStripePortalSession(user.stripeCustomerId, 'https://gammarips.com/account');
-    return { success: true, portalUrl };
+    userData = { uid: user.uid, email: user.email ?? null };
+  }
+  const { trackingId } = await saveFeedbackAdmin(message, replyToEmail, userData);
+  
+  await sendFeedbackAcknowledgmentEmail({
+    to: replyToEmail,
+    trackingId,
+  });
+
+  return { success: true };
 }
 
-export async function createCheckoutSession(uid: string, gaClientId?: string | null) {
-     const user = await getOrCreateUserAdmin(uid);
-     // Default to Edge plan if called via this legacy method
-     const priceId = process.env.NEXT_PUBLIC_STRIPE_OVERNIGHT_EDGE_PRICE_ID; 
-     
-     if (!priceId) throw new Error("Price ID missing");
+export async function handleWelcomeEmail(email: string, name: string): Promise<{success: boolean}> {
+    if (!email) return { success: false };
+    try {
+        await sendWelcomeEmailAdmin({ to: email, name: name || email.split('@')[0] });
+        return { success: true };
+    } catch (error) {
+        console.error(`Failed to send welcome email to ${email}:`, error);
+        return { success: false };
+    }
+}
 
-     const sessionId = await createStripeCheckoutSession(
+export async function createCheckoutSession(uid: string, gaClientId: string | null): Promise<{ sessionId: string }> {
+    const user = await getOrCreateUserAdmin(uid);
+    const headersList = await headers();
+    const origin = headersList.get('origin')!;
+
+    const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
+    if (!priceId) {
+        throw new Error('Stripe Price ID is not configured.');
+    }
+
+    const sessionMetadata: { ga_client_id?: string } = {};
+    if (gaClientId) {
+        sessionMetadata.ga_client_id = gaClientId;
+    }
+
+    const sessionId = await createStripeCheckoutSession(
         uid,
-        user.email, 
+        user.email,
         priceId,
-        `https://gammarips.com/signals?success=true`, 
-        `https://gammarips.com/signals?canceled=true`,
-        { ga_client_id: gaClientId || '' }
-     );
-     return { sessionId };
+        `${origin}/`,
+        `${origin}/`,
+        sessionMetadata
+    );
+
+    return { sessionId };
+}
+
+export async function createStripePortalLink(uid: string): Promise<{ portalUrl: string }> {
+  const user = await getOrCreateUserAdmin(uid);
+  const stripeCustomerId = user.stripeCustomerId;
+
+  if (!stripeCustomerId) {
+    throw new Error('User does not have a Stripe Customer ID.');
+  }
+
+  const headersList = await headers();
+  const origin = headersList.get('origin')!;
+  const returnUrl = `${origin}/account`;
+
+  const portalUrl = await createStripePortalSession(stripeCustomerId, returnUrl);
+
+  return { portalUrl };
+}
+
+export async function sendPasswordReset(email: string): Promise<void> {
+  const auth = getClientAuth(app);
+  await sendPasswordResetEmail(auth, email);
+}
+
+export async function handleFeedbackSurvey(uid: string, data: FeedbackSurveyData): Promise<{success: boolean}> {
+    try {
+        await saveFeedbackSurveyAdmin(uid, data);
+        return { success: true };
+    } catch (error: any) {
+        console.error(`Failed to save feedback survey for user ${uid}`, error);
+        throw new Error(error.message || "Could not save survey.");
+    }
+}
+
+export async function handleCancellationIntent(uid: string, feedback: string): Promise<{ portalUrl: string }> {
+    const user = await getOrCreateUserAdmin(uid);
+    const stripeCustomerId = user.stripeCustomerId;
+
+    if (!stripeCustomerId) {
+        throw new Error('User does not have a Stripe Customer ID.');
+    }
+
+    await saveCancellationFeedbackAdmin(uid, feedback);
+
+    const headersList = await headers();
+    const origin = headersList.get('origin')!;
+    const returnUrl = `${origin}/account`;
+    const portalUrl = await createStripePortalSession(stripeCustomerId, returnUrl);
+
+    return { portalUrl };
 }

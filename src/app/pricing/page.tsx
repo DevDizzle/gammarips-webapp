@@ -1,162 +1,128 @@
-import { Metadata } from 'next';
-import Link from 'next/link';
+import type { Metadata } from 'next';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, X, Minus } from 'lucide-react';
-import { PublicHeader } from "@/components/layout/public-header";
-import Footer from "@/components/layout/footer";
+import { Check, X } from 'lucide-react';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: "Pricing | The Overnight Edge by GammaRips",
-  description: "See what institutions did last night. Free daily previews. Full analysis from $49/mo.",
+  title: 'Pricing | The Overnight Edge by GammaRips',
+  description: 'See what institutions did last night. Free daily previews. Full analysis from $49/mo.',
+  alternates: { canonical: '/pricing' },
 };
 
+const features = [
+  { name: 'Daily signal previews', free: true, edge: true, war: true },
+  { name: 'Top movers + themes', free: true, edge: true, war: true },
+  { name: 'Public reports archive', free: true, edge: true, war: true },
+  { name: 'AI trade thesis', free: false, edge: true, war: true },
+  { name: 'Recommended contracts', free: false, edge: true, war: true },
+  { name: 'Key levels (S/R)', free: false, edge: true, war: true },
+  { name: 'Technical analysis', free: false, edge: true, war: true },
+  { name: 'News deep-dive', free: false, edge: true, war: true },
+  { name: 'WhatsApp alerts', free: false, edge: false, war: true },
+  { name: 'Priority signals', free: false, edge: false, war: true },
+  { name: 'Direct analyst access', free: false, edge: false, war: true },
+];
+
+function FeatureIcon({ included }: { included: boolean }) {
+  return included
+    ? <Check className="h-4 w-4 text-primary" />
+    : <X className="h-4 w-4 text-muted-foreground/40" />;
+}
+
 export default function PricingPage() {
-  const tiers = [
-    {
-      name: "Free",
-      price: "$0",
-      description: "Daily previews & public data",
-      features: [
-        { name: "Daily signal previews", included: true },
-        { name: "Top movers + themes", included: true },
-        { name: "Public reports archive", included: true },
-        { name: "AI trade thesis", included: false },
-        { name: "Recommended contracts", included: false },
-        { name: "Key levels (S/R)", included: false },
-        { name: "Technical analysis", included: false },
-        { name: "News deep-dive", included: false },
-        { name: "WhatsApp alerts", included: false },
-        { name: "Priority signals", included: false },
-        { name: "Direct analyst access", included: false },
-      ],
-      cta: "Get Started",
-      ctaLink: "/signals", // Direct to dashboard for free users
-      variant: "outline" as const,
-    },
-    {
-      name: "The Overnight Edge",
-      price: "$49",
-      period: "/mo",
-      description: "Full AI analysis & levels",
-      features: [
-        { name: "Daily signal previews", included: true },
-        { name: "Top movers + themes", included: true },
-        { name: "Public reports archive", included: true },
-        { name: "AI trade thesis", included: true },
-        { name: "Recommended contracts", included: true },
-        { name: "Key levels (S/R)", included: true },
-        { name: "Technical analysis", included: true },
-        { name: "News deep-dive", included: true },
-        { name: "WhatsApp alerts", included: false },
-        { name: "Priority signals", included: false },
-        { name: "Direct analyst access", included: false },
-      ],
-      cta: "Subscribe",
-      ctaLink: "/account", // Placeholder: Redirect to account for upgrade
-      popular: true,
-      variant: "default" as const,
-    },
-    {
-      name: "The War Room",
-      price: "$149",
-      period: "/mo",
-      description: "Real-time alerts & access",
-      features: [
-        { name: "Daily signal previews", included: true },
-        { name: "Top movers + themes", included: true },
-        { name: "Public reports archive", included: true },
-        { name: "AI trade thesis", included: true },
-        { name: "Recommended contracts", included: true },
-        { name: "Key levels (S/R)", included: true },
-        { name: "Technical analysis", included: true },
-        { name: "News deep-dive", included: true },
-        { name: "WhatsApp alerts", included: true },
-        { name: "Priority signals", included: true },
-        { name: "Direct analyst access", included: true },
-      ],
-      cta: "Subscribe",
-      ctaLink: "/account", // Placeholder: Redirect to account for upgrade
-      variant: "outline" as const,
-    },
-  ];
-
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <PublicHeader />
-      
-      <main className="flex-1 container mx-auto px-4 py-16 md:py-24">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold font-headline mb-6">
-            Simple, Transparent Pricing
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            See what institutions did last night. Start for free, upgrade for the full edge.
-          </p>
-        </div>
+    <section className="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <header className="text-center mb-16">
+        <p className="text-sm font-semibold uppercase tracking-wider text-primary">Pricing</p>
+        <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
+          Choose Your Edge
+        </h1>
+        <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+          See what institutions did last night. Free daily previews — upgrade for the full thesis.
+        </p>
+      </header>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {tiers.map((tier) => (
-            <div 
-              key={tier.name} 
-              className={`relative flex flex-col rounded-xl border ${tier.popular ? 'border-primary shadow-lg scale-105 z-10' : 'border-border'} bg-card p-6 md:p-8`}
-            >
-              {tier.popular && (
-                <div className="absolute top-0 right-0 -mt-3 mr-6 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-                  Most Popular
-                </div>
-              )}
-              
-              <div className="mb-6">
-                <h3 className="text-xl font-bold font-headline">{tier.name}</h3>
-                <div className="mt-4 flex items-baseline">
-                  <span className="text-4xl font-bold tracking-tight">{tier.price}</span>
-                  {tier.period && <span className="text-muted-foreground ml-1">{tier.period}</span>}
-                </div>
-                <p className="mt-2 text-sm text-muted-foreground">{tier.description}</p>
-              </div>
+      {/* Pricing Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        {/* Free */}
+        <Card className="bg-card/50">
+          <CardHeader className="text-center pb-2">
+            <p className="text-sm text-muted-foreground uppercase tracking-wider">Free</p>
+            <CardTitle className="text-4xl font-bold font-headline">$0</CardTitle>
+            <p className="text-sm text-muted-foreground">Forever</p>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <ul className="space-y-3">
+              {features.map(f => (
+                <li key={f.name} className="flex items-center gap-3 text-sm">
+                  <FeatureIcon included={f.free} />
+                  <span className={f.free ? 'text-foreground' : 'text-muted-foreground/40'}>{f.name}</span>
+                </li>
+              ))}
+            </ul>
+            <Button asChild variant="outline" className="w-full mt-8">
+              <Link href="/">Get Started</Link>
+            </Button>
+          </CardContent>
+        </Card>
 
-              <div className="flex-1 mb-8">
-                <ul className="space-y-4">
-                  {tier.features.map((feature) => (
-                    <li key={feature.name} className="flex items-start gap-3">
-                      {feature.included ? (
-                        <Check className="h-5 w-5 text-primary shrink-0" />
-                      ) : (
-                        <Minus className="h-5 w-5 text-muted-foreground/30 shrink-0" />
-                      )}
-                      <span className={`text-sm ${feature.included ? 'text-foreground' : 'text-muted-foreground/50'}`}>
-                        {feature.name}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+        {/* Overnight Edge */}
+        <Card className="bg-card/50 border-primary/50 ring-1 ring-primary/20 relative">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full">
+            Most Popular
+          </div>
+          <CardHeader className="text-center pb-2">
+            <p className="text-sm text-primary uppercase tracking-wider font-semibold">The Overnight Edge</p>
+            <CardTitle className="text-4xl font-bold font-headline">$49<span className="text-lg font-normal text-muted-foreground">/mo</span></CardTitle>
+            <p className="text-sm text-muted-foreground">Full institutional flow analysis</p>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <ul className="space-y-3">
+              {features.map(f => (
+                <li key={f.name} className="flex items-center gap-3 text-sm">
+                  <FeatureIcon included={f.edge} />
+                  <span className={f.edge ? 'text-foreground' : 'text-muted-foreground/40'}>{f.name}</span>
+                </li>
+              ))}
+            </ul>
+            <Button asChild className="w-full mt-8">
+              <Link href="/account">Subscribe Now</Link>
+            </Button>
+          </CardContent>
+        </Card>
 
-              <Button 
-                variant={tier.variant} 
-                className="w-full" 
-                asChild
-              >
-                <Link href={tier.ctaLink}>
-                  {tier.cta}
-                </Link>
-              </Button>
-            </div>
-          ))}
-        </div>
+        {/* War Room */}
+        <Card className="bg-card/50">
+          <CardHeader className="text-center pb-2">
+            <p className="text-sm text-muted-foreground uppercase tracking-wider">The War Room</p>
+            <CardTitle className="text-4xl font-bold font-headline">$149<span className="text-lg font-normal text-muted-foreground">/mo</span></CardTitle>
+            <p className="text-sm text-muted-foreground">Real-time flow + direct access</p>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <ul className="space-y-3">
+              {features.map(f => (
+                <li key={f.name} className="flex items-center gap-3 text-sm">
+                  <FeatureIcon included={f.war} />
+                  <span className={f.war ? 'text-foreground' : 'text-muted-foreground/40'}>{f.name}</span>
+                </li>
+              ))}
+            </ul>
+            <Button asChild variant="outline" className="w-full mt-8">
+              <Link href="/account">Subscribe Now</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
 
-        <div className="mt-16 text-center max-w-2xl mx-auto bg-muted/30 p-8 rounded-lg">
-          <h3 className="text-lg font-bold mb-2">Need Enterprise Access?</h3>
-          <p className="text-muted-foreground mb-4">
-            For funds, family offices, and API access, contact us directly for custom pricing.
-          </p>
-          <Button variant="link" asChild>
-            <a href="mailto:support@gammarips.com">Contact Sales &rarr;</a>
-          </Button>
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+      {/* FAQ-style bottom */}
+      <div className="text-center space-y-4">
+        <p className="text-muted-foreground">All subscriptions are month-to-month. Cancel anytime.</p>
+        <p className="text-sm text-muted-foreground">
+          Questions? Reach us at{' '}
+          <a href="mailto:support@gammarips.com" className="text-primary hover:underline">support@gammarips.com</a>
+        </p>
+      </div>
+    </section>
   );
 }

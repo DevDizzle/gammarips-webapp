@@ -1,49 +1,85 @@
-import { Metadata } from 'next';
-import { PublicHeader } from "@/components/layout/public-header";
-import Footer from "@/components/layout/footer";
-import { Card, CardContent } from "@/components/ui/card";
+import type { Metadata } from 'next';
+import { Separator } from '@/components/ui/separator';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { BarChart3, Target, TrendingUp, Clock } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Signal Scorecard | Verified Performance | GammaRips",
-  description: "Every Overnight Edge signal is timestamped and tracked. See our verified win rate and performance history. No cherry-picking — just data.",
+  title: 'Signal Scorecard | Verified Performance | GammaRips',
+  description: 'Every Overnight Edge signal is timestamped and tracked. See our verified win rate and performance history. No cherry-picking — just data.',
+  alternates: { canonical: '/scorecard' },
 };
 
 export default function ScorecardPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <PublicHeader />
-      
-      <main className="flex-1 container mx-auto px-4 py-16 md:py-24">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold font-headline mb-6">
-            THE OVERNIGHT EDGE — SIGNAL SCORECARD
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Every signal is timestamped. Every result is tracked.<br />
-            No cherry-picking. No hindsight bias. Just data.
+    <section className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <header className="text-center">
+        <p className="text-sm font-semibold uppercase tracking-wider text-primary">Performance</p>
+        <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
+          Signal Scorecard
+        </h1>
+        <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
+          Every signal is timestamped. Every result is tracked. No cherry-picking. No hindsight bias. Just data.
+        </p>
+      </header>
+
+      <Separator className="my-12 sm:my-16" />
+
+      {/* Placeholder Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="bg-card/50 text-center">
+          <CardContent className="p-6">
+            <BarChart3 className="h-8 w-8 text-primary mx-auto mb-3" />
+            <p className="text-3xl font-bold font-headline">—</p>
+            <p className="text-sm text-muted-foreground">Overall Win Rate</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-card/50 text-center">
+          <CardContent className="p-6">
+            <Target className="h-8 w-8 text-primary mx-auto mb-3" />
+            <p className="text-3xl font-bold font-headline">—</p>
+            <p className="text-sm text-muted-foreground">Signals Tracked</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-card/50 text-center">
+          <CardContent className="p-6">
+            <TrendingUp className="h-8 w-8 text-primary mx-auto mb-3" />
+            <p className="text-3xl font-bold font-headline">—</p>
+            <p className="text-sm text-muted-foreground">Avg Winner Return</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-card/50 text-center">
+          <CardContent className="p-6">
+            <Clock className="h-8 w-8 text-primary mx-auto mb-3" />
+            <p className="text-3xl font-bold font-headline">—</p>
+            <p className="text-sm text-muted-foreground">Avg Hold Period</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Separator className="my-12 sm:my-16" />
+
+      {/* Coming Soon */}
+      <Card className="bg-primary/5 border-primary/20">
+        <CardContent className="p-8 text-center space-y-4">
+          <h2 className="text-2xl font-bold font-headline">Win Tracking Begins February 2026</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            The Overnight Edge signal pipeline went live in February 2026. As signals mature and resolve, performance data will populate this page automatically. Every signal is timestamped at publication — no retroactive editing.
           </p>
-        </div>
-
-        <div className="max-w-4xl mx-auto">
-             <Card className="bg-muted/30 border-dashed border-2">
-                <CardContent className="flex flex-col items-center justify-center py-20 text-center">
-                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-6">
-                        <span className="text-3xl">📊</span>
-                    </div>
-                    <h2 className="text-2xl font-bold mb-4">Performance Tracking Active</h2>
-                    <p className="text-muted-foreground max-w-md mx-auto mb-6">
-                        Win tracking for The Overnight Edge began in February 2026. 
-                        We need a minimum of 30 days of data to display statistically significant performance metrics.
-                    </p>
-                    <div className="bg-background border px-4 py-2 rounded text-sm font-mono text-muted-foreground">
-                        Check back for verified results soon.
-                    </div>
-                </CardContent>
-             </Card>
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+          <p className="text-muted-foreground">
+            Check back for verified results. In the meantime, browse our daily signals and reports.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <Button asChild size="lg">
+              <Link href="/pricing">Get Full Access</Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/how-it-works">Learn How Scoring Works</Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
   );
 }

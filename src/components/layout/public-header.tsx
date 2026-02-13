@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { UserNav } from "@/components/auth/user-nav";
-import { TickerSearch } from "@/components/ticker-search";
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
@@ -52,7 +51,6 @@ export function PublicHeader() {
                 ))}
              </nav>
 
-            <TickerSearch />
             <UserNav />
 
             {/* Mobile Nav */}

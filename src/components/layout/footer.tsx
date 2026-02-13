@@ -10,7 +10,7 @@ const Footer = () => {
           {/* Brand Column */}
           <div className="md:col-span-1">
             <h3 className="text-xl font-bold font-headline">
-                <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
+                <span className="text-foreground">Overnight</span><span className="text-primary">Edge</span>
             </h3>
             <p className="text-sm text-muted-foreground mt-2">
               Institutional overnight options flow data, technical analysis, and AI-generated market insights.
@@ -27,58 +27,85 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/developers" className="text-muted-foreground hover:text-primary transition-colors">
-                  Developers
+                <Link href="/reports" className="text-muted-foreground hover:text-primary transition-colors">
+                  Reports
                 </Link>
               </li>
               <li>
-                <Link href="/#pricing" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/pricing" className="text-muted-foreground hover:text-primary transition-colors">
                   Pricing
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Company */}
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Legal</h4>
+            <h4 className="font-semibold text-foreground mb-4">Company</h4>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
-                  Privacy Policy
+                <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
+                  About
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors">
-                  Terms of Service
+                <Link href="/how-it-works" className="text-muted-foreground hover:text-primary transition-colors">
+                  How It Works
+                </Link>
+              </li>
+              <li>
+                <Link href="/scorecard" className="text-muted-foreground hover:text-primary transition-colors">
+                  Scorecard
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Connect */}
+          {/* Legal & Connect */}
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Connect</h4>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <a 
-                  href="https://x.com/GammaRips" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
-                >
-                  X (@GammaRips)
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="mailto:ceo@gammarips.com" 
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Email CEO
-                </a>
-              </li>
-            </ul>
+             <div className="mb-6">
+                <h4 className="font-semibold text-foreground mb-4">Legal</h4>
+                <ul className="space-y-3 text-sm">
+                  <li>
+                    <Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
+                      Privacy Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors">
+                      Terms of Service
+                    </Link>
+                  </li>
+                </ul>
+             </div>
+             <div>
+                 <h4 className="font-semibold text-foreground mb-4">Connect</h4>
+                 <ul className="space-y-3 text-sm">
+                  <li>
+                    <a 
+                      href="https://x.com/GammaRips" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+                    >
+                      X (@GammaRips)
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="mailto:support@gammarips.com" 
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      support@gammarips.com
+                    </a>
+                  </li>
+                   <li>
+                    <Link href="/developers" className="text-muted-foreground hover:text-primary transition-colors">
+                      Developers (MCP API)
+                    </Link>
+                  </li>
+                </ul>
+             </div>
           </div>
         </div>
 

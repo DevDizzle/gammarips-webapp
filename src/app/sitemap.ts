@@ -30,6 +30,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 0.9,
     },
+    { url: 'https://gammarips.com/about', changeFrequency: 'monthly', priority: 0.7 },
+    { url: 'https://gammarips.com/pricing', changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://gammarips.com/how-it-works', changeFrequency: 'monthly', priority: 0.7 },
+    { url: 'https://gammarips.com/scorecard', changeFrequency: 'daily', priority: 0.8 },
     ...reportPages,
   ];
 }

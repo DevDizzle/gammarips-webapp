@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      { source: '/feedback', destination: '/about#contact', permanent: true },
+      { source: '/api', destination: '/developers', permanent: true },
+      { source: '/dashboard', destination: '/', permanent: true },
+      { source: '/options/:path*', destination: '/', permanent: true },
       // Old footer pages → new locations
       {
         source: '/about',
@@ -69,12 +73,6 @@ const nextConfig: NextConfig = {
       {
         source: '/blog/:slug',
         destination: '/',
-        permanent: true,
-      },
-      // Old dashboard → signals
-      {
-        source: '/dashboard',
-        destination: '/signals',
         permanent: true,
       },
       {

@@ -23,7 +23,9 @@ export function PublicHeader() {
   const links = [
     { href: '/signals', label: 'Signals' },
     { href: '/reports', label: 'Reports' },
-    { href: '/history', label: 'History' },
+    { href: '/how-it-works', label: 'How It Works' },
+    { href: '/pricing', label: 'Pricing' },
+    { href: '/about', label: 'About' },
   ];
 
   return (

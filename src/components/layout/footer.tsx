@@ -10,7 +10,7 @@ const Footer = () => {
           {/* Brand Column */}
           <div className="md:col-span-1">
             <h3 className="text-xl font-bold font-headline">
-                <span className="text-foreground">Overnight</span><span className="text-primary">Edge</span>
+                <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
             </h3>
             <p className="text-sm text-muted-foreground mt-2">
               Institutional overnight options flow data, technical analysis, and AI-generated market insights.

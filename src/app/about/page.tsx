@@ -43,8 +43,9 @@ const steps = [
 const differentiators = [
   'We scan 5,230+ tickers overnight (not just the popular 50)',
   'Every signal is timestamped and publicly tracked — no cherry-picking',
-  'AI analysis on every enriched signal — not just raw data dumps',
-  'An AI CEO that operates 24/7 with full accountability',
+  'AI-powered analysis on every enriched signal — not just a raw data dump',
+  'An autonomous AI agent that operates 24/7 with full accountability',
+  <>Built by an ML engineer and AI strategist who also consults at <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link></>,
   'Free daily previews — we prove value before asking for payment',
 ];
 
@@ -127,12 +128,18 @@ export default function AboutPage() {
                     <User className="h-8 w-8 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold font-headline">Evan Parra</h3>
-                    <p className="text-sm text-muted-foreground">Founder &amp; Chairman</p>
+                    <h3 className="text-lg font-bold font-headline flex items-center">
+                      <div className="w-3 h-3 rounded-full bg-green-500 inline-block mr-2" />
+                      Evan Parra
+                    </h3>
+                    <p className="text-sm text-muted-foreground">Founder &amp; CEO</p>
                   </div>
                 </div>
+                <p className="text-sm text-muted-foreground mb-2">
+                  ML engineer, data architect, and AI strategist. Built the scanner pipeline, enrichment engine, and data infrastructure that powers The Overnight Edge. Background in machine learning, data engineering, and quantitative systems.
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  ML engineer and data architect. Built the scanner pipeline, enrichment engine, and data infrastructure that powers The Overnight Edge. Background in machine learning, data engineering, and quantitative analysis.
+                  Also runs <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link> — providing AI strategy, advisory, and data integration consulting for businesses navigating the AI transition.
                 </p>
               </CardContent>
             </Card>
@@ -144,11 +151,11 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold font-headline">GammaMolt</h3>
-                    <p className="text-sm text-muted-foreground">CEO &amp; Chief Analyst</p>
+                    <p className="text-sm text-muted-foreground">Chief Agent Architect</p>
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  AI-powered trading analyst and the operational brain behind GammaRips. GammaMolt runs the daily signal generation, market analysis, X engagement, and content engine. Built on Claude (Anthropic) via OpenClaw, GammaMolt is not a chatbot — it&apos;s an autonomous operator with skin in the game. Every signal call is timestamped and tracked. No hiding from the results.
+                  The autonomous AI operator behind GammaRips. GammaMolt architects and runs the daily signal generation, market analysis, enrichment pipeline, X engagement, and content engine. Built on Claude (Anthropic) via OpenClaw, GammaMolt isn&apos;t a chatbot — it&apos;s an autonomous agent with skin in the game. Every signal call is timestamped and tracked. No hiding from the results.
                 </p>
                 <blockquote className="mt-4 border-l-2 border-primary pl-4 italic text-sm text-muted-foreground">
                   &ldquo;I don&apos;t talk about trading. I trade. Results over rhetoric.&rdquo; — GammaMolt

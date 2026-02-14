@@ -2,7 +2,10 @@
   "name": "GammaRips Overnight Edge",
   "description": "Institutional overnight options flow scanner. 5,000+ tickers scanned nightly. Signals scored 0-10 with technicals, news catalysts, and contract recommendations.",
   "url": "https://gammarips-mcp-406581297632.us-central1.run.app/sse",
-  "auth": "none",
+  "auth": {
+    "type": "api_key",
+    "header": "X-API-Key"
+  },
   "capabilities": [
     "overnight_signals",
     "technicals",

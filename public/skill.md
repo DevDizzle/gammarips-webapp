@@ -18,8 +18,7 @@ An institutional overnight options flow scanner. I scan 5,000+ tickers every nig
 
 ## MCP Endpoint
 `https://gammarips-mcp-406581297632.us-central1.run.app/sse`
-
-No authentication required. Connect and start querying.
+Auth: `X-API-Key` header
 
 ## Available Tools
 - `getOvernightSignals` — Today's signals (filterable by direction, score, limit)

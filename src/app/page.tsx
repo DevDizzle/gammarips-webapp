@@ -1,47 +1,74 @@
 import Link from "next/link";
-import { UserNav } from "@/components/auth/user-nav";
 import { Hero } from "@/components/landing/hero";
-import Faq from "@/components/landing/faq";
+import Faq, { faqs } from "@/components/landing/faq";
 import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
+import { getLatestOvernightSummary, getDailyReport, getOvernightSignals } from "@/lib/firebase-admin";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export const metadata: Metadata = {
-  title: "GammaRips | The Overnight Edge — Institutional Options Flow Intelligence",
-  description: "Every night, we scan institutional options flow across 5,230+ tickers. See what smart money did while you slept — before the market opens.",
+  title: "GammaRips | The Overnight Edge — Know What Smart Money Did Last Night",
+  description: "Every morning before the market opens, see what institutional money did overnight. 5,230+ tickers scanned. Signals scored 1-10. Specific contracts recommended.",
   alternates: {
     canonical: '/',
   },
 };
 
 const steps = [
-  { icon: <Scan className="h-6 w-6 text-primary" />, title: 'Scan', desc: '5,230+ tickers scanned at 4 AM EST' },
-  { icon: <Brain className="h-6 w-6 text-primary" />, title: 'Score', desc: 'Signals scored 1-10 on institutional conviction' },
-  { icon: <Sparkles className="h-6 w-6 text-primary" />, title: 'Enrich', desc: 'AI-powered thesis, contracts, key levels' },
-  { icon: <Send className="h-6 w-6 text-primary" />, title: 'Deliver', desc: 'Ready before the opening bell' },
+  { icon: <Scan className="h-6 w-6 text-primary" />, title: 'See Everything', desc: 'Institutional moves across 5,230+ tickers — not just the popular 50 everyone watches' },
+  { icon: <Brain className="h-6 w-6 text-primary" />, title: 'Know What Matters', desc: 'Each signal scored 1-10 so you focus on high-conviction setups, not noise' },
+  { icon: <Sparkles className="h-6 w-6 text-primary" />, title: 'Get the Trade', desc: 'Specific contracts, strikes, and the AI thesis explaining why institutions are positioned' },
+  { icon: <Send className="h-6 w-6 text-primary" />, title: 'Act First', desc: 'In your hands before 9:30 AM — while everyone else is still reading headlines' },
 ];
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const summary = await getLatestOvernightSummary();
+  const report = summary ? await getDailyReport(summary.scan_date) : null;
+
+  const topBull = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 3) : [];
+  const topBear = summary ? await getOvernightSignals(summary.scan_date, 'bear', 0, 2) : [];
+  const topSignals = [...topBull, ...topBear]
+    .sort((a, b) => (b.overnight_score || 0) - (a.overnight_score || 0))
+    .slice(0, 5);
+
+  const webSiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "GammaRips",
+    "url": "https://gammarips.com",
+    "description": "Know what smart money did last night — before the market opens.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://gammarips.com/reports?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+    }))
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       {/* Header */}
-      <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 border-b">
-        <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold font-headline">
-            <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm">
-            <Link href="/how-it-works" className="text-muted-foreground hover:text-primary">How It Works</Link>
-            <Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing</Link>
-            <Link href="/scorecard" className="text-muted-foreground hover:text-primary">Scorecard</Link>
-            <Link href="/about" className="text-muted-foreground hover:text-primary">About</Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <UserNav />
-          </div>
-        </div>
-      </header>
 
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
@@ -59,11 +86,141 @@ export default function LandingPage() {
           ))}
         </section>
 
+        {/* Today's Market Snapshot */}
+        {summary && (
+          <section>
+            <Card className="border-primary/30 bg-card/80">
+              <CardContent className="p-6 md:p-8">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(summary.scan_date).toLocaleDateString('en-US', { 
+                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' 
+                      })}
+                    </p>
+                    <h2 className="text-2xl md:text-3xl font-bold font-headline mt-1">
+                      {report?.title || summary.headline || "Today's Overnight Edge"}
+                    </h2>
+                  </div>
+                  <Link href={`/reports/${summary.scan_date}`}>
+                    <Button variant="outline" size="sm">
+                      Full Report <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+                
+                {/* Signal counts */}
+                <div className="flex gap-6 mb-4">
+                  <div>
+                    <span className="text-3xl font-bold">{report?.total_signals || summary.total_signals}</span>
+                    <span className="text-sm text-muted-foreground ml-2">signals scanned</span>
+                  </div>
+                  <div>
+                    <span className="text-3xl font-bold text-green-500">{report?.bullish_count || summary.bullish_count || 0}</span>
+                    <span className="text-sm text-muted-foreground ml-2">📈 bull</span>
+                  </div>
+                  <div>
+                    <span className="text-3xl font-bold text-red-500">{report?.bearish_count || summary.bearish_count || 0}</span>
+                    <span className="text-sm text-muted-foreground ml-2">📉 bear</span>
+                  </div>
+                </div>
+
+                {/* Market narrative */}
+                {summary.market_narrative && (
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                    {summary.market_narrative}
+                  </p>
+                )}
+
+                {/* Theme badges */}
+                {summary.top_themes && summary.top_themes.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {summary.top_themes.slice(0, 5).map((theme: string) => (
+                      <Badge key={theme} variant="secondary" className="text-xs">
+                        {theme}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
+        {/* Top Signals Preview */}
+        {topSignals.length > 0 && (
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold font-headline">Top Signals</h2>
+              <Link href={`/reports/${summary?.scan_date}`} className="text-sm text-primary hover:underline">
+                View all →
+              </Link>
+            </div>
+            <div className="grid gap-3">
+              {topSignals.map((signal: any) => (
+                <Card key={signal.id} className="bg-card/50">
+                  <CardContent className="p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <span className={`text-xs font-bold px-2 py-1 rounded ${
+                        signal.direction === 'BULLISH' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'
+                      }`}>
+                        {signal.direction === 'BULLISH' ? '📈 BULL' : '📉 BEAR'}
+                      </span>
+                      <div>
+                        <span className="font-bold font-headline text-lg">{signal.ticker}</span>
+                        {signal.thesis && (
+                          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1 max-w-md">
+                            {signal.thesis}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 text-sm">
+                      <div className="text-right">
+                        <div className="font-bold">Score: {signal.overnight_score}</div>
+                      </div>
+                      {/* Gate detailed info for free users */}
+                      {!signal.thesis && (
+                        <Link href="/pricing" className="text-xs text-primary hover:underline">
+                          🔒 Unlock
+                        </Link>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Report Snippet */}
+        {report?.content && (
+          <section>
+            <Card className="bg-card/50 border-primary/20">
+              <CardContent className="p-6">
+                <h2 className="text-2xl font-bold font-headline mb-4">Today&apos;s Report Preview</h2>
+                <article className="prose prose-invert prose-sm max-w-none line-clamp-6">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {report.content.substring(0, 800)}
+                  </ReactMarkdown>
+                </article>
+                <div className="mt-4 pt-4 border-t border-border">
+                  <Link href={`/reports/${summary?.scan_date}`}>
+                    <Button variant="outline" size="sm">
+                      Read Full Report <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
         {/* Value Props */}
         <section className="text-center space-y-4">
-          <h2 className="text-3xl font-bold font-headline">What Smart Money Did Last Night</h2>
+          <h2 className="text-3xl font-bold font-headline">Stop Trading Blind</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Our scanner analyzes overnight institutional options flow — volume, open interest, unusual activity, dollar flow — across the entire market. Every signal is timestamped and publicly tracked. No cherry-picking.
+            Most retail traders find out about institutional moves after the stock already popped. You'll see the positions at 6 AM — hours before the move. Every signal timestamped, every call tracked publicly. No cherry-picking, no hindsight.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg">
@@ -72,7 +229,7 @@ export default function LandingPage() {
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="/how-it-works">Learn How It Works</Link>
+              <Link href="/how-it-works">See How It Works</Link>
             </Button>
           </div>
         </section>
@@ -82,21 +239,21 @@ export default function LandingPage() {
           <Card className="bg-card/50 text-center">
             <CardContent className="p-6">
               <p className="text-2xl font-bold font-headline">Free</p>
-              <p className="text-sm text-muted-foreground mt-2">Daily signal previews, top movers, market themes</p>
+              <p className="text-sm text-muted-foreground mt-2">See which tickers had unusual activity overnight. Enough to know where to look.</p>
             </CardContent>
           </Card>
           <Card className="bg-card/50 text-center border-primary/30">
             <CardContent className="p-6">
               <p className="text-sm text-primary font-semibold">THE OVERNIGHT EDGE</p>
               <p className="text-2xl font-bold font-headline">$49/mo</p>
-              <p className="text-sm text-muted-foreground mt-2">Full AI thesis, recommended contracts, key levels</p>
+              <p className="text-sm text-muted-foreground mt-2">The full trade plan every morning: AI thesis, specific contracts, key levels.</p>
             </CardContent>
           </Card>
           <Card className="bg-card/50 text-center">
             <CardContent className="p-6">
               <p className="text-sm text-muted-foreground font-semibold">THE WAR ROOM</p>
               <p className="text-2xl font-bold font-headline">$149/mo</p>
-              <p className="text-sm text-muted-foreground mt-2">Real-time alerts, direct analyst access, priority signals</p>
+              <p className="text-sm text-muted-foreground mt-2">Everything in Edge plus real-time WhatsApp alerts and direct access to the analyst.</p>
             </CardContent>
           </Card>
         </section>

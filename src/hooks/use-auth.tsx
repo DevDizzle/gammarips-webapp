@@ -20,7 +20,7 @@ import { useToast } from './use-toast';
 import { getDoc, doc, onSnapshot } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { event as trackEvent } from '@/lib/gtag';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { FREE_MODE } from '@/lib/config';
 
 const auth = getAuth(app);
@@ -46,12 +46,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const isPro = useMemo(() => {
     // If we are in "Free Mode" (Growth Mode), everyone is Pro.
     if (FREE_MODE) return true;
 
     if (!dbUser) return false;
+
+    // Check for lifetime/founder status or War Room plan
+    if (dbUser.plan === 'warroom' || dbUser.subscriptionStatus === 'founder_lifetime') return true;
 
     // If the user has an active Stripe subscription, they are Pro.
     if (dbUser.isSubscribed) return true;
@@ -116,15 +120,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const newDbUser = await getOrCreateUser(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
     setDbUser(newDbUser);
 
+    const redirectUrl = searchParams?.get('redirect') || '/dashboard';
+
     if (additionalInfo?.isNewUser) {
       trackEvent('sign_up', { method });
       
       toast({ title: "Welcome to GammaRips!", description: "Account created successfully." });
-      router.push('/dashboard');
+      router.push(redirectUrl);
 
     } else {
        toast({ title: "Successfully signed in." });
-       router.push('/dashboard');
+       router.push(redirectUrl);
     }
   };
 
@@ -161,7 +167,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setDbUser(userDocSnap.data() as DbUser);
       }
       toast({ title: "Successfully signed in." });
-      router.push('/dashboard');
+      const redirectUrl = searchParams?.get('redirect') || '/dashboard';
+      router.push(redirectUrl);
 
     } catch (error) {
         console.error("Email sign-in error", error);

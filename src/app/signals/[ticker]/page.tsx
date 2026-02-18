@@ -12,6 +12,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${ticker.toUpperCase()} Signal | The Overnight Edge`,
     description: `Institutional options flow analysis for ${ticker.toUpperCase()}.`,
+    alternates: { canonical: `https://gammarips.com/signals/${ticker}` },
   };
 }
 

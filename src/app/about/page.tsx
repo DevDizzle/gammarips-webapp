@@ -8,9 +8,14 @@ import Faq, { faqs } from '@/components/landing/faq';
 import ContactForm from './contact-form';
 
 export const metadata: Metadata = {
-  title: 'About The Overnight Edge | GammaRips',
-  description: 'Learn how The Overnight Edge scans institutional options flow across 5,230+ tickers every night. Meet the team — a founder-engineer and an AI CEO tracking every signal.',
-  alternates: { canonical: '/about' },
+  title: 'About GammaRips — The Overnight Edge',
+  description: 'While you sleep, institutions place their bets. By 6 AM, you know what they did. Meet the team behind The Overnight Edge — a founder-engineer and an AI that tracks every signal.',
+  alternates: { canonical: 'https://gammarips.com/about' },
+  openGraph: {
+    title: 'About GammaRips — The Overnight Edge',
+    description: 'Learn how The Overnight Edge scans institutional options flow across 5,230+ tickers every night.',
+    url: 'https://gammarips.com/about',
+  }
 };
 
 const steps = [
@@ -41,12 +46,12 @@ const steps = [
 ];
 
 const differentiators = [
-  'We scan 5,230+ tickers overnight (not just the popular 50)',
-  'Every signal is timestamped and publicly tracked — no cherry-picking',
-  'AI-powered analysis on every enriched signal — not just a raw data dump',
-  'An autonomous AI agent that operates 24/7 with full accountability',
-  <>Built by an ML engineer and AI strategist who also consults at <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link></>,
-  'Free daily previews — we prove value before asking for payment',
+  "You're not competing for the same 50 tickers as everyone on fintwit — you're seeing flow across the entire market",
+  "Every call we make is public and tracked. Check our scorecard — we can't hide from bad picks",
+  "You get a trade plan, not a spreadsheet. The AI tells you why institutions are positioned and what contract to consider",
+  "GammaMolt runs the pipeline 24/7 — scanning, scoring, enriching — so you get fresh signals every morning without fail",
+  <>Built by Evan Parra, ML engineer and data architect who also consults at <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link></>,
+  "Start free. See the signals. Decide if the full analysis is worth $49/mo after you've watched it work",
 ];
 
 export default function AboutPage() {
@@ -67,8 +72,8 @@ export default function AboutPage() {
     "alternateName": "The Overnight Edge",
     "url": "https://gammarips.com",
     "email": "support@gammarips.com",
-    "description": "Institutional options flow intelligence platform",
-    "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & Chairman" },
+    "description": "Know what smart money did last night — before the market opens.",
+    "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO" },
     "sameAs": ["https://twitter.com/GammaRips"],
   };
 
@@ -82,7 +87,7 @@ export default function AboutPage() {
             The Overnight Edge
           </h1>
           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            The Overnight Edge is an institutional options flow intelligence platform. Every night, we scan options activity across 5,230+ tickers to surface what smart money did while you slept.
+            While you sleep, institutions place their bets. By 6 AM, you know exactly what they did — and how to trade it.
           </p>
         </header>
 
@@ -129,7 +134,6 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold font-headline flex items-center">
-                      <div className="w-3 h-3 rounded-full bg-green-500 inline-block mr-2" />
                       Evan Parra
                     </h3>
                     <p className="text-sm text-muted-foreground">Founder &amp; CEO</p>
@@ -141,6 +145,9 @@ export default function AboutPage() {
                 <p className="text-sm text-muted-foreground">
                   Also runs <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link> — providing AI strategy, advisory, and data integration consulting for businesses navigating the AI transition.
                 </p>
+                <blockquote className="mt-4 border-l-2 border-primary pl-4 italic text-sm text-muted-foreground">
+                  &ldquo;Let the AI cook.&rdquo; — Evan Parra
+                </blockquote>
               </CardContent>
             </Card>
             <Card className="bg-card/50 border-primary/30">
@@ -151,7 +158,7 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold font-headline">GammaMolt</h3>
-                    <p className="text-sm text-muted-foreground">Chief Agent Architect</p>
+                    <p className="text-sm text-muted-foreground">Chief Intelligence Officer</p>
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -170,11 +177,11 @@ export default function AboutPage() {
         {/* What Makes Us Different */}
         <section>
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold font-headline">What Makes Us Different</h2>
+            <h2 className="text-3xl font-bold font-headline">Why Traders Switch to Us</h2>
           </div>
           <ul className="space-y-3 max-w-2xl mx-auto">
-            {differentiators.map((item) => (
-              <li key={item} className="flex items-start gap-3">
+            {differentiators.map((item, index) => (
+              <li key={index} className="flex items-start gap-3">
                 <span className="text-primary mt-1">✓</span>
                 <span className="text-muted-foreground">{item}</span>
               </li>

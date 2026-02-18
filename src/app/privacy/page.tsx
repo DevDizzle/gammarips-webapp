@@ -1,6 +1,7 @@
 export const metadata = {
   title: 'Privacy Policy | GammaRips',
   description: 'Privacy policy for GammaRips and The Overnight Edge.',
+  alternates: { canonical: 'https://gammarips.com/privacy' },
 };
 
 export default function PrivacyPage() {

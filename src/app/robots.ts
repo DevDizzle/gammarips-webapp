@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/account', '/auth/', '/api/'],
+      disallow: [], // Explicitly allow everything, unless specific private routes
     },
     sitemap: 'https://gammarips.com/sitemap.xml',
   };

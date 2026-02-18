@@ -65,10 +65,10 @@ export function EmailCapture({ variant = 'default' }: { variant?: 'default' | 'm
                             <Mail className="h-6 w-6 text-blue-400" />
                         </div>
                         <h3 className="mb-2 text-xl font-bold text-white">
-                            Get Free Daily Signals
+                          Tomorrow Morning, Know What Smart Money Did Tonight
                         </h3>
                         <p className="mb-6 max-w-md text-sm text-zinc-400">
-                            Join smart money. Get our top institutional options flow signals delivered to your inbox every morning before the market opens.
+                          Free daily email. Top signals scored and summarized before the bell. Takes 2 minutes to read.
                         </p>
                     </>
                 )}

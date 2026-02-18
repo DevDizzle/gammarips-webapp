@@ -21,16 +21,18 @@ export function PublicHeader() {
 
   const links = [
     { href: '/signals', label: 'Signals' },
+    { href: '/arena', label: 'Arena' },
     { href: '/reports', label: 'Reports' },
     { href: '/how-it-works', label: 'How It Works' },
     { href: '/pricing', label: 'Pricing' },
     { href: '/about', label: 'About' },
+    { href: '/developers', label: 'Developers' },
   ];
 
   return (
     <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold font-headline shrink-0 flex items-center gap-2">
+          <Link href="/" className="text-2xl font-bold font-headline shrink-0">
             <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
           </Link>
           
@@ -56,7 +58,7 @@ export function PublicHeader() {
             {/* Mobile Nav */}
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden ml-1">
+                <Button variant="ghost" size="icon" className="md:hidden ml-1 z-50 text-foreground">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>

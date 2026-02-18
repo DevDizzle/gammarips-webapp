@@ -1,6 +1,7 @@
 export const metadata = {
   title: 'Terms of Service | GammaRips',
   description: 'Terms of service for GammaRips and The Overnight Edge.',
+  alternates: { canonical: 'https://gammarips.com/terms' },
 };
 
 export default function TermsPage() {

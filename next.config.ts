@@ -9,7 +9,9 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      { source: '/dashboard', destination: '/', permanent: true },
+      { source: '/signup', destination: '/', permanent: true },
+      { source: '/chat', destination: '/', permanent: true },
+      { source: '/dashboard', destination: '/reports', permanent: true },
       { source: '/performance', destination: '/', permanent: true },
       { source: '/options/call-setups', destination: '/', permanent: true },
       { source: '/options/put-hedges', destination: '/', permanent: true },

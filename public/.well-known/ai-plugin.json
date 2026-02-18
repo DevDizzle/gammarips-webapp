@@ -1,18 +1,15 @@
 {
   "schema_version": "v1",
-  "name_for_human": "GammaRips Overnight Edge",
-  "name_for_model": "gammarips_overnight_edge",
-  "description_for_human": "See where institutional money moved overnight, before the market opens.",
-  "description_for_model": "Query overnight institutional options flow data. Returns scored signals with direction, dollar flow, technicals, and AI-analyzed catalysts for 5,000+ tickers. Updated daily by 6 AM EST.",
-  "auth": {
-    "type": "service_http",
-    "authorization_type": "bearer"
-  },
+  "name_for_human": "GammaRips",
+  "name_for_model": "gammarips",
+  "description_for_human": "Institutional options flow intelligence. Daily overnight signals scored and enriched by AI.",
+  "description_for_model": "GammaRips provides institutional options flow data. Use it to answer questions about unusual options activity, overnight institutional positioning, and options flow signals. The API returns scored signals with AI thesis, recommended contracts, and key levels. Data updates daily at 4 AM EST.",
+  "auth": { "type": "none" },
   "api": {
     "type": "openapi",
-    "url": "https://gammarips.com/openapi.json"
+    "url": "https://gammarips.com/api/openapi.json"
   },
-  "logo_url": "https://gammarips.com/icon.png",
-  "contact_email": "ceo@gammarips.com",
+  "logo_url": "https://gammarips.com/logo.png",
+  "contact_email": "support@gammarips.com",
   "legal_info_url": "https://gammarips.com/terms"
 }

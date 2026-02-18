@@ -6,9 +6,14 @@ import Link from 'next/link';
 import { BarChart3, Target, TrendingUp, Clock } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Signal Scorecard | Verified Performance | GammaRips',
+  title: 'GammaRips Scorecard — Verified Signal Performance & Win Rate',
   description: 'Every Overnight Edge signal is timestamped and tracked. See our verified win rate and performance history. No cherry-picking — just data.',
-  alternates: { canonical: '/scorecard' },
+  alternates: { canonical: 'https://gammarips.com/scorecard' },
+  openGraph: {
+    title: 'GammaRips Scorecard — Verified Signal Performance',
+    description: 'Every Overnight Edge signal is timestamped and tracked. See our verified win rate.',
+    url: 'https://gammarips.com/scorecard',
+  }
 };
 
 export default function ScorecardPage() {
@@ -65,7 +70,7 @@ export default function ScorecardPage() {
         <CardContent className="p-8 text-center space-y-4">
           <h2 className="text-2xl font-bold font-headline">Win Tracking Begins February 2026</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            The Overnight Edge signal pipeline went live in February 2026. As signals mature and resolve, performance data will populate this page automatically. Every signal is timestamped at publication — no retroactive editing.
+            We started tracking signals in February 2026. As trades resolve, the numbers show up here automatically. Every signal is timestamped when published — we can't edit history.
           </p>
           <p className="text-muted-foreground">
             Check back for verified results. In the meantime, browse our daily signals and reports.

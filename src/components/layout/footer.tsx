@@ -4,14 +4,14 @@ import { XIcon } from '@/components/icons/XIcon';
 
 const Footer = () => {
   return (
-    <footer className="bg-background border-t mt-auto">
+    <footer className="bg-background border-t mt-auto relative z-10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-xl font-bold font-headline">
                 <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
             </h3>
-            <p className="text-sm text-muted-foreground mt-2">Institutional Options Flow Intelligence</p>
+            <p className="text-sm text-muted-foreground mt-2">Know what smart money did last night</p>
           </div>
           <div>
             <h4 className="font-semibold text-foreground">Product</h4>

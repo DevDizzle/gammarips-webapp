@@ -1,0 +1,6 @@
+{
+  "entry": ["src/app/**/page.tsx", "src/app/**/layout.tsx", "src/app/**/route.ts"],
+  "project": ["src/**/*.{ts,tsx}"],
+  "ignore": ["src/**/*.test.*", "src/**/*.spec.*"],
+  "ignoreDependencies": ["@types/*"]
+}

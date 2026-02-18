@@ -1,0 +1,23 @@
+# GammaRips — The Overnight Edge
+# https://gammarips.com
+
+> GammaRips scans overnight institutional options flow across 5,230+ tickers every trading day.
+> Signals are scored 1-10 on institutional conviction and enriched with AI-generated thesis,
+> recommended contracts, and key technical levels. Reports are published daily before market open.
+
+## Reports
+Daily overnight flow reports with signal analysis.
+URL: https://gammarips.com/reports
+
+## API (MCP)
+Machine-readable options flow data via MCP protocol.
+URL: https://gammarips.com/developers
+SSE Endpoint: https://gammarips-mcp-406581297632.us-central1.run.app/sse
+
+## Pricing
+Free tier: daily previews. $49/mo: full signals. $149/mo: live alerts.
+URL: https://gammarips.com/pricing
+
+## Contact
+X: @GammaRips
+Email: support@gammarips.com

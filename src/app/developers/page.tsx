@@ -1,19 +1,55 @@
-import { PublicHeader } from "@/components/layout/public-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { Check, X } from "lucide-react";
 
 export const metadata = {
-  title: "Developers | The Overnight Edge",
-  description: "Connect your AI agent, trading bot, or application to institutional overnight options flow.",
+  title: "GammaRips MCP API — Options Flow Intelligence for AI Agents",
+  description: "Connect your AI agent, trading bot, or application to institutional overnight options flow. Full MCP support.",
+  alternates: { canonical: 'https://gammarips.com/developers' },
+  openGraph: {
+    title: "GammaRips MCP API — Options Flow Intelligence for AI Agents",
+    description: "Connect your AI agent, trading bot, or application to institutional overnight options flow.",
+    url: "https://gammarips.com/developers",
+  }
+};
+
+const datasetSchema = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "GammaRips Overnight Options Flow Data",
+  "description": "Daily overnight institutional options flow signals across 5,000+ US equities. Includes conviction scores, technicals, AI-generated catalysts, and contract recommendations.",
+  "url": "https://gammarips.com/developers",
+  "license": "https://gammarips.com/terms",
+  "creator": {
+    "@type": "Organization",
+    "name": "GammaRips",
+    "url": "https://gammarips.com"
+  },
+  "temporalCoverage": "2026-02-13/..",
+  "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "application/json",
+    "contentUrl": "https://gammarips-mcp-406581297632.us-central1.run.app/sse"
+  },
+  "variableMeasured": [
+    "overnight_score",
+    "call_dollar_volume",
+    "put_dollar_volume",
+    "vol_oi_ratio",
+    "active_strikes",
+    "rsi_14",
+    "macd_histogram"
+  ]
 };
 
 export default function DevelopersPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <PublicHeader />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }}
+      />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-5xl space-y-16">
         {/* Hero Section */}
@@ -22,13 +58,19 @@ export default function DevelopersPage() {
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Connect your AI agent, trading bot, or application to institutional overnight options flow.
             </p>
-            <div className="flex justify-center gap-4 pt-4">
-                <Button asChild size="lg">
-                    <Link href="mailto:ceo@gammarips.com?subject=Request%20Free%20API%20Key">Get API Key</Link>
-                </Button>
-                <Button variant="outline" size="lg" asChild>
-                    <Link href="#docs">Read Docs</Link>
-                </Button>
+            <div className="p-8 rounded-lg border-2 border-primary bg-card max-w-2xl mx-auto mt-8" id="connect">
+              <div className="text-center space-y-4">
+                <h2 className="text-2xl font-bold font-headline">Connect Your Agent</h2>
+                <p className="text-muted-foreground">
+                  The MCP API is free. No API key, no sign-up, no trial. Just connect and query.
+                </p>
+                <code className="block p-3 bg-muted rounded text-sm break-all">
+                  https://gammarips-mcp-406581297632.us-central1.run.app/sse
+                </code>
+                <p className="text-sm text-muted-foreground">
+                  Want real-time alerts + enriched analysis? <Link href="/pricing" className="text-primary hover:underline">See paid plans →</Link>
+                </p>
+              </div>
             </div>
         </section>
 
@@ -47,15 +89,18 @@ export default function DevelopersPage() {
                     </div>
                     <div className="flex gap-4">
                         <span className="text-muted-foreground">Auth:</span>
-                        <span className="text-foreground">X-API-Key header</span>
+                        <span className="text-foreground">None required</span>
                     </div>
                 </div>
                 <div className="mt-6 pt-4 border-t border-border/50">
-                    <div className="text-muted-foreground mb-2"># Quick test</div>
-                    <div className="text-primary">
-                        curl -H "X-API-Key: YOUR_KEY" \<br/>
-                        &nbsp;&nbsp;"https://gammarips-mcp-406581297632.us-central1.run.app/api/tools/getTopMovers"
-                    </div>
+                    <div className="text-muted-foreground mb-2"># Python (using fastmcp)</div>
+                    <pre className="text-primary overflow-x-auto whitespace-pre-wrap break-all">
+{`from fastmcp import Client
+
+async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") as client:
+    signals = await client.call_tool("get_overnight_signals", {"min_score": 7})
+    print(signals)`}
+                    </pre>
                 </div>
             </div>
         </section>
@@ -65,145 +110,147 @@ export default function DevelopersPage() {
             <h2 className="text-2xl font-bold font-headline">Available Tools</h2>
             <div className="grid gap-4">
                 <ToolCard 
-                    name="getOvernightSignals"
-                    description="Get today's overnight institutional flow signals. Filter by direction (BULLISH/BEARISH), minimum score, and limit."
+                    name="get_overnight_signals"
+                    description="Raw overnight scanner signals. Returns smart money flow across 5,230+ tickers."
                     params={{
-                        direction: "ALL | BULLISH | BEARISH",
-                        minScore: "integer 0-10 (default 5)",
-                        limit: "integer (default 20)",
-                        date: "YYYY-MM-DD (default: latest)"
+                        date: "YYYY-MM-DD (optional)",
+                        direction: "bull | bear (optional)",
+                        min_score: "integer 1-10 (optional)",
+                        ticker: "string (optional)",
+                        limit: "integer (optional)"
                     }}
                 />
                 <ToolCard 
-                    name="getSignalDetail"
-                    description="Deep dive on a single ticker. Returns full flow data, technicals, news analysis, and recommended contract."
+                    name="get_enriched_signals"
+                    description="AI-enriched signals (score ≥ 6) with news analysis, technicals, and catalyst breakdown."
+                    params={{
+                        date: "YYYY-MM-DD (optional)",
+                        direction: "bull | bear (optional)",
+                        ticker: "string (optional)",
+                        limit: "integer (optional)"
+                    }}
+                />
+                <ToolCard 
+                    name="get_signal_detail"
+                    description="Deep dive on a single ticker. Full enriched data including recommended contract, AI thesis, technicals, news."
                     params={{
                         ticker: "string (required)",
-                        date: "YYYY-MM-DD (default: latest)"
-                    }}
-                    badge="Paid Only"
-                />
-                <ToolCard 
-                    name="getTopMovers"
-                    description="Quick summary of highest conviction signals. Returns top N bullish and bearish with scores and price changes."
-                    params={{
-                        count: "integer (default 5)"
+                        scan_date: "YYYY-MM-DD (optional)"
                     }}
                 />
                 <ToolCard 
-                    name="getMarketThemes"
-                    description="AI-detected sector rotation themes from tonight's overnight flow."
+                    name="get_signal_performance"
+                    description="Track how signals actually performed against market outcomes."
                     params={{
-                        date: "YYYY-MM-DD (default: latest)"
+                        date: "YYYY-MM-DD (optional)",
+                        ticker: "string (optional)",
+                        direction: "bull | bear (optional)",
+                        outcome: "win | loss (optional)",
+                        limit: "integer (optional)"
                     }}
                 />
-                 <ToolCard 
-                    name="chat"
-                    description="Natural language Q&A about overnight signals and market flow."
+                <ToolCard 
+                    name="get_win_rate_summary"
+                    description="Aggregate performance stats: win rate, average return."
                     params={{
-                        message: "string (required)"
+                        days: "integer (default 30)"
+                    }}
+                />
+                <ToolCard 
+                    name="get_daily_report"
+                    description="Full daily intelligence report in markdown."
+                    params={{
+                        date: "YYYY-MM-DD (defaults to latest)"
+                    }}
+                />
+                <ToolCard 
+                    name="get_report_list"
+                    description="List of available reports."
+                    params={{
+                        limit: "integer (default 10)"
+                    }}
+                />
+                <ToolCard 
+                    name="get_available_dates"
+                    description="Returns which scan dates have data."
+                    params={{
+                        "": "No params required"
+                    }}
+                />
+                <ToolCard 
+                    name="web_search"
+                    description="Search the web for real-time info or fact verification."
+                    params={{
+                        query: "string (required)",
+                        num_results: "integer (optional)"
                     }}
                 />
             </div>
         </section>
 
-        {/* Pricing Table */}
+        {/* Pricing */}
         <section className="space-y-6">
-            <h2 className="text-2xl font-bold font-headline">API Pricing</h2>
-            <div className="border rounded-lg overflow-hidden">
-                <div className="grid grid-cols-4 bg-muted/50 p-4 font-bold text-sm text-center">
-                    <div className="text-left">Feature</div>
-                    <div>Free</div>
-                    <div>Edge ($49/mo)</div>
-                    <div>War Room ($149/mo)</div>
-                </div>
-                <div className="divide-y">
-                    <PricingRow feature="Signals" free="Score 7+ only" edge="All signals" warroom="All signals" />
-                    <PricingRow feature="Results limit" free="10" edge="Unlimited" warroom="Unlimited" />
-                    <PricingRow feature="Contract recs" free={false} edge={true} warroom={true} />
-                    <PricingRow feature="Technicals" free={false} edge={true} warroom={true} />
-                    <PricingRow feature="News analysis" free={false} edge={true} warroom={true} />
-                    <PricingRow feature="Signal detail" free={false} edge={true} warroom={true} />
-                    <PricingRow feature="Market themes" free="Names only" edge="Full" warroom="Full" />
-                    <PricingRow feature="Chat queries" free="3/day" edge="Unlimited" warroom="Unlimited" />
-                    <PricingRow feature="Rate limit" free="100/day" edge="1,000/day" warroom="Unlimited" />
-                </div>
+          <h2 className="text-2xl font-bold font-headline">Pricing</h2>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="p-6 rounded-lg border-2 border-primary bg-card relative">
+              <div className="absolute -top-3 right-4 px-2 py-0.5 bg-primary text-primary-foreground text-xs font-bold rounded">
+                CURRENT
+              </div>
+              <div className="text-sm text-primary mb-2">MCP API</div>
+              <div className="text-3xl font-bold mb-4">Free</div>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>✓ All 9 tools unlocked</li>
+                <li>✓ get_overnight_signals</li>
+                <li>✓ get_enriched_signals</li>
+                <li>✓ get_signal_detail</li>
+                <li>✓ get_signal_performance</li>
+                <li>✓ get_daily_report</li>
+                <li>✓ web_search</li>
+                <li>✓ No auth required</li>
+              </ul>
             </div>
+            <div className="p-6 rounded-lg border bg-card">
+              <div className="text-sm text-muted-foreground mb-2">The Overnight Edge</div>
+              <div className="text-3xl font-bold mb-4">$49<span className="text-lg text-muted-foreground">/mo</span></div>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>✓ Full enriched signals daily</li>
+                <li>✓ AI news + catalyst analysis</li>
+                <li>✓ Contract recommendations</li>
+                <li>✓ Performance tracking</li>
+              </ul>
+            </div>
+            <div className="p-6 rounded-lg border bg-card">
+              <div className="text-sm text-muted-foreground mb-2">The War Room</div>
+              <div className="text-3xl font-bold mb-4">$149<span className="text-lg text-muted-foreground">/mo</span></div>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>✓ Everything in Edge</li>
+                <li>✓ WhatsApp real-time alerts</li>
+                <li>✓ Direct access to GammaMolt</li>
+                <li>✓ Intraday high-conviction calls</li>
+              </ul>
+            </div>
+          </div>
         </section>
 
-        {/* API Key Registration */}
-        <section className="py-12 bg-muted/10 rounded-xl text-center space-y-6 border">
-            <h2 className="text-2xl font-bold font-headline">Get Your API Key</h2>
-            <p className="text-muted-foreground">
-                We are currently in beta. Email us to get a free developer key instantly.
-            </p>
-            <Button size="lg" asChild>
-                <Link href="mailto:ceo@gammarips.com?subject=Request%20Free%20API%20Key">Email ceo@gammarips.com</Link>
-            </Button>
-        </section>
-
-        {/* Code Examples */}
-        <section className="space-y-6">
-            <h2 className="text-2xl font-bold font-headline">Code Examples</h2>
-            
-            <div className="space-y-8">
-                <div>
-                    <h3 className="text-lg font-bold mb-3">Python (MCP Client)</h3>
-                    <pre className="bg-muted/30 p-4 rounded-lg border text-xs overflow-x-auto text-foreground">
-{`import requests
-
-API_KEY = "your_api_key"
-BASE = "https://gammarips-mcp-406581297632.us-central1.run.app"
-
-# Get today's top movers
-resp = requests.post(f"{BASE}/api/tools/getTopMovers",
-    headers={"X-API-Key": API_KEY},
-    json={"count": 5})
-print(resp.json())
-
-# Get bullish signals score 7+
-resp = requests.post(f"{BASE}/api/tools/getOvernightSignals",
-    headers={"X-API-Key": API_KEY},
-    json={"direction": "BULLISH", "minScore": 7})
-print(resp.json())`}
-                    </pre>
-                </div>
-
-                <div>
-                    <h3 className="text-lg font-bold mb-3">JavaScript</h3>
-                    <pre className="bg-muted/30 p-4 rounded-lg border text-xs overflow-x-auto text-foreground">
-{`const API_KEY = 'your_api_key';
-const BASE = 'https://gammarips-mcp-406581297632.us-central1.run.app';
-
-const res = await fetch(BASE + '/api/tools/getTopMovers', {
-  method: 'POST',
-  headers: {
-    'X-API-Key': API_KEY,
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ count: 5 })
-});
-const data = await res.json();`}
-                    </pre>
-                </div>
-
-                <div>
-                    <h3 className="text-lg font-bold mb-3">MCP Config (for AI Agents)</h3>
-                    <pre className="bg-muted/30 p-4 rounded-lg border text-xs overflow-x-auto text-foreground">
-{`{
-  "mcpServers": {
-    "gammarips": {
-      "url": "https://gammarips-mcp-406581297632.us-central1.run.app/sse",
-      "transport": "sse",
-      "headers": {
-        "X-API-Key": "your_api_key"
-      }
-    }
-  }
-}`}
-                    </pre>
-                </div>
-            </div>
+        {/* Bottom CTA */}
+        <section className="text-center space-y-6">
+          <h2 className="text-2xl font-bold font-headline">Ready to Build?</h2>
+          <p className="text-muted-foreground">Point your agent at the endpoint and start querying. That's it.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link href="/pricing">
+              <Button size="lg">See Paid Plans →</Button>
+            </Link>
+            <a
+              href="https://x.com/GammaRips"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="outline" size="lg">
+                Follow @GammaRips on X
+              </Button>
+            </a>
+          </div>
         </section>
 
       </main>
@@ -246,22 +293,5 @@ function ToolCard({ name, description, params, badge }: { name: string, descript
                 </div>
             </CardContent>
         </Card>
-    );
-}
-
-function PricingRow({ feature, free, edge, warroom }: { feature: string, free: string | boolean, edge: string | boolean, warroom: string | boolean }) {
-    const renderCell = (val: string | boolean) => {
-        if (val === true) return <Check className="w-5 h-5 text-green-500 mx-auto" />;
-        if (val === false) return <X className="w-5 h-5 text-muted-foreground/50 mx-auto" />;
-        return <span className="text-sm">{val}</span>;
-    };
-
-    return (
-        <div className="grid grid-cols-4 p-4 items-center text-center hover:bg-muted/20 transition-colors">
-            <div className="text-left font-medium text-sm text-muted-foreground">{feature}</div>
-            <div>{renderCell(free)}</div>
-            <div>{renderCell(edge)}</div>
-            <div>{renderCell(warroom)}</div>
-        </div>
     );
 }

@@ -6,9 +6,14 @@ import Link from 'next/link';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'How The Overnight Edge Works | Institutional Options Flow Analysis',
+  title: 'How GammaRips Works — Overnight Options Scanner, AI Enrichment, Daily Signals',
   description: 'Learn how our scanner analyzes overnight institutional options flow across 5,230+ tickers. Understand our scoring system, enrichment process, and what makes a high-conviction signal.',
-  alternates: { canonical: '/how-it-works' },
+  alternates: { canonical: 'https://gammarips.com/how-it-works' },
+  openGraph: {
+    title: 'How GammaRips Works — Overnight Options Scanner',
+    description: 'Learn how our scanner analyzes overnight institutional options flow across 5,230+ tickers.',
+    url: 'https://gammarips.com/how-it-works',
+  }
 };
 
 export default function HowItWorksPage() {
@@ -20,9 +25,30 @@ export default function HowItWorksPage() {
           How The Overnight Edge Works
         </h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-          Understanding institutional options flow — from scan to signal delivery.
+          Here's exactly what lands on your screen before the market opens — and how we find it.
         </p>
       </header>
+
+      <Separator className="my-12 sm:my-16" />
+
+      {/* Your Morning */}
+      <section className="space-y-4">
+        <h2 className="text-3xl font-bold font-headline">Your Morning With The Overnight Edge</h2>
+        <div className="p-6 rounded-lg border bg-primary/5 border-primary/20 text-muted-foreground space-y-4">
+          <p>
+            It's 6:15 AM. You open gammarips.com with your coffee.
+          </p>
+          <p>
+            Three tickers are highlighted — all scored 8+ overnight. One has $14M in new call positioning across 58 strike prices. The AI thesis says it's an agentic AI infrastructure play with earnings in two weeks. Specific contracts are listed. Key support and resistance levels are marked.
+          </p>
+          <p>
+            By 9:25 AM, you know exactly which setups you're watching at the open. Most traders are still scrolling X for tips. You already have the institutional playbook.
+          </p>
+          <p className="text-primary font-semibold">
+            That's The Overnight Edge.
+          </p>
+        </div>
+      </section>
 
       <Separator className="my-12 sm:my-16" />
 
@@ -166,13 +192,13 @@ export default function HowItWorksPage() {
 
       {/* CTA */}
       <div className="text-center">
-        <h2 className="text-2xl font-bold font-headline mb-4">Ready to See Tonight&apos;s Flow?</h2>
+        <h2 className="text-2xl font-bold font-headline mb-4">Ready to See Tomorrow Morning's Flow?</h2>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild size="lg">
             <Link href="/pricing">View Pricing <ArrowRight className="ml-2 h-5 w-5" /></Link>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link href="/scorecard">View Signal Scorecard</Link>
+            <Link href="/scorecard">Check Our Track Record</Link>
           </Button>
         </div>
       </div>

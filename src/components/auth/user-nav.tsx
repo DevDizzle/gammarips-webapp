@@ -73,6 +73,11 @@ export function UserNav() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
+            <Link href="/pricing">
+               <DropdownMenuItem>
+                    <span className="text-primary font-semibold">Subscribe</span>
+                </DropdownMenuItem>
+            </Link>
             <Link href="/">
                <DropdownMenuItem>
                     <LayoutDashboard className="mr-2 h-4 w-4" />

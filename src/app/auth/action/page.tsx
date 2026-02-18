@@ -6,6 +6,7 @@ import { getAuth, applyActionCode, checkActionCode } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
+import { useAuthModal } from '@/components/auth/auth-modal-provider';
 
 const auth = getAuth(app);
 
@@ -13,14 +14,28 @@ function AuthActionHandler() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
-  const [message, setMessage] = useState('Verifying your email...');
+  const [message, setMessage] = useState('Processing...');
+  const { openAuthModal } = useAuthModal();
 
   const mode = searchParams.get('mode');
   const actionCode = searchParams.get('oobCode');
 
   useEffect(() => {
     const handleAction = async () => {
-      if (!mode || !actionCode) {
+      if (!mode) {
+        setStatus('error');
+        setMessage('Invalid request.');
+        return;
+      }
+
+      if (mode === 'signUp') {
+          setStatus('success');
+          setMessage('Please create an account to continue.');
+          openAuthModal('signUp');
+          return;
+      }
+
+      if (!actionCode) {
         setStatus('error');
         setMessage('Invalid verification link. Please try again.');
         return;
@@ -58,7 +73,7 @@ function AuthActionHandler() {
     };
 
     handleAction();
-  }, [mode, actionCode, router]);
+  }, [mode, actionCode, router, openAuthModal]);
 
   const getIcon = () => {
     switch (status) {
@@ -76,7 +91,9 @@ function AuthActionHandler() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-center">Email Verification</CardTitle>
+        <CardTitle className="text-center">
+            {mode === 'signUp' ? 'Sign Up' : 'Email Verification'}
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center text-center space-y-4">
         {getIcon()}

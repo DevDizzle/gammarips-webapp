@@ -1,6 +1,5 @@
 'use client';
 
-import { PublicHeader } from "@/components/layout/public-header";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useState } from "react";
@@ -22,7 +21,6 @@ export default function HistoryPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <PublicHeader />
       <main className="flex-1 container mx-auto px-4 py-8 max-w-5xl">
         <div className="mb-8">
             <h1 className="text-3xl font-bold font-headline mb-2">Historical Performance</h1>

@@ -5,24 +5,104 @@ import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { setUserSubscriptionStatusAdmin, getUserByStripeCustomerIdAdmin } from '@/lib/firebase-admin';
 import { sendWelcomeEmail } from '@/lib/mailgun';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore'; // Import direct firestore access
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const gaApiSecret = process.env.GA_API_SECRET!;
+
+const PRICE_TO_PLAN: Record<string, 'edge' | 'warroom'> = {
+  'price_1Rrp8HCibMPRXbgJh7zlSME1': 'edge',
+  'price_1Rrp8kCibMPRXbgJjdKBhyqo': 'warroom',
+};
+
+async function updateSubscriptionStatus(
+    customerId: string, 
+    status: string, 
+    plan?: 'edge' | 'warroom' | 'free',
+    subscriptionId?: string
+) {
+    const user = await getUserByStripeCustomerIdAdmin(customerId);
+    if (!user) {
+        console.warn(`Webhook Error: No user found with Stripe Customer ID: ${customerId}`);
+        // Optionally create pending record here if needed
+        return;
+    }
+
+    const db = getFirestore();
+    const userRef = db.collection('users').doc(user.uid);
+    
+    const updates: any = {
+        subscriptionStatus: status,
+    };
+
+    if (plan) {
+        updates.plan = plan;
+    }
+    
+    if (subscriptionId) {
+        updates.stripeSubscriptionId = subscriptionId;
+    }
+
+    if (status === 'active') {
+        updates.isSubscribed = true;
+        // Only set subscribedAt if it's not already set? Or update it on renewal/upgrade?
+        // Prompt says "subscribedAt: serverTimestamp()" on checkout.session.completed
+    } else if (status === 'canceled' || status === 'unpaid') {
+        updates.isSubscribed = false;
+        if (status === 'canceled') {
+            updates.canceledAt = FieldValue.serverTimestamp();
+        }
+    }
+
+    await userRef.set(updates, { merge: true });
+    
+    // Also call the old helper for compatibility if needed, but we are doing direct updates now for more control
+    // setUserSubscriptionStatusAdmin sets isSubscribed and proUntil. 
+    // We might want to keep using it or replicate its logic.
+    // Let's rely on this specific update function for the new logic and also ensure proUntil is handled if active.
+    
+    if (status === 'active') {
+         // We need subscription object to get period end... passed in?
+         // For now, let's assume the calling function handles the period_end update via setUserSubscriptionStatusAdmin if needed,
+         // OR we just set isSubscribed here.
+         // Actually, let's look at how handleSubscriptionChange did it.
+         // It calls setUserSubscriptionStatusAdmin.
+    }
+}
 
 
 async function handleSubscriptionChange(
     subscription: Stripe.Subscription, 
     isSubscribed: boolean, 
     isNew: boolean = false,
-    plan?: 'free' | 'edge' | 'warroom'
+    planOverride?: 'edge' | 'warroom'
 ) {
     const customerId = subscription.customer as string;
     const user = await getUserByStripeCustomerIdAdmin(customerId);
 
     if (user) {
-        await setUserSubscriptionStatusAdmin(user.uid, isSubscribed, subscription.current_period_end, plan);
+        // Determine plan from price ID
+        const priceId = subscription.items.data[0].price.id;
+        const mappedPlan = PRICE_TO_PLAN[priceId];
+        const finalPlan = planOverride || mappedPlan || 'edge'; // Default to edge if unknown
+
+        await setUserSubscriptionStatusAdmin(
+            user.uid, 
+            isSubscribed, 
+            subscription.current_period_end, 
+            finalPlan
+        );
         
+        // Update detailed status fields
+        const db = getFirestore();
+        await db.collection('users').doc(user.uid).set({
+            subscriptionStatus: subscription.status,
+            stripeSubscriptionId: subscription.id,
+            plan: finalPlan, // Ensure plan is set
+            ...(isNew ? { subscribedAt: FieldValue.serverTimestamp() } : {})
+        }, { merge: true });
+
         // Send the powerful new welcome email ONLY on a new active subscription.
         if (isSubscribed && isNew && user.email) {
             console.log(`Webhook: Sending welcome email to new subscriber ${user.email}`);
@@ -117,23 +197,49 @@ export async function POST(req: NextRequest) {
         break;
     case 'customer.subscription.updated':
         const subscriptionUpdated = event.data.object as Stripe.Subscription;
-        if (subscriptionUpdated.status === 'active') {
-             await handleSubscriptionChange(subscriptionUpdated, true, false);
-        } else {
-             await handleSubscriptionChange(subscriptionUpdated, false, false);
-        }
+        // Extract price ID to update plan if changed
+        // subscriptionUpdated.items.data[0].price.id
+        await handleSubscriptionChange(
+            subscriptionUpdated, 
+            subscriptionUpdated.status === 'active', 
+            false
+        );
         break;
     case 'customer.subscription.deleted':
         const subscriptionDeleted = event.data.object as Stripe.Subscription;
         await handleSubscriptionChange(subscriptionDeleted, false, false);
+        
+        // Explicitly handle cancellation timestamp
+        const customerId = subscriptionDeleted.customer as string;
+        const user = await getUserByStripeCustomerIdAdmin(customerId);
+        if (user) {
+             const db = getFirestore();
+             await db.collection('users').doc(user.uid).set({
+                 subscriptionStatus: 'canceled',
+                 canceledAt: FieldValue.serverTimestamp()
+             }, { merge: true });
+        }
         break;
     case 'checkout.session.completed':
         const session = event.data.object as Stripe.Checkout.Session;
         if (session.mode === 'subscription' && session.subscription) {
             const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
-            const plan = session.metadata?.plan as 'edge' | 'warroom' | undefined;
+            
+            // Try to get plan from metadata, fallback to price mapping
+            let plan = session.metadata?.plan as 'edge' | 'warroom' | undefined;
+            if (!plan) {
+                 const priceId = subscription.items.data[0].price.id;
+                 plan = PRICE_TO_PLAN[priceId];
+            }
+
             await handleSubscriptionChange(subscription, true, true, plan); 
             await sendPurchaseEventToGA(session); 
+            
+            // If user not found (e.g. diff email), handle pending logic?
+            // The existing logic inside handleSubscriptionChange checks for user by stripe ID.
+            // If checkout just happened, we might need to link by email if stripe ID wasn't already on user.
+            // createStripeCheckoutSession in lib/stripe.ts ALREADY links user to stripe ID before creating session.
+            // So getUserByStripeCustomerIdAdmin should work.
         }
         break;
     default:

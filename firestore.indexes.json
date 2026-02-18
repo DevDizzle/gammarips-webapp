@@ -1,0 +1,23 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "overnight_signals",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "direction",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "scan_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "overnight_score",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

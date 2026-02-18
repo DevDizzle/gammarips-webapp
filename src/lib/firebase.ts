@@ -79,6 +79,7 @@ export const UserSchema = z.object({
   stripeCustomerId: z.string().optional().nullable(),
   insiderActivationToken: z.string().optional().nullable(),
   plan: z.enum(['free', 'trial', 'pro', 'edge', 'warroom']).optional(),
+  subscriptionStatus: z.string().optional(),
   proUntil: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data)).optional(),
   trialEnd: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data)).optional(),
   apiKeyHash: z.string().optional(),

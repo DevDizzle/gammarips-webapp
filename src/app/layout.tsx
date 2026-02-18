@@ -3,11 +3,13 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/hooks/use-auth';
 import Footer from '@/components/layout/footer';
+import { PublicHeader } from "@/components/layout/public-header";
 import Script from 'next/script';
 import CookieConsentBanner from '@/components/cookie-consent-banner';
 import RootLayoutClient from './root-layout-client';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import { AuthModalProvider } from '@/components/auth/auth-modal-provider';
+import { Suspense } from 'react';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk', display: 'swap' });
@@ -17,25 +19,25 @@ const siteUrl = 'https://gammarips.com';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl), 
   title: {
-    default: 'GammaRips | The Overnight Edge — Institutional Options Flow Intelligence',
+    default: 'GammaRips | The Overnight Edge — Know What Smart Money Did Last Night',
     template: `%s | GammaRips`,
   },
-  description: 'The Overnight Edge scans institutional options flow across 5,230+ tickers every night. See what smart money did while you slept — before the market opens.',
+  description: 'Every morning before the market opens, see what institutional money did overnight. 5,230+ tickers scanned. Signals scored 1-10. Specific contracts recommended.',
   keywords: ['overnight options flow', 'institutional options activity', 'unusual options activity', 'options flow scanner', 'options signals', 'smart money', 'options trading', 'AI trading analysis'],
   openGraph: {
     title: 'GammaRips | The Overnight Edge',
-    description: 'Institutional options flow intelligence — 5,230+ tickers scanned nightly.',
+    description: 'Every morning before the market opens, see what institutional money did overnight.',
     url: siteUrl,
     siteName: 'GammaRips',
-    images: [{ url: `${siteUrl}/profitscout-og.png`, width: 1200, height: 630, alt: 'GammaRips — The Overnight Edge' }],
+    images: [{ url: `${siteUrl}/og-image.png`, width: 1200, height: 630, alt: 'GammaRips — The Overnight Edge' }],
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'GammaRips | The Overnight Edge',
-    description: 'Institutional options flow intelligence — 5,230+ tickers scanned nightly.',
-    images: [`${siteUrl}/profitscout-og.png`],
+    description: 'Every morning before the market opens, see what institutional money did overnight.',
+    images: [`${siteUrl}/og-image.png`],
   },
 };
 
@@ -50,8 +52,8 @@ const organizationSchema = {
   "url": "https://gammarips.com",
   "logo": "https://gammarips.com/icon.png",
   "email": "support@gammarips.com",
-  "description": "Institutional options flow intelligence platform. Scans 5,230+ tickers nightly.",
-  "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & Chairman" },
+  "description": "Know what smart money did last night — before the market opens.",
+  "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO" },
   "sameAs": ["https://twitter.com/GammaRips"],
 };
 
@@ -89,16 +91,19 @@ export default async function RootLayout({
         }} />
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
-        <AuthProvider>
-          <AuthModalProvider>
-            <RootLayoutClient>
-              <main className='flex-grow'>{children}</main>
-            </RootLayoutClient>
-            <Footer />
-            <Toaster />
-            <CookieConsentBanner />
-          </AuthModalProvider>
-        </AuthProvider>
+        <Suspense fallback={null}>
+          <AuthProvider>
+            <AuthModalProvider>
+              <PublicHeader />
+              <RootLayoutClient>
+                <main className='flex-grow'>{children}</main>
+              </RootLayoutClient>
+              <Footer />
+              <Toaster />
+              <CookieConsentBanner />
+            </AuthModalProvider>
+          </AuthProvider>
+        </Suspense>
       </body>
     </html>
   );

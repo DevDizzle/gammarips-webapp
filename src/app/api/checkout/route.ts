@@ -28,12 +28,16 @@ export async function POST(req: NextRequest) {
         priceId = plan === 'warroom' ? 'price_warroom_placeholder' : 'price_edge_placeholder';
     }
 
+    const successUrl = plan === 'warroom' 
+      ? `${req.nextUrl.origin}/war-room?session_id={CHECKOUT_SESSION_ID}`
+      : `${req.nextUrl.origin}/dashboard?session_id={CHECKOUT_SESSION_ID}`;
+
     const sessionId = await createStripeCheckoutSession(
       uid,
       email,
       priceId,
-      `${req.nextUrl.origin}/signals?success=true`,
-      `${req.nextUrl.origin}/signals?canceled=true`,
+      successUrl,
+      `${req.nextUrl.origin}/pricing`,
       { plan }
     );
 

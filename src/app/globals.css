@@ -90,3 +90,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Markdown Table Styles */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.prose th, .prose td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.prose th {
+  background: hsl(var(--muted));
+  font-weight: 600;
+}

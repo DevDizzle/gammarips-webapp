@@ -1,67 +1,77 @@
-# gammarips-webapp
+# GammaRips
 
-A Next.js 15 financial analytics platform ('GammaRips') powered by MCP-based AI agents for real-time, institutional-grade stock picking. Features a frictionless 'Growth Mode' onboarding strategy and a pure Model Context Protocol architecture for dynamic market analysis.
+**Overnight options flow intelligence for serious traders.**
 
-## Getting Started
+[gammarips.com](https://gammarips.com)
 
-To get started, take a look at `src/app/page.tsx`.
+---
 
-## Local Development Setup
+## What Is GammaRips?
 
-To run the application locally, you need to set up your environment variables.
+GammaRips surfaces institutional options activity that happens overnight — before retail traders wake up. Every trading day, our pipeline scans thousands of tickers for unusual options flow, enriches the top signals with AI-generated trade theses, technical levels, and news context, then runs them through a 5-model adversarial debate system (Agent Arena) to produce a single high-conviction consensus pick.
 
-1.  **Create a `.env` file** in the root of your project if it doesn't exist.
-2.  **Add the credentials listed below** to the `.env` file.
+The result: actionable intelligence delivered before the opening bell.
 
-Your final `.env` file will look something like this:
+## Products
 
-```env
-# Firebase Client SDK Configuration (for the browser)
-# Found in Firebase Console > Project Settings > Your Apps > Web App > SDK Snippet > Config
-NEXT_PUBLIC_FIREBASE_API_KEY="YOUR_API_KEY"
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="YOUR_AUTH_DOMAIN"
-NEXT_PUBLIC_FIREBASE_PROJECT_ID="YOUR_PROJECT_ID"
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="YOUR_STORAGE_BUCKET"
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="YOUR_MESSAGING_SENDER_ID"
-NEXT_PUBLIC_FIREBASE_APP_ID="YOUR_APP_ID"
+| Tier | What You Get | Price |
+|------|-------------|-------|
+| **The Overnight Edge** | Daily scanner output, enriched signals with AI theses, technical levels, key support/resistance, 52-week context | $49/mo |
+| **The War Room** | Everything in Edge + Agent Arena consensus picks, full debate transcripts, real-time WhatsApp alerts | $149/mo |
+| **MCP API** | Free programmatic access to overnight signals for AI agents and developers | Free |
 
-# Firebase Admin SDK Configuration (for the server)
-# Found in Firebase Console > Project Settings > Service Accounts > Generate new private key
-FIREBASE_PROJECT_ID="YOUR_PROJECT_ID"
-FIREBASE_CLIENT_EMAIL="YOUR_CLIENT_EMAIL"
-FIREBASE_PRIVATE_KEY="YOUR_PRIVATE_KEY"
+## The Pipeline
 
-# Generative AI (Gemini)
-# Found in Google AI Studio ([https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey))
-GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
-
-# Stripe (Payments & Subscriptions)
-# Found in Stripe Dashboard > Developers > API Keys
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
-STRIPE_SECRET_KEY="sk_test_..."
-STRIPE_WEBHOOK_SECRET="whsec_..."
-NEXT_PUBLIC_STRIPE_PRICE_ID="price_..."
-NEXT_PUBLIC_STRIPE_BILLING_PORTAL_CONFIG_ID="bpc_..."
-
-# Mailgun (Email Sending)
-# Found in Mailgun Dashboard > Sending > Domain Settings > Sending API keys
-MAILGUN_SENDING_KEY="YOUR_MAILGUN_SENDING_KEY"
-
-# Financial Data APIs
-# Create accounts and get keys from their respective websites
-FMP_API_KEY="YOUR_FMP_API_KEY"
-POLYGON_API_KEY="YOUR_POLYGON_API_KEY"
-
-# Google Analytics (for purchase tracking)
-# Found in Google Analytics Admin > Data Streams > Your Web Stream
-NEXT_PUBLIC_GA_MEASUREMENT_ID="YOUR_GA_MEASUREMENT_ID"
-# Create this in GA Admin > Data Streams > Measurement Protocol API secrets
-GA_API_SECRET="YOUR_GA_API_SECRET"
-
-# App Hosting Cron Secret
-# A secret string of your choice to secure cron job endpoints. Must match apphosting.yaml.
-CRON_SECRET="YOUR_CRON_SECRET"
-
-# Model Context Protocol Server (if used)
-MCP_SERVER_URL="YOUR_MCP_SERVER_URL"
 ```
+4:00 AM UTC    Overnight Scanner → scans options flow across all tickers
+4:30 AM UTC    Enrichment → AI thesis, technicals, news, risk/reward for top signals
+5:00 AM UTC    Agent Arena → 5 models debate, produce consensus pick
+6:00 AM EST    Daily report published to gammarips.com
+6:15 AM EST    Signal drop posted to X (@GammaRips)
+7:30 AM EST    Arena consensus pick posted
+```
+
+All pipeline services run on **Google Cloud Run**. Data lives in **BigQuery** (analytics) and **Firestore** (serving).
+
+## Agent Arena
+
+Five frontier models with assigned analytical roles debate each day's top signals through 4 rounds of structured adversarial challenge:
+
+| Agent | Model | Role |
+|-------|-------|------|
+| Grok | grok-4-1-fast-reasoning | Momentum |
+| Gemini | gemini-3-flash-preview | Contrarian |
+| Claude | claude-sonnet-4 | Risk Manager |
+| DeepSeek | deepseek-chat (V3) | Catalyst Hunter |
+| GPT-5.2 | gpt-5.2-2025-12-11 | Technical Analyst |
+
+The Arena produces exactly one consensus trade with specific contract details (strike, expiration, delta target, entry/exit thesis). When agents can't agree, the highest-conviction individual pick surfaces instead.
+
+## MCP API
+
+Free, no auth, no API key. Built for AI agents to discover and consume overnight signals programmatically.
+
+**Endpoint:** `https://gammarips-mcp-406581297632.us-central1.run.app/sse`
+
+9 tools available — get signals, reports, enriched data, arena consensus, and more. See [gammarips.com/developers](https://gammarips.com/developers) for documentation.
+
+## Stack
+
+- **Frontend:** Next.js 15, React, Tailwind CSS, Firebase Hosting
+- **Auth:** Firebase Authentication
+- **Payments:** Stripe (subscriptions + billing portal)
+- **Database:** Firestore (serving), BigQuery (analytics + pipeline)
+- **Backend:** Google Cloud Run (scanner, enrichment, win tracker, arena, MCP server)
+- **Scheduling:** Google Cloud Scheduler
+- **AI:** Google Gemini (enrichment + grounded search), Grok, Claude, DeepSeek, GPT-5.2 (arena)
+
+## Links
+
+- **Website:** [gammarips.com](https://gammarips.com)
+- **X:** [@GammaRips](https://twitter.com/GammaRips)
+- **MCP API Docs:** [gammarips.com/developers](https://gammarips.com/developers)
+- **Founder:** [Evan Parra](https://linkedin.com/in/evanparra)
+
+---
+
+© 2026 GammaRips. All rights reserved.

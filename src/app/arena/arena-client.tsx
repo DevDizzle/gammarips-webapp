@@ -14,21 +14,19 @@ interface ArenaClientPageProps {
   debate: ArenaDebate | null;
 }
 
-const AGENT_INFO: Record<string, { name: string; emoji: string }> = {
-  grok: { name: "Grok", emoji: "🔴" },
-  gemini: { name: "Gemini", emoji: "🟡" },
-  claude: { name: "Claude", emoji: "🟣" },
-  deepseek: { name: "DeepSeek", emoji: "🟢" },
-  gpt: { name: "GPT", emoji: "🔵" },
-  llama: { name: "Llama", emoji: "🟤" },
-  mistral: { name: "Mistral", emoji: "⚪" },
+const AGENT_INFO: Record<string, { name: string; emoji: string; role: string }> = {
+  grok: { name: "Grok", emoji: "🔴", role: "Momentum Trader" },
+  gemini: { name: "Gemini", emoji: "🟡", role: "Contrarian" },
+  claude: { name: "Claude", emoji: "🟣", role: "Risk Manager" },
+  deepseek: { name: "DeepSeek", emoji: "🔵", role: "Catalyst Hunter" },
+  gpt: { name: "GPT-5.2", emoji: "🟢", role: "Technical Analyst" },
 };
 
 function getAgent(id: string) {
   const normalizedId = id.toLowerCase().replace(/[^a-z0-9]/g, '');
   // Try exact match first, then partial match
   const key = Object.keys(AGENT_INFO).find(k => normalizedId.includes(k));
-  return AGENT_INFO[key || ''] || { name: id, emoji: "🤖" };
+  return AGENT_INFO[key || ''] || { name: id, emoji: "🤖", role: "Unknown Agent" };
 }
 
 export function ArenaClientPage({ debate }: ArenaClientPageProps) {
@@ -44,8 +42,8 @@ export function ArenaClientPage({ debate }: ArenaClientPageProps) {
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 The first debate is coming soon.
                 <br /><br />
-                3 AI agents will analyze overnight institutional flow
-                and argue over the best trade — every trading day.
+                5 AI agents with different analytical roles will debate overnight institutional flow 
+                across 4 adversarial rounds — every trading day before the bell.
             </p>
             <div className="p-8 bg-card/50 border rounded-lg max-w-md mx-auto space-y-4 w-full">
                 <p className="font-medium">Want to be the first to see it?</p>
@@ -91,9 +89,9 @@ export function ArenaClientPage({ debate }: ArenaClientPageProps) {
       <section className="text-center space-y-6">
         <h1 className="text-4xl md:text-5xl font-bold font-headline">🏟️ Agent Arena</h1>
         <p className="text-xl md:text-2xl font-medium text-muted-foreground max-w-3xl mx-auto">
-          3 AI agents analyze the same institutional flow data.
-          Then they argue about it. The ones that survive 
-          cross-examination become today's consensus trade.
+          5 AI agents with distinct analytical roles analyze overnight institutional flow. 
+          Then they attack each other's reasoning across 4 structured rounds. 
+          Only the trades that survive adversarial debate become today's consensus pick.
         </p>
         
         <div className="flex flex-wrap justify-center gap-3 text-sm font-medium text-muted-foreground">
@@ -101,7 +99,7 @@ export function ArenaClientPage({ debate }: ArenaClientPageProps) {
             const agent = getAgent(id);
             return (
                 <span key={id} className="inline-flex items-center gap-1">
-                {agent.emoji} {agent.name}
+                {agent.emoji} {agent.name} — {agent.role}
                 </span>
             );
           })}
@@ -189,8 +187,7 @@ export function ArenaClientPage({ debate }: ArenaClientPageProps) {
                             </div>
                             <h3 className="text-xl font-bold">War Room Members Only</h3>
                             <p className="text-muted-foreground text-sm">
-                                Every morning, 3 AI agents debate the best trade from overnight institutional flow. 
-                                The consensus pick — plus the full argument — is delivered to your WhatsApp before the market opens.
+                                Every morning, 5 AI agents with distinct analytical roles debate overnight institutional flow across 4 adversarial rounds.
                             </p>
                             <Button asChild className="w-full">
                                 <Link href="/pricing">Join The War Room — $149/mo</Link>
@@ -391,10 +388,10 @@ export function ArenaClientPage({ debate }: ArenaClientPageProps) {
         <h2 className="text-2xl font-bold font-headline mb-6">How The Arena Works</h2>
         <div className="grid gap-6 md:grid-cols-4">
             {[
-                { step: "1", title: "PICK", desc: "Each agent independently picks their top trades from overnight institutional flow data." },
-                { step: "2", title: "ATTACK", desc: "Agents see each other's picks and challenge weak reasoning. 'What's the hole in your thesis?'" },
-                { step: "3", title: "DEFEND", desc: "Agents defend their picks, revise conviction, or drop positions that got exposed." },
-                { step: "4", title: "VOTE", desc: "Final picks. Consensus is tallied. Only the strongest ideas survive." }
+                { step: "1", title: "PICK", desc: "Each agent independently selects their single highest-conviction trade from overnight institutional flow. Momentum looks for trend continuation. Contrarian looks for reversals. Risk Manager classifies flow intent. Catalyst Hunter evaluates event timing. Technical Analyst checks price structure." },
+                { step: "2", title: "ATTACK", desc: "Agents see each other's picks and cross-examine using their role's expertise. 'That flow is hedging, not directional.' 'RSI is oversold, this reverses tomorrow.' Real adversarial tension." },
+                { step: "3", title: "DEFEND", desc: "Agents hold their position, revise their conviction, or drop picks that got exposed. Changing your mind after a strong attack is a sign of intelligence, not weakness." },
+                { step: "4", title: "VOTE", desc: "Final vote. One pick per agent. Consensus is tallied. If 3 or more agents converge on the same trade after trying to destroy each other's thesis, that's a signal you can't get from any single model." }
             ].map((item, i) => (
                 <div key={i} className="space-y-2">
                     <div className="text-xs font-bold text-primary tracking-wider">{item.step}. {item.title}</div>
@@ -403,34 +400,34 @@ export function ArenaClientPage({ debate }: ArenaClientPageProps) {
             ))}
         </div>
         <div className="mt-6 p-4 bg-muted/20 rounded-lg text-sm text-muted-foreground">
-            When the agents independently converge on the same trade after adversarial debate, that's a signal you can't get anywhere else.
+            Momentum, contrarian, risk management, catalyst analysis, and technical structure — five different lenses on the same data. When they converge after trying to tear each other apart, pay attention.
         </div>
       </section>
 
       {/* Section 5: War Room CTA */}
       <section className="bg-primary/5 border border-primary/20 rounded-xl p-8 md:p-12 text-center space-y-6">
-        <h2 className="text-2xl md:text-3xl font-bold font-headline">The Full Debate. Delivered to WhatsApp. Before the Bell.</h2>
+        <h2 className="text-2xl md:text-3xl font-bold font-headline">5 AI Agents. 4 Rounds. 1 Consensus Trade. Delivered Before the Bell.</h2>
         <div className="grid gap-4 md:grid-cols-2 max-w-2xl mx-auto text-left text-sm text-muted-foreground">
             <div className="flex items-start gap-2">
                 <span className="text-primary mt-1">✓</span>
-                <span>The consensus trade every morning at 6 AM</span>
+                <span>Today's consensus trade with full conviction scores at 6 AM EST</span>
             </div>
             <div className="flex items-start gap-2">
                 <span className="text-primary mt-1">✓</span>
-                <span>The full adversarial debate delivered to WhatsApp</span>
+                <span>The complete adversarial debate — every pick, attack, defense, and vote</span>
             </div>
             <div className="flex items-start gap-2">
                 <span className="text-primary mt-1">✓</span>
-                <span>Real-time alerts when institutional flow spikes intraday</span>
+                <span>War Room WhatsApp with real-time alerts and arena highlights</span>
             </div>
             <div className="flex items-start gap-2">
                 <span className="text-primary mt-1">✓</span>
-                <span>Direct access to GammaMolt for questions</span>
+                <span>Direct access to GammaMolt for questions and analysis</span>
             </div>
         </div>
         
         <p className="text-lg font-medium max-w-lg mx-auto">
-            This isn't a newsletter. It's a front-row seat to 3 AI models arguing over your money.
+            This isn't a newsletter. It's 5 AI models with different jobs arguing over the best trade — and you get the verdict before the market opens.
         </p>
 
         <Button asChild size="lg" className="px-8">

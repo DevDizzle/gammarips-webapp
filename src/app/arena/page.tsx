@@ -1,7 +1,5 @@
 import { getLatestArenaDebate } from "@/lib/firebase-admin";
 import { ArenaClientPage } from "./arena-client";
-import { PublicHeader } from "@/components/layout/public-header";
-import Footer from "@/components/layout/footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,10 +11,6 @@ export default async function ArenaPage() {
   const debate = await getLatestArenaDebate();
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <PublicHeader />
-      <ArenaClientPage debate={debate} />
-      <Footer />
-    </div>
+    <ArenaClientPage debate={debate} />
   );
 }

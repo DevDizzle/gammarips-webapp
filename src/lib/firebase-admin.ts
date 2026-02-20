@@ -163,8 +163,8 @@ export interface OvernightSignal {
   direction: string; // "BULLISH" | "BEARISH" (stored uppercase in Firestore)
   // Scores
   overnight_score: number;
-  enrichment_quality_score?: number | null;
-  contract_score?: number | null;
+  enrichment_quality_score?: number;
+  contract_score?: number;
   // Price & Flow
   underlying_price?: number;
   price_change_pct?: number;
@@ -175,11 +175,11 @@ export interface OvernightSignal {
   call_active_strikes?: number;
   put_active_strikes?: number;
   // Contract
-  recommended_contract?: string | null;
-  recommended_strike?: number | null;
-  recommended_expiration?: string | null;
-  recommended_mid_price?: number | null;
-  recommended_delta?: number | null;
+  recommended_contract?: string;
+  recommended_strike?: number;
+  recommended_expiration?: string;
+  recommended_mid_price?: number;
+  recommended_delta?: number;
   // Enrichment
   thesis?: string;
   news_summary?: string;
@@ -194,10 +194,10 @@ export interface OvernightSignal {
   resistance?: number;
   high_52w?: number;
   low_52w?: number;
-  sma_50?: number | null;
-  sma_200?: number | null;
+  sma_50?: number;
+  sma_200?: number;
   rsi_14?: number;
-  risk_reward_ratio?: number | null;
+  risk_reward_ratio?: number;
   // Meta
   enriched_at?: any;
   updated_at?: any;
@@ -236,6 +236,21 @@ export async function getDailyReport(date: string): Promise<DailyReport | null> 
   } catch (error) {
     console.error(`Error fetching daily report for ${date}:`, error);
     return null;
+  }
+}
+
+export async function getAllDailyReports(limit: number = 30): Promise<DailyReport[]> {
+  noStore();
+  try {
+    const snapshot = await getDb().collection('daily_reports')
+      .orderBy('scan_date', 'desc')
+      .limit(limit)
+      .get();
+    
+    return snapshot.docs.map(doc => doc.data() as DailyReport);
+  } catch (error) {
+    console.error('Error fetching daily reports:', error);
+    return [];
   }
 }
 
@@ -318,11 +333,11 @@ export async function getOvernightSignals(
       .offset(offset)
       .limit(limit)
       .get();
-    
+
     return snapshot.docs.map(doc => {
       const data = doc.data();
-      return {
-        id: doc.id,
+      return { 
+        id: doc.id, 
         ...data,
         enriched_at: data.enriched_at?.toDate?.().toISOString() || data.enriched_at || null,
         updated_at: data.updated_at?.toDate?.().toISOString() || data.updated_at || null,

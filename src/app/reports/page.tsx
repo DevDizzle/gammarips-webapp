@@ -25,12 +25,14 @@ export default async function ReportsPage() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {summaries.map((summary) => (
-            <Card key={summary.scan_date} className="hover:border-primary/50 transition-colors">
-              <Link href={`/reports/${summary.scan_date}`} className="block h-full">
+          {summaries.map((summary) => {
+            const dateStr = summary.report_date || summary.scan_date;
+            return (
+            <Card key={dateStr} className="hover:border-primary/50 transition-colors">
+              <Link href={`/reports/${dateStr}`} className="block h-full">
                 <CardHeader>
                   <div className="text-sm text-muted-foreground mb-2">
-                    {new Date(summary.scan_date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
+                    {new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
                   </div>
                   <CardTitle className="text-xl leading-tight">
                     {summary.headline || summary.title || "Daily Overnight Signals"}
@@ -57,7 +59,7 @@ export default async function ReportsPage() {
                 </CardContent>
               </Link>
             </Card>
-          ))}
+          )})}
           
           {summaries.length === 0 && (
             <div className="col-span-full text-center py-12 text-muted-foreground">

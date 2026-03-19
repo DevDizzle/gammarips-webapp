@@ -198,6 +198,14 @@ export interface OvernightSignal {
   sma_200?: number;
   rsi_14?: number;
   risk_reward_ratio?: number;
+  // Premium Signals
+  is_premium_signal?: boolean;
+  premium_score?: number;
+  premium_hedge?: boolean;
+  premium_high_rr?: boolean;
+  premium_bull_flow?: boolean;
+  premium_high_atr?: boolean;
+  premium_bear_flow?: boolean;
   // Meta
   enriched_at?: any;
   updated_at?: any;
@@ -215,6 +223,7 @@ export interface OvernightSummary {
   market_narrative: string;
   generated_at: any;
   title?: string; // Added title optional field
+  report_date?: string; // Date of the Daily Report publication
 }
 
 export interface DailyReport {
@@ -224,6 +233,7 @@ export interface DailyReport {
   total_signals: number;
   bullish_count: number;
   bearish_count: number;
+  underlying_scan_date?: string;
 }
 
 export async function getDailyReport(date: string): Promise<DailyReport | null> {
@@ -257,32 +267,32 @@ export async function getAllDailyReports(limit: number = 30): Promise<DailyRepor
 export async function getAllOvernightSummaries(limit: number = 30): Promise<OvernightSummary[]> {
   noStore();
   try {
-    const snapshot = await getDb().collection('overnight_summaries')
+    const snapshot = await getDb().collection('daily_reports')
       .orderBy('scan_date', 'desc')
       .limit(limit)
       .get();
       
     const summaries = await Promise.all(snapshot.docs.map(async doc => {
-        const data = doc.data() as OvernightSummary;
+        const reportData = doc.data() as DailyReport & { underlying_scan_date?: string };
+        const summaryScanDate = reportData.scan_date;
         
-        // Fetch title from daily_reports
         try {
-            const reportDoc = await getDb().collection('daily_reports').doc(data.scan_date).get();
-            if (reportDoc.exists) {
-                const reportData = reportDoc.data();
-                if (reportData?.title) {
-                    data.headline = reportData.title;
-                    data.title = reportData.title;
-                }
+            const summaryDoc = await getDb().collection('overnight_summaries').doc(summaryScanDate).get();
+            if (summaryDoc.exists) {
+                const data = summaryDoc.data() as OvernightSummary;
+                data.headline = reportData.title;
+                data.title = reportData.title;
+                data.report_date = reportData.scan_date;
+                return data; 
             }
         } catch (e) {
-            // Ignore error, just fallback to missing title
+            console.error(`Error fetching summary for ${summaryScanDate}:`, e);
         }
         
-        return data;
+        return null;
     }));
     
-    return summaries;
+    return summaries.filter((s): s is OvernightSummary => s !== null);
   } catch (error) {
     console.error('Error fetching overnight summaries:', error);
     return [];
@@ -305,12 +315,32 @@ export async function getOvernightSummary(scanDate: string): Promise<OvernightSu
 export async function getLatestOvernightSummary(): Promise<OvernightSummary | null> {
   noStore();
   try {
-    const snapshot = await getDb().collection('overnight_summaries')
+    const reportSnapshot = await getDb().collection('daily_reports')
       .orderBy('scan_date', 'desc')
-      .limit(1)
+      .limit(5)
       .get();
-    if (snapshot.empty) return null;
-    return snapshot.docs[0].data() as OvernightSummary;
+      
+    if (reportSnapshot.empty) return null;
+
+    for (const doc of reportSnapshot.docs) {
+      const reportData = doc.data() as DailyReport & { underlying_scan_date?: string };
+      const summaryScanDate = reportData.scan_date;
+      
+      try {
+        const summaryDoc = await getDb().collection('overnight_summaries').doc(summaryScanDate).get();
+        if (summaryDoc.exists) {
+          const data = summaryDoc.data() as OvernightSummary;
+          data.headline = reportData.title;
+          data.title = reportData.title;
+          data.report_date = reportData.scan_date;
+          return data;
+        }
+      } catch (e) {
+        console.error(`Error fetching summary for ${summaryScanDate}:`, e);
+      }
+    }
+
+    return null;
   } catch (error) {
     console.error('Error fetching overnight summary:', error);
     return null;
@@ -446,7 +476,7 @@ export async function getOrCreateUserAdmin(
     email: email ?? null,
     displayName: displayName ?? null,
     isAnonymous,
-    isSubscribed: false,
+    isSubscribed: true,
     usageCount: 0,
     createdAt: FieldValue.serverTimestamp(),
     stripeCustomerId: stripeCustomerId ?? null,

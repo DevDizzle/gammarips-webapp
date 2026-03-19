@@ -1,23 +1,96 @@
-# GammaRips — The Overnight Edge
+# GammaRips — Overnight Options Flow Intelligence
 # https://gammarips.com
 
-> GammaRips scans overnight institutional options flow across 5,230+ tickers every trading day.
-> Signals are scored 1-10 on institutional conviction and enriched with AI-generated thesis,
-> recommended contracts, and key technical levels. Reports are published daily before market open.
+GammaRips is a free AI-powered options flow intelligence platform. We scan institutional overnight options activity and deliver actionable trade signals before the market opens. Built for retail traders who want institutional-grade intelligence without the institutional price tag.
 
-## Reports
-Daily overnight flow reports with signal analysis.
-URL: https://gammarips.com/reports
+## What GammaRips Does
 
-## API (MCP)
-Machine-readable options flow data via MCP protocol.
-URL: https://gammarips.com/developers
-SSE Endpoint: https://gammarips-mcp-406581297632.us-central1.run.app/sse
+- Scans 2,000+ overnight institutional options signals every market night
+- Scores and ranks signals by institutional conviction (volume/OI ratios, dollar flow imbalance, unusual activity depth)
+- Enriches top signals (score 6+) with AI trade thesis, technical indicators, support/resistance levels, and specific contract recommendations with full greeks
+- Runs Agent Arena: multiple AI models with distinct trading philosophies debate signals and produce consensus picks
+- Delivers a daily intelligence report before market open (6 AM EST)
+- Tracks signal performance with automated win/loss reconciliation over 3 trading days
+- Flags premium signals matching 80%+ win rate patterns
 
-## Pricing
-Free tier: daily previews. $49/mo: full signals. $149/mo: live alerts.
-URL: https://gammarips.com/pricing
+## Access
 
-## Contact
-X: @GammaRips
-Email: support@gammarips.com
+Everything is free. Every signal, report, AI trade thesis, contract recommendation, and Agent Arena debate. No login required. No paywall.
+
+## Premium Signal System
+
+Our system identifies signals matching historically validated patterns with 80%+ win rates. Each signal is scored 0-5 based on how many independent confirmation patterns it matches:
+
+1. **Institutional Hedging Flow** (81.4% win rate): When institutions aggressively hedge, the underlying almost always moves directionally
+2. **High Risk/Reward + Not Overextended** (80.0% win rate): Clean setups with room to run and no mean-reversion trap
+3. **Strong Bullish Call Flow** (81.3% win rate): High call volume/OI ratio on bullish signals that aren't overextended
+4. **Explosive ATR Move** (84.6% win rate, 19.3% avg peak return): Stock moving 2x+ its normal average true range on unusual flow
+5. **Strong Bearish Put Flow** (80.0% win rate): High put volume/OI ratio confirming bearish direction
+
+Signals matching 2+ patterns (premium_score >= 2) represent the highest conviction setups.
+
+## Performance (287 Tracked Signals)
+
+- Overall win rate: 73.2%
+- Premium signal win rate: 79.8%
+- Home runs (5%+ move in 3 days): 41.8% of all signals
+- Strong wins (3%+ move): 12.2%
+- Directional wins (1%+ move): 19.2%
+- Win = stock moves 1%+ in the signaled direction within 3 trading days using peak intraday price
+
+Performance is automatically tracked and reconciled daily at market close.
+
+## How It Works
+
+1. Overnight scanner runs at 4 AM EST, ingests institutional options flow data
+2. Enrichment pipeline analyzes top signals with Gemini (grounded news search, technicals, risk/reward analysis)
+3. Each signal gets: AI trade thesis, support/resistance levels, RSI/MACD/MAs, catalyst identification, specific contract with greeks, and premium score
+4. Agent Arena: AI agents with distinct roles (Momentum, Contrarian, Risk Manager, Technical Analyst) independently analyze and debate top signals through structured adversarial rounds
+5. Daily report generated and synced to web app before market open
+6. Win tracker monitors signal performance over 3 trading days, calculates outcome tiers
+
+## Data Schema — Enriched Signals
+
+Each enriched signal contains:
+
+- `ticker`, `scan_date`, `direction` (BULLISH/BEARISH), `overnight_score` (6-9)
+- Flow: `call_dollar_volume`, `put_dollar_volume`, `call_vol_oi_ratio`, `put_vol_oi_ratio`, `call_uoa_depth`, `put_uoa_depth`
+- Technicals: `rsi_14`, `macd`, `macd_hist`, `sma_50`, `sma_200`, `ema_21`, `atr_14`, `above_sma_50`, `above_sma_200`, `golden_cross`
+- Levels: `support`, `resistance`, `high_52w`, `low_52w`
+- Risk: `risk_reward_ratio`, `mean_reversion_risk`, `reversal_probability`, `atr_normalized_move`, `move_overdone`
+- AI Analysis: `thesis`, `flow_intent`, `flow_intent_reasoning`, `catalyst_type`, `catalyst_score`, `news_summary`, `key_headline`
+- Contract: `recommended_contract`, `recommended_strike`, `recommended_expiration`, `recommended_delta`, `recommended_gamma`, `recommended_theta`, `recommended_vega`, `recommended_iv`
+- Premium: `is_premium_signal`, `premium_score` (0-5), `premium_hedge`, `premium_high_rr`, `premium_bull_flow`, `premium_high_atr`, `premium_bear_flow`
+- Performance: `next_day_pct`, `day2_pct`, `day3_pct`, `peak_return_3d`, `outcome_tier` (home_run/strong/directional/flat/wrong), `is_win`
+- Quality: `enrichment_quality_score`, `contract_score`
+
+## MCP Server (Programmatic Access)
+
+- **URL:** https://gammarips-mcp-406581297632.us-central1.run.app/sse
+- **Transport:** Server-Sent Events (SSE)
+- **Auth:** None required. Completely free.
+- **Tools available:**
+  - `get_overnight_signals` — raw overnight scan results
+  - `get_enriched_signals` — fully enriched signals with thesis, technicals, premium scoring
+  - `get_signal_detail` — deep dive on a specific ticker + date
+  - `get_signal_performance` — win/loss tracking data
+  - `get_win_rate_summary` — aggregated win rate statistics
+  - `get_daily_report` — formatted daily intelligence report
+  - `get_report_list` — available report dates
+  - `get_available_dates` — dates with signal data
+  - `web_search` — search GammaRips content
+
+## Technology
+
+- Google Cloud Platform: Cloud Run, BigQuery, Cloud Scheduler, Firestore, Pub/Sub
+- Multi-agent consensus system with structured adversarial debate
+- Custom scoring model validated against real market outcomes
+- Automated daily performance tracking with tiered win classification
+- Next.js web application on Firebase Hosting
+
+## Links
+
+- Website: https://gammarips.com
+- MCP Server: https://gammarips-mcp-406581297632.us-central1.run.app/sse
+- X/Twitter: https://x.com/GammaRips
+- Email: ceo@gammarips.com

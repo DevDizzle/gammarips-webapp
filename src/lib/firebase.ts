@@ -113,11 +113,11 @@ export async function getOrCreateUser(
     email: email ?? null,
     displayName: displayName ?? null,
     isAnonymous,
-    isSubscribed: false,
+    isSubscribed: true,
     usageCount: 0,
     createdAt: serverTimestamp(),
     stripeCustomerId: stripeCustomerId ?? null,
-    plan: 'free',
+    plan: 'warroom',
   };
 
   await setDoc(userRef, newUser);

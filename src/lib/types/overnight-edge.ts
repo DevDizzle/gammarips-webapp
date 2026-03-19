@@ -5,6 +5,7 @@ export type PlanType = 'free' | 'edge' | 'warroom';
 
 export interface OvernightSignal {
   scan_date: string; // YYYY-MM-DD
+  underlying_scan_date?: string; // Original scan date from the overnight scanner
   ticker: string;
   direction: SignalDirection;
   overnight_score: number;
@@ -40,11 +41,21 @@ export interface OvernightSignal {
   news_summary: string | null;
   key_headline: string | null;
   
+  // Premium Signals
+  is_premium_signal?: boolean;
+  premium_score?: number;
+  premium_hedge?: boolean;
+  premium_high_rr?: boolean;
+  premium_bull_flow?: boolean;
+  premium_high_atr?: boolean;
+  premium_bear_flow?: boolean;
+
   enriched_at: Timestamp;
 }
 
 export interface OvernightSummary {
   scan_date: string;
+  underlying_scan_date?: string; // Original scan date from the overnight scanner
   total_signals: number;
   bullish_count: number;
   bearish_count: number;

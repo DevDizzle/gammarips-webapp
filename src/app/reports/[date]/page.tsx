@@ -52,7 +52,7 @@ export default async function ReportPage({ params }: Props) {
     "publisher": {
       "@type": "Organization",
       "name": "GammaRips",
-      "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png" }
+      "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=2" }
     },
     "description": `Overnight institutional options flow report. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`,
     "mainEntityOfPage": `https://gammarips.com/reports/${report.scan_date}`
@@ -75,6 +75,12 @@ export default async function ReportPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }} />
       
+      {report.underlying_scan_date && report.underlying_scan_date !== report.scan_date && (
+        <div className="mb-6 p-3 bg-muted/30 border border-muted rounded-md text-muted-foreground text-sm text-center">
+          Covering overnight flow from {report.underlying_scan_date}
+        </div>
+      )}
+
       <article className="prose prose-invert max-w-none">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{report.content}</ReactMarkdown>
       </article>

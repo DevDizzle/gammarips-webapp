@@ -174,6 +174,7 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
 
 
 export async function POST(req: NextRequest) {
+  // Webhook disabled/dormant — GammaRips is free
   const buf = await req.text();
   const headersList = await headers();
   const sig = headersList.get('Stripe-Signature')!;

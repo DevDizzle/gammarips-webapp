@@ -18,13 +18,14 @@ const Footer = () => {
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
               <li><Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing</Link></li>
-              <li><Link href="/developers" className="text-muted-foreground hover:text-primary">Developers (MCP API)</Link></li>
+              <li><Link href="/developers" className="text-muted-foreground hover:text-primary">Developers</Link></li>
+              <li><Link href="/llms.txt" className="text-muted-foreground hover:text-primary">llms.txt</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold text-foreground">Company</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="/about" className="text-muted-foreground hover:text-primary">About</Link></li>
+              <li><Link href="https://gammarips.com/about" className="text-muted-foreground hover:text-primary">About</Link></li>
               <li><Link href="/how-it-works" className="text-muted-foreground hover:text-primary">How It Works</Link></li>
               <li><Link href="/scorecard" className="text-muted-foreground hover:text-primary">Scorecard</Link></li>
             </ul>

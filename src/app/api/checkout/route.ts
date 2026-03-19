@@ -5,6 +5,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getOrCreateUserAdmin } from '@/lib/firebase-admin';
 
 export async function POST(req: NextRequest) {
+  // Checkout disabled — GammaRips is free
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

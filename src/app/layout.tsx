@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description: 'Every morning before the market opens, see what institutional money did overnight.',
     url: siteUrl,
     siteName: 'GammaRips',
-    images: [{ url: `${siteUrl}/og-image.png`, width: 1200, height: 630, alt: 'GammaRips — The Overnight Edge' }],
+    images: [{ url: `${siteUrl}/og-image.png?v=2`, width: 1200, height: 630, alt: 'GammaRips — The Overnight Edge' }],
     locale: 'en_US',
     type: 'website',
   },
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'GammaRips | The Overnight Edge',
     description: 'Every morning before the market opens, see what institutional money did overnight.',
-    images: [`${siteUrl}/og-image.png`],
+    images: [`${siteUrl}/og-image.png?v=2`],
   },
 };
 

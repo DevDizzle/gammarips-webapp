@@ -20,12 +20,13 @@ export function PublicHeader() {
   const [open, setOpen] = useState(false);
 
   const links = [
+    { href: '/', label: 'Home' },
     { href: '/signals', label: 'Signals' },
     { href: '/arena', label: 'Arena' },
     { href: '/reports', label: 'Reports' },
     { href: '/how-it-works', label: 'How It Works' },
     { href: '/pricing', label: 'Pricing' },
-    { href: '/about', label: 'About' },
+    { href: 'https://gammarips.com/about', label: 'About' },
     { href: '/developers', label: 'Developers' },
   ];
 
@@ -45,9 +46,8 @@ export function PublicHeader() {
                     href={href} 
                     className={cn(
                       "hover:text-primary transition-colors",
-                      pathname?.startsWith(href) && "text-primary"
-                    )}
-                  >
+                      (href === '/' ? pathname === '/' : pathname?.startsWith(href)) && "text-primary"
+                    )}                  >
                     {label}
                   </Link>
                 ))}
@@ -70,23 +70,13 @@ export function PublicHeader() {
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col gap-4 mt-8">
-                  <Link 
-                    href="/" 
-                    className={cn(
-                      "text-lg font-medium transition-colors hover:text-primary",
-                      pathname === '/' ? "text-primary" : "text-muted-foreground"
-                    )}
-                    onClick={() => setOpen(false)}
-                  >
-                    Home
-                  </Link>
                   {links.map(({ href, label }) => (
                     <Link 
                       key={href} 
                       href={href} 
                       className={cn(
                         "text-lg font-medium transition-colors hover:text-primary",
-                        pathname?.startsWith(href) ? "text-primary" : "text-muted-foreground"
+                        (href === '/' ? pathname === '/' : pathname?.startsWith(href)) ? "text-primary" : "text-muted-foreground"
                       )}
                       onClick={() => setOpen(false)}
                     >

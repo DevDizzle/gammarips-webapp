@@ -4,15 +4,13 @@ import { useAuth } from "@/hooks/use-auth";
 import { type OvernightSignal } from "@/lib/firebase-admin";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Lock, TrendingUp, TrendingDown, ArrowLeft } from "lucide-react";
+import { TrendingUp, TrendingDown, ArrowLeft, Flame, Zap } from "lucide-react";
 import Link from "next/link";
 import { Markdown } from "@/components/markdown";
 import { EmailCapture } from "@/components/email-capture";
 
 export default function SignalClientPage({ signal }: { signal: OvernightSignal }) {
   const { dbUser, loading } = useAuth();
-  const isSubscribed = !!dbUser?.isSubscribed;
   const isBullish = signal.direction === 'BULLISH';
   const movePct = signal.price_change_pct || 0;
 
@@ -26,6 +24,34 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
 
   const totalFlow = (signal.call_dollar_volume || 0) + (signal.put_dollar_volume || 0);
 
+  const renderPremiumBadge = () => {
+    if (!signal.is_premium_signal) return null;
+    
+    const score = signal.premium_score || 1;
+    
+    if (score >= 3) {
+      return (
+        <Badge className="ml-2 bg-amber-500 hover:bg-amber-600 text-black border-0 gap-1 shadow-[0_0_10px_rgba(245,158,11,0.5)] text-sm px-3 py-1">
+          <Flame className="w-4 h-4" /> Premium ×{score}
+        </Badge>
+      );
+    }
+    
+    if (score === 2) {
+      return (
+        <Badge variant="outline" className="ml-2 border-amber-500 text-amber-500 bg-amber-500/10 gap-1 text-sm px-3 py-1">
+          <Zap className="w-4 h-4" /> Premium ×2
+        </Badge>
+      );
+    }
+    
+    return (
+      <Badge variant="outline" className="ml-2 border-amber-500/50 text-amber-600 bg-amber-500/5 text-sm px-3 py-1">
+        Premium
+      </Badge>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl">
@@ -36,8 +62,9 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
         {/* Header */}
         <div className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center mb-8">
           <div>
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-2 flex-wrap">
               <h1 className="text-4xl font-bold font-headline tracking-tight">{signal.ticker}</h1>
+              {renderPremiumBadge()}
               <Badge variant={isBullish ? "default" : "destructive"} className={isBullish ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}>
                 {isBullish ? 'BULL' : 'BEAR'}
               </Badge>
@@ -74,7 +101,71 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
         {/* Main Content Grid */}
         <div className="grid gap-6">
 
-          {/* AI Trade Thesis — always visible (this is the teaser that sells subscriptions) */}
+          {/* Premium Reason Section */}
+          {signal.is_premium_signal && (
+            <Card className="border-amber-500/30 bg-amber-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-amber-500 flex items-center gap-2">
+                  <Flame className="w-5 h-5" />
+                  Why This is a Premium Signal
+                  <span className="text-sm font-normal text-muted-foreground ml-2">
+                    ({signal.premium_score || 1}/5 patterns matched)
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  {signal.premium_hedge && (
+                    <div className="flex items-start gap-2">
+                      <span className="text-lg">🛡️</span>
+                      <div>
+                        <span className="font-semibold block">Institutional Hedging</span>
+                        <span className="text-muted-foreground">When big money hedges, the underlying moves</span>
+                      </div>
+                    </div>
+                  )}
+                  {signal.premium_high_rr && (
+                    <div className="flex items-start gap-2">
+                      <span className="text-lg">📐</span>
+                      <div>
+                        <span className="font-semibold block">High Risk/Reward</span>
+                        <span className="text-muted-foreground">Clean setup with room to run</span>
+                      </div>
+                    </div>
+                  )}
+                  {signal.premium_bull_flow && (
+                    <div className="flex items-start gap-2">
+                      <span className="text-lg">📈</span>
+                      <div>
+                        <span className="font-semibold block">Strong Call Flow</span>
+                        <span className="text-muted-foreground">Aggressive bullish accumulation</span>
+                      </div>
+                    </div>
+                  )}
+                  {signal.premium_high_atr && (
+                    <div className="flex items-start gap-2">
+                      <span className="text-lg">⚡</span>
+                      <div>
+                        <span className="font-semibold block">Explosive Move</span>
+                        <span className="text-muted-foreground">2x+ normal range on unusual flow</span>
+                      </div>
+                    </div>
+                  )}
+                  {signal.premium_bear_flow && (
+                    <div className="flex items-start gap-2">
+                      <span className="text-lg">📉</span>
+                      <div>
+                        <span className="font-semibold block">Strong Put Flow</span>
+                        <span className="text-muted-foreground">Heavy bearish conviction</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* AI Trade Thesis */}
           <Card>
             <CardHeader>
               <CardTitle>AI Trade Thesis</CardTitle>
@@ -86,7 +177,7 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
             </CardContent>
           </Card>
 
-          {/* Flow Breakdown — free */}
+          {/* Flow Breakdown */}
           <Card>
             <CardHeader>
               <CardTitle>Flow Breakdown</CardTitle>
@@ -113,20 +204,10 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
             </CardContent>
           </Card>
 
-          {/* Locked Details Section */}
+          {/* Details Section */}
           <div className="grid md:grid-cols-2 gap-6">
             {/* Contract Setup */}
-            <Card className={`relative overflow-hidden ${!isSubscribed && 'border-primary/20'}`}>
-              {!isSubscribed && !loading && (
-                <div className="absolute inset-0 z-10 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center">
-                  <Lock className="w-8 h-8 text-primary mb-4" />
-                  <h3 className="text-lg font-bold mb-2">Subscribe to Unlock</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Get the exact contract, strike price, and risk/reward analysis.</p>
-                  <Button asChild>
-                    <Link href="/#pricing">Upgrade to Edge</Link>
-                  </Button>
-                </div>
-              )}
+            <Card className="relative overflow-hidden">
               <CardHeader>
                 <CardTitle>Recommended Setup</CardTitle>
               </CardHeader>
@@ -152,16 +233,6 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
 
             {/* Key Levels */}
             <Card className="relative overflow-hidden">
-              {!isSubscribed && !loading && (
-                <div className="absolute inset-0 z-10 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center">
-                  <Lock className="w-8 h-8 text-primary mb-4" />
-                  <h3 className="text-lg font-bold mb-2">Unlock Technicals</h3>
-                  <p className="text-sm text-muted-foreground mb-4">See key support & resistance levels, technicals, and 52-week range.</p>
-                  <Button asChild>
-                    <Link href="/#pricing">Upgrade to Edge</Link>
-                  </Button>
-                </div>
-              )}
               <CardHeader>
                 <CardTitle>Key Levels</CardTitle>
               </CardHeader>
@@ -196,13 +267,6 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
 
           {/* Extended Analysis */}
           <Card className="relative overflow-hidden">
-            {!isSubscribed && !loading && (
-              <div className="absolute inset-0 z-10 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center">
-                <Button variant="outline" asChild>
-                  <Link href="/#pricing">Unlock Full Analysis</Link>
-                </Button>
-              </div>
-            )}
             <CardHeader>
               <CardTitle>News & Catalyst Analysis</CardTitle>
             </CardHeader>

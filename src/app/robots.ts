@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/[A-Z]*'], // Block old ticker pages (now 301 redirected)
+      disallow: ['/api/', '/dashboard/', '/account/'],
     },
     sitemap: 'https://gammarips.com/sitemap.xml',
   };

@@ -1,4 +1,4 @@
-import { getLatestArenaDebate } from "@/lib/firebase-admin";
+import { getLatestArenaDebate, getOvernightSignals } from "@/lib/firebase-admin";
 import { ArenaClientPage } from "./arena-client";
 import { Metadata } from "next";
 
@@ -9,8 +9,20 @@ export const metadata: Metadata = {
 
 export default async function ArenaPage() {
   const debate = await getLatestArenaDebate();
+  
+  let premiumTickers: string[] = [];
+  
+  if (debate?.scan_date) {
+    const [bullSignals, bearSignals] = await Promise.all([
+      getOvernightSignals(debate.scan_date, 'bull', 0, 100),
+      getOvernightSignals(debate.scan_date, 'bear', 0, 100),
+    ]);
+    
+    const allSignals = [...bullSignals, ...bearSignals];
+    premiumTickers = allSignals.filter(s => s.is_premium_signal).map(s => s.ticker);
+  }
 
   return (
-    <ArenaClientPage debate={debate} />
+    <ArenaClientPage debate={debate} premiumTickers={premiumTickers} />
   );
 }

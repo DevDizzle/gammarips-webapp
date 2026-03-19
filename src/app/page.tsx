@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
+import { ArrowRight, Scan, Brain, Sparkles, Send, Flame, Zap } from "lucide-react";
 import { getLatestOvernightSummary, getDailyReport, getOvernightSignals } from "@/lib/firebase-admin";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -27,7 +27,8 @@ const steps = [
 
 export default async function LandingPage() {
   const summary = await getLatestOvernightSummary();
-  const report = summary ? await getDailyReport(summary.scan_date) : null;
+  const reportDate = summary ? (summary.report_date || summary.scan_date) : null;
+  const report = reportDate ? await getDailyReport(reportDate) : null;
 
   const topBull = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 3) : [];
   const topBear = summary ? await getOvernightSignals(summary.scan_date, 'bear', 0, 2) : [];
@@ -94,7 +95,7 @@ export default async function LandingPage() {
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <p className="text-sm text-muted-foreground">
-                      {new Date(summary.scan_date).toLocaleDateString('en-US', { 
+                      {new Date(reportDate || summary.scan_date).toLocaleDateString('en-US', { 
                         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' 
                       })}
                     </p>
@@ -102,7 +103,7 @@ export default async function LandingPage() {
                       {report?.title || summary.headline || "Today's Overnight Edge"}
                     </h2>
                   </div>
-                  <Link href={`/reports/${summary.scan_date}`}>
+                  <Link href={`/reports/${reportDate || summary.scan_date}`}>
                     <Button variant="outline" size="sm">
                       Full Report <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -152,7 +153,7 @@ export default async function LandingPage() {
           <section>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold font-headline">Top Signals</h2>
-              <Link href={`/reports/${summary?.scan_date}`} className="text-sm text-primary hover:underline">
+              <Link href="/signals" className="text-sm text-primary hover:underline">
                 View all →
               </Link>
             </div>
@@ -167,7 +168,15 @@ export default async function LandingPage() {
                         {signal.direction === 'BULLISH' ? '📈 BULL' : '📉 BEAR'}
                       </span>
                       <div>
-                        <span className="font-bold font-headline text-lg">{signal.ticker}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold font-headline text-lg">{signal.ticker}</span>
+                          {signal.is_premium_signal && (
+                            <Badge className={`ml-1 gap-1 text-xs px-2 py-0.5 ${signal.premium_score >= 3 ? 'bg-amber-500 hover:bg-amber-600 text-black shadow-[0_0_10px_rgba(245,158,11,0.5)]' : 'bg-amber-500/10 text-amber-500 border border-amber-500/50'}`} variant={signal.premium_score >= 3 ? "default" : "outline"}>
+                              {signal.premium_score >= 3 ? <Flame className="w-3 h-3" /> : (signal.premium_score === 2 ? <Zap className="w-3 h-3" /> : null)}
+                              Premium{signal.premium_score >= 2 ? ` ×${signal.premium_score}` : ''}
+                            </Badge>
+                          )}
+                        </div>
                         {signal.thesis && (
                           <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1 max-w-md">
                             {signal.thesis}
@@ -179,12 +188,7 @@ export default async function LandingPage() {
                       <div className="text-right">
                         <div className="font-bold">Score: {signal.overnight_score}</div>
                       </div>
-                      {/* Gate detailed info for free users */}
-                      {!signal.thesis && (
-                        <Link href="/pricing" className="text-xs text-primary hover:underline">
-                          🔒 Unlock
-                        </Link>
-                      )}
+                      {/* All info is free */}
                     </div>
                   </CardContent>
                 </Card>
@@ -205,7 +209,7 @@ export default async function LandingPage() {
                   </ReactMarkdown>
                 </article>
                 <div className="mt-4 pt-4 border-t border-border">
-                  <Link href={`/reports/${summary?.scan_date}`}>
+                  <Link href={`/reports/${reportDate || summary?.scan_date}`}>
                     <Button variant="outline" size="sm">
                       Read Full Report <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -224,38 +228,14 @@ export default async function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg">
-              <Link href="/pricing">
-                Get The Overnight Edge <ArrowRight className="ml-2 h-5 w-5" />
+              <Link href="/signals">
+                Explore Signals <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
               <Link href="/how-it-works">See How It Works</Link>
             </Button>
           </div>
-        </section>
-
-        {/* Pricing Summary */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-card/50 text-center">
-            <CardContent className="p-6">
-              <p className="text-2xl font-bold font-headline">Free</p>
-              <p className="text-sm text-muted-foreground mt-2">See which tickers had unusual activity overnight. Enough to know where to look.</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card/50 text-center border-primary/30">
-            <CardContent className="p-6">
-              <p className="text-sm text-primary font-semibold">THE OVERNIGHT EDGE</p>
-              <p className="text-2xl font-bold font-headline">$49/mo</p>
-              <p className="text-sm text-muted-foreground mt-2">The full trade plan every morning: AI thesis, specific contracts, key levels.</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card/50 text-center">
-            <CardContent className="p-6">
-              <p className="text-sm text-muted-foreground font-semibold">THE WAR ROOM</p>
-              <p className="text-2xl font-bold font-headline">$149/mo</p>
-              <p className="text-sm text-muted-foreground mt-2">Everything in Edge plus real-time WhatsApp alerts and direct access to the analyst.</p>
-            </CardContent>
-          </Card>
         </section>
 
         {/* FAQ */}

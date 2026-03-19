@@ -10,11 +10,15 @@ export const metadata: Metadata = {
 
 export default async function SignalsPage() {
   const summary = await getLatestOvernightSummary();
-  const scanDate = summary?.scan_date || new Date().toISOString().split('T')[0];
+  // We use report_date if available (from previous fallback logic) or scan_date (the primary date going forward)
+  const reportDate = summary?.report_date || summary?.scan_date || new Date().toISOString().split('T')[0];
+  
+  // Always query signals using the summary's scan_date (which matches the signals' scan_date)
+  const queryDate = summary?.scan_date || reportDate;
 
   const [bullSignals, bearSignals] = await Promise.all([
-    getOvernightSignals(scanDate, 'bull', 0, 100), // Get all valid signals (score > 0)
-    getOvernightSignals(scanDate, 'bear', 0, 100),
+    getOvernightSignals(queryDate, 'bull', 0, 100), // Get all valid signals (score > 0)
+    getOvernightSignals(queryDate, 'bear', 0, 100),
   ]);
 
   return (
@@ -23,7 +27,10 @@ export default async function SignalsPage() {
          <div className="mb-8">
             <h1 className="text-3xl font-bold font-headline mb-2">Overnight Signals</h1>
             <p className="text-muted-foreground">
-                Institutional options flow detected overnight — {scanDate}
+                Institutional options flow reported on {reportDate}
+                {summary?.underlying_scan_date && summary.underlying_scan_date !== reportDate && (
+                  <span className="block text-sm opacity-80 mt-1">Based on overnight flow from {summary.underlying_scan_date}</span>
+                )}
             </p>
          </div>
          

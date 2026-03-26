@@ -224,7 +224,7 @@ export default async function LandingPage() {
         <section className="text-center space-y-4">
           <h2 className="text-3xl font-bold font-headline">Stop Trading Blind</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Most retail traders find out about institutional moves after the stock already popped. You'll see the positions at 6 AM — hours before the move. Every signal timestamped, every call tracked publicly. No cherry-picking, no hindsight.
+            Most retail traders find out about institutional moves after the stock already popped. You'll see the positions at 8:30 AM — hours before the move. Every signal timestamped, every call tracked publicly. No cherry-picking, no hindsight.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg">

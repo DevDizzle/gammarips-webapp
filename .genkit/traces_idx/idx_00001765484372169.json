@@ -1,3 +1,0 @@
-{"id":"0de5a616d48ffc76c9604a20586cb28b","type":"flow","start":1765484521877,"name":"chatRouterFlow","end":1765484524367.0276,"status":0}
-{"id":"e09c9bd860ff4aadedecdadb059a5911","type":"executable-prompt","start":1765484723342,"name":"aiTopPickPrompt","end":1765484723382.2795,"status":0,"genkitx:ignore-trace":"true"}
-{"id":"deba96dedd4d4ee7e3bbc1c01b1b204b","type":"flow","start":1765484759499,"name":"chatRouterFlow","end":1765484779053.9414,"status":0}

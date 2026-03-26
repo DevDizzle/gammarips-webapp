@@ -9,7 +9,7 @@ import ContactForm from './contact-form';
 
 export const metadata: Metadata = {
   title: 'About GammaRips — The Overnight Edge',
-  description: 'While you sleep, institutions place their bets. By 6 AM, you know what they did. Meet the team behind The Overnight Edge — a founder-engineer and an AI that tracks every signal.',
+  description: 'While you sleep, institutions place their bets. By 8:30 AM, you know what they did. Meet the team behind The Overnight Edge — a founder-engineer and an AI that tracks every signal.',
   alternates: { canonical: 'https://gammarips.com/about' },
   openGraph: {
     title: 'About GammaRips — The Overnight Edge',
@@ -87,7 +87,7 @@ export default function AboutPage() {
             The Overnight Edge
           </h1>
           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            While you sleep, institutions place their bets. By 6 AM, you know exactly what they did — and how to trade it.
+            While you sleep, institutions place their bets. By 8:30 AM, you know exactly what they did — and how to trade it.
           </p>
         </header>
 

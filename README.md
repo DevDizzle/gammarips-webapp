@@ -26,7 +26,7 @@ The result: actionable intelligence delivered before the opening bell.
 4:00 AM UTC    Overnight Scanner → scans options flow across all tickers
 4:30 AM UTC    Enrichment → AI thesis, technicals, news, risk/reward for top signals
 5:00 AM UTC    Agent Arena → 5 models debate, produce consensus pick
-6:00 AM EST    Daily report published to gammarips.com
+8:30 AM EST    Daily report published to gammarips.com
 6:15 AM EST    Signal drop posted to X (@GammaRips)
 7:30 AM EST    Arena consensus pick posted
 ```

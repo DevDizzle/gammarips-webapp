@@ -114,7 +114,7 @@ export default function WarRoomPage() {
           </CardHeader>
           <CardContent>
             <ul className="space-y-3 text-sm">
-              <li><strong className="text-primary">6:00 AM EST</strong> — Daily Overnight Edge report</li>
+              <li><strong className="text-primary">8:30 AM EST</strong> — Daily Overnight Edge report</li>
               <li><strong className="text-primary">9:30 AM EST</strong> — Pre-market enriched picks</li>
               <li><strong className="text-primary">Intraday</strong> — High-conviction alerts</li>
               <li><strong className="text-primary">4:30 PM EST</strong> — Win tracker results</li>

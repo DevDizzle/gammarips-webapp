@@ -8,7 +8,7 @@ import {
 export const faqs = [
   {
     question: "What do I actually get every morning?",
-    answer: "By 6 AM EST, you get a scored list of every ticker where institutions placed unusual options bets overnight. Free users see the ticker, score, direction, and move size. Paid users ($49/mo) get the full AI trade thesis, specific contract recommendations with strike and expiry, key support/resistance levels, and technical + news analysis."
+    answer: "By 8:30 AM EST, you get a scored list of every ticker where institutions placed unusual options bets overnight. Free users see the ticker, score, direction, and move size. Paid users ($49/mo) get the full AI trade thesis, specific contract recommendations with strike and expiry, key support/resistance levels, and technical + news analysis."
   },
   {
     question: "How do you decide which signals are worth paying attention to?",
@@ -28,7 +28,7 @@ export const faqs = [
   },
   {
     question: "What time do I need to be up?",
-    answer: "Signals are ready by 6 AM EST. You don't need to be up at 4 AM when the scanner runs — everything is waiting for you when you open gammarips.com with your morning coffee. Most traders check between 7-9 AM and have their trade plan set before the 9:30 open."
+    answer: "Signals are ready by 8:30 AM EST. You don't need to be up at 4 AM when the scanner runs — everything is waiting for you when you open gammarips.com with your morning coffee. Most traders check between 8:30-9 AM and have their trade plan set before the 9:30 open."
   },
   {
     question: "Are you telling me what to trade?",

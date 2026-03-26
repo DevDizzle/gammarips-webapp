@@ -9,7 +9,7 @@ GammaRips is a free AI-powered options flow intelligence platform. We scan insti
 - Scores and ranks signals by institutional conviction (volume/OI ratios, dollar flow imbalance, unusual activity depth)
 - Enriches top signals (score 6+) with AI trade thesis, technical indicators, support/resistance levels, and specific contract recommendations with full greeks
 - Runs Agent Arena: multiple AI models with distinct trading philosophies debate signals and produce consensus picks
-- Delivers a daily intelligence report before market open (6 AM EST)
+- Delivers a daily intelligence report before market open (8:30 AM EST)
 - Tracks signal performance with automated win/loss reconciliation over 3 trading days
 - Flags premium signals matching 80%+ win rate patterns
 

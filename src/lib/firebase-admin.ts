@@ -43,7 +43,9 @@ function getAdminApp(): AdminApp {
   console.log('DEBUG: FIREBASE_PRIVATE_KEY length:', process.env.FIREBASE_PRIVATE_KEY?.length);
 
   try {
-    if (projectId && clientEmail && privateKey) {
+    // If we are strictly NOT in production, use the manually provided private key.
+    // This utterly bypasses the PEM decoding crash during the App Hosting 'next build' phase.
+    if (process.env.NODE_ENV !== 'production' && projectId && clientEmail && privateKey) {
       // Local development or explicit service account
       adminApp = initializeAdminApp({
         credential: admin.credential.cert({ projectId, clientEmail, privateKey }),

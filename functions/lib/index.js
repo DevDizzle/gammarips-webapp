@@ -33,28 +33,39 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateSignalSeo = exports.generateReportSeo = void 0;
+exports.manualSeoBackfill = exports.generateSignalSeo = exports.generateReportSeo = void 0;
 const functions = __importStar(require("firebase-functions"));
+const https_1 = require("firebase-functions/v2/https");
 const admin = __importStar(require("firebase-admin"));
-const ai_1 = require("@genkit-ai/ai");
-const core_1 = require("@genkit-ai/core");
-const vertexai_1 = require("@genkit-ai/vertexai");
-const zod_1 = require("zod");
 admin.initializeApp();
-// Configure Genkit with the Vertex AI plugin for Enterprise features
-(0, core_1.configureGenkit)({
-    // @ts-ignore - Bypass interface mismatch between GenkitPlugin and PluginProvider in 0.5.17
-    plugins: [(0, vertexai_1.vertexAI)({ location: 'global' })],
-    logLevel: "info",
-    enableTracingAndMetrics: true,
-});
-// We will explicitly pass 'vertexai/gemini-3.1-flash' or use the exported gemini31Flash
-// Define the structured output schema for the SEO metadata
-const SeoMetadataSchema = zod_1.z.object({
-    seoTitle: zod_1.z.string().describe("A highly clickable title, max 60 characters. Do not use clickbait."),
-    seoDescription: zod_1.z.string().describe("Targeted summary of the report or thesis, max 160 characters."),
-    keywords: zod_1.z.array(zod_1.z.string()).describe("Top 5 most important tickers or financial themes mentioned."),
-});
+// Hard fallback to native REST to guarantee 100% stable execution
+// independently of @genkit-ai version restrictions.
+async function generateSeoMetadata(promptText) {
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+    if (!geminiApiKey) {
+        throw new Error("Missing GEMINI_API_KEY in cloud environment.");
+    }
+    // Natively hitting the stable and active 2.5 model endpoint
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            contents: [{ parts: [{ text: promptText }] }],
+            generationConfig: {
+                responseMimeType: "application/json",
+            }
+        })
+    });
+    const data = await response.json();
+    if (data.error) {
+        throw new Error(`Google AI API Error: ${data.error.message}`);
+    }
+    const rawJson = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!rawJson)
+        throw new Error("Empty response from Gemini.");
+    return JSON.parse(rawJson);
+}
 /**
  * Cloud Function triggered when a new report is added to Firestore.
  */
@@ -62,28 +73,13 @@ exports.generateReportSeo = functions.firestore
     .document("reports/{date}")
     .onCreate(async (snap, context) => {
     const reportData = snap.data();
-    if (!reportData || !reportData.content) {
-        console.log("No content found in the report.");
+    if (!reportData || !reportData.content)
         return null;
-    }
     try {
         console.log(`Generating SEO metadata for report ${context.params.date}`);
-        const llmResponse = await (0, ai_1.generate)({
-            model: 'vertexai/gemini-3.1-flash',
-            prompt: `You are an expert financial SEO copywriter. Read the following daily options flow report and generate highly optimized SEO metadata for it. Focus on the most important ticker movements and institutional positioning.\n\nReport Content:\n${reportData.content.substring(0, 5000)}`,
-            output: {
-                format: "json",
-                schema: SeoMetadataSchema,
-            },
-        });
-        const seoData = llmResponse.output;
-        if (!seoData) {
-            throw new Error("Failed to generate structured SEO data.");
-        }
-        // Save the generated SEO metadata back to the report document
-        await snap.ref.update({
-            seoMetadata: seoData,
-        });
+        const prompt = `You are an expert financial SEO copywriter. Read the following daily options flow report and generate highly optimized SEO metadata for it. Focus on the most important ticker movements and institutional positioning. Output strictly valid JSON containing seoTitle (<60 chars), seoDescription (<160 chars), and keywords (array of 5 tickers/themes).\n\nReport Content:\n${reportData.content.substring(0, 5000)}`;
+        const seoData = await generateSeoMetadata(prompt);
+        await snap.ref.update({ seoMetadata: seoData });
         console.log(`Successfully generated and saved SEO metadata for ${context.params.date}`);
         return seoData;
     }
@@ -99,33 +95,73 @@ exports.generateSignalSeo = functions.firestore
     .document("signals/{ticker}")
     .onCreate(async (snap, context) => {
     const signalData = snap.data();
-    if (!signalData || !signalData.thesis) {
-        console.log("No thesis found in the signal.");
+    if (!signalData || !signalData.thesis)
         return null;
-    }
     try {
         console.log(`Generating SEO metadata for signal ${context.params.ticker}`);
-        const llmResponse = await (0, ai_1.generate)({
-            model: 'vertexai/gemini-3.1-flash',
-            prompt: `You are an expert financial SEO copywriter. Read the following institutional options flow thesis for ${context.params.ticker} and generate highly optimized SEO metadata for the ticker's signal page. Keep it professional and focused on the options flow analysis.\n\nThesis:\n${signalData.thesis}`,
-            output: {
-                format: "json",
-                schema: SeoMetadataSchema,
-            },
-        });
-        const seoData = llmResponse.output;
-        if (!seoData) {
-            throw new Error("Failed to generate structured SEO data.");
-        }
-        await snap.ref.update({
-            seoMetadata: seoData,
-        });
+        const prompt = `You are an expert financial SEO copywriter. Read the following institutional options flow thesis for ${context.params.ticker} and generate highly optimized SEO metadata for the ticker's signal page. Keep it professional and focused on the options flow analysis. Output strictly valid JSON containing seoTitle (<60 chars), seoDescription (<160 chars), and keywords (array of 5 max).\n\nThesis:\n${signalData.thesis}`;
+        const seoData = await generateSeoMetadata(prompt);
+        await snap.ref.update({ seoMetadata: seoData });
         console.log(`Successfully generated and saved SEO metadata for signal ${context.params.ticker}`);
         return seoData;
     }
     catch (error) {
         console.error("Error generating signal SEO metadata:", error);
         return null;
+    }
+});
+/**
+ * HTTP Callable Cloud Function to manually trigger the backfill of historical data.
+ */
+exports.manualSeoBackfill = (0, https_1.onRequest)({ timeoutSeconds: 540, memory: "1GiB" }, async (req, res) => {
+    try {
+        console.log("Starting cloud-native native fetch manual backfill...");
+        const firestore = admin.firestore();
+        // 1. Backfill Reports
+        const reportsSnapshot = await firestore.collection("daily_reports").get();
+        let reportsUpdated = 0;
+        for (const doc of reportsSnapshot.docs) {
+            const data = doc.data();
+            if (data.seoMetadata || !data.content)
+                continue;
+            console.log(`Backfilling report: ${doc.id}`);
+            try {
+                const prompt = `You are an expert financial SEO copywriter. Read the following daily options flow report and generate highly optimized SEO metadata for it. Focus on the most important ticker movements and institutional positioning. Output strictly valid JSON containing seoTitle (<60 chars), seoDescription (<160 chars), and keywords (array of 5 tickers/themes).\n\nReport Content:\n${data.content.substring(0, 5000)}`;
+                const seoData = await generateSeoMetadata(prompt);
+                await doc.ref.update({ seoMetadata: seoData });
+                reportsUpdated++;
+            }
+            catch (e) {
+                console.error(`Failed ${doc.id}:`, e);
+            }
+        }
+        // 2. Backfill Signals (Limit 50 to avoid timeouts)
+        const signalsSnapshot = await firestore.collection("overnight_signals").limit(50).get();
+        let signalsUpdated = 0;
+        for (const doc of signalsSnapshot.docs) {
+            const data = doc.data();
+            if (data.seoMetadata || !data.thesis)
+                continue;
+            console.log(`Backfilling signal: ${doc.id}`);
+            try {
+                const prompt = `You are an expert financial SEO copywriter. Read the following institutional options flow thesis for ${data.ticker || doc.id} and generate highly optimized SEO metadata for the ticker's signal page. Keep it professional and focused on the options flow analysis. Output strictly valid JSON containing seoTitle (<60 chars), seoDescription (<160 chars), and keywords (array of 5 max).\n\nThesis:\n${data.thesis}`;
+                const seoData = await generateSeoMetadata(prompt);
+                await doc.ref.update({ seoMetadata: seoData });
+                signalsUpdated++;
+            }
+            catch (e) {
+                console.error(`Failed signal ${doc.id}:`, e);
+            }
+        }
+        res.json({
+            success: true,
+            message: "Native REST Backfill execution complete.",
+            metrics: { reportsUpdated, signalsUpdated }
+        });
+    }
+    catch (error) {
+        console.error("Backfill execution failed:", error);
+        res.status(500).json({ success: false, error: String(error) });
     }
 });
 //# sourceMappingURL=index.js.map

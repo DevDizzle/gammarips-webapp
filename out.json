@@ -1,0 +1,109 @@
+{
+  "status": "success",
+  "result": [
+    {
+      "platform": "gcfv2",
+      "id": "manualSeoBackfill",
+      "project": "profitscout-fida8",
+      "region": "us-central1",
+      "httpsTrigger": {},
+      "entryPoint": "manualSeoBackfill",
+      "runtime": "nodejs20",
+      "source": {
+        "storageSource": {
+          "bucket": "gcf-v2-sources-406581297632-us-central1",
+          "object": "manualSeoBackfill/function-source.zip",
+          "generation": "1774619725675101"
+        }
+      },
+      "ingressSettings": "ALLOW_ALL",
+      "environmentVariables": {
+        "FIREBASE_CONFIG": "{\"projectId\":\"profitscout-fida8\",\"storageBucket\":\"profitscout-fida8.firebasestorage.app\"}",
+        "GCLOUD_PROJECT": "profitscout-fida8",
+        "EVENTARC_CLOUD_EVENT_SOURCE": "projects/profitscout-fida8/locations/us-central1/services/manualSeoBackfill",
+        "FUNCTION_TARGET": "manualSeoBackfill",
+        "LOG_EXECUTION_ID": "true"
+      },
+      "timeoutSeconds": 540,
+      "uri": "https://us-central1-profitscout-fida8.cloudfunctions.net/manualSeoBackfill",
+      "serviceAccount": "406581297632-compute@developer.gserviceaccount.com",
+      "availableMemoryMb": 1024,
+      "cpu": 1,
+      "concurrency": 80,
+      "labels": {
+        "deployment-tool": "cli-firebase",
+        "firebase-functions-hash": "30c1d5d452d6b06ddba104d7cb4c469e2a65449e"
+      },
+      "runServiceId": "manualseobackfill",
+      "codebase": "default",
+      "hash": "30c1d5d452d6b06ddba104d7cb4c469e2a65449e",
+      "state": "ACTIVE"
+    },
+    {
+      "platform": "gcfv1",
+      "id": "generateReportSeo",
+      "project": "profitscout-fida8",
+      "region": "us-central1",
+      "eventTrigger": {
+        "eventType": "providers/cloud.firestore/eventTypes/document.create",
+        "eventFilters": {
+          "resource": "projects/profitscout-fida8/databases/(default)/documents/reports/{date}"
+        },
+        "retry": false
+      },
+      "entryPoint": "generateReportSeo",
+      "runtime": "nodejs20",
+      "maxInstances": 3000,
+      "ingressSettings": "ALLOW_ALL",
+      "labels": {
+        "deployment-tool": "cli-firebase",
+        "firebase-functions-hash": "9afaa0a80a49401e5de9e3a06f3b14173b185d62"
+      },
+      "environmentVariables": {
+        "FIREBASE_CONFIG": "{\"projectId\":\"profitscout-fida8\",\"storageBucket\":\"profitscout-fida8.firebasestorage.app\"}",
+        "GCLOUD_PROJECT": "profitscout-fida8",
+        "EVENTARC_CLOUD_EVENT_SOURCE": "projects/profitscout-fida8/locations/us-central1/functions/generateReportSeo"
+      },
+      "sourceUploadUrl": "https://storage.googleapis.com/uploads-841877422789.us-central1.cloudfunctions.appspot.com/101c989e-c75b-4191-b343-09dc07e2bed3.zip",
+      "serviceAccount": "profitscout-fida8@appspot.gserviceaccount.com",
+      "availableMemoryMb": 256,
+      "timeoutSeconds": 60,
+      "codebase": "default",
+      "hash": "9afaa0a80a49401e5de9e3a06f3b14173b185d62",
+      "state": "ACTIVE"
+    },
+    {
+      "platform": "gcfv1",
+      "id": "generateSignalSeo",
+      "project": "profitscout-fida8",
+      "region": "us-central1",
+      "eventTrigger": {
+        "eventType": "providers/cloud.firestore/eventTypes/document.create",
+        "eventFilters": {
+          "resource": "projects/profitscout-fida8/databases/(default)/documents/signals/{ticker}"
+        },
+        "retry": false
+      },
+      "entryPoint": "generateSignalSeo",
+      "runtime": "nodejs20",
+      "maxInstances": 3000,
+      "ingressSettings": "ALLOW_ALL",
+      "labels": {
+        "deployment-tool": "cli-firebase",
+        "firebase-functions-hash": "9afaa0a80a49401e5de9e3a06f3b14173b185d62"
+      },
+      "environmentVariables": {
+        "FIREBASE_CONFIG": "{\"projectId\":\"profitscout-fida8\",\"storageBucket\":\"profitscout-fida8.firebasestorage.app\"}",
+        "GCLOUD_PROJECT": "profitscout-fida8",
+        "EVENTARC_CLOUD_EVENT_SOURCE": "projects/profitscout-fida8/locations/us-central1/functions/generateSignalSeo"
+      },
+      "sourceUploadUrl": "https://storage.googleapis.com/uploads-841877422789.us-central1.cloudfunctions.appspot.com/101c989e-c75b-4191-b343-09dc07e2bed3.zip",
+      "serviceAccount": "profitscout-fida8@appspot.gserviceaccount.com",
+      "availableMemoryMb": 256,
+      "timeoutSeconds": 60,
+      "codebase": "default",
+      "hash": "9afaa0a80a49401e5de9e3a06f3b14173b185d62",
+      "state": "ACTIVE"
+    }
+  ]
+}

@@ -39,6 +39,9 @@ function getAdminApp(): AdminApp {
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
+  console.log('DEBUG: FIREBASE_PRIVATE_KEY raw value:', process.env.FIREBASE_PRIVATE_KEY);
+  console.log('DEBUG: FIREBASE_PRIVATE_KEY length:', process.env.FIREBASE_PRIVATE_KEY?.length);
+
   try {
     if (projectId && clientEmail && privateKey) {
       // Local development or explicit service account

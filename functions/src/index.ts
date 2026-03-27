@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import { onRequest } from "firebase-functions/v2/https";
 import * as admin from "firebase-admin";
 import { generate } from "@genkit-ai/ai";
 import { configureGenkit } from "@genkit-ai/core";
@@ -108,3 +109,67 @@ export const generateSignalSeo = functions.firestore
       return null;
     }
   });
+
+/**
+ * HTTP Callable Cloud Function to manually trigger the backfill of historical data.
+ * Limit defined batches to avoid Google Cloud function timeouts or memory limits.
+ */
+export const manualSeoBackfill = onRequest(
+  { timeoutSeconds: 540, memory: "1GiB" },
+  async (req, res) => {
+    try {
+      console.log("Starting cloud-native manual backfill with vertex ai...");
+      
+      const firestore = admin.firestore();
+      
+      // 1. Backfill Reports
+      const reportsSnapshot = await firestore.collection("daily_reports").get();
+      let reportsUpdated = 0;
+      for (const doc of reportsSnapshot.docs) {
+        const data = doc.data();
+        if (data.seoMetadata || !data.content) continue;
+        
+        console.log(`Backfilling report: ${doc.id}`);
+        const llmResponse = await generate({
+          model: 'vertexai/gemini-3.1-flash',
+          prompt: `You are an expert financial SEO copywriter. Read the following daily options flow report and generate highly optimized SEO metadata for it. Focus on the most important ticker movements and institutional positioning.\n\nReport Content:\n${data.content.substring(0, 5000)}`,
+          output: { format: "json", schema: SeoMetadataSchema },
+        });
+
+        if (llmResponse.output) {
+          await doc.ref.update({ seoMetadata: llmResponse.output });
+          reportsUpdated++;
+        }
+      }
+
+      // 2. Backfill Signals (Limits to 50 per execution to avoid timeout. Refresh page to do more.)
+      const signalsSnapshot = await firestore.collection("overnight_signals").limit(50).get();
+      let signalsUpdated = 0;
+      for (const doc of signalsSnapshot.docs) {
+        const data = doc.data();
+        if (data.seoMetadata || !data.thesis) continue;
+
+        console.log(`Backfilling signal: ${doc.id}`);
+        const llmResponse = await generate({
+          model: 'vertexai/gemini-3.1-flash',
+          prompt: `You are an expert financial SEO copywriter. Read the following institutional options flow thesis for ${data.ticker || doc.id} and generate highly optimized SEO metadata for the ticker's signal page. Keep it professional and focused on the options flow analysis.\n\nThesis:\n${data.thesis}`,
+          output: { format: "json", schema: SeoMetadataSchema },
+        });
+
+        if (llmResponse.output) {
+          await doc.ref.update({ seoMetadata: llmResponse.output });
+          signalsUpdated++;
+        }
+      }
+
+      res.json({
+        success: true,
+        message: "Vertex AI Backfill execution complete.",
+        metrics: { reportsUpdated, signalsUpdated }
+      });
+    } catch (error) {
+      console.error("Backfill execution failed:", error);
+      res.status(500).json({ success: false, error: String(error) });
+    }
+  }
+);

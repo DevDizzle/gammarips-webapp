@@ -42,8 +42,9 @@ export default async function ReportPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": report.title || `GammaRips Overnight Report ${date}`,
-    "datePublished": report.scan_date,
-    "dateModified": report.scan_date,
+    "image": "https://gammarips.com/og-image.png?v=2",
+    "datePublished": `${report.scan_date}T08:00:00Z`,
+    "dateModified": `${report.scan_date}T08:00:00Z`,
     "author": {
       "@type": "Organization",
       "name": "GammaRips",
@@ -65,7 +66,7 @@ export default async function ReportPage({ params }: Props) {
     "name": `GammaRips Overnight Signals — ${report.scan_date}`,
     "description": `Institutional options flow scan of 5,230+ tickers. ${report.total_signals} signals detected.`,
     "url": `https://gammarips.com/reports/${report.scan_date}`,
-    "datePublished": report.scan_date,
+    "datePublished": `${report.scan_date}T08:00:00Z`,
     "creator": { "@type": "Organization", "name": "GammaRips" },
     "license": "https://gammarips.com/terms",
     "variableMeasured": ["options volume", "open interest", "unusual activity score", "institutional flow"]

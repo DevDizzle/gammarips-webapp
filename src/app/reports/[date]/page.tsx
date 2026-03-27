@@ -12,10 +12,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { date } = await params;
   const report = await getDailyReport(date);
   
-  const title = report?.title || `Report ${date} | GammaRips`;
-  const description = report 
+  const title = report?.seoMetadata?.seoTitle || report?.title || `Report ${date} | GammaRips`;
+  const description = report?.seoMetadata?.seoDescription || (report 
     ? `Overnight institutional options flow report. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`
-    : `Overnight Edge report for ${date}`;
+    : `Overnight Edge report for ${date}`);
 
   return {
     title,
@@ -54,7 +54,8 @@ export default async function ReportPage({ params }: Props) {
       "name": "GammaRips",
       "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=2" }
     },
-    "description": `Overnight institutional options flow report. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`,
+    "description": report.seoMetadata?.seoDescription || `Overnight institutional options flow report. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`,
+    ...(report.seoMetadata?.keywords ? { "keywords": report.seoMetadata.keywords.join(', ') } : {}),
     "mainEntityOfPage": `https://gammarips.com/reports/${report.scan_date}`
   };
 

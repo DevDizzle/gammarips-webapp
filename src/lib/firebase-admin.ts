@@ -29,32 +29,35 @@ let adminDb: ReturnType<typeof getAdminFirestore> | null = null;
 function getAdminApp(): AdminApp {
   if (adminApp) return adminApp;
   
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-
   // Check if apps are already initialized (e.g. by another instance of the module)
   if (getAdminApps().length) {
     adminApp = getAdminApps()[0]!;
     return adminApp;
   }
 
-  if (!projectId || !clientEmail || !privateKey) {
-     // If we are missing credentials, we can't initialize. 
-     // This will cause data fetching to fail, which is expected if config is missing.
-    throw new Error('Firebase server environment variables (FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY) are not set.');
+  const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+
+  try {
+    if (projectId && clientEmail && privateKey) {
+      // Local development or explicit service account
+      adminApp = initializeAdminApp({
+        credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
+        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+      });
+    } else {
+      // Production / Firebase App Hosting: Use Application Default Credentials (ADC)
+      // Automatically uses the App Hosting compute service account
+      adminApp = initializeAdminApp({
+        projectId: projectId, // Optional if GOOGLE_CLOUD_PROJECT is natively set
+        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+      });
+    }
+  } catch (error) {
+    console.error('Firebase Admin initialization error:', error);
+    throw error;
   }
-
-  const serviceAccount: ServiceAccount = {
-    projectId,
-    clientEmail,
-    privateKey,
-  };
-
-  adminApp = initializeAdminApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  });
   
   return adminApp;
 }

@@ -53,11 +53,9 @@ function getAdminApp(): AdminApp {
       });
     } else {
       // Production / Firebase App Hosting: Use Application Default Credentials (ADC)
-      // Automatically uses the App Hosting compute service account
-      adminApp = initializeAdminApp({
-        projectId: projectId, // Optional if GOOGLE_CLOUD_PROJECT is natively set
-        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-      });
+      // Call with zero arguments so the Google Cloud Metadata server auto-injects the Quota Project
+      // and eliminates the CONSUMER_INVALID permission errors.
+      adminApp = initializeAdminApp();
     }
   } catch (error) {
     console.error('Firebase Admin initialization error:', error);

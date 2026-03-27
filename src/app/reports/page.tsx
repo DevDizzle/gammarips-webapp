@@ -13,9 +13,25 @@ export const metadata: Metadata = {
 export default async function ReportsPage() {
   const summaries = await getAllOvernightSummaries(50);
 
+  const indexSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Daily Overnight Edge Reports",
+    "description": "Every trading day, we publish what institutional money did overnight.",
+    "url": "https://gammarips.com/reports",
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": summaries.map((summary, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "url": `https://gammarips.com/reports/${summary.report_date || summary.scan_date}`
+      }))
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(indexSchema) }} />    
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold font-headline mb-4">The Morning Briefing</h1>

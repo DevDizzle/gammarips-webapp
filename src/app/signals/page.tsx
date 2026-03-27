@@ -21,8 +21,26 @@ export default async function SignalsPage() {
     getOvernightSignals(queryDate, 'bear', 0, 100),
   ]);
 
+  const allSignals = [...bullSignals, ...bearSignals];
+  const indexSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Overnight Options Flow Signals",
+    "description": "Full list of institutional options flow signals detected overnight.",
+    "url": "https://gammarips.com/signals",
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": allSignals.slice(0, 30).map((signal, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "url": `https://gammarips.com/signals/${signal.ticker.toLowerCase()}`
+      }))
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(indexSchema) }} />
       <main className="flex-1 container mx-auto px-4 py-8">
          <div className="mb-8">
             <h1 className="text-3xl font-bold font-headline mb-2">Overnight Signals</h1>

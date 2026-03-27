@@ -215,6 +215,11 @@ export interface OvernightSignal {
   // Meta
   enriched_at?: any;
   updated_at?: any;
+  seoMetadata?: {
+    seoTitle?: string;
+    seoDescription?: string;
+    keywords?: string[];
+  };
 }
 
 export interface OvernightSummary {
@@ -240,6 +245,11 @@ export interface DailyReport {
   bullish_count: number;
   bearish_count: number;
   underlying_scan_date?: string;
+  seoMetadata?: {
+    seoTitle?: string;
+    seoDescription?: string;
+    keywords?: string[];
+  };
 }
 
 export async function getDailyReport(date: string): Promise<DailyReport | null> {

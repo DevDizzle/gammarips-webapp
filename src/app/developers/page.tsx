@@ -19,7 +19,10 @@ const datasetSchema = {
   "@type": "Dataset",
   "name": "GammaRips Overnight Options Flow Data",
   "description": "Daily overnight institutional options flow signals across 5,000+ US equities. Includes conviction scores, technicals, AI-generated catalysts, and contract recommendations.",
+  "image": "https://gammarips.com/og-image.png?v=2",
   "url": "https://gammarips.com/developers",
+  "datePublished": "2026-03-27T08:00:00Z",
+  "dateModified": "2026-03-27T08:00:00Z",
   "license": "https://gammarips.com/terms",
   "creator": {
     "@type": "Organization",

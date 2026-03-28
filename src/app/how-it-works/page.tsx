@@ -17,8 +17,19 @@ export const metadata: Metadata = {
 };
 
 export default function HowItWorksPage() {
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How GammaRips Works — Overnight Options Scanner",
+    "description": "Learn how our scanner analyzes overnight institutional options flow across 5,230+ tickers.",
+    "image": "https://gammarips.com/og-image.png?v=2",
+    "author": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
+    "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=2" } }
+  };
+
   return (
     <section className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <header className="text-center">
         <p className="text-sm font-semibold uppercase tracking-wider text-primary">Education</p>
         <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">

@@ -77,6 +77,15 @@ export default function AboutPage() {
     "sameAs": ["https://twitter.com/GammaRips"],
   };
 
+  const aboutSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About GammaRips - The Overnight Edge",
+    "description": "While you sleep, institutions place their bets. By 8:30 AM, you know what they did. Meet the team behind The Overnight Edge.",
+    "url": "https://gammarips.com/about",
+    "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=2" } }
+  };
+
   return (
     <>
       <section className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
@@ -262,6 +271,7 @@ export default function AboutPage() {
         </section>
       </section>
 
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }} />    
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
     </>

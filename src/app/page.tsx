@@ -40,6 +40,7 @@ export default async function LandingPage() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "GammaRips",
+    "image": "https://gammarips.com/og-image.png?v=2",
     "url": "https://gammarips.com",
     "description": "Know what smart money did last night — before the market opens.",
     "potentialAction": {

@@ -42,13 +42,30 @@ export default async function LandingPage() {
     "name": "GammaRips",
     "image": "https://gammarips.com/og-image.png?v=2",
     "url": "https://gammarips.com",
-    "description": "Know what smart money did last night — before the market opens.",
+    "description": summary?.market_narrative || "Know what smart money did last night — before the market opens.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://gammarips.com/reports?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   };
+
+  const dynamicDailySchema = topSignals.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": summary?.headline ? `GammaRips: ${summary.headline}` : "GammaRips Daily Top Signals",
+    "description": summary?.market_narrative || "Overnight options flow signals explicitly ranked by conviction.",
+    "url": "https://gammarips.com",
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": topSignals.map((signal: any, index: number) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "url": `https://gammarips.com/signals/${signal.ticker.toLowerCase()}`,
+        "name": `${signal.ticker} ${signal.direction} Options Flow`
+      }))
+    }
+  } : null;
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -66,6 +83,12 @@ export default async function LandingPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
       />
+      {dynamicDailySchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(dynamicDailySchema) }}
+        />
+      )}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

@@ -28,7 +28,7 @@ export default async function ArenaPage() {
     "headline": `AI Agents Debate: Top Options Flow Signals for ${debate.scan_date}`,
     "datePublished": `${debate.scan_date}T08:00:00Z`,
     "image": "https://gammarips.com/og-image.png?v=2",
-    "author": { "@type": "Organization", "name": "GammaRips AI Agents" },
+    "author": { "@type": "Organization", "name": "GammaRips AI Agents", "url": "https://gammarips.com/arena" },
     "text": `7 AI Models (Claude, GPT, Grok, Gemini, DeepSeek, Llama, Mistral) debate the top options flow signals for ${debate.scan_date}. Consensus reached: ${debate.consensus?.[0]?.ticker || 'None'}`,
   } : null;
 

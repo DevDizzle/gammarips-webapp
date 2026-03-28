@@ -21,16 +21,12 @@ export default function PricingPage() {
     "image": "https://gammarips.com/og-image.png?v=2",
     "brand": { "@type": "Brand", "name": "GammaRips" },
     "offers": {
-      "@type": "AggregateOffer",
+      "@type": "Offer",
       "priceCurrency": "USD",
-      "lowPrice": "0.00",
-      "highPrice": "149.00",
-      "offerCount": "3",
-      "offers": [
-        { "@type": "Offer", "name": "Free Tier", "price": "0.00", "priceCurrency": "USD" },
-        { "@type": "Offer", "name": "The Overnight Edge", "price": "49.00", "priceCurrency": "USD" },
-        { "@type": "Offer", "name": "The War Room", "price": "149.00", "priceCurrency": "USD" }
-      ]
+      "price": "0.00",
+      "name": "All Access Free Membership",
+      "availability": "https://schema.org/InStock",
+      "url": "https://gammarips.com/pricing"
     }
   };
 

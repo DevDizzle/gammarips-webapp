@@ -24,7 +24,14 @@ export default async function ReportsPage() {
       "itemListElement": summaries.map((summary, index) => ({
         "@type": "ListItem",
         "position": index + 1,
-        "url": `https://gammarips.com/reports/${summary.report_date || summary.scan_date}`
+        "item": {
+          "@type": "Article",
+          "url": `https://gammarips.com/reports/${summary.report_date || summary.scan_date}`,
+          "name": summary.headline || summary.title || "Daily Overnight Signals",
+          "headline": summary.headline || summary.title || "Daily Overnight Signals",
+          "description": `${summary.total_signals || 0} Signals Scanned. Bullish: ${summary.bullish_count || 0}. Bearish: ${summary.bearish_count || 0}.`,
+          "datePublished": `${summary.report_date || summary.scan_date}T08:30:00Z`
+        }
       }))
     }
   };

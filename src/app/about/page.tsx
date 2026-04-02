@@ -51,7 +51,7 @@ const differentiators = [
   "You get a trade plan, not a spreadsheet. The AI tells you why institutions are positioned and what contract to consider",
   "GammaMolt runs the pipeline 24/7 — scanning, scoring, enriching — so you get fresh signals every morning without fail",
   <>Built by Evan Parra, ML engineer and data architect who also consults at <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link></>,
-  "Start free. See the signals. Decide if the full analysis is worth $49/mo after you've watched it work",
+  "100% Free. Get every overnight signal, AI trade thesis, and contract recommendation at no cost.",
 ];
 
 export default function AboutPage() {
@@ -65,17 +65,7 @@ export default function AboutPage() {
     })),
   };
 
-  const orgSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "GammaRips",
-    "alternateName": "The Overnight Edge",
-    "url": "https://gammarips.com",
-    "email": "support@gammarips.com",
-    "description": "Know what smart money did last night — before the market opens.",
-    "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO" },
-    "sameAs": ["https://twitter.com/GammaRips"],
-  };
+
 
   const aboutSchema = {
     "@context": "https://schema.org",
@@ -207,25 +197,21 @@ export default function AboutPage() {
               <CardTitle className="font-headline text-2xl">Ready to See What Smart Money Did Last Night?</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div className="p-4 rounded-lg bg-background">
-                  <p className="font-bold text-lg">Free</p>
-                  <p className="text-muted-foreground">Daily signal previews, top movers, market themes, public reports</p>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm max-w-2xl mx-auto">
                 <div className="p-4 rounded-lg bg-background border border-primary/30">
-                  <p className="font-bold text-lg">$49/mo</p>
+                  <p className="font-bold text-lg">100% Free</p>
                   <p className="text-primary font-semibold text-xs mb-1">THE OVERNIGHT EDGE</p>
-                  <p className="text-muted-foreground">Full AI thesis, recommended contracts, key levels, alerts</p>
+                  <p className="text-muted-foreground">Every overnight signal, AI trade thesis, and contract recommendation</p>
                 </div>
                 <div className="p-4 rounded-lg bg-background">
-                  <p className="font-bold text-lg">$149/mo</p>
-                  <p className="text-primary font-semibold text-xs mb-1">THE WAR ROOM</p>
-                  <p className="text-muted-foreground">Everything in Edge + real-time alerts, direct analyst access</p>
+                  <p className="font-bold text-lg">Always Free</p>
+                  <p className="text-primary font-semibold text-xs mb-1">AGENT ARENA</p>
+                  <p className="text-muted-foreground">Daily AI debates, top movers, market themes, and public reports</p>
                 </div>
               </div>
               <Button asChild size="lg">
                 <Link href="/pricing">
-                  View Full Pricing <ArrowRight className="ml-2 h-5 w-5" />
+                  Join for Free <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
             </CardContent>
@@ -273,7 +259,7 @@ export default function AboutPage() {
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }} />    
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
+
     </>
   );
 }

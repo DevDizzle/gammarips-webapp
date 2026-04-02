@@ -14,36 +14,18 @@ export const metadata = {
   }
 };
 
-const datasetSchema = {
+const webApiSchema = {
   "@context": "https://schema.org",
-  "@type": "Dataset",
-  "name": "GammaRips Overnight Options Flow Data",
-  "description": "Daily overnight institutional options flow signals across 5,000+ US equities. Includes conviction scores, technicals, AI-generated catalysts, and contract recommendations.",
-  "image": "https://gammarips.com/og-image.png?v=2",
-  "url": "https://gammarips.com/developers",
-  "datePublished": "2026-03-27T08:00:00Z",
-  "dateModified": "2026-03-27T08:00:00Z",
-  "license": "https://gammarips.com/terms",
-  "creator": {
+  "@type": "WebAPI",
+  "name": "GammaRips MCP API",
+  "description": "Model Context Protocol (MCP) API for daily overnight institutional options flow signals across 5,000+ US equities. Includes conviction scores, technicals, AI-generated catalysts, and contract recommendations.",
+  "url": "https://gammarips-mcp-406581297632.us-central1.run.app/sse",
+  "documentation": "https://gammarips.com/developers",
+  "provider": {
     "@type": "Organization",
     "name": "GammaRips",
     "url": "https://gammarips.com"
-  },
-  "temporalCoverage": "2026-02-13/..",
-  "distribution": {
-    "@type": "DataDownload",
-    "encodingFormat": "application/json",
-    "contentUrl": "https://gammarips-mcp-406581297632.us-central1.run.app/sse"
-  },
-  "variableMeasured": [
-    "overnight_score",
-    "call_dollar_volume",
-    "put_dollar_volume",
-    "vol_oi_ratio",
-    "active_strikes",
-    "rsi_14",
-    "macd_histogram"
-  ]
+  }
 };
 
 export default function DevelopersPage() {
@@ -51,7 +33,7 @@ export default function DevelopersPage() {
     <div className="flex flex-col min-h-screen bg-background">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webApiSchema) }}
       />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-5xl space-y-16">
@@ -71,7 +53,7 @@ export default function DevelopersPage() {
                   https://gammarips-mcp-406581297632.us-central1.run.app/sse
                 </code>
                 <p className="text-sm text-muted-foreground">
-                  Want real-time alerts + enriched analysis? <Link href="/pricing" className="text-primary hover:underline">See paid plans →</Link>
+                  Web-based analysis and email alerts are available completely free. <Link href="/pricing" className="text-primary hover:underline">Learn more →</Link>
                 </p>
               </div>
             </div>
@@ -195,10 +177,10 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
         <section className="space-y-6">
           <h2 className="text-2xl font-bold font-headline">Pricing</h2>
           
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <div className="p-6 rounded-lg border-2 border-primary bg-card relative">
               <div className="absolute -top-3 right-4 px-2 py-0.5 bg-primary text-primary-foreground text-xs font-bold rounded">
-                CURRENT
+                100% FREE
               </div>
               <div className="text-sm text-primary mb-2">MCP API</div>
               <div className="text-3xl font-bold mb-4">Free</div>
@@ -213,24 +195,18 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
                 <li>✓ No auth required</li>
               </ul>
             </div>
-            <div className="p-6 rounded-lg border bg-card">
-              <div className="text-sm text-muted-foreground mb-2">The Overnight Edge</div>
-              <div className="text-3xl font-bold mb-4">$49<span className="text-lg text-muted-foreground">/mo</span></div>
+            <div className="p-6 rounded-lg border bg-card relative">
+              <div className="absolute -top-3 right-4 px-2 py-0.5 bg-foreground text-background text-xs font-bold rounded">
+                WEB ACCESS
+              </div>
+              <div className="text-sm text-muted-foreground mb-2">GammaRips Web</div>
+              <div className="text-3xl font-bold mb-4">Free</div>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>✓ Full enriched signals daily</li>
                 <li>✓ AI news + catalyst analysis</li>
                 <li>✓ Contract recommendations</li>
-                <li>✓ Performance tracking</li>
-              </ul>
-            </div>
-            <div className="p-6 rounded-lg border bg-card">
-              <div className="text-sm text-muted-foreground mb-2">The War Room</div>
-              <div className="text-3xl font-bold mb-4">$149<span className="text-lg text-muted-foreground">/mo</span></div>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ Everything in Edge</li>
-                <li>✓ WhatsApp real-time alerts</li>
-                <li>✓ Direct access to GammaMolt</li>
-                <li>✓ Intraday high-conviction calls</li>
+                <li>✓ Interactive Agent Arena</li>
+                <li>✓ Public performance tracking</li>
               </ul>
             </div>
           </div>
@@ -242,7 +218,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
           <p className="text-muted-foreground">Point your agent at the endpoint and start querying. That's it.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/pricing">
-              <Button size="lg">See Paid Plans →</Button>
+              <Button size="lg">Get Free Access →</Button>
             </Link>
             <a
               href="https://x.com/GammaRips"

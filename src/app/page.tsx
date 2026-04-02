@@ -52,17 +52,26 @@ export default async function LandingPage() {
 
   const dynamicDailySchema = topSignals.length > 0 ? {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": summary?.headline ? `GammaRips: ${summary.headline}` : "GammaRips Daily Top Signals",
-    "description": summary?.market_narrative || "Overnight options flow signals explicitly ranked by conviction.",
+    "@type": "Article",
+    "headline": report?.title || summary?.headline || "Today's Overnight Edge",
+    "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "Overnight options flow signals explicitly ranked by conviction.",
     "url": "https://gammarips.com",
+    "publisher": {
+      "@type": "Organization",
+      "name": "GammaRips",
+      "logo": { "@type": "ImageObject", "url": "https://gammarips.com/icon.png" }
+    },
+    "datePublished": reportDate ? `${reportDate}T08:30:00Z` : (summary?.scan_date ? `${summary.scan_date}T08:30:00Z` : new Date().toISOString()),
+    "articleBody": report?.content?.substring(0, 800) || summary?.market_narrative,
     "mainEntity": {
       "@type": "ItemList",
+      "name": "Top Signals",
       "itemListElement": topSignals.map((signal: any, index: number) => ({
         "@type": "ListItem",
         "position": index + 1,
         "url": `https://gammarips.com/signals/${signal.ticker.toLowerCase()}`,
-        "name": `${signal.ticker} ${signal.direction} Options Flow`
+        "name": `${signal.ticker} ${signal.direction === 'BULLISH' ? 'BULL' : 'BEAR'} Options Flow. Score: ${signal.overnight_score}`,
+        "description": signal.thesis || `${signal.ticker} signal`
       }))
     }
   } : null;

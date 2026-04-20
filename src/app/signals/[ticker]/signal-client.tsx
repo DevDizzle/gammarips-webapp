@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { type OvernightSignal } from "@/lib/firebase-admin";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, ArrowLeft, Flame, Zap } from "lucide-react";
+import { TrendingUp, TrendingDown, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Markdown } from "@/components/markdown";
 import { EmailCapture } from "@/components/email-capture";
@@ -24,33 +24,16 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
 
   const totalFlow = (signal.call_dollar_volume || 0) + (signal.put_dollar_volume || 0);
 
-  const renderPremiumBadge = () => {
-    if (!signal.is_premium_signal) return null;
-    
-    const score = signal.premium_score || 1;
-    
-    if (score >= 3) {
-      return (
-        <Badge className="ml-2 bg-amber-500 hover:bg-amber-600 text-black border-0 gap-1 shadow-[0_0_10px_rgba(245,158,11,0.5)] text-sm px-3 py-1">
-          <Flame className="w-4 h-4" /> Premium ×{score}
-        </Badge>
-      );
-    }
-    
-    if (score === 2) {
-      return (
-        <Badge variant="outline" className="ml-2 border-amber-500 text-amber-500 bg-amber-500/10 gap-1 text-sm px-3 py-1">
-          <Zap className="w-4 h-4" /> Premium ×2
-        </Badge>
-      );
-    }
-    
-    return (
-      <Badge variant="outline" className="ml-2 border-amber-500/50 text-amber-600 bg-amber-500/5 text-sm px-3 py-1">
-        Premium
-      </Badge>
-    );
-  };
+  // V5.3 note: "today's pick" (the tradeable-at-10:00-ET one) is surfaced by
+  // the TodaysPickCard on the home page, sourced from Firestore todays_pick.
+  // The per-signal detail page below describes any browsable signal; the
+  // "Engine Flags" card shows diagnostic patterns the scanner detected.
+  const engineFlagCount =
+    (signal.premium_hedge ? 1 : 0) +
+    (signal.premium_high_rr ? 1 : 0) +
+    (signal.premium_bull_flow ? 1 : 0) +
+    (signal.premium_high_atr ? 1 : 0) +
+    (signal.premium_bear_flow ? 1 : 0);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -64,7 +47,6 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
           <div>
             <div className="flex items-center gap-3 mb-2 flex-wrap">
               <h1 className="text-4xl font-bold font-headline tracking-tight">{signal.ticker}</h1>
-              {renderPremiumBadge()}
               <Badge variant={isBullish ? "default" : "destructive"} className={isBullish ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}>
                 {isBullish ? 'BULL' : 'BEAR'}
               </Badge>
@@ -101,15 +83,15 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
         {/* Main Content Grid */}
         <div className="grid gap-6">
 
-          {/* Premium Reason Section */}
-          {signal.is_premium_signal && (
-            <Card className="border-amber-500/30 bg-amber-500/5">
+          {/* Engine Flags — diagnostic patterns the scanner matched. Orthogonal to the
+              V5.3 notifier's deterministic pick (which lives on the home page). */}
+          {engineFlagCount > 0 && (
+            <Card className="border-primary/20 bg-card/60">
               <CardHeader className="pb-3">
-                <CardTitle className="text-amber-500 flex items-center gap-2">
-                  <Flame className="w-5 h-5" />
-                  Why This is a Premium Signal
+                <CardTitle className="flex items-center gap-2">
+                  Engine Flags
                   <span className="text-sm font-normal text-muted-foreground ml-2">
-                    ({signal.premium_score || 1}/5 patterns matched)
+                    ({engineFlagCount}/5 patterns matched — diagnostic, not a trade signal)
                   </span>
                 </CardTitle>
               </CardHeader>

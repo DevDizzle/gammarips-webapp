@@ -169,7 +169,6 @@ export interface OvernightSignal {
   direction: string; // "BULLISH" | "BEARISH" (stored uppercase in Firestore)
   // Scores
   overnight_score: number;
-  enrichment_quality_score?: number;
   contract_score?: number;
   // Price & Flow
   underlying_price?: number;
@@ -194,7 +193,6 @@ export interface OvernightSignal {
   key_headline?: string;
   flow_intent?: string;
   flow_intent_reasoning?: string;
-  mean_reversion_risk?: number;
   // Technicals
   support?: number;
   resistance?: number;
@@ -250,6 +248,67 @@ export interface DailyReport {
     seoDescription?: string;
     keywords?: string[];
   };
+}
+
+/** Canonical source of truth for "what did GammaRips pick today," written
+ *  atomically by signal-notifier at ~09:00 ET in Firestore todays_pick/{scan_date}.
+ *  Readers MUST NOT re-apply filters — this doc IS the answer. See
+ *  docs/TRADING-STRATEGY.md "Publication timing" and
+ *  docs/EXEC-PLANS/2026-04-20-v5-3-surface-and-monetization.md Phase 1.0. */
+export interface TodaysPick {
+  scan_date: string;
+  decided_at: any; // Firestore Timestamp
+  effective_at: string | null; // ISO8601 at 10:00 ET day+1 when pick is present
+  has_pick: boolean;
+  skip_reason:
+    | 'no_candidates_passed_gates'
+    | 'regime_fail_closed'
+    | 'vix_backwardation'
+    | null;
+  ticker?: string;
+  direction?: 'BULLISH' | 'BEARISH';
+  recommended_contract?: string;
+  recommended_strike?: number;
+  recommended_expiration?: string;
+  recommended_mid_price?: number;
+  recommended_dte?: number;
+  overnight_score?: number;
+  vol_oi_ratio?: number;
+  moneyness_pct?: number;
+  call_dollar_volume?: number;
+  put_dollar_volume?: number;
+  vix3m_at_enrich?: number;
+  vix_now_at_decision?: number;
+  policy_version: string;
+}
+
+export async function getTodaysPick(scanDate: string): Promise<TodaysPick | null> {
+  noStore();
+  try {
+    const docRef = getDb().collection('todays_pick').doc(scanDate);
+    const docSnap = await docRef.get();
+    if (!docSnap.exists) return null;
+    return docSnap.data() as TodaysPick;
+  } catch (error) {
+    console.error(`Error fetching todays_pick for ${scanDate}:`, error);
+    return null;
+  }
+}
+
+export async function getLatestTodaysPick(): Promise<TodaysPick | null> {
+  noStore();
+  try {
+    const snapshot = await getDb()
+      .collection('todays_pick')
+      .orderBy('scan_date', 'desc')
+      .limit(1)
+      .get();
+    if (snapshot.empty) return null;
+    return snapshot.docs[0].data() as TodaysPick;
+  } catch (error) {
+    console.error('Error fetching latest todays_pick:', error);
+    return null;
+  }
 }
 
 export async function getDailyReport(date: string): Promise<DailyReport | null> {

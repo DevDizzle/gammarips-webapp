@@ -5,10 +5,13 @@ import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Scan, Brain, Sparkles, Send, Flame, Zap } from "lucide-react";
-import { getLatestOvernightSummary, getDailyReport, getOvernightSignals } from "@/lib/firebase-admin";
+import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
+import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getLatestTodaysPick } from "@/lib/firebase-admin";
+import { TodaysPickCard } from "@/components/landing/todays-pick-card";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
+export const revalidate = 60; // keep todays_pick fresh without a full static rebuild
 
 export const metadata: Metadata = {
   title: "GammaRips | The Overnight Edge — Know What Smart Money Did Last Night",
@@ -29,6 +32,7 @@ export default async function LandingPage() {
   const summary = await getLatestOvernightSummary();
   const reportDate = summary ? (summary.report_date || summary.scan_date) : null;
   const report = reportDate ? await getDailyReport(reportDate) : null;
+  const todaysPick = await getLatestTodaysPick();
 
   const topBull = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 3) : [];
   const topBear = summary ? await getOvernightSignals(summary.scan_date, 'bear', 0, 2) : [];
@@ -106,6 +110,9 @@ export default async function LandingPage() {
 
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
+
+        {/* Today's V5.3 Pick — canonical single source of truth (Firestore todays_pick/{scan_date}) */}
+        {todaysPick && <TodaysPickCard pick={todaysPick} />}
 
         {/* How It Works Summary */}
         <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -203,12 +210,6 @@ export default async function LandingPage() {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-bold font-headline text-lg">{signal.ticker}</span>
-                          {signal.is_premium_signal && (
-                            <Badge className={`ml-1 gap-1 text-xs px-2 py-0.5 ${signal.premium_score >= 3 ? 'bg-amber-500 hover:bg-amber-600 text-black shadow-[0_0_10px_rgba(245,158,11,0.5)]' : 'bg-amber-500/10 text-amber-500 border border-amber-500/50'}`} variant={signal.premium_score >= 3 ? "default" : "outline"}>
-                              {signal.premium_score >= 3 ? <Flame className="w-3 h-3" /> : (signal.premium_score === 2 ? <Zap className="w-3 h-3" /> : null)}
-                              Premium{signal.premium_score >= 2 ? ` ×${signal.premium_score}` : ''}
-                            </Badge>
-                          )}
                         </div>
                         {signal.thesis && (
                           <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1 max-w-md">

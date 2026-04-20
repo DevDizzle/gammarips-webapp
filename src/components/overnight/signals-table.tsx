@@ -1,13 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowRight, TrendingUp, TrendingDown, Flame, Zap } from "lucide-react";
+import { ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
 import { type OvernightSignal } from '@/lib/firebase-admin';
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 
 interface SignalsTableProps {
   signals: OvernightSignal[];
@@ -15,12 +13,6 @@ interface SignalsTableProps {
 }
 
 export function SignalsTable({ signals, title }: SignalsTableProps) {
-  const [showPremiumOnly, setShowPremiumOnly] = useState(false);
-
-  const filteredSignals = showPremiumOnly 
-    ? signals.filter(s => s.is_premium_signal)
-    : signals;
-
   const formatMoney = (amount: number) => {
     if (!amount || amount === 0) return '—';
     if (Math.abs(amount) >= 1_000_000_000) return `$${(amount / 1_000_000_000).toFixed(1)}B`;
@@ -35,34 +27,6 @@ export function SignalsTable({ signals, title }: SignalsTableProps) {
     return "bg-slate-500 hover:bg-slate-600";
   };
 
-  const renderPremiumBadge = (signal: OvernightSignal) => {
-    if (!signal.is_premium_signal) return null;
-    
-    const score = signal.premium_score || 1;
-    
-    if (score >= 3) {
-      return (
-        <Badge className="ml-2 bg-amber-500 hover:bg-amber-600 text-black border-0 gap-1 shadow-[0_0_10px_rgba(245,158,11,0.5)]">
-          <Flame className="w-3 h-3" /> Premium ×{score}
-        </Badge>
-      );
-    }
-    
-    if (score === 2) {
-      return (
-        <Badge variant="outline" className="ml-2 border-amber-500 text-amber-500 bg-amber-500/10 gap-1">
-          <Zap className="w-3 h-3" /> Premium ×2
-        </Badge>
-      );
-    }
-    
-    return (
-      <Badge variant="outline" className="ml-2 border-amber-500/50 text-amber-600 bg-amber-500/5">
-        Premium
-      </Badge>
-    );
-  };
-
   // Calculate total dollar volume as positioning
   const getPositioning = (signal: OvernightSignal) => {
     const callVol = signal.call_dollar_volume || 0;
@@ -72,18 +36,8 @@ export function SignalsTable({ signals, title }: SignalsTableProps) {
 
   return (
     <div className="rounded-md border bg-card">
-      <div className="p-4 border-b flex items-center justify-between">
+      <div className="p-4 border-b">
         <h3 className="font-semibold text-lg">{title}</h3>
-        <div className="flex items-center space-x-2">
-          <Switch 
-            id={`premium-mode-${title}`} 
-            checked={showPremiumOnly} 
-            onCheckedChange={setShowPremiumOnly} 
-          />
-          <Label htmlFor={`premium-mode-${title}`} className="text-sm font-medium text-amber-500 cursor-pointer">
-            Premium Only
-          </Label>
-        </div>
       </div>
       <Table>
         <TableHeader>
@@ -97,24 +51,21 @@ export function SignalsTable({ signals, title }: SignalsTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredSignals.length === 0 ? (
+          {signals.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                {showPremiumOnly ? "No premium signals found for this category." : "No signals found for this category."}
+                No signals found for this category.
               </TableCell>
             </TableRow>
           ) : (
-            filteredSignals.map((signal) => {
+            signals.map((signal) => {
               const movePct = signal.price_change_pct || 0;
               return (
                 <TableRow key={signal.id} className="cursor-pointer hover:bg-muted/50 transition-colors group">
                   <TableCell className="font-bold font-mono text-base">
-                    <div className="flex items-center">
-                      <Link href={`/signals/${signal.ticker}`} className="hover:underline underline-offset-4">
-                        {signal.ticker}
-                      </Link>
-                      {renderPremiumBadge(signal)}
-                    </div>
+                    <Link href={`/signals/${signal.ticker}`} className="hover:underline underline-offset-4">
+                      {signal.ticker}
+                    </Link>
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge className={`${getScoreColor(signal.overnight_score)} text-white border-0`}>

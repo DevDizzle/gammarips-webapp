@@ -12,7 +12,8 @@ export async function createStripeCheckoutSession(
     priceId: string,
     successUrl: string,
     cancelUrl: string,
-    metadata?: { [key: string]: string }
+    metadata?: { [key: string]: string },
+    opts?: { trialPeriodDays?: number }
   ) {
     const user = await getOrCreateUserAdmin(uid);
     let customerId = user.stripeCustomerId;
@@ -29,7 +30,7 @@ export async function createStripeCheckoutSession(
         // Update user in Firebase with the new Stripe Customer ID
         await getOrCreateUserAdmin(uid, user.isAnonymous, (user.displayName || undefined) as string | undefined, (user.email || undefined) as string | undefined, customerId);
     }
-  
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'subscription',
@@ -41,14 +42,20 @@ export async function createStripeCheckoutSession(
         },
       ],
       metadata,
+      subscription_data: opts?.trialPeriodDays
+        ? { trial_period_days: opts.trialPeriodDays, metadata }
+        : metadata
+        ? { metadata }
+        : undefined,
+      allow_promotion_codes: true,
       success_url: successUrl,
       cancel_url: cancelUrl,
     });
-  
+
     if (!session.id) {
         throw new Error('Could not create Stripe Checkout Session.');
     }
-    
+
     return session.id;
 }
 

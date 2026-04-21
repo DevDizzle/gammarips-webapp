@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Privacy Policy | GammaRips',
-  description: 'Privacy policy for GammaRips and The Overnight Edge.',
+  description: 'Privacy policy for GammaRips and GammaRips Pro.',
   alternates: { canonical: 'https://gammarips.com/privacy' },
 };
 
@@ -12,7 +12,7 @@ export default function PrivacyPage() {
       
       <div className="prose prose-invert max-w-none space-y-6">
         <h2>1. Information We Collect</h2>
-        <p>When you create an account or subscribe to The Overnight Edge, we collect:</p>
+        <p>When you create an account or subscribe to GammaRips Pro, we collect:</p>
         <ul>
           <li>Email address</li>
           <li>Payment information (processed securely by Stripe — we never store card details)</li>
@@ -21,7 +21,7 @@ export default function PrivacyPage() {
 
         <h2>2. How We Use Your Information</h2>
         <ul>
-          <li>To provide and maintain The Overnight Edge service</li>
+          <li>To provide and maintain GammaRips Pro service</li>
           <li>To process subscriptions and payments</li>
           <li>To send daily signal reports (if subscribed)</li>
           <li>To improve our service</li>

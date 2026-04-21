@@ -7,50 +7,74 @@ import {
 
 export const faqs = [
   {
-    question: "What do I actually get every morning?",
-    answer: "By 8:30 AM EST, you get a scored list of every ticker where institutions placed unusual options bets overnight. Free users see the ticker, score, direction, and move size. Paid users ($49/mo) get the full AI trade thesis, specific contract recommendations with strike and expiry, key support/resistance levels, and technical + news analysis."
+    question: "What exactly lands on my phone every morning?",
+    answer: "By 09:00 ET you get one pick or none. A ticker, a direction (call or put), a specific contract with strike and expiration, a recommended mid price, a −60% stop, and a +80% target. Some days the engine stays out — when VIX closes above VIX3M (backwardation) or nothing clears the filter stack, nothing is sent. On those days, do nothing. That's the routine."
   },
   {
-    question: "How do you decide which signals are worth paying attention to?",
-    answer: "Each signal is scored 1-10 based on four things: how much money institutions put in (positioning size), how many strike prices had unusual activity (strike breadth), how much volume there was vs existing positions (vol/OI ratio), and whether the money was directionally concentrated in calls or puts (flow imbalance). Scores of 6+ get the full AI enrichment."
+    question: "How does the engine pick which one?",
+    answer: "Four mechanical filters, in order. (1) Overnight score ≥ 1 — any level of unusual activity qualifies. (2) Bid-ask spread ≤ 10%. (3) Directional dollar volume > $500K. (4) Volume/open-interest ratio > 2.0 at the focal strike, moneyness 5–15% OTM, and VIX ≤ VIX3M. Whatever clears all four, the pick is whichever has the highest directional dollar volume. Five deterministic tiebreakers after that — no judgment, no override."
   },
   {
-    question: "Can I try it without paying?",
-    answer: "Yes. Free accounts see daily signal previews — ticker, score, direction, percent move, and positioning size — plus daily market themes and the full reports archive. You can watch the signals for as long as you want before deciding if the full analysis is worth $49/mo."
+    question: "What's free, what's paid, what do you actually charge for?",
+    answer: "The full webapp is free forever — today's pick, full signals list, daily report, per-ticker deep dive, methodology, and the public scorecard. Pro ($39/mo, 7-day free trial) adds a WhatsApp push at 09:00 ET, an exit reminder at 15:50 ET day-3, and access to an AI chat agent inside the private WhatsApp group that answers questions against live engine data."
   },
   {
-    question: "What's the difference between free and the $49 plan?",
-    answer: "Free shows you WHERE institutions moved. The $49 Overnight Edge plan tells you WHY they moved and WHAT to do about it — the AI-written trade thesis, specific contract recommendations (strike + expiry), key price levels where the trade works or breaks down, and detailed technical and news analysis."
+    question: "Why is the webapp free if you charge for WhatsApp?",
+    answer: "We charge for convenience, not information. Pro subscribers get the push to their phone so they don't have to check the webapp at 09:00 ET. They also get the chat agent. Free users see the same pick on the same page at the same second. No information is behind a paywall. We think that's the honest model."
   },
   {
-    question: "Is the War Room worth 3x the price?",
-    answer: "The War Room ($149/mo) is for active traders who want real-time flow alerts during market hours via WhatsApp — not just the overnight scan. You also get direct access to ask GammaMolt questions and priority access to the highest-conviction setups before they're published to Edge subscribers."
-  },
-  {
-    question: "What time do I need to be up?",
-    answer: "Signals are ready by 8:30 AM EST. You don't need to be up at 4 AM when the scanner runs — everything is waiting for you when you open gammarips.com with your morning coffee. Most traders check between 8:30-9 AM and have their trade plan set before the 9:30 open."
+    question: "What if the trade hits −60% right after I buy it?",
+    answer: "Then the stop fills and you lose up to $300 on a $500 position. That is the engineered maximum per-trade loss, and it's the whole point. The trade either hits −60%, +80%, or closes at 3:50 ET on day-3 — nothing else. No 'should I hold one more day' decisions. A −60% fill is a clean outcome for the routine; you closed and moved on."
   },
   {
     question: "Are you telling me what to trade?",
-    answer: "No. We surface what institutional money did overnight and generate AI analysis to help you understand it. Every signal is timestamped and tracked publicly so you can judge our accuracy — but all trading decisions are yours. Past performance doesn't guarantee future results."
+    answer: "No. GammaRips is educational content about what one mechanical engine picked, based on public overnight options-flow data. You decide whether to take the trade in your account, at what size, and whether to deviate. We never see your account, never manage your money, and never personalize the pick. If you want personalized investment advice, work with a licensed advisor."
   },
   {
-    question: "Wait — an AI runs this?",
-    answer: "The daily pipeline is operated by GammaMolt, an autonomous AI agent built on Claude (Anthropic). GammaMolt runs the scanning, scoring, enriching, reporting, and content. The system was built by Evan Parra, an ML engineer and data architect. Every signal is automated and publicly tracked — no human cherry-picking the good calls."
+    question: "Where's the track record?",
+    answer: "On the Scorecard page, updated as the engine's paper trades close. We started V5.3 paper-trading on April 17, 2026, so sample size is small — we will publish specific win-rate numbers when at least 30 V5.3 trades have closed. In the meantime, every signal is timestamped, every outcome is logged, and nothing is edited after the fact. That's the receipt."
+  },
+  {
+    question: "Why one trade a day? Everyone else sends dozens.",
+    answer: "Because you can't take dozens and keep a job. And because most 'more signals' services are firehoses with no exit rules, and the user ends up cherry-picking the ones that worked in hindsight. We'd rather be wrong one time a day than right-in-retrospect twelve times a day."
+  },
+  {
+    question: "Who runs this?",
+    answer: "Evan Parra (founder, ML engineer, data architect) built the engine. An autonomous AI operator named GammaMolt runs the daily pipeline — scanning, scoring, enriching, publishing, posting. Every decision is logged to BigQuery. Nothing is human-curated in the pick path. Read more on the About page."
+  },
+  {
+    question: "What happens if I cancel?",
+    answer: "You keep Pro access through the end of your billing cycle, then lose the WhatsApp push and chat agent. The webapp stays free forever. No retention tricks, no downgraded experience. Your pick appears on the home page the same as it did before you subscribed."
   },
 ];
 
 export default function Faq() {
+    const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": faqs.map(f => ({
+            "@type": "Question",
+            "name": f.question,
+            "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+        }))
+    };
+
     return (
-        <Accordion type="single" collapsible className="w-full mt-12">
-            {faqs.map((faq, i) => (
-                <AccordionItem key={i} value={`item-${i}`}>
-                    <AccordionTrigger>{faq.question}</AccordionTrigger>
-                    <AccordionContent>
-                        {faq.answer}
-                    </AccordionContent>
-                </AccordionItem>
-            ))}
-        </Accordion>
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            />
+            <Accordion type="single" collapsible className="w-full mt-12">
+                {faqs.map((faq, i) => (
+                    <AccordionItem key={i} value={`item-${i}`}>
+                        <AccordionTrigger>{faq.question}</AccordionTrigger>
+                        <AccordionContent>
+                            {faq.answer}
+                        </AccordionContent>
+                    </AccordionItem>
+                ))}
+            </Accordion>
+        </>
     )
 }

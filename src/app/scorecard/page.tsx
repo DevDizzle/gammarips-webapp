@@ -7,11 +7,11 @@ import { BarChart3, Target, TrendingUp, Clock } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'GammaRips Scorecard — Verified Signal Performance & Win Rate',
-  description: 'Every Overnight Edge signal is timestamped and tracked. See our verified win rate and performance history. No cherry-picking — just data.',
+  description: 'Every GammaRips V5.3 pick is timestamped and tracked. See the public paper-trading ledger. No cherry-picking, no hindsight edits. Paper-trading, educational only.',
   alternates: { canonical: 'https://gammarips.com/scorecard' },
   openGraph: {
     title: 'GammaRips Scorecard — Verified Signal Performance',
-    description: 'Every Overnight Edge signal is timestamped and tracked. See our verified win rate.',
+    description: 'Every GammaRips V5.3 pick is timestamped and tracked. Paper-trading ledger, educational only.',
     url: 'https://gammarips.com/scorecard',
   }
 };

@@ -4,22 +4,24 @@ import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { setUserSubscriptionStatusAdmin, getUserByStripeCustomerIdAdmin } from '@/lib/firebase-admin';
-import { sendWelcomeEmail } from '@/lib/mailgun';
+import { sendWelcomeEmail, sendTrialEndingEmail } from '@/lib/mailgun';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'; // Import direct firestore access
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const gaApiSecret = process.env.GA_API_SECRET!;
+const PRO_PRICE_ID =
+  process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID ||
+  process.env.NEXT_PUBLIC_STRIPE_PRICE_ID;
 
-const PRICE_TO_PLAN: Record<string, 'edge' | 'warroom'> = {
-  'price_1Rrp8HCibMPRXbgJh7zlSME1': 'edge',
-  'price_1Rrp8kCibMPRXbgJjdKBhyqo': 'warroom',
-};
+const PRICE_TO_PLAN: Record<string, 'pro'> = PRO_PRICE_ID
+  ? { [PRO_PRICE_ID]: 'pro' }
+  : {};
 
 async function updateSubscriptionStatus(
     customerId: string, 
     status: string, 
-    plan?: 'edge' | 'warroom' | 'free',
+    plan?: 'pro' | 'free',
     subscriptionId?: string
 ) {
     const user = await getUserByStripeCustomerIdAdmin(customerId);
@@ -73,10 +75,10 @@ async function updateSubscriptionStatus(
 
 
 async function handleSubscriptionChange(
-    subscription: Stripe.Subscription, 
-    isSubscribed: boolean, 
+    subscription: Stripe.Subscription,
+    isSubscribed: boolean,
     isNew: boolean = false,
-    planOverride?: 'edge' | 'warroom'
+    planOverride?: 'pro'
 ) {
     const customerId = subscription.customer as string;
     const user = await getUserByStripeCustomerIdAdmin(customerId);
@@ -85,12 +87,12 @@ async function handleSubscriptionChange(
         // Determine plan from price ID
         const priceId = subscription.items.data[0].price.id;
         const mappedPlan = PRICE_TO_PLAN[priceId];
-        const finalPlan = planOverride || mappedPlan || 'edge'; // Default to edge if unknown
+        const finalPlan = planOverride || mappedPlan || 'pro';
 
         await setUserSubscriptionStatusAdmin(
-            user.uid, 
-            isSubscribed, 
-            subscription.current_period_end, 
+            user.uid,
+            isSubscribed,
+            subscription.current_period_end,
             finalPlan
         );
         
@@ -145,7 +147,7 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
                     currency: session.currency?.toUpperCase() || 'USD',
                     items: [{
                         item_id: item.price?.product as string,
-                        item_name: 'Overnight Edge Subscription',
+                        item_name: 'GammaRips Pro Subscription',
                         price: (item.price?.unit_amount || 0) / 100,
                         quantity: 1,
                     }]
@@ -225,22 +227,67 @@ export async function POST(req: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session;
         if (session.mode === 'subscription' && session.subscription) {
             const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
-            
+
             // Try to get plan from metadata, fallback to price mapping
-            let plan = session.metadata?.plan as 'edge' | 'warroom' | undefined;
+            let plan = session.metadata?.plan as 'pro' | undefined;
             if (!plan) {
                  const priceId = subscription.items.data[0].price.id;
                  plan = PRICE_TO_PLAN[priceId];
             }
 
-            await handleSubscriptionChange(subscription, true, true, plan); 
-            await sendPurchaseEventToGA(session); 
-            
-            // If user not found (e.g. diff email), handle pending logic?
-            // The existing logic inside handleSubscriptionChange checks for user by stripe ID.
-            // If checkout just happened, we might need to link by email if stripe ID wasn't already on user.
-            // createStripeCheckoutSession in lib/stripe.ts ALREADY links user to stripe ID before creating session.
-            // So getUserByStripeCustomerIdAdmin should work.
+            await handleSubscriptionChange(subscription, true, true, plan);
+            await sendPurchaseEventToGA(session);
+
+            // Provision WhatsApp access: write a Firestore doc the OpenClaw
+            // paywall plugin will check before letting the chat agent reply.
+            const provisionCustomerId = subscription.customer as string;
+            const provisionUser = await getUserByStripeCustomerIdAdmin(provisionCustomerId);
+            if (provisionUser?.email) {
+                const db = getFirestore();
+                await db.collection('whatsapp_allowlist').doc(provisionUser.uid).set({
+                    uid: provisionUser.uid,
+                    email: provisionUser.email,
+                    displayName: provisionUser.displayName || null,
+                    plan: plan || 'pro',
+                    stripeCustomerId: provisionCustomerId,
+                    stripeSubscriptionId: subscription.id,
+                    senderId: null, // populated when user joins the WhatsApp group (manual or via group-join hook)
+                    status: 'provisioned',
+                    provisionedAt: FieldValue.serverTimestamp(),
+                }, { merge: true });
+                console.log(`Webhook: Provisioned whatsapp_allowlist for ${provisionUser.email}`);
+            } else {
+                console.warn('Webhook: Could not provision whatsapp_allowlist — user missing or no email');
+            }
+        }
+        break;
+    case 'customer.subscription.trial_will_end':
+        // Stripe fires this event 3 days before trial_end. Send a courtesy
+        // reminder so subscribers know the card is about to be charged, with
+        // a one-click cancel path via /account. Prevents "surprise-charge"
+        // chargebacks and builds goodwill even with users who cancel.
+        const trialEndingSub = event.data.object as Stripe.Subscription;
+        const trialEndingCustomerId = trialEndingSub.customer as string;
+        const trialEndingUser = await getUserByStripeCustomerIdAdmin(trialEndingCustomerId);
+        if (trialEndingUser?.email && trialEndingSub.trial_end) {
+            const item = trialEndingSub.items.data[0];
+            const unitAmount = item?.price?.unit_amount ?? 3900;
+            const currency = (item?.price?.currency ?? 'usd').toUpperCase();
+            const amountDisplay = `${currency === 'USD' ? '$' : currency + ' '}${(unitAmount / 100).toFixed(2)}`;
+            const chargeDateISO = new Date(trialEndingSub.trial_end * 1000).toISOString();
+            try {
+                await sendTrialEndingEmail({
+                    to: trialEndingUser.email,
+                    name: trialEndingUser.displayName || trialEndingUser.email.split('@')[0],
+                    chargeDateISO,
+                    amountDisplay,
+                });
+                console.log(`Webhook: trial_will_end reminder sent to ${trialEndingUser.email}`);
+            } catch (err) {
+                console.error(`Webhook: failed to send trial_will_end reminder to ${trialEndingUser.email}`, err);
+            }
+        } else {
+            console.warn('Webhook: trial_will_end — missing user or trial_end on subscription');
         }
         break;
     default:

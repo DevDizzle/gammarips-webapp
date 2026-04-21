@@ -2,37 +2,49 @@ import type { Metadata } from 'next';
 import { PricingClient } from './pricing-client';
 
 export const metadata: Metadata = {
-  title: 'Pricing | GammaRips is Free',
-  description: 'GammaRips is currently 100% free. Get daily AI-enriched institutional options flow signals with thesis, contracts, and key levels.',
+  title: 'Pricing — GammaRips',
+  description:
+    'The webapp is free forever. Pro is $39/mo for the WhatsApp push and the AI chat agent inside the private group. 7-day free trial. Cancel anytime.',
   alternates: { canonical: 'https://gammarips.com/pricing' },
   openGraph: {
-    title: 'GammaRips Pricing — 100% Free',
-    description: 'Every overnight signal, AI trade thesis, contract recommendation, and Agent Arena debate — completely free.',
+    title: 'Pricing — GammaRips',
+    description:
+      'Free webapp forever. Pro $39/mo for WhatsApp push + AI chat agent. 7-day free trial.',
     url: 'https://gammarips.com/pricing',
-  }
+  },
 };
 
 export default function PricingPage() {
   const productSchema = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "The Overnight Edge",
-    "description": "Daily AI-enriched institutional options flow signals with thesis, contracts, and key levels.",
-    "image": "https://gammarips.com/og-image.png?v=2",
-    "brand": { "@type": "Brand", "name": "GammaRips" },
-    "offers": {
-      "@type": "Offer",
-      "priceCurrency": "USD",
-      "price": "0.00",
-      "name": "All Access Free Membership",
-      "availability": "https://schema.org/InStock",
-      "url": "https://gammarips.com/pricing"
-    }
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'GammaRips Pro',
+    description:
+      'One options trade a day, scored overnight and pushed to your phone at 09:00 ET, with an AI chat agent inside the private WhatsApp group.',
+    image: 'https://gammarips.com/og-image.png?v=2',
+    brand: { '@type': 'Brand', name: 'GammaRips' },
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'USD',
+      price: '39.00',
+      name: 'GammaRips Pro (monthly)',
+      availability: 'https://schema.org/InStock',
+      url: 'https://gammarips.com/pricing',
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: '39.00',
+        priceCurrency: 'USD',
+        unitText: 'MONTH',
+      },
+    },
   };
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
       <PricingClient />
     </>
   );

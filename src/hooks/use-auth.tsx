@@ -54,8 +54,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (!dbUser) return false;
 
-    // Check for lifetime/founder status or War Room plan
-    if (dbUser.plan === 'warroom' || dbUser.subscriptionStatus === 'founder_lifetime') return true;
+    // Lifetime/founder status, legacy war-room/edge grants, or Pro
+    if (dbUser.plan === 'pro' || dbUser.plan === 'warroom' || dbUser.plan === 'edge') return true;
+    if (dbUser.subscriptionStatus === 'founder_lifetime') return true;
 
     // If the user has an active Stripe subscription, they are Pro.
     if (dbUser.isSubscribed) return true;

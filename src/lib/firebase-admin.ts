@@ -633,7 +633,7 @@ export async function setUserSubscriptionStatusAdmin(
   uid: string,
   isSubscribed: boolean,
   currentPeriodEnd?: number,
-  plan?: 'free' | 'edge' | 'warroom'
+  plan?: 'free' | 'pro'
 ) {
   const userRef = getDb().collection('users').doc(uid);
   

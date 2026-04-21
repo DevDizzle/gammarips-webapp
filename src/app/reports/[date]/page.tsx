@@ -12,10 +12,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { date } = await params;
   const report = await getDailyReport(date);
   
-  const title = report?.seoMetadata?.seoTitle || report?.title || `Report ${date} | GammaRips`;
-  const description = report?.seoMetadata?.seoDescription || (report 
-    ? `Overnight institutional options flow report. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`
-    : `Overnight Edge report for ${date}`);
+  const title = report?.seoMetadata?.seoTitle || report?.title || `GammaRips V5.3 pick for ${date}`;
+  const description = report?.seoMetadata?.seoDescription || (report
+    ? `GammaRips V5.3 daily pick and market context for ${date}. ${report.total_signals} signals scanned across the overnight session. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`
+    : `GammaRips V5.3 daily pick for ${date}.`);
 
   return {
     title,
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `https://gammarips.com/reports/${date}`,
     },
     openGraph: {
-      title: `${title} — Overnight Edge`,
+      title,
       description,
       type: "article",
       publishedTime: report?.scan_date,
@@ -41,7 +41,7 @@ export default async function ReportPage({ params }: Props) {
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": report.title || `GammaRips Overnight Report ${date}`,
+    "headline": report.title || `GammaRips V5.3 pick for ${date}`,
     "image": "https://gammarips.com/og-image.png?v=2",
     "datePublished": `${report.scan_date}T08:00:00Z`,
     "dateModified": `${report.scan_date}T08:00:00Z`,
@@ -55,7 +55,12 @@ export default async function ReportPage({ params }: Props) {
       "name": "GammaRips",
       "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=2" }
     },
-    "description": report.seoMetadata?.seoDescription || `Overnight institutional options flow report. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`,
+    "description": report.seoMetadata?.seoDescription || `GammaRips V5.3 daily pick and market context for ${date}. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`,
+    "about": {
+      "@type": "Thing",
+      "name": "Single V5.3 daily pick with pre-set stop, target, and exit",
+    },
+    "disclaimer": "Paper-trading performance, educational only. Not investment advice.",
     ...(report.seoMetadata?.keywords ? { "keywords": report.seoMetadata.keywords.join(', ') } : {}),
     "mainEntityOfPage": `https://gammarips.com/reports/${report.scan_date}`
   };
@@ -63,20 +68,28 @@ export default async function ReportPage({ params }: Props) {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    "name": `GammaRips Overnight Signals — ${report.scan_date}`,
-    "description": `Institutional options flow scan of 5,230+ tickers. ${report.total_signals} signals detected.`,
+    "name": `GammaRips V5.3 enriched signals — ${report.scan_date}`,
+    "description": `V5.3 gate-stack scan of 5,230+ tickers for ${report.scan_date}. ${report.total_signals} signals detected.`,
     "url": `https://gammarips.com/reports/${report.scan_date}`,
     "datePublished": `${report.scan_date}T08:00:00Z`,
     "creator": { "@type": "Organization", "name": "GammaRips" },
     "license": "https://gammarips.com/terms",
-    "variableMeasured": ["options volume", "open interest", "unusual activity score", "institutional flow"]
+    "variableMeasured": [
+      "overnight_score",
+      "volume_oi_ratio",
+      "moneyness_pct",
+      "VIX-VIX3M regime",
+      "V5.3 gate status",
+      "directional dollar volume",
+      "3-day bracket outcome",
+    ],
   };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }} />
-      
+
       {report.underlying_scan_date && report.underlying_scan_date !== report.scan_date && (
         <div className="mb-6 p-3 bg-muted/30 border border-muted rounded-md text-muted-foreground text-sm text-center">
           Covering overnight flow from {report.underlying_scan_date}
@@ -86,6 +99,12 @@ export default async function ReportPage({ params }: Props) {
       <article className="prose prose-invert max-w-none">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{report.content}</ReactMarkdown>
       </article>
+
+      <p className="mt-12 pt-6 border-t border-muted text-xs text-muted-foreground leading-relaxed">
+        Paper-trading performance, educational content only. Not investment advice.
+        Past performance is not a guarantee of future results. Options trading
+        involves substantial risk of loss.
+      </p>
     </div>
   );
 }

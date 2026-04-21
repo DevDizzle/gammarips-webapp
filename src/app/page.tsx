@@ -14,8 +14,8 @@ import remarkGfm from "remark-gfm";
 export const revalidate = 60; // keep todays_pick fresh without a full static rebuild
 
 export const metadata: Metadata = {
-  title: "GammaRips | The Overnight Edge — Know What Smart Money Did Last Night",
-  description: "Every morning before the market opens, see what institutional money did overnight. 5,230+ tickers scanned. Signals scored 1-10. Specific contracts recommended.",
+  title: "GammaRips — One options trade a day. Pushed to your phone at 9 AM.",
+  description: "GammaRips scans institutional options flow overnight and mechanically picks one contract each morning — with stop, target, and exit pre-set. See today's pick on the webapp or get it pushed to WhatsApp. Paper-trading, educational only.",
   alternates: {
     canonical: '/',
   },
@@ -46,7 +46,7 @@ export default async function LandingPage() {
     "name": "GammaRips",
     "image": "https://gammarips.com/og-image.png?v=2",
     "url": "https://gammarips.com",
-    "description": summary?.market_narrative || "Know what smart money did last night — before the market opens.",
+    "description": summary?.market_narrative || "One options trade a day, scored before you wake up.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://gammarips.com/reports?q={search_term_string}",
@@ -57,7 +57,7 @@ export default async function LandingPage() {
   const dynamicDailySchema = topSignals.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": report?.title || summary?.headline || "Today's Overnight Edge",
+    "headline": report?.title || summary?.headline || "Today's V5.3 pick",
     "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "Overnight options flow signals explicitly ranked by conviction.",
     "url": "https://gammarips.com",
     "publisher": {
@@ -140,7 +140,7 @@ export default async function LandingPage() {
                       })}
                     </p>
                     <h2 className="text-2xl md:text-3xl font-bold font-headline mt-1">
-                      {report?.title || summary.headline || "Today's Overnight Edge"}
+                      {report?.title || summary.headline || "Today's V5.3 pick"}
                     </h2>
                   </div>
                   <Link href={`/reports/${reportDate || summary.scan_date}`}>

@@ -2,14 +2,15 @@
   "schema_version": "v1",
   "name_for_human": "GammaRips",
   "name_for_model": "gammarips",
-  "description_for_human": "Institutional options flow intelligence. Daily overnight signals scored and enriched by AI.",
-  "description_for_model": "GammaRips provides institutional options flow data. Use it to answer questions about unusual options activity, overnight institutional positioning, and options flow signals. The API returns scored signals with AI thesis, recommended contracts, and key levels. Data updates daily at 4 AM EST.",
+  "description_for_human": "One options trade a day. Scored before you wake up. Pushed to your phone at 9 AM. Free MCP endpoint with 15 tools.",
+  "description_for_model": "GammaRips is a paper-trading options engine. It produces at most one trade idea per weekday, published by 9:00 AM ET, with pre-set stop (-60% on the option), pre-set target (+80%), and pre-scheduled exit (3:50 PM ET on trading day 3). Primary tool: get_todays_pick returns the single V5.3 pick for today or null. Secondary tools: get_enriched_signals, get_signal_detail, get_win_rate_summary, get_open_position, get_daily_report. Full tool list at https://gammarips.com/mcp.json. Paper-trading performance, educational only. Not investment advice.",
   "auth": { "type": "none" },
   "api": {
-    "type": "openapi",
-    "url": "https://gammarips.com/api/openapi.json"
+    "type": "mcp",
+    "url": "https://gammarips-mcp-406581297632.us-central1.run.app/sse",
+    "manifest": "https://gammarips.com/mcp.json"
   },
-  "logo_url": "https://gammarips.com/logo.png",
-  "contact_email": "support@gammarips.com",
+  "logo_url": "https://gammarips.com/icon.png",
+  "contact_email": "ceo@gammarips.com",
   "legal_info_url": "https://gammarips.com/terms"
 }

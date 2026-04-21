@@ -1,2 +1,2 @@
 export const FREE_MODE = false;
-export const APP_NAME = "The Overnight Edge";
+export const APP_NAME = "GammaRips";

@@ -1,15 +1,31 @@
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+
 export function Hero() {
   return (
-    <section className="py-8 md:py-12 text-center container px-4">
-      <h1 className="text-4xl md:text-6xl font-bold font-headline mb-4 tracking-tight">
-        Wake Up Knowing What Smart Money Did Last Night
+    <section className="py-12 md:py-20 text-center container px-4">
+      <h1 className="text-4xl md:text-6xl font-bold font-headline mb-6 tracking-tight">
+        One options trade a day.
+        <span className="block mt-2 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+          Scored before you wake up. Pushed to your phone at 9 AM.
+        </span>
       </h1>
-      <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
-        Every morning by 8:30 AM, you get the trades institutions placed overnight — scored, analyzed, with specific contracts to consider. While 99% of traders check the news, you already know where the money moved.
+      <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
+        GammaRips watches institutional options flow overnight and mechanically
+        picks one contract each morning — stop, target, and exit all pre-set.
+        You place the trade at 10:00 ET and go back to your day.
       </p>
-      <p className="text-sm text-muted-foreground">
-        5,230+ tickers scanned · Signals scored 1-10 · Delivered before market open
+      <p className="text-sm text-muted-foreground mb-8">
+        V5.3 engine · 5,230 tickers scanned nightly · One pick or none · Paper-trading, educational only
       </p>
+      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <Button asChild size="lg">
+          <Link href="/signals">See Today&apos;s Pick</Link>
+        </Button>
+        <Button asChild variant="outline" size="lg">
+          <Link href="/pricing">Start 7-Day Free Trial</Link>
+        </Button>
+      </div>
     </section>
   );
 }

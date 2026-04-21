@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 
 export type SignalDirection = 'BULLISH' | 'BEARISH';
-export type PlanType = 'free' | 'edge' | 'warroom';
+export type PlanType = 'free' | 'pro' | 'edge' | 'warroom';
 
 export interface OvernightSignal {
   scan_date: string; // YYYY-MM-DD

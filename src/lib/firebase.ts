@@ -117,7 +117,7 @@ export async function getOrCreateUser(
     usageCount: 0,
     createdAt: serverTimestamp(),
     stripeCustomerId: stripeCustomerId ?? null,
-    plan: 'warroom',
+    plan: 'free',
   };
 
   await setDoc(userRef, newUser);

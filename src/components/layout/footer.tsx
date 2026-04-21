@@ -11,7 +11,7 @@ const Footer = () => {
             <h3 className="text-xl font-bold font-headline">
                 <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
             </h3>
-            <p className="text-sm text-muted-foreground mt-2">Know what smart money did last night</p>
+            <p className="text-sm text-muted-foreground mt-2">One options trade a day. Pushed to your phone at 9 AM.</p>
           </div>
           <div>
             <h4 className="font-semibold text-foreground">Product</h4>
@@ -36,7 +36,7 @@ const Footer = () => {
               <li><Link href="/privacy" className="text-muted-foreground hover:text-primary">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-muted-foreground hover:text-primary">Terms of Service</Link></li>
               <li><a href="https://x.com/GammaRips" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><XIcon className="h-4 w-4" /> @GammaRips</a></li>
-              <li><a href="mailto:support@gammarips.com" className="text-muted-foreground hover:text-primary">support@gammarips.com</a></li>
+              <li><a href="mailto:ceo@gammarips.com" className="text-muted-foreground hover:text-primary">ceo@gammarips.com</a></li>
             </ul>
           </div>
         </div>

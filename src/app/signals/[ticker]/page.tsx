@@ -9,7 +9,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { ticker } = await params;
-  let title = `${ticker.toUpperCase()} Signal | The Overnight Edge`;
+  let title = `${ticker.toUpperCase()} Signal | GammaRips`;
   let description = `Institutional options flow analysis for ${ticker.toUpperCase()}.`;
 
   try {

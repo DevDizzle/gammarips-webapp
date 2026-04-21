@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Terms of Service | GammaRips',
-  description: 'Terms of service for GammaRips and The Overnight Edge.',
+  description: 'Terms of service for GammaRips.',
   alternates: { canonical: 'https://gammarips.com/terms' },
 };
 
@@ -12,7 +12,7 @@ export default function TermsPage() {
       
       <div className="prose prose-invert max-w-none space-y-6">
         <h2>1. Service Description</h2>
-        <p>GammaRips ("The Overnight Edge") provides institutional overnight options flow data, technical analysis, and AI-generated market insights for informational purposes only.</p>
+        <p>GammaRips is a paper-trading options engine that produces at most one trade idea per weekday, published by 09:00 ET, with pre-set stop, target, and exit. The webapp (gammarips.com) is free. The Pro subscription ($39/mo) adds a WhatsApp push and an AI chat agent inside the private subscriber group. The MCP API at gammarips-mcp-406581297632.us-central1.run.app/sse is free and unauthenticated. All content is educational; nothing published by GammaRips constitutes personalized investment advice.</p>
 
         <h2>2. Not Financial Advice</h2>
         <p><strong>The information provided by GammaRips is for informational purposes only and does not constitute investment advice, financial advice, trading advice, or any other sort of advice.</strong> You should not treat any of the website's content as such. GammaRips does not recommend that any securities, options, or strategies are suitable for any particular investor. You are solely responsible for your own investment decisions.</p>
@@ -28,12 +28,12 @@ export default function TermsPage() {
           <li>Prices may change with 30 days notice</li>
         </ul>
 
-        <h2>5. API Usage</h2>
+        <h2>5. MCP API Usage</h2>
         <ul>
-          <li>API keys are for your use only — do not share or resell</li>
-          <li>Rate limits apply per your subscription tier</li>
-          <li>We reserve the right to revoke API access for abuse</li>
-          <li>Redistributing our data without permission is prohibited</li>
+          <li>The MCP API is free and requires no API key or authentication.</li>
+          <li>Fair-use rate limits apply; contact ceo@gammarips.com if your use case exceeds them.</li>
+          <li>We reserve the right to rate-limit or revoke access for abuse.</li>
+          <li>You may not redistribute bulk data or resell API responses without written permission.</li>
         </ul>
 
         <h2>6. Intellectual Property</h2>

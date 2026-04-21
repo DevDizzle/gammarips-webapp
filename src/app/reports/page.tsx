@@ -5,8 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "The Morning Briefing | Daily Overnight Edge Reports | GammaRips",
-  description: "Every trading day, we publish what institutional money did overnight. Browse daily reports with scored signals, market themes, and AI analysis.",
+  title: "Daily Reports — GammaRips V5.3",
+  description: "Every trading day, GammaRips publishes the V5.3 daily pick (or a documented skip) alongside market context across 5,230+ tickers. Paper-trading, educational only.",
   alternates: { canonical: 'https://gammarips.com/reports' },
 };
 
@@ -16,8 +16,8 @@ export default async function ReportsPage() {
   const indexSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Daily Overnight Edge Reports",
-    "description": "Every trading day, we publish what institutional money did overnight.",
+    "name": "GammaRips V5.3 Daily Reports",
+    "description": "Every trading day, GammaRips publishes the V5.3 daily pick with entry, stop, target, and exit — or a documented skip.",
     "url": "https://gammarips.com/reports",
     "mainEntity": {
       "@type": "ItemList",

@@ -81,11 +81,11 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{isSignIn ? 'Sign In' : 'Become a Ripper'}</DialogTitle>
+          <DialogTitle>{isSignIn ? 'Sign in to GammaRips' : 'Join GammaRips'}</DialogTitle>
           <DialogDescription>
-             {isSignIn 
-                ? 'Welcome back. Sign in to access your dashboard.' 
-                : 'Unlock the full Daily Playbook. Get the Rips, the interactive dashboard, and the deep-dive AI analysis.'
+             {isSignIn
+                ? 'Welcome back.'
+                : 'Sign up free to see today\'s V5.3 pick at 09:00 ET, browse the full signals list, and read the daily report. Upgrade to Pro anytime for the WhatsApp push and chat agent.'
              }
           </DialogDescription>
         </DialogHeader>
@@ -155,7 +155,7 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
             </p>
 
           <p className="text-center text-sm text-muted-foreground">
-            {isSignIn ? "Not a Ripper yet?" : 'Already a Ripper?'}{' '}
+            {isSignIn ? "New to GammaRips?" : 'Already have an account?'}{' '}
             <button
               onClick={() => setIsSignIn(!isSignIn)}
               className="underline hover:text-primary"

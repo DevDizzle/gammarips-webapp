@@ -30,8 +30,12 @@ export async function POST(req: NextRequest) {
     const gaClientId =
       typeof body?.gaClientId === 'string' ? body.gaClientId : undefined;
 
-    const successUrl = `${req.nextUrl.origin}/account?session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${req.nextUrl.origin}/pricing`;
+    const forwardedHost = req.headers.get('x-forwarded-host') ?? req.headers.get('host');
+    const forwardedProto = req.headers.get('x-forwarded-proto') ?? 'https';
+    const origin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : req.nextUrl.origin;
+
+    const successUrl = `${origin}/about?welcome=1&session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${origin}/pricing`;
 
     const metadata: Record<string, string> = { plan: 'pro' };
     if (gaClientId) metadata.ga_client_id = gaClientId;

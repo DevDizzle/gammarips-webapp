@@ -54,8 +54,9 @@ interface AboutPageProps {
 }
 
 export default async function AboutPage({ searchParams }: AboutPageProps) {
-  const { welcome } = await searchParams;
+  const { welcome, session_id } = await searchParams;
   const isWelcome = welcome === '1';
+  const whatsappInvite = isWelcome && session_id ? process.env.WHATSAPP_GROUP_INVITE_URL : undefined;
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -86,14 +87,20 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
               <CardTitle className="font-headline text-2xl sm:text-3xl">You&apos;re in. Here&apos;s your 09:00 ET routine.</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {whatsappInvite && (
+                <div className="rounded-lg border border-primary/40 bg-background p-4">
+                  <p className="text-sm font-semibold text-foreground mb-2">Step 1 — Join the private WhatsApp group</p>
+                  <p className="text-xs text-muted-foreground mb-3">Your invite is ready. Click below on your phone or open the link on any device with WhatsApp installed.</p>
+                  <Button asChild size="lg" className="w-full sm:w-auto">
+                    <a href={whatsappInvite} target="_blank" rel="noopener noreferrer">Join GammaRips Pro group</a>
+                  </Button>
+                  <p className="text-xs text-muted-foreground mt-3">A welcome email with this same link is also in your inbox (check Spam / Promotions / All Mail if you don&apos;t see it).</p>
+                </div>
+              )}
               <ul className="space-y-3 text-sm text-foreground/90">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>Check your inbox for the WhatsApp group invite — it just went out with your welcome email.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>Tomorrow at 09:00 ET, today&apos;s V5.3 pick lands in the group. Or the pick says "no trade today" and you do nothing.</span>
+                  <span>Tomorrow at 09:00 ET, today&apos;s V5.3 pick lands in the group. Or the pick says &ldquo;no trade today&rdquo; and you do nothing.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -109,7 +116,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                 </li>
               </ul>
               <div className="flex flex-wrap gap-3 pt-2">
-                <Button asChild>
+                <Button asChild variant="outline">
                   <Link href="/">See today&apos;s pick</Link>
                 </Button>
                 <Button asChild variant="outline">

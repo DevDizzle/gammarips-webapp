@@ -310,10 +310,10 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
           <p className="text-xs text-muted-foreground">
             Contact:{" "}
             <a
-              href="mailto:ceo@gammarips.com"
+              href="mailto:evan@gammarips.com"
               className="underline hover:text-foreground"
             >
-              ceo@gammarips.com
+              evan@gammarips.com
             </a>
           </p>
           <p className="text-xs text-muted-foreground max-w-2xl mx-auto">

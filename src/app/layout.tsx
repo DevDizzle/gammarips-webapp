@@ -50,7 +50,7 @@ const organizationSchema = {
   "name": "GammaRips",
   "url": "https://gammarips.com",
   "logo": "https://gammarips.com/icon.png",
-  "email": "ceo@gammarips.com",
+  "email": "evan@gammarips.com",
   "description": "GammaRips mechanically picks one options contract each morning from overnight institutional flow and pushes it to subscribers at 09:00 ET with stop, target, and exit pre-set.",
   "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO" },
   "sameAs": ["https://twitter.com/GammaRips"],

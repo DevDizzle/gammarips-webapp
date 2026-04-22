@@ -19,7 +19,7 @@ export interface EmailOptions {
 export async function sendEmail(options: EmailOptions) {
   const API_KEY = process.env.MAILGUN_SENDING_KEY;
   const DOMAIN = process.env.MAILGUN_DOMAIN || 'mg.gammarips.com';
-  const DEFAULT_FROM = 'GammaRips <ceo@gammarips.com>';
+  const DEFAULT_FROM = 'Evan Parra <evan@gammarips.com>';
 
   const FROM = options.from || DEFAULT_FROM;
   const TO =
@@ -107,7 +107,7 @@ Here's the routine starting tomorrow morning (weekdays, 09:00 ET):
 4. At 15:50 ET on day-3, the exit reminder fires if the trade is still open.
    Close at market, log the outcome, move on.
 
-You can @mention the chat agent in the group to ask about today's pick, the open position, the 30-day ledger, or any enriched signal. The whole group sees the exchange.
+Tag @gamma in the group to ask about today's pick, the open position, the 30-day ledger, or any enriched signal. The whole group sees the exchange.
 
 Your 7-day free trial started today. Manage your subscription anytime at https://gammarips.com/account.
 
@@ -116,7 +116,7 @@ Paper-trading performance, educational only. Not investment advice. Past perform
 Welcome aboard,
 Evan Parra
 Founder, GammaRips
-ceo@gammarips.com
+evan@gammarips.com
 `;
 
     const htmlContent = `
@@ -175,7 +175,7 @@ ceo@gammarips.com
                                 <tr>
                                     <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">4.</td>
                                     <td valign="top">
-                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">@mention the chat agent anytime</h3>
+                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Tag @gamma anytime</h3>
                                         <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Ask about today's pick, the open position, the 30-day ledger, or any enriched signal. The whole group sees the exchange — one ask benefits everyone.</p>
                                     </td>
                                 </tr>
@@ -205,7 +205,7 @@ ceo@gammarips.com
                      <tr>
                         <td style="padding: 20px 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
                             <p style="margin: 0;">Welcome aboard,</p>
-                            <p style="margin-top: 4px;">Evan Parra<br>Founder, GammaRips<br><a href="mailto:ceo@gammarips.com" style="color: hsl(74, 80%, 50%);">ceo@gammarips.com</a></p>
+                            <p style="margin-top: 4px;">Evan Parra<br>Founder, GammaRips<br><a href="mailto:evan@gammarips.com" style="color: hsl(74, 80%, 50%);">evan@gammarips.com</a></p>
                         </td>
                     </tr>
                 </table>
@@ -252,14 +252,14 @@ If the routine isn't for you:
 What's worked so far in the trial:
 - The 09:00 ET pick lands in the private WhatsApp group on trading days.
 - The engine also skips on days nothing clears the V5.3 gates — those are free money in your attention budget.
-- The @mention chat agent is there for any question about today's pick, the open position, or the ledger.
+- Tag @gamma in the group for any question about today's pick, the open position, or the ledger.
 
 If anything's off or you have a question before the trial ends, reply to this email — it goes straight to me.
 
 Paper-trading, educational only. Not investment advice.
 
 — Evan
-ceo@gammarips.com
+evan@gammarips.com
 `;
 
     const htmlContent = `
@@ -308,7 +308,7 @@ ceo@gammarips.com
                     </tr>
                     <tr>
                         <td style="padding: 10px 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
-                            <p style="margin: 0;">— Evan<br><a href="mailto:ceo@gammarips.com" style="color: hsl(74, 80%, 50%);">ceo@gammarips.com</a></p>
+                            <p style="margin: 0;">— Evan<br><a href="mailto:evan@gammarips.com" style="color: hsl(74, 80%, 50%);">evan@gammarips.com</a></p>
                         </td>
                     </tr>
                 </table>
@@ -421,7 +421,7 @@ Founder, GammaRips
 export async function sendFeedbackRequestEmail({ to, name }: { to: string, name: string }) {
     const { text, html } = await buildFeedbackRequestEmailContent(name);
     return sendEmail({
-        from: 'Evan at GammaRips <ceo@gammarips.com>', // Updated sender
+        from: 'Evan Parra <evan@gammarips.com>',
         to: `${name} <${to}>`,
         subject: `GammaRips: How is the data working for you?`,
         text,
@@ -497,7 +497,7 @@ export async function sendFeedbackAcknowledgmentEmail({ to, trackingId }: { to: 
         subject: `We've received your message (Ref: ${trackingId})`,
         text,
         html,
-        replyTo: 'ceo@gammarips.com', // Ensure replies go to support
+        replyTo: 'evan@gammarips.com', // Ensure replies go to support
     });
 }
 
@@ -573,7 +573,7 @@ export async function sendAgentResponseEmail({ to, response, trackingId }: { to:
         subject: `Re: Your GammaRips Inquiry (Ref: ${trackingId})`,
         text,
         html,
-        replyTo: 'ceo@gammarips.com',
+        replyTo: 'evan@gammarips.com',
     });
 }
 

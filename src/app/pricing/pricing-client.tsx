@@ -17,7 +17,7 @@ const proFeatures = [
   "Today's V5.3 pick pushed to WhatsApp at 09:00 ET",
   'Exit reminder at 15:50 ET on day-3',
   'Private WhatsApp group access',
-  'AI chat agent — @mention it to ask about today\'s pick, open position, or the 30-day ledger',
+  'AI chat agent — tag @gamma to ask about today\'s pick, open position, or the 30-day ledger',
   'Live open-position tracker via chat',
   'Historical ledger queries (any direction, any ticker)',
   '7-day free trial · cancel anytime',
@@ -63,7 +63,7 @@ export function PricingClient() {
       console.error('Checkout error:', err);
       toast({
         title: 'Something went wrong',
-        description: 'We couldn\'t start your checkout. Please try again or contact ceo@gammarips.com.',
+        description: 'We couldn\'t start your checkout. Please try again or contact evan@gammarips.com.',
         variant: 'destructive',
       });
       setLoading(false);
@@ -235,7 +235,7 @@ export function PricingClient() {
             <p className="text-sm text-muted-foreground leading-relaxed">
               We don&apos;t offer pro-rated refunds mid-cycle, but the 7-day
               trial gives you a full week to evaluate without paying anything.
-              If something breaks, email ceo@gammarips.com and we&apos;ll make it
+              If something breaks, email evan@gammarips.com and we&apos;ll make it
               right.
             </p>
           </div>

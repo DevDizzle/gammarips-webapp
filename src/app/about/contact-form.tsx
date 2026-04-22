@@ -22,7 +22,7 @@ export default function ContactForm() {
       await handleFeedback(user?.uid ?? null, message, email);
       setSubmitted(true);
     } catch {
-      alert('Failed to send. Please email ceo@gammarips.com directly.');
+      alert('Failed to send. Please email evan@gammarips.com directly.');
     } finally {
       setLoading(false);
     }
@@ -43,7 +43,7 @@ export default function ContactForm() {
     <Card>
       <CardHeader>
         <CardTitle className="font-headline text-2xl">Contact Us</CardTitle>
-        <p className="text-sm text-muted-foreground">Have a question? Reach out at ceo@gammarips.com or use the form below.</p>
+        <p className="text-sm text-muted-foreground">Have a question? Reach out at evan@gammarips.com or use the form below.</p>
       </CardHeader>
       <CardContent>
         <form onSubmit={onSubmit} className="space-y-4">

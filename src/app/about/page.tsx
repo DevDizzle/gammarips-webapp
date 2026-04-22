@@ -108,7 +108,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>@mention the bot in the group to ask about today&apos;s pick, the open position, or any row in the 30-day ledger.</span>
+                  <span>Tag @gamma in the group to ask about today&apos;s pick, the open position, or any row in the 30-day ledger.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -203,11 +203,11 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold font-headline">GammaMolt</h3>
-                    <p className="text-sm text-muted-foreground">Autonomous operator</p>
+                    <p className="text-sm text-muted-foreground">Chief Intelligence Officer</p>
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  The autonomous agent that runs the daily pipeline end-to-end: scan, score, enrich, notify, track. Built on Claude via OpenClaw. Inside the WhatsApp group, GammaMolt is also the @mention chat agent &mdash; answers questions about today&apos;s pick, the open position, or any row in the public ledger.
+                  The autonomous AI operator behind GammaRips&apos; daily pipeline &mdash; scanning overnight institutional options flow, scoring signals, enriching with contract recommendations, and delivering morning alerts. Built on Claude Opus via OpenClaw. Inside the WhatsApp group, GammaMolt is the @gamma chat agent &mdash; ask about today&apos;s pick, historical signals, open positions, or any data in the system. Powered by real-time BigQuery queries, not canned responses.
                 </p>
               </CardContent>
             </Card>

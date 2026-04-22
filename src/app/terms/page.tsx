@@ -24,14 +24,14 @@ export default function TermsPage() {
         <ul>
           <li>Subscriptions are billed monthly through Stripe</li>
           <li>You may cancel at any time through the customer portal</li>
-          <li>Refunds are handled on a case-by-case basis — email ceo@gammarips.com</li>
+          <li>Refunds are handled on a case-by-case basis — email evan@gammarips.com</li>
           <li>Prices may change with 30 days notice</li>
         </ul>
 
         <h2>5. MCP API Usage</h2>
         <ul>
           <li>The MCP API is free and requires no API key or authentication.</li>
-          <li>Fair-use rate limits apply; contact ceo@gammarips.com if your use case exceeds them.</li>
+          <li>Fair-use rate limits apply; contact evan@gammarips.com if your use case exceeds them.</li>
           <li>We reserve the right to rate-limit or revoke access for abuse.</li>
           <li>You may not redistribute bulk data or resell API responses without written permission.</li>
         </ul>
@@ -49,7 +49,7 @@ export default function TermsPage() {
         <p>We may modify these terms at any time. Continued use of the service after changes constitutes acceptance.</p>
 
         <h2>10. Contact</h2>
-        <p>Questions? Email us at <a href="mailto:ceo@gammarips.com" className="text-green-400">ceo@gammarips.com</a></p>
+        <p>Questions? Email us at <a href="mailto:evan@gammarips.com" className="text-green-400">evan@gammarips.com</a></p>
       </div>
     </div>
   );

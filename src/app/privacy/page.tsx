@@ -41,13 +41,13 @@ export default function PrivacyPage() {
         <p>We use essential cookies for authentication and session management. We do not use advertising or tracking cookies.</p>
 
         <h2>6. Your Rights</h2>
-        <p>You may request deletion of your account and associated data at any time by emailing ceo@gammarips.com.</p>
+        <p>You may request deletion of your account and associated data at any time by emailing evan@gammarips.com.</p>
 
         <h2>7. Changes</h2>
         <p>We may update this policy from time to time. Changes will be posted on this page with an updated date.</p>
 
         <h2>8. Contact</h2>
-        <p>Questions? Email us at <a href="mailto:ceo@gammarips.com" className="text-green-400">ceo@gammarips.com</a></p>
+        <p>Questions? Email us at <a href="mailto:evan@gammarips.com" className="text-green-400">evan@gammarips.com</a></p>
       </div>
     </div>
   );

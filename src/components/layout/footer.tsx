@@ -36,7 +36,7 @@ const Footer = () => {
               <li><Link href="/privacy" className="text-muted-foreground hover:text-primary">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-muted-foreground hover:text-primary">Terms of Service</Link></li>
               <li><a href="https://x.com/GammaRips" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><XIcon className="h-4 w-4" /> @GammaRips</a></li>
-              <li><a href="mailto:ceo@gammarips.com" className="text-muted-foreground hover:text-primary">ceo@gammarips.com</a></li>
+              <li><a href="mailto:evan@gammarips.com" className="text-muted-foreground hover:text-primary">evan@gammarips.com</a></li>
             </ul>
           </div>
         </div>

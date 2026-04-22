@@ -1,76 +1,38 @@
-import { getLatestArenaDebate, getOvernightSignals } from "@/lib/firebase-admin";
-import { ArenaClientPage } from "./arena-client";
 import { Metadata } from "next";
+import Link from "next/link";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Agent Arena — 7 AI Models Debate Today's Best Trade | GammaRips",
-  description: "Every morning, 7 AI agents powered by Claude, GPT, Grok, Gemini, DeepSeek, Llama, and Mistral analyze the same institutional flow data and argue over the best trade. War Room members watch the fight.",
+  title: "Agent Arena — Returning Soon | GammaRips",
+  description: "The Agent Arena is being rebuilt around V5.3. It returns once the paper-trading ledger has a meaningful sample to compete against.",
+  robots: { index: false, follow: true },
 };
 
-export default async function ArenaPage() {
-  const debate = await getLatestArenaDebate();
-  
-  let premiumTickers: string[] = [];
-  
-  if (debate?.scan_date) {
-    const [bullSignals, bearSignals] = await Promise.all([
-      getOvernightSignals(debate.scan_date, 'bull', 0, 100),
-      getOvernightSignals(debate.scan_date, 'bear', 0, 100),
-    ]);
-    
-    const allSignals = [...bullSignals, ...bearSignals];
-    premiumTickers = allSignals.filter(s => s.is_premium_signal).map(s => s.ticker);
-  }
-
-  let debateSchema: any = null;
-  if (debate) {
-    const comments: any[] = [];
-    
-    if (debate.rounds?.round1_picks) {
-      Object.entries(debate.rounds.round1_picks).forEach(([agent, picks]) => {
-        picks.forEach(pick => {
-          const agentName = agent.charAt(0).toUpperCase() + agent.slice(1);
-          comments.push({
-            "@type": "Comment",
-            "author": { "@type": "Organization", "name": agentName },
-            "text": `${pick.direction.toUpperCase()} on ${pick.ticker}: ${pick.reasoning}`,
-            "datePublished": `${debate.scan_date}T08:00:00Z`
-          });
-        });
-      });
-    }
-    
-    if (debate.rounds?.round2_attacks) {
-      Object.entries(debate.rounds.round2_attacks).forEach(([agent, attacks]) => {
-        attacks.forEach(attack => {
-          const agentName = agent.charAt(0).toUpperCase() + agent.slice(1);
-          comments.push({
-            "@type": "Comment",
-            "author": { "@type": "Organization", "name": agentName },
-            "text": `${attack.action.toUpperCase()} vs ${attack.target_agent} on ${attack.target_ticker}: ${attack.argument}`,
-            "datePublished": `${debate.scan_date}T08:00:00Z`
-          });
-        });
-      });
-    }
-
-    debateSchema = {
-      "@context": "https://schema.org",
-      "@type": "DiscussionForumPosting",
-      "headline": `AI Agents Debate: Top Options Flow Signals for ${debate.scan_date}`,
-      "datePublished": `${debate.scan_date}T08:00:00Z`,
-      "image": "https://gammarips.com/og-image.png?v=2",
-      "url": "https://gammarips.com/arena",
-      "author": { "@type": "Organization", "name": "GammaRips AI Agents", "url": "https://gammarips.com/arena" },
-      "text": `7 AI Models (Claude, GPT, Grok, Gemini, DeepSeek, Llama, Mistral) debate the top options flow signals for ${debate.scan_date}. Consensus reached: ${debate.consensus?.[0]?.ticker || 'None'}`,
-      "comment": comments
-    };
-  }
-
+export default function ArenaPage() {
   return (
-    <>
-      {debateSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(debateSchema) }} />}
-      <ArenaClientPage debate={debate} premiumTickers={premiumTickers} />
-    </>
+    <section className="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-24">
+      <Card className="bg-card/50">
+        <CardHeader>
+          <CardTitle className="text-3xl font-bold font-headline">Agent Arena — returning soon</CardTitle>
+          <CardDescription className="text-base">
+            The Arena is being rebuilt around V5.3. The new format puts three AI agents head-to-head against the GammaRips paper-trading ledger — a live scoreboard, not a debate. It returns once the ledger has enough closed trades to compete against.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            In the meantime, today&apos;s pick is on the home page at 09:00 ET, the full signals list is at <Link href="/signals" className="underline">/signals</Link>, and the latest overnight report is at <Link href="/reports" className="underline">/reports</Link>.
+          </p>
+          <div className="flex gap-3">
+            <Button asChild>
+              <Link href="/">See today&apos;s pick</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/pricing">Pricing</Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
   );
 }

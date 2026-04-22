@@ -121,7 +121,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const newDbUser = await getOrCreateUser(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
     setDbUser(newDbUser);
 
-    const redirectUrl = searchParams?.get('redirect') || '/dashboard';
+    const redirectUrl = searchParams?.get('redirect') || '/';
 
     if (additionalInfo?.isNewUser) {
       trackEvent('sign_up', { method });
@@ -168,7 +168,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setDbUser(userDocSnap.data() as DbUser);
       }
       toast({ title: "Successfully signed in." });
-      const redirectUrl = searchParams?.get('redirect') || '/dashboard';
+      const redirectUrl = searchParams?.get('redirect') || '/';
       router.push(redirectUrl);
 
     } catch (error) {

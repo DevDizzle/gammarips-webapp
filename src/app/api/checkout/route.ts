@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createStripeCheckoutSession } from '@/lib/stripe';
 import { getAuth } from 'firebase-admin/auth';
-import '@/lib/firebase-admin';
+import { getAdminApp } from '@/lib/firebase-admin';
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     }
 
     const token = authHeader.split('Bearer ')[1];
-    const decodedToken = await getAuth().verifyIdToken(token);
+    const decodedToken = await getAuth(getAdminApp()).verifyIdToken(token);
     const uid = decodedToken.uid;
     const email = decodedToken.email;
 

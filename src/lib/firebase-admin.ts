@@ -26,9 +26,9 @@ config();
 let adminApp: AdminApp | null = null;
 let adminDb: ReturnType<typeof getAdminFirestore> | null = null;
 
-function getAdminApp(): AdminApp {
+export function getAdminApp(): AdminApp {
   if (adminApp) return adminApp;
-  
+
   // Check if apps are already initialized (e.g. by another instance of the module)
   if (getAdminApps().length) {
     adminApp = getAdminApps()[0]!;
@@ -38,9 +38,6 @@ function getAdminApp(): AdminApp {
   const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-
-  console.log('DEBUG: FIREBASE_PRIVATE_KEY raw value:', process.env.FIREBASE_PRIVATE_KEY);
-  console.log('DEBUG: FIREBASE_PRIVATE_KEY length:', process.env.FIREBASE_PRIVATE_KEY?.length);
 
   try {
     // If we are strictly NOT in production, use the manually provided private key.

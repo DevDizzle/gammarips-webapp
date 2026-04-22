@@ -1,11 +1,15 @@
 import Link from 'next/link';
 import React from 'react';
 import { XIcon } from '@/components/icons/XIcon';
+import { EmailCapture } from '@/components/email-capture';
 
 const Footer = () => {
   return (
     <footer className="bg-background border-t mt-auto relative z-10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-10 max-w-xl mx-auto">
+          <EmailCapture variant="minimal" />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-xl font-bold font-headline">

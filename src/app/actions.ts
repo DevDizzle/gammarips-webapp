@@ -1,10 +1,12 @@
 'use server';
 
-import { 
+import {
     getOrCreateUserAdmin,
     saveFeedbackAdmin,
     saveCancellationFeedbackAdmin,
+    getAdminApp,
 } from '@/lib/firebase-admin';
+import { getAuth as getAdminAuth } from 'firebase-admin/auth';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth';
@@ -27,17 +29,25 @@ export async function handleFeedback(uid: string | null, message: string, replyT
   return { success: true };
 }
 
-export async function createCheckoutSession(uid: string, gaClientId: string | null): Promise<{ sessionId: string }> {
+export async function createCheckoutSession(idToken: string, gaClientId: string | null): Promise<{ sessionId: string }> {
+    if (!idToken) {
+        throw new Error('Authentication required.');
+    }
+    const decoded = await getAdminAuth(getAdminApp()).verifyIdToken(idToken);
+    const uid = decoded.uid;
+
     const user = await getOrCreateUserAdmin(uid);
     const headersList = await headers();
-    const origin = headersList.get('origin')!;
+    const forwardedHost = headersList.get('x-forwarded-host') ?? headersList.get('host');
+    const forwardedProto = headersList.get('x-forwarded-proto') ?? 'https';
+    const origin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : headersList.get('origin') ?? 'https://gammarips.com';
 
     const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
     if (!priceId) {
         throw new Error('Stripe Price ID is not configured.');
     }
 
-    const sessionMetadata: { ga_client_id?: string } = {};
+    const sessionMetadata: { ga_client_id?: string; plan?: string } = { plan: 'pro' };
     if (gaClientId) {
         sessionMetadata.ga_client_id = gaClientId;
     }
@@ -46,9 +56,10 @@ export async function createCheckoutSession(uid: string, gaClientId: string | nu
         uid,
         user.email,
         priceId,
-        `${origin}/`,
-        `${origin}/`,
-        sessionMetadata
+        `${origin}/about?welcome=1&session_id={CHECKOUT_SESSION_ID}`,
+        `${origin}/pricing`,
+        sessionMetadata,
+        { trialPeriodDays: 7 }
     );
 
     return { sessionId };

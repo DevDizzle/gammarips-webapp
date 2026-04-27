@@ -39,26 +39,7 @@ env:
 
   # Google Analytics (measurement ID is public)
   - variable: NEXT_PUBLIC_GA_MEASUREMENT_ID
-    value: G-KPGTJDBC6N
-
-# Defines server-side cron jobs for the application.
-scheduledJobs:
-  - schedule: "0 20 * * 1-4"
-    timeZone: America/New_York
-    httpTarget:
-      uri: /api/cron/send-daily-setups
-  - schedule: "0 8 * * 1-5"
-    timeZone: America/New_York
-    httpTarget:
-      uri: /api/cron/send-top-pick
-  - schedule: "0 13 * * 1-5"
-    timeZone: America/New_York
-    httpTarget:
-      uri: /api/cron/send-midday-movers
-  - schedule: "0 10 * * *"
-    timeZone: America/New_York
-    httpTarget:
-      uri: /api/cron/send-feedback-requests
+    value: G-ZF0DQVQEKJ
 
 # Server-side secrets pulled from Google Secret Manager at runtime.
 # Each secret must be granted to the App Hosting service account —

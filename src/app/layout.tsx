@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   },
 };
 
-const GA_MEASUREMENT_ID = 'G-KPGTJDBC6N';
+const GA_MEASUREMENT_ID = 'G-ZF0DQVQEKJ';
 const AW_MEASUREMENT_ID = 'AW-17603675875';
 
 const organizationSchema = {

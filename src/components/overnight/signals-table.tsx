@@ -1,10 +1,9 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown } from "lucide-react";
 import { type OvernightSignal } from '@/lib/firebase-admin';
 
 interface SignalsTableProps {
@@ -61,11 +60,9 @@ export function SignalsTable({ signals, title }: SignalsTableProps) {
             signals.map((signal) => {
               const movePct = signal.price_change_pct || 0;
               return (
-                <TableRow key={signal.id} className="cursor-pointer hover:bg-muted/50 transition-colors group">
+                <TableRow key={signal.id}>
                   <TableCell className="font-bold font-mono text-base">
-                    <Link href={`/signals/${signal.ticker}`} className="hover:underline underline-offset-4">
-                      {signal.ticker}
-                    </Link>
+                    {signal.ticker}
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge className={`${getScoreColor(signal.overnight_score)} text-white border-0`}>
@@ -82,13 +79,9 @@ export function SignalsTable({ signals, title }: SignalsTableProps) {
                     {formatMoney(getPositioning(signal))}
                   </TableCell>
                   <TableCell className="hidden md:table-cell max-w-[300px] text-sm text-muted-foreground">
-                    <span className="line-clamp-1">{signal.thesis || "Thesis available on detail page"}</span>
+                    <span className="line-clamp-1">{signal.thesis || ""}</span>
                   </TableCell>
-                  <TableCell>
-                    <Link href={`/signals/${signal.ticker}`} className="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ArrowRight className="w-4 h-4 text-muted-foreground" />
-                    </Link>
-                  </TableCell>
+                  <TableCell />
                 </TableRow>
               );
             })

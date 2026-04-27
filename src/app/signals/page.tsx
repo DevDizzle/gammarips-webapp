@@ -30,7 +30,7 @@ export default async function SignalsPage() {
       "itemListElement": allSignals.slice(0, 30).map((signal, index) => ({
         "@type": "ListItem",
         "position": index + 1,
-        "url": `https://gammarips.com/signals/${signal.ticker.toLowerCase()}`
+        "name": signal.ticker
       }))
     }
   };

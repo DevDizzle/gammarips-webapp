@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
 import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getLatestTodaysPick } from "@/lib/firebase-admin";
 import { TodaysPickCard } from "@/components/landing/todays-pick-card";
-import { EmailCapture } from "@/components/email-capture";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -74,7 +73,6 @@ export default async function LandingPage() {
       "itemListElement": topSignals.map((signal: any, index: number) => ({
         "@type": "ListItem",
         "position": index + 1,
-        "url": `https://gammarips.com/signals/${signal.ticker.toLowerCase()}`,
         "name": `${signal.ticker} ${signal.direction === 'BULLISH' ? 'BULL' : 'BEAR'} Options Flow. Score: ${signal.overnight_score}`,
         "description": signal.thesis || `${signal.ticker} signal`
       }))
@@ -271,11 +269,6 @@ export default async function LandingPage() {
               <Link href="/how-it-works">See How It Works</Link>
             </Button>
           </div>
-        </section>
-
-        {/* Email capture */}
-        <section>
-          <EmailCapture />
         </section>
 
         {/* FAQ */}

@@ -16,11 +16,11 @@ export const faqs = [
   },
   {
     question: "What's free, what's paid, what do you actually charge for?",
-    answer: "The full webapp is free forever — today's pick, full signals list, daily report, per-ticker deep dive, methodology, and the public scorecard. Pro ($39/mo, 7-day free trial) adds a WhatsApp push at 09:00 ET, an exit reminder at 15:50 ET day-3, and access to an AI chat agent inside the private WhatsApp group that answers questions against live engine data."
+    answer: "Free webapp: the full signals haystack — every signal that cleared the V5.3 enrichment gates this morning, with per-ticker drill-downs, daily reports, methodology, and the public scorecard. Pro ($39/mo, 7-day free trial): the curation. The engine picks ONE V5.3 trade each weekday morning — strike, DTE, contract, stop, target, exit — and delivers it to your inbox + private WhatsApp group at 09:00 ET. Plus access to an AI chat agent in the WhatsApp group that answers questions against live engine data."
   },
   {
-    question: "Why is the webapp free if you charge for WhatsApp?",
-    answer: "We charge for convenience, not information. Pro subscribers get the push to their phone so they don't have to check the webapp at 09:00 ET. They also get the chat agent. Free users see the same pick on the same page at the same second. No information is behind a paywall. We think that's the honest model."
+    question: "Why is the curated pick blurred on the homepage?",
+    answer: "Because the curation IS the value. The free webapp shows every signal — that's the haystack. Pro picks THE one for you so you don't have to scan it. The blurred card on the homepage exists so you can see that we picked something today; subscribing reveals which one and gets it delivered to your inbox + WhatsApp at 09:00 ET. The signals haystack itself is never paywalled."
   },
   {
     question: "What if the trade hits −60% right after I buy it?",
@@ -44,7 +44,7 @@ export const faqs = [
   },
   {
     question: "What happens if I cancel?",
-    answer: "You keep Pro access through the end of your billing cycle, then lose the WhatsApp push and chat agent. The webapp stays free forever. No retention tricks, no downgraded experience. Your pick appears on the home page the same as it did before you subscribed."
+    answer: "You keep Pro access through the end of your billing cycle. After that you lose the curated daily pick email + WhatsApp delivery and the homepage's pick card reverts to the blurred state. The full signals haystack on /signals, the daily reports, methodology, and scorecard all stay free forever. No retention tricks, no downgraded data."
   },
 ];
 

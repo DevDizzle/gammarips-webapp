@@ -9,14 +9,12 @@ import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
 import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getLatestTodaysPick } from "@/lib/firebase-admin";
 import { TodaysPickCard } from "@/components/landing/todays-pick-card";
 import { ProLock } from "@/components/ui/pro-lock";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
 export const revalidate = 60; // keep todays_pick fresh without a full static rebuild
 
 export const metadata: Metadata = {
   title: "GammaRips — One options trade a day. Pushed to your phone at 9 AM.",
-  description: "GammaRips scans institutional options flow overnight and mechanically picks one contract each morning — with stop, target, and exit pre-set. See today's pick on the webapp or get it pushed to WhatsApp. Paper-trading, educational only.",
+  description: "GammaRips scans institutional options flow overnight and mechanically picks one contract each morning — with stop, target, and exit pre-set. Browse the signals haystack free, or get the curated daily pick delivered to your inbox + WhatsApp at 09:00 ET. Paper-trading, educational only.",
   alternates: {
     canonical: '/',
   },
@@ -238,29 +236,6 @@ export default async function LandingPage() {
                 </Card>
               ))}
             </div>
-          </section>
-        )}
-
-        {/* Report Snippet */}
-        {report?.content && (
-          <section>
-            <Card className="bg-card/50 border-primary/20">
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-bold font-headline mb-4">Today&apos;s Report Preview</h2>
-                <article className="prose prose-invert prose-sm max-w-none line-clamp-6">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {report.content.substring(0, 800)}
-                  </ReactMarkdown>
-                </article>
-                <div className="mt-4 pt-4 border-t border-border">
-                  <Link href={`/reports/${reportDate || summary?.scan_date}`}>
-                    <Button variant="outline" size="sm">
-                      Read Full Report <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
           </section>
         )}
 

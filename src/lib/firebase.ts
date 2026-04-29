@@ -113,7 +113,8 @@ export async function getOrCreateUser(
     email: email ?? null,
     displayName: displayName ?? null,
     isAnonymous,
-    isSubscribed: true,
+    // Default to false. Stripe webhook flips this to true on customer.subscription.created.
+    isSubscribed: false,
     usageCount: 0,
     createdAt: serverTimestamp(),
     stripeCustomerId: stripeCustomerId ?? null,

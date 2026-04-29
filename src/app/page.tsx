@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
 import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getLatestTodaysPick } from "@/lib/firebase-admin";
 import { TodaysPickCard } from "@/components/landing/todays-pick-card";
+import { ProLock } from "@/components/ui/pro-lock";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -110,8 +111,18 @@ export default async function LandingPage() {
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
 
-        {/* Today's V5.3 Pick — canonical single source of truth (Firestore todays_pick/{scan_date}) */}
-        {todaysPick && <TodaysPickCard pick={todaysPick} />}
+        {/* Today's V5.3 Pick — canonical single source of truth (Firestore todays_pick/{scan_date}).
+            Paywalled for unpaid users via <ProLock>; paid users (isPro === true) see the full card. */}
+        {todaysPick && (
+          <section id="todays-pick">
+            <ProLock
+              title="Today's V5.3 Pick"
+              description="Subscribe to get the curated daily pick delivered to your inbox + WhatsApp group at 09:00 ET."
+            >
+              <TodaysPickCard pick={todaysPick} />
+            </ProLock>
+          </section>
+        )}
 
         {/* How It Works Summary */}
         <section className="grid grid-cols-1 md:grid-cols-4 gap-4">

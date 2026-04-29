@@ -20,7 +20,7 @@ export function Hero() {
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <Button asChild size="lg">
-          <Link href="/signals">See Today&apos;s Pick</Link>
+          <Link href="/pricing">Today&apos;s V5.3 Pick &rarr;</Link>
         </Button>
         <Button asChild variant="outline" size="lg">
           <Link href="/pricing">Start 7-Day Free Trial</Link>

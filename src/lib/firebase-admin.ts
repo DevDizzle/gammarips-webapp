@@ -6,6 +6,7 @@ import type { DbUser } from './firebase';
 import { unstable_noStore as noStore } from 'next/cache';
 import { config } from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
+import { sendSignupWelcomeEmail } from './mailgun';
 
 export interface BlogPost {
   slug: string;
@@ -548,13 +549,29 @@ export async function getOrCreateUserAdmin(
     email: email ?? null,
     displayName: displayName ?? null,
     isAnonymous,
-    isSubscribed: true,
+    // Default to false. Stripe webhook flips this to true on customer.subscription.created.
+    isSubscribed: false,
     usageCount: 0,
     createdAt: FieldValue.serverTimestamp(),
     stripeCustomerId: stripeCustomerId ?? null,
   };
 
   await userRef.set(newUser);
+
+  // Fire signup welcome for non-anonymous users with a real email. Failure
+  // must not block account creation — log and continue.
+  if (!isAnonymous && email) {
+    try {
+      await sendSignupWelcomeEmail({
+        to: email,
+        name: displayName || email.split('@')[0],
+      });
+      console.log(`Sent signup welcome to ${email}`);
+    } catch (err) {
+      console.error(`Failed to send signup welcome to ${email}:`, err);
+    }
+  }
+
   return newUser;
 }
 
@@ -580,17 +597,25 @@ export async function getEligibleEmailRecipientsAdmin(): Promise<DbUser[]> {
 }
 
 
+// Strict-tuple paid filter: plan == 'pro' AND subscriptionStatus == 'active' AND stripeSubscriptionId set.
+// Firestore can't compose `!= null` cleanly in a compound query, so we filter the
+// stripeSubscriptionId presence check in-memory after the indexed query.
 export async function getSubscribedUsersAdmin(): Promise<DbUser[]> {
     const subscribedUsers: DbUser[] = [];
     try {
-        const snapshot = await getDb().collection('users').where('isSubscribed', '==', true).get();
+        const snapshot = await getDb()
+            .collection('users')
+            .where('plan', '==', 'pro')
+            .where('subscriptionStatus', '==', 'active')
+            .get();
         if (snapshot.empty) {
             console.log('No subscribed users found.');
             return [];
         }
         snapshot.forEach(doc => {
-            const userData = doc.data() as DbUser;
-            if (userData.email) { // Only include users with an email
+            const userData = doc.data() as DbUser & { stripeSubscriptionId?: string | null };
+            // Defense-in-depth: require a real Stripe subscription id, not null/empty.
+            if (userData.email && userData.stripeSubscriptionId) {
                 subscribedUsers.push(userData);
             }
         });

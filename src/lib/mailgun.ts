@@ -93,13 +93,13 @@ You're in. GammaRips Pro is live on your account.
 
 Here's the routine starting tomorrow morning (weekdays, 09:00 ET):
 
-1. Join the private WhatsApp group.
+1. At 09:00 ET each weekday, the day's V5.3 pick lands in your inbox AND the private WhatsApp group.
+   One ticker. One contract. Pre-set stop (-60%), target (+80%), exit (3:50 PM ET day-3).
+   Some days the engine skips — you'll get a message either way.
+
+2. Join the WhatsApp group for live discussion with gamma-bot.
    Invite: ${whatsappInviteUrl}
    (If the link doesn't work, reply to this email with the number you'll use on WhatsApp and we'll add you manually.)
-
-2. At 09:00 ET, the day's pick lands in the group.
-   One ticker. One contract. Pre-set stop (-60%), target (+80%), exit (3:50 PM ET day-3).
-   Some days the engine skips — the message will say so.
 
 3. At 10:00 ET, place the trade.
    Buy one contract at market, arm both GTC exit orders, put your phone down.
@@ -151,16 +151,16 @@ evan@gammarips.com
                                 <tr>
                                     <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">1.</td>
                                     <td valign="top">
-                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Join the private WhatsApp group</h3>
-                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Use the invite link below. If it doesn't work, reply to this email with the number you'll use on WhatsApp and we'll add you manually.</p>
+                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">09:00 ET — the day's pick lands in your inbox + WhatsApp group</h3>
+                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">One ticker, one contract, pre-set stop (−60%), target (+80%), exit at 3:50 PM ET day-3. Some days the engine skips — you'll get a message either way.</p>
                                     </td>
                                 </tr>
                                 <tr><td height="24"></td></tr>
                                 <tr>
                                     <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">2.</td>
                                     <td valign="top">
-                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">09:00 ET — the day's pick lands in the group</h3>
-                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">One ticker, one contract, pre-set stop (−60%), target (+80%), exit at 3:50 PM ET day-3. Some days the engine skips — the message will say so.</p>
+                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Join the WhatsApp group for live Q&amp;A</h3>
+                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Use the invite link below for in-group discussion + gamma-bot. If the link doesn't work, reply to this email with your WhatsApp number and we'll add you manually.</p>
                                     </td>
                                 </tr>
                                 <tr><td height="24"></td></tr>
@@ -229,6 +229,109 @@ export async function sendWelcomeEmail({ to, name }: { to: string, name: string 
     });
 }
 
+export async function buildSignupWelcomeEmailContent(name: string): Promise<{ text: string; html: string }> {
+    const textContent = `
+Hi ${name},
+
+Welcome to GammaRips. Your free account is live.
+
+What that gets you:
+
+- gammarips.com/signals — every options signal that cleared the V5.3 enrichment gates this morning. Browse the haystack the engine scans for you.
+- gammarips.com/blog — methodology deep-dives, post-mortems, weekly research notes.
+- @gammarips on X — daily teaser at 09:05 ET, Friday scorecard.
+
+The differentiator on the paid tier is curation. Each weekday at 09:00 ET, the engine picks ONE V5.3 trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.
+
+$39/month. 7-day free trial. Cancel anytime.
+Pick a plan: https://gammarips.com/pricing
+
+Reply to this email if you have questions — it goes straight to me.
+
+Paper-trading performance, educational only. Not investment advice. Past performance is not a guarantee of future results.
+
+— Evan Parra
+Founder, GammaRips
+evan@gammarips.com
+`;
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <title>Welcome to GammaRips</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
+                    <tr>
+                        <td align="center" style="padding: 40px 20px 20px;">
+                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px 20px;">
+                            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h2>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 20px;">Welcome to GammaRips. Your free account is live.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 20px;"><strong style="color: #ffffff;">What that gets you:</strong></p>
+                            <ul style="font-size: 15px; line-height: 1.7; color: #C0C0C0; padding-left: 20px;">
+                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">gammarips.com/signals</a> — every options signal that cleared the V5.3 enrichment gates this morning. Browse the haystack the engine scans.</li>
+                                <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">gammarips.com/blog</a> — methodology deep-dives, post-mortems, weekly research.</li>
+                                <li><a href="https://x.com/GammaRips" style="color: hsl(74, 80%, 50%);">@gammarips on X</a> — daily teaser at 09:05 ET, Friday scorecard.</li>
+                            </ul>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">The differentiator on the paid tier is <strong style="color: #ffffff;">curation</strong>. Each weekday at 09:00 ET, the engine picks ONE V5.3 trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 10px 40px 30px;">
+                            <a href="https://gammarips.com/pricing" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Start 7-day free trial — $39/mo</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px 20px;">
+                            <p style="font-size: 14px; line-height: 1.6; color: #A0A0A0; border-top: 1px solid #393b4d; padding-top: 24px;">
+                                Reply to this email if you have questions — it goes straight to me.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px 40px 20px; font-size: 12px; line-height: 1.5; color: #6A6A6A; text-align: center; border-top: 1px solid #393b4d;">
+                            Paper-trading performance, educational only. Not investment advice. Past performance is not a guarantee of future results.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
+                            <p style="margin: 0;">— Evan Parra<br>Founder, GammaRips<br><a href="mailto:evan@gammarips.com" style="color: hsl(74, 80%, 50%);">evan@gammarips.com</a></p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+`;
+
+    return { text: textContent, html: htmlContent };
+}
+
+export async function sendSignupWelcomeEmail({ to, name }: { to: string, name: string }) {
+    const { text, html } = await buildSignupWelcomeEmailContent(name);
+    return sendEmail({
+        to: `${name} <${to}>`,
+        subject: `Welcome to GammaRips — here's how it works.`,
+        text,
+        html,
+    });
+}
+
 export async function buildTrialEndingEmailContent(
     name: string,
     chargeDateISO: string,
@@ -250,7 +353,7 @@ If the routine isn't for you:
 - Manage subscription: https://gammarips.com/account
 
 What's worked so far in the trial:
-- The 09:00 ET pick lands in the private WhatsApp group on trading days.
+- The 09:00 ET pick lands in your inbox and the private WhatsApp group on trading days.
 - The engine also skips on days nothing clears the V5.3 gates — those are free money in your attention budget.
 - Tag @gamma in the group for any question about today's pick, the open position, or the ledger.
 

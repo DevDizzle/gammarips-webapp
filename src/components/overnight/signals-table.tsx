@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
 import { type OvernightSignal } from '@/lib/firebase-admin';
 
 interface SignalsTableProps {
@@ -60,9 +61,11 @@ export function SignalsTable({ signals, title }: SignalsTableProps) {
             signals.map((signal) => {
               const movePct = signal.price_change_pct || 0;
               return (
-                <TableRow key={signal.id}>
+                <TableRow key={signal.id} className="cursor-pointer hover:bg-muted/50 transition-colors group">
                   <TableCell className="font-bold font-mono text-base">
-                    {signal.ticker}
+                    <Link href={`/signals/${signal.ticker}`} className="hover:underline underline-offset-4">
+                      {signal.ticker}
+                    </Link>
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge className={`${getScoreColor(signal.overnight_score)} text-white border-0`}>
@@ -81,7 +84,11 @@ export function SignalsTable({ signals, title }: SignalsTableProps) {
                   <TableCell className="hidden md:table-cell max-w-[300px] text-sm text-muted-foreground">
                     <span className="line-clamp-1">{signal.thesis || ""}</span>
                   </TableCell>
-                  <TableCell />
+                  <TableCell>
+                    <Link href={`/signals/${signal.ticker}`} className="opacity-0 group-hover:opacity-100 transition-opacity" aria-label={`View ${signal.ticker} signal detail`}>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                    </Link>
+                  </TableCell>
                 </TableRow>
               );
             })

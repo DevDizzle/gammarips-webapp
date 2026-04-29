@@ -113,7 +113,7 @@ export function PricingClient() {
               ))}
             </ul>
             <Button asChild variant="outline" size="lg" className="w-full">
-              <Link href="/signals">See Today&apos;s Pick</Link>
+              <Link href="/signals">Today&apos;s V5.3 Pick &rarr;</Link>
             </Button>
           </CardContent>
         </Card>

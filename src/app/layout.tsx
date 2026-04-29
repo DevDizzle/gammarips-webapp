@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/hooks/use-auth';
 import Footer from '@/components/layout/footer';
+import EmailCaptureSection from '@/components/layout/email-capture-section';
 import { PublicHeader } from "@/components/layout/public-header";
 import Script from 'next/script';
 import CookieConsentBanner from '@/components/cookie-consent-banner';
@@ -97,6 +98,7 @@ export default async function RootLayout({
               <RootLayoutClient>
                 <main className='flex-grow'>{children}</main>
               </RootLayoutClient>
+              <EmailCaptureSection />
               <Footer />
               <Toaster />
               <CookieConsentBanner />

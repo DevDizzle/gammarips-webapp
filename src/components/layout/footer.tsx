@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
 import { XIcon } from '@/components/icons/XIcon';
-import { EmailCapture } from '@/components/email-capture';
 
 const Footer = () => {
   return (
@@ -13,14 +12,12 @@ const Footer = () => {
                 <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
             </h3>
             <p className="text-sm text-muted-foreground mt-2">One options trade a day. Pushed to your phone at 9 AM.</p>
-            <div className="mt-4">
-              <EmailCapture variant="minimal" />
-            </div>
           </div>
           <div>
             <h4 className="font-semibold text-foreground">Product</h4>
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
+              <li><Link href="/signals" className="text-muted-foreground hover:text-primary">Signals</Link></li>
               <li><Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing</Link></li>
               <li><Link href="/developers" className="text-muted-foreground hover:text-primary">Developers</Link></li>
               <li><Link href="/llms.txt" className="text-muted-foreground hover:text-primary">llms.txt</Link></li>
@@ -29,14 +26,16 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground">Company</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="https://gammarips.com/about" className="text-muted-foreground hover:text-primary">About</Link></li>
+              <li><Link href="/about" className="text-muted-foreground hover:text-primary">About</Link></li>
               <li><Link href="/how-it-works" className="text-muted-foreground hover:text-primary">How It Works</Link></li>
+              <li><Link href="/methodology" className="text-muted-foreground hover:text-primary">Methodology</Link></li>
               <li><Link href="/scorecard" className="text-muted-foreground hover:text-primary">Scorecard</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold text-foreground">Legal &amp; Connect</h4>
             <ul className="mt-4 space-y-2 text-sm">
+              <li><Link href="/disclosures" className="text-muted-foreground hover:text-primary">Disclosures</Link></li>
               <li><Link href="/privacy" className="text-muted-foreground hover:text-primary">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-muted-foreground hover:text-primary">Terms of Service</Link></li>
               <li><a href="https://x.com/GammaRips" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary flex items-center gap-2"><XIcon className="h-4 w-4" /> @GammaRips</a></li>

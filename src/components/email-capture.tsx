@@ -65,10 +65,10 @@ export function EmailCapture({ variant = 'default' }: { variant?: 'default' | 'm
                             <Mail className="h-6 w-6 text-blue-400" />
                         </div>
                         <h3 className="mb-2 text-xl font-bold text-white">
-                          Tomorrow Morning, Know What Smart Money Did Tonight
+                          One email a week. Catch up in five minutes.
                         </h3>
                         <p className="mb-6 max-w-md text-sm text-zinc-400">
-                          Free daily email. Top signals scored and summarized before the bell. Takes 2 minutes to read.
+                          The GammaRips weekly briefing — engine state, the latest deep-dive, and the picks on the public ledger. No firehose, no FOMO.
                         </p>
                     </>
                 )}
@@ -93,7 +93,7 @@ export function EmailCapture({ variant = 'default' }: { variant?: 'default' | 'm
                     </Button>
                   </div>
                   <p className="text-xs text-zinc-500">
-                    Free daily signal previews. No spam. Unsubscribe anytime.
+                    Free weekly newsletter. No spam. Unsubscribe anytime.
                   </p>
                 </form>
             </>

@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   keywords: ['options flow', 'institutional options activity', 'unusual options activity', 'options signals', 'one trade a day', 'options trading', 'AI trading analysis', 'overnight options scanner'],
   openGraph: {
     title: 'GammaRips — One options trade a day',
-    description: 'One contract picked overnight. Stop, target, and exit pre-set. Pushed to your phone at 9 AM ET.',
+    description: 'One contract picked overnight. Stop, target, and exit pre-set. Pushed to your phone at 7:30 AM ET.',
     url: siteUrl,
     siteName: 'GammaRips',
     images: [{ url: `${siteUrl}/og-image.png?v=2`, width: 1200, height: 630, alt: 'GammaRips — One options trade a day' }],
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'GammaRips — One options trade a day',
-    description: 'One contract picked overnight. Stop, target, and exit pre-set. Pushed to your phone at 9 AM ET.',
+    description: 'One contract picked overnight. Stop, target, and exit pre-set. Pushed to your phone at 7:30 AM ET.',
     images: [`${siteUrl}/og-image.png?v=2`],
   },
 };
@@ -52,7 +52,7 @@ const organizationSchema = {
   "url": "https://gammarips.com",
   "logo": "https://gammarips.com/icon.png",
   "email": "evan@gammarips.com",
-  "description": "GammaRips mechanically picks one options contract each morning from overnight institutional flow and pushes it to subscribers at 09:00 ET with stop, target, and exit pre-set.",
+  "description": "GammaRips mechanically picks one options contract each morning from overnight institutional flow and pushes it to subscribers at 07:30 ET with stop, target, and exit pre-set.",
   "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO" },
   "sameAs": ["https://twitter.com/GammaRips"],
 };

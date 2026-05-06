@@ -8,7 +8,7 @@ import {
 export const faqs = [
   {
     question: "What exactly lands on my phone every morning?",
-    answer: "By 09:00 ET you get one pick or none. A ticker, a direction (call or put), a specific contract with strike and expiration, a recommended mid price, a −60% stop, and a +80% target. Some days the engine stays out — when VIX closes above VIX3M (backwardation) or nothing clears the filter stack, nothing is sent. On those days, do nothing. That's the routine."
+    answer: "By 07:30 ET you get one pick or none. A ticker, a direction (call or put), a specific contract with strike and expiration, a recommended mid price, a −60% stop, and a +80% target. Some days the engine stays out — when VIX closes above VIX3M (backwardation) or nothing clears the filter stack, nothing is sent. On those days, do nothing. That's the routine."
   },
   {
     question: "How does the engine pick which one?",
@@ -16,11 +16,11 @@ export const faqs = [
   },
   {
     question: "What's free, what's paid, what do you actually charge for?",
-    answer: "Free webapp: the full signals haystack — every signal that cleared the V5.3 enrichment gates this morning, with per-ticker drill-downs, daily reports, methodology, and the public scorecard. Pro ($39/mo, 7-day free trial): the curation. The engine picks ONE V5.3 trade each weekday morning — strike, DTE, contract, stop, target, exit — and delivers it to your inbox + private WhatsApp group at 09:00 ET. Plus access to an AI chat agent in the WhatsApp group that answers questions against live engine data."
+    answer: "Free webapp: the full signals haystack — every signal that cleared the V5.3 enrichment gates this morning, with per-ticker drill-downs, daily reports, methodology, and the public scorecard. Pro ($39/mo, 7-day free trial): the curation. The engine picks ONE V5.3 trade each weekday morning — strike, DTE, contract, stop, target, exit — and delivers it to your inbox + private WhatsApp group at 07:30 ET. Plus access to an AI chat agent in the WhatsApp group that answers questions against live engine data."
   },
   {
     question: "Why is the curated pick blurred on the homepage?",
-    answer: "Because the curation IS the value. The free webapp shows every signal — that's the haystack. Pro picks THE one for you so you don't have to scan it. The blurred card on the homepage exists so you can see that we picked something today; subscribing reveals which one and gets it delivered to your inbox + WhatsApp at 09:00 ET. The signals haystack itself is never paywalled."
+    answer: "Because the curation IS the value. The free webapp shows every signal — that's the haystack. Pro picks THE one for you so you don't have to scan it. The blurred card on the homepage exists so you can see that we picked something today; subscribing reveals which one and gets it delivered to your inbox + WhatsApp at 07:30 ET. The signals haystack itself is never paywalled."
   },
   {
     question: "What if the trade hits −60% right after I buy it?",

@@ -249,7 +249,7 @@ export interface DailyReport {
 }
 
 /** Canonical source of truth for "what did GammaRips pick today," written
- *  atomically by signal-notifier at ~09:00 ET in Firestore todays_pick/{scan_date}.
+ *  atomically by signal-notifier at ~07:30 ET in Firestore todays_pick/{scan_date}.
  *  Readers MUST NOT re-apply filters — this doc IS the answer. See
  *  docs/TRADING-STRATEGY.md "Publication timing" and
  *  docs/EXEC-PLANS/2026-04-20-v5-3-surface-and-monetization.md Phase 1.0. */

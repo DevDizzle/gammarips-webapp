@@ -21,7 +21,7 @@ export default function ArenaPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            In the meantime, today&apos;s pick is on the home page at 09:00 ET, the full signals list is at <Link href="/signals" className="underline">/signals</Link>, and the latest overnight report is at <Link href="/reports" className="underline">/reports</Link>.
+            In the meantime, today&apos;s pick is on the home page at 07:30 ET, the full signals list is at <Link href="/signals" className="underline">/signals</Link>, and the latest overnight report is at <Link href="/reports" className="underline">/reports</Link>.
           </p>
           <div className="flex gap-3">
             <Button asChild>

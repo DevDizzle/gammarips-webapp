@@ -16,7 +16,7 @@ export const revalidate = 60; // keep todays_pick fresh without a full static re
 
 export const metadata: Metadata = {
   title: "GammaRips — One options trade a day. Pushed to your phone at 9 AM.",
-  description: "GammaRips scans institutional options flow overnight and mechanically picks one contract each morning — with stop, target, and exit pre-set. Browse the signals haystack free, or get the curated daily pick delivered to your inbox + WhatsApp at 09:00 ET. Paper-trading, educational only.",
+  description: "GammaRips scans institutional options flow overnight and mechanically picks one contract each morning — with stop, target, and exit pre-set. Browse the signals haystack free, or get the curated daily pick delivered to your inbox + WhatsApp at 07:30 ET. Paper-trading, educational only.",
   alternates: {
     canonical: '/',
   },
@@ -144,7 +144,7 @@ export default async function LandingPage() {
 
                 <ProLock
                   title="Today's V5.3 Pick"
-                  description="Subscribe to get the curated daily pick delivered to your inbox + WhatsApp group at 09:00 ET."
+                  description="Subscribe to get the curated daily pick delivered to your inbox + WhatsApp group at 07:30 ET."
                 >
                   <TodaysPickCard pick={todaysPick} embedded />
                 </ProLock>

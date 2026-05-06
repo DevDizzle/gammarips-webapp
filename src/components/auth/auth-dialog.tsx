@@ -85,7 +85,7 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
           <DialogDescription>
              {isSignIn
                 ? 'Welcome back.'
-                : 'Sign up free to see today\'s V5.3 pick at 09:00 ET, browse the full signals list, and read the daily report. Upgrade to Pro anytime for the WhatsApp push and chat agent.'
+                : 'Sign up free to see today\'s V5.3 pick at 07:30 ET, browse the full signals list, and read the daily report. Upgrade to Pro anytime for the WhatsApp push and chat agent.'
              }
           </DialogDescription>
         </DialogHeader>

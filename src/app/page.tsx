@@ -8,8 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
 import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getLatestTodaysPick, getCohortStats } from "@/lib/firebase-admin";
 import { TodaysPickCard } from "@/components/landing/todays-pick-card";
-import { CohortStatsRow } from "@/components/landing/cohort-stats-row";
+import { CohortStatsTiles, formatCohortStartDate } from "@/components/landing/cohort-stats-row";
 import { ProLock } from "@/components/ui/pro-lock";
+import { Separator } from "@/components/ui/separator";
 
 export const revalidate = 60; // keep todays_pick fresh without a full static rebuild
 
@@ -111,22 +112,48 @@ export default async function LandingPage() {
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
 
-        {/* Live cohort stats — public social-proof row above the pick card.
-            Visible to all users (logged-out included). Reads cohort_stats/current
-            from Firestore; signal-notifier writes it once per daily run. Empty
-            state (zeros) is rendered honestly per the no-hedge-copy rule. */}
-        <CohortStatsRow stats={cohortStats} />
-
-        {/* Today's V5.3 Pick — canonical single source of truth (Firestore todays_pick/{scan_date}).
-            Paywalled for unpaid users via <ProLock>; paid users (isPro === true) see the full card. */}
+        {/* V5.3 Live Panel — single brand-bordered container that visually
+            unifies (a) the public cohort-stats tiles and (b) the paywalled
+            today's-pick card. Stats are above the divider and visible to all;
+            pick details are below and paywalled via <ProLock> for non-subs.
+            Both are explicitly framed as the SAME GammaRips strategy so the
+            stats can't be read in isolation from the pick that produced them. */}
         {todaysPick && (
           <section id="todays-pick">
-            <ProLock
-              title="Today's V5.3 Pick"
-              description="Subscribe to get the curated daily pick delivered to your inbox + WhatsApp group at 09:00 ET."
-            >
-              <TodaysPickCard pick={todaysPick} />
-            </ProLock>
+            <Card className="border-primary/40 bg-card/90 shadow-[0_0_30px_rgba(234,179,8,0.08)]">
+              <CardContent className="p-6 md:p-8 space-y-6">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-primary font-semibold">
+                      GammaRips · V5.3 Live
+                    </p>
+                    <h2 className="text-xl md:text-2xl font-bold font-headline mt-1">
+                      One pick a day. Tracked openly.
+                    </h2>
+                  </div>
+                  {cohortStats && (
+                    <Badge variant="outline" className="text-[11px] text-muted-foreground border-muted-foreground/30">
+                      Cohort since {formatCohortStartDate(cohortStats.cohort_start)}
+                    </Badge>
+                  )}
+                </div>
+
+                <CohortStatsTiles stats={cohortStats} />
+
+                <Separator />
+
+                <ProLock
+                  title="Today's V5.3 Pick"
+                  description="Subscribe to get the curated daily pick delivered to your inbox + WhatsApp group at 09:00 ET."
+                >
+                  <TodaysPickCard pick={todaysPick} embedded />
+                </ProLock>
+
+                <p className="text-[11px] text-muted-foreground text-center leading-tight">
+                  Paper-traded · Educational only · Not investment advice
+                </p>
+              </CardContent>
+            </Card>
           </section>
         )}
 

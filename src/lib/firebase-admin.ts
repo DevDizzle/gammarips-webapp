@@ -262,6 +262,8 @@ export interface TodaysPick {
     | 'no_candidates_passed_gates'
     | 'regime_fail_closed'
     | 'vix_backwardation'
+    | 'earnings_overlap_all_candidates'
+    | 'earnings_calendar_unavailable'
     | null;
   ticker?: string;
   direction?: 'BULLISH' | 'BEARISH';
@@ -289,6 +291,38 @@ export async function getTodaysPick(scanDate: string): Promise<TodaysPick | null
     return docSnap.data() as TodaysPick;
   } catch (error) {
     console.error(`Error fetching todays_pick for ${scanDate}:`, error);
+    return null;
+  }
+}
+
+/** Public live-cohort performance stats. Single source of truth at
+ *  Firestore cohort_stats/current — written by signal-notifier once per
+ *  daily cron run (compute_and_write_cohort_stats). Cohort starts
+ *  2026-05-07 (post lit-audit reset). Webapp renders the five-tile
+ *  social-proof row above the today's-pick card; visible to all users.
+ *  See docs/EXEC-PLANS/2026-05-06-webapp-stats-and-deeplink-contract.md
+ *  in gammarips-engine for the schema contract. */
+export interface CohortStats {
+  cohort_start: string;          // ISO date; currently "2026-05-07"
+  policy_version: string;        // "V5_3_TARGET_80"
+  as_of: any;                    // Firestore Timestamp
+  trades_closed: number;
+  trades_won: number;
+  win_rate: number;              // 0.0–1.0 (multiply by 100 for %)
+  total_invested_usd: number;
+  total_pl_usd: number;
+  roi_pct: number;               // decimal (multiply by 100 for %)
+}
+
+export async function getCohortStats(): Promise<CohortStats | null> {
+  noStore();
+  try {
+    const docRef = getDb().collection('cohort_stats').doc('current');
+    const docSnap = await docRef.get();
+    if (!docSnap.exists) return null;
+    return docSnap.data() as CohortStats;
+  } catch (error) {
+    console.error('Error fetching cohort_stats/current:', error);
     return null;
   }
 }

@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
-import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getLatestTodaysPick } from "@/lib/firebase-admin";
+import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getLatestTodaysPick, getCohortStats } from "@/lib/firebase-admin";
 import { TodaysPickCard } from "@/components/landing/todays-pick-card";
+import { CohortStatsRow } from "@/components/landing/cohort-stats-row";
 import { ProLock } from "@/components/ui/pro-lock";
 
 export const revalidate = 60; // keep todays_pick fresh without a full static rebuild
@@ -32,6 +33,7 @@ export default async function LandingPage() {
   const reportDate = summary ? (summary.report_date || summary.scan_date) : null;
   const report = reportDate ? await getDailyReport(reportDate) : null;
   const todaysPick = await getLatestTodaysPick();
+  const cohortStats = await getCohortStats();
 
   const topBull = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 3) : [];
   const topBear = summary ? await getOvernightSignals(summary.scan_date, 'bear', 0, 2) : [];
@@ -108,6 +110,12 @@ export default async function LandingPage() {
 
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
+
+        {/* Live cohort stats — public social-proof row above the pick card.
+            Visible to all users (logged-out included). Reads cohort_stats/current
+            from Firestore; signal-notifier writes it once per daily run. Empty
+            state (zeros) is rendered honestly per the no-hedge-copy rule. */}
+        <CohortStatsRow stats={cohortStats} />
 
         {/* Today's V5.3 Pick — canonical single source of truth (Firestore todays_pick/{scan_date}).
             Paywalled for unpaid users via <ProLock>; paid users (isPro === true) see the full card. */}

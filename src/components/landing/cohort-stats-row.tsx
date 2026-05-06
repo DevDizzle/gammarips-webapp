@@ -32,84 +32,97 @@ function formatCohortStart(iso: string): string {
   }
 }
 
-export function CohortStatsRow({ stats }: { stats: CohortStats | null }) {
-  // Empty-state when the doc doesn't exist yet (pre-first-deploy or transient
-  // Firestore failure). Render a safe zeros panel — never block the page.
-  const safe: CohortStats = stats ?? {
-    cohort_start: "2026-05-07",
-    policy_version: "V5_3_TARGET_80",
-    as_of: null,
-    trades_closed: 0,
-    trades_won: 0,
-    win_rate: 0,
-    total_invested_usd: 0,
-    total_pl_usd: 0,
-    roi_pct: 0,
-  };
-
-  const roi = formatPctSigned(safe.roi_pct);
+/** Shared tile-grid renderer used by both standalone and embedded callers.
+ *  Embedded mode (no surrounding <section>, no disclosure footer) is for
+ *  composition inside a parent panel that owns the brand border + footer. */
+function StatsTiles({ stats }: { stats: CohortStats }) {
+  const roi = formatPctSigned(stats.roi_pct);
   const roiColor =
     roi.sign === "pos"
       ? "text-green-500"
       : roi.sign === "neg"
         ? "text-red-500"
         : "text-foreground";
-
-  // Win rate undefined when no closed trades — show em-dash, not "0%" which
-  // would imply we tried 100 trades and won zero. Honest reporting matters.
   const winRateText =
-    safe.trades_closed === 0
-      ? "—"
-      : `${Math.round(safe.win_rate * 100)}%`;
+    stats.trades_closed === 0 ? "—" : `${Math.round(stats.win_rate * 100)}%`;
 
   return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <Card className="bg-card/60">
+        <CardContent className="p-4 text-center">
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">
+            Trades
+          </p>
+          <p className="text-2xl font-bold font-headline mt-1">
+            {stats.trades_closed}
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-card/60">
+        <CardContent className="p-4 text-center">
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">
+            ROI
+          </p>
+          <p className={`text-2xl font-bold font-headline mt-1 ${roiColor}`}>
+            {roi.text}
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-card/60">
+        <CardContent className="p-4 text-center">
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">
+            Win Rate
+          </p>
+          <p className="text-2xl font-bold font-headline mt-1">
+            {winRateText}
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-card/60">
+        <CardContent className="p-4 text-center">
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">
+            Total Invested
+          </p>
+          <p className="text-2xl font-bold font-headline mt-1">
+            {formatUSD(stats.total_invested_usd)}
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+const EMPTY_STATS: CohortStats = {
+  cohort_start: "2026-05-07",
+  policy_version: "V5_3_TARGET_80",
+  as_of: null,
+  trades_closed: 0,
+  trades_won: 0,
+  win_rate: 0,
+  total_invested_usd: 0,
+  total_pl_usd: 0,
+  roi_pct: 0,
+};
+
+export function formatCohortStartDate(iso: string): string {
+  return formatCohortStart(iso);
+}
+
+export function CohortStatsTiles({ stats }: { stats: CohortStats | null }) {
+  return <StatsTiles stats={stats ?? EMPTY_STATS} />;
+}
+
+/** Standalone variant — keeps the original behavior in case anything else
+ *  on the site renders the row in isolation. The unified V5.3 panel on
+ *  the landing page uses <CohortStatsTiles> directly inside its own card. */
+export function CohortStatsRow({ stats }: { stats: CohortStats | null }) {
+  const safe = stats ?? EMPTY_STATS;
+  return (
     <section aria-label="GammaRips paper-trade live performance">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Card className="bg-card/60">
-          <CardContent className="p-4 text-center">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Trades
-            </p>
-            <p className="text-2xl font-bold font-headline mt-1">
-              {safe.trades_closed}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card/60">
-          <CardContent className="p-4 text-center">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              ROI
-            </p>
-            <p className={`text-2xl font-bold font-headline mt-1 ${roiColor}`}>
-              {roi.text}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card/60">
-          <CardContent className="p-4 text-center">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Win Rate
-            </p>
-            <p className="text-2xl font-bold font-headline mt-1">
-              {winRateText}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card/60">
-          <CardContent className="p-4 text-center">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Total Invested
-            </p>
-            <p className="text-2xl font-bold font-headline mt-1">
-              {formatUSD(safe.total_invested_usd)}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
+      <StatsTiles stats={safe} />
       <p className="text-[11px] text-muted-foreground text-center mt-2 leading-tight">
         Paper-traded · Educational only · Not investment advice ·
         {" "}

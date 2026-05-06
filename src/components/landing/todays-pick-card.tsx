@@ -42,29 +42,40 @@ function formatMoneyMillions(v: number | undefined): string {
   return `$${v.toFixed(0)}`;
 }
 
-export function TodaysPickCard({ pick }: { pick: TodaysPick }) {
+export function TodaysPickCard({
+  pick,
+  embedded = false,
+}: {
+  pick: TodaysPick;
+  /** When true, skip the outer <Card>/<section> chrome. The parent panel
+   *  owns the brand border so we don't double up. Used by the unified
+   *  V5.3 panel on the landing page. */
+  embedded?: boolean;
+}) {
   if (!pick.has_pick) {
     const reason = pick.skip_reason
       ? SKIP_REASON_COPY[pick.skip_reason] ?? pick.skip_reason
       : "No pick today.";
+    const skipBody = (
+      <div className="flex items-start gap-3">
+        <AlertCircle className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
+        <div>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
+            Today&apos;s V5.3 Pick
+          </p>
+          <h2 className="text-2xl font-bold font-headline">No trade today</h2>
+          <p className="text-sm text-muted-foreground mt-2 max-w-prose">{reason}</p>
+          <p className="text-xs text-muted-foreground mt-3">
+            scan {pick.scan_date}
+          </p>
+        </div>
+      </div>
+    );
+    if (embedded) return skipBody;
     return (
       <section>
         <Card className="border-muted-foreground/30 bg-card/60">
-          <CardContent className="p-6 md:p-8">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
-              <div>
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
-                  Today&apos;s V5.3 Pick
-                </p>
-                <h2 className="text-2xl font-bold font-headline">No trade today</h2>
-                <p className="text-sm text-muted-foreground mt-2 max-w-prose">{reason}</p>
-                <p className="text-xs text-muted-foreground mt-3">
-                  scan {pick.scan_date}
-                </p>
-              </div>
-            </div>
-          </CardContent>
+          <CardContent className="p-6 md:p-8">{skipBody}</CardContent>
         </Card>
       </section>
     );
@@ -77,23 +88,16 @@ export function TodaysPickCard({ pick }: { pick: TodaysPick }) {
     ? "bg-green-500/20 text-green-500 border-green-500/40"
     : "bg-red-500/20 text-red-500 border-red-500/40";
 
-  return (
-    <section>
-      <Link
-        href={`/signals/${pick.ticker}`}
-        aria-label={`Read the rationale for ${pick.ticker} ${pick.direction}`}
-        className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
-      >
-        <Card className="border-primary/40 bg-card/90 shadow-[0_0_30px_rgba(234,179,8,0.08)] transition-all group-hover:border-primary/70 group-hover:shadow-[0_0_40px_rgba(234,179,8,0.16)] cursor-pointer">
-          <CardContent className="p-6 md:p-8 space-y-5">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <p className="text-xs uppercase tracking-wider text-primary font-semibold">
-                Today&apos;s V5.3 Pick
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Entry {formatEffectiveAt(pick.effective_at)}
-              </p>
-            </div>
+  const pickInner = (
+    <div className="space-y-5">
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <p className="text-xs uppercase tracking-wider text-primary font-semibold">
+          Today&apos;s V5.3 Pick
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Entry {formatEffectiveAt(pick.effective_at)}
+        </p>
+      </div>
 
             <div className="flex items-center gap-4 flex-wrap">
               <span className={`text-5xl font-bold font-headline tracking-tight ${color}`}>
@@ -171,16 +175,39 @@ export function TodaysPickCard({ pick }: { pick: TodaysPick }) {
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-2">
-              <p className="text-xs text-muted-foreground leading-relaxed flex-1 pr-4">
-                Entry 10:00 ET day-1 · Stop −60% · Target +80% · Hold 3 trading days · Paper-trading
-                performance, educational only. Not investment advice.
-              </p>
-              <span className="text-xs text-primary font-medium whitespace-nowrap inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                Read rationale <ArrowRight className="w-3 h-3" />
-              </span>
-            </div>
-          </CardContent>
+      <div className="flex items-center justify-between pt-2">
+        <p className="text-xs text-muted-foreground leading-relaxed flex-1 pr-4">
+          Entry 10:00 ET day-1 · Stop −60% · Target +80% · Hold 3 trading days · Paper-trading
+          performance, educational only. Not investment advice.
+        </p>
+        <span className="text-xs text-primary font-medium whitespace-nowrap inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+          Read rationale <ArrowRight className="w-3 h-3" />
+        </span>
+      </div>
+    </div>
+  );
+
+  const linkWrapper = (
+    <Link
+      href={`/signals/${pick.ticker}`}
+      aria-label={`Read the rationale for ${pick.ticker} ${pick.direction}`}
+      className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
+    >
+      {pickInner}
+    </Link>
+  );
+
+  if (embedded) return linkWrapper;
+
+  return (
+    <section>
+      <Link
+        href={`/signals/${pick.ticker}`}
+        aria-label={`Read the rationale for ${pick.ticker} ${pick.direction}`}
+        className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
+      >
+        <Card className="border-primary/40 bg-card/90 shadow-[0_0_30px_rgba(234,179,8,0.08)] transition-all group-hover:border-primary/70 group-hover:shadow-[0_0_40px_rgba(234,179,8,0.16)] cursor-pointer">
+          <CardContent className="p-6 md:p-8">{pickInner}</CardContent>
         </Card>
       </Link>
     </section>

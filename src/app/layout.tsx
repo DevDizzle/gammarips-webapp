@@ -20,7 +20,7 @@ const siteUrl = 'https://gammarips.com';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl), 
   title: {
-    default: 'GammaRips — One options trade a day. Pushed to your phone at 9 AM.',
+    default: 'GammaRips — One options trade a day. Pushed to your phone at 7:30 AM ET.',
     template: `%s | GammaRips`,
   },
   description: 'GammaRips watches institutional options flow overnight and mechanically picks one contract each morning — with stop, target, and exit pre-set. You place the trade at 10:00 ET and go back to your day. Paper-trading, educational only.',

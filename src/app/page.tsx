@@ -15,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 export const revalidate = 60; // keep todays_pick fresh without a full static rebuild
 
 export const metadata: Metadata = {
-  title: "GammaRips — One options trade a day. Pushed to your phone at 9 AM.",
+  title: "GammaRips — One options trade a day. Pushed to your phone at 7:30 AM ET.",
   description: "GammaRips scans institutional options flow overnight and mechanically picks one contract each morning — with stop, target, and exit pre-set. Browse the signals haystack free, or get the curated daily pick delivered to your inbox + WhatsApp at 07:30 ET. Paper-trading, educational only.",
   alternates: {
     canonical: '/',

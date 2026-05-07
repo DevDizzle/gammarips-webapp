@@ -8,11 +8,11 @@ import Faq, { faqs } from '@/components/landing/faq';
 import ContactForm from './contact-form';
 
 export const metadata: Metadata = {
-  title: 'About GammaRips — One options trade a day, pushed at 9 AM',
+  title: 'About GammaRips — One options trade a day, pushed at 7:30 AM ET',
   description: "The engine, the methodology, and the person behind GammaRips. One V5.3 pick a day, scored while you sleep, pushed to your phone at 07:30 ET. Paper-trading performance, educational only.",
   alternates: { canonical: 'https://gammarips.com/about' },
   openGraph: {
-    title: 'About GammaRips — One options trade a day, pushed at 9 AM',
+    title: 'About GammaRips — One options trade a day, pushed at 7:30 AM ET',
     description: "The engine, the methodology, and the person behind GammaRips. Paper-trading performance, educational only.",
     url: 'https://gammarips.com/about',
   },

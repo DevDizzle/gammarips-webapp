@@ -27,7 +27,7 @@ const dataSources = [
   {
     name: 'FRED (Federal Reserve Economic Data)',
     purpose: 'VIX and VIX3M daily close — used for the term-structure regime gate.',
-    cadence: 'Pulled at signal-decision time (09:00 ET) by signal-notifier.',
+    cadence: 'Pulled at signal-decision time (07:30 ET) by signal-notifier.',
   },
   {
     name: 'BigQuery (`profitscout-fida8.profit_scout`)',
@@ -301,7 +301,7 @@ export default function MethodologyPage() {
           <h2 className="text-2xl font-bold mb-3">Want the daily pick delivered?</h2>
           <p className="text-muted-foreground mb-6">
             Browse the haystack on the signals page free, or get the curated single V5.3 pick
-            delivered to your inbox + private WhatsApp group at 09:00 ET each weekday.
+            delivered to your inbox + private WhatsApp group at 07:30 ET each weekday.
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
             <Button asChild>

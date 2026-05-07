@@ -12,7 +12,7 @@ export default function TermsPage() {
       
       <div className="prose prose-invert max-w-none space-y-6">
         <h2>1. Service Description</h2>
-        <p>GammaRips is a paper-trading options engine that produces at most one trade idea per weekday, published by 09:00 ET, with pre-set stop, target, and exit. The webapp (gammarips.com) is free. The Pro subscription ($39/mo) adds a WhatsApp push and an AI chat agent inside the private subscriber group. The MCP API at gammarips-mcp-406581297632.us-central1.run.app/sse is free and unauthenticated. All content is educational; nothing published by GammaRips constitutes personalized investment advice.</p>
+        <p>GammaRips is a paper-trading options engine that produces at most one trade idea per weekday, published by 07:30 ET, with pre-set stop, target, and exit. The webapp (gammarips.com) is free. The Pro subscription ($39/mo) adds a WhatsApp push and an AI chat agent inside the private subscriber group. The MCP API at gammarips-mcp-406581297632.us-central1.run.app/sse is free and unauthenticated. All content is educational; nothing published by GammaRips constitutes personalized investment advice.</p>
 
         <h2>2. Not Financial Advice</h2>
         <p><strong>The information provided by GammaRips is for informational purposes only and does not constitute investment advice, financial advice, trading advice, or any other sort of advice.</strong> You should not treat any of the website's content as such. GammaRips does not recommend that any securities, options, or strategies are suitable for any particular investor. You are solely responsible for your own investment decisions.</p>

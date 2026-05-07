@@ -8,11 +8,11 @@ import Faq, { faqs } from '@/components/landing/faq';
 import ContactForm from './contact-form';
 
 export const metadata: Metadata = {
-  title: 'About GammaRips — One options trade a day, pushed at 9 AM',
-  description: "The engine, the methodology, and the person behind GammaRips. One V5.3 pick a day, scored while you sleep, pushed to your phone at 09:00 ET. Paper-trading performance, educational only.",
+  title: 'About GammaRips — One options trade a day, pushed at 7:30 AM ET',
+  description: "The engine, the methodology, and the person behind GammaRips. One V5.3 pick a day, scored while you sleep, pushed to your phone at 07:30 ET. Paper-trading performance, educational only.",
   alternates: { canonical: 'https://gammarips.com/about' },
   openGraph: {
-    title: 'About GammaRips — One options trade a day, pushed at 9 AM',
+    title: 'About GammaRips — One options trade a day, pushed at 7:30 AM ET',
     description: "The engine, the methodology, and the person behind GammaRips. Paper-trading performance, educational only.",
     url: 'https://gammarips.com/about',
   },
@@ -32,7 +32,7 @@ const engineSteps = [
   {
     icon: <MessageSquare className="h-6 w-6 text-primary" />,
     title: 'One pick, or none',
-    description: 'At 09:00 ET the notifier picks the single best contract — V/OI > 2, 5–15% OTM, VIX ≤ VIX3M, deterministic tiebreak. Some days there is no pick and the push says so.',
+    description: 'At 07:30 ET the notifier picks the single best contract — V/OI > 2, 5–15% OTM, VIX ≤ VIX3M, deterministic tiebreak. Some days there is no pick and the push says so.',
   },
   {
     icon: <AlarmClock className="h-6 w-6 text-primary" />,
@@ -72,7 +72,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
     "@context": "https://schema.org",
     "@type": "AboutPage",
     "name": "About GammaRips",
-    "description": "One V5.3 options pick a day, scored while you sleep, pushed to your phone at 09:00 ET.",
+    "description": "One V5.3 options pick a day, scored while you sleep, pushed to your phone at 07:30 ET.",
     "url": "https://gammarips.com/about",
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=2" } }
   };
@@ -84,7 +84,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
           <Card className="bg-primary/5 border-primary/40 mb-12">
             <CardHeader>
               <p className="text-sm font-semibold uppercase tracking-wider text-primary">Welcome to GammaRips Pro</p>
-              <CardTitle className="font-headline text-2xl sm:text-3xl">You&apos;re in. Here&apos;s your 09:00 ET routine.</CardTitle>
+              <CardTitle className="font-headline text-2xl sm:text-3xl">You&apos;re in. Here&apos;s your 07:30 ET routine.</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {whatsappInvite && (
@@ -100,7 +100,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
               <ul className="space-y-3 text-sm text-foreground/90">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>Tomorrow at 09:00 ET, today&apos;s V5.3 pick lands in the group. Or the pick says &ldquo;no trade today&rdquo; and you do nothing.</span>
+                  <span>Tomorrow at 07:30 ET, today&apos;s V5.3 pick lands in the group. Or the pick says &ldquo;no trade today&rdquo; and you do nothing.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -135,7 +135,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
           <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
             One options trade a day.
             <span className="block mt-2 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Scored while you sleep. Pushed at 09:00 ET.
+              Scored while you sleep. Pushed at 07:30 ET.
             </span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
@@ -242,12 +242,12 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                 <div className="p-4 rounded-lg bg-background">
                   <p className="font-bold text-lg">Free</p>
                   <p className="text-primary font-semibold text-xs mb-1">$0 · FOREVER</p>
-                  <p className="text-muted-foreground">Today&apos;s pick at 09:00 ET on the home page, full signals list, daily report, public ledger.</p>
+                  <p className="text-muted-foreground">Today&apos;s pick at 07:30 ET on the home page, full signals list, daily report, public ledger.</p>
                 </div>
                 <div className="p-4 rounded-lg bg-background border border-primary/30">
                   <p className="font-bold text-lg">Pro</p>
                   <p className="text-primary font-semibold text-xs mb-1">$39/MO · 7-DAY TRIAL</p>
-                  <p className="text-muted-foreground">WhatsApp push at 09:00 ET, day-3 exit reminder, AI chat agent in the private group.</p>
+                  <p className="text-muted-foreground">WhatsApp push at 07:30 ET, day-3 exit reminder, AI chat agent in the private group.</p>
                 </div>
               </div>
               <Button asChild size="lg">

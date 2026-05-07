@@ -36,17 +36,17 @@ export default function HowItWorksPage() {
           How GammaRips Works
         </h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-          One V5.3 options trade a day, or none. Scored while you sleep, pushed to your phone at 09:00 ET. Here&apos;s the full pipeline.
+          One V5.3 options trade a day, or none. Scored while you sleep, pushed to your phone at 07:30 ET. Here&apos;s the full pipeline.
         </p>
       </header>
 
       <Separator className="my-12 sm:my-16" />
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">Your morning at 09:00 ET</h2>
+        <h2 className="text-3xl font-bold font-headline">Your morning at 07:30 ET</h2>
         <div className="p-6 rounded-lg border bg-primary/5 border-primary/20 text-muted-foreground space-y-4 leading-relaxed">
           <p>
-            At 09:00 ET, one message lands in your phone. Either it&apos;s today&apos;s single V5.3 pick &mdash; one ticker, one contract, a pre-set &minus;60% stop and +80% target &mdash; or the engine says <em>no trade today</em> and you do nothing.
+            At 07:30 ET, one message lands in your phone. Either it&apos;s today&apos;s single V5.3 pick &mdash; one ticker, one contract, a pre-set &minus;60% stop and +80% target &mdash; or the engine says <em>no trade today</em> and you do nothing.
           </p>
           <p>
             At 10:00 ET, you place the trade: buy one contract at market, arm both GTC exit orders, put your phone down. At 15:50 ET on day-3, an exit reminder fires if the trade is still open. Close at market, log the outcome, move on.
@@ -109,7 +109,7 @@ export default function HowItWorksPage() {
       <section className="space-y-4">
         <h2 className="text-3xl font-bold font-headline">Selecting the one V5.3 pick</h2>
         <p className="text-muted-foreground leading-relaxed">
-          At 09:00 ET, the notifier runs a second filter stack over the enriched list and picks <strong className="text-foreground">at most one</strong> contract:
+          At 07:30 ET, the notifier runs a second filter stack over the enriched list and picks <strong className="text-foreground">at most one</strong> contract:
         </p>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
           <li><strong className="text-foreground">V/OI &gt; 2</strong> &mdash; the day&apos;s flow on that contract must be more than double its standing open interest.</li>
@@ -160,7 +160,7 @@ export default function HowItWorksPage() {
       <Separator className="my-12 sm:my-16" />
 
       <div className="text-center">
-        <h2 className="text-2xl font-bold font-headline mb-4">Ready for tomorrow&apos;s 09:00 ET pick?</h2>
+        <h2 className="text-2xl font-bold font-headline mb-4">Ready for tomorrow&apos;s 07:30 ET pick?</h2>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild size="lg">
             <Link href="/pricing">See pricing <ArrowRight className="ml-2 h-5 w-5" /></Link>

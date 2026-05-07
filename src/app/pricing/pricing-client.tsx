@@ -14,7 +14,7 @@ const stripePromise = loadStripe(
 );
 
 const proFeatures = [
-  "Today's V5.3 pick pushed to WhatsApp at 09:00 ET",
+  "Today's V5.3 pick pushed to WhatsApp at 07:30 ET",
   'Exit reminder at 15:50 ET on day-3',
   'Private WhatsApp group access',
   'AI chat agent — tag @gamma to ask about today\'s pick, open position, or the 30-day ledger',
@@ -24,7 +24,7 @@ const proFeatures = [
 ];
 
 const freeFeatures = [
-  "Today's V5.3 pick on the home page at 09:00 ET",
+  "Today's V5.3 pick on the home page at 07:30 ET",
   'Full signals list across 5,230+ tickers',
   'Daily market report with AI-authored thesis',
   'Per-ticker deep dive + recommended contract',
@@ -83,7 +83,7 @@ export function PricingClient() {
           </span>
         </h1>
         <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
-          The webapp is always free. Pay for the WhatsApp push at 09:00 ET and
+          The webapp is always free. Pay for the WhatsApp push at 07:30 ET and
           the AI chat agent inside the private group. 7-day free trial on Pro.
           Cancel anytime.
         </p>
@@ -99,7 +99,7 @@ export function PricingClient() {
               <span className="text-muted-foreground ml-2">forever</span>
             </div>
             <p className="text-sm text-muted-foreground mt-2">
-              See the pick at 09:00 ET. Browse every signal. Read the full report.
+              See the pick at 07:30 ET. Browse every signal. Read the full report.
               Everything on gammarips.com, no card required.
             </p>
           </CardHeader>

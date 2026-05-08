@@ -46,7 +46,7 @@ export default async function LandingPage() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "GammaRips",
-    "image": "https://gammarips.com/og-image.png?v=2",
+    "image": "https://gammarips.com/og-image.png?v=3",
     "url": "https://gammarips.com",
     "description": summary?.market_narrative || "One options trade a day, scored before you wake up.",
     "potentialAction": {

@@ -74,7 +74,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
     "name": "About GammaRips",
     "description": "One V5.3 options pick a day, scored while you sleep, pushed to your phone at 07:30 ET.",
     "url": "https://gammarips.com/about",
-    "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=2" } }
+    "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
   };
 
   return (

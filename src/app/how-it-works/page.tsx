@@ -22,9 +22,9 @@ export default function HowItWorksPage() {
     "@type": "Article",
     "headline": "How GammaRips Works — Overnight Options Scanner, V5.3 Execution",
     "description": "Mechanical, filtered, single-pick-per-day pipeline across 5,230+ tickers.",
-    "image": "https://gammarips.com/og-image.png?v=2",
+    "image": "https://gammarips.com/og-image.png?v=3",
     "author": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
-    "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=2" } }
+    "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
   };
 
   return (

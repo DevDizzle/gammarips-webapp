@@ -13,27 +13,27 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, User as UserIcon, LogIn, LayoutDashboard } from 'lucide-react';
+import { LogOut, User as UserIcon, LayoutDashboard } from 'lucide-react';
 import { useState } from 'react';
 import { AuthDialog } from './auth-dialog';
-import { Skeleton } from '../ui/skeleton';
 import Link from 'next/link';
 
 export function UserNav() {
   const { user, signOut, loading } = useAuth();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
 
-  if (loading) {
-    return <Skeleton className="h-9 w-24 rounded-md" />;
-  }
-  
-  if (!user) {
+  // Render the unauthenticated CTA in two cases:
+  //  1) auth still resolving (loading=true) — true on SSR and pre-hydration
+  //  2) auth resolved with no user
+  // This guarantees crawlers and first paint see a real "Start Free Trial"
+  // button instead of a loading skeleton. Authenticated users will swap to
+  // the avatar dropdown after hydration.
+  if (loading || !user) {
     return (
       <>
         <AuthDialog open={showAuthDialog} onOpenChange={setShowAuthDialog} />
         <Button onClick={() => setShowAuthDialog(true)}>
-          <LogIn className="mr-2 h-4 w-4" />
-          Sign In / Sign Up
+          Start Free Trial
         </Button>
       </>
     );

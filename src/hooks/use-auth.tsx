@@ -20,8 +20,19 @@ import { useToast } from './use-toast';
 import { getDoc, doc, onSnapshot } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { event as trackEvent } from '@/lib/gtag';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { FREE_MODE } from '@/lib/config';
+
+// Read ?redirect= from window.location only when an auth handler runs (always
+// client-side after a click). We deliberately avoid useSearchParams() here
+// because it forces the closest Suspense boundary to bail out of SSR — and
+// AuthProvider wraps the entire app, which would empty every page's HTML for
+// JS-disabled crawlers (ClaudeBot, GPTBot, link previews, etc.).
+function getRedirectFromLocation(): string {
+  if (typeof window === 'undefined') return '/';
+  const params = new URLSearchParams(window.location.search);
+  return params.get('redirect') || '/';
+}
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -46,7 +57,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const isPro = useMemo(() => {
     // If we are in "Free Mode" (Growth Mode), everyone is Pro.
@@ -121,7 +131,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const newDbUser = await getOrCreateUser(user.uid, user.isAnonymous, user.displayName ?? undefined, user.email ?? undefined);
     setDbUser(newDbUser);
 
-    const redirectUrl = searchParams?.get('redirect') || '/';
+    const redirectUrl = getRedirectFromLocation();
 
     if (additionalInfo?.isNewUser) {
       trackEvent('sign_up', { method });
@@ -168,7 +178,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setDbUser(userDocSnap.data() as DbUser);
       }
       toast({ title: "Successfully signed in." });
-      const redirectUrl = searchParams?.get('redirect') || '/';
+      const redirectUrl = getRedirectFromLocation();
       router.push(redirectUrl);
 
     } catch (error) {

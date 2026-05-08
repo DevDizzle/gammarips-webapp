@@ -10,7 +10,6 @@ import CookieConsentBanner from '@/components/cookie-consent-banner';
 import RootLayoutClient from './root-layout-client';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import { AuthModalProvider } from '@/components/auth/auth-modal-provider';
-import { Suspense } from 'react';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk', display: 'swap' });
@@ -30,7 +29,7 @@ export const metadata: Metadata = {
     description: 'One contract picked overnight. Stop, target, and exit pre-set. Pushed to your phone at 7:30 AM ET.',
     url: siteUrl,
     siteName: 'GammaRips',
-    images: [{ url: `${siteUrl}/og-image.png?v=2`, width: 1200, height: 630, alt: 'GammaRips — One options trade a day' }],
+    images: [{ url: `${siteUrl}/og-image.png?v=3`, width: 1200, height: 630, alt: 'GammaRips — One options trade a day' }],
     locale: 'en_US',
     type: 'website',
   },
@@ -38,7 +37,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'GammaRips — One options trade a day',
     description: 'One contract picked overnight. Stop, target, and exit pre-set. Pushed to your phone at 7:30 AM ET.',
-    images: [`${siteUrl}/og-image.png?v=2`],
+    images: [`${siteUrl}/og-image.png?v=3`],
   },
 };
 
@@ -91,20 +90,18 @@ export default async function RootLayout({
         }} />
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
-        <Suspense fallback={null}>
-          <AuthProvider>
-            <AuthModalProvider>
-              <PublicHeader />
-              <RootLayoutClient>
-                <main className='flex-grow'>{children}</main>
-              </RootLayoutClient>
-              <EmailCaptureSection />
-              <Footer />
-              <Toaster />
-              <CookieConsentBanner />
-            </AuthModalProvider>
-          </AuthProvider>
-        </Suspense>
+        <AuthProvider>
+          <AuthModalProvider>
+            <PublicHeader />
+            <RootLayoutClient>
+              <main className='flex-grow'>{children}</main>
+            </RootLayoutClient>
+            <EmailCaptureSection />
+            <Footer />
+            <Toaster />
+            <CookieConsentBanner />
+          </AuthModalProvider>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -1,8 +1,8 @@
 # GammaRips
 
-> One options trade a day. Scored before you wake up. Pushed to your phone at 9 AM.
+> One options trade a day. Scored before you wake up. Pushed to your phone at 7:30 AM ET.
 
-GammaRips is a paper-trading options engine for working professionals. Every weeknight it scans 5,230+ US equities for institutional overnight options flow, applies deterministic quality gates, and publishes at most one trade idea by 9:00 AM ET. The trade has a pre-set stop (−60% on the option), pre-set target (+80%), and scheduled exit (3:50 PM ET on trading day 3). Free users see the pick on the webapp; Pro subscribers get it pushed to WhatsApp and can @mention an AI agent in the private group.
+GammaRips is a paper-trading options engine for working professionals. Every weeknight it scans 5,230+ US equities for institutional overnight options flow, applies deterministic quality gates, and publishes at most one trade idea by 7:30 AM ET. The trade has a pre-set stop (−60% on the option), pre-set target (+80%), and scheduled exit (3:50 PM ET on trading day 3). Free users see the pick on the webapp; Pro subscribers get it pushed to WhatsApp and can @mention an AI agent in the private group.
 
 Paper-trading, educational only. Not investment advice.
 
@@ -30,8 +30,8 @@ Paper-trading, educational only. Not investment advice.
 
 ## Pricing
 
-- **Free** — today's pick on the webapp at 09:00 ET, full signals list, daily report, public scorecard, all 15 MCP tools.
-- **Pro $39/mo** — everything in Free, plus a WhatsApp push at 09:00 ET, an exit reminder at 15:50 ET day-3, and an AI chat agent inside the private WhatsApp group. 7-day free trial. Cancel anytime.
+- **Free** — today's pick on the webapp at 07:30 ET, full signals list, daily report, public scorecard, all 15 MCP tools.
+- **Pro $39/mo** — everything in Free, plus a WhatsApp push at 07:30 ET, an exit reminder at 15:50 ET day-3, and an AI chat agent inside the private WhatsApp group. 7-day free trial. Cancel anytime.
 
 ## Disclaimers
 

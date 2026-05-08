@@ -42,7 +42,7 @@ export default async function ReportPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": report.title || `GammaRips V5.3 pick for ${date}`,
-    "image": "https://gammarips.com/og-image.png?v=2",
+    "image": "https://gammarips.com/og-image.png?v=3",
     "datePublished": `${report.scan_date}T08:00:00Z`,
     "dateModified": `${report.scan_date}T08:00:00Z`,
     "author": {
@@ -53,7 +53,7 @@ export default async function ReportPage({ params }: Props) {
     "publisher": {
       "@type": "Organization",
       "name": "GammaRips",
-      "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=2" }
+      "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" }
     },
     "description": report.seoMetadata?.seoDescription || `GammaRips V5.3 daily pick and market context for ${date}. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`,
     "about": {

@@ -9,7 +9,7 @@ import ContactForm from './contact-form';
 
 export const metadata: Metadata = {
   title: 'About GammaRips — One options trade a day, pushed at 7:30 AM ET',
-  description: "The engine, the methodology, and the person behind GammaRips. One V5.3 pick a day, scored while you sleep, pushed to your phone at 07:30 ET. Paper-trading performance, educational only.",
+  description: "The engine, the methodology, and the person behind GammaRips. One V5.4 pick a day, scored while you sleep, pushed to your phone at 07:30 ET. Paper-trading performance, educational only.",
   alternates: { canonical: 'https://gammarips.com/about' },
   openGraph: {
     title: 'About GammaRips — One options trade a day, pushed at 7:30 AM ET',
@@ -37,7 +37,7 @@ const engineSteps = [
   {
     icon: <AlarmClock className="h-6 w-6 text-primary" />,
     title: 'Exit reminder',
-    description: 'V5.3 holds for three sessions with a −60% option stop and +80% target, exiting at 15:50 ET on day-3. Pro subscribers get the exit reminder pushed to WhatsApp the same minute the engine writes it.',
+    description: 'V5.4 holds for three sessions with a −60% option stop and +80% target, exiting at 15:50 ET on day-3. Pro subscribers get the exit reminder pushed to WhatsApp the same minute the engine writes it.',
   },
 ];
 
@@ -46,7 +46,7 @@ const whyList = [
   'Every pick carries its exit rules and its paper-trading outcome, updated automatically in the public ledger.',
   'Free users and Pro subscribers see the same pick at the exact same second. No paid-first tier.',
   'The engine is deterministic — same inputs, same output. Every filter, threshold, and tiebreak is documented and reproducible.',
-  'Paper-trading performance only. Nothing marketed until the V5.3 ledger has ≥30 closed trades. This page is about what was built, not what it returned.',
+  'Paper-trading performance only. Nothing marketed until the V5.4 ledger has ≥30 closed trades. This page is about what was built, not what it returned.',
 ];
 
 interface AboutPageProps {
@@ -72,7 +72,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
     "@context": "https://schema.org",
     "@type": "AboutPage",
     "name": "About GammaRips",
-    "description": "One V5.3 options pick a day, scored while you sleep, pushed to your phone at 07:30 ET.",
+    "description": "One V5.4 options pick a day, scored while you sleep, pushed to your phone at 07:30 ET.",
     "url": "https://gammarips.com/about",
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
   };
@@ -100,7 +100,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
               <ul className="space-y-3 text-sm text-foreground/90">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>Tomorrow at 07:30 ET, today&apos;s V5.3 pick lands in the group. Or the pick says &ldquo;no trade today&rdquo; and you do nothing.</span>
+                  <span>Tomorrow at 07:30 ET, today&apos;s V5.4 pick lands in the group. Or the pick says &ldquo;no trade today&rdquo; and you do nothing.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -149,7 +149,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">How the engine works</h2>
             <p className="mt-3 max-w-2xl mx-auto text-muted-foreground">
-              V5.3 &mdash; the only active strategy &mdash; is a mechanical, filtered, single-pick-per-day pipeline. No discretion, no override, no paid-first tier.
+              V5.4 &mdash; the only active strategy &mdash; is a mechanical, filtered, single-pick-per-day pipeline. No discretion, no override, no paid-first tier.
             </p>
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -188,7 +188,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">
-                  ML engineer and data architect. Built the scanner, the enrichment layer, and the V5.3 execution policy. Solo operator — no team of analysts, no &ldquo;room of traders.&rdquo; One person with a pipeline.
+                  ML engineer and data architect. Built the scanner, the enrichment layer, and the V5.4 execution policy. Solo operator — no team of analysts, no &ldquo;room of traders.&rdquo; One person with a pipeline.
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Also runs <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link> &mdash; AI strategy and data integration consulting.

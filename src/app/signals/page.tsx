@@ -52,7 +52,7 @@ export default async function SignalsPage() {
               GammaRips is a daily options signals scanner. Every night at 23:00 ET, the engine ingests institutional options flow &mdash; volume, open interest, unusual activity, and directional dollar flow &mdash; across every optionable U.S. equity. Candidates clear three deterministic gates: <strong className="text-foreground">overnight score &ge; 1, spread &le; 10%, directional UOA &gt; $500K</strong>. What you see below is the full post-gate flow for today.
             </p>
             <p>
-              From this list, one single V5.3 contract is selected and pushed to the private WhatsApp group at <strong className="text-foreground">07:30 ET</strong> with pre-set stop (&minus;60%), target (+80%), and a 3-day hold window. Free readers see the same pick on the home page at the exact same second. No paid-first tier. Browse the raw scan here, or subscribe for the one-a-day WhatsApp push.
+              From this list, one single V5.4 contract is selected and pushed to the private WhatsApp group at <strong className="text-foreground">07:30 ET</strong> with pre-set stop (&minus;60%), target (+80%), and a 3-day hold window. Free readers see the same pick on the home page at the exact same second. No paid-first tier. Browse the raw scan here, or subscribe for the one-a-day WhatsApp push.
             </p>
           </div>
         </div>

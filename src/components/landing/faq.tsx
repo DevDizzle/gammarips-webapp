@@ -16,7 +16,7 @@ export const faqs = [
   },
   {
     question: "What's free, what's paid, what do you actually charge for?",
-    answer: "Free webapp: the full signals haystack — every signal that cleared the V5.3 enrichment gates this morning, with per-ticker drill-downs, daily reports, methodology, and the public scorecard. Pro ($39/mo, 7-day free trial): the curation. The engine picks ONE V5.3 trade each weekday morning — strike, DTE, contract, stop, target, exit — and delivers it to your inbox + private WhatsApp group at 07:30 ET. Plus access to an AI chat agent in the WhatsApp group that answers questions against live engine data."
+    answer: "Free webapp: the full signals haystack — every signal that cleared the enrichment gates this morning, with per-ticker drill-downs, daily reports, methodology, and the public scorecard. Pro ($39/mo, 7-day free trial): the curation. The engine picks ONE trade each weekday morning — strike, DTE, contract, stop, target, exit — and delivers it to your inbox + private WhatsApp group at 07:30 ET. Plus access to an AI chat agent in the WhatsApp group that answers questions against live engine data."
   },
   {
     question: "Why is the curated pick blurred on the homepage?",
@@ -32,7 +32,7 @@ export const faqs = [
   },
   {
     question: "Where's the track record?",
-    answer: "On the Scorecard page, updated as the engine's paper trades close. We started V5.3 paper-trading on April 17, 2026, so sample size is small — we will publish specific win-rate numbers when at least 30 V5.3 trades have closed. In the meantime, every signal is timestamped, every outcome is logged, and nothing is edited after the fact. That's the receipt."
+    answer: "On the Scorecard page, updated as the engine's paper trades close. We promoted V5.4 — our LLM agent ranker — on May 8, 2026; the V5.4 cohort starts fresh from that date. Sample size is small — we'll publish specific win-rate numbers when at least 30 V5.4 trades have closed. In the meantime, every signal is timestamped, every outcome is logged, and nothing is edited after the fact. That's the receipt."
   },
   {
     question: "Why one trade a day? Everyone else sends dozens.",

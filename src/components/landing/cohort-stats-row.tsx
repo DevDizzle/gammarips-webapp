@@ -96,8 +96,8 @@ function StatsTiles({ stats }: { stats: CohortStats }) {
 }
 
 const EMPTY_STATS: CohortStats = {
-  cohort_start: "2026-05-07",
-  policy_version: "V5_3_TARGET_80",
+  cohort_start: "2026-05-08",
+  policy_version: "V5_4_AGENT_RANKER",
   as_of: null,
   trades_closed: 0,
   trades_won: 0,
@@ -116,7 +116,7 @@ export function CohortStatsTiles({ stats }: { stats: CohortStats | null }) {
 }
 
 /** Standalone variant — keeps the original behavior in case anything else
- *  on the site renders the row in isolation. The unified V5.3 panel on
+ *  on the site renders the row in isolation. The unified live-stats panel on
  *  the landing page uses <CohortStatsTiles> directly inside its own card. */
 export function CohortStatsRow({ stats }: { stats: CohortStats | null }) {
   const safe = stats ?? EMPTY_STATS;

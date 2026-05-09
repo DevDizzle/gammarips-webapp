@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Agent Arena — Returning Soon | GammaRips",
-  description: "The Agent Arena is being rebuilt around V5.3. It returns once the paper-trading ledger has a meaningful sample to compete against.",
+  description: "The Agent Arena is being rebuilt around V5.4. It returns once the paper-trading ledger has a meaningful sample to compete against.",
   robots: { index: false, follow: true },
 };
 
@@ -16,7 +16,7 @@ export default function ArenaPage() {
         <CardHeader>
           <CardTitle className="text-3xl font-bold font-headline">Agent Arena — returning soon</CardTitle>
           <CardDescription className="text-base">
-            The Arena is being rebuilt around V5.3. The new format puts three AI agents head-to-head against the GammaRips paper-trading ledger — a live scoreboard, not a debate. It returns once the ledger has enough closed trades to compete against.
+            The Arena is being rebuilt around V5.4. The new format puts three AI agents head-to-head against the GammaRips paper-trading ledger — a live scoreboard, not a debate. It returns once the ledger has enough closed trades to compete against.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

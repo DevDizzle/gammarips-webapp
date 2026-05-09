@@ -16,7 +16,7 @@ export function Hero() {
         You place the trade at 10:00 ET and go back to your day.
       </p>
       <p className="text-sm text-muted-foreground mb-8">
-        V5.3 engine · 5,230 tickers scanned nightly · One pick or none · Paper-trading, educational only
+        GammaRips engine · 5,230 tickers scanned nightly · One pick or none · Paper-trading, educational only
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <Button asChild size="lg">

@@ -8,12 +8,12 @@ import { ArrowRight, Database, Filter, Calculator, GitBranch, ShieldCheck, Code 
 export const metadata: Metadata = {
   title: 'GammaRips Methodology — Where every number comes from',
   description:
-    'The data sources, gate thresholds, bracket math, and tiebreakers behind every V5.3 pick. Polygon end-of-day options, FRED VIX, BigQuery ledger. Deterministic, reproducible, paper-trading only.',
+    'The data sources, gate thresholds, bracket math, and tiebreakers behind every V5.4 pick. Polygon end-of-day options, FRED VIX, BigQuery ledger. Deterministic, reproducible, paper-trading only.',
   alternates: { canonical: 'https://gammarips.com/methodology' },
   openGraph: {
     title: 'GammaRips Methodology — Where every number comes from',
     description:
-      'The data sources, gate thresholds, bracket math, and tiebreakers behind every V5.3 pick. Deterministic and reproducible.',
+      'The data sources, gate thresholds, bracket math, and tiebreakers behind every V5.4 pick. Deterministic and reproducible.',
     url: 'https://gammarips.com/methodology',
   },
 };
@@ -60,7 +60,7 @@ const gates = [
   {
     name: '5–15% out-of-the-money',
     where: 'signal-notifier',
-    why: 'Moneyness band. Closer than 5% OTM is closer-to-ATM and behaves more like delta-1 stock; further than 15% OTM is too lottery-ticket. The 5–15% band is the gamma-sensitive zone V5.3 targets.',
+    why: 'Moneyness band. Closer than 5% OTM is closer-to-ATM and behaves more like delta-1 stock; further than 15% OTM is too lottery-ticket. The 5–15% band is the gamma-sensitive zone V5.4 targets.',
   },
   {
     name: 'VIX ≤ VIX3M (no backwardation)',
@@ -117,7 +117,7 @@ const dontDoList = [
   },
   {
     label: 'No track-record marketing pre-30-trades.',
-    detail: 'Until V5.3 has 30 closed paper trades the engine ships methodology only. No win rate, no Sharpe, no expectancy claims.',
+    detail: 'Until V5.4 has 30 closed paper trades the engine ships methodology only. No win rate, no Sharpe, no expectancy claims.',
   },
 ];
 
@@ -126,7 +126,7 @@ const methodologySchema = {
   '@type': 'TechArticle',
   headline: 'GammaRips Methodology — Where every number comes from',
   description:
-    'The data sources, gate thresholds, bracket math, and tiebreakers behind every V5.3 pick. Deterministic and reproducible.',
+    'The data sources, gate thresholds, bracket math, and tiebreakers behind every V5.4 pick. Deterministic and reproducible.',
   url: 'https://gammarips.com/methodology',
   publisher: {
     '@type': 'Organization',
@@ -149,7 +149,7 @@ export default function MethodologyPage() {
             Where every number in our engine comes from.
           </h1>
           <p className="text-lg text-muted-foreground">
-            Every threshold, every data source, every tiebreaker — documented. The V5.3 engine is
+            Every threshold, every data source, every tiebreaker — documented. The GammaRips engine is
             deterministic: same inputs produce the same output, every time. This page is the audit
             trail.
           </p>
@@ -184,7 +184,7 @@ export default function MethodologyPage() {
         <section className="mb-16">
           <div className="flex items-center gap-2 mb-6">
             <Filter className="h-5 w-5 text-primary" />
-            <h2 className="text-2xl font-bold">The V5.3 gate stack</h2>
+            <h2 className="text-2xl font-bold">The V5.4 gate stack</h2>
           </div>
           <p className="text-muted-foreground mb-6">
             Seven deterministic checks, applied in order. A signal that fails any one gate is
@@ -219,7 +219,7 @@ export default function MethodologyPage() {
             <h2 className="text-2xl font-bold">The bracket math</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            Every V5.3 pick ships with the same execution rules. The bracket isn't a guess — it
+            Every V5.4 pick ships with the same execution rules. The bracket isn't a guess — it
             came out of a sweep across thousands of historical signals where a −60/+80/3-day
             envelope was the highest-EV configuration tested.
           </p>
@@ -261,7 +261,7 @@ export default function MethodologyPage() {
             <li className="flex gap-3">
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Decision trail</strong> — every change to V5.3 (or its predecessors V3, V4)
+                <strong>Decision trail</strong> — every change to V5.4 (or its predecessors V3, V4)
                 ships with a dated decision document explaining the rationale and the evidence.
               </span>
             </li>
@@ -300,7 +300,7 @@ export default function MethodologyPage() {
         <section className="text-center">
           <h2 className="text-2xl font-bold mb-3">Want the daily pick delivered?</h2>
           <p className="text-muted-foreground mb-6">
-            Browse the haystack on the signals page free, or get the curated single V5.3 pick
+            Browse the haystack on the signals page free, or get the curated single V5.4 pick
             delivered to your inbox + private WhatsApp group at 07:30 ET each weekday.
           </p>
           <div className="flex gap-3 justify-center flex-wrap">

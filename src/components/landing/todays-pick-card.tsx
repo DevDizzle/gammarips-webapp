@@ -6,7 +6,7 @@ import { TrendingUp, TrendingDown, AlertCircle, ArrowRight } from "lucide-react"
 
 const SKIP_REASON_COPY: Record<string, string> = {
   no_candidates_passed_gates:
-    "No signals cleared today's V5.3 filter stack (V/OI > 2, 5–10% OTM, VIX ≤ VIX3M, no earnings overlap). On these days the engine stays out — routine over FOMO.",
+    "No signals cleared today's gate stack (V/OI > 2, 5–10% OTM, VIX ≤ VIX3M, no earnings overlap). On these days the engine stays out — routine over FOMO.",
   regime_fail_closed:
     "Regime data was unavailable (VIX or VIX3M missing). Fail-closed: no trade today.",
   vix_backwardation:
@@ -49,7 +49,7 @@ export function TodaysPickCard({
   pick: TodaysPick;
   /** When true, skip the outer <Card>/<section> chrome. The parent panel
    *  owns the brand border so we don't double up. Used by the unified
-   *  V5.3 panel on the landing page. */
+   *  live-stats panel on the landing page. */
   embedded?: boolean;
 }) {
   if (!pick.has_pick) {
@@ -61,7 +61,7 @@ export function TodaysPickCard({
         <AlertCircle className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
         <div>
           <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
-            Today&apos;s V5.3 Pick
+            Today&apos;s Pick
           </p>
           <h2 className="text-2xl font-bold font-headline">No trade today</h2>
           <p className="text-sm text-muted-foreground mt-2 max-w-prose">{reason}</p>
@@ -92,7 +92,7 @@ export function TodaysPickCard({
     <div className="space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <p className="text-xs uppercase tracking-wider text-primary font-semibold">
-          Today&apos;s V5.3 Pick
+          Today&apos;s Pick
         </p>
         <p className="text-xs text-muted-foreground">
           Entry {formatEffectiveAt(pick.effective_at)}
@@ -145,7 +145,7 @@ export function TodaysPickCard({
 
             <div className="pt-4 border-t border-border">
               <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wider">
-                Why this pick cleared V5.3 gates
+                Why this pick cleared the gate stack
               </p>
               <div className="flex flex-wrap gap-2">
                 {pick.vol_oi_ratio !== undefined && (

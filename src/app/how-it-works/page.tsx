@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'How GammaRips Works — Overnight Options Scanner, V5.3 Execution',
-  description: 'The scanner ingests overnight institutional options flow across 5,230+ tickers, applies three deterministic gates, and selects one V5.3 pick per day with pre-set stop and target. Here is the full pipeline — no discretion, no paid-first tier.',
+  title: 'How GammaRips Works — Overnight Options Scanner, V5.4 Execution',
+  description: 'The scanner ingests overnight institutional options flow across 5,230+ tickers, applies three deterministic gates, and selects one V5.4 pick per day with pre-set stop and target. Here is the full pipeline — no discretion, no paid-first tier.',
   alternates: { canonical: 'https://gammarips.com/how-it-works' },
   openGraph: {
     title: 'How GammaRips Works — Overnight Options Scanner',
@@ -20,7 +20,7 @@ export default function HowItWorksPage() {
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "How GammaRips Works — Overnight Options Scanner, V5.3 Execution",
+    "headline": "How GammaRips Works — Overnight Options Scanner, V5.4 Execution",
     "description": "Mechanical, filtered, single-pick-per-day pipeline across 5,230+ tickers.",
     "image": "https://gammarips.com/og-image.png?v=3",
     "author": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
@@ -36,7 +36,7 @@ export default function HowItWorksPage() {
           How GammaRips Works
         </h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-          One V5.3 options trade a day, or none. Scored while you sleep, pushed to your phone at 07:30 ET. Here&apos;s the full pipeline.
+          One V5.4 options trade a day, or none. Scored while you sleep, pushed to your phone at 07:30 ET. Here&apos;s the full pipeline.
         </p>
       </header>
 
@@ -46,7 +46,7 @@ export default function HowItWorksPage() {
         <h2 className="text-3xl font-bold font-headline">Your morning at 07:30 ET</h2>
         <div className="p-6 rounded-lg border bg-primary/5 border-primary/20 text-muted-foreground space-y-4 leading-relaxed">
           <p>
-            At 07:30 ET, one message lands in your phone. Either it&apos;s today&apos;s single V5.3 pick &mdash; one ticker, one contract, a pre-set &minus;60% stop and +80% target &mdash; or the engine says <em>no trade today</em> and you do nothing.
+            At 07:30 ET, one message lands in your phone. Either it&apos;s today&apos;s single V5.4 pick &mdash; one ticker, one contract, a pre-set &minus;60% stop and +80% target &mdash; or the engine says <em>no trade today</em> and you do nothing.
           </p>
           <p>
             At 10:00 ET, you place the trade: buy one contract at market, arm both GTC exit orders, put your phone down. At 15:50 ET on day-3, an exit reminder fires if the trade is still open. Close at market, log the outcome, move on.
@@ -107,7 +107,7 @@ export default function HowItWorksPage() {
       <Separator className="my-12 sm:my-16" />
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">Selecting the one V5.3 pick</h2>
+        <h2 className="text-3xl font-bold font-headline">Selecting the one V5.4 pick</h2>
         <p className="text-muted-foreground leading-relaxed">
           At 07:30 ET, the notifier runs a second filter stack over the enriched list and picks <strong className="text-foreground">at most one</strong> contract:
         </p>
@@ -125,7 +125,7 @@ export default function HowItWorksPage() {
       <Separator className="my-12 sm:my-16" />
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">Execution rules (V5.3)</h2>
+        <h2 className="text-3xl font-bold font-headline">Execution rules (V5.4)</h2>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
           <li><strong className="text-foreground">Entry:</strong> 10:00 ET day-1 at market.</li>
           <li><strong className="text-foreground">Stop:</strong> &minus;60% option price, GTC.</li>

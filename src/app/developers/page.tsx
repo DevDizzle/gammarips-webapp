@@ -6,12 +6,12 @@ import Link from "next/link";
 export const metadata = {
   title: "GammaRips MCP API — 15 Tools for AI Agents",
   description:
-    "Connect any AI agent, research notebook, or trading bot to the V5.3 paper-trading engine. 15 MCP tools, SSE transport, no auth, no key.",
+    "Connect any AI agent, research notebook, or trading bot to the paper-trading engine. 15 MCP tools, SSE transport, no auth, no key.",
   alternates: { canonical: "https://gammarips.com/developers" },
   openGraph: {
     title: "GammaRips MCP API — 15 Tools for AI Agents",
     description:
-      "Connect any AI agent, research notebook, or trading bot to the V5.3 paper-trading engine. 15 MCP tools, no auth.",
+      "Connect any AI agent, research notebook, or trading bot to the paper-trading engine. 15 MCP tools, no auth.",
     url: "https://gammarips.com/developers",
   },
 };
@@ -21,7 +21,7 @@ const webApiSchema = {
   "@type": "WebAPI",
   name: "GammaRips MCP API",
   description:
-    "Model Context Protocol (MCP) API for the V5.3 paper-trading options engine. 15 tools covering today's pick, enriched signals, win-rate summaries, live open position, daily reports, and historical ledger queries.",
+    "Model Context Protocol (MCP) API for the paper-trading options engine. 15 tools covering today's pick, enriched signals, win-rate summaries, live open position, daily reports, and historical ledger queries.",
   url: "https://gammarips-mcp-406581297632.us-central1.run.app/sse",
   documentation: "https://gammarips.com/developers",
   provider: {
@@ -43,7 +43,7 @@ export default function DevelopersPage() {
         {/* Hero */}
         <section className="text-center py-12 space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold font-headline">
-            Build on the V5.3 Engine
+            Build on the V5.4 Engine
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             One pick a day, 15 MCP tools, no auth. Point your AI agent, research notebook,
@@ -113,7 +113,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
           <h2 className="text-2xl font-bold font-headline">15 Available Tools</h2>
           <p className="text-sm text-muted-foreground">
             <span className="text-primary font-mono">get_todays_pick</span> is the primary entry point —
-            it returns the single V5.3 pick for today (or <code>null</code> if the engine skipped).
+            it returns the single V5.4 pick for today (or <code>null</code> if the engine skipped).
             Everything else is supporting context.
           </p>
 
@@ -121,7 +121,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
             {/* Primary */}
             <ToolCard
               name="get_todays_pick"
-              description="The single V5.3 pick for today's scan date. Returns ticker, direction, contract, entry/stop/target/exit, and the gate-pass evidence. Null when the engine skipped (no signal cleared the gates, or VIX backwardation)."
+              description="The single V5.4 pick for today's scan date. Returns ticker, direction, contract, entry/stop/target/exit, and the gate-pass evidence. Null when the engine skipped (no signal cleared the gates, or VIX backwardation)."
               params={{ "": "No params required" }}
               badge="PRIMARY"
             />
@@ -163,7 +163,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
             />
             <ToolCard
               name="get_enriched_signals"
-              description="Signals after the V5.3 enrichment filter (score ≥ 1, spread ≤ 10%, directional UOA > $500K). Includes thesis, technicals, recommended contract."
+              description="Signals after the V5.4 enrichment filter (score ≥ 1, spread ≤ 10%, directional UOA > $500K). Includes thesis, technicals, recommended contract."
               params={{
                 date: "YYYY-MM-DD (optional)",
                 direction: "bull | bear (optional)",
@@ -197,7 +197,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
             />
             <ToolCard
               name="get_win_rate_summary"
-              description="Aggregate signal-level win rate across a rolling window. Note: this is the signal universe (~30/day), not the V5.3 paper-trader universe (1/day)."
+              description="Aggregate signal-level win rate across a rolling window. Note: this is the signal universe (~30/day), not the V5.4 paper-trader universe (1/day)."
               params={{ days: "integer (default 30)" }}
             />
             <ToolCard

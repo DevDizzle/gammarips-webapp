@@ -24,7 +24,7 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
 
   const totalFlow = (signal.call_dollar_volume || 0) + (signal.put_dollar_volume || 0);
 
-  // V5.3 note: "today's pick" (the tradeable-at-10:00-ET one) is surfaced by
+  // V5.4 note: "today's pick" (the tradeable-at-10:00-ET one) is surfaced by
   // the TodaysPickCard on the home page, sourced from Firestore todays_pick.
   // The per-signal detail page below describes any browsable signal; the
   // "Engine Flags" card shows diagnostic patterns the scanner detected.
@@ -84,7 +84,7 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
         <div className="grid gap-6">
 
           {/* Engine Flags — diagnostic patterns the scanner matched. Orthogonal to the
-              V5.3 notifier's deterministic pick (which lives on the home page). */}
+              V5.4 notifier's deterministic pick (which lives on the home page). */}
           {engineFlagCount > 0 && (
             <Card className="border-primary/20 bg-card/60">
               <CardHeader className="pb-3">

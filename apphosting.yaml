@@ -17,9 +17,12 @@ env:
   - variable: MCP_SERVER_URL
     value: https://gammarips-mcp-406581297632.us-central1.run.app
 
-  # Firebase web SDK (public-safe; client rules enforce access control)
+  # Firebase web SDK (public-safe; client rules enforce access control).
+  # This MUST be the Firebase-auto-created browser key (UID b7938035-...,
+  # the only fida8 key with identitytoolkit.googleapis.com enabled).
+  # Sourced from Firebase Console → Project settings → Web app config.
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    value: AIzaSyAqZq_gQLIxGSw3en_P7tgv6UfPlcKybDk
+    value: AIzaSyDuAghyUEDchlHL5WkEJeRMaYGqBCB1gD8
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
     value: profitscout-fida8.firebaseapp.com
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID

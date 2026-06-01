@@ -16,10 +16,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPostAdmin(slug);
   if (!post) {
-    return { title: "Post not found | GammaRips" };
+    return { title: "Post not found" };
   }
   return {
-    title: `${post.title} | GammaRips`,
+    // Root layout applies the `%s | GammaRips` title template — do NOT add the
+    // suffix here or it doubles ("… | GammaRips | GammaRips").
+    title: post.title,
     description: post.description,
     keywords: post.keywords,
     alternates: { canonical: `https://gammarips.com/blog/${post.slug}` },

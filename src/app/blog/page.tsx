@@ -6,7 +6,8 @@ import { Metadata } from "next";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Blog — Options Flow Methodology & Research | GammaRips",
+  // Root layout applies the `%s | GammaRips` title template — no suffix here.
+  title: "Blog — Options Flow Methodology & Research",
   description: "How GammaRips reads institutional options flow: methodology, the research we trade on, and plain-English explainers on unusual options activity, V/OI, moneyness, and the overnight scan.",
   alternates: { canonical: "https://gammarips.com/blog" },
   openGraph: {

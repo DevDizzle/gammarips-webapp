@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
       { source: '/history', destination: '/reports', permanent: true },
 
       // Catch old top-level ticker pages (1-5 chars) -> signals page, excluding actual pages
-      { source: '/:ticker((?!arena|about|terms|auth|api|login|signup|dashboard|war-room|history)[a-zA-Z]{1,5})', destination: '/signals', permanent: true },
+      { source: '/:ticker((?!arena|about|terms|auth|api|blog|login|signup|dashboard|war-room|history)[a-zA-Z]{1,5})', destination: '/signals', permanent: true },
     ];
   },
   images: {

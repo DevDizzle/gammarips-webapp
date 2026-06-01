@@ -8,16 +8,19 @@ import { config } from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 import { sendSignupWelcomeEmail } from './mailgun';
 
+// Mirrors the producer schema written by the blog-generator service to the
+// `blog_posts` collection (publish_to_firestore). Field names match that
+// writer (description/markdown/keywords/reading_time_min/published_at), NOT
+// the older aspirational camelCase shape this interface used to declare.
 export interface BlogPost {
   slug: string;
   title: string;
-  excerpt: string;
-  content: string;
+  description: string;
+  markdown: string;
+  keywords: string[];
+  cta: string;
+  readingTimeMin: number;
   publishedAt: string;
-  author: string;
-  tags: string[];
-  featured: boolean;
-  ogImage: string | null;
 }
 
 // Load environment variables from .env file (for local dev)
@@ -723,37 +726,40 @@ export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): 
     return null;
 }
 
+// FirebaseFirestore.DocumentData → BlogPost. Reads the producer's snake_case
+// fields and normalizes the published_at Timestamp to an ISO string.
+function mapBlogPost(id: string, data: FirebaseFirestore.DocumentData): BlogPost {
+  let publishedAt = '';
+  const ts = data.published_at;
+  if (ts instanceof Timestamp) {
+    publishedAt = ts.toDate().toISOString();
+  } else if (typeof ts === 'string') {
+    publishedAt = ts;
+  }
+  return {
+    slug: data.slug || id,
+    title: data.title || 'Untitled',
+    description: data.description || '',
+    markdown: data.markdown || '',
+    keywords: data.keywords || [],
+    cta: data.cta || 'webapp_visit',
+    readingTimeMin: data.reading_time_min || 0,
+    publishedAt,
+  };
+}
+
 export async function getBlogPostsAdmin(): Promise<BlogPost[]> {
   try {
-    const snapshot = await getDb().collection('blogPosts')
-      .orderBy('publishedAt', 'desc')
-      .get();
-    
+    // Read the whole (small) collection and filter/sort in memory so we don't
+    // depend on a composite (status, published_at) index existing.
+    const snapshot = await getDb().collection('blog_posts').get();
     const posts: BlogPost[] = [];
     snapshot.forEach(doc => {
       const data = doc.data();
-      // Handle timestamp conversion
-      let publishedAt = new Date().toISOString();
-      if (data.publishedAt) {
-          if (data.publishedAt instanceof Timestamp) {
-              publishedAt = data.publishedAt.toDate().toISOString();
-          } else if (typeof data.publishedAt === 'string') {
-              publishedAt = data.publishedAt;
-          }
-      }
-
-      posts.push({
-        slug: doc.id,
-        title: data.title || 'Untitled',
-        excerpt: data.excerpt || '',
-        content: data.content || '',
-        publishedAt,
-        author: data.author || 'GammaRips Team',
-        tags: data.tags || [],
-        featured: data.featured || false,
-        ogImage: data.ogImage || null,
-      });
+      if (data.status !== 'published') return;
+      posts.push(mapBlogPost(doc.id, data));
     });
+    posts.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
     return posts;
   } catch (error) {
     console.error("Error fetching blog posts:", error);
@@ -763,36 +769,11 @@ export async function getBlogPostsAdmin(): Promise<BlogPost[]> {
 
 export async function getBlogPostAdmin(slug: string): Promise<BlogPost | null> {
   try {
-    const docSnap = await getDb().collection('blogPosts').doc(slug).get();
-    if (!docSnap.exists) {
-      return null;
-    }
+    const docSnap = await getDb().collection('blog_posts').doc(slug).get();
+    if (!docSnap.exists) return null;
     const data = docSnap.data();
-     if (!data) return null;
-
-     // Handle timestamp conversion
-      let publishedAt = new Date().toISOString();
-      if (data.publishedAt) {
-          if (data.publishedAt instanceof Timestamp) {
-              publishedAt = data.publishedAt.toDate().toISOString();
-          } else if (typeof data.publishedAt === 'string') {
-              publishedAt = data.publishedAt;
-          }
-      }
-
-// ... existing code ...
-
-    return {
-      slug: docSnap.id,
-      title: data.title || 'Untitled',
-      excerpt: data.excerpt || '',
-      content: data.content || '',
-      publishedAt,
-      author: data.author || 'GammaRips Team',
-      tags: data.tags || [],
-      featured: data.featured || false,
-      ogImage: data.ogImage || null,
-    };
+    if (!data || data.status !== 'published') return null;
+    return mapBlogPost(docSnap.id, data);
   } catch (error) {
     console.error(`Error fetching blog post ${slug}:`, error);
     return null;

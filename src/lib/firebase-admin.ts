@@ -509,6 +509,101 @@ export async function getSignalByTicker(scanDate: string, ticker: string): Promi
   }
 }
 
+/**
+ * Most-recent signal doc for a ticker across ALL scans. The detail page keys
+ * off the latest scan_date, so a ticker that isn't in today's scan would 404
+ * even though it ranks/gets clicks (orphaned historical pages). This lets the
+ * page fall back to the last scan that contained the ticker. Single `ticker`
+ * equality → auto single-field index; sort in memory to avoid a composite.
+ */
+export async function getMostRecentSignalForTicker(ticker: string): Promise<OvernightSignal | null> {
+  noStore();
+  try {
+    const snapshot = await getDb().collection('overnight_signals')
+      .where('ticker', '==', ticker.toUpperCase())
+      .limit(60)
+      .get();
+    if (snapshot.empty) return null;
+    const docs = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        enriched_at: data.enriched_at?.toDate?.().toISOString() || data.enriched_at || null,
+        updated_at: data.updated_at?.toDate?.().toISOString() || data.updated_at || null,
+      } as OvernightSignal;
+    });
+    docs.sort((a, b) => (b.scan_date || '').localeCompare(a.scan_date || ''));
+    return docs[0];
+  } catch (error) {
+    console.error(`Error fetching most-recent signal for ${ticker}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Top signals from recent PAST scans (excluding `excludeDate`), deduped by
+ * ticker. Powers the "Recent Signals" section on the /signals index so that
+ * detail pages stay one click from a high-priority hub instead of going
+ * orphan the day after their scan.
+ */
+export async function getRecentSignals(
+  excludeDate: string,
+  days: number = 4,
+  perDate: number = 6
+): Promise<OvernightSignal[]> {
+  noStore();
+  try {
+    const reports = await getAllDailyReports(days + 6);
+    const dates = Array.from(new Set(reports.map(r => r.scan_date)))
+      .filter(d => d && d !== excludeDate)
+      .slice(0, days);
+    const seen = new Set<string>();
+    const out: OvernightSignal[] = [];
+    for (const date of dates) {
+      const [bull, bear] = await Promise.all([
+        getOvernightSignals(date, 'bull', 0, perDate),
+        getOvernightSignals(date, 'bear', 0, perDate),
+      ]);
+      const combined = [...bull, ...bear].sort(
+        (a, b) => (b.overnight_score || 0) - (a.overnight_score || 0)
+      );
+      for (const s of combined) {
+        if (seen.has(s.ticker)) continue;
+        seen.add(s.ticker);
+        out.push(s);
+      }
+    }
+    return out;
+  } catch (error) {
+    console.error('Error fetching recent signals:', error);
+    return [];
+  }
+}
+
+/**
+ * Sibling signals from the SAME scan and direction as a given ticker — powers
+ * the "More flow that day" related block on signal detail pages. Builds a
+ * dense intra-/signals link mesh. Uses direction (always present); upgrade to
+ * sector-matching once a `sector`/`sic` field is persisted on the signal doc.
+ */
+export async function getRelatedSignals(
+  scanDate: string,
+  ticker: string,
+  direction: string,
+  limit: number = 5
+): Promise<OvernightSignal[]> {
+  noStore();
+  try {
+    const dir = direction === 'BULLISH' ? 'bull' : 'bear';
+    const sigs = await getOvernightSignals(scanDate, dir, 0, limit + 6);
+    return sigs.filter(s => s.ticker !== ticker.toUpperCase()).slice(0, limit);
+  } catch (error) {
+    console.error('Error fetching related signals:', error);
+    return [];
+  }
+}
+
 export async function getAppStatusAdmin(): Promise<{ isUpdating: boolean }> {
   noStore();
   try {

@@ -1,8 +1,11 @@
-import { getDailyReport } from "@/lib/firebase-admin";
+import { getDailyReport, getAllDailyReports, getOvernightSignals } from "@/lib/firebase-admin";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { remarkTickerLinks } from "@/lib/remark-ticker-links";
 
 interface Props {
   params: Promise<{ date: string }>;
@@ -37,6 +40,23 @@ export default async function ReportPage({ params }: Props) {
   const { date } = await params;
   const report = await getDailyReport(date);
   if (!report) return notFound();
+
+  // Fetch the scan's signals (for the in-report link block + a safe allow-list
+  // that constrains ticker auto-linking) plus the report index (prev/next nav).
+  const [bullSignals, bearSignals, allReports] = await Promise.all([
+    getOvernightSignals(report.scan_date, 'bull', 0, 8),
+    getOvernightSignals(report.scan_date, 'bear', 0, 8),
+    getAllDailyReports(60),
+  ]);
+  const reportSignals = [...bullSignals, ...bearSignals].sort(
+    (a, b) => (b.overnight_score || 0) - (a.overnight_score || 0)
+  );
+  const tickerAllowList = new Set(reportSignals.map((s) => s.ticker.toUpperCase()));
+
+  // Reports are ordered newest-first; neighbours give a crawlable report chain.
+  const idx = allReports.findIndex((r) => r.scan_date === report.scan_date);
+  const newerReport = idx > 0 ? allReports[idx - 1] : null;
+  const olderReport = idx >= 0 && idx < allReports.length - 1 ? allReports[idx + 1] : null;
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -90,6 +110,15 @@ export default async function ReportPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }} />
 
+      <Breadcrumbs
+        className="mb-6"
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Reports", href: "/reports" },
+          { name: date },
+        ]}
+      />
+
       {report.underlying_scan_date && report.underlying_scan_date !== report.scan_date && (
         <div className="mb-6 p-3 bg-muted/30 border border-muted rounded-md text-muted-foreground text-sm text-center">
           Covering overnight flow from {report.underlying_scan_date}
@@ -97,8 +126,52 @@ export default async function ReportPage({ params }: Props) {
       )}
 
       <article className="prose prose-invert max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{report.content}</ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm, [remarkTickerLinks, { tickers: tickerAllowList }]]}>
+          {report.content}
+        </ReactMarkdown>
       </article>
+
+      {/* Signals in this report — turns the page from a dead-end into a
+          distributor of equity to individual ticker pages with dated anchors. */}
+      {reportSignals.length > 0 && (
+        <section className="mt-12 pt-8 border-t border-muted">
+          <h2 className="text-xl font-bold font-headline mb-4">Signals in this report</h2>
+          <div className="flex flex-wrap gap-2">
+            {reportSignals.map((s) => (
+              <Link
+                key={s.id}
+                href={`/signals/${s.ticker}`}
+                className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm hover:border-primary/50 hover:bg-muted/30 transition-colors"
+              >
+                <span className="font-mono font-semibold">{s.ticker}</span>
+                <span className={s.direction === 'BULLISH' ? 'text-green-500' : 'text-red-500'}>
+                  {s.direction === 'BULLISH' ? 'BULL' : 'BEAR'}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Prev/next report chain + back to the live pick. */}
+      <nav className="mt-10 pt-6 border-t border-muted flex flex-wrap items-center justify-between gap-4 text-sm">
+        <div className="flex flex-wrap gap-4">
+          {newerReport && (
+            <Link href={`/reports/${newerReport.scan_date}`} className="text-primary hover:underline">
+              ← Newer briefing ({newerReport.scan_date})
+            </Link>
+          )}
+          {olderReport && (
+            <Link href={`/reports/${olderReport.scan_date}`} className="text-primary hover:underline">
+              Older briefing ({olderReport.scan_date}) →
+            </Link>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-4">
+          <Link href="/reports" className="text-muted-foreground hover:text-primary">All reports</Link>
+          <Link href="/" className="text-muted-foreground hover:text-primary">See today&apos;s pick</Link>
+        </div>
+      </nav>
 
       <p className="mt-12 pt-6 border-t border-muted text-xs text-muted-foreground leading-relaxed">
         Paper-trading performance, educational content only. Not investment advice.

@@ -1,4 +1,5 @@
-import { getLatestOvernightSummary, getOvernightSignals } from "@/lib/firebase-admin";
+import Link from "next/link";
+import { getLatestOvernightSummary, getOvernightSignals, getRecentSignals } from "@/lib/firebase-admin";
 import { SignalsTable } from "@/components/overnight/signals-table";
 import { Metadata } from "next";
 
@@ -13,9 +14,10 @@ export default async function SignalsPage() {
   const reportDate = summary?.report_date || summary?.scan_date || new Date().toISOString().split('T')[0];
   const queryDate = summary?.scan_date || reportDate;
 
-  const [bullSignals, bearSignals] = await Promise.all([
+  const [bullSignals, bearSignals, recentSignals] = await Promise.all([
     getOvernightSignals(queryDate, 'bull', 0, 100),
     getOvernightSignals(queryDate, 'bear', 0, 100),
+    getRecentSignals(queryDate, 4, 6),
   ]);
 
   const allSignals = [...bullSignals, ...bearSignals];
@@ -49,11 +51,16 @@ export default async function SignalsPage() {
           </p>
           <div className="text-sm text-muted-foreground space-y-3 max-w-3xl leading-relaxed">
             <p>
-              GammaRips is a daily options signals scanner. Every night at 23:00 ET, the engine ingests institutional options flow &mdash; volume, open interest, unusual activity, and directional dollar flow &mdash; across every optionable U.S. equity. Candidates clear three deterministic gates: <strong className="text-foreground">overnight score &ge; 1, spread &le; 10%, directional UOA &gt; $500K</strong>. What you see below is the full post-gate flow for today.
+              GammaRips is a daily options signals scanner. Every night at 23:00 ET, the engine ingests institutional options flow &mdash; volume, open interest, unusual activity, and directional dollar flow &mdash; across every optionable U.S. equity. Candidates clear <Link href="/methodology" className="text-primary hover:underline">three deterministic gates</Link>: <strong className="text-foreground">overnight score &ge; 1, spread &le; 10%, directional UOA &gt; $500K</strong>. What you see below is the full post-gate flow for today.
             </p>
             <p>
-              From this list, one single V5.4 contract is selected and pushed to the private WhatsApp group at <strong className="text-foreground">07:30 ET</strong> with pre-set stop (&minus;60%), target (+80%), and a 3-day hold window. Free readers see the same pick on the home page at the exact same second. No paid-first tier. Browse the raw scan here, or subscribe for the one-a-day WhatsApp push.
+              From this list, <Link href="/scorecard" className="text-primary hover:underline">one single V5.4 contract</Link> is selected and pushed to the private WhatsApp group at <strong className="text-foreground">07:30 ET</strong> with pre-set stop (&minus;60%), target (+80%), and a 3-day hold window. Free readers see the same pick on the home page at the exact same second. No paid-first tier. Browse the raw scan here, or subscribe for the one-a-day WhatsApp push.
             </p>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-4 text-sm">
+            <Link href="/how-it-works" className="text-primary hover:underline">How the scan works →</Link>
+            <Link href="/scorecard" className="text-primary hover:underline">Track record →</Link>
+            <Link href="/reports" className="text-primary hover:underline">Daily reports →</Link>
           </div>
         </div>
 
@@ -61,6 +68,32 @@ export default async function SignalsPage() {
           <SignalsTable title="Bullish Flow" signals={bullSignals} />
           <SignalsTable title="Bearish Flow" signals={bearSignals} />
         </div>
+
+        {/* Recent Signals — keeps prior-day detail pages one click from this
+            high-priority hub instead of going orphan the day after their scan. */}
+        {recentSignals.length > 0 && (
+          <section className="mt-12">
+            <h2 className="text-2xl font-bold font-headline mb-2">Recent Signals</h2>
+            <p className="text-sm text-muted-foreground mb-4 max-w-2xl">
+              Top flow from the last few sessions. Each links to its full institutional options-flow breakdown.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {recentSignals.map((s) => (
+                <Link
+                  key={`${s.scan_date}_${s.ticker}`}
+                  href={`/signals/${s.ticker}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-muted px-3 py-1.5 text-sm hover:border-primary/50 hover:bg-muted/30 transition-colors"
+                >
+                  <span className="font-mono font-semibold">{s.ticker}</span>
+                  <span className={s.direction === 'BULLISH' ? 'text-green-500' : 'text-red-500'}>
+                    {s.direction === 'BULLISH' ? 'BULL' : 'BEAR'}
+                  </span>
+                  <span className="text-muted-foreground text-xs">{s.scan_date}</span>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );

@@ -25,6 +25,7 @@ export function PublicHeader() {
     { href: '/reports', label: 'Reports' },
     { href: '/blog', label: 'Blog' },
     { href: '/how-it-works', label: 'How It Works' },
+    { href: '/scorecard', label: 'Scorecard' },
     { href: '/pricing', label: 'Pricing' },
     { href: 'https://gammarips.com/about', label: 'About' },
     { href: '/developers', label: 'Developers' },

@@ -239,7 +239,7 @@ export default async function LandingPage() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold font-headline">Top Signals</h2>
               <Link href="/signals" className="text-sm text-primary hover:underline">
-                View all →
+                View all options signals →
               </Link>
             </div>
             <div className="grid gap-3">

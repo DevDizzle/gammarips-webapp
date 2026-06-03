@@ -4,12 +4,19 @@ import { useAuth } from "@/hooks/use-auth";
 import { type OvernightSignal } from "@/lib/firebase-admin";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, ArrowLeft } from "lucide-react";
+import { TrendingUp, TrendingDown, ArrowRight, FileText } from "lucide-react";
 import Link from "next/link";
 import { Markdown } from "@/components/markdown";
 import { EmailCapture } from "@/components/email-capture";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
-export default function SignalClientPage({ signal }: { signal: OvernightSignal }) {
+export default function SignalClientPage({
+  signal,
+  relatedSignals = [],
+}: {
+  signal: OvernightSignal;
+  relatedSignals?: OvernightSignal[];
+}) {
   const { dbUser, loading } = useAuth();
   const isBullish = signal.direction === 'BULLISH';
   const movePct = signal.price_change_pct || 0;
@@ -38,9 +45,14 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl">
-        <Link href="/signals" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-6">
-          <ArrowLeft className="w-4 h-4 mr-1" /> Back to Signals
-        </Link>
+        <Breadcrumbs
+          className="mb-6"
+          items={[
+            { name: "Home", href: "/" },
+            { name: "Signals", href: "/signals" },
+            { name: signal.ticker },
+          ]}
+        />
 
         {/* Header */}
         <div className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center mb-8">
@@ -55,6 +67,12 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
               </Badge>
             </div>
             <p className="text-lg text-muted-foreground">Overnight Institutional Flow Signal</p>
+            <Link
+              href={`/reports/${signal.scan_date}`}
+              className="mt-2 inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+            >
+              <FileText className="w-4 h-4" /> See the {signal.scan_date} Morning Briefing
+            </Link>
           </div>
 
           <div className="flex gap-4 text-center">
@@ -185,6 +203,35 @@ export default function SignalClientPage({ signal }: { signal: OvernightSignal }
               </div>
             </CardContent>
           </Card>
+
+          {/* More flow that day — intra-/signals link mesh from same-direction
+              siblings in the same scan. */}
+          {relatedSignals.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  More {isBullish ? 'Bullish' : 'Bearish'} Flow · {signal.scan_date}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {relatedSignals.map((s) => (
+                    <Link
+                      key={s.id}
+                      href={`/signals/${s.ticker}`}
+                      className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm hover:border-primary/50 hover:bg-muted/30 transition-colors group"
+                    >
+                      <span className="font-mono font-semibold">{s.ticker}</span>
+                      {typeof s.overnight_score === 'number' && (
+                        <span className="text-muted-foreground text-xs">{s.overnight_score}/10</span>
+                      )}
+                      <ArrowRight className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Link>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Details Section */}
           <div className="grid md:grid-cols-2 gap-6">

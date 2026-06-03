@@ -1,4 +1,4 @@
-import { getSignalByTicker, getLatestOvernightSummary, getBlogPostsAdmin } from "@/lib/firebase-admin";
+import { getSignalByTicker, getLatestOvernightSummary, getBlogPostsAdmin, getMostRecentSignalForTicker, getRelatedSignals } from "@/lib/firebase-admin";
 import SignalClientPage from "./signal-client";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import { notFound } from "next/navigation";
@@ -15,12 +15,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   try {
     const summary = await getLatestOvernightSummary();
-    if (summary) {
-      const signal = await getSignalByTicker(summary.scan_date, ticker.toUpperCase());
-      if (signal?.seoMetadata) {
-        title = signal.seoMetadata.seoTitle || title;
-        description = signal.seoMetadata.seoDescription || description;
-      }
+    const signal =
+      (summary ? await getSignalByTicker(summary.scan_date, ticker.toUpperCase()) : null) ||
+      (await getMostRecentSignalForTicker(ticker));
+    if (signal?.seoMetadata) {
+      title = signal.seoMetadata.seoTitle || title;
+      description = signal.seoMetadata.seoDescription || description;
     }
   } catch (error) {
     console.error("Error fetching signal metadata:", error);
@@ -36,22 +36,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function SignalPage({ params }: PageProps) {
   const { ticker } = await params;
   
-  // Get latest scan date
+  // Latest scan first; fall back to the most recent scan that contained this
+  // ticker so historical (ranking) detail pages resolve instead of 404ing.
   const summary = await getLatestOvernightSummary();
-  if (!summary) {
-    return notFound();
-  }
-  
-  const signal = await getSignalByTicker(summary.scan_date, ticker.toUpperCase());
+  const signal =
+    (summary ? await getSignalByTicker(summary.scan_date, ticker.toUpperCase()) : null) ||
+    (await getMostRecentSignalForTicker(ticker));
 
   if (!signal) {
     return notFound();
   }
 
-  // Cross-link the orphaned /blog section from signal pages (our largest page
-  // inventory). BlogPost has no `tickers` field yet, so surface latest posts
-  // generically as methodology/"how we read this flow" reading.
-  const blogPosts = await getBlogPostsAdmin();
+  // Sibling signals from the same scan/direction (intra-/signals link mesh) and
+  // recent blog posts (cross-link the blog from our largest page inventory).
+  const [relatedSignals, blogPosts] = await Promise.all([
+    getRelatedSignals(signal.scan_date, signal.ticker, signal.direction, 6),
+    getBlogPostsAdmin(),
+  ]);
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -76,7 +77,7 @@ export default async function SignalPage({ params }: PageProps) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
-      <SignalClientPage signal={signal} />
+      <SignalClientPage signal={signal} relatedSignals={relatedSignals} />
       {blogPosts.length > 0 && (
         <section className="container mx-auto px-4 pb-12 max-w-4xl">
           <BlogTeaserList

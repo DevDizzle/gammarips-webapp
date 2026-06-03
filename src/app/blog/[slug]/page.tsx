@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 // ISR: serve published posts and pick up edits without a redeploy.
 export const revalidate = 300;
@@ -74,9 +75,17 @@ export default async function BlogPostPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-      <nav className="mb-6 text-sm text-muted-foreground">
-        <Link href="/blog" className="hover:underline">← All posts</Link>
-      </nav>
+      {/* JSON-LD BreadcrumbList already emitted above (breadcrumbSchema), so
+          render the visible trail only to avoid duplicate structured data. */}
+      <Breadcrumbs
+        className="mb-6"
+        emitJsonLd={false}
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Blog", href: "/blog" },
+          { name: post.title },
+        ]}
+      />
 
       {(post.publishedAt || post.readingTimeMin > 0) && (
         <div className="mb-6 text-sm text-muted-foreground flex items-center gap-3">

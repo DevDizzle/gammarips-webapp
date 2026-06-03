@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
-import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getLatestTodaysPick, getCohortStats } from "@/lib/firebase-admin";
+import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getLatestTodaysPick, getCohortStats, getBlogPostsAdmin } from "@/lib/firebase-admin";
+import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import { TodaysPickCard } from "@/components/landing/todays-pick-card";
 import { CohortStatsTiles, formatCohortStartDate } from "@/components/landing/cohort-stats-row";
 import { ProLock } from "@/components/ui/pro-lock";
@@ -35,6 +36,7 @@ export default async function LandingPage() {
   const report = reportDate ? await getDailyReport(reportDate) : null;
   const todaysPick = await getLatestTodaysPick();
   const cohortStats = await getCohortStats();
+  const blogPosts = await getBlogPostsAdmin();
 
   const topBull = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 3) : [];
   const topBear = summary ? await getOvernightSignals(summary.scan_date, 'bear', 0, 2) : [];
@@ -291,6 +293,17 @@ export default async function LandingPage() {
             </Button>
           </div>
         </section>
+
+        {/* Latest from the blog — cross-link into the /blog section so posts
+            get crawled and pick up link-equity from the highest-traffic page. */}
+        {blogPosts.length > 0 && (
+          <BlogTeaserList
+            posts={blogPosts}
+            heading="From the Blog"
+            subheading="How the engine reads institutional options flow — methodology, research, and plain-English explainers."
+            limit={3}
+          />
+        )}
 
         {/* FAQ */}
         <section>

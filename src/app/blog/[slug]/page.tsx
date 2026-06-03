@@ -92,6 +92,25 @@ export default async function BlogPostPage({ params }: Props) {
       <article className="prose prose-invert max-w-none">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.markdown}</ReactMarkdown>
       </article>
+
+      {/* Close the explainer↔example topic cluster: funnel readers to the live
+          signals surface and back to the rest of the blog. */}
+      <aside className="mt-12 border-t pt-8 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+        <div>
+          <p className="font-semibold font-headline text-lg">See the methodology live</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Today&apos;s institutional options flow, scored and ranked by the engine.
+          </p>
+        </div>
+        <div className="flex gap-4 shrink-0">
+          <Link href="/signals" className="text-sm text-primary hover:underline">
+            Explore today&apos;s signals →
+          </Link>
+          <Link href="/blog" className="text-sm text-muted-foreground hover:text-primary">
+            More posts
+          </Link>
+        </div>
+      </aside>
     </div>
   );
 }

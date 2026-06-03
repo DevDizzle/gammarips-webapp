@@ -1,5 +1,6 @@
-import { getSignalByTicker, getLatestOvernightSummary } from "@/lib/firebase-admin";
+import { getSignalByTicker, getLatestOvernightSummary, getBlogPostsAdmin } from "@/lib/firebase-admin";
 import SignalClientPage from "./signal-client";
+import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
@@ -42,10 +43,15 @@ export default async function SignalPage({ params }: PageProps) {
   }
   
   const signal = await getSignalByTicker(summary.scan_date, ticker.toUpperCase());
-  
+
   if (!signal) {
     return notFound();
   }
+
+  // Cross-link the orphaned /blog section from signal pages (our largest page
+  // inventory). BlogPost has no `tickers` field yet, so surface latest posts
+  // generically as methodology/"how we read this flow" reading.
+  const blogPosts = await getBlogPostsAdmin();
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -71,6 +77,16 @@ export default async function SignalPage({ params }: PageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <SignalClientPage signal={signal} />
+      {blogPosts.length > 0 && (
+        <section className="container mx-auto px-4 pb-12 max-w-4xl">
+          <BlogTeaserList
+            posts={blogPosts}
+            heading="How We Read This Flow"
+            subheading="Plain-English explainers on the methodology behind signals like this one."
+            limit={3}
+          />
+        </section>
+      )}
     </>
   );
 }

@@ -50,7 +50,7 @@ export default async function SignalPage({ params }: PageProps) {
   // Sibling signals from the same scan/direction (intra-/signals link mesh) and
   // recent blog posts (cross-link the blog from our largest page inventory).
   const [relatedSignals, blogPosts] = await Promise.all([
-    getRelatedSignals(signal.scan_date, signal.ticker, signal.direction, 6),
+    getRelatedSignals(signal.scan_date, signal.ticker, signal.direction, 6, signal.sector),
     getBlogPostsAdmin(),
   ]);
 

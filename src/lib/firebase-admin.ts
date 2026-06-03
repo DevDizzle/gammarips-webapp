@@ -211,6 +211,10 @@ export interface OvernightSignal {
   premium_bull_flow?: boolean;
   premium_high_atr?: boolean;
   premium_bear_flow?: boolean;
+  // Sector / industry (SIC-mapped at scan time) — used for same-sector
+  // related-signals matching. May be undefined on pre-2026-06 docs.
+  sector?: string;
+  industry?: string;
   // Meta
   enriched_at?: any;
   updated_at?: any;
@@ -584,20 +588,28 @@ export async function getRecentSignals(
 /**
  * Sibling signals from the SAME scan and direction as a given ticker — powers
  * the "More flow that day" related block on signal detail pages. Builds a
- * dense intra-/signals link mesh. Uses direction (always present); upgrade to
- * sector-matching once a `sector`/`sic` field is persisted on the signal doc.
+ * dense intra-/signals link mesh. Same-direction is the base set; when a
+ * `sector` is supplied, same-sector siblings are ranked to the top (the rest
+ * fill the remainder). Falls back to direction-only on sector-less docs.
  */
 export async function getRelatedSignals(
   scanDate: string,
   ticker: string,
   direction: string,
-  limit: number = 5
+  limit: number = 5,
+  sector?: string | null
 ): Promise<OvernightSignal[]> {
   noStore();
   try {
     const dir = direction === 'BULLISH' ? 'bull' : 'bear';
-    const sigs = await getOvernightSignals(scanDate, dir, 0, limit + 6);
-    return sigs.filter(s => s.ticker !== ticker.toUpperCase()).slice(0, limit);
+    const pool = (await getOvernightSignals(scanDate, dir, 0, 50))
+      .filter(s => s.ticker !== ticker.toUpperCase());
+    if (sector) {
+      const sameSector = pool.filter(s => s.sector && s.sector === sector);
+      const others = pool.filter(s => !(s.sector && s.sector === sector));
+      return [...sameSector, ...others].slice(0, limit);
+    }
+    return pool.slice(0, limit);
   } catch (error) {
     console.error('Error fetching related signals:', error);
     return [];

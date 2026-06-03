@@ -334,6 +334,45 @@ export async function getCohortStats(): Promise<CohortStats | null> {
   }
 }
 
+/** One closed V5.4 paper-trade, synced from BigQuery forward_paper_ledger by
+ *  signal-notifier (compute_and_write_ledger_trades) into Firestore
+ *  ledger_trades/{scan_date}_{ticker}. SAME V5.4 cohort + fixed-dollar sizing
+ *  as cohort_stats/current, so the scorecard table and aggregate tiles agree. */
+export interface LedgerTrade {
+  scan_date: string;
+  ticker: string;
+  direction: 'BULLISH' | 'BEARISH';
+  recommended_contract: string;
+  option_type: 'CALL' | 'PUT' | null;
+  strike: number | null;
+  expiration: string | null;       // ISO date
+  dte: number | null;
+  entry_date: string;              // ISO date
+  entry_price: number;             // option premium per share at entry
+  exit_date: string;               // ISO date
+  hold_days: number | null;
+  exit_reason: string;             // TARGET | STOP | TIMEOUT | TRAIL | ...
+  return_pct: number;              // decimal (multiply by 100 for %)
+  capital_usd: number;
+  pl_usd: number;
+  policy_gate: string;
+}
+
+export async function getLedgerTrades(limit: number = 100): Promise<LedgerTrade[]> {
+  noStore();
+  try {
+    const snapshot = await getDb()
+      .collection('ledger_trades')
+      .orderBy('entry_date', 'desc')
+      .limit(limit)
+      .get();
+    return snapshot.docs.map((d) => d.data() as LedgerTrade);
+  } catch (error) {
+    console.error('Error fetching ledger_trades:', error);
+    return [];
+  }
+}
+
 export async function getLatestTodaysPick(): Promise<TodaysPick | null> {
   noStore();
   try {

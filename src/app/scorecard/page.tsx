@@ -4,7 +4,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { BarChart3, Target, TrendingUp, DollarSign } from 'lucide-react';
-import { getCohortStats } from '@/lib/firebase-admin';
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+} from '@/components/ui/table';
+import { getCohortStats, getLedgerTrades, type LedgerTrade } from '@/lib/firebase-admin';
 
 export const metadata: Metadata = {
   title: 'GammaRips Scorecard — Verified Signal Performance & Win Rate',
@@ -33,11 +36,28 @@ function formatCohortStart(iso?: string): string {
   return `${MONTHS[m - 1]} ${d}, ${y}`;
 }
 
+// Short date for the ledger table ("May 29").
+function formatShort(iso?: string): string {
+  if (!iso) return '—';
+  const [, m, d] = iso.split('-').map(Number);
+  if (!m || !d) return iso;
+  return `${MONTHS[m - 1].slice(0, 3)} ${d}`;
+}
+
+// "$525 PUT" when parsed; otherwise the raw OCC symbol.
+function contractLabel(t: LedgerTrade): string {
+  if (t.strike != null && t.option_type) {
+    const strike = Number.isInteger(t.strike) ? `${t.strike}` : t.strike.toFixed(2);
+    return `$${strike} ${t.option_type}`;
+  }
+  return t.recommended_contract;
+}
+
 export default async function ScorecardPage() {
   // V5.4-only cohort — the same source the home-page panel uses. NOT the
   // all-signals / underlying-peak-return win-tracker data (that's a different,
   // hindsight-favorable methodology that would contradict this page's promise).
-  const stats = await getCohortStats();
+  const [stats, trades] = await Promise.all([getCohortStats(), getLedgerTrades()]);
   const hasData = !!stats && stats.trades_closed > 0;
 
   const roi = hasData ? stats!.roi_pct * 100 : null;
@@ -99,6 +119,49 @@ export default async function ScorecardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {trades.length > 0 && (
+        <div className="mt-12 sm:mt-16">
+          <h2 className="text-2xl font-bold font-headline text-center">The Ledger</h2>
+          <p className="text-sm text-muted-foreground text-center mt-2 mb-8 max-w-2xl mx-auto">
+            Every closed V5.4 trade, most recent first &mdash; realized option P&amp;L on the 3-day +80% / &minus;60% bracket. Winners and losers, counted the same way.
+          </p>
+          <div className="overflow-x-auto rounded-lg border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Ticker</TableHead>
+                  <TableHead>Side</TableHead>
+                  <TableHead>Contract</TableHead>
+                  <TableHead className="text-right">Entry</TableHead>
+                  <TableHead>Exit</TableHead>
+                  <TableHead className="text-right">Return</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {trades.map((t) => {
+                  const ret = t.return_pct * 100;
+                  const retColor = ret >= 0 ? 'text-emerald-500' : 'text-red-500';
+                  return (
+                    <TableRow key={`${t.scan_date}_${t.ticker}`}>
+                      <TableCell className="whitespace-nowrap text-muted-foreground">{formatShort(t.entry_date)}</TableCell>
+                      <TableCell className="font-semibold">{t.ticker}</TableCell>
+                      <TableCell className="text-muted-foreground">{t.direction === 'BULLISH' ? 'Bullish' : 'Bearish'}</TableCell>
+                      <TableCell className="whitespace-nowrap">{contractLabel(t)}</TableCell>
+                      <TableCell className="text-right whitespace-nowrap">${t.entry_price.toFixed(2)}</TableCell>
+                      <TableCell className="capitalize text-muted-foreground">{t.exit_reason.toLowerCase()}</TableCell>
+                      <TableCell className={`text-right font-semibold ${retColor}`}>
+                        {ret >= 0 ? '+' : ''}{ret.toFixed(1)}%
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      )}
 
       <Separator className="my-12 sm:my-16" />
 

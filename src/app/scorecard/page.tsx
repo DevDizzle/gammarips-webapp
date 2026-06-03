@@ -74,8 +74,34 @@ export default async function ScorecardPage() {
   const roiColor = roi === null ? '' : roi >= 0 ? 'text-emerald-500' : 'text-red-500';
   const plColor = pl === null ? '' : pl >= 0 ? 'text-emerald-500' : 'text-red-500';
 
+  // The ledger is, literally, a tracked dataset of closed paper trades. Describe
+  // it as schema.org/Dataset and surface the aggregate metrics as
+  // variableMeasured when we actually have closed trades.
+  const scorecardSchema = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "GammaRips V5.4 Paper-Trading Ledger",
+    "description": "Public, timestamped record of every GammaRips V5.4 signal and its realized option P&L on a 3-day +80% / -60% bracket. No cherry-picking, no hindsight edits. Paper-trading, educational only.",
+    "url": "https://gammarips.com/scorecard",
+    "creator": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
+    "license": "https://gammarips.com/disclosures",
+    "isAccessibleForFree": true,
+    ...(hasData
+      ? {
+          "temporalCoverage": `${stats!.cohort_start}/..`,
+          "variableMeasured": [
+            { "@type": "PropertyValue", "name": "Win Rate", "value": `${Math.round(stats!.win_rate * 100)}%` },
+            { "@type": "PropertyValue", "name": "ROI", "value": `${roi!.toFixed(1)}%` },
+            { "@type": "PropertyValue", "name": "Net P&L (USD)", "value": Math.round(pl!) },
+            { "@type": "PropertyValue", "name": "Trades Closed", "value": stats!.trades_closed },
+          ],
+        }
+      : {}),
+  };
+
   return (
     <section className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(scorecardSchema) }} />
       <header className="text-center">
         <p className="text-sm font-semibold uppercase tracking-wider text-primary">Performance</p>
         <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">

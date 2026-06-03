@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getLatestOvernightSummary, getOvernightSignals, getRecentSignals } from "@/lib/firebase-admin";
 import { SignalsTable } from "@/components/overnight/signals-table";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -41,6 +42,7 @@ export default async function SignalsPage() {
     <div className="flex flex-col min-h-screen bg-background">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(indexSchema) }} />
       <main className="flex-1 container mx-auto px-4 py-8">
+        <Breadcrumbs className="mb-6" items={[{ name: "Home", href: "/" }, { name: "Overnight Signals" }]} />
         <div className="mb-8">
           <h1 className="text-3xl font-bold font-headline mb-2">Overnight Options Flow</h1>
           <p className="text-muted-foreground mb-6">

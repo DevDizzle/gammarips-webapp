@@ -1,5 +1,6 @@
 import { getBlogPostsAdmin } from "@/lib/firebase-admin";
 import Link from "next/link";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Metadata } from "next";
 
 // ISR: pick up newly published posts without a redeploy.
@@ -48,6 +49,8 @@ export default async function BlogIndexPage() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(listSchema) }} />
+
+      <Breadcrumbs className="mb-6" items={[{ name: "Home", href: "/" }, { name: "Blog" }]} />
 
       <header className="mb-10">
         <h1 className="text-4xl font-bold font-headline tracking-tight mb-3">Blog</h1>

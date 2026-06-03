@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAllOvernightSummaries } from "@/lib/firebase-admin";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -40,6 +41,7 @@ export default async function ReportsPage() {
     <div className="flex flex-col min-h-screen bg-background">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(indexSchema) }} />    
       <main className="flex-1 container mx-auto px-4 py-8">
+        <Breadcrumbs className="mb-6" items={[{ name: "Home", href: "/" }, { name: "Daily Reports" }]} />
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold font-headline mb-4">The Morning Briefing</h1>
           <p className="text-muted-foreground text-lg max-w-2xl">

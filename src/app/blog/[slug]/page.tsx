@@ -42,10 +42,11 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) return notFound();
 
   const publishedISO = post.publishedAt || new Date().toISOString();
+  const wordCount = post.markdown ? post.markdown.trim().split(/\s+/).length : undefined;
 
   const articleSchema = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     "headline": post.title,
     "image": "https://gammarips.com/og-image.png?v=3",
     "datePublished": publishedISO,
@@ -58,6 +59,9 @@ export default async function BlogPostPage({ params }: Props) {
       "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" },
     },
     ...(post.keywords?.length ? { "keywords": post.keywords.join(", ") } : {}),
+    // ISO 8601 duration (PT#M) — engine supplies readingTimeMin on blog_posts/{slug}.
+    ...(post.readingTimeMin > 0 ? { "timeRequired": `PT${post.readingTimeMin}M` } : {}),
+    ...(wordCount ? { "wordCount": wordCount } : {}),
     "mainEntityOfPage": `https://gammarips.com/blog/${post.slug}`,
   };
 

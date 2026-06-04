@@ -96,8 +96,8 @@ function StatsTiles({ stats }: { stats: CohortStats }) {
 }
 
 const EMPTY_STATS: CohortStats = {
-  cohort_start: "2026-05-08",
-  policy_version: "V5_4_AGENT_RANKER",
+  cohort_start: "2026-06-04",
+  policy_version: "V6_TOURNAMENT",
   as_of: null,
   trades_closed: 0,
   trades_won: 0,

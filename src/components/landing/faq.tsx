@@ -12,7 +12,7 @@ export const faqs = [
   },
   {
     question: "How does the engine pick which one?",
-    answer: "Four mechanical filters, in order. (1) Overnight score ≥ 1 — any level of unusual activity qualifies. (2) Bid-ask spread ≤ 10%. (3) Directional dollar volume > $500K. (4) Volume/open-interest ratio > 2.0 at the focal strike, moneyness 5–15% OTM, and VIX ≤ VIX3M. Whatever clears all four, the pick is whichever has the highest directional dollar volume. Five deterministic tiebreakers after that — no judgment, no override."
+    answer: "Mechanical filters, in order. (1) Overnight score ≥ 1 — any level of unusual activity qualifies. (2) Bid-ask spread ≤ 8%. (3) Directional dollar volume > $500K. (4) Moneyness 5–13% OTM, VIX ≤ VIX3M, plus open-interest and volume floors at the focal strike. The survivors are ordered by a deterministic tiebreaker (overnight score → open interest → tighter spread → alphabetical ticker)."
   },
   {
     question: "What's free, what's paid, what do you actually charge for?",

@@ -27,12 +27,12 @@ const engineSteps = [
   {
     icon: <CheckCircle2 className="h-6 w-6 text-primary" />,
     title: 'Enrichment',
-    description: 'At 05:30 ET candidates clear three deterministic gates: overnight_score ≥ 1, spread ≤ 10%, directional UOA > $500K. Anything that fails is discarded.',
+    description: 'At 05:30 ET candidates clear three deterministic gates: overnight_score ≥ 1, spread ≤ 8%, directional UOA > $500K. Anything that fails is discarded.',
   },
   {
     icon: <MessageSquare className="h-6 w-6 text-primary" />,
     title: 'One pick, or none',
-    description: 'At 07:30 ET the notifier picks the single best contract — V/OI > 2, 5–15% OTM, VIX ≤ VIX3M, deterministic tiebreak. Some days there is no pick and the push says so.',
+    description: 'At 07:30 ET the notifier picks the single best contract — 5–13% OTM, VIX ≤ VIX3M, no earnings overlap, deterministic tiebreak. Some days there is no pick and the push says so.',
   },
   {
     icon: <AlarmClock className="h-6 w-6 text-primary" />,

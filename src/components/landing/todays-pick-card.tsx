@@ -6,7 +6,7 @@ import { TrendingUp, TrendingDown, AlertCircle, ArrowRight } from "lucide-react"
 
 const SKIP_REASON_COPY: Record<string, string> = {
   no_candidates_passed_gates:
-    "No signals cleared today's gate stack (V/OI > 2, 5–10% OTM, VIX ≤ VIX3M, no earnings overlap). On these days the engine stays out — routine over FOMO.",
+    "No signals cleared today's gate stack (5–13% OTM, VIX ≤ VIX3M, no earnings overlap, OI/volume floors). On these days the engine stays out — routine over FOMO.",
   regime_fail_closed:
     "Regime data was unavailable (VIX or VIX3M missing). Fail-closed: no trade today.",
   vix_backwardation:
@@ -148,14 +148,9 @@ export function TodaysPickCard({
                 Why this pick cleared the gate stack
               </p>
               <div className="flex flex-wrap gap-2">
-                {pick.vol_oi_ratio !== undefined && (
-                  <Badge variant="secondary" className="text-xs">
-                    V/OI {pick.vol_oi_ratio.toFixed(2)} &gt; 2.0 ✓
-                  </Badge>
-                )}
                 {pick.moneyness_pct !== undefined && (
                   <Badge variant="secondary" className="text-xs">
-                    {(pick.moneyness_pct * 100).toFixed(1)}% OTM (5–10%) ✓
+                    {(pick.moneyness_pct * 100).toFixed(1)}% OTM (5–13%) ✓
                   </Badge>
                 )}
                 {pick.vix_now_at_decision !== undefined &&

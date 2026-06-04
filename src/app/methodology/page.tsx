@@ -43,9 +43,9 @@ const gates = [
     why: 'Five deterministic premium-flow flags. A score of 1 means at least one flag fired — minimum quality threshold for any candidate to enter the daily pool.',
   },
   {
-    name: 'spread ≤ 10%',
+    name: 'spread ≤ 8%',
     where: 'enrichment-trigger',
-    why: 'Bid/ask spread relative to mid. Anything wider than 10% gets cleared at the wrong end and ruins the bracket math. Hard cap.',
+    why: 'Bid/ask spread relative to mid. Anything wider than 8% gets cleared at the wrong end and ruins the bracket math. Hard cap (tightened from 10% on 2026-06-02).',
   },
   {
     name: 'directional UOA > $500K',
@@ -53,14 +53,9 @@ const gates = [
     why: 'Direction-aware unusual options activity. Bullish picks need call dollar volume above $500K; bearish picks need put dollar volume above $500K. Below this, flow is too thin to be informative.',
   },
   {
-    name: 'V/OI > 2.0',
+    name: '5–13% out-of-the-money',
     where: 'signal-notifier',
-    why: 'Volume-to-open-interest ratio. A value above 2 means today\'s flow is more than twice the existing open interest — fresh positioning, not aged inventory.',
-  },
-  {
-    name: '5–15% out-of-the-money',
-    where: 'signal-notifier',
-    why: 'Moneyness band. Closer than 5% OTM is closer-to-ATM and behaves more like delta-1 stock; further than 15% OTM is too lottery-ticket. The 5–15% band is the gamma-sensitive zone V5.4 targets.',
+    why: 'Moneyness band. Closer than 5% OTM is closer-to-ATM and behaves more like delta-1 stock; further than 13% OTM is too lottery-ticket. The 5–13% band is the gamma-sensitive zone V5.4 targets (cap widened from 10% on 2026-06-02).',
   },
   {
     name: 'VIX ≤ VIX3M (no backwardation)',
@@ -70,7 +65,7 @@ const gates = [
   {
     name: 'LIMIT 1, deterministic tiebreaker',
     where: 'signal-notifier',
-    why: '5-key cascade: directional UOA → overnight_score → V/OI ratio → tighter spread → alphabetical ticker. Same inputs, same output. No "best of three" judgment calls.',
+    why: '4-key cascade: overnight_score → open interest → tighter spread → alphabetical ticker. Same inputs, same output. No "best of three" judgment calls. (Re-ranked 2026-06-02 to drop V/OI, which realized-PnL analysis showed had no selection value.)',
   },
 ];
 
@@ -187,9 +182,9 @@ export default function MethodologyPage() {
             <h2 className="text-2xl font-bold">The V5.4 gate stack</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            Seven deterministic checks, applied in order. A signal that fails any one gate is
+            Six deterministic checks, applied in order. A signal that fails any one gate is
             discarded. On a typical morning, ~40% of trading days produce zero picks because nothing
-            clears all seven.
+            clears all six.
           </p>
           <div className="space-y-4">
             {gates.map((gate, i) => (

@@ -163,7 +163,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
             />
             <ToolCard
               name="get_enriched_signals"
-              description="Signals after the V5.4 enrichment filter (score ≥ 1, spread ≤ 10%, directional UOA > $500K). Includes thesis, technicals, recommended contract."
+              description="Signals after the V5.4 enrichment filter (score ≥ 1, spread ≤ 8%, directional UOA > $500K). Includes thesis, technicals, recommended contract."
               params={{
                 date: "YYYY-MM-DD (optional)",
                 direction: "bull | bear (optional)",

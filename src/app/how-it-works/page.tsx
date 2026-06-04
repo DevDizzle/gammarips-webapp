@@ -88,7 +88,7 @@ export default function HowItWorksPage() {
           </Card>
           <Card className="bg-card/50">
             <CardContent className="p-5">
-              <h3 className="font-bold font-headline text-lg">Spread &le; 10%</h3>
+              <h3 className="font-bold font-headline text-lg">Spread &le; 8%</h3>
               <p className="text-sm text-muted-foreground mt-1">The bid-ask spread on the recommended contract must be tight enough to be tradeable at market. Wide spreads on thin contracts are dropped.</p>
             </CardContent>
           </Card>
@@ -112,10 +112,9 @@ export default function HowItWorksPage() {
           At 07:30 ET, the notifier runs a second filter stack over the enriched list and picks <strong className="text-foreground">at most one</strong> contract:
         </p>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
-          <li><strong className="text-foreground">V/OI &gt; 2</strong> &mdash; the day&apos;s flow on that contract must be more than double its standing open interest.</li>
-          <li><strong className="text-foreground">Moneyness 5&ndash;15% OTM</strong> &mdash; the recommended contract must sit 5 to 15 percent out-of-the-money, not at-the-money and not deep OTM lottery tickets.</li>
+          <li><strong className="text-foreground">Moneyness 5&ndash;13% OTM</strong> &mdash; the recommended contract must sit 5 to 13 percent out-of-the-money, not at-the-money and not deep OTM lottery tickets.</li>
           <li><strong className="text-foreground">VIX &le; VIX3M</strong> &mdash; the term structure must be in contango. If VIX is above VIX3M (backwardation), the regime gate fails closed and the engine skips the day.</li>
-          <li><strong className="text-foreground">Deterministic tiebreak</strong> &mdash; when multiple candidates survive, a five-key deterministic ordering picks the same contract every time given the same inputs. No randomness, no human judgment.</li>
+          <li><strong className="text-foreground">Deterministic tiebreak</strong> &mdash; when multiple candidates survive, a deterministic ordering picks the same contract every time given the same inputs. No randomness, no human judgment.</li>
         </ul>
         <p className="text-muted-foreground leading-relaxed">
           Some days the filters eliminate every candidate and the 09:00 message says so. That&apos;s the correct behavior &mdash; skipping beats forcing a trade.

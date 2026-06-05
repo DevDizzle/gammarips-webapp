@@ -1,4 +1,4 @@
-import { getAllDailyReports, getBlogPostsAdmin } from "@/lib/firebase-admin";
+import { getAllDailyReports, getBlogPostsAdmin, getSignalTickersForSitemap } from "@/lib/firebase-admin";
 import { MetadataRoute } from 'next';
 
 const BASE_URL = 'https://gammarips.com';
@@ -51,5 +51,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Sitemap: failed to fetch blog posts', e);
   }
 
-  return [...staticPages, ...reportPages, ...blogPages];
+  // Per-ticker signal pages — our largest indexable inventory, previously absent
+  // from the sitemap (Google discovered them only via internal links).
+  let signalPages: MetadataRoute.Sitemap = [];
+  try {
+    const tickers = await getSignalTickersForSitemap(30, 12);
+    signalPages = tickers.map(({ ticker, scanDate }) => ({
+      url: `${BASE_URL}/signals/${ticker}`,
+      lastModified: scanDate || new Date().toISOString(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.6,
+    }));
+  } catch (e) {
+    console.error('Sitemap: failed to fetch signal tickers', e);
+  }
+
+  return [...staticPages, ...reportPages, ...blogPages, ...signalPages];
 }

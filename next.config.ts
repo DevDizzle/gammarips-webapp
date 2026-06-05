@@ -15,15 +15,23 @@ const nextConfig: NextConfig = {
       { source: '/performance', destination: '/', permanent: true },
       { source: '/options/call-setups', destination: '/', permanent: true },
       { source: '/options/put-hedges', destination: '/', permanent: true },
-      { source: '/stocks/:ticker', destination: '/', permanent: true },
+      // Old per-ticker URL patterns -> the canonical /signals/:ticker page.
+      // These URLs are indexed and carry the largest share of our impressions;
+      // sending them to a generic destination (/, /signals) discarded the ticker
+      // and read as a soft-404 to Google (impressions, ~0 clicks). A 1:1
+      // ticker-preserving redirect consolidates that equity onto the page that
+      // actually answers the query. /signals/:ticker 404s cleanly if the ticker
+      // was never scanned.
+      { source: '/stocks/:ticker', destination: '/signals/:ticker', permanent: true },
       { source: '/dashboard/:ticker', destination: '/', permanent: true },
       { source: '/feedback', destination: '/about#contact', permanent: true },
       { source: '/api', destination: '/developers', permanent: true },
       { source: '/war-room', destination: '/pricing', permanent: true },
       { source: '/history', destination: '/reports', permanent: true },
 
-      // Catch old top-level ticker pages (1-5 chars) -> signals page, excluding actual pages
-      { source: '/:ticker((?!arena|about|terms|auth|api|blog|login|signup|dashboard|war-room|history)[a-zA-Z]{1,5})', destination: '/signals', permanent: true },
+      // Old top-level ticker pages (1-5 chars) -> canonical /signals/:ticker,
+      // preserving the ticker. Excludes real page slugs in that length range.
+      { source: '/:ticker((?!arena|about|terms|auth|api|blog|login|signup|dashboard|war-room|history)[a-zA-Z]{1,5})', destination: '/signals/:ticker', permanent: true },
     ];
   },
   images: {

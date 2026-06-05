@@ -5,7 +5,8 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Overnight Options Flow Scanner — Daily Unusual Options Activity | GammaRips",
+  // Root layout applies the `%s | GammaRips` title template — no suffix here.
+  title: "Overnight Options Flow Scanner — Daily Unusual Options Activity",
   description: "Daily options signals scanner. GammaRips detects overnight unusual options activity across 5,230+ tickers — volume, open interest, directional dollar flow — and ranks it before the market opens. One pick a day, pushed to phone at 07:30 ET.",
   alternates: { canonical: 'https://gammarips.com/signals' },
 };

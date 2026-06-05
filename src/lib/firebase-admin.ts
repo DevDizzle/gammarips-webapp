@@ -634,6 +634,42 @@ export async function getRecentSignals(
 }
 
 /**
+ * Distinct tickers (with the most recent scan_date that contained them) for the
+ * sitemap. The ~590 /signals/:ticker pages are our largest indexable inventory
+ * but were absent from sitemap.xml; this surfaces them with a real lastmod so
+ * Google can discover and freshness-rank them. Scoped to top signals from recent
+ * scans (the pages with actual content + engine seoMetadata), not every enriched
+ * row, to avoid bloating the sitemap with thin pages.
+ */
+export async function getSignalTickersForSitemap(
+  days: number = 30,
+  perDate: number = 12
+): Promise<Array<{ ticker: string; scanDate: string }>> {
+  noStore();
+  try {
+    const reports = await getAllDailyReports(days + 10);
+    const dates = Array.from(new Set(reports.map(r => r.scan_date)))
+      .filter(Boolean)
+      .sort((a, b) => (b || '').localeCompare(a || '')) // newest first
+      .slice(0, days);
+    const seen = new Map<string, string>(); // ticker -> most-recent scanDate
+    for (const date of dates) {
+      const [bull, bear] = await Promise.all([
+        getOvernightSignals(date, 'bull', 0, perDate),
+        getOvernightSignals(date, 'bear', 0, perDate),
+      ]);
+      for (const s of [...bull, ...bear]) {
+        if (s.ticker && !seen.has(s.ticker)) seen.set(s.ticker, s.scan_date || date);
+      }
+    }
+    return Array.from(seen.entries()).map(([ticker, scanDate]) => ({ ticker, scanDate }));
+  } catch (error) {
+    console.error('Error building sitemap ticker list:', error);
+    return [];
+  }
+}
+
+/**
  * Sibling signals from the SAME scan and direction as a given ticker — powers
  * the "More flow that day" related block on signal detail pages. Builds a
  * dense intra-/signals link mesh. Same-direction is the base set; when a

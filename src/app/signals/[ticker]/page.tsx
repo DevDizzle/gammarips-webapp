@@ -10,17 +10,33 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { ticker } = await params;
-  let title = `${ticker.toUpperCase()} Signal | GammaRips`;
-  let description = `Institutional options flow analysis for ${ticker.toUpperCase()}.`;
+  const T = ticker.toUpperCase();
+
+  // NOTE: the root layout applies the `%s | GammaRips` title template, so titles
+  // here must NOT include a "| GammaRips" suffix (that produced the duplicated
+  // "... | GammaRips | GammaRips" titles). Engine seoTitle is brand-free too.
+  let title = `${T} Unusual Options Flow`;
+  let description = `Institutional options flow analysis for ${T}.`;
 
   try {
     const summary = await getLatestOvernightSummary();
     const signal =
-      (summary ? await getSignalByTicker(summary.scan_date, ticker.toUpperCase()) : null) ||
+      (summary ? await getSignalByTicker(summary.scan_date, T) : null) ||
       (await getMostRecentSignalForTicker(ticker));
-    if (signal?.seoMetadata) {
+
+    if (signal?.seoMetadata?.seoTitle || signal?.seoMetadata?.seoDescription) {
+      // Best case: the engine wrote per-ticker SEO metadata for this signal.
       title = signal.seoMetadata.seoTitle || title;
       description = signal.seoMetadata.seoDescription || description;
+    } else if (signal) {
+      // Historical tickers (resolved via getMostRecentSignalForTicker) often have
+      // no engine seoMetadata. Build a unique, query-relevant title/description
+      // from the signal's own fields instead of the generic boilerplate, so every
+      // ticker page carries distinct metadata.
+      const dir = (signal.direction || "").toUpperCase();
+      const dirWord = dir === "BULLISH" ? "Bullish" : dir === "BEARISH" ? "Bearish" : "";
+      title = dirWord ? `${T} Unusual Options Flow — ${dirWord}` : `${T} Unusual Options Flow`;
+      description = buildSignalDescription(signal, T);
     }
   } catch (error) {
     console.error("Error fetching signal metadata:", error);
@@ -31,6 +47,44 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description,
     alternates: { canonical: `https://gammarips.com/signals/${ticker}` },
   };
+}
+
+/** Compose a 140-160 char meta description from a signal's own fields when no
+ *  engine seoMetadata is present. Leads with ticker + direction + the
+ *  load-bearing datum (catalyst/headline/flow), no hype. */
+function buildSignalDescription(signal: any, T: string): string {
+  const dir = (signal.direction || "").toUpperCase();
+  const dirWord = dir === "BULLISH" ? "bullish" : dir === "BEARISH" ? "bearish" : "directional";
+
+  // Prefer the analyst thesis if it exists; trim to a clean sentence boundary.
+  const thesis = (signal.thesis || "").trim();
+  if (thesis.length >= 80) {
+    const lead = `${T} ${dirWord} options flow: `;
+    const room = 158 - lead.length;
+    let body = thesis.slice(0, room);
+    if (thesis.length > room) {
+      const cut = body.lastIndexOf(" ");
+      if (cut > room * 0.6) body = body.slice(0, cut);
+      body = body.replace(/[\s,;:.]+$/, "") + "…";
+    }
+    return lead + body;
+  }
+
+  // Otherwise assemble from structured fields.
+  const flow = Math.max(signal.call_dollar_volume || 0, signal.put_dollar_volume || 0);
+  const flowStr =
+    flow >= 1_000_000 ? `$${(flow / 1_000_000).toFixed(1)}M` : flow > 0 ? `$${Math.round(flow / 1000)}K` : "";
+  const catalyst = (signal.key_headline || signal.catalyst_type || "").trim();
+  const sector = (signal.sector || "").trim();
+
+  const parts = [
+    `${T} flagged for ${dirWord} unusual options activity`,
+    flowStr ? `on ${flowStr} directional flow` : "",
+    sector ? `in ${sector}` : "",
+  ].filter(Boolean);
+  let out = parts.join(" ") + ".";
+  if (catalyst && out.length + catalyst.length + 2 <= 158) out += ` ${catalyst}.`;
+  return out.slice(0, 160);
 }
 
 export default async function SignalPage({ params }: PageProps) {

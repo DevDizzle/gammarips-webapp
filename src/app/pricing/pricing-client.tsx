@@ -14,7 +14,7 @@ const stripePromise = loadStripe(
 );
 
 const proFeatures = [
-  "Today's V5.4 pick pushed to WhatsApp at 07:30 ET",
+  "Today's pick pushed to WhatsApp at 07:30 ET",
   'Exit reminder at 15:50 ET on day-3',
   'Private WhatsApp group access',
   'AI chat agent — tag @gamma to ask about today\'s pick, open position, or the 30-day ledger',
@@ -24,7 +24,7 @@ const proFeatures = [
 ];
 
 const freeFeatures = [
-  "Today's V5.4 pick on the home page at 07:30 ET",
+  "Today's pick on the home page at 07:30 ET",
   'Full signals list across 5,230+ tickers',
   'Daily market report with AI-authored thesis',
   'Per-ticker deep dive + recommended contract',

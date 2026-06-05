@@ -6,15 +6,21 @@ import { TrendingUp, TrendingDown, AlertCircle, ArrowRight } from "lucide-react"
 
 const SKIP_REASON_COPY: Record<string, string> = {
   no_candidates_passed_gates:
-    "No signals cleared today's gate stack (5–13% OTM, VIX ≤ VIX3M, no earnings overlap, OI/volume floors). On these days the engine stays out — routine over FOMO.",
+    "Nothing made it into today's pool — no signal cleared the enrichment bar (overnight score ≥ 4 with directional unusual-options flow above $500K). On empty days the engine stays out — routine over FOMO.",
   regime_fail_closed:
     "Regime data was unavailable (VIX or VIX3M missing). Fail-closed: no trade today.",
   vix_backwardation:
     "VIX closed above VIX3M today. Backwardation regime — the engine skips these days because long-premium setups fail disproportionately here.",
   earnings_overlap_all_candidates:
-    "All top candidates report earnings during the hold window. The engine skips these days — long single-leg options through earnings is a literature-documented loss pattern (De Silva et al. 2026, RoF).",
+    "Every candidate reports earnings during the 3-day hold window. The engine skips these days — holding long single-leg options through an earnings print is a literature-documented loss pattern (De Silva et al. 2026, RoF).",
   earnings_calendar_unavailable:
     "Earnings calendar unavailable — engine is standing down (fail-closed). The no-options-through-earnings rule is hard; we skip rather than guess.",
+  v5_4_unavailable:
+    "The selection tournament couldn't complete (engine error). It fails closed rather than guess — no trade today.",
+  v5_4_out_of_set:
+    "The tournament returned a pick outside today's eligible pool. Fail-closed — no trade today.",
+  v5_4_mass_leakage:
+    "Today's candidates were held back by the leakage safeguard. The engine fails closed rather than risk a contaminated pick — no trade today.",
 };
 
 function formatEffectiveAt(isoString: string | null): string {
@@ -40,6 +46,21 @@ function formatMoneyMillions(v: number | undefined): string {
   if (v >= 1_000_000) return `$${(v / 1_000_000).toFixed(1)}M`;
   if (v >= 1_000) return `$${(v / 1_000).toFixed(0)}K`;
   return `$${v.toFixed(0)}`;
+}
+
+// V6 tournament: the pick is the consensus of 3 independent randomized brackets.
+// v5_4_confidence (key name retained for cohort continuity) holds the agreement level.
+function formatConsensus(confidence: string | undefined): string | null {
+  switch (confidence) {
+    case "high":
+      return "3/3 brackets agree";
+    case "med":
+      return "2/3 brackets agree";
+    case "low":
+      return "1/3 brackets";
+    default:
+      return null;
+  }
 }
 
 export function TodaysPickCard({
@@ -145,12 +166,12 @@ export function TodaysPickCard({
 
             <div className="pt-4 border-t border-border">
               <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wider">
-                Why this pick cleared the gate stack
+                How this pick won the tournament
               </p>
               <div className="flex flex-wrap gap-2">
-                {pick.moneyness_pct !== undefined && (
+                {formatConsensus(pick.v5_4_confidence) && (
                   <Badge variant="secondary" className="text-xs">
-                    {(pick.moneyness_pct * 100).toFixed(1)}% OTM (5–13%) ✓
+                    Tournament consensus: {formatConsensus(pick.v5_4_confidence)} ✓
                   </Badge>
                 )}
                 {pick.vix_now_at_decision !== undefined &&

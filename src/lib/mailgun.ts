@@ -93,7 +93,7 @@ You're in. GammaRips Pro is live on your account.
 
 Here's the routine starting tomorrow morning (weekdays, 07:30 ET):
 
-1. At 07:30 ET each weekday, the day's V5.4 pick lands in your inbox AND the private WhatsApp group.
+1. At 07:30 ET each weekday, the day's pick lands in your inbox AND the private WhatsApp group.
    One ticker. One contract. Pre-set stop (-60%), target (+80%), exit (3:50 PM ET day-3).
    Some days the engine skips — you'll get a message either way.
 
@@ -241,7 +241,7 @@ What that gets you:
 - gammarips.com/blog — methodology deep-dives, post-mortems, weekly research notes.
 - @gammarips on X — daily teaser at 09:05 ET, Friday scorecard.
 
-The differentiator on the paid tier is curation. Each weekday at 07:30 ET, the engine picks ONE V5.4 trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.
+The differentiator on the paid tier is curation. Each weekday at 07:30 ET, the engine picks ONE trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.
 
 $39/month. 7-day free trial. Cancel anytime.
 Pick a plan: https://gammarips.com/pricing
@@ -286,7 +286,7 @@ evan@gammarips.com
                                 <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">gammarips.com/blog</a> — methodology deep-dives, post-mortems, weekly research.</li>
                                 <li><a href="https://x.com/GammaRips" style="color: hsl(74, 80%, 50%);">@gammarips on X</a> — daily teaser at 09:05 ET, Friday scorecard.</li>
                             </ul>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">The differentiator on the paid tier is <strong style="color: #ffffff;">curation</strong>. Each weekday at 07:30 ET, the engine picks ONE V5.4 trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">The differentiator on the paid tier is <strong style="color: #ffffff;">curation</strong>. Each weekday at 07:30 ET, the engine picks ONE trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.</p>
                         </td>
                     </tr>
                     <tr>
@@ -354,7 +354,7 @@ If the routine isn't for you:
 
 What's worked so far in the trial:
 - The 07:30 ET pick lands in your inbox and the private WhatsApp group on trading days.
-- The engine also skips on days nothing clears the V5.4 gates — those are free money in your attention budget.
+- The engine also skips on days nothing clears the engine's filters — those are free money in your attention budget.
 - Tag @gamma in the group for any question about today's pick, the open position, or the ledger.
 
 If anything's off or you have a question before the trial ends, reply to this email — it goes straight to me.
@@ -918,7 +918,7 @@ Good news! We've made a big change to our platform.
 
 GammaRips is now free for all early adopters. That includes you.
 
-You now have full access to the daily V5.4 pick, the enriched signals list, the daily report, and the public paper-trading ledger. No strings attached.
+You now have full access to the daily pick, the enriched signals list, the daily report, and the public paper-trading ledger. No strings attached.
 
 We're doing this to gather feedback from a core group of traders as we continue to build out the platform.
 
@@ -964,7 +964,7 @@ Founder, GammaRips
                                 </p>
                             </div>
 
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">You now have full access to the daily V5.4 pick, the enriched signals list, the daily report, and the public paper-trading ledger. No strings attached.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">You now have full access to the daily pick, the enriched signals list, the daily report, and the public paper-trading ledger. No strings attached.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We're doing this to gather feedback from a core group of traders as we continue to build out the platform.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Log in now to see today's top Call & Put contracts.</p>
                         </td>

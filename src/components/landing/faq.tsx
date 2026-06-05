@@ -8,11 +8,11 @@ import {
 export const faqs = [
   {
     question: "What exactly lands on my phone every morning?",
-    answer: "By 07:30 ET you get one pick or none. A ticker, a direction (call or put), a specific contract with strike and expiration, a recommended mid price, a −60% stop, and a +80% target. Some days the engine stays out — when VIX closes above VIX3M (backwardation) or nothing clears the filter stack, nothing is sent. On those days, do nothing. That's the routine."
+    answer: "By 07:30 ET you get one pick or none. A ticker, a direction (call or put), a specific contract with strike and expiration, a recommended mid price, a −60% stop, and a +80% target. Some days the engine stays out — when VIX closes above VIX3M (backwardation), when the enriched pool is empty, or when the selection tournament fails closed, nothing is sent. On those days, do nothing. That's the routine."
   },
   {
     question: "How does the engine pick which one?",
-    answer: "Mechanical filters, in order. (1) Overnight score ≥ 1 — any level of unusual activity qualifies. (2) Bid-ask spread ≤ 8%. (3) Directional dollar volume > $500K. (4) Moneyness 5–13% OTM, VIX ≤ VIX3M, plus open-interest and volume floors at the focal strike. The survivors are ordered by a deterministic tiebreaker (overnight score → open interest → tighter spread → alphabetical ticker)."
+    answer: "A tournament, not a scoring formula. First a thin bar: overnight score ≥ 4 with directional dollar volume > $500K to be enriched at all, then two safety rails (no earnings during the 3-day hold; VIX ≤ VIX3M). There are no per-contract selection gates anymore. Everything that survives — often ~90 candidates — goes into a randomized bracket tournament: three independent brackets each shuffle the pool, an LLM advances the top 2 from batches of ≤10 round after round until one winner remains, and the three bracket winners vote (3/3 = high confidence, 2/3 = medium, 1/3 = low). No memory, no rubric, no weights, and every candidate is leakage-checked first."
   },
   {
     question: "What's free, what's paid, what do you actually charge for?",
@@ -32,7 +32,7 @@ export const faqs = [
   },
   {
     question: "Where's the track record?",
-    answer: "On the Scorecard page, updated as the engine's paper trades close. We promoted V5.4 — our LLM agent ranker — on May 8, 2026; the V5.4 cohort starts fresh from that date. Sample size is small — we'll publish specific win-rate numbers when at least 30 V5.4 trades have closed. In the meantime, every signal is timestamped, every outcome is logged, and nothing is edited after the fact. That's the receipt."
+    answer: "On the Scorecard page, updated as the engine's paper trades close. We launched V6 — our randomized bracket tournament — on June 4, 2026; the V6 cohort starts fresh from that date. Sample size is small — we'll publish specific win-rate numbers when at least 30 V6 trades have closed. In the meantime, every signal is timestamped, every outcome is logged, and nothing is edited after the fact. That's the receipt."
   },
   {
     question: "Why one trade a day? Everyone else sends dozens.",

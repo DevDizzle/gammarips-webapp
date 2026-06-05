@@ -6,8 +6,8 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Daily Reports — GammaRips V5.4",
-  description: "Every trading day, GammaRips publishes the V5.4 daily pick (or a documented skip) alongside market context across 5,230+ tickers. Paper-trading, educational only.",
+  title: "Daily Reports — GammaRips V6",
+  description: "Every trading day, GammaRips publishes the V6 daily pick (or a documented skip) alongside market context across 5,230+ tickers. Paper-trading, educational only.",
   alternates: { canonical: 'https://gammarips.com/reports' },
 };
 
@@ -17,8 +17,8 @@ export default async function ReportsPage() {
   const indexSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "GammaRips V5.4 Daily Reports",
-    "description": "Every trading day, GammaRips publishes the V5.4 daily pick with entry, stop, target, and exit — or a documented skip.",
+    "name": "GammaRips V6 Daily Reports",
+    "description": "Every trading day, GammaRips publishes the V6 daily pick with entry, stop, target, and exit — or a documented skip.",
     "url": "https://gammarips.com/reports",
     "mainEntity": {
       "@type": "ItemList",

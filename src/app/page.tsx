@@ -61,7 +61,7 @@ export default async function LandingPage() {
   const dynamicDailySchema = topSignals.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": report?.title || summary?.headline || "Today's V5.4 pick",
+    "headline": report?.title || summary?.headline || "Today's V6 pick",
     "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "Overnight options flow signals explicitly ranked by conviction.",
     "url": "https://gammarips.com",
     "publisher": {
@@ -114,7 +114,7 @@ export default async function LandingPage() {
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
 
-        {/* V5.4 Live Panel — single brand-bordered container that visually
+        {/* V6 Live Panel — single brand-bordered container that visually
             unifies (a) the public cohort-stats tiles and (b) the paywalled
             today's-pick card. Stats are above the divider and visible to all;
             pick details are below and paywalled via <ProLock> for non-subs.
@@ -127,7 +127,7 @@ export default async function LandingPage() {
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div>
                     <p className="text-xs uppercase tracking-wider text-primary font-semibold">
-                      GammaRips · V5.4 Live
+                      GammaRips · V6 Live
                     </p>
                     <h2 className="text-xl md:text-2xl font-bold font-headline mt-1">
                       One pick a day. Tracked openly.
@@ -185,7 +185,7 @@ export default async function LandingPage() {
                       })}
                     </p>
                     <h2 className="text-2xl md:text-3xl font-bold font-headline mt-1">
-                      {report?.title || summary.headline || "Today's V5.4 pick"}
+                      {report?.title || summary.headline || "Today's V6 pick"}
                     </h2>
                   </div>
                   <Link href={`/reports/${reportDate || summary.scan_date}`}>

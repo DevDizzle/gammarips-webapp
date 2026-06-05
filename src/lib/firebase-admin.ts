@@ -271,6 +271,10 @@ export interface TodaysPick {
     | 'vix_backwardation'
     | 'earnings_overlap_all_candidates'
     | 'earnings_calendar_unavailable'
+    // V6 tournament fail-closed reasons (signal-judge errored / off-set / all-leakage)
+    | 'v5_4_unavailable'
+    | 'v5_4_out_of_set'
+    | 'v5_4_mass_leakage'
     | null;
   ticker?: string;
   direction?: 'BULLISH' | 'BEARISH';
@@ -287,6 +291,11 @@ export interface TodaysPick {
   vix3m_at_enrich?: number;
   vix_now_at_decision?: number;
   policy_version: string;
+  // V6 tournament provenance (key names retained from V5.4 for cohort continuity).
+  // v5_4_confidence carries the bracket-consensus level: 3/3 brackets agree = "high", 2/3 = "med", 1/3 = "low".
+  v5_4_confidence?: 'high' | 'med' | 'low' | string;
+  v5_4_runner_up?: string;
+  v5_4_justification?: string;
 }
 
 export async function getTodaysPick(scanDate: string): Promise<TodaysPick | null> {
@@ -311,7 +320,7 @@ export async function getTodaysPick(scanDate: string): Promise<TodaysPick | null
  *  in gammarips-engine for the schema contract. */
 export interface CohortStats {
   cohort_start: string;          // ISO date; currently "2026-05-07"
-  policy_version: string;        // "V5_4_AGENT_RANKER"
+  policy_version: string;        // "V6_TOURNAMENT"
   as_of: any;                    // Firestore Timestamp
   trades_closed: number;
   trades_won: number;
@@ -334,9 +343,9 @@ export async function getCohortStats(): Promise<CohortStats | null> {
   }
 }
 
-/** One closed V5.4 paper-trade, synced from BigQuery forward_paper_ledger by
+/** One closed V6 paper-trade, synced from BigQuery forward_paper_ledger by
  *  signal-notifier (compute_and_write_ledger_trades) into Firestore
- *  ledger_trades/{scan_date}_{ticker}. SAME V5.4 cohort + fixed-dollar sizing
+ *  ledger_trades/{scan_date}_{ticker}. SAME V6 cohort + fixed-dollar sizing
  *  as cohort_stats/current, so the scorecard table and aggregate tiles agree. */
 export interface LedgerTrade {
   scan_date: string;

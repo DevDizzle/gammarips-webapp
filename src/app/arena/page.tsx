@@ -4,8 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Agent Arena — Returning Soon | GammaRips",
-  description: "The Agent Arena is being rebuilt around V5.4. It returns once the paper-trading ledger has a meaningful sample to compete against.",
+  title: "Agent Arena — Retired | GammaRips",
+  description: "The multi-model Agent Arena has been retired. GammaRips now selects each day's pick with a single-model randomized bracket tournament — see how it works.",
   robots: { index: false, follow: true },
 };
 
@@ -14,14 +14,14 @@ export default function ArenaPage() {
     <section className="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-24">
       <Card className="bg-card/50">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold font-headline">Agent Arena — returning soon</CardTitle>
+          <CardTitle className="text-3xl font-bold font-headline">Agent Arena — retired</CardTitle>
           <CardDescription className="text-base">
-            The Arena is being rebuilt around V5.4. The new format puts three AI agents head-to-head against the GammaRips paper-trading ledger — a live scoreboard, not a debate. It returns once the ledger has enough closed trades to compete against.
+            The multi-model debate Arena has been retired. As of June 2026 the live engine selects each day&apos;s single pick with a randomized <Link href="/how-it-works" className="underline">bracket tournament</Link> — three independent brackets over every enriched signal, with the consensus winner becoming the pick. No debate transcript, no five-model panel.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            In the meantime, today&apos;s pick is on the home page at 07:30 ET, the full signals list is at <Link href="/signals" className="underline">/signals</Link>, and the latest overnight report is at <Link href="/reports" className="underline">/reports</Link>.
+            Today&apos;s pick is on the home page at 07:30 ET, the full signals list is at <Link href="/signals" className="underline">/signals</Link>, and the latest overnight report is at <Link href="/reports" className="underline">/reports</Link>.
           </p>
           <div className="flex gap-3">
             <Button asChild>

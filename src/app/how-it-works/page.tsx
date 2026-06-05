@@ -6,12 +6,12 @@ import Link from 'next/link';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'How GammaRips Works — Overnight Options Scanner, V5.4 Execution',
-  description: 'The scanner ingests overnight institutional options flow across 5,230+ tickers, applies three deterministic gates, and selects one V5.4 pick per day with pre-set stop and target. Here is the full pipeline — no discretion, no paid-first tier.',
+  title: 'How GammaRips Works — Overnight Options Scanner, V6 Tournament',
+  description: 'The scanner ingests overnight institutional options flow across 5,230+ tickers, enriches the standouts, and a randomized bracket tournament picks one trade per day with pre-set stop and target. Here is the full pipeline — no discretion, no paid-first tier.',
   alternates: { canonical: 'https://gammarips.com/how-it-works' },
   openGraph: {
     title: 'How GammaRips Works — Overnight Options Scanner',
-    description: 'Mechanical, filtered, single-pick-per-day pipeline across 5,230+ tickers.',
+    description: 'Scanned, enriched, tournament-selected: one pick a day across 5,230+ tickers.',
     url: 'https://gammarips.com/how-it-works',
   }
 };
@@ -20,8 +20,8 @@ export default function HowItWorksPage() {
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "How GammaRips Works — Overnight Options Scanner, V5.4 Execution",
-    "description": "Mechanical, filtered, single-pick-per-day pipeline across 5,230+ tickers.",
+    "headline": "How GammaRips Works — Overnight Options Scanner, V6 Tournament",
+    "description": "Scanned, enriched, tournament-selected: one pick a day across 5,230+ tickers.",
     "image": "https://gammarips.com/og-image.png?v=3",
     "author": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
@@ -36,7 +36,7 @@ export default function HowItWorksPage() {
           How GammaRips Works
         </h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-          One V5.4 options trade a day, or none. Scored while you sleep, pushed to your phone at 07:30 ET. Here&apos;s the full pipeline.
+          One options trade a day, or none. Scored while you sleep, picked by a bracket tournament, pushed to your phone at 07:30 ET. Here&apos;s the full pipeline.
         </p>
       </header>
 
@@ -46,7 +46,7 @@ export default function HowItWorksPage() {
         <h2 className="text-3xl font-bold font-headline">Your morning at 07:30 ET</h2>
         <div className="p-6 rounded-lg border bg-primary/5 border-primary/20 text-muted-foreground space-y-4 leading-relaxed">
           <p>
-            At 07:30 ET, one message lands in your phone. Either it&apos;s today&apos;s single V5.4 pick &mdash; one ticker, one contract, a pre-set &minus;60% stop and +80% target &mdash; or the engine says <em>no trade today</em> and you do nothing.
+            At 07:30 ET, one message lands in your phone. Either it&apos;s today&apos;s single pick &mdash; one ticker, one contract, a pre-set &minus;60% stop and +80% target &mdash; or the engine says <em>no trade today</em> and you do nothing.
           </p>
           <p>
             At 10:00 ET, you place the trade: buy one contract at market, arm both GTC exit orders, put your phone down. At 15:50 ET on day-3, an exit reminder fires if the trade is still open. Close at market, log the outcome, move on.
@@ -75,21 +75,15 @@ export default function HowItWorksPage() {
       <Separator className="my-12 sm:my-16" />
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">The enrichment gate</h2>
+        <h2 className="text-3xl font-bold font-headline">The enrichment bar</h2>
         <p className="text-muted-foreground leading-relaxed">
-          Each night the scanner produces hundreds of raw flow events. Three deterministic gates narrow that list down to enrichment-worthy candidates:
+          Each night the scanner produces hundreds of raw flow events. A small enrichment bar narrows that list down to the candidates worth a closer look:
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           <Card className="bg-card/50">
             <CardContent className="p-5">
-              <h3 className="font-bold font-headline text-lg">Overnight score &ge; 1</h3>
-              <p className="text-sm text-muted-foreground mt-1">The scanner&apos;s internal conviction score must clear a minimum floor &mdash; combines positioning size, strike breadth, Vol/OI, and directional imbalance.</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card/50">
-            <CardContent className="p-5">
-              <h3 className="font-bold font-headline text-lg">Spread &le; 8%</h3>
-              <p className="text-sm text-muted-foreground mt-1">The bid-ask spread on the recommended contract must be tight enough to be tradeable at market. Wide spreads on thin contracts are dropped.</p>
+              <h3 className="font-bold font-headline text-lg">Overnight score &ge; 4</h3>
+              <p className="text-sm text-muted-foreground mt-1">The scanner&apos;s internal conviction score must clear a floor that combines positioning size, strike breadth, Vol/OI, and directional imbalance. A floor, not a ceiling &mdash; the tournament does the discriminating from here.</p>
             </CardContent>
           </Card>
           <Card className="bg-card/50">
@@ -98,33 +92,46 @@ export default function HowItWorksPage() {
               <p className="text-sm text-muted-foreground mt-1">The name-level net directional dollar flow must exceed $500K. Institutional footprint, not single-contract anomalies.</p>
             </CardContent>
           </Card>
+          <Card className="bg-card/50">
+            <CardContent className="p-5">
+              <h3 className="font-bold font-headline text-lg">Both directions</h3>
+              <p className="text-sm text-muted-foreground mt-1">Bullish (calls) and bearish (puts) candidates both qualify. There is no direction filter and no per-contract selection gate &mdash; everything that clears the bar enters the pool.</p>
+            </CardContent>
+          </Card>
         </div>
         <p className="text-muted-foreground mt-6 leading-relaxed">
-          Anything that fails any gate is discarded. Whatever survives is enriched with news context, technical levels, and a recommended contract &mdash; that full list is published to <Link href="/signals" className="text-primary hover:underline">/signals</Link>.
+          Whatever clears the bar is enriched with news context, technical levels, and a recommended contract &mdash; that full list is published to <Link href="/signals" className="text-primary hover:underline">/signals</Link>.
         </p>
       </section>
 
       <Separator className="my-12 sm:my-16" />
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">Selecting the one V5.4 pick</h2>
+        <h2 className="text-3xl font-bold font-headline">Picking the one trade: the tournament</h2>
         <p className="text-muted-foreground leading-relaxed">
-          At 07:30 ET, the notifier runs a second filter stack over the enriched list and picks <strong className="text-foreground">at most one</strong> contract:
+          At 07:30 ET, two <strong className="text-foreground">safety rails</strong> run over the enriched list first &mdash; and they are the only filters left:
         </p>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
-          <li><strong className="text-foreground">Moneyness 5&ndash;13% OTM</strong> &mdash; the recommended contract must sit 5 to 13 percent out-of-the-money, not at-the-money and not deep OTM lottery tickets.</li>
+          <li><strong className="text-foreground">No earnings during the hold</strong> &mdash; any ticker reporting earnings inside the 3-day window is dropped. Holding long options through an earnings print is a documented loss pattern.</li>
           <li><strong className="text-foreground">VIX &le; VIX3M</strong> &mdash; the term structure must be in contango. If VIX is above VIX3M (backwardation), the regime gate fails closed and the engine skips the day.</li>
-          <li><strong className="text-foreground">Deterministic tiebreak</strong> &mdash; when multiple candidates survive, a deterministic ordering picks the same contract every time given the same inputs. No randomness, no human judgment.</li>
         </ul>
         <p className="text-muted-foreground leading-relaxed">
-          Some days the filters eliminate every candidate and the 09:00 message says so. That&apos;s the correct behavior &mdash; skipping beats forcing a trade.
+          Everything that survives the two rails &mdash; on a busy day around 90 candidates, with no further gates &mdash; goes into a <strong className="text-foreground">randomized bracket tournament</strong>:
+        </p>
+        <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
+          <li><strong className="text-foreground">Three independent brackets.</strong> Each shuffles the pool into a fresh random order and reduces it in batches of ≤10 &mdash; an LLM advances the top 2 from each batch, round after round, until one winner remains.</li>
+          <li><strong className="text-foreground">Consensus vote.</strong> The three bracket winners are compared: 3/3 agree &rarr; high confidence, 2/3 &rarr; medium, 1/3 &rarr; low. The consensus ticker is the pick.</li>
+          <li><strong className="text-foreground">No memory, no rubric, no weights.</strong> Each batch gets a dead-simple prompt plus the daily report. Every candidate is leakage-checked before the model sees it, and any error fails closed &mdash; no trade rather than a forced one.</li>
+        </ul>
+        <p className="text-muted-foreground leading-relaxed">
+          Some days the rails eliminate every candidate, the pool is empty, or the tournament fails closed &mdash; and the 07:30 message says <em>no trade today</em>. That&apos;s the correct behavior &mdash; skipping beats forcing a trade.
         </p>
       </section>
 
       <Separator className="my-12 sm:my-16" />
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">Execution rules (V5.4)</h2>
+        <h2 className="text-3xl font-bold font-headline">Execution rules</h2>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
           <li><strong className="text-foreground">Entry:</strong> 10:00 ET day-1 at market.</li>
           <li><strong className="text-foreground">Stop:</strong> &minus;60% option price, GTC.</li>

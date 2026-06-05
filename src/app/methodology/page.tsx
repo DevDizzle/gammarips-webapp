@@ -8,12 +8,12 @@ import { ArrowRight, Database, Filter, Calculator, GitBranch, ShieldCheck, Code 
 export const metadata: Metadata = {
   title: 'GammaRips Methodology — Where every number comes from',
   description:
-    'The data sources, gate thresholds, bracket math, and tiebreakers behind every V5.4 pick. Polygon end-of-day options, FRED VIX, BigQuery ledger. Deterministic, reproducible, paper-trading only.',
+    'The data sources, the enrichment bar, the selection tournament, and the bracket math behind every V6 pick. Polygon end-of-day options, FRED VIX, BigQuery ledger. Auditable, fully logged, paper-trading only.',
   alternates: { canonical: 'https://gammarips.com/methodology' },
   openGraph: {
     title: 'GammaRips Methodology — Where every number comes from',
     description:
-      'The data sources, gate thresholds, bracket math, and tiebreakers behind every V5.4 pick. Deterministic and reproducible.',
+      'The enrichment bar, the bracket tournament, and the execution math behind every V6 pick. Auditable and fully logged.',
     url: 'https://gammarips.com/methodology',
   },
 };
@@ -36,36 +36,31 @@ const dataSources = [
   },
 ];
 
-const gates = [
+const filters = [
   {
-    name: 'overnight_score ≥ 1',
+    name: 'overnight_score ≥ 4',
     where: 'enrichment-trigger',
-    why: 'Five deterministic premium-flow flags. A score of 1 means at least one flag fired — minimum quality threshold for any candidate to enter the daily pool.',
-  },
-  {
-    name: 'spread ≤ 8%',
-    where: 'enrichment-trigger',
-    why: 'Bid/ask spread relative to mid. Anything wider than 8% gets cleared at the wrong end and ruins the bracket math. Hard cap (tightened from 10% on 2026-06-02).',
+    why: 'Five deterministic premium-flow flags combine into a 0–8 score. The floor was raised from 1 to 4 on 2026-06-05 to drop the proven-weak low-score dregs. It is a floor, not a ceiling — we deliberately do not cap the top, because the tournament does the discriminating from here.',
   },
   {
     name: 'directional UOA > $500K',
     where: 'enrichment-trigger',
-    why: 'Direction-aware unusual options activity. Bullish picks need call dollar volume above $500K; bearish picks need put dollar volume above $500K. Below this, flow is too thin to be informative.',
+    why: 'Direction-aware unusual options activity. Bullish candidates need call dollar volume above $500K; bearish candidates need put dollar volume above $500K. Below this, flow is too thin to be informative.',
   },
   {
-    name: '5–13% out-of-the-money',
-    where: 'signal-notifier',
-    why: 'Moneyness band. Closer than 5% OTM is closer-to-ATM and behaves more like delta-1 stock; further than 13% OTM is too lottery-ticket. The 5–13% band is the gamma-sensitive zone V5.4 targets (cap widened from 10% on 2026-06-02).',
+    name: 'all directions kept',
+    where: 'enrichment-trigger',
+    why: 'Both bullish (calls) and bearish (puts) candidates enter the pool. There is no direction filter — the 2026 bearish drag looks regime-conditional, so excluding it is shelved until the live cohort is large enough to judge.',
+  },
+  {
+    name: 'no earnings during the 3-day hold',
+    where: 'signal-notifier · safety rail',
+    why: 'Exclude any ticker reporting earnings inside the hold window. Holding long single-leg options through an earnings print is a documented loss pattern (De Silva et al. 2026, Review of Finance; Cao & Han 2013, JFE). Fail-closed if the earnings calendar is unreachable.',
   },
   {
     name: 'VIX ≤ VIX3M (no backwardation)',
-    where: 'signal-notifier',
-    why: 'Term-structure regime gate. When 30-day VIX exceeds 90-day VIX3M, the market is pricing acute near-term stress and directional options trades degrade. Skip the day.',
-  },
-  {
-    name: 'LIMIT 1, deterministic tiebreaker',
-    where: 'signal-notifier',
-    why: '4-key cascade: overnight_score → open interest → tighter spread → alphabetical ticker. Same inputs, same output. No "best of three" judgment calls. (Re-ranked 2026-06-02 to drop V/OI, which realized-PnL analysis showed had no selection value.)',
+    where: 'signal-notifier · safety rail',
+    why: 'Term-structure regime gate. When 30-day VIX exceeds 90-day VIX3M, the market is pricing acute near-term stress and directional long-premium trades degrade. Skip the entire day. Fail-closed if either value is missing.',
   },
 ];
 
@@ -99,12 +94,16 @@ const bracketRules = [
 
 const dontDoList = [
   {
-    label: 'No LLMs in pricing decisions.',
-    detail: 'Gemini powers webapp text and editorial blog posts. Never trade selection. Selection is deterministic SQL + Python.',
+    label: 'No black-box scoring model.',
+    detail: 'The selection tournament is an LLM, but it has no learned weights, no rubric, and no memory of past trades — just a simple prompt and a randomized bracket, run three times for consensus. Every candidate is leakage-checked before the model ever sees it.',
+  },
+  {
+    label: 'No model in the execution path.',
+    detail: 'The tournament picks the ticker; it never sets the price levels. Entry, the −60% stop, the +80% target, and the 3-day exit are fixed code with no model in the loop.',
   },
   {
     label: 'No manual override of the engine.',
-    detail: 'Whatever clears all gates is the pick. No "I\'ve got a feeling" veto, no last-minute swap.',
+    detail: 'Whatever wins the tournament is the pick. No "I\'ve got a feeling" veto, no last-minute swap.',
   },
   {
     label: 'No live execution.',
@@ -112,7 +111,7 @@ const dontDoList = [
   },
   {
     label: 'No track-record marketing pre-30-trades.',
-    detail: 'Until V5.4 has 30 closed paper trades the engine ships methodology only. No win rate, no Sharpe, no expectancy claims.',
+    detail: 'Until V6 has 30 closed paper trades the engine ships methodology only. No win rate, no Sharpe, no expectancy claims.',
   },
 ];
 
@@ -121,7 +120,7 @@ const methodologySchema = {
   '@type': 'TechArticle',
   headline: 'GammaRips Methodology — Where every number comes from',
   description:
-    'The data sources, gate thresholds, bracket math, and tiebreakers behind every V5.4 pick. Deterministic and reproducible.',
+    'The data sources, the enrichment bar, the selection tournament, and the bracket math behind every V6 pick. Auditable and fully logged.',
   url: 'https://gammarips.com/methodology',
   publisher: {
     '@type': 'Organization',
@@ -144,9 +143,9 @@ export default function MethodologyPage() {
             Where every number in our engine comes from.
           </h1>
           <p className="text-lg text-muted-foreground">
-            Every threshold, every data source, every tiebreaker — documented. The GammaRips engine is
-            deterministic: same inputs produce the same output, every time. This page is the audit
-            trail.
+            Every threshold, every data source, every step — documented and logged. Selection runs an
+            LLM bracket tournament; execution is fixed code. Nothing in the pick path is human-curated,
+            and every candidate is leakage-checked. This page is the audit trail.
           </p>
         </header>
 
@@ -179,25 +178,29 @@ export default function MethodologyPage() {
         <section className="mb-16">
           <div className="flex items-center gap-2 mb-6">
             <Filter className="h-5 w-5 text-primary" />
-            <h2 className="text-2xl font-bold">The V5.4 gate stack</h2>
+            <h2 className="text-2xl font-bold">The enrichment bar and two safety rails</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            Six deterministic checks, applied in order. A signal that fails any one gate is
-            discarded. On a typical morning, ~40% of trading days produce zero picks because nothing
-            clears all six.
+            V6 has <strong className="text-foreground">no per-candidate selection gates</strong>. The
+            old moneyness, open-interest, volume, DTE, and V/OI filters were removed on 2026-06-04 —
+            they choked real winners on stale scan-time data. Every signal that clears the enrichment
+            bar below and the two safety rails goes into the tournament; the engine does its
+            discriminating there, not with a filter cascade. (Bid/ask spread is no longer shown or
+            gated — this Polygon data tier serves no live options quotes, so there is no real spread
+            to display.)
           </p>
           <div className="space-y-4">
-            {gates.map((gate, i) => (
-              <Card key={gate.name}>
+            {filters.map((filter, i) => (
+              <Card key={filter.name}>
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
                     <span className="text-2xl font-bold text-primary shrink-0 w-8">{i + 1}.</span>
                     <div className="flex-1">
-                      <h3 className="font-mono text-sm font-bold mb-1">{gate.name}</h3>
+                      <h3 className="font-mono text-sm font-bold mb-1">{filter.name}</h3>
                       <p className="text-xs text-muted-foreground mb-2">
-                        Applied in <code className="text-xs">{gate.where}</code>
+                        Applied in <code className="text-xs">{filter.where}</code>
                       </p>
-                      <p className="text-sm">{gate.why}</p>
+                      <p className="text-sm">{filter.why}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -210,13 +213,65 @@ export default function MethodologyPage() {
 
         <section className="mb-16">
           <div className="flex items-center gap-2 mb-6">
+            <GitBranch className="h-5 w-5 text-primary" />
+            <h2 className="text-2xl font-bold">The selection tournament</h2>
+          </div>
+          <p className="text-muted-foreground mb-6">
+            Once the enriched pool clears the two safety rails — on a busy day that&apos;s around 90
+            candidates — one pick is chosen by a <strong className="text-foreground">randomized
+            bracket tournament</strong>. Not a scoring formula, not a human.
+          </p>
+          <ul className="space-y-3 text-sm">
+            <li className="flex gap-3">
+              <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
+              <span>
+                <strong>Three independent brackets.</strong> Each one shuffles the full pool into a
+                fresh random order, then reduces it in batches of ≤10: an LLM (Gemini) reads each
+                batch and advances the top 2, round after round, until one winner remains
+                (≈94 → 20 → 4 → 1).
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
+              <span>
+                <strong>Consensus vote.</strong> The three bracket winners are compared. 3/3 agreement
+                → high confidence, 2/3 → medium, 1/3 → low. The consensus ticker is the pick.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
+              <span>
+                <strong>Dead-simple prompt.</strong> Each batch call gets one instruction — make money
+                buying a single option and sell it for a profit within three days — plus the daily
+                report and a per-contract JSON. No memory, no rubric, no composite weights.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
+              <span>
+                <strong>Fail-closed.</strong> Any error — a timeout, a pick outside the eligible set,
+                an all-leakage day — produces no email and a no-trade day. There is no fallback path;
+                tournament uptime is the only SLO.
+              </span>
+            </li>
+          </ul>
+          <p className="text-muted-foreground mt-6">
+            Every candidate is leakage-checked before it can enter a bracket: the judge never sees
+            anything that wasn&apos;t known at scan time.
+          </p>
+        </section>
+
+        <Separator className="my-12" />
+
+        <section className="mb-16">
+          <div className="flex items-center gap-2 mb-6">
             <Calculator className="h-5 w-5 text-primary" />
             <h2 className="text-2xl font-bold">The bracket math</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            Every V5.4 pick ships with the same execution rules. The bracket isn't a guess — it
-            came out of a sweep across thousands of historical signals where a −60/+80/3-day
-            envelope was the highest-EV configuration tested.
+            Every pick ships with the same execution rules, and they have not changed across strategy
+            versions. The bracket isn't a guess — it came out of a sweep across thousands of historical
+            signals where a −60/+80/3-day envelope was the highest-EV configuration tested.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {bracketRules.map((rule) => (
@@ -256,16 +311,17 @@ export default function MethodologyPage() {
             <li className="flex gap-3">
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Decision trail</strong> — every change to V5.4 (or its predecessors V3, V4)
-                ships with a dated decision document explaining the rationale and the evidence.
+                <strong>Decision trail</strong> — every change to the strategy (V6 today, and its
+                predecessors back to V3) ships with a dated decision document explaining the rationale
+                and the evidence.
               </span>
             </li>
             <li className="flex gap-3">
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Trace logging</strong> — enrichment, agent-arena, and overnight-report-generator
-                each write structured trace rows so a downstream auditor can reconstruct any
-                specific morning's reasoning end-to-end.
+                <strong>Trace logging</strong> — enrichment, the tournament judge, and
+                overnight-report-generator each write structured trace rows so a downstream auditor can
+                reconstruct any specific morning's reasoning end-to-end, including every bracket round.
               </span>
             </li>
           </ul>
@@ -295,7 +351,7 @@ export default function MethodologyPage() {
         <section className="text-center">
           <h2 className="text-2xl font-bold mb-3">Want the daily pick delivered?</h2>
           <p className="text-muted-foreground mb-6">
-            Browse the haystack on the signals page free, or get the curated single V5.4 pick
+            Browse the haystack on the signals page free, or get the curated single V6 pick
             delivered to your inbox + private WhatsApp group at 07:30 ET each weekday.
           </p>
           <div className="flex gap-3 justify-center flex-wrap">

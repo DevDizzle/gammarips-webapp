@@ -635,32 +635,40 @@ export async function getRecentSignals(
 
 /**
  * Distinct tickers (with the most recent scan_date that contained them) for the
- * sitemap. The ~590 /signals/:ticker pages are our largest indexable inventory
- * but were absent from sitemap.xml; this surfaces them with a real lastmod so
- * Google can discover and freshness-rank them. Scoped to top signals from recent
- * scans (the pages with actual content + engine seoMetadata), not every enriched
- * row, to avoid bloating the sitemap with thin pages.
+ * sitemap. The /signals/:ticker pages are our largest indexable inventory.
+ *
+ * The sitemap MUST be a SUPERSET of every indexable detail page. The route
+ * (`/signals/[ticker]`) resolves a page for ANY ticker that has at least one
+ * doc in `overnight_signals` (via getMostRecentSignalForTicker) and 404s only
+ * when none exists. The previous per-date bull/bear loop capped at `perDate`
+ * per direction and only walked the most-recent N scan dates, so tickers that
+ * ranked below the cap, or whose only signal predated the window, stayed live
+ * + indexable yet dropped out of the sitemap (AMD/ABBV/AVGO/CMG/JPM were all
+ * missing). We now enumerate the collection directly: one ordered scan over
+ * `overnight_signals` (newest scan_date first), deduped to the most-recent
+ * scan per ticker. That makes "in the sitemap" == "the route would render an
+ * indexable page", which is the definition of indexable from the route's own
+ * 404 logic (any ticker with a doc → 200; none → notFound).
+ *
+ * Efficiency: a single bounded query (`maxDocs`, default 6000) ordered by
+ * scan_date desc — first-seen-per-ticker is therefore the most recent scan, so
+ * no in-memory date compare is needed. Resilience: the existing try/catch still
+ * returns [] on any failure so the sitemap build never blocks.
  */
 export async function getSignalTickersForSitemap(
-  days: number = 30,
-  perDate: number = 12
+  maxDocs: number = 6000
 ): Promise<Array<{ ticker: string; scanDate: string }>> {
   noStore();
   try {
-    const reports = await getAllDailyReports(days + 10);
-    const dates = Array.from(new Set(reports.map(r => r.scan_date)))
-      .filter(Boolean)
-      .sort((a, b) => (b || '').localeCompare(a || '')) // newest first
-      .slice(0, days);
-    const seen = new Map<string, string>(); // ticker -> most-recent scanDate
-    for (const date of dates) {
-      const [bull, bear] = await Promise.all([
-        getOvernightSignals(date, 'bull', 0, perDate),
-        getOvernightSignals(date, 'bear', 0, perDate),
-      ]);
-      for (const s of [...bull, ...bear]) {
-        if (s.ticker && !seen.has(s.ticker)) seen.set(s.ticker, s.scan_date || date);
-      }
+    const snapshot = await getDb().collection('overnight_signals')
+      .orderBy('scan_date', 'desc')
+      .limit(maxDocs)
+      .get();
+    const seen = new Map<string, string>(); // ticker -> most-recent scanDate (first seen wins)
+    for (const doc of snapshot.docs) {
+      const data = doc.data();
+      const ticker = data.ticker;
+      if (ticker && !seen.has(ticker)) seen.set(ticker, data.scan_date || '');
     }
     return Array.from(seen.entries()).map(([ticker, scanDate]) => ({ ticker, scanDate }));
   } catch (error) {

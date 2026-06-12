@@ -66,7 +66,10 @@ export default function SignalClientPage({
                 {signal.scan_date}
               </Badge>
             </div>
-            <p className="text-lg text-muted-foreground">Overnight Institutional Flow Signal</p>
+            <p className="text-lg text-muted-foreground">
+              Overnight Institutional Flow Signal
+              {signal.sector ? <span className="text-muted-foreground/70"> · {signal.sector}</span> : null}
+            </p>
             <Link
               href={`/reports/${signal.scan_date}`}
               className="mt-2 inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
@@ -246,6 +249,18 @@ export default function SignalClientPage({
                   <span className="font-mono font-bold">{signal.recommended_contract || "—"}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b">
+                  <span className="text-muted-foreground">Strike</span>
+                  <span className="font-mono">{signal.recommended_strike ? `$${signal.recommended_strike.toFixed(2)}` : "—"}</span>
+                </div>
+                <div className="flex justify-between py-2 border-b">
+                  <span className="text-muted-foreground">Expiration</span>
+                  <span className="font-mono">{signal.recommended_expiration || "—"}</span>
+                </div>
+                <div className="flex justify-between py-2 border-b">
+                  <span className="text-muted-foreground">Mid Price</span>
+                  <span className="font-mono">{signal.recommended_mid_price ? `$${signal.recommended_mid_price.toFixed(2)}` : "—"}</span>
+                </div>
+                <div className="flex justify-between py-2 border-b">
                   <span className="text-muted-foreground">Contract Score</span>
                   <span className="font-mono">{signal.contract_score ? `${signal.contract_score}/10` : "—"}</span>
                 </div>
@@ -284,11 +299,15 @@ export default function SignalClientPage({
                     {signal.sma_50 ? `$${signal.sma_50.toFixed(0)}` : "—"} / {signal.sma_200 ? `$${signal.sma_200.toFixed(0)}` : "—"}
                   </span>
                 </div>
-                <div className="flex justify-between py-2">
+                <div className="flex justify-between py-2 border-b">
                   <span className="text-muted-foreground">52W Range</span>
                   <span className="font-mono">
                     {signal.low_52w ? `$${signal.low_52w.toFixed(0)}` : "—"} — {signal.high_52w ? `$${signal.high_52w.toFixed(0)}` : "—"}
                   </span>
+                </div>
+                <div className="flex justify-between py-2">
+                  <span className="text-muted-foreground">RSI (14)</span>
+                  <span className="font-mono">{typeof signal.rsi_14 === 'number' ? signal.rsi_14.toFixed(0) : "—"}</span>
                 </div>
               </CardContent>
             </Card>

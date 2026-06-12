@@ -55,7 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // from the sitemap (Google discovered them only via internal links).
   let signalPages: MetadataRoute.Sitemap = [];
   try {
-    const tickers = await getSignalTickersForSitemap(30, 12);
+    const tickers = await getSignalTickersForSitemap();
     signalPages = tickers.map(({ ticker, scanDate }) => ({
       url: `${BASE_URL}/signals/${ticker}`,
       lastModified: scanDate || new Date().toISOString(),

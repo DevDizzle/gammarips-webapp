@@ -20,7 +20,7 @@ type SubscriptionDialogProps = {
 
 const features = [
     { 
-        title: "Daily Top-Rated Call & Put Contracts",
+        title: "Daily Top-Rated Call Contracts",
         description: "Delivered to your dashboard & inbox" 
     },
     { 
@@ -28,8 +28,8 @@ const features = [
         description: "Ask questions about any ticker, setup, or strategy — instant analysis"
     },
     {
-        title: "Russell 1000 Coverage",
-        description: "Every stock scanned daily for momentum, flow, and opportunity"
+        title: "Full-Market Coverage",
+        description: "~5,230-ticker overnight scan for momentum, flow, and opportunity"
     },
     {
         title: "Full Confluence Dashboard",

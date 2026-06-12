@@ -16,7 +16,7 @@ export default function ArenaPage() {
         <CardHeader>
           <CardTitle className="text-3xl font-bold font-headline">Agent Arena — retired</CardTitle>
           <CardDescription className="text-base">
-            The multi-model debate Arena has been retired. As of June 2026 the live engine selects each day&apos;s single pick with a randomized <Link href="/how-it-works" className="underline">bracket tournament</Link> — three independent brackets over every enriched signal, with the consensus winner becoming the pick. No debate transcript, no five-model panel.
+            The multi-model debate Arena has been retired. As of June 2026 the live engine selects each day&apos;s single pick with a randomized <Link href="/how-it-works" className="underline">bracket tournament</Link> — three independent brackets over the ~50 bullish setups, with the consensus winner becoming the pick. No debate transcript, no five-model panel.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

@@ -45,12 +45,12 @@ const filters = [
   {
     name: 'directional UOA > $500K',
     where: 'enrichment-trigger',
-    why: 'Direction-aware unusual options activity. Bullish candidates need call dollar volume above $500K; bearish candidates need put dollar volume above $500K. Below this, flow is too thin to be informative.',
+    why: 'Direction-aware unusual options activity. Bullish candidates need call dollar volume above $500K. Below this, flow is too thin to be informative.',
   },
   {
-    name: 'all directions kept',
+    name: 'BULLISH-only + delta edge-rank to top ~50',
     where: 'enrichment-trigger',
-    why: 'Both bullish (calls) and bearish (puts) candidates enter the pool. There is no direction filter — the 2026 bearish drag looks regime-conditional, so excluding it is shelved until the live cohort is large enough to judge.',
+    why: 'A hard bullish gate (since 2026-06-11): only call setups enter the pool. The surviving bullish names are then delta-edge-ranked to the ~50 strongest setups before the tournament.',
   },
   {
     name: 'no earnings during the 3-day hold',
@@ -181,11 +181,12 @@ export default function MethodologyPage() {
             <h2 className="text-2xl font-bold">The enrichment bar and two safety rails</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            V6 has <strong className="text-foreground">no per-candidate selection gates</strong>. The
-            old moneyness, open-interest, volume, DTE, and V/OI filters were removed on 2026-06-04 —
-            they choked real winners on stale scan-time data. Every signal that clears the enrichment
-            bar below and the two safety rails goes into the tournament; the engine does its
-            discriminating there, not with a filter cascade. (Bid/ask spread is no longer shown or
+            In V6, selection is now the <strong className="text-foreground">BULLISH-only gate plus a
+            delta edge-rank to the top ~50 bullish setups</strong>. The old moneyness, open-interest,
+            volume, DTE, and V/OI filters were removed on 2026-06-04 — they choked real winners on
+            stale scan-time data. The ~50 bullish setups that clear the enrichment bar below and the
+            two safety rails go into the tournament; the engine does its discriminating there, not
+            with a filter cascade. (Bid/ask spread is no longer shown or
             gated — this Polygon data tier serves no live options quotes, so there is no real spread
             to display.)
           </p>
@@ -217,18 +218,18 @@ export default function MethodologyPage() {
             <h2 className="text-2xl font-bold">The selection tournament</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            Once the enriched pool clears the two safety rails — on a busy day that&apos;s around 90
-            candidates — one pick is chosen by a <strong className="text-foreground">randomized
+            Once the enriched pool clears the two safety rails — on a busy day that&apos;s around 50
+            bullish candidates — one pick is chosen by a <strong className="text-foreground">randomized
             bracket tournament</strong>. Not a scoring formula, not a human.
           </p>
           <ul className="space-y-3 text-sm">
             <li className="flex gap-3">
               <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Three independent brackets.</strong> Each one shuffles the full pool into a
-                fresh random order, then reduces it in batches of ≤10: an LLM (Gemini) reads each
-                batch and advances the top 2, round after round, until one winner remains
-                (≈94 → 20 → 4 → 1).
+                <strong>Three independent brackets.</strong> Each one shuffles the ~50-name bullish
+                pool into a fresh random order, then reduces it in batches of ≤10: an LLM (Gemini)
+                reads each batch and advances the top 2, round after round, until one winner remains
+                (≈50 → 10 → 1 per bracket).
               </span>
             </li>
             <li className="flex gap-3">

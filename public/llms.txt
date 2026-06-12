@@ -12,7 +12,7 @@ Paper-trading, educational only. Not investment advice.
 - [Today's pick](https://gammarips.com/signals)
 - [Scorecard (paper-trading ledger)](https://gammarips.com/scorecard)
 - [Pricing — Free / Pro $39](https://gammarips.com/pricing)
-- [Developer docs — 15 MCP tools, no auth](https://gammarips.com/developers)
+- [Developer docs — 18 MCP tools, no auth](https://gammarips.com/developers)
 
 ## Gate stack (V6)
 
@@ -26,11 +26,11 @@ Paper-trading, educational only. Not investment advice.
 - Endpoint: `https://gammarips-mcp-406581297632.us-central1.run.app/sse`
 - Transport: SSE
 - Primary tool: `get_todays_pick`
-- All 15 tools: `get_todays_pick`, `list_todays_picks`, `get_freemium_preview`, `get_overnight_signals`, `get_enriched_signals`, `get_signal_detail`, `get_enriched_signal_schema`, `get_signal_performance`, `get_win_rate_summary`, `get_open_position`, `get_position_history`, `get_daily_report`, `get_report_list`, `get_available_dates`, `web_search`.
+- All 18 tools: `get_todays_pick`, `list_todays_picks`, `get_freemium_preview`, `get_overnight_signals`, `get_enriched_signals`, `get_signal_detail`, `get_enriched_signal_schema`, `get_signal_performance`, `get_win_rate_summary`, `get_open_position`, `get_position_history`, `get_daily_report`, `get_report_list`, `get_available_dates`, `web_search`, `get_market_calendar_status`, `get_signal_explainer`, `get_historical_performance`.
 
 ## Pricing
 
-- **Free** — today's pick on the webapp at 07:30 ET, full signals list, daily report, public scorecard, all 15 MCP tools.
+- **Free** — today's pick on the webapp at 07:30 ET, full signals list, daily report, public scorecard, all 18 MCP tools.
 - **Pro $39/mo** — everything in Free, plus a WhatsApp push at 07:30 ET, an exit reminder at 15:50 ET day-3, and an AI chat agent inside the private WhatsApp group. 7-day free trial. Cancel anytime.
 
 ## Disclaimers

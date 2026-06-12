@@ -4,14 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
 export const metadata = {
-  title: "GammaRips MCP API — 15 Tools for AI Agents",
+  title: "GammaRips MCP API — 18 Tools for AI Agents",
   description:
-    "Connect any AI agent, research notebook, or trading bot to the paper-trading engine. 15 MCP tools, SSE transport, no auth, no key.",
+    "Connect any AI agent, research notebook, or trading bot to the paper-trading engine. 18 MCP tools, SSE transport, no auth, no key.",
   alternates: { canonical: "https://gammarips.com/developers" },
   openGraph: {
-    title: "GammaRips MCP API — 15 Tools for AI Agents",
+    title: "GammaRips MCP API — 18 Tools for AI Agents",
     description:
-      "Connect any AI agent, research notebook, or trading bot to the paper-trading engine. 15 MCP tools, no auth.",
+      "Connect any AI agent, research notebook, or trading bot to the paper-trading engine. 18 MCP tools, no auth.",
     url: "https://gammarips.com/developers",
   },
 };
@@ -21,7 +21,7 @@ const webApiSchema = {
   "@type": "WebAPI",
   name: "GammaRips MCP API",
   description:
-    "Model Context Protocol (MCP) API for the paper-trading options engine. 15 tools covering today's pick, enriched signals, win-rate summaries, live open position, daily reports, and historical ledger queries.",
+    "Model Context Protocol (MCP) API for the paper-trading options engine. 18 tools covering today's pick, enriched signals, win-rate summaries, live open position, daily reports, and historical ledger queries.",
   url: "https://gammarips-mcp-406581297632.us-central1.run.app/sse",
   documentation: "https://gammarips.com/developers",
   provider: {
@@ -46,7 +46,7 @@ export default function DevelopersPage() {
             Build on the V6 Engine
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            One pick a day, 15 MCP tools, no auth. Point your AI agent, research notebook,
+            One pick a day, 18 MCP tools, no auth. Point your AI agent, research notebook,
             or trading bot at the endpoint and go.
           </p>
           <div
@@ -238,7 +238,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
               <div className="text-sm text-primary mb-2">MCP API</div>
               <div className="text-3xl font-bold mb-4">$0</div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ All 15 tools unlocked</li>
+                <li>✓ All 18 tools unlocked</li>
                 <li>✓ No auth, no API key</li>
                 <li>✓ SSE transport</li>
                 <li>✓ Rate-limited fairly; reach out for heavy use</li>

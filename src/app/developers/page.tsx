@@ -163,7 +163,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
             />
             <ToolCard
               name="get_enriched_signals"
-              description="Signals after the V6 enrichment filter (score ≥ 4, directional UOA > $500K, both directions). Includes thesis, technicals, recommended contract."
+              description="Signals after the V6 enrichment filter (score ≥ 4, directional UOA > $500K, BULLISH-only, delta edge-ranked to ~50). Includes thesis, technicals, recommended contract."
               params={{
                 date: "YYYY-MM-DD (optional)",
                 direction: "bull | bear (optional)",
@@ -197,7 +197,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
             />
             <ToolCard
               name="get_win_rate_summary"
-              description="Aggregate signal-level win rate across a rolling window. Note: this is the signal universe (~30/day), not the V6 paper-trader universe (1/day)."
+              description="Aggregate signal-level win rate across a rolling window. Note: this is the enriched bullish set (~50/day), not the 1/day tournament pick."
               params={{ days: "integer (default 30)" }}
             />
             <ToolCard

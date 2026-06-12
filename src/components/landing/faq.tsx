@@ -8,19 +8,19 @@ import {
 export const faqs = [
   {
     question: "What exactly lands on my phone every morning?",
-    answer: "By 07:30 ET you get one pick or none. A ticker, a direction (call or put), a specific contract with strike and expiration, a recommended mid price, a −60% stop, and a +80% target. Some days the engine stays out — when VIX closes above VIX3M (backwardation), when the enriched pool is empty, or when the selection tournament fails closed, nothing is sent. On those days, do nothing. That's the routine."
+    answer: "By 07:30 ET you get one pick or none. A ticker, a bullish call contract — strike and expiration, a recommended mid price, a −60% stop, and a +80% target. Some days the engine stays out — when VIX closes above VIX3M (backwardation), when the enriched pool is empty, or when the selection tournament fails closed, nothing is sent. On those days, do nothing. That's the routine."
   },
   {
     question: "How does the engine pick which one?",
-    answer: "A tournament, not a scoring formula. First a thin bar: overnight score ≥ 4 with directional dollar volume > $500K to be enriched at all, then two safety rails (no earnings during the 3-day hold; VIX ≤ VIX3M). There are no per-contract selection gates anymore. Everything that survives — often ~90 candidates — goes into a randomized bracket tournament: three independent brackets each shuffle the pool, an LLM advances the top 2 from batches of ≤10 round after round until one winner remains, and the three bracket winners vote (3/3 = high confidence, 2/3 = medium, 1/3 = low). No memory, no rubric, no weights, and every candidate is leakage-checked first."
+    answer: "A tournament, not a scoring formula. First a thin bar: overnight score ≥ 4 with directional dollar volume > $500K to be enriched at all, then two safety rails (no earnings during the 3-day hold; VIX ≤ VIX3M). Then a BULLISH-only gate and a delta edge-rank keep the ~50 strongest bullish setups, which go into a randomized bracket tournament: three independent brackets each shuffle the pool, an LLM advances the top 2 from batches of ≤10 round after round until one winner remains, and the three bracket winners vote (3/3 = high confidence, 2/3 = medium, 1/3 = low). No memory, no rubric, no weights, and every candidate is leakage-checked first."
   },
   {
     question: "What's free, what's paid, what do you actually charge for?",
-    answer: "Free webapp: the full signals haystack — every signal that cleared the enrichment gates this morning, with per-ticker drill-downs, daily reports, methodology, and the public scorecard. Pro ($39/mo, 7-day free trial): the curation. The engine picks ONE trade each weekday morning — strike, DTE, contract, stop, target, exit — and delivers it to your inbox + private WhatsApp group at 07:30 ET. Plus access to an AI chat agent in the WhatsApp group that answers questions against live engine data."
+    answer: "Free webapp: the ~50 bullish setups we analyze each morning, with per-ticker drill-downs, daily reports, methodology, and the public scorecard. Pro ($39/mo, 7-day free trial): the curation. The engine picks ONE trade each weekday morning — strike, DTE, contract, stop, target, exit — and delivers it to your inbox + private WhatsApp group at 07:30 ET. Plus access to an AI chat agent in the WhatsApp group that answers questions against live engine data."
   },
   {
     question: "Why is the curated pick blurred on the homepage?",
-    answer: "Because the curation IS the value. The free webapp shows every signal — that's the haystack. Pro picks THE one for you so you don't have to scan it. The blurred card on the homepage exists so you can see that we picked something today; subscribing reveals which one and gets it delivered to your inbox + WhatsApp at 07:30 ET. The signals haystack itself is never paywalled."
+    answer: "Because the curation IS the value. The free webapp shows the ~50 bullish setups we analyze each morning — that's the haystack. Pro picks THE one for you so you don't have to scan it. The blurred card on the homepage exists so you can see that we picked something today; subscribing reveals which one and gets it delivered to your inbox + WhatsApp at 07:30 ET. The signals haystack itself is never paywalled."
   },
   {
     question: "What if the trade hits −60% right after I buy it?",

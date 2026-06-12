@@ -7,7 +7,7 @@ import { ArrowRight, AlertTriangle } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'How GammaRips Works — Overnight Options Scanner, V6 Tournament',
-  description: 'The scanner ingests overnight institutional options flow across 5,230+ tickers, enriches the standouts, and a randomized bracket tournament picks one trade per day with pre-set stop and target. Here is the full pipeline — no discretion, no paid-first tier.',
+  description: 'The scanner ingests overnight institutional options flow across 5,230+ tickers, enriches the standouts, applies a BULLISH-only gate and delta edge-rank to the top ~50 bullish setups, and a randomized bracket tournament picks one bullish call per day with pre-set stop and target. Here is the full pipeline — no discretion, no paid-first tier.',
   alternates: { canonical: 'https://gammarips.com/how-it-works' },
   openGraph: {
     title: 'How GammaRips Works — Overnight Options Scanner',
@@ -94,13 +94,13 @@ export default function HowItWorksPage() {
           </Card>
           <Card className="bg-card/50">
             <CardContent className="p-5">
-              <h3 className="font-bold font-headline text-lg">Both directions</h3>
-              <p className="text-sm text-muted-foreground mt-1">Bullish (calls) and bearish (puts) candidates both qualify. There is no direction filter and no per-contract selection gate &mdash; everything that clears the bar enters the pool.</p>
+              <h3 className="font-bold font-headline text-lg">Bullish only</h3>
+              <p className="text-sm text-muted-foreground mt-1">Bullish calls only &mdash; a hard gate since 2026-06-11. The pool is then delta-edge-ranked to the ~50 strongest bullish setups.</p>
             </CardContent>
           </Card>
         </div>
         <p className="text-muted-foreground mt-6 leading-relaxed">
-          Whatever clears the bar is enriched with news context, technical levels, and a recommended contract &mdash; that full list is published to <Link href="/signals" className="text-primary hover:underline">/signals</Link>.
+          Whatever clears the bar is enriched with news context, technical levels, and a recommended contract &mdash; the ~50 bullish setups are published to <Link href="/signals" className="text-primary hover:underline">/signals</Link>.
         </p>
       </section>
 
@@ -116,7 +116,7 @@ export default function HowItWorksPage() {
           <li><strong className="text-foreground">VIX &le; VIX3M</strong> &mdash; the term structure must be in contango. If VIX is above VIX3M (backwardation), the regime gate fails closed and the engine skips the day.</li>
         </ul>
         <p className="text-muted-foreground leading-relaxed">
-          Everything that survives the two rails &mdash; on a busy day around 90 candidates, with no further gates &mdash; goes into a <strong className="text-foreground">randomized bracket tournament</strong>:
+          Everything that survives the two rails &mdash; on a busy day around 50 bullish setups &mdash; goes into a <strong className="text-foreground">randomized bracket tournament</strong>:
         </p>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
           <li><strong className="text-foreground">Three independent brackets.</strong> Each shuffles the pool into a fresh random order and reduces it in batches of ≤10 &mdash; an LLM advances the top 2 from each batch, round after round, until one winner remains.</li>

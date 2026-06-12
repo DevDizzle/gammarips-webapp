@@ -7,7 +7,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   // Root layout applies the `%s | GammaRips` title template — no suffix here.
   title: "Overnight Options Flow Scanner — Daily Unusual Options Activity",
-  description: "Daily options signals scanner. GammaRips detects overnight unusual options activity across 5,230+ tickers — volume, open interest, directional dollar flow — and ranks it before the market opens. One pick a day, pushed to phone at 07:30 ET.",
+  description: "Daily options signals scanner. From an overnight scan across 5,230+ tickers, GammaRips publishes the ~50 bullish setups it analyzes each morning — volume, open interest, directional dollar flow — ranked before the market opens. One pick a day, pushed to phone at 07:30 ET.",
   alternates: { canonical: 'https://gammarips.com/signals' },
 };
 
@@ -16,18 +16,17 @@ export default async function SignalsPage() {
   const reportDate = summary?.report_date || summary?.scan_date || new Date().toISOString().split('T')[0];
   const queryDate = summary?.scan_date || reportDate;
 
-  const [bullSignals, bearSignals, recentSignals] = await Promise.all([
+  const [bullSignals, recentSignals] = await Promise.all([
     getOvernightSignals(queryDate, 'bull', 0, 100),
-    getOvernightSignals(queryDate, 'bear', 0, 100),
     getRecentSignals(queryDate, 4, 6),
   ]);
 
-  const allSignals = [...bullSignals, ...bearSignals];
+  const allSignals = bullSignals;
   const indexSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "Overnight Options Flow Scanner",
-    "description": "Daily unusual options activity across 5,230+ tickers, reported before the market opens.",
+    "description": "The ~50 bullish setups GammaRips analyzes each morning, drawn from an overnight scan across 5,230+ tickers and reported before the market opens.",
     "url": "https://gammarips.com/signals",
     "mainEntity": {
       "@type": "ItemList",
@@ -47,14 +46,14 @@ export default async function SignalsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold font-headline mb-2">Overnight Options Flow</h1>
           <p className="text-muted-foreground mb-6">
-            Full list of unusual options activity detected overnight across 5,230+ tickers, reported on {reportDate}.
+            The bullish setups GammaRips analyzed today, from an overnight scan across 5,230+ tickers — reported {reportDate}.
             {summary?.underlying_scan_date && summary.underlying_scan_date !== reportDate && (
               <span className="block text-sm opacity-80 mt-1">Based on overnight flow from {summary.underlying_scan_date}</span>
             )}
           </p>
           <div className="text-sm text-muted-foreground space-y-3 max-w-3xl leading-relaxed">
             <p>
-              GammaRips is a daily options signals scanner. Every night at 23:00 ET, the engine ingests institutional options flow &mdash; volume, open interest, unusual activity, and directional dollar flow &mdash; across every optionable U.S. equity. Candidates clear a thin <Link href="/methodology" className="text-primary hover:underline">enrichment bar</Link>: <strong className="text-foreground">overnight score &ge; 4 with directional UOA &gt; $500K, both directions</strong>. There are no per-contract selection gates. What you see below is the full enriched flow for today.
+              GammaRips is a daily options signals scanner. Every night at 23:00 ET, the engine ingests institutional options flow &mdash; volume, open interest, unusual activity, and directional dollar flow &mdash; across every optionable U.S. equity. Candidates clear a thin <Link href="/methodology" className="text-primary hover:underline">enrichment bar</Link>: <strong className="text-foreground">overnight score &ge; 4 with directional UOA &gt; $500K</strong> &mdash; then a BULLISH-only gate and a delta edge-rank keep the ~50 strongest bullish setups. What you see below is that bullish set (we trade calls only).
             </p>
             <p>
               From this list, <Link href="/how-it-works" className="text-primary hover:underline">one single contract</Link> is chosen by a randomized bracket tournament and pushed to the private WhatsApp group at <strong className="text-foreground">07:30 ET</strong> with pre-set stop (&minus;60%), target (+80%), and a 3-day hold window. Free readers see the same pick on the home page at the exact same second. No paid-first tier. Browse the raw scan here, or subscribe for the one-a-day WhatsApp push.
@@ -69,7 +68,6 @@ export default async function SignalsPage() {
 
         <div className="grid gap-12">
           <SignalsTable title="Bullish Flow" signals={bullSignals} />
-          <SignalsTable title="Bearish Flow" signals={bearSignals} />
         </div>
 
         {/* Recent Signals — keeps prior-day detail pages one click from this

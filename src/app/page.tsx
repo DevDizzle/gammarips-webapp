@@ -38,9 +38,8 @@ export default async function LandingPage() {
   const cohortStats = await getCohortStats();
   const blogPosts = await getBlogPostsAdmin();
 
-  const topBull = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 3) : [];
-  const topBear = summary ? await getOvernightSignals(summary.scan_date, 'bear', 0, 2) : [];
-  const topSignals = [...topBull, ...topBear]
+  const topBull = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 5) : [];
+  const topSignals = [...topBull]
     .sort((a, b) => (b.overnight_score || 0) - (a.overnight_score || 0))
     .slice(0, 5);
 
@@ -77,7 +76,7 @@ export default async function LandingPage() {
       "itemListElement": topSignals.map((signal: any, index: number) => ({
         "@type": "ListItem",
         "position": index + 1,
-        "name": `${signal.ticker} ${signal.direction === 'BULLISH' ? 'BULL' : 'BEAR'} Options Flow. Score: ${signal.overnight_score}`,
+        "name": `${signal.ticker} BULL Options Flow. Score: ${signal.overnight_score}`,
         "description": signal.thesis || `${signal.ticker} signal`
       }))
     }
@@ -195,7 +194,9 @@ export default async function LandingPage() {
                   </Link>
                 </div>
                 
-                {/* Signal counts */}
+                {/* Signal counts — raw overnight scan (all directions), before
+                    the BULLISH-only gate. GammaRips trades the bullish side only. */}
+                <p className="text-xs text-muted-foreground mb-2">Raw overnight scan (all directions)</p>
                 <div className="flex gap-6 mb-4">
                   <div>
                     <span className="text-3xl font-bold">{report?.total_signals || summary.total_signals}</span>
@@ -247,10 +248,8 @@ export default async function LandingPage() {
                 <Card key={signal.id} className="bg-card/50">
                   <CardContent className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <span className={`text-xs font-bold px-2 py-1 rounded ${
-                        signal.direction === 'BULLISH' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'
-                      }`}>
-                        {signal.direction === 'BULLISH' ? '📈 BULL' : '📉 BEAR'}
+                      <span className="text-xs font-bold px-2 py-1 rounded bg-green-500/20 text-green-500">
+                        📈 BULL
                       </span>
                       <div>
                         <div className="flex items-center gap-2">

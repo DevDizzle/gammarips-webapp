@@ -27,12 +27,12 @@ const engineSteps = [
   {
     icon: <CheckCircle2 className="h-6 w-6 text-primary" />,
     title: 'Enrichment',
-    description: 'At 05:30 ET candidates clear a thin enrichment bar: overnight_score ≥ 4 with directional UOA > $500K, both directions. There are no per-contract selection gates — everything that clears the bar enters the pool.',
+    description: 'After the scan, candidates clear a thin enrichment bar: overnight_score ≥ 4 with directional UOA > $500K, then a BULLISH-only gate and a delta edge-rank to the ~50 strongest bullish setups.',
   },
   {
     icon: <MessageSquare className="h-6 w-6 text-primary" />,
     title: 'One pick, or none',
-    description: 'At 07:30 ET, two safety rails run first (no earnings during the hold, VIX ≤ VIX3M), then a randomized bracket tournament over the full pool picks one ticker by 3-bracket consensus. Some days the pool is empty or it fails closed and the push says no trade.',
+    description: 'At 07:30 ET, two safety rails run first (no earnings during the hold, VIX ≤ VIX3M), then a randomized bracket tournament over the ~50 bullish setups picks one ticker by 3-bracket consensus. Some days the pool is empty or it fails closed and the push says no trade.',
   },
   {
     icon: <AlarmClock className="h-6 w-6 text-primary" />,

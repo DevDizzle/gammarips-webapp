@@ -44,7 +44,7 @@ const disclosures = [
     number: '03',
     title: 'No track-record marketing pre-30-trades.',
     body: [
-      "The current V7 strategy went live on the forward paper-trader on June 17, 2026, re-simulating the existing cohort (running since June 4) under the same-day exit. Until the V7 ledger has 30 closed paper trades, GammaRips does not publish or market any aggregate performance number — no win rate, no Sharpe ratio, no expectancy claim, no \"we returned X%.\"",
+      "The current V7 strategy went live on the forward paper-trader on June 17, 2026, re-simulating the existing cohort (first trade June 8) under the same-day exit. Until the V7 ledger has 30 closed paper trades, GammaRips does not publish or market any aggregate performance number — no win rate, no Sharpe ratio, no expectancy claim, no \"we returned X%.\"",
       "Below 30 closed trades the sample size is too small for any statistic to be informative. We say this explicitly in every channel and we will not be talked into selectively quoting early winners.",
       "Once the 30-trade gate is reached, all aggregate performance numbers will be published with their confidence intervals, the full sample, and the methodology used to compute them. Until then: methodology only.",
     ],

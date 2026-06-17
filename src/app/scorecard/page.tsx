@@ -44,6 +44,13 @@ function formatShort(iso?: string): string {
   return `${MONTHS[m - 1].slice(0, 3)} ${d}`;
 }
 
+// Whole-dollar money with thousands separators, e.g. "$1,913". Signed variant
+// for the Profit column ("+$483" / "-$314").
+function usd(v: number, signed = false): string {
+  const sign = signed ? (v >= 0 ? '+' : '-') : v < 0 ? '-' : '';
+  return `${sign}$${Math.abs(Math.round(v)).toLocaleString()}`;
+}
+
 // "$525 PUT" when parsed; otherwise the raw OCC symbol.
 function contractLabel(t: LedgerTrade): string {
   if (t.strike != null && t.option_type) {
@@ -161,14 +168,21 @@ export default async function ScorecardPage() {
                   <TableHead>Side</TableHead>
                   <TableHead>Contract</TableHead>
                   <TableHead className="text-right">Entry</TableHead>
-                  <TableHead>Exit</TableHead>
-                  <TableHead className="text-right">Return</TableHead>
+                  <TableHead className="text-right">#</TableHead>
+                  <TableHead className="text-right">Invested</TableHead>
+                  <TableHead className="text-right">Exit Value</TableHead>
+                  <TableHead className="text-right">Profit</TableHead>
+                  <TableHead className="text-right">ROI</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {trades.map((t) => {
                   const ret = t.return_pct * 100;
                   const retColor = ret >= 0 ? 'text-emerald-500' : 'text-red-500';
+                  // Defensive fallbacks for docs synced before the n_contracts /
+                  // exit_value_usd fields were added (exit value = invested + P&L).
+                  const contracts = t.n_contracts ?? Math.max(1, Math.round(t.capital_usd / (t.entry_price * 100)));
+                  const exitValue = t.exit_value_usd ?? t.capital_usd + t.pl_usd;
                   return (
                     <TableRow key={`${t.scan_date}_${t.ticker}`}>
                       <TableCell className="whitespace-nowrap text-muted-foreground">{formatShort(t.entry_date)}</TableCell>
@@ -176,9 +190,15 @@ export default async function ScorecardPage() {
                       <TableCell className="text-muted-foreground">{t.direction === 'BULLISH' ? 'Bullish' : 'Bearish'}</TableCell>
                       <TableCell className="whitespace-nowrap">{contractLabel(t)}</TableCell>
                       <TableCell className="text-right whitespace-nowrap">${t.entry_price.toFixed(2)}</TableCell>
-                      <TableCell className="capitalize text-muted-foreground">{t.exit_reason.toLowerCase()}</TableCell>
+                      <TableCell className="text-right text-muted-foreground">{contracts}</TableCell>
+                      <TableCell className="text-right whitespace-nowrap">{usd(t.capital_usd)}</TableCell>
+                      <TableCell className="text-right whitespace-nowrap">{usd(exitValue)}</TableCell>
+                      <TableCell className={`text-right whitespace-nowrap font-semibold ${t.pl_usd >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                        {usd(t.pl_usd, true)}
+                      </TableCell>
                       <TableCell className={`text-right font-semibold ${retColor}`}>
-                        {ret >= 0 ? '+' : ''}{ret.toFixed(1)}%
+                        <div>{ret >= 0 ? '+' : ''}{ret.toFixed(1)}%</div>
+                        <div className="text-xs font-normal capitalize text-muted-foreground">{t.exit_reason.toLowerCase()}</div>
                       </TableCell>
                     </TableRow>
                   );

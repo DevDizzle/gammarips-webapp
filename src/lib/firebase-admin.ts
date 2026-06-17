@@ -358,12 +358,14 @@ export interface LedgerTrade {
   dte: number | null;
   entry_date: string;              // ISO date
   entry_price: number;             // option premium per share at entry
+  n_contracts?: number;            // contracts sized to ~$500 (min 1)
   exit_date: string;               // ISO date
   hold_days: number | null;
   exit_reason: string;             // TARGET | STOP | TIMEOUT | TRAIL | ...
   return_pct: number;              // decimal (multiply by 100 for %)
-  capital_usd: number;
-  pl_usd: number;
+  capital_usd: number;             // "Invested" — n_contracts * entry_price * 100
+  exit_value_usd?: number;         // "Exit Value" — capital_usd * (1 + return_pct)
+  pl_usd: number;                  // "Profit" — capital_usd * return_pct
   policy_gate: string;
 }
 

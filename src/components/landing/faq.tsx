@@ -8,11 +8,11 @@ import {
 export const faqs = [
   {
     question: "What exactly lands on my phone every morning?",
-    answer: "By 07:30 ET you get one pick or none. A ticker, a bullish call contract — strike and expiration, a recommended mid price, a −60% stop, and a +80% target. Some days the engine stays out — when VIX closes above VIX3M (backwardation), when the enriched pool is empty, or when the selection tournament fails closed, nothing is sent. On those days, do nothing. That's the routine."
+    answer: "By 07:30 ET you get one pick or none. A ticker, a bullish call contract — strike and expiration, a recommended mid price, a −30% stop, and a +40% target. V7 'GIGO' — Get In, Get Out: entry 10:00 ET, exit flat 15:45 ET the same day. Some days the engine stays out — when VIX closes above VIX3M (backwardation), when the enriched pool is empty, or when the selection tournament fails closed, nothing is sent. On those days, do nothing. That's the routine."
   },
   {
     question: "How does the engine pick which one?",
-    answer: "A tournament, not a scoring formula. First a thin bar: overnight score ≥ 4 with directional dollar volume > $500K to be enriched at all, then two safety rails (no earnings during the 3-day hold; VIX ≤ VIX3M). Then a BULLISH-only gate and a delta edge-rank keep the ~50 strongest bullish setups, which go into a randomized bracket tournament: three independent brackets each shuffle the pool, an LLM advances the top 2 from batches of ≤10 round after round until one winner remains, and the three bracket winners vote (3/3 = high confidence, 2/3 = medium, 1/3 = low). No memory, no rubric, no weights, and every candidate is leakage-checked first."
+    answer: "A tournament, not a scoring formula. First a thin bar: overnight score ≥ 4 with directional dollar volume > $500K to be enriched at all, then two safety rails (no earnings during the same-day hold; VIX ≤ VIX3M). Then a BULLISH-only gate and a delta edge-rank keep the ~50 strongest bullish setups, which go into a randomized bracket tournament: three independent brackets each shuffle the pool, an LLM advances the top 2 from batches of ≤10 round after round until one winner remains, and the three bracket winners vote (3/3 = high confidence, 2/3 = medium, 1/3 = low). No memory, no rubric, no weights, and every candidate is leakage-checked first."
   },
   {
     question: "What's free, what's paid, what do you actually charge for?",
@@ -23,8 +23,8 @@ export const faqs = [
     answer: "Because the curation IS the value. The free webapp shows the ~50 bullish setups we analyze each morning — that's the haystack. Pro picks THE one for you so you don't have to scan it. The blurred card on the homepage exists so you can see that we picked something today; subscribing reveals which one and gets it delivered to your inbox + WhatsApp at 07:30 ET. The signals haystack itself is never paywalled."
   },
   {
-    question: "What if the trade hits −60% right after I buy it?",
-    answer: "Then the stop fills and you lose up to $300 on a $500 position. That is the engineered maximum per-trade loss, and it's the whole point. The trade either hits −60%, +80%, or closes at 3:50 ET on day-3 — nothing else. No 'should I hold one more day' decisions. A −60% fill is a clean outcome for the routine; you closed and moved on."
+    question: "What if the trade hits −30% right after I buy it?",
+    answer: "Then the stop fills and you lose up to $150 on a $500 position. That is the engineered maximum per-trade loss, and it's the whole point. The trade either hits −30%, +40%, or closes flat at 15:45 ET the same day — nothing else. No 'should I hold one more day' decisions. A −30% fill is a clean outcome for the routine; you closed and moved on."
   },
   {
     question: "Are you telling me what to trade?",
@@ -32,7 +32,7 @@ export const faqs = [
   },
   {
     question: "Where's the track record?",
-    answer: "On the Scorecard page, updated as the engine's paper trades close. We launched V6 — our randomized bracket tournament — on June 4, 2026; the V6 cohort starts fresh from that date. Sample size is small — we'll publish specific win-rate numbers when at least 30 V6 trades have closed. In the meantime, every signal is timestamped, every outcome is logged, and nothing is edited after the fact. That's the receipt."
+    answer: "On the Scorecard page, updated as the engine's paper trades close. We launched V7 — our randomized bracket tournament — on June 4, 2026; the V7 cohort starts fresh from that date. Sample size is small — we'll publish specific win-rate numbers when at least 30 V7 trades have closed. In the meantime, every signal is timestamped, every outcome is logged, and nothing is edited after the fact. That's the receipt."
   },
   {
     question: "Why one trade a day? Everyone else sends dozens.",

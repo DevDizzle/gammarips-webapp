@@ -320,7 +320,7 @@ export async function getTodaysPick(scanDate: string): Promise<TodaysPick | null
  *  in gammarips-engine for the schema contract. */
 export interface CohortStats {
   cohort_start: string;          // ISO date; currently "2026-05-07"
-  policy_version: string;        // "V6_TOURNAMENT"
+  policy_version: string;        // "V7_INTRADAY"
   as_of: any;                    // Firestore Timestamp
   trades_closed: number;
   trades_won: number;

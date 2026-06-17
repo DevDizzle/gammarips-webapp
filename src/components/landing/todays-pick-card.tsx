@@ -12,7 +12,7 @@ const SKIP_REASON_COPY: Record<string, string> = {
   vix_backwardation:
     "VIX closed above VIX3M today. Backwardation regime — the engine skips these days because long-premium setups fail disproportionately here.",
   earnings_overlap_all_candidates:
-    "Every candidate reports earnings during the 3-day hold window. The engine skips these days — holding long single-leg options through an earnings print is a literature-documented loss pattern (De Silva et al. 2026, RoF).",
+    "Every candidate reports earnings during the same-day hold window. The engine skips these days — holding long single-leg options through an earnings print is a literature-documented loss pattern (De Silva et al. 2026, RoF).",
   earnings_calendar_unavailable:
     "Earnings calendar unavailable — engine is standing down (fail-closed). The no-options-through-earnings rule is hard; we skip rather than guess.",
   v5_4_unavailable:
@@ -193,7 +193,7 @@ export function TodaysPickCard({
 
       <div className="flex items-center justify-between pt-2">
         <p className="text-xs text-muted-foreground leading-relaxed flex-1 pr-4">
-          Entry 10:00 ET day-1 · Stop −60% · Target +80% · Hold 3 trading days · Paper-trading
+          Entry 10:00 ET · Stop −30% · Target +40% · Exit 15:45 ET same day · Paper-trading
           performance, educational only. Not investment advice.
         </p>
         <span className="text-xs text-primary font-medium whitespace-nowrap inline-flex items-center gap-1 group-hover:gap-2 transition-all">

@@ -15,10 +15,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { date } = await params;
   const report = await getDailyReport(date);
   
-  const title = report?.seoMetadata?.seoTitle || report?.title || `GammaRips V6 pick for ${date}`;
+  const title = report?.seoMetadata?.seoTitle || report?.title || `GammaRips V7 pick for ${date}`;
   const description = report?.seoMetadata?.seoDescription || (report
-    ? `GammaRips V6 daily pick and market context for ${date}. ${report.total_signals} signals scanned across the overnight session. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`
-    : `GammaRips V6 daily pick for ${date}.`);
+    ? `GammaRips V7 daily pick and market context for ${date}. ${report.total_signals} signals scanned across the overnight session. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`
+    : `GammaRips V7 daily pick for ${date}.`);
 
   return {
     title,
@@ -61,7 +61,7 @@ export default async function ReportPage({ params }: Props) {
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": report.title || `GammaRips V6 pick for ${date}`,
+    "headline": report.title || `GammaRips V7 pick for ${date}`,
     "image": "https://gammarips.com/og-image.png?v=3",
     "datePublished": `${report.scan_date}T08:00:00Z`,
     "dateModified": `${report.scan_date}T08:00:00Z`,
@@ -75,10 +75,10 @@ export default async function ReportPage({ params }: Props) {
       "name": "GammaRips",
       "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" }
     },
-    "description": report.seoMetadata?.seoDescription || `GammaRips V6 daily pick and market context for ${date}. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`,
+    "description": report.seoMetadata?.seoDescription || `GammaRips V7 daily pick and market context for ${date}. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`,
     "about": {
       "@type": "Thing",
-      "name": "Single V6 daily pick with pre-set stop, target, and exit",
+      "name": "Single V7 daily pick with pre-set stop, target, and exit",
     },
     "disclaimer": "Paper-trading performance, educational only. Not investment advice.",
     ...(report.seoMetadata?.keywords ? { "keywords": report.seoMetadata.keywords.join(', ') } : {}),
@@ -88,8 +88,8 @@ export default async function ReportPage({ params }: Props) {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    "name": `GammaRips V6 enriched signals — ${report.scan_date}`,
-    "description": `V6 tournament scan of 5,230+ tickers for ${report.scan_date}. ${report.total_signals} signals detected.`,
+    "name": `GammaRips V7 enriched signals — ${report.scan_date}`,
+    "description": `V7 tournament scan of 5,230+ tickers for ${report.scan_date}. ${report.total_signals} signals detected.`,
     "url": `https://gammarips.com/reports/${report.scan_date}`,
     "datePublished": `${report.scan_date}T08:00:00Z`,
     "creator": { "@type": "Organization", "name": "GammaRips" },
@@ -101,7 +101,7 @@ export default async function ReportPage({ params }: Props) {
       "VIX-VIX3M regime",
       "tournament consensus",
       "directional dollar volume",
-      "3-day bracket outcome",
+      "same-day bracket outcome",
     ],
   };
 

@@ -8,12 +8,12 @@ import { ArrowRight, Database, Filter, Calculator, GitBranch, ShieldCheck, Code 
 export const metadata: Metadata = {
   title: 'GammaRips Methodology — Where every number comes from',
   description:
-    'The data sources, the enrichment bar, the selection tournament, and the bracket math behind every V6 pick. Polygon end-of-day options, FRED VIX, BigQuery ledger. Auditable, fully logged, paper-trading only.',
+    "The data sources, the enrichment bar, the selection tournament, and the bracket math behind every V7 pick. V7 'GIGO' (Get In, Get Out) is a same-day intraday trade. Polygon end-of-day options, FRED VIX, BigQuery ledger. Auditable, fully logged, paper-trading only.",
   alternates: { canonical: 'https://gammarips.com/methodology' },
   openGraph: {
     title: 'GammaRips Methodology — Where every number comes from',
     description:
-      'The enrichment bar, the bracket tournament, and the execution math behind every V6 pick. Auditable and fully logged.',
+      'The enrichment bar, the bracket tournament, and the execution math behind every V7 pick. Auditable and fully logged.',
     url: 'https://gammarips.com/methodology',
   },
 };
@@ -53,7 +53,7 @@ const filters = [
     why: 'A hard bullish gate (since 2026-06-11): only call setups enter the pool. The surviving bullish names are then delta-edge-ranked to the ~50 strongest setups before the tournament.',
   },
   {
-    name: 'no earnings during the 3-day hold',
+    name: 'no earnings during the same-day hold',
     where: 'signal-notifier · safety rail',
     why: 'Exclude any ticker reporting earnings inside the hold window. Holding long single-leg options through an earnings print is a documented loss pattern (De Silva et al. 2026, Review of Finance; Cao & Han 2013, JFE). Fail-closed if the earnings calendar is unreachable.',
   },
@@ -72,23 +72,23 @@ const bracketRules = [
   },
   {
     label: 'Stop',
-    value: '−60% on option premium',
-    why: 'GTC stop-limit on the contract. Bracket-sweep research showed −60% beats tighter stops on 3-day holds because gamma whipsaw kills tighter exits.',
+    value: '−30% on option premium',
+    why: 'Stop-limit on the contract. The intraday V7 envelope tightens the stop to −30% — on a same-day hold there is no overnight gamma whipsaw to ride out.',
   },
   {
     label: 'Target',
-    value: '+80% on option premium',
-    why: 'GTC limit sell. Asymmetric vs. the stop — 4:3 reward/risk in option-premium space, which after delta and gamma typically translates to a positive expected value at modest hit rate.',
+    value: '+40% on option premium',
+    why: 'Limit sell. Asymmetric vs. the stop — 4:3 reward/risk in option-premium space, which after delta and gamma typically translates to a positive expected value at modest hit rate.',
   },
   {
     label: 'Hold',
-    value: '3 trading days',
-    why: 'Long enough for the directional flow thesis to play out, short enough to avoid theta decay dominating.',
+    value: 'Same trading day',
+    why: 'V7 “GIGO” — Get In, Get Out. Enter at the open, take profit or stop intraday, and flatten before the close. Nothing carries overnight.',
   },
   {
     label: 'Exit',
-    value: '15:50 ET, day 3',
-    why: 'If neither stop nor target filled, market sell at 15:50 — before the close-print volatility, after most of the day\'s move is in.',
+    value: '15:45 ET, same day',
+    why: 'If neither stop nor target filled, market sell at 15:45 the same day — before the close-print volatility, after most of the day\'s move is in.',
   },
 ];
 
@@ -99,7 +99,7 @@ const dontDoList = [
   },
   {
     label: 'No model in the execution path.',
-    detail: 'The tournament picks the ticker; it never sets the price levels. Entry, the −60% stop, the +80% target, and the 3-day exit are fixed code with no model in the loop.',
+    detail: 'The tournament picks the ticker; it never sets the price levels. Entry, the −30% stop, the +40% target, and the same-day exit are fixed code with no model in the loop.',
   },
   {
     label: 'No manual override of the engine.',
@@ -111,7 +111,7 @@ const dontDoList = [
   },
   {
     label: 'No track-record marketing pre-30-trades.',
-    detail: 'Until V6 has 30 closed paper trades the engine ships methodology only. No win rate, no Sharpe, no expectancy claims.',
+    detail: 'Until V7 has 30 closed paper trades the engine ships methodology only. No win rate, no Sharpe, no expectancy claims.',
   },
 ];
 
@@ -120,7 +120,7 @@ const methodologySchema = {
   '@type': 'TechArticle',
   headline: 'GammaRips Methodology — Where every number comes from',
   description:
-    'The data sources, the enrichment bar, the selection tournament, and the bracket math behind every V6 pick. Auditable and fully logged.',
+    'The data sources, the enrichment bar, the selection tournament, and the bracket math behind every V7 pick. Auditable and fully logged.',
   url: 'https://gammarips.com/methodology',
   publisher: {
     '@type': 'Organization',
@@ -181,7 +181,7 @@ export default function MethodologyPage() {
             <h2 className="text-2xl font-bold">The enrichment bar and two safety rails</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            In V6, selection is now the <strong className="text-foreground">BULLISH-only gate plus a
+            In V7, selection remains the <strong className="text-foreground">BULLISH-only gate plus a
             delta edge-rank to the top ~50 bullish setups</strong>. The old moneyness, open-interest,
             volume, DTE, and V/OI filters were removed on 2026-06-04 — they choked real winners on
             stale scan-time data. The ~50 bullish setups that clear the enrichment bar below and the
@@ -243,7 +243,7 @@ export default function MethodologyPage() {
               <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
                 <strong>Dead-simple prompt.</strong> Each batch call gets one instruction — make money
-                buying a single option and sell it for a profit within three days — plus the daily
+                buying a single option and sell it for a profit within one day — plus the daily
                 report and a per-contract JSON. No memory, no rubric, no composite weights.
               </span>
             </li>
@@ -272,7 +272,7 @@ export default function MethodologyPage() {
           <p className="text-muted-foreground mb-6">
             Every pick ships with the same execution rules, and they have not changed across strategy
             versions. The bracket isn't a guess — it came out of a sweep across thousands of historical
-            signals where a −60/+80/3-day envelope was the highest-EV configuration tested.
+            signals; V7 tightens that envelope to a −30/+40/same-day intraday configuration.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {bracketRules.map((rule) => (
@@ -312,7 +312,7 @@ export default function MethodologyPage() {
             <li className="flex gap-3">
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Decision trail</strong> — every change to the strategy (V6 today, and its
+                <strong>Decision trail</strong> — every change to the strategy (V7 today, and its
                 predecessors back to V3) ships with a dated decision document explaining the rationale
                 and the evidence.
               </span>
@@ -352,7 +352,7 @@ export default function MethodologyPage() {
         <section className="text-center">
           <h2 className="text-2xl font-bold mb-3">Want the daily pick delivered?</h2>
           <p className="text-muted-foreground mb-6">
-            Browse the haystack on the signals page free, or get the curated single V6 pick
+            Browse the haystack on the signals page free, or get the curated single V7 pick
             delivered to your inbox + private WhatsApp group at 07:30 ET each weekday.
           </p>
           <div className="flex gap-3 justify-center flex-wrap">

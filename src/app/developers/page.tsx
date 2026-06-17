@@ -43,7 +43,7 @@ export default function DevelopersPage() {
         {/* Hero */}
         <section className="text-center py-12 space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold font-headline">
-            Build on the V6 Engine
+            Build on the V7 Engine
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             One pick a day, 18 MCP tools, no auth. Point your AI agent, research notebook,
@@ -113,7 +113,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
           <h2 className="text-2xl font-bold font-headline">15 Available Tools</h2>
           <p className="text-sm text-muted-foreground">
             <span className="text-primary font-mono">get_todays_pick</span> is the primary entry point —
-            it returns the single V6 pick for today (or <code>null</code> if the engine skipped).
+            it returns the single V7 pick for today (or <code>null</code> if the engine skipped).
             Everything else is supporting context.
           </p>
 
@@ -121,7 +121,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
             {/* Primary */}
             <ToolCard
               name="get_todays_pick"
-              description="The single V6 pick for today's scan date. Returns ticker, direction, contract, entry/stop/target/exit, and the tournament-consensus evidence. Null when the engine skipped (empty enriched pool, a safety rail, or a fail-closed tournament)."
+              description="The single V7 pick for today's scan date — a same-day intraday trade. Returns ticker, direction, contract, entry/stop/target/exit, and the tournament-consensus evidence. Null when the engine skipped (empty enriched pool, a safety rail, or a fail-closed tournament)."
               params={{ "": "No params required" }}
               badge="PRIMARY"
             />
@@ -163,7 +163,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
             />
             <ToolCard
               name="get_enriched_signals"
-              description="Signals after the V6 enrichment filter (score ≥ 4, directional UOA > $500K, BULLISH-only, delta edge-ranked to ~50). Includes thesis, technicals, recommended contract."
+              description="Signals after the V7 enrichment filter (score ≥ 4, directional UOA > $500K, BULLISH-only, delta edge-ranked to ~50). Includes thesis, technicals, recommended contract."
               params={{
                 date: "YYYY-MM-DD (optional)",
                 direction: "bull | bear (optional)",
@@ -258,7 +258,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>✓ Everything in Free</li>
                 <li>✓ WhatsApp push at 07:30 ET</li>
-                <li>✓ Exit reminder at 15:50 ET day-3</li>
+                <li>✓ Exit reminder at 15:45 ET same day</li>
                 <li>✓ AI chat agent in private group</li>
                 <li>✓ 7-day free trial</li>
               </ul>

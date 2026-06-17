@@ -24,8 +24,8 @@ const disclosures = [
     number: '01',
     title: 'Paper-trading only — no live execution.',
     body: [
-      "Every V6 pick is paper-traded. There is no brokerage account behind these signals, no real capital at risk on any signal we publish, and no order ever hits a real exchange via GammaRips.",
-      "The forward paper-trading ledger is a forward simulator: it ingests Polygon end-of-day options data, applies the V6 entry and exit rules at the same timestamps a live trader would, and records the outcome. The same data feeds the public scorecard.",
+      "Every V7 pick is paper-traded. There is no brokerage account behind these signals, no real capital at risk on any signal we publish, and no order ever hits a real exchange via GammaRips.",
+      "The forward paper-trading ledger is a forward simulator: it ingests Polygon end-of-day options data, applies the V7 intraday entry and exit rules at the same timestamps a live trader would, and records the outcome. The same data feeds the public scorecard.",
       "If you act on a signal in your own brokerage account, that is your decision, your capital, and your risk. We do not place trades, hold positions, or receive any commission tied to trades you place.",
     ],
   },
@@ -44,7 +44,7 @@ const disclosures = [
     number: '03',
     title: 'No track-record marketing pre-30-trades.',
     body: [
-      "The current V6 strategy went live on the forward paper-trader on June 4, 2026, and the ledger was reset to a fresh cohort that day. Until the V6 ledger has 30 closed paper trades, GammaRips does not publish or market any aggregate performance number — no win rate, no Sharpe ratio, no expectancy claim, no \"we returned X%.\"",
+      "The current V7 strategy went live on the forward paper-trader on June 17, 2026, re-simulating the existing cohort (running since June 4) under the same-day exit. Until the V7 ledger has 30 closed paper trades, GammaRips does not publish or market any aggregate performance number — no win rate, no Sharpe ratio, no expectancy claim, no \"we returned X%.\"",
       "Below 30 closed trades the sample size is too small for any statistic to be informative. We say this explicitly in every channel and we will not be talked into selectively quoting early winners.",
       "Once the 30-trade gate is reached, all aggregate performance numbers will be published with their confidence intervals, the full sample, and the methodology used to compute them. Until then: methodology only.",
     ],
@@ -55,8 +55,8 @@ const disclosures = [
     title: 'Past performance does not predict future results.',
     body: [
       "Even after the 30-trade gate is reached, all performance numbers will be paper-trading performance against historical or near-real-time data. Real execution introduces slippage, fills, partial fills, halt-and-pause behavior, and human latency that paper-trading does not capture.",
-      "Market regimes change. A strategy that worked in one volatility environment can fail in another. The 2026 regime that V6 is being tested in is not necessarily the regime you will trade in if you act on these signals later.",
-      "There is no claim, express or implied, that any past V6 paper-trade outcome is indicative of any future result, paper or live.",
+      "Market regimes change. A strategy that worked in one volatility environment can fail in another. The 2026 regime that V7 is being tested in is not necessarily the regime you will trade in if you act on these signals later.",
+      "There is no claim, express or implied, that any past V7 paper-trade outcome is indicative of any future result, paper or live.",
     ],
   },
   {
@@ -143,7 +143,7 @@ export default function DisclosuresPage() {
               <Link href="/methodology" className="text-primary underline underline-offset-2 hover:no-underline">
                 Methodology
               </Link>{' '}
-              — every threshold, every data source, and the selection tournament behind a V6 pick.
+              — every threshold, every data source, and the selection tournament behind a V7 pick.
             </li>
             <li>
               <Link href="/about" className="text-primary underline underline-offset-2 hover:no-underline">

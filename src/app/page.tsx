@@ -17,7 +17,7 @@ export const revalidate = 60; // keep todays_pick fresh without a full static re
 
 export const metadata: Metadata = {
   title: "GammaRips — One options trade a day. Pushed to your phone at 7:30 AM ET.",
-  description: "GammaRips scans institutional options flow overnight and mechanically picks one contract each morning — with stop, target, and exit pre-set. Browse the signals haystack free, or get the curated daily pick delivered to your inbox + WhatsApp at 07:30 ET. Paper-trading, educational only.",
+  description: "GammaRips scans institutional options flow overnight and mechanically picks one contract each morning — V7 'GIGO' (Get In, Get Out): one same-day intraday trade with stop, target, and exit pre-set. Browse the signals haystack free, or get the curated daily pick delivered to your inbox + WhatsApp at 07:30 ET. Paper-trading, educational only.",
   alternates: {
     canonical: '/',
   },
@@ -60,7 +60,7 @@ export default async function LandingPage() {
   const dynamicDailySchema = topSignals.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": report?.title || summary?.headline || "Today's V6 pick",
+    "headline": report?.title || summary?.headline || "Today's V7 pick",
     "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "Overnight options flow signals explicitly ranked by conviction.",
     "url": "https://gammarips.com",
     "publisher": {
@@ -126,7 +126,7 @@ export default async function LandingPage() {
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div>
                     <p className="text-xs uppercase tracking-wider text-primary font-semibold">
-                      GammaRips · V6 Live
+                      GammaRips · V7 Live
                     </p>
                     <h2 className="text-xl md:text-2xl font-bold font-headline mt-1">
                       One pick a day. Tracked openly.
@@ -184,7 +184,7 @@ export default async function LandingPage() {
                       })}
                     </p>
                     <h2 className="text-2xl md:text-3xl font-bold font-headline mt-1">
-                      {report?.title || summary.headline || "Today's V6 pick"}
+                      {report?.title || summary.headline || "Today's V7 pick"}
                     </h2>
                   </div>
                   <Link href={`/reports/${reportDate || summary.scan_date}`}>

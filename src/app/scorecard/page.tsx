@@ -11,11 +11,11 @@ import { getCohortStats, getLedgerTrades, type LedgerTrade } from '@/lib/firebas
 
 export const metadata: Metadata = {
   title: 'GammaRips Scorecard — Verified Signal Performance & Win Rate',
-  description: 'Every GammaRips V6 pick is timestamped and tracked. See the public paper-trading ledger. No cherry-picking, no hindsight edits. Paper-trading, educational only.',
+  description: 'Every GammaRips V7 pick is timestamped and tracked. See the public paper-trading ledger. No cherry-picking, no hindsight edits. Paper-trading, educational only.',
   alternates: { canonical: 'https://gammarips.com/scorecard' },
   openGraph: {
     title: 'GammaRips Scorecard — Verified Signal Performance',
-    description: 'Every GammaRips V6 pick is timestamped and tracked. Paper-trading ledger, educational only.',
+    description: 'Every GammaRips V7 pick is timestamped and tracked. Paper-trading ledger, educational only.',
     url: 'https://gammarips.com/scorecard',
   }
 };
@@ -61,7 +61,7 @@ function contractLabel(t: LedgerTrade): string {
 }
 
 export default async function ScorecardPage() {
-  // V6-only cohort — the same source the home-page panel uses. NOT the
+  // V7-only cohort — the same source the home-page panel uses. NOT the
   // all-signals / underlying-peak-return win-tracker data (that's a different,
   // hindsight-favorable methodology that would contradict this page's promise).
   const [stats, trades] = await Promise.all([getCohortStats(), getLedgerTrades()]);
@@ -87,8 +87,8 @@ export default async function ScorecardPage() {
   const scorecardSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    "name": "GammaRips V6 Paper-Trading Ledger",
-    "description": "Public, timestamped record of every GammaRips V6 signal and its realized option P&L on a 3-day +80% / -60% bracket. No cherry-picking, no hindsight edits. Paper-trading, educational only.",
+    "name": "GammaRips V7 Paper-Trading Ledger",
+    "description": "Public, timestamped record of every GammaRips V7 signal and its realized option P&L on a same-day +40% / -30% bracket. No cherry-picking, no hindsight edits. Paper-trading, educational only.",
     "url": "https://gammarips.com/scorecard",
     "creator": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
     "license": "https://gammarips.com/disclosures",
@@ -121,7 +121,7 @@ export default async function ScorecardPage() {
 
       <Separator className="my-12 sm:my-16" />
 
-      {/* Live V6 cohort stats — cohort_stats/current */}
+      {/* Live V7 cohort stats — cohort_stats/current */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="bg-card/50 text-center">
           <CardContent className="p-6">
@@ -157,7 +157,7 @@ export default async function ScorecardPage() {
         <div className="mt-12 sm:mt-16">
           <h2 className="text-2xl font-bold font-headline text-center">The Ledger</h2>
           <p className="text-sm text-muted-foreground text-center mt-2 mb-8 max-w-2xl mx-auto">
-            Every closed V6 trade, most recent first &mdash; realized option P&amp;L on the 3-day +80% / &minus;60% bracket. Winners and losers, counted the same way.
+            Every closed V7 trade, most recent first &mdash; realized option P&amp;L on the same-day +40% / &minus;30% bracket. Winners and losers, counted the same way.
           </p>
           <div className="overflow-x-auto rounded-lg border">
             <Table>
@@ -215,10 +215,10 @@ export default async function ScorecardPage() {
         <Card className="bg-primary/5 border-primary/20">
           <CardContent className="p-8 text-center space-y-4">
             <h2 className="text-2xl font-bold font-headline">
-              Live V6 paper-trading ledger — since {cohortStart}
+              Live V7 paper-trading ledger — since {cohortStart}
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Every V6 pick is timestamped at publish and marked to its realized option P&amp;L on a 3-day +80% / &minus;60% bracket &mdash; winners and losers counted the same way. We can&apos;t edit history.
+              Every V7 pick is timestamped at publish and marked to its realized option P&amp;L on a same-day +40% / &minus;30% bracket &mdash; winners and losers counted the same way. We can&apos;t edit history.
             </p>
             <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
               Preliminary: {stats!.trades_closed} of {EVAL_THRESHOLD} trades closed. Treat this as an early, small sample &mdash; not a verified edge &mdash; until the cohort reaches {EVAL_THRESHOLD} resolved trades.
@@ -238,7 +238,7 @@ export default async function ScorecardPage() {
           <CardContent className="p-8 text-center space-y-4">
             <h2 className="text-2xl font-bold font-headline">Win Tracking Begins {cohortStart}</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              The V6 cohort started {cohortStart}. As trades resolve, the numbers show up here automatically. Every signal is timestamped when published &mdash; we can&apos;t edit history.
+              The V7 cohort started {cohortStart}. As trades resolve, the numbers show up here automatically. Every signal is timestamped when published &mdash; we can&apos;t edit history.
             </p>
             <p className="text-muted-foreground">
               Check back for verified results. In the meantime, browse our daily signals and reports.

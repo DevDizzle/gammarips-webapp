@@ -15,7 +15,7 @@ const stripePromise = loadStripe(
 
 const proFeatures = [
   "Today's pick pushed to WhatsApp at 07:30 ET",
-  'Exit reminder at 15:50 ET on day-3',
+  'Exit reminder at 15:45 ET same day',
   'Private WhatsApp group access',
   'AI chat agent — tag @gamma to ask about today\'s pick, open position, or the 30-day ledger',
   'Live open-position tracker via chat',

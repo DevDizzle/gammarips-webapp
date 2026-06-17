@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'How GammaRips Works — Overnight Options Scanner, V6 Tournament',
-  description: 'The scanner ingests overnight institutional options flow across 5,230+ tickers, enriches the standouts, applies a BULLISH-only gate and delta edge-rank to the top ~50 bullish setups, and a randomized bracket tournament picks one bullish call per day with pre-set stop and target. Here is the full pipeline — no discretion, no paid-first tier.',
+  title: 'How GammaRips Works — Overnight Options Scanner, V7 Intraday',
+  description: "The scanner ingests overnight institutional options flow across 5,230+ tickers, enriches the standouts, applies a BULLISH-only gate and delta edge-rank to the top ~50 bullish setups, and a randomized bracket tournament picks one bullish call per day. V7 'GIGO' (Get In, Get Out) trades and closes it the same day with pre-set stop and target. Here is the full pipeline — no discretion, no paid-first tier.",
   alternates: { canonical: 'https://gammarips.com/how-it-works' },
   openGraph: {
     title: 'How GammaRips Works — Overnight Options Scanner',
@@ -20,7 +20,7 @@ export default function HowItWorksPage() {
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "How GammaRips Works — Overnight Options Scanner, V6 Tournament",
+    "headline": "How GammaRips Works — Overnight Options Scanner, V7 Intraday",
     "description": "Scanned, enriched, tournament-selected: one pick a day across 5,230+ tickers.",
     "image": "https://gammarips.com/og-image.png?v=3",
     "author": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
@@ -46,10 +46,10 @@ export default function HowItWorksPage() {
         <h2 className="text-3xl font-bold font-headline">Your morning at 07:30 ET</h2>
         <div className="p-6 rounded-lg border bg-primary/5 border-primary/20 text-muted-foreground space-y-4 leading-relaxed">
           <p>
-            At 07:30 ET, one message lands in your phone. Either it&apos;s today&apos;s single pick &mdash; one ticker, one contract, a pre-set &minus;60% stop and +80% target &mdash; or the engine says <em>no trade today</em> and you do nothing.
+            At 07:30 ET, one message lands in your phone. Either it&apos;s today&apos;s single pick &mdash; one ticker, one contract, a pre-set &minus;30% stop and +40% target &mdash; or the engine says <em>no trade today</em> and you do nothing. This is V7 &ldquo;GIGO&rdquo; &mdash; Get In, Get Out: one option, traded and closed the same day.
           </p>
           <p>
-            At 10:00 ET, you place the trade: buy one contract at market, arm both GTC exit orders, put your phone down. At 15:50 ET on day-3, an exit reminder fires if the trade is still open. Close at market, log the outcome, move on.
+            At 10:00 ET, you place the trade: buy one contract at market, arm both exit orders, put your phone down. At 15:45 ET the same day, an exit reminder fires if the trade is still open. Close at market, log the outcome, move on &mdash; nothing carries overnight.
           </p>
           <p className="text-primary font-semibold">
             That&apos;s the whole product. Everything below is how the engine gets to that one message.
@@ -112,7 +112,7 @@ export default function HowItWorksPage() {
           At 07:30 ET, two <strong className="text-foreground">safety rails</strong> run over the enriched list first &mdash; and they are the only filters left:
         </p>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
-          <li><strong className="text-foreground">No earnings during the hold</strong> &mdash; any ticker reporting earnings inside the 3-day window is dropped. Holding long options through an earnings print is a documented loss pattern.</li>
+          <li><strong className="text-foreground">No earnings during the hold</strong> &mdash; any ticker reporting earnings the same trading day is dropped. Holding long options through an earnings print is a documented loss pattern.</li>
           <li><strong className="text-foreground">VIX &le; VIX3M</strong> &mdash; the term structure must be in contango. If VIX is above VIX3M (backwardation), the regime gate fails closed and the engine skips the day.</li>
         </ul>
         <p className="text-muted-foreground leading-relaxed">
@@ -133,11 +133,11 @@ export default function HowItWorksPage() {
       <section className="space-y-4">
         <h2 className="text-3xl font-bold font-headline">Execution rules</h2>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
-          <li><strong className="text-foreground">Entry:</strong> 10:00 ET day-1 at market.</li>
-          <li><strong className="text-foreground">Stop:</strong> &minus;60% option price, GTC.</li>
-          <li><strong className="text-foreground">Target:</strong> +80% option price, GTC.</li>
-          <li><strong className="text-foreground">Hold:</strong> up to three sessions.</li>
-          <li><strong className="text-foreground">Exit:</strong> 15:50 ET day-3 at market if stop and target both untouched.</li>
+          <li><strong className="text-foreground">Entry:</strong> 10:00 ET at market.</li>
+          <li><strong className="text-foreground">Stop:</strong> &minus;30% option price.</li>
+          <li><strong className="text-foreground">Target:</strong> +40% option price.</li>
+          <li><strong className="text-foreground">Hold:</strong> the same trading day &mdash; nothing carries overnight.</li>
+          <li><strong className="text-foreground">Exit:</strong> 15:45 ET the same day at market if stop and target both untouched.</li>
           <li><strong className="text-foreground">Conservative tiebreak:</strong> if a single bar touches both stop and target, the stop wins (lower-bound assumption).</li>
         </ul>
         <p className="text-muted-foreground leading-relaxed">

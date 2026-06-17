@@ -32,12 +32,12 @@ const engineSteps = [
   {
     icon: <MessageSquare className="h-6 w-6 text-primary" />,
     title: 'One pick, or none',
-    description: 'At 07:30 ET, two safety rails run first (no earnings during the hold, VIX ≤ VIX3M), then a randomized bracket tournament over the ~50 bullish setups picks one ticker by 3-bracket consensus. Some days the pool is empty or it fails closed and the push says no trade.',
+    description: 'At 07:30 ET, two safety rails run first (no earnings during the same-day hold, VIX ≤ VIX3M), then a randomized bracket tournament over the ~50 bullish setups picks one ticker by 3-bracket consensus. Some days the pool is empty or it fails closed and the push says no trade.',
   },
   {
     icon: <AlarmClock className="h-6 w-6 text-primary" />,
     title: 'Exit reminder',
-    description: 'The trade holds for three sessions with a −60% option stop and +80% target, exiting at 15:50 ET on day-3. Pro subscribers get the exit reminder pushed to WhatsApp the same minute the engine writes it.',
+    description: 'The trade is held the same day with a −30% option stop and +40% target, exiting flat at 15:45 ET. Pro subscribers get the exit reminder pushed to WhatsApp the same minute the engine writes it.',
   },
 ];
 
@@ -46,7 +46,7 @@ const whyList = [
   'Every pick carries its exit rules and its paper-trading outcome, updated automatically in the public ledger.',
   'Free users and Pro subscribers see the same pick at the exact same second. No paid-first tier.',
   'Selection runs a leakage-checked LLM tournament; execution is fixed code. Every filter, threshold, and bracket rule is documented and logged.',
-  'Paper-trading performance only. Nothing marketed until the V6 ledger has ≥30 closed trades. This page is about what was built, not what it returned.',
+  'Paper-trading performance only. Nothing marketed until the V7 ledger has ≥30 closed trades. This page is about what was built, not what it returned.',
 ];
 
 interface AboutPageProps {
@@ -104,7 +104,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>Exit reminder pushes at 15:50 ET on day-3. −60% option stop, +80% target, whichever comes first.</span>
+                  <span>Exit reminder pushes at 15:45 ET the same day. −30% option stop, +40% target, whichever comes first.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -149,7 +149,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">How the engine works</h2>
             <p className="mt-3 max-w-2xl mx-auto text-muted-foreground">
-              V6 &mdash; the only active strategy &mdash; is a scanned, enriched, tournament-selected, single-pick-per-day pipeline. No discretion, no override, no paid-first tier.
+              V7 &ldquo;GIGO&rdquo; (Get In, Get Out) &mdash; the only active strategy &mdash; is a scanned, enriched, tournament-selected, single-pick-per-day pipeline: one option, traded and closed the same day. No discretion, no override, no paid-first tier.
             </p>
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -188,7 +188,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">
-                  ML engineer and data architect. Built the scanner, the enrichment layer, the V6 tournament, and the execution policy. Solo operator — no team of analysts, no &ldquo;room of traders.&rdquo; One person with a pipeline.
+                  ML engineer and data architect. Built the scanner, the enrichment layer, the V7 tournament, and the execution policy. Solo operator — no team of analysts, no &ldquo;room of traders.&rdquo; One person with a pipeline.
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Also runs <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link> &mdash; AI strategy and data integration consulting.
@@ -247,7 +247,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                 <div className="p-4 rounded-lg bg-background border border-primary/30">
                   <p className="font-bold text-lg">Pro</p>
                   <p className="text-primary font-semibold text-xs mb-1">$39/MO · 7-DAY TRIAL</p>
-                  <p className="text-muted-foreground">WhatsApp push at 07:30 ET, day-3 exit reminder, AI chat agent in the private group.</p>
+                  <p className="text-muted-foreground">WhatsApp push at 07:30 ET, same-day exit reminder, AI chat agent in the private group.</p>
                 </div>
               </div>
               <Button asChild size="lg">

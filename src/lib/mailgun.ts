@@ -94,7 +94,8 @@ You're in. GammaRips Pro is live on your account.
 Here's the routine starting tomorrow morning (weekdays, 07:30 ET):
 
 1. At 07:30 ET each weekday, the day's pick lands in your inbox AND the private WhatsApp group.
-   One ticker. One contract. Pre-set stop (-60%), target (+80%), exit (3:50 PM ET day-3).
+   One ticker. One contract. Pre-set stop (-30%), target (+40%), exit (3:45 PM ET same day).
+   V7 "GIGO" — Get In, Get Out: one option, traded and closed the same day.
    Some days the engine skips — you'll get a message either way.
 
 2. Join the WhatsApp group for live discussion with gamma-bot.
@@ -104,8 +105,8 @@ Here's the routine starting tomorrow morning (weekdays, 07:30 ET):
 3. At 10:00 ET, place the trade.
    Buy one contract at market, arm both GTC exit orders, put your phone down.
 
-4. At 15:50 ET on day-3, the exit reminder fires if the trade is still open.
-   Close at market, log the outcome, move on.
+4. At 15:45 ET the same day, the exit reminder fires if the trade is still open.
+   Close at market, log the outcome, move on — nothing carries overnight.
 
 Tag @gamma in the group to ask about today's pick, the open position, the 30-day ledger, or any enriched signal. The whole group sees the exchange.
 
@@ -152,7 +153,7 @@ evan@gammarips.com
                                     <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">1.</td>
                                     <td valign="top">
                                         <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">07:30 ET — the day's pick lands in your inbox + WhatsApp group</h3>
-                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">One ticker, one contract, pre-set stop (−60%), target (+80%), exit at 3:50 PM ET day-3. Some days the engine skips — you'll get a message either way.</p>
+                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">One ticker, one contract, pre-set stop (−30%), target (+40%), exit at 3:45 PM ET the same day. V7 &ldquo;GIGO&rdquo; — Get In, Get Out: traded and closed the same day. Some days the engine skips — you'll get a message either way.</p>
                                     </td>
                                 </tr>
                                 <tr><td height="24"></td></tr>

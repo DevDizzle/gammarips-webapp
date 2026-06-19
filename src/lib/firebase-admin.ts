@@ -275,6 +275,8 @@ export interface TodaysPick {
     | 'v5_4_unavailable'
     | 'v5_4_out_of_set'
     | 'v5_4_mass_leakage'
+    // Markets closed (NYSE holiday / non-trading day) — engine stands down, no email.
+    | 'market_holiday'
     | null;
   ticker?: string;
   direction?: 'BULLISH' | 'BEARISH';

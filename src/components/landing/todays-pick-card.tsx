@@ -21,6 +21,8 @@ const SKIP_REASON_COPY: Record<string, string> = {
     "The tournament returned a pick outside today's eligible pool. Fail-closed — no trade today.",
   v5_4_mass_leakage:
     "Today's candidates were held back by the leakage safeguard. The engine fails closed rather than risk a contaminated pick — no trade today.",
+  market_holiday:
+    "U.S. markets are closed today (exchange holiday). The engine is standing down — no signal. The next pick posts on the following trading day.",
 };
 
 function formatEffectiveAt(isoString: string | null): string {

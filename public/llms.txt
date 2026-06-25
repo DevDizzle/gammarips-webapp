@@ -1,25 +1,25 @@
 # GammaRips
 
-> One options trade a day. Scored before you wake up. Pushed to your phone at 7:30 AM ET.
+> One options trade a day. Scored overnight. Pushed to your phone at 9:50 ET, right before the 10:00 entry.
 
-GammaRips is a paper-trading options engine for working professionals. Every weeknight it scans 5,230+ US equities for institutional overnight options flow, applies deterministic quality gates, and publishes at most one trade idea by 7:30 AM ET. The trade has a pre-set stop (−60% on the option), pre-set target (+80%), and scheduled exit (3:50 PM ET on trading day 3). Free users see the pick on the webapp; Pro subscribers get it pushed to WhatsApp and can @mention an AI agent in the private group.
+GammaRips is a paper-trading options engine for working professionals. Every weeknight it scans 5,230+ US equities for institutional overnight options flow, applies deterministic quality gates, and publishes at most one trade idea at ~9:50 ET, right before the 10:00 ET entry. The trade has a pre-set stop (−30% on the option), pre-set target (+40%), and a same-day exit (flat at 15:45 ET on the entry day — no overnight hold). Free users see the pick on the webapp; Pro subscribers get it pushed to WhatsApp and can @mention an AI agent in the private group.
 
 Paper-trading, educational only. Not investment advice.
 
 ## Core docs
 
-- [Trading strategy (V6)](https://gammarips.com/how-it-works)
+- [Trading strategy (V7.1)](https://gammarips.com/how-it-works)
 - [Today's pick](https://gammarips.com/signals)
 - [Scorecard (paper-trading ledger)](https://gammarips.com/scorecard)
 - [Pricing — Free / Pro $39](https://gammarips.com/pricing)
 - [Developer docs — 18 MCP tools, no auth](https://gammarips.com/developers)
 
-## Gate stack (V6)
+## Gate stack (V7.1)
 
 1. **Scanner** — overnight signals across 5,230 tickers.
 2. **Enrichment** — `overnight_score >= 4 AND directional_uoa_usd > 500000, BULLISH-only, delta edge-ranked to top ~50`.
-3. **Signal-notifier** — Two safety rails: no earnings during the 3-day hold; VIX <= VIX3M. Then a randomized 3-bracket consensus tournament over the ~50 bullish setups picks 1 (or none).
-4. **Forward paper-trader** — enters 10:00 ET day-1, −60% stop, +80% target, exits 15:50 ET day-3. Stop wins over target on ambiguous bars.
+3. **Signal-notifier** — Two safety rails: no earnings on the trade day; VIX <= VIX3M. Then a randomized 3-bracket consensus tournament over the ~50 bullish setups picks 1 (or none). Just before the pick is published, a live open-interest re-check drops any contract too illiquid to actually trade, so the pick is one a subscriber can realistically enter and exit at fair prices.
+4. **Forward paper-trader** — enters 10:00 ET, −30% stop, +40% target, exits flat at 15:45 ET the same day. Stop wins over target on ambiguous bars.
 
 ## MCP server (free, no auth)
 
@@ -30,8 +30,8 @@ Paper-trading, educational only. Not investment advice.
 
 ## Pricing
 
-- **Free** — today's pick on the webapp at 07:30 ET, full signals list, daily report, public scorecard, all 18 MCP tools.
-- **Pro $39/mo** — everything in Free, plus a WhatsApp push at 07:30 ET, an exit reminder at 15:50 ET day-3, and an AI chat agent inside the private WhatsApp group. 7-day free trial. Cancel anytime.
+- **Free** — today's pick on the webapp at 09:50 ET, full signals list, daily report, public scorecard, all 18 MCP tools.
+- **Pro $39/mo** — everything in Free, plus a WhatsApp push at 09:50 ET, an exit reminder at 15:45 ET (same-day close), and an AI chat agent inside the private WhatsApp group. 7-day free trial. Cancel anytime.
 
 ## Disclaimers
 

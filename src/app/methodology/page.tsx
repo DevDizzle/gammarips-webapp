@@ -27,7 +27,7 @@ const dataSources = [
   {
     name: 'FRED (Federal Reserve Economic Data)',
     purpose: 'VIX and VIX3M daily close — used for the term-structure regime gate.',
-    cadence: 'Pulled at signal-decision time (07:30 ET) by signal-notifier.',
+    cadence: 'Pulled at signal-decision time (~09:50 ET, just before the 10:00 entry) by signal-notifier.',
   },
   {
     name: 'BigQuery (`profitscout-fida8.profit_scout`)',
@@ -255,6 +255,15 @@ export default function MethodologyPage() {
                 tournament uptime is the only SLO.
               </span>
             </li>
+            <li className="flex gap-3">
+              <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
+              <span>
+                <strong>Live liquidity check.</strong> Right before the pick is sent (~09:50 ET, just
+                before the 10:00 entry), the engine re-checks each candidate&apos;s live open interest and
+                drops any contract too illiquid to actually trade — so the published pick is one a
+                subscriber can realistically enter and exit at fair prices.
+              </span>
+            </li>
           </ul>
           <p className="text-muted-foreground mt-6">
             Every candidate is leakage-checked before it can enter a bracket: the judge never sees
@@ -353,7 +362,7 @@ export default function MethodologyPage() {
           <h2 className="text-2xl font-bold mb-3">Want the daily pick delivered?</h2>
           <p className="text-muted-foreground mb-6">
             Browse the haystack on the signals page free, or get the curated single V7 pick
-            delivered to your inbox + private WhatsApp group at 07:30 ET each weekday.
+            delivered to your inbox + private WhatsApp group at ~09:50 ET each weekday, right before the 10:00 entry.
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
             <Button asChild>

@@ -19,14 +19,14 @@ const siteUrl = 'https://gammarips.com';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl), 
   title: {
-    default: 'GammaRips — One options trade a day. Pushed to your phone at 7:30 AM ET.',
+    default: 'GammaRips — One options trade a day. Pushed to your phone at 9:50 ET.',
     template: `%s | GammaRips`,
   },
   description: "GammaRips watches institutional options flow overnight and mechanically picks one contract each morning — V7 'GIGO' (Get In, Get Out): one same-day intraday trade with stop, target, and exit pre-set. You place the trade at 10:00 ET and close it flat the same afternoon. Paper-trading, educational only.",
   keywords: ['options flow', 'institutional options activity', 'unusual options activity', 'options signals', 'one trade a day', 'options trading', 'AI trading analysis', 'overnight options scanner'],
   openGraph: {
     title: 'GammaRips — One options trade a day',
-    description: "One contract picked overnight. V7 'GIGO' — Get In, Get Out: one same-day intraday trade, stop/target/exit pre-set. Pushed to your phone at 7:30 AM ET.",
+    description: "One contract picked overnight. V7 'GIGO' — Get In, Get Out: one same-day intraday trade, stop/target/exit pre-set. Pushed to your phone at 9:50 ET, right before the 10:00 entry.",
     url: siteUrl,
     siteName: 'GammaRips',
     images: [{ url: `${siteUrl}/og-image.png?v=3`, width: 1200, height: 630, alt: 'GammaRips — One options trade a day' }],
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'GammaRips — One options trade a day',
-    description: "One contract picked overnight. V7 'GIGO' — Get In, Get Out: one same-day intraday trade, stop/target/exit pre-set. Pushed to your phone at 7:30 AM ET.",
+    description: "One contract picked overnight. V7 'GIGO' — Get In, Get Out: one same-day intraday trade, stop/target/exit pre-set. Pushed to your phone at 9:50 ET, right before the 10:00 entry.",
     images: [`${siteUrl}/og-image.png?v=3`],
   },
 };
@@ -51,7 +51,7 @@ const organizationSchema = {
   "url": "https://gammarips.com",
   "logo": "https://gammarips.com/icon.png",
   "email": "evan@gammarips.com",
-  "description": "GammaRips mechanically picks one options contract each morning from overnight institutional flow and pushes it to subscribers at 07:30 ET — V7 'GIGO' (Get In, Get Out): one same-day intraday trade with stop, target, and exit pre-set.",
+  "description": "GammaRips mechanically picks one options contract each day from overnight institutional flow and pushes it to subscribers at 09:50 ET, right before the 10:00 entry — V7 'GIGO' (Get In, Get Out): one same-day intraday trade with stop, target, and exit pre-set.",
   "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO" },
   "sameAs": ["https://twitter.com/GammaRips"],
 };

@@ -20,7 +20,7 @@ export default function PricingPage() {
     '@type': 'Product',
     name: 'GammaRips Pro',
     description:
-      'One options trade a day, scored overnight and pushed to your phone at 07:30 ET, with an AI chat agent inside the private WhatsApp group.',
+      'One options trade a day, scored overnight and pushed to your phone at 09:50 ET, right before the 10:00 entry, with an AI chat agent inside the private WhatsApp group.',
     image: 'https://gammarips.com/og-image.png?v=3',
     brand: { '@type': 'Brand', name: 'GammaRips' },
     offers: {

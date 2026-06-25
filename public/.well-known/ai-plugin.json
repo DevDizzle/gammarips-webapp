@@ -2,8 +2,8 @@
   "schema_version": "v1",
   "name_for_human": "GammaRips",
   "name_for_model": "gammarips",
-  "description_for_human": "One options trade a day. Scored before you wake up. Pushed to your phone at 7:30 AM ET. Free MCP endpoint with 18 tools.",
-  "description_for_model": "GammaRips is a paper-trading options engine. It produces at most one trade idea per weekday, published by 07:30 ET, with pre-set stop (-60% on the option), pre-set target (+80%), and pre-scheduled exit (3:50 PM ET on trading day 3). Primary tool: get_todays_pick returns the single V6 bullish pick for today or null. Secondary tools: get_enriched_signals, get_signal_detail, get_win_rate_summary, get_open_position, get_daily_report. Full tool list at https://gammarips.com/mcp.json. Paper-trading performance, educational only. Not investment advice.",
+  "description_for_human": "One options trade a day. Scored overnight. Pushed to your phone at 9:50 ET, right before the 10:00 entry. Free MCP endpoint with 18 tools.",
+  "description_for_model": "GammaRips is a paper-trading options engine. It produces at most one trade idea per weekday, published at ~09:50 ET (right before the 10:00 ET entry), with a pre-set stop (-30% on the option), pre-set target (+40%), and a same-day exit (flat at 15:45 ET on the entry day, no overnight hold). Primary tool: get_todays_pick returns the single bullish pick for today or null. Secondary tools: get_enriched_signals, get_signal_detail, get_win_rate_summary, get_open_position, get_daily_report. Full tool list at https://gammarips.com/mcp.json. Paper-trading performance, educational only. Not investment advice.",
   "auth": { "type": "none" },
   "api": {
     "type": "mcp",

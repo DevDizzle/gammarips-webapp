@@ -132,7 +132,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
             />
             <ToolCard
               name="get_freemium_preview"
-              description="Redacted preview of today's pick for unauthenticated surfaces (ticker masked until 07:30 ET)."
+              description="Redacted preview of today's pick for unauthenticated surfaces (ticker masked until ~09:50 ET)."
               params={{ "": "No params required" }}
             />
             <ToolCard
@@ -257,7 +257,7 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
               </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>✓ Everything in Free</li>
-                <li>✓ WhatsApp push at 07:30 ET</li>
+                <li>✓ WhatsApp push at 09:50 ET</li>
                 <li>✓ Exit reminder at 15:45 ET same day</li>
                 <li>✓ AI chat agent in private group</li>
                 <li>✓ 7-day free trial</li>

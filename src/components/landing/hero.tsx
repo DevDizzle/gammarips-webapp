@@ -7,7 +7,7 @@ export function Hero() {
       <h1 className="text-4xl md:text-6xl font-bold font-headline mb-6 tracking-tight">
         One options trade a day.
         <span className="block mt-2 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-          Scored before you wake up. Pushed to your phone at 7:30 AM ET.
+          Scored overnight. Pushed to your phone at 9:50 ET — right before the 10:00 entry.
         </span>
       </h1>
       <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4">

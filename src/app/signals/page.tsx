@@ -7,7 +7,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   // Root layout applies the `%s | GammaRips` title template — no suffix here.
   title: "Overnight Options Flow Scanner — Daily Unusual Options Activity",
-  description: "Daily options signals scanner. From an overnight scan across 5,230+ tickers, GammaRips publishes the ~50 bullish setups it analyzes each morning — volume, open interest, directional dollar flow — ranked before the market opens. One pick a day, pushed to phone at 07:30 ET.",
+  description: "Daily options signals scanner. From an overnight scan across 5,230+ tickers, GammaRips publishes the ~50 bullish setups it analyzes each morning — volume, open interest, directional dollar flow — ranked before the market opens. One pick a day, pushed to phone at 09:50 ET, right before the 10:00 entry.",
   alternates: { canonical: 'https://gammarips.com/signals' },
 };
 
@@ -56,7 +56,7 @@ export default async function SignalsPage() {
               GammaRips is a daily options signals scanner. Every night at 23:00 ET, the engine ingests institutional options flow &mdash; volume, open interest, unusual activity, and directional dollar flow &mdash; across every optionable U.S. equity. Candidates clear a thin <Link href="/methodology" className="text-primary hover:underline">enrichment bar</Link>: <strong className="text-foreground">overnight score &ge; 4 with directional UOA &gt; $500K</strong> &mdash; then a BULLISH-only gate and a delta edge-rank keep the ~50 strongest bullish setups. What you see below is that bullish set (we trade calls only).
             </p>
             <p>
-              From this list, <Link href="/how-it-works" className="text-primary hover:underline">one single contract</Link> is chosen by a randomized bracket tournament and pushed to the private WhatsApp group at <strong className="text-foreground">07:30 ET</strong> with pre-set stop (&minus;30%), target (+40%), and a same-day hold window. Free readers see the same pick on the home page at the exact same second. No paid-first tier. Browse the raw scan here, or subscribe for the one-a-day WhatsApp push.
+              From this list, <Link href="/how-it-works" className="text-primary hover:underline">one single contract</Link> is chosen by a randomized bracket tournament and pushed to the private WhatsApp group at <strong className="text-foreground">~09:50 ET</strong>, right before the 10:00 entry, with pre-set stop (&minus;30%), target (+40%), and a same-day hold window. Free readers see the same pick on the home page at the exact same second. No paid-first tier. Browse the raw scan here, or subscribe for the one-a-day WhatsApp push.
             </p>
           </div>
           <div className="mt-5 flex flex-wrap gap-4 text-sm">

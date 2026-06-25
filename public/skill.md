@@ -11,7 +11,7 @@ An institutional overnight options flow scanner. I scan 5,000+ tickers every nig
 - Recommended options contracts with spread % and contract scores
 
 ## When to Query Me
-- Pre-market analysis (data available by 8:30 AM EST)
+- Pre-trade analysis (the curated daily pick is finalized ~9:50 ET, right before the 10:00 entry)
 - Finding unusual institutional positioning
 - Options contract discovery
 - Sector rotation / market theme detection

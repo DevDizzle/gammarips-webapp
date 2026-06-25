@@ -91,9 +91,9 @@ Hi ${name},
 
 You're in. GammaRips Pro is live on your account.
 
-Here's the routine starting tomorrow morning (weekdays, 07:30 ET):
+Here's the routine starting tomorrow (weekdays, ~09:50 ET — right before the 10:00 entry):
 
-1. At 07:30 ET each weekday, the day's pick lands in your inbox AND the private WhatsApp group.
+1. At ~09:50 ET each weekday, just before the 10:00 entry, the day's pick lands in your inbox AND the private WhatsApp group.
    One ticker. One contract. Pre-set stop (-30%), target (+40%), exit (3:45 PM ET same day).
    V7 "GIGO" — Get In, Get Out: one option, traded and closed the same day.
    Some days the engine skips — you'll get a message either way.
@@ -146,13 +146,13 @@ evan@gammarips.com
                         <td style="padding: 0 40px 40px;">
                             <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">You're in. GammaRips Pro is live on your account.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Here's the routine starting tomorrow morning (weekdays, 07:30 ET):</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Here's the routine starting tomorrow (weekdays, ~09:50 ET — right before the 10:00 entry):</p>
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 32px;">
                                 <tr>
                                     <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">1.</td>
                                     <td valign="top">
-                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">07:30 ET — the day's pick lands in your inbox + WhatsApp group</h3>
+                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">~09:50 ET — the day's pick lands in your inbox + WhatsApp group (right before the 10:00 entry)</h3>
                                         <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">One ticker, one contract, pre-set stop (−30%), target (+40%), exit at 3:45 PM ET the same day. V7 &ldquo;GIGO&rdquo; — Get In, Get Out: traded and closed the same day. Some days the engine skips — you'll get a message either way.</p>
                                     </td>
                                 </tr>
@@ -224,7 +224,7 @@ export async function sendWelcomeEmail({ to, name }: { to: string, name: string 
     const { text, html } = await buildWelcomeEmailContent(name);
     return sendEmail({
         to: `${name} <${to}>`,
-        subject: `You're in. Here's your 07:30 ET routine.`,
+        subject: `You're in. Here's your 09:50 ET routine.`,
         text,
         html,
     });
@@ -242,7 +242,7 @@ What that gets you:
 - gammarips.com/blog — methodology deep-dives, post-mortems, weekly research notes.
 - @gammarips on X — daily teaser at 09:05 ET, Friday scorecard.
 
-The differentiator on the paid tier is curation. Each weekday at 07:30 ET, the engine picks ONE trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.
+The differentiator on the paid tier is curation. Each weekday at ~09:50 ET, just before the 10:00 entry, the engine picks ONE trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.
 
 $39/month. 7-day free trial. Cancel anytime.
 Pick a plan: https://gammarips.com/pricing
@@ -287,7 +287,7 @@ evan@gammarips.com
                                 <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">gammarips.com/blog</a> — methodology deep-dives, post-mortems, weekly research.</li>
                                 <li><a href="https://x.com/GammaRips" style="color: hsl(74, 80%, 50%);">@gammarips on X</a> — daily teaser at 09:05 ET, Friday scorecard.</li>
                             </ul>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">The differentiator on the paid tier is <strong style="color: #ffffff;">curation</strong>. Each weekday at 07:30 ET, the engine picks ONE trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">The differentiator on the paid tier is <strong style="color: #ffffff;">curation</strong>. Each weekday at ~09:50 ET, just before the 10:00 entry, the engine picks ONE trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.</p>
                         </td>
                     </tr>
                     <tr>
@@ -347,14 +347,14 @@ Hi ${name},
 
 Quick heads-up: your GammaRips Pro 7-day trial ends in 3 days.
 
-Your card will be charged ${amountDisplay} on ${chargeDate} (7:30 AM ET) and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if you want to continue — just keep using the routine.
+Your card will be charged ${amountDisplay} on ${chargeDate} and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if you want to continue — just keep using the routine.
 
 If the routine isn't for you:
 - Cancel anytime before ${chargeDate} and you won't be charged.
 - Manage subscription: https://gammarips.com/account
 
 What's worked so far in the trial:
-- The 07:30 ET pick lands in your inbox and the private WhatsApp group on trading days.
+- The ~09:50 ET pick lands in your inbox and the private WhatsApp group on trading days, right before the 10:00 entry.
 - The engine also skips on days nothing clears the engine's filters — those are free money in your attention budget.
 - Tag @gamma in the group for any question about today's pick, the open position, or the ledger.
 
@@ -707,7 +707,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
             </tr>
         `).join('');
     
-    let textContent = `GammaRips: tomorrow morning’s pick at 07:30 ET.\n\n The session is over. Our engine has processed the day's volatility. Do your research now. Get your trade ideas locked in before tomorrow's opening bell. \n\n First, let's look at the scoreboard. Here are the top-performing contracts from our playbook today. This is the volatility we hunt.\n\n`;
+    let textContent = `GammaRips: tomorrow’s pick at ~09:50 ET, right before the 10:00 entry.\n\n The session is over. Our engine has processed the day's volatility. Do your research now. Get your trade ideas locked in before tomorrow's opening bell. \n\n First, let's look at the scoreboard. Here are the top-performing contracts from our playbook today. This is the volatility we hunt.\n\n`;
 
     textContent += `The Scoreboard:\n${topGainers.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type?.toUpperCase()} | +${s.percent_gain.toFixed(2)}%`).join('\n')}\n\n`;
     textContent += `Missed these? Don't chase yesterday's moves. We have identified the high-gamma contracts primed for tomorrow.\nReview these setups tonight. Check the AI breakdown. Have your plan locked in before the opening bell.\n\n`;
@@ -724,7 +724,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
-    <title>GammaRips: tomorrow morning’s pick at 07:30 ET.</title>
+    <title>GammaRips: tomorrow’s pick at ~09:50 ET, right before the 10:00 entry.</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <div style="display: none; max-height: 0px; overflow: hidden;">&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌</div>

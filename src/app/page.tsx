@@ -16,8 +16,8 @@ import { Separator } from "@/components/ui/separator";
 export const revalidate = 60; // keep todays_pick fresh without a full static rebuild
 
 export const metadata: Metadata = {
-  title: "GammaRips — One options trade a day. Pushed to your phone at 7:30 AM ET.",
-  description: "GammaRips scans institutional options flow overnight and mechanically picks one contract each morning — V7 'GIGO' (Get In, Get Out): one same-day intraday trade with stop, target, and exit pre-set. Browse the signals haystack free, or get the curated daily pick delivered to your inbox + WhatsApp at 07:30 ET. Paper-trading, educational only.",
+  title: "GammaRips — One options trade a day. Pushed to your phone at 9:50 ET.",
+  description: "GammaRips scans institutional options flow overnight and mechanically picks one contract each day — V7 'GIGO' (Get In, Get Out): one same-day intraday trade with stop, target, and exit pre-set. Browse the signals haystack free, or get the curated daily pick delivered to your inbox + WhatsApp at 09:50 ET, right before the 10:00 entry. Paper-trading, educational only.",
   alternates: {
     canonical: '/',
   },
@@ -145,7 +145,7 @@ export default async function LandingPage() {
 
                 <ProLock
                   title="Today's Pick"
-                  description="Subscribe to get the curated daily pick delivered to your inbox + WhatsApp group at 07:30 ET."
+                  description="Subscribe to get the curated daily pick delivered to your inbox + WhatsApp group at ~9:50 ET, right before the 10:00 entry."
                 >
                   <TodaysPickCard pick={todaysPick} embedded />
                 </ProLock>
@@ -279,7 +279,7 @@ export default async function LandingPage() {
         <section className="text-center space-y-4">
           <h2 className="text-3xl font-bold font-headline">Stop Trading Blind</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Most retail traders find out about institutional moves after the stock already popped. You'll see the positions at 8:30 AM — hours before the move. Every signal timestamped, every call tracked publicly. No cherry-picking, no hindsight.
+            Most retail traders find out about institutional moves after the stock already popped. You'll see the positions from the overnight scan before the open, and the curated pick lands ~9:50 ET — right before the 10:00 entry. Every signal timestamped, every call tracked publicly. No cherry-picking, no hindsight.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg">

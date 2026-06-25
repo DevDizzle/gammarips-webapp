@@ -36,17 +36,17 @@ export default function HowItWorksPage() {
           How GammaRips Works
         </h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-          One options trade a day, or none. Scored while you sleep, picked by a bracket tournament, pushed to your phone at 07:30 ET. Here&apos;s the full pipeline.
+          One options trade a day, or none. Scored while you sleep, picked by a bracket tournament, pushed to your phone at ~09:50 ET &mdash; right before the 10:00 entry. Here&apos;s the full pipeline.
         </p>
       </header>
 
       <Separator className="my-12 sm:my-16" />
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">Your morning at 07:30 ET</h2>
+        <h2 className="text-3xl font-bold font-headline">Your 09:50 ET routine</h2>
         <div className="p-6 rounded-lg border bg-primary/5 border-primary/20 text-muted-foreground space-y-4 leading-relaxed">
           <p>
-            At 07:30 ET, one message lands in your phone. Either it&apos;s today&apos;s single pick &mdash; one ticker, one contract, a pre-set &minus;30% stop and +40% target &mdash; or the engine says <em>no trade today</em> and you do nothing. This is V7 &ldquo;GIGO&rdquo; &mdash; Get In, Get Out: one option, traded and closed the same day.
+            At ~09:50 ET &mdash; about ten minutes before the 10:00 ET entry &mdash; one message lands in your phone. Either it&apos;s today&apos;s single pick &mdash; one ticker, one contract, a pre-set &minus;30% stop and +40% target &mdash; or the engine says <em>no trade today</em> and you do nothing. The pick lands right before the trade so it&apos;s set on fresh, real-time liquidity. This is V7 &ldquo;GIGO&rdquo; &mdash; Get In, Get Out: one option, traded and closed the same day.
           </p>
           <p>
             At 10:00 ET, you place the trade: buy one contract at market, arm both exit orders, put your phone down. At 15:45 ET the same day, an exit reminder fires if the trade is still open. Close at market, log the outcome, move on &mdash; nothing carries overnight.
@@ -109,7 +109,7 @@ export default function HowItWorksPage() {
       <section className="space-y-4">
         <h2 className="text-3xl font-bold font-headline">Picking the one trade: the tournament</h2>
         <p className="text-muted-foreground leading-relaxed">
-          At 07:30 ET, two <strong className="text-foreground">safety rails</strong> run over the enriched list first &mdash; and they are the only filters left:
+          Just before the pick goes out, two <strong className="text-foreground">safety rails</strong> run over the enriched list first &mdash; and they are the only filters left:
         </p>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
           <li><strong className="text-foreground">No earnings during the hold</strong> &mdash; any ticker reporting earnings the same trading day is dropped. Holding long options through an earnings print is a documented loss pattern.</li>
@@ -122,9 +122,10 @@ export default function HowItWorksPage() {
           <li><strong className="text-foreground">Three independent brackets.</strong> Each shuffles the pool into a fresh random order and reduces it in batches of ≤10 &mdash; an LLM advances the top 2 from each batch, round after round, until one winner remains.</li>
           <li><strong className="text-foreground">Consensus vote.</strong> The three bracket winners are compared: 3/3 agree &rarr; high confidence, 2/3 &rarr; medium, 1/3 &rarr; low. The consensus ticker is the pick.</li>
           <li><strong className="text-foreground">No memory, no rubric, no weights.</strong> Each batch gets a dead-simple prompt plus the daily report. Every candidate is leakage-checked before the model sees it, and any error fails closed &mdash; no trade rather than a forced one.</li>
+          <li><strong className="text-foreground">Live liquidity check.</strong> Right before the pick goes out, the engine re-checks each candidate&apos;s live open interest and drops any contract too illiquid to actually trade &mdash; so the one you get is one you can realistically enter and exit at fair prices.</li>
         </ul>
         <p className="text-muted-foreground leading-relaxed">
-          Some days the rails eliminate every candidate, the pool is empty, or the tournament fails closed &mdash; and the 07:30 message says <em>no trade today</em>. That&apos;s the correct behavior &mdash; skipping beats forcing a trade.
+          Some days the rails eliminate every candidate, the pool is empty, or the tournament fails closed &mdash; and the ~09:50 message says <em>no trade today</em>. That&apos;s the correct behavior &mdash; skipping beats forcing a trade.
         </p>
       </section>
 
@@ -166,7 +167,7 @@ export default function HowItWorksPage() {
       <Separator className="my-12 sm:my-16" />
 
       <div className="text-center">
-        <h2 className="text-2xl font-bold font-headline mb-4">Ready for tomorrow&apos;s 07:30 ET pick?</h2>
+        <h2 className="text-2xl font-bold font-headline mb-4">Ready for tomorrow&apos;s 09:50 ET pick?</h2>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild size="lg">
             <Link href="/pricing">See pricing <ArrowRight className="ml-2 h-5 w-5" /></Link>

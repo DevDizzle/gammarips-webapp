@@ -11,7 +11,7 @@ const Footer = () => {
             <h3 className="text-xl font-bold font-headline">
                 <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
             </h3>
-            <p className="text-sm text-muted-foreground mt-2">One options trade a day. Pushed to your phone at 7:30 AM ET.</p>
+            <p className="text-sm text-muted-foreground mt-2">One options trade a day. Pushed to your phone at 9:50 ET — right before the 10:00 entry.</p>
           </div>
           <div>
             <h4 className="font-semibold text-foreground">Product</h4>

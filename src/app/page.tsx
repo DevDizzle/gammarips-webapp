@@ -9,9 +9,15 @@ import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
 import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getLatestTodaysPick, getCohortStats, getBlogPostsAdmin } from "@/lib/firebase-admin";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import { TodaysPickCard } from "@/components/landing/todays-pick-card";
+import { NextPickCountdown } from "@/components/landing/next-pick-countdown";
 import { CohortStatsTiles, formatCohortStartDate } from "@/components/landing/cohort-stats-row";
 import { ProLock } from "@/components/ui/pro-lock";
 import { Separator } from "@/components/ui/separator";
+import {
+  resolvePickFreshness,
+  formatPickTargetLabel,
+  formatEtWeekday,
+} from "@/lib/trading-calendar";
 
 export const revalidate = 60; // keep todays_pick fresh without a full static rebuild
 
@@ -37,6 +43,26 @@ export default async function LandingPage() {
   const todaysPick = await getLatestTodaysPick();
   const cohortStats = await getCohortStats();
   const blogPosts = await getBlogPostsAdmin();
+
+  // Is the latest pick genuinely "today's", or spent? Drives whether the card
+  // shows the live pick or a countdown to the next pick. See trading-calendar.ts.
+  const pickView = todaysPick
+    ? resolvePickFreshness({
+        hasPick: todaysPick.has_pick,
+        effectiveAt: todaysPick.effective_at,
+        now: new Date(),
+      })
+    : null;
+  const lastClosedPick =
+    todaysPick?.has_pick && todaysPick.ticker
+      ? {
+          ticker: todaysPick.ticker,
+          direction: todaysPick.direction ?? "",
+          closedLabel: todaysPick.effective_at
+            ? formatEtWeekday(todaysPick.effective_at)
+            : "",
+        }
+      : null;
 
   const topBull = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 5) : [];
   const topSignals = [...topBull]
@@ -143,12 +169,37 @@ export default async function LandingPage() {
 
                 <Separator />
 
-                <ProLock
-                  title="Today's Pick"
-                  description="Subscribe to get the curated daily pick delivered to your inbox + WhatsApp group at ~9:50 ET, right before the 10:00 entry."
-                >
-                  <TodaysPickCard pick={todaysPick} embedded />
-                </ProLock>
+                {pickView?.kind === "live" && (
+                  <ProLock
+                    title="Today's Pick"
+                    description="Subscribe to get the curated daily pick delivered to your inbox + WhatsApp group at ~9:50 ET, right before the 10:00 entry."
+                  >
+                    <TodaysPickCard
+                      pick={todaysPick}
+                      embedded
+                      positionClosed={pickView.positionClosed}
+                    />
+                  </ProLock>
+                )}
+
+                {pickView?.kind === "countdown" && (
+                  <NextPickCountdown
+                    targetIso={pickView.nextPickAt}
+                    targetLabel={formatPickTargetLabel(pickView.nextPickAt)}
+                    lastPick={lastClosedPick}
+                  />
+                )}
+
+                {pickView?.kind === "standdown" && (
+                  <div className="space-y-4">
+                    <TodaysPickCard pick={todaysPick} embedded />
+                    <NextPickCountdown
+                      targetIso={pickView.nextPickAt}
+                      targetLabel={formatPickTargetLabel(pickView.nextPickAt)}
+                      compact
+                    />
+                  </div>
+                )}
 
                 <p className="text-[11px] text-muted-foreground text-center leading-tight">
                   Paper-traded · Educational only · Not investment advice

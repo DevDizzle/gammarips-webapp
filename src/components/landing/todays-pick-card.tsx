@@ -68,12 +68,16 @@ function formatConsensus(confidence: string | undefined): string | null {
 export function TodaysPickCard({
   pick,
   embedded = false,
+  positionClosed = false,
 }: {
   pick: TodaysPick;
   /** When true, skip the outer <Card>/<section> chrome. The parent panel
    *  owns the brand border so we don't double up. Used by the unified
    *  live-stats panel on the landing page. */
   embedded?: boolean;
+  /** True after the 15:45 ET same-day exit (until the 16:00 close-flip):
+   *  the pick is still today's, but the position has been closed. */
+  positionClosed?: boolean;
 }) {
   if (!pick.has_pick) {
     const reason = pick.skip_reason
@@ -119,6 +123,9 @@ export function TodaysPickCard({
         </p>
         <p className="text-xs text-muted-foreground">
           Entry {formatEffectiveAt(pick.effective_at)}
+          {positionClosed && (
+            <span className="ml-1 text-muted-foreground/80">· position closed for today</span>
+          )}
         </p>
       </div>
 

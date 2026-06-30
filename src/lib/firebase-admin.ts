@@ -283,8 +283,22 @@ export interface TodaysPick {
   recommended_contract?: string;
   recommended_strike?: number;
   recommended_expiration?: string;
-  recommended_mid_price?: number;
+  recommended_mid_price?: number; // overnight scan-time mark — fallback only (2026-06-30)
   recommended_dte?: number;
+  // Fresh entry-day (~09:50 ET) mark + fair-value limit, published post-selection
+  // (2026-06-30, signal-notifier). Display only; never re-enters selection.
+  // entry_mark is null when the live mark couldn't be fetched
+  // (entry_mark_source === 'unavailable') — render falls back to recommended_mid_price.
+  entry_mark?: number | null;
+  entry_mark_asof?: string | null; // ISO8601 of the last printed trade
+  entry_mark_source?: 'last_trade' | 'day_close' | 'unavailable';
+  entry_mark_stale?: boolean; // last trade older than ~15 min
+  limit_entry_price?: number | null; // suggested marketable BUY limit
+  do_not_chase_above?: number | null; // hard cap — skip if it ran past this
+  limit_good_til?: string; // e.g. "10:15 ET"
+  display_target_price?: number | null; // +40% off the mark (V7.1 GIGO reference)
+  display_stop_price?: number | null; // -30% off the mark (V7.1 GIGO reference)
+  entry_bracket_basis?: string; // "live_entry_day_mark"
   overnight_score?: number;
   vol_oi_ratio?: number;
   moneyness_pct?: number;

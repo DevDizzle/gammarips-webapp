@@ -43,22 +43,6 @@ function formatEffectiveAt(isoString: string | null): string {
   }
 }
 
-// Render the entry-mark as-of time (ISO8601) as a short ET clock label.
-function formatMarkTime(iso: string | null | undefined): string {
-  if (!iso) return "9:50 ET";
-  try {
-    return (
-      new Date(iso).toLocaleTimeString("en-US", {
-        timeZone: "America/New_York",
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      }) + " ET"
-    );
-  } catch {
-    return "9:50 ET";
-  }
-}
 
 function formatMoneyMillions(v: number | undefined): string {
   if (v === undefined || v === null) return "—";
@@ -132,23 +116,6 @@ export function TodaysPickCard({
     ? "bg-green-500/20 text-green-500 border-green-500/40"
     : "bg-red-500/20 text-red-500 border-red-500/40";
 
-  // Fresh entry-day (~09:50 ET) mark + fair-value limit (2026-06-30). Falls back
-  // to the overnight mid when the live mark is unavailable.
-  const markStr = pick.entry_mark != null ? `$${pick.entry_mark.toFixed(2)}` : null;
-  const hasFreshMark = markStr != null && pick.entry_mark_source !== "unavailable";
-  const midStr =
-    pick.recommended_mid_price != null ? `$${pick.recommended_mid_price.toFixed(2)}` : "—";
-  const entryValue = hasFreshMark && markStr ? markStr : midStr;
-  const entryAsof = formatMarkTime(pick.entry_mark_asof);
-  const limitStr =
-    pick.limit_entry_price != null ? `$${pick.limit_entry_price.toFixed(2)}` : null;
-  const chaseStr =
-    pick.do_not_chase_above != null ? `$${pick.do_not_chase_above.toFixed(2)}` : null;
-  const targetStr =
-    pick.display_target_price != null ? `$${pick.display_target_price.toFixed(2)}` : null;
-  const stopStr =
-    pick.display_stop_price != null ? `$${pick.display_stop_price.toFixed(2)}` : null;
-  const showLimitBlock = hasFreshMark && limitStr != null && chaseStr != null;
 
   const pickInner = (
     <div className="space-y-5">
@@ -183,7 +150,7 @@ export function TodaysPickCard({
               )}
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
               <div>
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">Strike</p>
                 <p className="font-semibold">{pick.recommended_strike ?? "—"}</p>
@@ -194,46 +161,12 @@ export function TodaysPickCard({
               </div>
               <div>
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                  {hasFreshMark ? "Entry" : "Mid"}
-                </p>
-                <p className="font-semibold">{entryValue}</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider">
                   {isBull ? "Call $ Vol" : "Put $ Vol"}
                 </p>
                 <p className="font-semibold">{formatMoneyMillions(directionalFlow)}</p>
               </div>
             </div>
 
-            {showLimitBlock && (
-              <div className="rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-sm">
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <span className="font-semibold">Limit BUY {limitStr}</span>
-                  <span className="text-muted-foreground">
-                    don&apos;t chase above {chaseStr}
-                    {pick.limit_good_til ? ` · good till ${pick.limit_good_til}` : ""}
-                  </span>
-                  {pick.entry_mark_stale && (
-                    <Badge
-                      variant="outline"
-                      className="text-[10px] border-amber-500/50 text-amber-500"
-                    >
-                      stale mark
-                    </Badge>
-                  )}
-                </div>
-                {targetStr && stopStr && (
-                  <p className="mt-1 text-muted-foreground">
-                    Target {targetStr} (+40%) · Stop {stopStr} (−30%)
-                  </p>
-                )}
-                <p className="mt-2 text-xs text-muted-foreground/80">
-                  Mark as of {entryAsof}. Reference levels off that mark — your actual
-                  fill sets your bracket.
-                </p>
-              </div>
-            )}
 
             <div className="pt-4 border-t border-border">
               <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wider">

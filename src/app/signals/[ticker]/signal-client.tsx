@@ -257,10 +257,6 @@ export default function SignalClientPage({
                   <span className="font-mono">{signal.recommended_expiration || "—"}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b">
-                  <span className="text-muted-foreground">Mid Price</span>
-                  <span className="font-mono">{signal.recommended_mid_price ? `$${signal.recommended_mid_price.toFixed(2)}` : "—"}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b">
                   <span className="text-muted-foreground">Contract Score</span>
                   <span className="font-mono">{signal.contract_score ? `${signal.contract_score}/10` : "—"}</span>
                 </div>

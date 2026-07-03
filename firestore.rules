@@ -18,6 +18,14 @@ service cloud.firestore {
       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
     }
 
+    // MCP API keys are server-only (Admin SDK). No client may read or write —
+    // the doc id is a key hash and the collection is the auth source of truth
+    // for the paid MCP. Explicit here (also covered by the default-deny below)
+    // so it can never be loosened by accident.
+    match /mcp_api_keys/{keyHash} {
+      allow read, write: if false;
+    }
+
     // Default deny all other collections for security.
     // We can add specific rules for other collections like 'users' later if needed.
     match /{document=**} {

@@ -1,25 +1,101 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { sendPasswordReset } from '@/app/actions';
+import {
+  sendPasswordReset,
+  generateMcpApiKey,
+  getMcpApiKeyStatus,
+  revokeMcpApiKey,
+} from '@/app/actions';
 import { Loader2 } from 'lucide-react';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { FREE_MODE } from '@/lib/config';
 
+const MCP_ENDPOINT = 'https://gammarips-mcp-406581297632.us-central1.run.app/mcp';
+
 
 export default function AccountPage() {
   const { user, dbUser, loading: authLoading, isPro } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
+
+  // MCP API key state
+  const [keyStatus, setKeyStatus] = useState<{
+    hasActiveKey: boolean;
+    keyPrefix: string | null;
+    createdAtISO: string | null;
+  } | null>(null);
+  const [newKey, setNewKey] = useState<string | null>(null); // shown once
+  const [keyBusy, setKeyBusy] = useState(false);
+
+  const refreshKeyStatus = useCallback(async () => {
+    if (!user || !isPro) return;
+    try {
+      const token = await user.getIdToken();
+      setKeyStatus(await getMcpApiKeyStatus(token));
+    } catch {
+      // non-fatal — the section still renders a generate button
+    }
+  }, [user, isPro]);
+
+  useEffect(() => {
+    refreshKeyStatus();
+  }, [refreshKeyStatus]);
+
+  const handleGenerateKey = async () => {
+    if (!user) return;
+    setKeyBusy(true);
+    try {
+      const token = await user.getIdToken();
+      const { key } = await generateMcpApiKey(token);
+      setNewKey(key);
+      await refreshKeyStatus();
+      toast({ title: 'API key generated', description: 'Copy it now — it is shown only once.' });
+    } catch (error: any) {
+      toast({
+        title: 'Could not generate key',
+        description: error?.message || 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setKeyBusy(false);
+    }
+  };
+
+  const handleRevokeKey = async () => {
+    if (!user) return;
+    if (!confirm('Revoke your current API key? Any agent using it will lose access immediately.')) return;
+    setKeyBusy(true);
+    try {
+      const token = await user.getIdToken();
+      await revokeMcpApiKey(token);
+      setNewKey(null);
+      await refreshKeyStatus();
+      toast({ title: 'API key revoked' });
+    } catch (error: any) {
+      toast({
+        title: 'Could not revoke key',
+        description: error?.message || 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setKeyBusy(false);
+    }
+  };
+
+  const copy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({ title: 'Copied to clipboard' });
+  };
 
   const handlePasswordReset = async () => {
     if (!user?.email) return;
@@ -87,22 +163,71 @@ export default function AccountPage() {
           {isPro ? (
             <>
               <p className="text-muted-foreground">
-                Your subscription includes full MCP Agent Access (all 23
-                tools). Your API key arrives by email shortly after you
-                subscribe. Haven&apos;t received it? Email{' '}
-                <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">
-                  evan@gammarips.com
-                </a>{' '}
-                and we&apos;ll sort it immediately.
+                Your subscription includes full MCP Agent Access (all 23 tools).
+                Generate an API key and connect Claude, ChatGPT, or your own
+                agent.
               </p>
+
+              {/* One-time reveal of a freshly generated key */}
+              {newKey && (
+                <div className="p-4 rounded border border-green-600 bg-green-500/10 space-y-2">
+                  <p className="text-sm font-semibold text-green-500">
+                    ⚠️ Copy this key now — you won&apos;t be able to see it again.
+                  </p>
+                  <code className="block p-2 bg-muted rounded text-sm font-mono break-all">
+                    {newKey}
+                  </code>
+                  <Button size="sm" variant="outline" onClick={() => copy(newKey)}>
+                    Copy key
+                  </Button>
+                </div>
+              )}
+
+              {/* Current key status + actions */}
+              {!newKey && (
+                <div className="space-y-2">
+                  {keyStatus?.hasActiveKey ? (
+                    <p className="text-sm text-muted-foreground">
+                      Active key: <code className="text-primary">{keyStatus.keyPrefix}…</code>
+                      {keyStatus.createdAtISO
+                        ? ` · created ${new Date(keyStatus.createdAtISO).toLocaleDateString()}`
+                        : ''}
+                      . For security the full key is only shown at creation.
+                    </p>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No active API key yet.</p>
+                  )}
+                  <div className="flex flex-wrap gap-2">
+                    <Button onClick={handleGenerateKey} disabled={keyBusy}>
+                      {keyBusy && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                      {keyStatus?.hasActiveKey ? 'Regenerate key' : 'Generate API key'}
+                    </Button>
+                    {keyStatus?.hasActiveKey && (
+                      <Button variant="destructive" onClick={handleRevokeKey} disabled={keyBusy}>
+                        Revoke
+                      </Button>
+                    )}
+                  </div>
+                  {keyStatus?.hasActiveKey && (
+                    <p className="text-xs text-muted-foreground">
+                      Regenerating immediately invalidates your previous key.
+                    </p>
+                  )}
+                </div>
+              )}
+
               <div>
                 <p className="text-sm font-semibold mb-2">MCP Endpoint:</p>
-                <code className="block p-2 bg-muted rounded text-sm font-mono">
-                  https://gammarips-mcp-406581297632.us-central1.run.app/mcp
+                <code className="block p-2 bg-muted rounded text-sm font-mono break-all">
+                  {MCP_ENDPOINT}
                 </code>
                 <p className="text-xs text-muted-foreground mt-2">
                   Transport: Streamable HTTP • Auth: Authorization: Bearer &lt;your key&gt;
                 </p>
+                <code className="block p-2 mt-2 bg-muted rounded text-xs font-mono break-all">
+                  claude mcp add --transport http gammarips {MCP_ENDPOINT} --header
+                  &quot;Authorization: Bearer &lt;your key&gt;&quot;
+                </code>
               </div>
             </>
           ) : (

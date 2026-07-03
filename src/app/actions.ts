@@ -5,6 +5,10 @@ import {
     saveFeedbackAdmin,
     saveCancellationFeedbackAdmin,
     getAdminApp,
+    isUserMcpEntitledAdmin,
+    provisionMcpKeyAdmin,
+    revokeMcpKeysForUserAdmin,
+    getMcpKeyMetaAdmin,
 } from '@/lib/firebase-admin';
 import { getAuth as getAdminAuth } from 'firebase-admin/auth';
 import { createStripeCheckoutSession, createStripePortalSession } from '@/lib/stripe';
@@ -68,6 +72,50 @@ export async function createCheckoutSession(idToken: string, gaClientId: string 
 export async function sendPasswordReset(email: string): Promise<void> {
   const auth = getClientAuth(app);
   await sendPasswordResetEmail(auth, email);
+}
+
+// --- MCP API key lifecycle (self-serve, show-once) -------------------------
+
+async function requireEntitledUid(idToken: string): Promise<string> {
+  if (!idToken) throw new Error('Authentication required.');
+  const decoded = await getAdminAuth(getAdminApp()).verifyIdToken(idToken);
+  const uid = decoded.uid;
+  const user = await getOrCreateUserAdmin(uid);
+  // Server-side entitlement — the real paid signal, NOT the client's isPro and
+  // NOT the site-wide FREE_MODE flag. MCP access is the paid product.
+  if (!isUserMcpEntitledAdmin(user)) {
+    throw new Error('An active GammaRips subscription is required to generate an API key.');
+  }
+  return uid;
+}
+
+/**
+ * Generate (or rotate) the caller's MCP API key. Returns the RAW key exactly
+ * once — it is never stored or recoverable. Any prior active key is revoked.
+ */
+export async function generateMcpApiKey(
+  idToken: string
+): Promise<{ key: string; keyPrefix: string; createdAtISO: string }> {
+  const uid = await requireEntitledUid(idToken);
+  const { rawKey, keyPrefix, createdAtISO } = await provisionMcpKeyAdmin(uid);
+  return { key: rawKey, keyPrefix, createdAtISO };
+}
+
+/** Non-secret status of the caller's key (prefix + created date), for /account. */
+export async function getMcpApiKeyStatus(
+  idToken: string
+): Promise<{ hasActiveKey: boolean; keyPrefix: string | null; createdAtISO: string | null }> {
+  if (!idToken) throw new Error('Authentication required.');
+  const decoded = await getAdminAuth(getAdminApp()).verifyIdToken(idToken);
+  return getMcpKeyMetaAdmin(decoded.uid);
+}
+
+/** Manually revoke the caller's key(s) (e.g. suspected leak). */
+export async function revokeMcpApiKey(idToken: string): Promise<{ revoked: number }> {
+  if (!idToken) throw new Error('Authentication required.');
+  const decoded = await getAdminAuth(getAdminApp()).verifyIdToken(idToken);
+  const revoked = await revokeMcpKeysForUserAdmin(decoded.uid, 'user_revoked');
+  return { revoked };
 }
 
 export async function handleCancellationIntent(uid: string, feedback: string): Promise<{ portalUrl: string }> {

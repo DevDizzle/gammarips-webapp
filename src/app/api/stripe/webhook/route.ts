@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
-import { setUserSubscriptionStatusAdmin, getUserByStripeCustomerIdAdmin } from '@/lib/firebase-admin';
+import { setUserSubscriptionStatusAdmin, getUserByStripeCustomerIdAdmin, revokeMcpKeysForUserAdmin } from '@/lib/firebase-admin';
 import { sendWelcomeEmail, sendTrialEndingEmail } from '@/lib/mailgun';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'; // Import direct firestore access
 
@@ -17,6 +17,15 @@ const PRO_PRICE_ID =
 const PRICE_TO_PLAN: Record<string, 'pro'> = PRO_PRICE_ID
   ? { [PRO_PRICE_ID]: 'pro' }
   : {};
+
+// Terminal Stripe subscription statuses that revoke MCP key access. 'past_due'
+// is intentionally excluded (dunning grace, mirrors the 2-day proUntil grace);
+// 'active' and 'trialing' keep access.
+const MCP_REVOKE_STATUSES = new Set<Stripe.Subscription.Status>([
+  'canceled',
+  'unpaid',
+  'incomplete_expired',
+]);
 
 async function updateSubscriptionStatus(
     customerId: string, 
@@ -95,7 +104,7 @@ async function handleSubscriptionChange(
             subscription.current_period_end,
             finalPlan
         );
-        
+
         // Update detailed status fields
         const db = getFirestore();
         await db.collection('users').doc(user.uid).set({
@@ -104,6 +113,20 @@ async function handleSubscriptionChange(
             plan: finalPlan, // Ensure plan is set
             ...(isNew ? { subscribedAt: FieldValue.serverTimestamp() } : {})
         }, { merge: true });
+
+        // Real-time MCP key revocation on lapse. Keyed on the ACTUAL terminal
+        // Stripe status (NOT `isSubscribed`, which treats 'trialing' as false
+        // and would wrongly revoke a trial user's key). 'past_due' is left
+        // active during dunning to match the 2-day proUntil grace; the
+        // reconciliation cron is the safety net for any missed webhook.
+        if (MCP_REVOKE_STATUSES.has(subscription.status)) {
+            try {
+                const n = await revokeMcpKeysForUserAdmin(user.uid, `stripe_${subscription.status}`);
+                if (n > 0) console.log(`Webhook: revoked ${n} MCP key(s) for ${user.uid} (${subscription.status})`);
+            } catch (err) {
+                console.error(`Webhook: failed to revoke MCP keys for ${user.uid}`, err);
+            }
+        }
 
         // Send the powerful new welcome email ONLY on a new active subscription.
         if (isSubscribed && isNew && user.email) {
@@ -176,7 +199,8 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
 
 
 export async function POST(req: NextRequest) {
-  // Webhook disabled/dormant — GammaRips is free
+  // Live for paid MCP access (Phase 3). Handles subscription lifecycle:
+  // provisions entitlement on activate, revokes MCP keys on lapse.
   const buf = await req.text();
   const headersList = await headers();
   const sig = headersList.get('Stripe-Signature')!;

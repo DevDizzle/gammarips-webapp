@@ -169,7 +169,7 @@ export default async function ReportPage({ params }: Props) {
         </div>
         <div className="flex flex-wrap gap-4">
           <Link href="/reports" className="text-muted-foreground hover:text-primary">All reports</Link>
-          <Link href="/" className="text-muted-foreground hover:text-primary">See today&apos;s pick</Link>
+          <Link href="/signals" className="text-muted-foreground hover:text-primary">Browse today&apos;s full pool</Link>
         </div>
       </nav>
 

@@ -68,7 +68,7 @@ export function EmailCapture({ variant = 'default' }: { variant?: 'default' | 'm
                           One email a week. Catch up in five minutes.
                         </h3>
                         <p className="mb-6 max-w-md text-sm text-zinc-400">
-                          The GammaRips weekly briefing — engine state, the latest deep-dive, and the picks on the public ledger. No firehose, no FOMO.
+                          The GammaRips weekly briefing — engine state, the latest Lab experiment, and what the pool&apos;s outcome data showed. No firehose, no FOMO.
                         </p>
                     </>
                 )}

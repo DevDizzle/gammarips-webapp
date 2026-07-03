@@ -31,7 +31,7 @@ export default function HowItWorksPage() {
     <section className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <header className="text-center">
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">Education</p>
+        <p className="text-sm font-semibold uppercase tracking-wider text-primary">Learn</p>
         <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
           How GammaRips Works
         </h1>
@@ -150,6 +150,40 @@ export default function HowItWorksPage() {
         </ul>
         <p className="text-muted-foreground leading-relaxed">
           Every closed trade &mdash; winners and losers, counted the same way &mdash; is written to the public paper-trading ledger at <Link href="/scorecard" className="text-primary hover:underline">/scorecard</Link>. One honest caveat, straight from <Link href="/lab" className="text-primary hover:underline">the Lab</Link>: a fixed bracket like this is a measurement instrument, not a strategy &mdash; our own research shows the same setups produce very different outcomes under different exits. That&apos;s exactly why the MCP ships an exit-rule simulator instead of a rule to copy.
+        </p>
+      </section>
+
+      <Separator className="my-12 sm:my-16" />
+
+      <section className="space-y-4">
+        <h2 className="text-3xl font-bold font-headline">What is agentic trading &mdash; and how do you try it?</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          Agentic trading means using an AI agent &mdash; Claude, ChatGPT, or one you build &mdash;
+          as your own market analyst instead of following someone else&apos;s calls. You don&apos;t ask
+          it for a pick. You give it real data, it reasons over the whole surface &mdash; today&apos;s
+          pool, how similar setups actually resolved, what the volatility regime looks like &mdash;
+          and it hands you a decision surface. The judgment, the sizing, and the trade stay yours.
+        </p>
+        <p className="text-muted-foreground leading-relaxed">
+          The catch most people discover the hard way: a chatbot without data will happily improvise.
+          Ask a raw model about a ticker&apos;s options flow and you get confident fiction &mdash; its
+          knowledge froze months ago and no options-flow data exists in any training set. The fix is
+          not a smarter model; it&apos;s a connected one.
+        </p>
+        <p className="text-muted-foreground leading-relaxed">
+          Here&apos;s the on-ramp, cheapest step first. <strong className="text-foreground">Step 1 — free,
+          no account:</strong> browse <Link href="/signals" className="text-primary hover:underline">today&apos;s
+          pool</Link> and the <Link href="/scorecard" className="text-primary hover:underline">Track
+          Record</Link> yourself; that&apos;s the same data your agent would reason over.{' '}
+          <strong className="text-foreground">Step 2 &mdash; free, no card:</strong> point any MCP-capable
+          agent at our server&apos;s anonymous tier and let it taste the pool preview, daily reports, and
+          methodology playbooks. <strong className="text-foreground">Step 3 &mdash; the full data
+          layer:</strong> with <Link href="/developers" className="text-primary hover:underline">Agent
+          Access</Link>, your agent queries the complete outcome history, opportunity surfaces, and
+          exit-rule simulator &mdash; and can even run our bracket-tournament selection pattern against
+          your own objective. Setup for all three takes minutes, and the{' '}
+          <Link href="/developers" className="text-primary hover:underline">For Your Agent</Link> page
+          walks you through it.
         </p>
       </section>
 

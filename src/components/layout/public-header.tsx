@@ -19,17 +19,16 @@ export function PublicHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
+  // Six items, two audiences: pool/track-record/learn for arriving traders,
+  // for-your-agent/pricing for buyers. Home = logo; About/Reports/Lab live in
+  // the footer and inside Track Record.
   const links = [
-    { href: '/', label: 'Home' },
-    { href: '/signals', label: 'Signals' },
-    { href: '/reports', label: 'Reports' },
-    { href: '/lab', label: 'Lab' },
+    { href: '/signals', label: "Today's Pool" },
+    { href: '/scorecard', label: 'Track Record' },
+    { href: '/how-it-works', label: 'Learn' },
     { href: '/blog', label: 'Blog' },
-    { href: '/how-it-works', label: 'How It Works' },
-    { href: '/scorecard', label: 'Scorecard' },
+    { href: '/developers', label: 'For Your Agent' },
     { href: '/pricing', label: 'Pricing' },
-    { href: '/about', label: 'About' },
-    { href: '/developers', label: 'MCP' },
   ];
 
   return (

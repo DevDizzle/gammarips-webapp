@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Scan, LineChart, Bot, FlaskConical } from "lucide-react";
-import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getCohortStats, getBlogPostsAdmin } from "@/lib/firebase-admin";
+import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getPoolOutcomes, getBlogPostsAdmin } from "@/lib/firebase-admin";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import { AgentDemo } from "@/components/landing/agent-demo";
-import { CohortStatsTiles, formatCohortStartDate } from "@/components/landing/cohort-stats-row";
+import { PoolOutcomesTiles } from "@/components/landing/pool-outcomes-tiles";
 import { Separator } from "@/components/ui/separator";
 
 export const revalidate = 60; // keep the daily pool summary fresh without a full static rebuild
@@ -32,7 +32,7 @@ export default async function LandingPage() {
   const summary = await getLatestOvernightSummary();
   const reportDate = summary ? (summary.report_date || summary.scan_date) : null;
   const report = reportDate ? await getDailyReport(reportDate) : null;
-  const cohortStats = await getCohortStats();
+  const poolOutcomes = await getPoolOutcomes();
   const blogPosts = await getBlogPostsAdmin();
 
   const topBull = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 5) : [];
@@ -110,34 +110,33 @@ export default async function LandingPage() {
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
 
-        {/* Live panel — public validation-cohort stats above the divider,
-            an illustrative agent session below it. The pick itself is not a
-            product; the pool + the data layer are. */}
+        {/* Live panel — whole-pool outcome record above the divider,
+            an illustrative agent session below it. The pool + the data
+            layer are the product; there is no public pick. */}
         <section id="engine-live">
           <Card className="border-primary/40 bg-card/90 shadow-[0_0_30px_rgba(234,179,8,0.08)]">
             <CardContent className="p-6 md:p-8 space-y-6">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div>
                   <p className="text-xs uppercase tracking-wider text-primary font-semibold">
-                    GammaRips · V7 Engine Live
+                    GammaRips · Engine Live
                   </p>
                   <h2 className="text-xl md:text-2xl font-bold font-headline mt-1">
-                    The engine validates itself in public.
+                    Every candidate, tracked to its outcome.
                   </h2>
                   <p className="text-sm text-muted-foreground mt-1">
-                    A paper-traded cohort tests the selection methodology every
-                    market day, under fixed mechanical rules. Every outcome is
-                    logged, nothing is edited after the fact.
+                    The whole pool enters the outcome record — winners and
+                    losers counted the same way, nothing edited after the fact.
                   </p>
                 </div>
-                {cohortStats && (
+                {poolOutcomes && (
                   <Badge variant="outline" className="text-[11px] text-muted-foreground border-muted-foreground/30">
-                    Cohort since {formatCohortStartDate(cohortStats.cohort_start)}
+                    Since {poolOutcomes.first_scan_date} · {poolOutcomes.scan_days} scan days
                   </Badge>
                 )}
               </div>
 
-              <CohortStatsTiles stats={cohortStats} />
+              <PoolOutcomesTiles outcomes={poolOutcomes} />
 
               <Separator />
 
@@ -148,11 +147,6 @@ export default async function LandingPage() {
                 <AgentDemo />
               </div>
 
-              {cohortStats && cohortStats.trades_closed < 30 && (
-                <p className="text-[11px] text-muted-foreground text-center leading-tight">
-                  Preliminary — small sample ({cohortStats.trades_closed} closed trades). Per our disclosures, we make no claims from these numbers before 30 closed trades.
-                </p>
-              )}
               <p className="text-[11px] text-muted-foreground text-center leading-tight">
                 Paper-traded · Educational only · Not investment advice
               </p>
@@ -199,13 +193,13 @@ export default async function LandingPage() {
                   </Link>
                 </div>
 
-                {/* Signal counts — raw overnight scan (all directions), before
-                    the BULLISH-only gate. The curated pool is bullish-only. */}
-                <p className="text-xs text-muted-foreground mb-2">Raw overnight scan (all directions)</p>
+                {/* Pool counts — the enriched candidate set. Bullish-only is a
+                    deliberate gate (see methodology), so bear is expected to be 0. */}
+                <p className="text-xs text-muted-foreground mb-2">Today&apos;s enriched pool (bullish-only by design)</p>
                 <div className="flex gap-6 mb-4">
                   <div>
                     <span className="text-3xl font-bold">{report?.total_signals || summary.total_signals}</span>
-                    <span className="text-sm text-muted-foreground ml-2">signals scanned</span>
+                    <span className="text-sm text-muted-foreground ml-2">candidates enriched</span>
                   </div>
                   <div>
                     <span className="text-3xl font-bold text-green-500">{report?.bullish_count || summary.bullish_count || 0}</span>

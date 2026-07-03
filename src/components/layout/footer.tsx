@@ -20,6 +20,7 @@ const Footer = () => {
               <li><Link href="/signals" className="text-muted-foreground hover:text-primary">Signals</Link></li>
               <li><Link href="/reports" className="text-muted-foreground hover:text-primary">Daily Reports</Link></li>
               <li><Link href="/lab" className="text-muted-foreground hover:text-primary">The Lab</Link></li>
+              <li><Link href="/scorecard" className="text-muted-foreground hover:text-primary">Track Record</Link></li>
               <li><Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing</Link></li>
               <li><Link href="/developers" className="text-muted-foreground hover:text-primary">MCP / Developers</Link></li>
               <li><Link href="/llms.txt" className="text-muted-foreground hover:text-primary">llms.txt</Link></li>
@@ -32,7 +33,6 @@ const Footer = () => {
               <li><Link href="/how-it-works" className="text-muted-foreground hover:text-primary">How It Works</Link></li>
               <li><Link href="/blog" className="text-muted-foreground hover:text-primary">Blog</Link></li>
               <li><Link href="/methodology" className="text-muted-foreground hover:text-primary">Methodology</Link></li>
-              <li><Link href="/scorecard" className="text-muted-foreground hover:text-primary">Scorecard</Link></li>
             </ul>
           </div>
           <div>

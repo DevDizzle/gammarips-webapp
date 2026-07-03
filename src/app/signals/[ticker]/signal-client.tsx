@@ -75,6 +75,17 @@ export default function SignalClientPage({
             >
               <FileText className="w-4 h-4" /> See the {signal.scan_date} Morning Briefing
             </Link>
+            <p className="mt-3 text-sm text-muted-foreground max-w-xl">
+              This is one candidate from GammaRips&apos; nightly scan of 5,000+
+              tickers, curated into a small high-signal pool and tracked to its
+              outcome — data, not a recommendation.{" "}
+              <Link href="/how-it-works" className="text-primary hover:underline">
+                New here? See how the pool is built →
+              </Link>{" "}
+              <Link href="/developers" className="text-primary hover:underline">
+                Or put your AI agent on this data →
+              </Link>
+            </p>
           </div>
 
           <div className="flex gap-4 text-center">
@@ -239,7 +250,7 @@ export default function SignalClientPage({
             {/* Contract Setup */}
             <Card className="relative overflow-hidden">
               <CardHeader>
-                <CardTitle>Recommended Setup</CardTitle>
+                <CardTitle>Engine-Selected Contract</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between py-2 border-b">

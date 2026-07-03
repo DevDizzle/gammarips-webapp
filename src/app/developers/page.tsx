@@ -120,23 +120,28 @@ export default function DevelopersPage() {
             id="connect"
           >
             <div className="text-center space-y-4">
-              <h2 className="text-2xl font-bold font-headline">Connect Your Agent</h2>
-              <code className="block p-3 bg-muted rounded text-sm break-all">
-                {MCP_ENDPOINT}
-              </code>
+              <h2 className="text-2xl font-bold font-headline">Taste it right now &mdash; free, no card, no key</h2>
+              <pre className="p-3 bg-muted rounded text-sm text-left overflow-x-auto whitespace-pre-wrap break-all"><code>{`claude mcp add --transport http gammarips ${MCP_ENDPOINT}`}</code></pre>
               <p className="text-sm text-muted-foreground">
-                Streamable HTTP · Bearer API key · Works with Claude, ChatGPT,
-                Cursor, or any MCP client
+                The anonymous tier serves the pool preview, daily reports,
+                methodology playbooks, and reference tools with zero setup.
+                Ask your agent for a morning brief and see what comes back.
               </p>
               <p className="text-muted-foreground">
-                Full access is $39/mo with a 7-day free trial. Your API key
-                arrives by email shortly after you subscribe &mdash; and a
-                small anonymous tier (pool preview, daily reports, playbooks)
-                lets your agent taste the data before you pay.
+                The full data layer &mdash; outcome history, opportunity
+                surfaces, exit-rule simulation, all 23 tools &mdash; is $39/mo
+                with a 7-day free trial. Your API key arrives by email shortly
+                after you subscribe.
               </p>
               <Link href="/pricing">
                 <Button size="lg">Get Your API Key &rarr;</Button>
               </Link>
+              <p className="text-xs text-muted-foreground">
+                Works today with Claude Code, Cursor, and any MCP client that
+                can send an Authorization header. Consumer claude.ai and
+                ChatGPT connector UIs need OAuth &mdash; it&apos;s on the
+                roadmap; the anonymous tier works everywhere now.
+              </p>
             </div>
           </div>
         </section>
@@ -237,7 +242,10 @@ async with Client(transport) as client:
             <p className="text-sm text-muted-foreground max-w-3xl">
               Every tool is leakage-checked: nothing your agent reads contains
               information that wasn&apos;t knowable at the time it&apos;s dated.
-              Full parameter schemas are self-describing over MCP.
+              The outcome database behind these tools holds 3,000+ labeled
+              contracts across 50+ scan days &mdash; every pool candidate since
+              April 2026, growing every trading day. Full parameter schemas are
+              self-describing over MCP.
             </p>
           </div>
 

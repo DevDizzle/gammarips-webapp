@@ -346,6 +346,43 @@ export interface CohortStats {
   roi_pct: number;               // decimal (multiply by 100 for %)
 }
 
+/** Aggregates over the FULL labeled pool (enriched_option_outcomes), written
+ *  daily by win-tracker's /pool_outcomes. Replaced the pick-cohort scorecard
+ *  (owner call 2026-07-03). All return values are FRACTIONS (0.21 = +21%). */
+export interface PoolOutcomes {
+  contracts_total: number;
+  scan_days: number;
+  first_scan_date: string;       // ISO date
+  last_scan_date: string;        // ISO date
+  labeled_sameday: number;
+  labeled_3d: number;
+  with_opp_surface: number;
+  bracket_avg_return: number;    // fraction; the honest NEGATIVE baseline
+  bracket_win_rate: number;      // fraction 0-1
+  bracket_3d_avg_return: number | null;
+  bracket_3d_win_rate: number | null;
+  opp_peak_median: number;       // fraction
+  opp_peak_p75: number;
+  opp_peak_p90: number;
+  opp_trough_median: number;     // fraction (negative)
+  opp_trough_p10: number;
+  bracket_label: string;
+  opp_label: string;
+  updated_at: any;               // Firestore Timestamp
+}
+
+export async function getPoolOutcomes(): Promise<PoolOutcomes | null> {
+  noStore();
+  try {
+    const docSnap = await getDb().collection('pool_outcomes').doc('current').get();
+    if (!docSnap.exists) return null;
+    return docSnap.data() as PoolOutcomes;
+  } catch (error) {
+    console.error('Error fetching pool_outcomes/current:', error);
+    return null;
+  }
+}
+
 export async function getCohortStats(): Promise<CohortStats | null> {
   noStore();
   try {

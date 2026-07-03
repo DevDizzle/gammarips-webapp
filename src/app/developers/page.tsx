@@ -129,12 +129,10 @@ export default function DevelopersPage() {
                 Cursor, or any MCP client
               </p>
               <p className="text-muted-foreground">
-                Full access is $39/mo with a 7-day free trial. Your key is
-                issued from your{" "}
-                <Link href="/account" className="text-primary hover:underline">
-                  account page
-                </Link>{" "}
-                the moment you subscribe.
+                Full access is $39/mo with a 7-day free trial. Your API key
+                arrives by email shortly after you subscribe &mdash; and a
+                small anonymous tier (pool preview, daily reports, playbooks)
+                lets your agent taste the data before you pay.
               </p>
               <Link href="/pricing">
                 <Button size="lg">Get Your API Key &rarr;</Button>

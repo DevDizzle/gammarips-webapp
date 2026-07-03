@@ -31,10 +31,9 @@ export default function SignalClientPage({
 
   const totalFlow = (signal.call_dollar_volume || 0) + (signal.put_dollar_volume || 0);
 
-  // V6 note: "today's pick" (the tradeable-at-10:00-ET one) is surfaced by
-  // the TodaysPickCard on the home page, sourced from Firestore todays_pick.
-  // The per-signal detail page below describes any browsable signal; the
-  // "Engine Flags" card shows diagnostic patterns the scanner detected.
+  // The per-signal detail page below describes any browsable pool signal;
+  // the "Engine Flags" card shows diagnostic patterns the scanner detected.
+  // (There is no public daily pick — the pool is the product surface.)
   const engineFlagCount =
     (signal.premium_hedge ? 1 : 0) +
     (signal.premium_high_rr ? 1 : 0) +
@@ -104,8 +103,7 @@ export default function SignalClientPage({
         {/* Main Content Grid */}
         <div className="grid gap-6">
 
-          {/* Engine Flags — diagnostic patterns the scanner matched. Orthogonal to the
-              V6 notifier's tournament pick (which lives on the home page). */}
+          {/* Engine Flags — diagnostic patterns the scanner matched. */}
           {engineFlagCount > 0 && (
             <Card className="border-primary/20 bg-card/60">
               <CardHeader className="pb-3">

@@ -26,7 +26,7 @@ Buying every pool name mechanically under a fixed exit has been negative. The po
 ## MCP Endpoint
 `https://gammarips-mcp-406581297632.us-central1.run.app/mcp` (Streamable HTTP; legacy SSE at `/sse`)
 
-Auth: `Authorization: Bearer <API key>` — issued at https://gammarips.com/account with an active subscription ($39/mo, 7-day free trial at https://gammarips.com/pricing).
+Auth: `Authorization: Bearer <API key>` — delivered by email with an active subscription ($39/mo, 7-day free trial at https://gammarips.com/pricing). Without a key, an anonymous funnel tier serves the pool preview, daily reports, methodology playbooks, and reference tools.
 
 ## Disclaimers
 Data on a paper-trading basis, educational only. Not investment advice. Past performance is not a guarantee of future results.

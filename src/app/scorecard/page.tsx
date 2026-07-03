@@ -10,18 +10,19 @@ import {
 import { getCohortStats, getLedgerTrades, type LedgerTrade } from '@/lib/firebase-admin';
 
 export const metadata: Metadata = {
-  title: 'GammaRips Scorecard — Verified Signal Performance & Win Rate',
+  title: 'GammaRips Scorecard — Public Paper-Trading Ledger',
   description: 'The public paper-trading ledger of the GammaRips validation cohort — every selection timestamped and marked to realized option P&L, winners and losers counted the same way. No cherry-picking, no hindsight edits. Educational only.',
   alternates: { canonical: 'https://gammarips.com/scorecard' },
   openGraph: {
-    title: 'GammaRips Scorecard — Verified Signal Performance',
+    title: 'GammaRips Scorecard — Public Paper-Trading Ledger',
     description: 'The GammaRips validation cohort, tracked in public. Paper-trading ledger, educational only.',
     url: 'https://gammarips.com/scorecard',
   }
 };
 
-// Formal-evaluation threshold (mirrors the operator's N>=15 discipline).
-const EVAL_THRESHOLD = 15;
+// Public evaluation gate — matches disclosure #03: no marketing claims from
+// aggregates until a cohort has 30 closed trades.
+const EVAL_THRESHOLD = 30;
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -93,7 +94,7 @@ export default async function ScorecardPage() {
     "creator": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
     "license": "https://gammarips.com/disclosures",
     "isAccessibleForFree": true,
-    ...(hasData
+    ...(hasData && stats!.trades_closed >= EVAL_THRESHOLD
       ? {
           "temporalCoverage": `${stats!.cohort_start}/..`,
           "variableMeasured": [
@@ -221,11 +222,11 @@ export default async function ScorecardPage() {
               Every validation-cohort selection is timestamped and marked to its realized option P&amp;L on a fixed same-day +40% / &minus;30% bracket &mdash; winners and losers counted the same way. We can&apos;t edit history. This cohort tests the selection methodology; it is not a product to follow &mdash; the honest context is in the Lab.
             </p>
             <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-              Preliminary: {stats!.trades_closed} of {EVAL_THRESHOLD} trades closed. Treat this as an early, small sample &mdash; not a verified edge &mdash; until the cohort reaches {EVAL_THRESHOLD} resolved trades.
+              Preliminary: {stats!.trades_closed} of {EVAL_THRESHOLD} trades closed. Treat these aggregates as an early, small sample &mdash; not evidence of an edge. Per our disclosures, we make no marketing claims from them before {EVAL_THRESHOLD} resolved trades.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button asChild size="lg">
-                <Link href="/pricing">Get Full Access</Link>
+                <Link href="/lab">Read the Lab</Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <Link href="/how-it-works">Learn How Scoring Works</Link>
@@ -245,7 +246,7 @@ export default async function ScorecardPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button asChild size="lg">
-                <Link href="/pricing">Get Full Access</Link>
+                <Link href="/lab">Read the Lab</Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <Link href="/how-it-works">Learn How Scoring Works</Link>

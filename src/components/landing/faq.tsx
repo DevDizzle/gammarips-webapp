@@ -28,7 +28,7 @@ export const faqs = [
   },
   {
     question: "Where's the track record?",
-    answer: "On the Scorecard page, and in the Lab. A paper-traded cohort tests the selection methodology every market day under fixed mechanical rules — every trade timestamped, every outcome logged, nothing edited after the fact. We don't publish aggregate win-rate marketing until a cohort has at least 30 closed trades, and we tell you the unflattering part up front: the whole pool bought blindly under a fixed exit is negative. That number is exactly why we sell the data layer and not a pick."
+    answer: "On the Scorecard page, and in the Lab. A paper-traded cohort tests the selection methodology every market day under fixed mechanical rules — every trade timestamped, every outcome logged, nothing edited after the fact. Preliminary aggregates always carry their sample size and a small-sample warning, and we make no marketing claims from them until a cohort has at least 30 closed trades. We also tell you the unflattering part up front: the whole pool bought blindly under a fixed exit is negative. That number is exactly why we sell the data layer and not a pick."
   },
   {
     question: "Is this financial advice?",
@@ -53,22 +53,10 @@ export const faqs = [
 ];
 
 export default function Faq() {
-    const faqSchema = {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": faqs.map(f => ({
-            "@type": "Question",
-            "name": f.question,
-            "acceptedAnswer": { "@type": "Answer", "text": f.answer }
-        }))
-    };
-
+    // FAQPage JSON-LD is emitted by the pages that render this component
+    // (home, about) — not here, to avoid duplicate FAQPage markup per page.
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-            />
             <Accordion type="single" collapsible className="w-full mt-12">
                 {faqs.map((faq, i) => (
                     <AccordionItem key={i} value={`item-${i}`}>

@@ -88,8 +88,8 @@ export default function AccountPage() {
             <>
               <p className="text-muted-foreground">
                 Your subscription includes full MCP Agent Access (all 23
-                tools). Your API key is provisioned when you subscribe — check
-                your welcome email, or email{' '}
+                tools). Your API key arrives by email shortly after you
+                subscribe. Haven&apos;t received it? Email{' '}
                 <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">
                   evan@gammarips.com
                 </a>{' '}

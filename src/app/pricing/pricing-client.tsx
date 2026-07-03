@@ -161,8 +161,8 @@ export function PricingClient() {
               )}
             </Button>
             <p className="text-xs text-muted-foreground text-center mt-3">
-              No charge during trial. Your API key is issued instantly; cancel
-              anytime from your account.
+              No charge during trial. Your API key arrives by email shortly
+              after checkout; cancel anytime from your account.
             </p>
           </CardContent>
         </Card>

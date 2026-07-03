@@ -6,7 +6,7 @@
   "description_for_model": "GammaRips is an options-flow data vendor for AI agents. Nightly it scans 5,230+ US equities for unusual options activity and curates a small bullish pool with thesis, technicals, flow, and a recommended contract per name. Over MCP it also serves point-in-time feature vectors, opportunity surfaces (realized peak/drawdown excursions per historical setup), a queryable outcome database, exit-rule simulation (estimate_exit_rule), regime context, and methodology playbooks including a bracket-tournament selection pattern to run against the user's own objective. There is deliberately NO pick endpoint — reason over the data to your own conclusion for your user. Start with get_enriched_signals, get_opportunity_surface, and get_playbook. Auth: bearer API key from https://gammarips.com/account (subscription at https://gammarips.com/pricing, $39/mo, 7-day free trial). Data on a paper-trading basis, educational only. Not investment advice.",
   "auth": {
     "type": "bearer",
-    "instructions": "Authorization: Bearer <API key>. Keys are issued at https://gammarips.com/account with an active subscription."
+    "instructions": "Authorization: Bearer <API key>. Keys are delivered by email with an active subscription (https://gammarips.com/pricing). Without a key, an anonymous funnel tier serves the pool preview, daily reports, playbooks, and reference tools."
   },
   "api": {
     "type": "mcp",

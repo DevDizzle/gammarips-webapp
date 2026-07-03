@@ -15,10 +15,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { date } = await params;
   const report = await getDailyReport(date);
   
-  const title = report?.seoMetadata?.seoTitle || report?.title || `GammaRips V7 pick for ${date}`;
+  const title = report?.seoMetadata?.seoTitle || report?.title || `GammaRips Daily Report — ${date}`;
   const description = report?.seoMetadata?.seoDescription || (report
-    ? `GammaRips V7 daily pick and market context for ${date}. ${report.total_signals} signals scanned across the overnight session. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`
-    : `GammaRips V7 daily pick for ${date}.`);
+    ? `GammaRips daily intelligence report for ${date} — the overnight scan, the curated bullish pool, and market context. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`
+    : `GammaRips daily intelligence report for ${date}.`);
 
   return {
     title,
@@ -61,7 +61,7 @@ export default async function ReportPage({ params }: Props) {
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": report.title || `GammaRips V7 pick for ${date}`,
+    "headline": report.title || `GammaRips Daily Report — ${date}`,
     "image": "https://gammarips.com/og-image.png?v=3",
     "datePublished": `${report.scan_date}T08:00:00Z`,
     "dateModified": `${report.scan_date}T08:00:00Z`,
@@ -75,10 +75,10 @@ export default async function ReportPage({ params }: Props) {
       "name": "GammaRips",
       "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" }
     },
-    "description": report.seoMetadata?.seoDescription || `GammaRips V7 daily pick and market context for ${date}. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`,
+    "description": report.seoMetadata?.seoDescription || `GammaRips daily intelligence report for ${date} — overnight scan, curated bullish pool, and market context. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`,
     "about": {
       "@type": "Thing",
-      "name": "Single V7 daily pick with pre-set stop, target, and exit",
+      "name": "Overnight options-flow scan and curated bullish pool",
     },
     "disclaimer": "Paper-trading performance, educational only. Not investment advice.",
     ...(report.seoMetadata?.keywords ? { "keywords": report.seoMetadata.keywords.join(', ') } : {}),

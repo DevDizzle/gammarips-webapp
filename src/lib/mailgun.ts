@@ -803,7 +803,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
                         <td style="padding: 0 40px 40px; text-align: center; font-size: 12px; color: #A0A0A0;">
                              <div style="margin-bottom: 20px; border-top: 1px solid #393b4d; padding-top: 30px;">
                                 <a href="https://x.com/GammaRips" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Follow on X</a> &bull;
-                                <a href="https://www.reddit.com/r/GammaRips/" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Join on Reddit</a>
+                                <a href="https://x.com/GammaRips" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Follow on X</a>
                             </div>
                             <p style="margin: 0;">This is not financial advice. All trading involves risk. Past performance does not guarantee future results.</p>
                             <p style="margin-top: 4px;">&copy; ${new Date().getFullYear()} GammaRips. All rights reserved.</p>
@@ -892,7 +892,7 @@ The GammaRips Team
                             <div style="margin-top: 20px;">
                                 <a href="https://x.com/GammaRips" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">X (Twitter)</a>
                                 &bull;
-                                <a href="https://www.reddit.com/r/GammaRips/" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Reddit</a>
+                                <a href="https://x.com/GammaRips" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">X</a>
                                 &bull;
                                 <a href="https://gammarips.com/privacy" style="color: #A0A0A0; text-decoration: none; margin: 0 8px;">Privacy Policy</a>
                             </div>
@@ -919,7 +919,7 @@ Good news! We've made a big change to our platform.
 
 GammaRips is now free for all early adopters. That includes you.
 
-You now have full access to the daily pick, the enriched signals list, the daily report, and the public paper-trading ledger. No strings attached.
+You now have full access to the curated signals pool, the enriched signals list, the daily report, and the public paper-trading ledger. No strings attached.
 
 We're doing this to gather feedback from a core group of traders as we continue to build out the platform.
 
@@ -965,7 +965,7 @@ Founder, GammaRips
                                 </p>
                             </div>
 
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">You now have full access to the daily pick, the enriched signals list, the daily report, and the public paper-trading ledger. No strings attached.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">You now have full access to the curated signals pool, the enriched signals list, the daily report, and the public paper-trading ledger. No strings attached.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We're doing this to gather feedback from a core group of traders as we continue to build out the platform.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Log in now to see today's top Call & Put contracts.</p>
                         </td>

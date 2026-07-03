@@ -78,7 +78,7 @@ const bracketRules = [
   {
     label: 'Target',
     value: '+40% on option premium',
-    why: 'Limit sell. Asymmetric vs. the stop — 4:3 reward/risk in option-premium space, which after delta and gamma typically translates to a positive expected value at modest hit rate.',
+    why: 'Limit sell. Asymmetric vs. the stop — 4:3 reward/risk in option-premium space. The bracket is a measurement instrument for the validation cohort, not a profitability claim: our own published research shows a fixed bracket applied blindly across the whole pool loses.',
   },
   {
     label: 'Hold',
@@ -111,7 +111,7 @@ const dontDoList = [
   },
   {
     label: 'No track-record marketing pre-30-trades.',
-    detail: 'Until V7 has 30 closed paper trades the engine ships methodology only. No win rate, no Sharpe, no expectancy claims.',
+    detail: 'The raw ledger and preliminary aggregates are public from day one, always with sample size attached — but until a cohort has 30 closed paper trades we make no marketing claims from them: no advertised win rate, no Sharpe, no expectancy claims.',
   },
 ];
 

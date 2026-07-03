@@ -29,7 +29,8 @@ Data on a paper-trading basis, educational only. Not investment advice.
 
 - Endpoint: `https://gammarips-mcp-406581297632.us-central1.run.app/mcp`
 - Transport: Streamable HTTP (legacy SSE at `/sse`)
-- Auth: `Authorization: Bearer <API key>` — issued at https://gammarips.com/account with an active subscription ($39/mo, 7-day free trial)
+- Auth: `Authorization: Bearer <API key>` — delivered by email with an active subscription (subscribe at https://gammarips.com/pricing — $39/mo, 7-day free trial)
+- Anonymous funnel tier (no key): pool preview, daily reports, methodology playbooks, and reference tools. The full 23-tool surface — substrate, surfaces, outcomes — requires a key.
 - Start with: `get_enriched_signals`, `get_opportunity_surface`, `get_playbook`
 - All 23 tools: `get_enriched_signals`, `get_signal_detail`, `get_overnight_signals`, `get_freemium_preview`, `get_pool_features`, `get_opportunity_surface`, `query_outcomes`, `get_outcome_summary`, `estimate_exit_rule`, `get_regime_context`, `list_playbooks`, `get_playbook`, `get_signal_performance`, `get_win_rate_summary`, `get_position_history`, `get_historical_performance`, `get_daily_report`, `get_report_list`, `get_available_dates`, `get_enriched_signal_schema`, `get_market_calendar_status`, `get_signal_explainer`, `web_search`
 - Built-in prompts: `morning_brief`, `analyze_candidate`, `run_your_own_tournament` — workflows that end in a decision surface, never a pick.

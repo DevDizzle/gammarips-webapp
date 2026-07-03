@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { timingSafeEqual } from 'crypto';
 import { stripe } from '@/lib/stripe';
 import {
   listActiveMcpKeysAdmin,
@@ -26,12 +27,20 @@ export const dynamic = 'force-dynamic';
 
 const ENTITLED_STRIPE_STATUSES = new Set(['active', 'trialing', 'past_due']);
 
+function secretMatches(provided: string | null, expected: string): boolean {
+  if (!provided) return false;
+  const a = Buffer.from(provided);
+  const b = Buffer.from(expected);
+  // Length check first — timingSafeEqual throws on length mismatch.
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
 export async function POST(req: NextRequest) {
   const secret = process.env.RECONCILE_CRON_SECRET;
   if (!secret) {
     return NextResponse.json({ error: 'RECONCILE_CRON_SECRET not configured' }, { status: 503 });
   }
-  if (req.headers.get('x-reconcile-secret') !== secret) {
+  if (!secretMatches(req.headers.get('x-reconcile-secret'), secret)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -55,21 +64,35 @@ export async function POST(req: NextRequest) {
       try {
         const user = await getUserAdmin(uid);
 
-        let entitled = false;
+        // Tri-state: true=keep, false=revoke, null=UNKNOWN (Stripe unreachable
+        // etc.) -> DO NOT touch. Revoking only on a DEFINITIVE not-entitled
+        // signal means a Stripe outage can never mass-revoke paying customers.
+        let entitled: boolean | null = false;
         if (user?.subscriptionStatus === 'founder_lifetime') {
           entitled = true;
         } else if (user?.stripeSubscriptionId) {
-          // Stripe is the source of truth — catches a missed lapse webhook.
-          const sub = await stripe.subscriptions
-            .retrieve(user.stripeSubscriptionId)
-            .catch(() => null);
-          entitled = !!sub && ENTITLED_STRIPE_STATUSES.has(sub.status);
+          try {
+            const sub = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
+            entitled = ENTITLED_STRIPE_STATUSES.has(sub.status);
+          } catch (err: any) {
+            // A canceled/expired sub still RETURNS (status='canceled') — the
+            // only way retrieve throws is a genuinely-missing sub (404) or a
+            // transient/API error. Revoke only on definitive 404; otherwise
+            // leave state untouched.
+            if (err?.statusCode === 404 || err?.code === 'resource_missing') {
+              entitled = false;
+            } else {
+              entitled = null; // unknown — preserve existing access
+              summary.errors.push(`${uid}: stripe ${err?.message || 'error'}`);
+            }
+          }
         } else {
-          // No Stripe subscription on record → not entitled to a live key.
+          // Active key but no Stripe subscription on record and not a founder:
+          // an anomaly, not entitled to a live key.
           entitled = false;
         }
 
-        if (!entitled) {
+        if (entitled === false) {
           const n = await revokeMcpKeysForUserAdmin(uid, 'reconcile_lapsed');
           // Resync the user's entitlement flags so the rest of the app agrees.
           await setUserSubscriptionStatusAdmin(uid, false);

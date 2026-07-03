@@ -224,11 +224,13 @@ export async function POST(req: NextRequest) {
         break;
     case 'customer.subscription.updated':
         const subscriptionUpdated = event.data.object as Stripe.Subscription;
-        // Extract price ID to update plan if changed
-        // subscriptionUpdated.items.data[0].price.id
+        // 'trialing' counts as subscribed (it's a trial OF pro) so proUntil is
+        // set to the trial end and the user isn't locked out mid-trial by an
+        // update event. Only genuinely non-entitled statuses flip isSubscribed
+        // off (which, via MCP_REVOKE_STATUSES, also revokes the key).
         await handleSubscriptionChange(
-            subscriptionUpdated, 
-            subscriptionUpdated.status === 'active', 
+            subscriptionUpdated,
+            subscriptionUpdated.status === 'active' || subscriptionUpdated.status === 'trialing',
             false
         );
         break;

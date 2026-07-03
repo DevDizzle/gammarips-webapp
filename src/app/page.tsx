@@ -148,6 +148,11 @@ export default async function LandingPage() {
                 <AgentDemo />
               </div>
 
+              {cohortStats && cohortStats.trades_closed < 30 && (
+                <p className="text-[11px] text-muted-foreground text-center leading-tight">
+                  Preliminary — small sample ({cohortStats.trades_closed} closed trades). Per our disclosures, we make no claims from these numbers before 30 closed trades.
+                </p>
+              )}
               <p className="text-[11px] text-muted-foreground text-center leading-tight">
                 Paper-traded · Educational only · Not investment advice
               </p>

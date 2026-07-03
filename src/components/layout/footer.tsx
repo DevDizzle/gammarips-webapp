@@ -11,7 +11,7 @@ const Footer = () => {
             <h3 className="text-xl font-bold font-headline">
                 <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
             </h3>
-            <p className="text-sm text-muted-foreground mt-2">One options trade a day. Pushed to your phone at 9:50 ET — right before the 10:00 entry.</p>
+            <p className="text-sm text-muted-foreground mt-2">The options-flow data layer for AI agents. Curated overnight, leakage-checked, served over MCP.</p>
           </div>
           <div>
             <h4 className="font-semibold text-foreground">Product</h4>
@@ -19,8 +19,9 @@ const Footer = () => {
               <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
               <li><Link href="/signals" className="text-muted-foreground hover:text-primary">Signals</Link></li>
               <li><Link href="/reports" className="text-muted-foreground hover:text-primary">Daily Reports</Link></li>
+              <li><Link href="/lab" className="text-muted-foreground hover:text-primary">The Lab</Link></li>
               <li><Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing</Link></li>
-              <li><Link href="/developers" className="text-muted-foreground hover:text-primary">Developers</Link></li>
+              <li><Link href="/developers" className="text-muted-foreground hover:text-primary">MCP / Developers</Link></li>
               <li><Link href="/llms.txt" className="text-muted-foreground hover:text-primary">llms.txt</Link></li>
             </ul>
           </div>

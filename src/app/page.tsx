@@ -5,64 +5,35 @@ import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Scan, Brain, Sparkles, Send } from "lucide-react";
-import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getLatestTodaysPick, getCohortStats, getBlogPostsAdmin } from "@/lib/firebase-admin";
+import { ArrowRight, Scan, LineChart, Bot, FlaskConical } from "lucide-react";
+import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getCohortStats, getBlogPostsAdmin } from "@/lib/firebase-admin";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
-import { TodaysPickCard } from "@/components/landing/todays-pick-card";
-import { NextPickCountdown } from "@/components/landing/next-pick-countdown";
+import { AgentDemo } from "@/components/landing/agent-demo";
 import { CohortStatsTiles, formatCohortStartDate } from "@/components/landing/cohort-stats-row";
-import { ProLock } from "@/components/ui/pro-lock";
 import { Separator } from "@/components/ui/separator";
-import {
-  resolvePickFreshness,
-  formatPickTargetLabel,
-  formatEtWeekday,
-} from "@/lib/trading-calendar";
 
-export const revalidate = 60; // keep todays_pick fresh without a full static rebuild
+export const revalidate = 60; // keep the daily pool summary fresh without a full static rebuild
 
 export const metadata: Metadata = {
-  title: "GammaRips — One options trade a day. Pushed to your phone at 9:50 ET.",
-  description: "GammaRips scans institutional options flow overnight and mechanically picks one contract each day — V7 'GIGO' (Get In, Get Out): one same-day intraday trade with stop, target, and exit pre-set. Browse the signals haystack free, or get the curated daily pick delivered to your inbox + WhatsApp at 09:50 ET, right before the 10:00 entry. Paper-trading, educational only.",
+  title: "GammaRips — Options-flow data for AI agents",
+  description: "Stop asking AI for stock picks. Start giving it real data. GammaRips scans 5,000+ tickers overnight for unusual options activity and curates it to a small high-signal pool — browse it free, or connect Claude, ChatGPT, or your own agent over MCP for the full data layer. Your agent analyzes. You decide. Paper-trading data, educational only.",
   alternates: {
     canonical: '/',
   },
 };
 
-const steps = [
-  { icon: <Scan className="h-6 w-6 text-primary" />, title: 'See Everything', desc: 'Institutional moves across 5,230+ tickers — not just the popular 50 everyone watches' },
-  { icon: <Brain className="h-6 w-6 text-primary" />, title: 'Know What Matters', desc: 'Each signal scored 1-10 so you focus on high-conviction setups, not noise' },
-  { icon: <Sparkles className="h-6 w-6 text-primary" />, title: 'Get the Trade', desc: 'Specific contracts, strikes, and the AI thesis explaining why institutions are positioned' },
-  { icon: <Send className="h-6 w-6 text-primary" />, title: 'Act First', desc: 'In your hands before 9:30 AM — while everyone else is still reading headlines' },
+const pillars = [
+  { icon: <Scan className="h-6 w-6 text-primary" />, title: 'The Curated Pool', desc: 'The market prints hundreds of unusual-flow names a night. The engine scores and cuts them to a pool your agent can actually reason over — flow, technicals, and context attached.' },
+  { icon: <LineChart className="h-6 w-6 text-primary" />, title: 'The Opportunity Surface', desc: 'For every historical setup: what was actually possible. Peak excursion, worst drawdown, the full path — wins and losses. Your agent learns how these contracts really behave.' },
+  { icon: <Bot className="h-6 w-6 text-primary" />, title: 'Your Agent, Your Conclusion', desc: 'There is no pick endpoint. On purpose. 23 MCP tools return data and methodology; your agent reasons to its own contract. A thousand users, a thousand different conclusions.' },
 ];
 
 export default async function LandingPage() {
   const summary = await getLatestOvernightSummary();
   const reportDate = summary ? (summary.report_date || summary.scan_date) : null;
   const report = reportDate ? await getDailyReport(reportDate) : null;
-  const todaysPick = await getLatestTodaysPick();
   const cohortStats = await getCohortStats();
   const blogPosts = await getBlogPostsAdmin();
-
-  // Is the latest pick genuinely "today's", or spent? Drives whether the card
-  // shows the live pick or a countdown to the next pick. See trading-calendar.ts.
-  const pickView = todaysPick
-    ? resolvePickFreshness({
-        hasPick: todaysPick.has_pick,
-        effectiveAt: todaysPick.effective_at,
-        now: new Date(),
-      })
-    : null;
-  const lastClosedPick =
-    todaysPick?.has_pick && todaysPick.ticker
-      ? {
-          ticker: todaysPick.ticker,
-          direction: todaysPick.direction ?? "",
-          closedLabel: todaysPick.effective_at
-            ? formatEtWeekday(todaysPick.effective_at)
-            : "",
-        }
-      : null;
 
   const topBull = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 5) : [];
   const topSignals = [...topBull]
@@ -75,7 +46,7 @@ export default async function LandingPage() {
     "name": "GammaRips",
     "image": "https://gammarips.com/og-image.png?v=3",
     "url": "https://gammarips.com",
-    "description": summary?.market_narrative || "One options trade a day, scored before you wake up.",
+    "description": summary?.market_narrative || "Options-flow data for AI agents: overnight unusual-activity scans, curated to a high-signal pool and served over MCP.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://gammarips.com/reports?q={search_term_string}",
@@ -86,7 +57,7 @@ export default async function LandingPage() {
   const dynamicDailySchema = topSignals.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": report?.title || summary?.headline || "Today's V7 pick",
+    "headline": report?.title || summary?.headline || "Today's curated options-flow pool",
     "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "Overnight options flow signals explicitly ranked by conviction.",
     "url": "https://gammarips.com",
     "publisher": {
@@ -139,87 +110,65 @@ export default async function LandingPage() {
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
 
-        {/* V6 Live Panel — single brand-bordered container that visually
-            unifies (a) the public cohort-stats tiles and (b) the paywalled
-            today's-pick card. Stats are above the divider and visible to all;
-            pick details are below and paywalled via <ProLock> for non-subs.
-            Both are explicitly framed as the SAME GammaRips strategy so the
-            stats can't be read in isolation from the pick that produced them. */}
-        {todaysPick && (
-          <section id="todays-pick">
-            <Card className="border-primary/40 bg-card/90 shadow-[0_0_30px_rgba(234,179,8,0.08)]">
-              <CardContent className="p-6 md:p-8 space-y-6">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div>
-                    <p className="text-xs uppercase tracking-wider text-primary font-semibold">
-                      GammaRips · V7 Live
-                    </p>
-                    <h2 className="text-xl md:text-2xl font-bold font-headline mt-1">
-                      One pick a day. Tracked openly.
-                    </h2>
-                  </div>
-                  {cohortStats && (
-                    <Badge variant="outline" className="text-[11px] text-muted-foreground border-muted-foreground/30">
-                      Cohort since {formatCohortStartDate(cohortStats.cohort_start)}
-                    </Badge>
-                  )}
+        {/* Live panel — public validation-cohort stats above the divider,
+            an illustrative agent session below it. The pick itself is not a
+            product; the pool + the data layer are. */}
+        <section id="engine-live">
+          <Card className="border-primary/40 bg-card/90 shadow-[0_0_30px_rgba(234,179,8,0.08)]">
+            <CardContent className="p-6 md:p-8 space-y-6">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-primary font-semibold">
+                    GammaRips · V7 Engine Live
+                  </p>
+                  <h2 className="text-xl md:text-2xl font-bold font-headline mt-1">
+                    The engine validates itself in public.
+                  </h2>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    A paper-traded cohort tests the selection methodology every
+                    market day, under fixed mechanical rules. Every outcome is
+                    logged, nothing is edited after the fact.
+                  </p>
                 </div>
-
-                <CohortStatsTiles stats={cohortStats} />
-
-                <Separator />
-
-                {pickView?.kind === "live" && (
-                  <ProLock
-                    title="Today's Pick"
-                    description="Subscribe to get the curated daily pick delivered to your inbox + WhatsApp group at ~9:50 ET, right before the 10:00 entry."
-                  >
-                    <TodaysPickCard
-                      pick={todaysPick}
-                      embedded
-                      positionClosed={pickView.positionClosed}
-                    />
-                  </ProLock>
+                {cohortStats && (
+                  <Badge variant="outline" className="text-[11px] text-muted-foreground border-muted-foreground/30">
+                    Cohort since {formatCohortStartDate(cohortStats.cohort_start)}
+                  </Badge>
                 )}
+              </div>
 
-                {pickView?.kind === "countdown" && (
-                  <NextPickCountdown
-                    targetIso={pickView.nextPickAt}
-                    targetLabel={formatPickTargetLabel(pickView.nextPickAt)}
-                    lastPick={lastClosedPick}
-                  />
-                )}
+              <CohortStatsTiles stats={cohortStats} />
 
-                {pickView?.kind === "standdown" && (
-                  <div className="space-y-4">
-                    <TodaysPickCard pick={todaysPick} embedded />
-                    <NextPickCountdown
-                      targetIso={pickView.nextPickAt}
-                      targetLabel={formatPickTargetLabel(pickView.nextPickAt)}
-                      compact
-                    />
-                  </div>
-                )}
+              <Separator />
 
-                <p className="text-[11px] text-muted-foreground text-center leading-tight">
-                  Paper-traded · Educational only · Not investment advice
-                </p>
-              </CardContent>
-            </Card>
-          </section>
-        )}
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4 text-center">
+                  What working the pool with an agent looks like
+                </h3>
+                <AgentDemo />
+              </div>
 
-        {/* How It Works Summary */}
-        <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {steps.map((step) => (
-            <Card key={step.title} className="bg-card/50 text-center">
-              <CardContent className="p-5">
-                <div className="flex justify-center mb-3">{step.icon}</div>
-                <h3 className="font-bold font-headline">{step.title}</h3>
-                <p className="text-xs text-muted-foreground mt-1">{step.desc}</p>
-              </CardContent>
-            </Card>
-          ))}
+              <p className="text-[11px] text-muted-foreground text-center leading-tight">
+                Paper-traded · Educational only · Not investment advice
+              </p>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* What your agent gets */}
+        <section>
+          <h2 className="text-2xl font-bold font-headline text-center mb-6">What your agent gets</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {pillars.map((pillar) => (
+              <Card key={pillar.title} className="bg-card/50 text-center">
+                <CardContent className="p-5">
+                  <div className="flex justify-center mb-3">{pillar.icon}</div>
+                  <h3 className="font-bold font-headline">{pillar.title}</h3>
+                  <p className="text-xs text-muted-foreground mt-1">{pillar.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </section>
 
         {/* Today's Market Snapshot */}
@@ -230,12 +179,12 @@ export default async function LandingPage() {
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <p className="text-sm text-muted-foreground">
-                      {new Date(reportDate || summary.scan_date).toLocaleDateString('en-US', { 
-                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' 
+                      {new Date(reportDate || summary.scan_date).toLocaleDateString('en-US', {
+                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC'
                       })}
                     </p>
                     <h2 className="text-2xl md:text-3xl font-bold font-headline mt-1">
-                      {report?.title || summary.headline || "Today's V7 pick"}
+                      {report?.title || summary.headline || "Today's curated pool"}
                     </h2>
                   </div>
                   <Link href={`/reports/${reportDate || summary.scan_date}`}>
@@ -244,9 +193,9 @@ export default async function LandingPage() {
                     </Button>
                   </Link>
                 </div>
-                
+
                 {/* Signal counts — raw overnight scan (all directions), before
-                    the BULLISH-only gate. GammaRips trades the bullish side only. */}
+                    the BULLISH-only gate. The curated pool is bullish-only. */}
                 <p className="text-xs text-muted-foreground mb-2">Raw overnight scan (all directions)</p>
                 <div className="flex gap-6 mb-4">
                   <div>
@@ -285,13 +234,13 @@ export default async function LandingPage() {
           </section>
         )}
 
-        {/* Top Signals Preview */}
+        {/* Top of today's pool */}
         {topSignals.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold font-headline">Top Signals</h2>
+              <h2 className="text-2xl font-bold font-headline">From Today&apos;s Pool</h2>
               <Link href="/signals" className="text-sm text-primary hover:underline">
-                View all options signals →
+                View the full pool →
               </Link>
             </div>
             <div className="grid gap-3">
@@ -326,22 +275,49 @@ export default async function LandingPage() {
           </section>
         )}
 
-        {/* Value Props */}
-        <section className="text-center space-y-4">
-          <h2 className="text-3xl font-bold font-headline">Stop Trading Blind</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Most retail traders find out about institutional moves after the stock already popped. You'll see the positions from the overnight scan before the open, and the curated pick lands ~9:50 ET — right before the 10:00 entry. Every signal timestamped, every call tracked publicly. No cherry-picking, no hindsight.
+        {/* The honesty section */}
+        <section className="text-center space-y-4 max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold font-headline">Read this before you pay us</h2>
+          <p className="text-muted-foreground">
+            If you bought every contract in our pool every morning with a fixed
+            exit, you would lose money. We know because we tested it, and we
+            publish the ledger. The pool is where opportunity concentrates —
+            the excursion data proves the winners are in there — but which
+            ones, and how they&apos;re traded, is analysis. That&apos;s your
+            agent&apos;s job. Anyone who sells you a shortcut past that step is
+            selling you a story.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg">
-              <Link href="/signals">
-                Explore Signals <ArrowRight className="ml-2 h-5 w-5" />
+              <Link href="/developers">
+                Connect Your Agent <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="/how-it-works">See How It Works</Link>
+              <Link href="/how-it-works">See How the Engine Works</Link>
             </Button>
           </div>
+        </section>
+
+        {/* Lab teaser */}
+        <section>
+          <Card className="bg-card/50">
+            <CardContent className="p-6 md:p-8 text-center space-y-3">
+              <div className="flex justify-center">
+                <FlaskConical className="h-6 w-6 text-primary" />
+              </div>
+              <h2 className="text-2xl font-bold font-headline">The Lab</h2>
+              <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+                We run experiments on our own data substrate and publish the
+                results — hypothesis, method, sample size, verdict — including
+                the ideas that got killed. It&apos;s how the pool&apos;s
+                methodology earns its keep, in public.
+              </p>
+              <Button asChild variant="outline" size="sm">
+                <Link href="/lab">Read the experiments &rarr;</Link>
+              </Button>
+            </CardContent>
+          </Card>
         </section>
 
         {/* Latest from the blog — cross-link into the /blog section so posts

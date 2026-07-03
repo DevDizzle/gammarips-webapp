@@ -7,11 +7,11 @@ import { ArrowRight, AlertTriangle } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'How GammaRips Works — Overnight Options Scanner, V7 Intraday',
-  description: "The scanner ingests overnight institutional options flow across 5,230+ tickers, enriches the standouts, applies a BULLISH-only gate and delta edge-rank to the top ~50 bullish setups, and a randomized bracket tournament picks one bullish call per day. V7 'GIGO' (Get In, Get Out) trades and closes it the same day with pre-set stop and target. Here is the full pipeline — no discretion, no paid-first tier.",
+  description: "The scanner ingests overnight institutional options flow across 5,230+ tickers, enriches the standouts, and applies a BULLISH-only gate and delta edge-rank to curate the top ~50 bullish setups. A paper-traded validation cohort tests the selection methodology daily under fixed rules. Humans browse the pool free; AI agents get the full data layer over MCP. Here is the full pipeline — no discretion, no black box.",
   alternates: { canonical: 'https://gammarips.com/how-it-works' },
   openGraph: {
     title: 'How GammaRips Works — Overnight Options Scanner',
-    description: 'Scanned, enriched, tournament-selected: one pick a day across 5,230+ tickers.',
+    description: 'Scanned, enriched, curated: 5,230+ tickers cut to a high-signal bullish pool nightly, validated by a public paper-traded cohort.',
     url: 'https://gammarips.com/how-it-works',
   }
 };
@@ -21,7 +21,7 @@ export default function HowItWorksPage() {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "How GammaRips Works — Overnight Options Scanner, V7 Intraday",
-    "description": "Scanned, enriched, tournament-selected: one pick a day across 5,230+ tickers.",
+    "description": "Scanned, enriched, curated: 5,230+ tickers cut to a high-signal bullish pool nightly, validated by a public paper-traded cohort.",
     "image": "https://gammarips.com/og-image.png?v=3",
     "author": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
@@ -36,23 +36,23 @@ export default function HowItWorksPage() {
           How GammaRips Works
         </h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-          One options trade a day, or none. Scored while you sleep, picked by a bracket tournament, pushed to your phone at ~09:50 ET &mdash; right before the 10:00 entry. Here&apos;s the full pipeline.
+          Every night the engine scans 5,230+ tickers for unusual options flow and curates the firehose down to a small bullish pool &mdash; scored, enriched, and leakage-checked while you sleep. Here&apos;s the full pipeline, end to end.
         </p>
       </header>
 
       <Separator className="my-12 sm:my-16" />
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">Your 09:50 ET routine</h2>
+        <h2 className="text-3xl font-bold font-headline">The daily cycle</h2>
         <div className="p-6 rounded-lg border bg-primary/5 border-primary/20 text-muted-foreground space-y-4 leading-relaxed">
           <p>
-            At ~09:50 ET &mdash; about ten minutes before the 10:00 ET entry &mdash; one message lands in your phone. Either it&apos;s today&apos;s single pick &mdash; one ticker, one contract, a pre-set &minus;30% stop and +40% target &mdash; or the engine says <em>no trade today</em> and you do nothing. The pick lands right before the trade so it&apos;s set on fresh, real-time liquidity. This is V7 &ldquo;GIGO&rdquo; &mdash; Get In, Get Out: one option, traded and closed the same day.
+            <strong className="text-foreground">23:00 ET</strong> &mdash; the scanner ingests the day&apos;s institutional options flow across every optionable US equity and scores it. <strong className="text-foreground">Overnight</strong> &mdash; the standouts are enriched: news context, technicals, flow dollars, a recommended contract per name. <strong className="text-foreground">By the open</strong> &mdash; the curated bullish pool (~50 names) is live on <Link href="/signals" className="text-primary hover:underline">/signals</Link> and, in structured form, on the MCP for connected agents.
           </p>
           <p>
-            At 10:00 ET, you place the trade: buy one contract at market, arm both exit orders, put your phone down. At 15:45 ET the same day, an exit reminder fires if the trade is still open. Close at market, log the outcome, move on &mdash; nothing carries overnight.
+            <strong className="text-foreground">~09:50 ET</strong> &mdash; the safety rails and a live liquidity re-check run, and the engine&apos;s validation cohort selects and paper-trades one setup under fixed mechanical rules (10:00 entry, &minus;30% stop, +40% target, flat by 15:45 ET) so the selection methodology is tested against reality every single market day. Every outcome lands on the <Link href="/scorecard" className="text-primary hover:underline">public scorecard</Link>.
           </p>
           <p className="text-primary font-semibold">
-            That&apos;s the whole product. Everything below is how the engine gets to that one message.
+            The product is the data layer: the pool, the surfaces, and the methodology. Everything below is how it&apos;s built.
           </p>
         </div>
       </section>
@@ -107,9 +107,9 @@ export default function HowItWorksPage() {
       <Separator className="my-12 sm:my-16" />
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">Picking the one trade: the tournament</h2>
+        <h2 className="text-3xl font-bold font-headline">The selection tournament</h2>
         <p className="text-muted-foreground leading-relaxed">
-          Just before the pick goes out, two <strong className="text-foreground">safety rails</strong> run over the enriched list first &mdash; and they are the only filters left:
+          At selection time (~09:50 ET), two <strong className="text-foreground">safety rails</strong> run over the enriched list first &mdash; and they are the only filters left:
         </p>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
           <li><strong className="text-foreground">No earnings during the hold</strong> &mdash; any ticker reporting earnings the same trading day is dropped. Holding long options through an earnings print is a documented loss pattern.</li>
@@ -122,17 +122,24 @@ export default function HowItWorksPage() {
           <li><strong className="text-foreground">Three independent brackets.</strong> Each shuffles the pool into a fresh random order and reduces it in batches of ≤10 &mdash; an LLM advances the top 2 from each batch, round after round, until one winner remains.</li>
           <li><strong className="text-foreground">Consensus vote.</strong> The three bracket winners are compared: 3/3 agree &rarr; high confidence, 2/3 &rarr; medium, 1/3 &rarr; low. The consensus ticker is the pick.</li>
           <li><strong className="text-foreground">No memory, no rubric, no weights.</strong> Each batch gets a dead-simple prompt plus the daily report. Every candidate is leakage-checked before the model sees it, and any error fails closed &mdash; no trade rather than a forced one.</li>
-          <li><strong className="text-foreground">Live liquidity check.</strong> Right before the pick goes out, the engine re-checks each candidate&apos;s live open interest and drops any contract too illiquid to actually trade &mdash; so the one you get is one you can realistically enter and exit at fair prices.</li>
+          <li><strong className="text-foreground">Live liquidity check.</strong> At selection time, the engine re-checks each candidate&apos;s live open interest and drops any contract too illiquid to actually trade &mdash; the validation cohort only simulates contracts a real trader could enter and exit at fair prices.</li>
         </ul>
         <p className="text-muted-foreground leading-relaxed">
-          Some days the rails eliminate every candidate, the pool is empty, or the tournament fails closed &mdash; and the ~09:50 message says <em>no trade today</em>. That&apos;s the correct behavior &mdash; skipping beats forcing a trade.
+          Some days the rails eliminate every candidate, the pool is empty, or the tournament fails closed &mdash; and the engine stands down. No forced trade, no fallback. Skipping is correct behavior.
+        </p>
+        <p className="text-muted-foreground leading-relaxed">
+          The tournament is also published as a <strong className="text-foreground">methodology playbook on the MCP</strong> &mdash; <code className="text-primary text-sm">run_your_own_tournament</code> &mdash; so a connected agent can run the same selection pattern against <em>your</em> objective, horizon, and risk tolerance instead of the engine&apos;s fixed one.
         </p>
       </section>
 
       <Separator className="my-12 sm:my-16" />
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">Execution rules</h2>
+        <h2 className="text-3xl font-bold font-headline">The validation cohort&apos;s execution rules</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          The paper-traded cohort runs one deliberately rigid exit bracket, so the selection
+          methodology is measured under fixed, unfudgeable rules:
+        </p>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
           <li><strong className="text-foreground">Entry:</strong> 10:00 ET at market.</li>
           <li><strong className="text-foreground">Stop:</strong> &minus;30% option price.</li>
@@ -142,7 +149,7 @@ export default function HowItWorksPage() {
           <li><strong className="text-foreground">Conservative tiebreak:</strong> if a single bar touches both stop and target, the stop wins (lower-bound assumption).</li>
         </ul>
         <p className="text-muted-foreground leading-relaxed">
-          Every closed trade &mdash; winners and losers, counted the same way &mdash; is written to the public paper-trading ledger at <Link href="/scorecard" className="text-primary hover:underline">/scorecard</Link>.
+          Every closed trade &mdash; winners and losers, counted the same way &mdash; is written to the public paper-trading ledger at <Link href="/scorecard" className="text-primary hover:underline">/scorecard</Link>. One honest caveat, straight from <Link href="/lab" className="text-primary hover:underline">the Lab</Link>: a fixed bracket like this is a measurement instrument, not a strategy &mdash; our own research shows the same setups produce very different outcomes under different exits. That&apos;s exactly why the MCP ships an exit-rule simulator instead of a rule to copy.
         </p>
       </section>
 
@@ -156,7 +163,7 @@ export default function HowItWorksPage() {
               <div>
                 <h3 className="font-bold font-headline text-lg">Signals vs. trade recommendations</h3>
                 <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                  GammaRips publishes paper-trading performance and educational content. Every pick and ledger row is the output of a mechanical engine &mdash; not personalized advice. You trade your own account; GammaRips does not manage your money. Past performance does not guarantee future results.
+                  GammaRips publishes options-flow data, paper-trading performance, and educational content. Every signal and ledger row is the output of a mechanical engine &mdash; not personalized advice &mdash; and anything your AI agent concludes from the data is your analysis. You trade your own account; GammaRips does not manage your money. Past performance does not guarantee future results.
                 </p>
               </div>
             </div>
@@ -167,10 +174,10 @@ export default function HowItWorksPage() {
       <Separator className="my-12 sm:my-16" />
 
       <div className="text-center">
-        <h2 className="text-2xl font-bold font-headline mb-4">Ready for tomorrow&apos;s 09:50 ET pick?</h2>
+        <h2 className="text-2xl font-bold font-headline mb-4">Put an agent on tomorrow&apos;s pool</h2>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild size="lg">
-            <Link href="/pricing">See pricing <ArrowRight className="ml-2 h-5 w-5" /></Link>
+            <Link href="/developers">Connect your agent <ArrowRight className="ml-2 h-5 w-5" /></Link>
           </Button>
           <Button asChild variant="outline" size="lg">
             <Link href="/scorecard">Check the public ledger</Link>

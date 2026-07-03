@@ -8,11 +8,11 @@ export default function TermsPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-16">
       <h1 className="text-3xl font-bold mb-8">Terms of Service</h1>
-      <p className="text-sm text-gray-400 mb-8">Last updated: February 13, 2026</p>
+      <p className="text-sm text-gray-400 mb-8">Last updated: July 3, 2026</p>
       
       <div className="prose prose-invert max-w-none space-y-6">
         <h2>1. Service Description</h2>
-        <p>GammaRips is a paper-trading options engine that produces at most one trade idea per weekday, published at ~09:50 ET (just before the 10:00 ET entry), with pre-set stop, target, and exit. The webapp (gammarips.com) is free. The Pro subscription ($39/mo) adds a WhatsApp push and an AI chat agent inside the private subscriber group. The MCP API at gammarips-mcp-406581297632.us-central1.run.app/sse is free and unauthenticated. All content is educational; nothing published by GammaRips constitutes personalized investment advice.</p>
+        <p>GammaRips is an options-flow data service. Every weeknight it scans US equities for unusual options activity and curates a pool of candidate setups, published with supporting data on a paper-trading basis. The webapp (gammarips.com) is free. The paid subscription ("Agent Access," $39/mo) provides an API key for programmatic access to the GammaRips MCP server — structured data and analysis tools intended for use by AI agents and software the subscriber controls. GammaRips sells data and tools; it does not sell trade recommendations, and the MCP deliberately provides no "what should I buy" endpoint. All content is educational; nothing published by GammaRips constitutes personalized investment advice.</p>
 
         <h2>2. Not Financial Advice</h2>
         <p><strong>The information provided by GammaRips is for informational purposes only and does not constitute investment advice, financial advice, trading advice, or any other sort of advice.</strong> You should not treat any of the website's content as such. GammaRips does not recommend that any securities, options, or strategies are suitable for any particular investor. You are solely responsible for your own investment decisions.</p>
@@ -30,9 +30,10 @@ export default function TermsPage() {
 
         <h2>5. MCP API Usage</h2>
         <ul>
-          <li>The MCP API is free and requires no API key or authentication.</li>
+          <li>MCP access requires an active Agent Access subscription and a bearer API key issued to your account.</li>
+          <li>Your API key is personal to you and the agents you control. Do not share, publish, or resell it.</li>
           <li>Fair-use rate limits apply; contact evan@gammarips.com if your use case exceeds them.</li>
-          <li>We reserve the right to rate-limit or revoke access for abuse.</li>
+          <li>We reserve the right to rate-limit or revoke keys for abuse.</li>
           <li>You may not redistribute bulk data or resell API responses without written permission.</li>
         </ul>
 

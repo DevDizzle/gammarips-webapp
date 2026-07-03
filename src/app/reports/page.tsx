@@ -7,7 +7,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Daily Reports — GammaRips V7",
-  description: "Every trading day, GammaRips publishes the V7 daily pick — a same-day intraday trade — (or a documented skip) alongside market context across 5,230+ tickers. Paper-trading, educational only.",
+  description: "Every trading day, GammaRips publishes a daily intelligence report — the overnight scan, the curated bullish pool, and market context across 5,230+ tickers. Paper-trading data, educational only.",
   alternates: { canonical: 'https://gammarips.com/reports' },
 };
 
@@ -18,7 +18,7 @@ export default async function ReportsPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "GammaRips V7 Daily Reports",
-    "description": "Every trading day, GammaRips publishes the V7 daily pick — a same-day intraday trade — with entry, stop, target, and exit — or a documented skip.",
+    "description": "Every trading day, GammaRips publishes a daily intelligence report — the overnight scan, the curated bullish pool, and market context.",
     "url": "https://gammarips.com/reports",
     "mainEntity": {
       "@type": "ItemList",

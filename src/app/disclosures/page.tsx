@@ -34,7 +34,7 @@ const disclosures = [
     number: '02',
     title: 'Educational only. Not investment advice.',
     body: [
-      "GammaRips publishes options signals, methodology writeups, and a paper-trading ledger as educational content. Nothing on this site, in our emails, in the WhatsApp group, on @gammarips on X, or in any direct communication constitutes investment, financial, tax, accounting, or legal advice.",
+      "GammaRips publishes options-flow data, methodology writeups, research findings, and a paper-trading ledger as educational content. Nothing on this site, in our emails, over the MCP API, on @gammarips on X, or in any direct communication constitutes investment, financial, tax, accounting, or legal advice — and anything an AI agent concludes from our data is the user's own analysis, not a GammaRips recommendation.",
       "We do not know your financial situation, risk tolerance, time horizon, or tax position. A trade that would be reasonable for one person can be ruinous for another. Consult a registered investment advisor before making any trading decision based on what you read here.",
       "Options trading involves risk and is not suitable for every investor. The seller of an uncovered short option faces theoretically unlimited loss. The buyer of an option faces total loss of premium. Read the OCC's Characteristics and Risks of Standardized Options before trading any option.",
     ],
@@ -65,7 +65,7 @@ const disclosures = [
     title: 'Founder is not a registered investment advisor.',
     body: [
       "GammaRips is built by Evan Parra. Evan is not a registered investment advisor, broker-dealer, securities lawyer, CFP, CFA, or licensed financial professional of any kind. GammaRips is not a registered investment advisory firm, broker-dealer, or money-management business.",
-      "We do not solicit, manage, or accept assets under management. We sell access to a software pipeline that publishes options signals on a paper-trading basis. The $39/month subscription is a content subscription, not an advisory or management fee.",
+      "We do not solicit, manage, or accept assets under management. We sell access to data and software tools: a pipeline that publishes options-flow data on a paper-trading basis, plus programmatic (MCP) access for subscribers' own AI agents. The $39/month Agent Access subscription is a data-and-tools subscription, not an advisory or management fee — and the service deliberately provides no personalized recommendation of any kind.",
       "If you require advice on options trading specifically tailored to your situation, the responsible path is to consult a licensed advisor in your jurisdiction. We can build the engine but we cannot give you advice — that is, by design, not what this is.",
     ],
   },
@@ -191,7 +191,7 @@ export default function DisclosuresPage() {
         </section>
 
         <p className="text-xs text-muted-foreground text-center mt-16">
-          Last reviewed: April 2026. Disclosures may be updated as the engine, regulatory posture,
+          Last reviewed: July 2026. Disclosures may be updated as the engine, regulatory posture,
           or business model changes; updates will be dated.
         </p>
       </main>

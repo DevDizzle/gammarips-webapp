@@ -17,26 +17,26 @@ const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space
 const siteUrl = 'https://gammarips.com';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl), 
+  metadataBase: new URL(siteUrl),
   title: {
-    default: 'GammaRips — One options trade a day. Pushed to your phone at 9:50 ET.',
+    default: 'GammaRips — Options-flow data for AI agents',
     template: `%s | GammaRips`,
   },
-  description: "GammaRips watches institutional options flow overnight and mechanically picks one contract each morning — V7 'GIGO' (Get In, Get Out): one same-day intraday trade with stop, target, and exit pre-set. You place the trade at 10:00 ET and close it flat the same afternoon. Paper-trading, educational only.",
-  keywords: ['options flow', 'institutional options activity', 'unusual options activity', 'options signals', 'one trade a day', 'options trading', 'AI trading analysis', 'overnight options scanner'],
+  description: "GammaRips scans 5,000+ tickers overnight for unusual options activity and curates it to a small, high-signal pool — browse it free on the web, or connect Claude, ChatGPT, or your own agent over MCP for the full data layer: curated pool, opportunity surfaces, outcome history, and methodology. Your agent analyzes. You decide. Paper-trading data, educational only.",
+  keywords: ['agentic trading', 'AI trading agent', 'MCP server trading', 'options flow', 'unusual options activity', 'options flow data', 'institutional options activity', 'overnight options scanner', 'AI trading analysis', 'options data for AI agents'],
   openGraph: {
-    title: 'GammaRips — One options trade a day',
-    description: "One contract picked overnight. V7 'GIGO' — Get In, Get Out: one same-day intraday trade, stop/target/exit pre-set. Pushed to your phone at 9:50 ET, right before the 10:00 entry.",
+    title: 'GammaRips — Options-flow data for AI agents',
+    description: 'Stop asking AI for stock picks. Start giving it real data. Overnight unusual-options-activity scans, curated to a high-signal pool and served to your AI agent over MCP.',
     url: siteUrl,
     siteName: 'GammaRips',
-    images: [{ url: `${siteUrl}/og-image.png?v=3`, width: 1200, height: 630, alt: 'GammaRips — One options trade a day' }],
+    images: [{ url: `${siteUrl}/og-image.png?v=3`, width: 1200, height: 630, alt: 'GammaRips — Options-flow data for AI agents' }],
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GammaRips — One options trade a day',
-    description: "One contract picked overnight. V7 'GIGO' — Get In, Get Out: one same-day intraday trade, stop/target/exit pre-set. Pushed to your phone at 9:50 ET, right before the 10:00 entry.",
+    title: 'GammaRips — Options-flow data for AI agents',
+    description: 'Stop asking AI for stock picks. Start giving it real data. Overnight unusual-options-activity scans, curated and served to your AI agent over MCP.',
     images: [`${siteUrl}/og-image.png?v=3`],
   },
 };
@@ -51,7 +51,7 @@ const organizationSchema = {
   "url": "https://gammarips.com",
   "logo": "https://gammarips.com/icon.png",
   "email": "evan@gammarips.com",
-  "description": "GammaRips mechanically picks one options contract each day from overnight institutional flow and pushes it to subscribers at 09:50 ET, right before the 10:00 entry — V7 'GIGO' (Get In, Get Out): one same-day intraday trade with stop, target, and exit pre-set.",
+  "description": "GammaRips is an options-flow intelligence engine and data vendor for AI agents. It scans 5,000+ US tickers overnight for unusual options activity, curates a small high-signal pool, and serves the data — pool, opportunity surfaces, outcome history, methodology — to bring-your-own AI agents over MCP. The human web UI is free; agents subscribe.",
   "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO" },
   "sameAs": ["https://twitter.com/GammaRips"],
 };

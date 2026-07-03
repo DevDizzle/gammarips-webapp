@@ -11,11 +11,11 @@ import { getCohortStats, getLedgerTrades, type LedgerTrade } from '@/lib/firebas
 
 export const metadata: Metadata = {
   title: 'GammaRips Scorecard — Verified Signal Performance & Win Rate',
-  description: 'Every GammaRips V7 pick is timestamped and tracked. See the public paper-trading ledger. No cherry-picking, no hindsight edits. Paper-trading, educational only.',
+  description: 'The public paper-trading ledger of the GammaRips validation cohort — every selection timestamped and marked to realized option P&L, winners and losers counted the same way. No cherry-picking, no hindsight edits. Educational only.',
   alternates: { canonical: 'https://gammarips.com/scorecard' },
   openGraph: {
     title: 'GammaRips Scorecard — Verified Signal Performance',
-    description: 'Every GammaRips V7 pick is timestamped and tracked. Paper-trading ledger, educational only.',
+    description: 'The GammaRips validation cohort, tracked in public. Paper-trading ledger, educational only.',
     url: 'https://gammarips.com/scorecard',
   }
 };
@@ -88,7 +88,7 @@ export default async function ScorecardPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     "name": "GammaRips V7 Paper-Trading Ledger",
-    "description": "Public, timestamped record of every GammaRips V7 signal and its realized option P&L on a same-day +40% / -30% bracket. No cherry-picking, no hindsight edits. Paper-trading, educational only.",
+    "description": "Public, timestamped record of every GammaRips validation-cohort trade and its realized option P&L on a fixed same-day +40% / -30% bracket. No cherry-picking, no hindsight edits. Paper-trading, educational only.",
     "url": "https://gammarips.com/scorecard",
     "creator": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
     "license": "https://gammarips.com/disclosures",
@@ -218,7 +218,7 @@ export default async function ScorecardPage() {
               Live V7 paper-trading ledger — since {cohortStart}
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Every V7 pick is timestamped at publish and marked to its realized option P&amp;L on a same-day +40% / &minus;30% bracket &mdash; winners and losers counted the same way. We can&apos;t edit history.
+              Every validation-cohort selection is timestamped and marked to its realized option P&amp;L on a fixed same-day +40% / &minus;30% bracket &mdash; winners and losers counted the same way. We can&apos;t edit history. This cohort tests the selection methodology; it is not a product to follow &mdash; the honest context is in the Lab.
             </p>
             <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
               Preliminary: {stats!.trades_closed} of {EVAL_THRESHOLD} trades closed. Treat this as an early, small sample &mdash; not a verified edge &mdash; until the cohort reaches {EVAL_THRESHOLD} resolved trades.

@@ -7,44 +7,48 @@ import {
 
 export const faqs = [
   {
-    question: "What exactly lands on my phone, and when?",
-    answer: "At ~09:50 ET — about ten minutes before the 10:00 ET entry — you get one pick or none. A ticker, a bullish call contract — strike and expiration, a recommended mid price, a −30% stop, and a +40% target. V7 'GIGO' — Get In, Get Out: entry 10:00 ET, exit flat 15:45 ET the same day. The pick lands right before the trade so it's set on fresh, real-time liquidity. Some days the engine stays out — when VIX closes above VIX3M (backwardation), when the enriched pool is empty, or when the selection tournament fails closed, nothing is sent. On those days, do nothing. That's the routine."
+    question: "What is agentic trading?",
+    answer: "Using an AI agent — Claude, ChatGPT, or one you build — as your own market analyst instead of following someone else's calls. The agent pulls real data, reasons over it, and presents you a decision surface; you keep the judgment and place (or skip) the trade. The catch: agents are only as good as the data they can reach. A chatbot with no market data will happily improvise. GammaRips is the data layer that fixes that for options flow — your agent connects over MCP and reasons over curated, timestamped, leakage-checked data instead of vibes."
   },
   {
-    question: "How does the engine pick which one?",
-    answer: "A tournament, not a scoring formula. First a thin bar: overnight score ≥ 4 with directional dollar volume > $500K to be enriched at all, then two safety rails (no earnings during the same-day hold; VIX ≤ VIX3M). Then a BULLISH-only gate and a delta edge-rank keep the ~50 strongest bullish setups, which go into a randomized bracket tournament: three independent brackets each shuffle the pool, an LLM advances the top 2 from batches of ≤10 round after round until one winner remains, and the three bracket winners vote (3/3 = high confidence, 2/3 = medium, 1/3 = low). No memory, no rubric, no weights, and every candidate is leakage-checked first. Just before the pick goes out, the engine re-checks each candidate's live open interest and drops any contract too illiquid to actually trade, so the one you get is one you can realistically enter and exit at fair prices."
+    question: "What does GammaRips actually sell?",
+    answer: "Data and tools, not picks. The paid product is MCP access for your AI agent: today's curated options-flow pool in structured form, the opportunity surface for historical setups (how far each contract actually ran, and how far it drew down), a queryable outcome database, regime context, and methodology playbooks — 23 tools in total. Everything human-readable on gammarips.com is free, forever. The $39/mo is the machine connection."
   },
   {
-    question: "What's free, what's paid, what do you actually charge for?",
-    answer: "Free webapp: the ~50 bullish setups we analyze each morning, with per-ticker drill-downs, daily reports, methodology, and the public scorecard. Pro ($39/mo, 7-day free trial): the curation. The engine picks ONE trade each weekday — strike, DTE, contract, stop, target, exit — and delivers it to your inbox + private WhatsApp group at ~09:50 ET, just before the 10:00 entry. Plus access to an AI chat agent in the WhatsApp group that answers questions against live engine data."
+    question: "Which AI agents work with this?",
+    answer: "Anything that speaks MCP (Model Context Protocol): Claude via connectors or Claude Code, ChatGPT with MCP support, Cursor, or any custom agent using an MCP client library. You add the GammaRips server to your agent's config with your API key, and the 23 tools show up like native capabilities. Setup takes a few minutes; the Developers page has copy-paste instructions."
   },
   {
-    question: "Why is the curated pick blurred on the homepage?",
-    answer: "Because the curation IS the value. The free webapp shows the ~50 bullish setups we analyze each morning — that's the haystack. Pro picks THE one for you so you don't have to scan it. The blurred card on the homepage exists so you can see that we picked something today; subscribing reveals which one and gets it delivered to your inbox + WhatsApp at ~09:50 ET. The signals haystack itself is never paywalled."
+    question: "Why don't you just tell me what to buy?",
+    answer: "Two reasons, and we mean both. First, shared picks get crowded — everyone piling into the same thin options contract destroys the very thing they paid for. Second, our own published data shows that mechanically buying everything the engine surfaces, under a fixed exit rule, loses money. The value isn't a pick — it's the surface a good trade comes from: a small curated pool plus the historical data showing how setups like each one actually behaved. We give your agent that surface. It reasons to its own conclusion, sized to your risk, on your horizon."
   },
   {
-    question: "What if the trade hits −30% right after I buy it?",
-    answer: "Then the stop fills and you lose up to $150 on a $500 position. That is the engineered maximum per-trade loss, and it's the whole point. The trade either hits −30%, +40%, or closes flat at 15:45 ET the same day — nothing else. No 'should I hold one more day' decisions. A −30% fill is a clean outcome for the routine; you closed and moved on."
-  },
-  {
-    question: "Are you telling me what to trade?",
-    answer: "No. GammaRips is educational content about what one mechanical engine picked, based on public overnight options-flow data. You decide whether to take the trade in your account, at what size, and whether to deviate. We never see your account, never manage your money, and never personalize the pick. If you want personalized investment advice, work with a licensed advisor."
+    question: "How is the pool curated?",
+    answer: "Every weeknight the engine scans 5,230+ US tickers for unusual options activity. A name needs an overnight score ≥ 4 and directional dollar volume above $500K to be enriched at all. Then a bullish-only gate and a delta-based edge-rank — levers validated on over a thousand historically labeled trades — cut the list to the strongest ~50 setups, each carrying its flow data, technicals, news context, and a recommended contract. Two safety rails sit on top: no names with earnings in the window, and a volatility regime check (VIX ≤ VIX3M). Every candidate is leakage-checked — no field your agent sees contains information that wasn't knowable at scan time."
   },
   {
     question: "Where's the track record?",
-    answer: "On the Scorecard page, updated as the engine's paper trades close. We launched V7 — our randomized bracket tournament — on June 4, 2026; the V7 cohort starts fresh from that date. Sample size is small — we'll publish specific win-rate numbers when at least 30 V7 trades have closed. In the meantime, every signal is timestamped, every outcome is logged, and nothing is edited after the fact. That's the receipt."
+    answer: "On the Scorecard page, and in the Lab. A paper-traded cohort tests the selection methodology every market day under fixed mechanical rules — every trade timestamped, every outcome logged, nothing edited after the fact. We don't publish aggregate win-rate marketing until a cohort has at least 30 closed trades, and we tell you the unflattering part up front: the whole pool bought blindly under a fixed exit is negative. That number is exactly why we sell the data layer and not a pick."
   },
   {
-    question: "Why one trade a day? Everyone else sends dozens.",
-    answer: "Because you can't take dozens and keep a job. And because most 'more signals' services are firehoses with no exit rules, and the user ends up cherry-picking the ones that worked in hindsight. We'd rather be wrong one time a day than right-in-retrospect twelve times a day."
+    question: "Is this financial advice?",
+    answer: "No. GammaRips is a data vendor. We publish market data, methodology, and research on a paper-trading basis. We never see your account, never manage money, and never make personalized recommendations — and the MCP deliberately has no 'what should I buy' endpoint. What your agent concludes from the data is your analysis, not our advice. If you want personalized investment advice, work with a licensed advisor."
+  },
+  {
+    question: "Can't I just scrape the free site?",
+    answer: "The webapp shows today's pool and reports in human-readable form, and it always will, free. The MCP is a different animal: structured point-in-time data built for machine reasoning, the historical opportunity-surface and outcome databases that never render on a webpage, exit-rule simulation, regime context, and the methodology playbooks — including the bracket-tournament selection pattern your agent can run against its own objective. You could rebuild some of that from scraping. By the time you have, you'll have built a worse version of the thing we sell for $39."
   },
   {
     question: "Who runs this?",
-    answer: "Evan Parra (founder, ML engineer, data architect) built the engine. An autonomous AI operator named GammaMolt runs the daily pipeline — scanning, scoring, enriching, publishing, posting. Every decision is logged to BigQuery. Nothing is human-curated in the pick path. Read more on the About page."
+    answer: "Evan Parra (founder, ML engineer, data architect) built the engine. The nightly pipeline — scanning, scoring, enriching, publishing — runs autonomously, and every decision is logged to BigQuery. The Lab publishes experiments run on the engine's own data, including the failed ones. Read more on the About page."
+  },
+  {
+    question: "What happened to the WhatsApp pick subscription?",
+    answer: "Retired. We used to sell a daily pushed pick for $39/mo; we ended it deliberately. A single shared pick concentrates everyone into one contract, and our research kept showing the edge lives in how a setup is traded, not in the name itself. The same $39 now buys something better-aligned: full MCP data access, so your agent works the whole pool your way. If you had an active subscription, email evan@gammarips.com and we'll make it right."
   },
   {
     question: "What happens if I cancel?",
-    answer: "You keep Pro access through the end of your billing cycle. After that you lose the curated daily pick email + WhatsApp delivery and the homepage's pick card reverts to the blurred state. The full signals haystack on /signals, the daily reports, methodology, and scorecard all stay free forever. No retention tricks, no downgraded data."
+    answer: "Your agent's MCP access ends with your billing cycle — no retention tricks. Everything human-readable stays free forever: the daily pool, reports, scorecard, methodology, blog, and Lab. Come back whenever your agent misses the data."
   },
 ];
 

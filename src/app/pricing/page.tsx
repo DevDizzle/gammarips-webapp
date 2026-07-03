@@ -4,12 +4,12 @@ import { PricingClient } from './pricing-client';
 export const metadata: Metadata = {
   title: 'Pricing — GammaRips',
   description:
-    'The webapp is free forever. Pro is $39/mo for the WhatsApp push and the AI chat agent inside the private group. 7-day free trial. Cancel anytime.',
+    'Humans browse free. Agents subscribe. The whole website is free forever; $39/mo buys full MCP access for your AI agent — the curated options-flow pool, opportunity surfaces, outcome history, and methodology tools. 7-day free trial.',
   alternates: { canonical: 'https://gammarips.com/pricing' },
   openGraph: {
     title: 'Pricing — GammaRips',
     description:
-      'Free webapp forever. Pro $39/mo for WhatsApp push + AI chat agent. 7-day free trial.',
+      'Humans browse free. Agents subscribe. $39/mo for full MCP data access for your AI agent. 7-day free trial.',
     url: 'https://gammarips.com/pricing',
   },
 };
@@ -18,16 +18,16 @@ export default function PricingPage() {
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: 'GammaRips Pro',
+    name: 'GammaRips Agent Access',
     description:
-      'One options trade a day, scored overnight and pushed to your phone at 09:50 ET, right before the 10:00 entry, with an AI chat agent inside the private WhatsApp group.',
+      'MCP data access for AI agents: the curated overnight options-flow pool in structured form, opportunity surfaces (realized excursion distributions per historical setup), a queryable outcome database, regime context, and methodology playbooks. 23 tools for Claude, ChatGPT, or any MCP client. Data on a paper-trading basis — not investment advice.',
     image: 'https://gammarips.com/og-image.png?v=3',
     brand: { '@type': 'Brand', name: 'GammaRips' },
     offers: {
       '@type': 'Offer',
       priceCurrency: 'USD',
       price: '39.00',
-      name: 'GammaRips Pro (monthly)',
+      name: 'GammaRips Agent Access (monthly)',
       availability: 'https://schema.org/InStock',
       url: 'https://gammarips.com/pricing',
       priceSpecification: {

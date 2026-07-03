@@ -1,41 +1,47 @@
 # GammaRips
 
-> One options trade a day. Scored overnight. Pushed to your phone at 9:50 ET, right before the 10:00 entry.
+> The options-flow data layer for AI agents. Stop asking AI for stock picks — give it real data.
 
-GammaRips is a paper-trading options engine for working professionals. Every weeknight it scans 5,230+ US equities for institutional overnight options flow, applies deterministic quality gates, and publishes at most one trade idea at ~9:50 ET, right before the 10:00 ET entry. The trade has a pre-set stop (−30% on the option), pre-set target (+40%), and a same-day exit (flat at 15:45 ET on the entry day — no overnight hold). Free users see the pick on the webapp; Pro subscribers get it pushed to WhatsApp and can @mention an AI agent in the private group.
+GammaRips is an options-flow intelligence engine and data vendor. Every weeknight it scans 5,230+ US equities for unusual institutional options activity and curates the firehose down to a small, high-signal bullish pool. Humans browse everything free at gammarips.com; AI agents connect over MCP (paid, $39/mo, 7-day free trial) for the structured data layer: the curated pool, point-in-time feature vectors, opportunity surfaces (realized peak/drawdown excursions per historical setup), a queryable outcome database, exit-rule simulation, regime context, and methodology playbooks.
 
-Paper-trading, educational only. Not investment advice.
+There is no pick endpoint, deliberately. GammaRips sells the surface a good trade comes from, not a trade. Each user's agent reasons over the same data to its own conclusion — including via the published bracket-tournament selection playbook, run against the user's own objective. Honest baseline, published openly: buying the whole pool mechanically under a fixed exit is negative. The value is curation + history + your agent's analysis.
 
-## Core docs
+Data on a paper-trading basis, educational only. Not investment advice.
 
-- [Trading strategy (V7.1)](https://gammarips.com/how-it-works)
-- [Today's pick](https://gammarips.com/signals)
-- [Scorecard (paper-trading ledger)](https://gammarips.com/scorecard)
-- [Pricing — Free / Pro $39](https://gammarips.com/pricing)
-- [Developer docs — 18 MCP tools, no auth](https://gammarips.com/developers)
+## Core pages
 
-## Gate stack (V7.1)
+- [How it works (V7.1 engine)](https://gammarips.com/how-it-works)
+- [Today's curated pool (free)](https://gammarips.com/signals)
+- [Scorecard — paper-trading ledger](https://gammarips.com/scorecard)
+- [The Lab — published experiments](https://gammarips.com/lab)
+- [Pricing — free website / $39 Agent Access](https://gammarips.com/pricing)
+- [MCP docs — 23 tools](https://gammarips.com/developers)
 
-1. **Scanner** — overnight signals across 5,230 tickers.
-2. **Enrichment** — `overnight_score >= 4 AND directional_uoa_usd > 500000, BULLISH-only, delta edge-ranked to top ~50`.
-3. **Signal-notifier** — Two safety rails: no earnings on the trade day; VIX <= VIX3M. Then a randomized 3-bracket consensus tournament over the ~50 bullish setups picks 1 (or none). Just before the pick is published, a live open-interest re-check drops any contract too illiquid to actually trade, so the pick is one a subscriber can realistically enter and exit at fair prices.
-4. **Forward paper-trader** — enters 10:00 ET, −30% stop, +40% target, exits flat at 15:45 ET the same day. Stop wins over target on ambiguous bars.
+## Curation stack (V7.1)
 
-## MCP server (free, no auth)
+1. **Scanner** — overnight unusual-options-activity scan across 5,230+ tickers.
+2. **Enrichment** — `overnight_score >= 4 AND directional_uoa_usd > 500000`, bullish-only, delta edge-ranked to the strongest ~50; thesis, technicals, news context, and a recommended contract attached per name.
+3. **Safety rails** — no earnings in the window; volatility regime check (VIX <= VIX3M).
+4. **Leakage discipline** — every field is point-in-time; nothing an agent reads contains information that wasn't knowable at the time it's dated.
+5. **Validation** — a paper-traded cohort tests the selection methodology daily under fixed mechanical rules; outcomes are logged, published, and never edited.
 
-- Endpoint: `https://gammarips-mcp-406581297632.us-central1.run.app/sse`
-- Transport: SSE
-- Primary tool: `get_todays_pick`
-- All 18 tools: `get_todays_pick`, `list_todays_picks`, `get_freemium_preview`, `get_overnight_signals`, `get_enriched_signals`, `get_signal_detail`, `get_enriched_signal_schema`, `get_signal_performance`, `get_win_rate_summary`, `get_open_position`, `get_position_history`, `get_daily_report`, `get_report_list`, `get_available_dates`, `web_search`, `get_market_calendar_status`, `get_signal_explainer`, `get_historical_performance`.
+## MCP server (Agent Access — API key required)
+
+- Endpoint: `https://gammarips-mcp-406581297632.us-central1.run.app/mcp`
+- Transport: Streamable HTTP (legacy SSE at `/sse`)
+- Auth: `Authorization: Bearer <API key>` — issued at https://gammarips.com/account with an active subscription ($39/mo, 7-day free trial)
+- Start with: `get_enriched_signals`, `get_opportunity_surface`, `get_playbook`
+- All 23 tools: `get_enriched_signals`, `get_signal_detail`, `get_overnight_signals`, `get_freemium_preview`, `get_pool_features`, `get_opportunity_surface`, `query_outcomes`, `get_outcome_summary`, `estimate_exit_rule`, `get_regime_context`, `list_playbooks`, `get_playbook`, `get_signal_performance`, `get_win_rate_summary`, `get_position_history`, `get_historical_performance`, `get_daily_report`, `get_report_list`, `get_available_dates`, `get_enriched_signal_schema`, `get_market_calendar_status`, `get_signal_explainer`, `web_search`
+- Built-in prompts: `morning_brief`, `analyze_candidate`, `run_your_own_tournament` — workflows that end in a decision surface, never a pick.
 
 ## Pricing
 
-- **Free** — today's pick on the webapp at 09:50 ET, full signals list, daily report, public scorecard, all 18 MCP tools.
-- **Pro $39/mo** — everything in Free, plus a WhatsApp push at 09:50 ET, an exit reminder at 15:45 ET (same-day close), and an AI chat agent inside the private WhatsApp group. 7-day free trial. Cancel anytime.
+- **Free** — the entire human-readable website: today's curated pool, daily reports, per-ticker deep dives, scorecard, the Lab, methodology. Free forever, no account required.
+- **Agent Access $39/mo** — full MCP access for Claude, ChatGPT, or any MCP client. 7-day free trial. Cancel anytime.
 
 ## Disclaimers
 
-Paper-trading performance, educational only. Not investment advice. Past performance is not a guarantee of future results. Options trading involves substantial risk of loss. GammaRips does not make personalized recommendations and does not manage customer funds.
+Data on a paper-trading basis, educational only. Not investment advice. Past performance is not a guarantee of future results. Options trading involves substantial risk of loss. GammaRips does not make personalized recommendations and does not manage customer funds.
 
 ## Contact
 

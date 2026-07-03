@@ -83,19 +83,40 @@ export default function AccountPage() {
 
         {/* API Access Section */}
         <section className="p-6 rounded-lg border bg-card space-y-4">
-          <h2 className="text-xl font-bold">MCP API Access</h2>
-          <p className="text-muted-foreground">
-            The GammaRips MCP API is free and open. No API key required.
-          </p>
-          <div>
-            <p className="text-sm font-semibold mb-2">MCP Endpoint:</p>
-            <code className="block p-2 bg-muted rounded text-sm font-mono">
-              https://gammarips-mcp-406581297632.us-central1.run.app/sse
-            </code>
-            <p className="text-xs text-muted-foreground mt-2">
-              Transport: SSE (Server-Sent Events) • No authentication required
-            </p>
-          </div>
+          <h2 className="text-xl font-bold">Agent Access — MCP API Key</h2>
+          {isPro ? (
+            <>
+              <p className="text-muted-foreground">
+                Your subscription includes full MCP Agent Access (all 23
+                tools). Your API key is provisioned when you subscribe — check
+                your welcome email, or email{' '}
+                <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">
+                  evan@gammarips.com
+                </a>{' '}
+                and we&apos;ll sort it immediately.
+              </p>
+              <div>
+                <p className="text-sm font-semibold mb-2">MCP Endpoint:</p>
+                <code className="block p-2 bg-muted rounded text-sm font-mono">
+                  https://gammarips-mcp-406581297632.us-central1.run.app/mcp
+                </code>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Transport: Streamable HTTP • Auth: Authorization: Bearer &lt;your key&gt;
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="text-muted-foreground">
+                Connect Claude, ChatGPT, or your own agent to the GammaRips
+                data layer — the curated pool, opportunity surfaces, outcome
+                history, and methodology playbooks. $39/mo, 7-day free trial.
+              </p>
+              <Button asChild>
+                <Link href="/pricing">Get Agent Access &rarr;</Link>
+              </Button>
+            </>
+          )}
           <Link href="/developers" className="text-sm text-primary hover:underline inline-block mt-2">
             View full API documentation →
           </Link>

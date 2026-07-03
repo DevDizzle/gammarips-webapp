@@ -3,15 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
+const MCP_ENDPOINT = "https://gammarips-mcp-406581297632.us-central1.run.app/mcp";
+
 export const metadata = {
-  title: "GammaRips MCP API — 18 Tools for AI Agents",
+  title: "GammaRips MCP — The Options-Flow Data Layer for AI Agents",
   description:
-    "Connect any AI agent, research notebook, or trading bot to the paper-trading engine. 18 MCP tools, SSE transport, no auth, no key.",
+    "Connect Claude, ChatGPT, or your own agent to 23 MCP tools: the curated overnight options-flow pool, opportunity surfaces, a queryable outcome database, regime context, and methodology playbooks. $39/mo, 7-day free trial.",
   alternates: { canonical: "https://gammarips.com/developers" },
   openGraph: {
-    title: "GammaRips MCP API — 18 Tools for AI Agents",
+    title: "GammaRips MCP — The Options-Flow Data Layer for AI Agents",
     description:
-      "Connect any AI agent, research notebook, or trading bot to the paper-trading engine. 18 MCP tools, no auth.",
+      "23 MCP tools for AI agents: curated options-flow pool, opportunity surfaces, outcome history, methodology playbooks. $39/mo, 7-day free trial.",
     url: "https://gammarips.com/developers",
   },
 };
@@ -19,10 +21,10 @@ export const metadata = {
 const webApiSchema = {
   "@context": "https://schema.org",
   "@type": "WebAPI",
-  name: "GammaRips MCP API",
+  name: "GammaRips MCP",
   description:
-    "Model Context Protocol (MCP) API for the paper-trading options engine. 18 tools covering today's pick, enriched signals, win-rate summaries, live open position, daily reports, and historical ledger queries.",
-  url: "https://gammarips-mcp-406581297632.us-central1.run.app/sse",
+    "Model Context Protocol (MCP) server for AI agents: 23 tools covering the curated overnight options-flow pool, point-in-time feature vectors, opportunity surfaces (realized excursion distributions), a queryable outcome database, exit-rule simulation, regime context, methodology playbooks, and daily reports. Requires a bearer API key ($39/mo subscription, 7-day free trial). Data on a paper-trading basis — not investment advice.",
+  url: MCP_ENDPOINT,
   documentation: "https://gammarips.com/developers",
   provider: {
     "@type": "Organization",
@@ -30,6 +32,68 @@ const webApiSchema = {
     url: "https://gammarips.com",
   },
 };
+
+const toolGroups: { group: string; blurb: string; tools: { name: string; description: string }[] }[] = [
+  {
+    group: "Live pool",
+    blurb: "Today's curated candidates, structured for machine reasoning.",
+    tools: [
+      { name: "get_enriched_signals", description: "The curated pool for a scan date — thesis, technicals, flow, and recommended contract per name. Served from the leakage-safe enriched view." },
+      { name: "get_signal_detail", description: "Deep dive on one ticker: full narrative enrichment (news, thesis, catalyst) plus point-in-time features and the recommended contract." },
+      { name: "get_overnight_signals", description: "The raw overnight scan across 5,230+ tickers, before curation — filter by direction, score, or ticker." },
+      { name: "get_freemium_preview", description: "A minimal public teaser of the top pool names — ticker, direction, score, headline. The taste, not the meal." },
+    ],
+  },
+  {
+    group: "Research substrate",
+    blurb: "The deep data a human never browses — this is what you're paying for.",
+    tools: [
+      { name: "get_pool_features", description: "Point-in-time feature vectors for the labeled candidate pool — every field knowable at selection time, nothing after." },
+      { name: "get_opportunity_surface", description: "Realized excursion surfaces per historical setup: how far each contract actually ran (peak) and drew down (trough), so your agent learns what was possible." },
+      { name: "query_outcomes", description: "Query the labeled outcome database across horizons, dates, tickers, and feature filters — the raw material for your agent's own research." },
+      { name: "get_outcome_summary", description: "Cohort-shaped aggregate outcomes (grouped by delta bucket, momentum, horizon…) with sample sizes attached." },
+      { name: "estimate_exit_rule", description: "Simulate a target/stop/horizon exit rule against the historical pool — test YOUR exit idea before your money meets it." },
+      { name: "get_regime_context", description: "Point-in-time volatility regime for a scan date: VIX vs VIX3M, SPY trend, and the engine's regime rail evaluated on those values." },
+    ],
+  },
+  {
+    group: "Methodology",
+    blurb: "How the engine thinks — as playbooks your agent can execute.",
+    tools: [
+      { name: "list_playbooks", description: "List the published methodology playbooks." },
+      { name: "get_playbook", description: "Fetch one playbook in markdown — including the bracket-tournament selection pattern your agent can run against your own objective." },
+    ],
+  },
+  {
+    group: "Performance & receipts",
+    blurb: "The track record, queryable — including the unflattering parts.",
+    tools: [
+      { name: "get_signal_performance", description: "Forward outcome tracking per enriched signal — signal-level results across the whole pool, not a curated highlight reel." },
+      { name: "get_win_rate_summary", description: "Aggregate underlying-direction statistics for the broad pool over a lookback window, with the caveats attached." },
+      { name: "get_position_history", description: "Closed trades from the paper-trading validation cohort's ledger." },
+      { name: "get_historical_performance", description: "Ledger aggregates by window, direction, and policy version." },
+    ],
+  },
+  {
+    group: "Reports & metadata",
+    blurb: "Context and contracts.",
+    tools: [
+      { name: "get_daily_report", description: "The full daily intelligence report (markdown) — the editorial synthesis of the scan." },
+      { name: "get_report_list", description: "List available daily reports." },
+      { name: "get_available_dates", description: "Which scan dates have data." },
+      { name: "get_enriched_signal_schema", description: "The machine-readable data contract: every substrate column with its leakage classification and as-of boundary." },
+    ],
+  },
+  {
+    group: "Reference & external",
+    blurb: "Utilities that kill hallucination classes.",
+    tools: [
+      { name: "get_market_calendar_status", description: "Is the US market open today? Deterministic NYSE calendar — holidays and early closes included." },
+      { name: "get_signal_explainer", description: "Plain-English definition of any GammaRips signal field." },
+      { name: "web_search", description: "Google web search for real-time fact verification and grounding." },
+    ],
+  },
+];
 
 export default function DevelopersPage() {
   return (
@@ -43,11 +107,13 @@ export default function DevelopersPage() {
         {/* Hero */}
         <section className="text-center py-12 space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold font-headline">
-            Build on the V7 Engine
+            The options-flow data layer for AI agents
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            One pick a day, 18 MCP tools, no auth. Point your AI agent, research notebook,
-            or trading bot at the endpoint and go.
+            23 MCP tools over the GammaRips engine: the curated overnight pool,
+            opportunity surfaces, a queryable outcome database, and the
+            methodology itself. Your agent reasons to its own conclusions — there
+            is no pick endpoint, on purpose.
           </p>
           <div
             className="p-8 rounded-lg border-2 border-primary bg-card max-w-2xl mx-auto mt-8"
@@ -55,18 +121,24 @@ export default function DevelopersPage() {
           >
             <div className="text-center space-y-4">
               <h2 className="text-2xl font-bold font-headline">Connect Your Agent</h2>
-              <p className="text-muted-foreground">
-                The MCP API is free. No API key, no sign-up. Just connect and query.
-              </p>
               <code className="block p-3 bg-muted rounded text-sm break-all">
-                https://gammarips-mcp-406581297632.us-central1.run.app/sse
+                {MCP_ENDPOINT}
               </code>
               <p className="text-sm text-muted-foreground">
-                Want the pick pushed to WhatsApp and an AI agent in the group?{" "}
-                <Link href="/pricing" className="text-primary hover:underline">
-                  Pro is $39/mo with a 7-day free trial →
-                </Link>
+                Streamable HTTP · Bearer API key · Works with Claude, ChatGPT,
+                Cursor, or any MCP client
               </p>
+              <p className="text-muted-foreground">
+                Full access is $39/mo with a 7-day free trial. Your key is
+                issued from your{" "}
+                <Link href="/account" className="text-primary hover:underline">
+                  account page
+                </Link>{" "}
+                the moment you subscribe.
+              </p>
+              <Link href="/pricing">
+                <Button size="lg">Get Your API Key &rarr;</Button>
+              </Link>
             </div>
           </div>
         </section>
@@ -78,194 +150,156 @@ export default function DevelopersPage() {
             <div className="space-y-2">
               <div className="flex gap-4">
                 <span className="text-muted-foreground">Endpoint:</span>
-                <span className="text-foreground">
-                  https://gammarips-mcp-406581297632.us-central1.run.app/sse
-                </span>
+                <span className="text-foreground break-all">{MCP_ENDPOINT}</span>
               </div>
               <div className="flex gap-4">
                 <span className="text-muted-foreground">Transport:</span>
-                <span className="text-foreground">SSE (Server-Sent Events)</span>
+                <span className="text-foreground">Streamable HTTP (legacy SSE at /sse)</span>
               </div>
               <div className="flex gap-4">
                 <span className="text-muted-foreground">Auth:</span>
-                <span className="text-foreground">None required</span>
+                <span className="text-foreground">Authorization: Bearer &lt;your API key&gt;</span>
               </div>
               <div className="flex gap-4">
-                <span className="text-muted-foreground">Primary tool:</span>
-                <span className="text-primary">get_todays_pick</span>
+                <span className="text-muted-foreground">Start with:</span>
+                <span className="text-primary">get_enriched_signals · get_opportunity_surface · get_playbook</span>
               </div>
             </div>
             <div className="mt-6 pt-4 border-t border-border/50">
-              <div className="text-muted-foreground mb-2"># Python (using fastmcp)</div>
+              <div className="text-muted-foreground mb-2"># Claude Code</div>
+              <pre className="text-primary overflow-x-auto whitespace-pre-wrap break-all">
+{`claude mcp add --transport http gammarips \\
+  ${MCP_ENDPOINT} \\
+  --header "Authorization: Bearer YOUR_API_KEY"`}
+              </pre>
+            </div>
+            <div className="mt-6 pt-4 border-t border-border/50">
+              <div className="text-muted-foreground mb-2"># Python (fastmcp)</div>
               <pre className="text-primary overflow-x-auto whitespace-pre-wrap break-all">
 {`from fastmcp import Client
+from fastmcp.client.transports import StreamableHttpTransport
 
-async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") as client:
-    pick = await client.call_tool("get_todays_pick", {})
-    print(pick)`}
+transport = StreamableHttpTransport(
+    "${MCP_ENDPOINT}",
+    headers={"Authorization": "Bearer YOUR_API_KEY"},
+)
+async with Client(transport) as client:
+    pool = await client.call_tool("get_enriched_signals", {})
+    print(pool)`}
               </pre>
             </div>
           </div>
         </section>
 
-        {/* Available Tools */}
+        {/* Built-in prompts */}
         <section className="space-y-6">
-          <h2 className="text-2xl font-bold font-headline">15 Available Tools</h2>
-          <p className="text-sm text-muted-foreground">
-            <span className="text-primary font-mono">get_todays_pick</span> is the primary entry point —
-            it returns the single V7 pick for today (or <code>null</code> if the engine skipped).
-            Everything else is supporting context.
+          <h2 className="text-2xl font-bold font-headline">Built-in Prompts</h2>
+          <p className="text-sm text-muted-foreground max-w-3xl">
+            The server ships MCP prompts — ready-made workflows your agent can
+            run over the tools. None of them returns a pick; each ends in a
+            decision surface you reason about.
           </p>
-
-          <div className="grid gap-4">
-            {/* Primary */}
-            <ToolCard
-              name="get_todays_pick"
-              description="The single V7 pick for today's scan date — a same-day intraday trade. Returns ticker, direction, contract, entry/stop/target/exit, and the tournament-consensus evidence. Null when the engine skipped (empty enriched pool, a safety rail, or a fail-closed tournament)."
-              params={{ "": "No params required" }}
-              badge="PRIMARY"
-            />
-            <ToolCard
-              name="list_todays_picks"
-              description="Historical list of daily picks written by the notifier — one row per scan date."
-              params={{ limit: "integer (default 30)" }}
-            />
-            <ToolCard
-              name="get_freemium_preview"
-              description="Redacted preview of today's pick for unauthenticated surfaces (ticker masked until ~09:50 ET)."
-              params={{ "": "No params required" }}
-            />
-            <ToolCard
-              name="get_open_position"
-              description="Composite payload about the engine's current state: pending pick, awaiting simulation, and most-recent closed trade. The batch simulator is not live; no fabricated unrealized P&L."
-              params={{ "": "No params required" }}
-            />
-            <ToolCard
-              name="get_position_history"
-              description="Closed trades from the forward-paper-trader ledger. Filters: date range, direction, outcome."
-              params={{
-                start_date: "YYYY-MM-DD (optional)",
-                end_date: "YYYY-MM-DD (optional)",
-                direction: "bullish | bearish (optional)",
-                limit: "integer (default 30)",
-              }}
-            />
-            <ToolCard
-              name="get_overnight_signals"
-              description="Raw overnight scanner rows across 5,230+ tickers."
-              params={{
-                date: "YYYY-MM-DD (optional)",
-                direction: "bull | bear (optional)",
-                min_score: "integer 1-10 (optional)",
-                ticker: "string (optional)",
-                limit: "integer (optional)",
-              }}
-            />
-            <ToolCard
-              name="get_enriched_signals"
-              description="Signals after the V7 enrichment filter (score ≥ 4, directional UOA > $500K, BULLISH-only, delta edge-ranked to ~50). Includes thesis, technicals, recommended contract."
-              params={{
-                date: "YYYY-MM-DD (optional)",
-                direction: "bull | bear (optional)",
-                ticker: "string (optional)",
-                limit: "integer (optional)",
-              }}
-            />
-            <ToolCard
-              name="get_signal_detail"
-              description="Deep dive on a single ticker: full enriched payload including contract, thesis, technicals, news."
-              params={{
-                ticker: "string (required)",
-                scan_date: "YYYY-MM-DD (optional)",
-              }}
-            />
-            <ToolCard
-              name="get_enriched_signal_schema"
-              description="Returns the schema (column names + descriptions) of the enriched-signals table. Useful when an agent needs to know what fields to select."
-              params={{ "": "No params required" }}
-            />
-            <ToolCard
-              name="get_signal_performance"
-              description="Three-day forward returns per enriched signal. Separate universe from the paper-trader ledger — this is signal-level outcome tracking, not bracket trades."
-              params={{
-                date: "YYYY-MM-DD (optional)",
-                ticker: "string (optional)",
-                direction: "bull | bear (optional)",
-                outcome: "win | loss (optional)",
-                limit: "integer (optional)",
-              }}
-            />
-            <ToolCard
-              name="get_win_rate_summary"
-              description="Aggregate signal-level win rate across a rolling window. Note: this is the enriched bullish set (~50/day), not the 1/day tournament pick."
-              params={{ days: "integer (default 30)" }}
-            />
-            <ToolCard
-              name="get_daily_report"
-              description="Full daily market report (AI-authored editorial synthesis) in markdown."
-              params={{ date: "YYYY-MM-DD (defaults to latest)" }}
-            />
-            <ToolCard
-              name="get_report_list"
-              description="Paginated list of available daily reports."
-              params={{ limit: "integer (default 10)" }}
-            />
-            <ToolCard
-              name="get_available_dates"
-              description="Returns which scan dates have data."
-              params={{ "": "No params required" }}
-            />
-            <ToolCard
-              name="web_search"
-              description="Web search for real-time fact verification. Requires GOOGLE_CSE_ID at deploy time."
-              params={{
-                query: "string (required)",
-                num_results: "integer (optional)",
-              }}
-            />
+          <div className="grid md:grid-cols-3 gap-4">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="font-mono text-base text-primary">morning_brief</CardTitle>
+                <CardDescription>
+                  Regime check → today&apos;s pool → historical context by delta
+                  bucket → a briefing of the most interesting candidates, with
+                  data caveats.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="font-mono text-base text-primary">analyze_candidate</CardTitle>
+                <CardDescription>
+                  Deep-dive one name: enrichment, excursion history, realized
+                  labels of similar setups, and the honest risks.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="font-mono text-base text-primary">run_your_own_tournament</CardTitle>
+                <CardDescription>
+                  The engine&apos;s bracket-tournament selection pattern, run by
+                  YOUR agent against YOUR objective, horizon, and risk
+                  tolerance.
+                </CardDescription>
+              </CardHeader>
+            </Card>
           </div>
+        </section>
+
+        {/* Available Tools */}
+        <section className="space-y-8">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold font-headline">23 Tools</h2>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              Every tool is leakage-checked: nothing your agent reads contains
+              information that wasn&apos;t knowable at the time it&apos;s dated.
+              Full parameter schemas are self-describing over MCP.
+            </p>
+          </div>
+
+          {toolGroups.map((g) => (
+            <div key={g.group} className="space-y-3">
+              <div className="flex items-baseline gap-3">
+                <h3 className="text-lg font-bold font-headline">{g.group}</h3>
+                <span className="text-xs text-muted-foreground">{g.blurb}</span>
+              </div>
+              <div className="grid gap-3">
+                {g.tools.map((t) => (
+                  <Card key={t.name}>
+                    <CardHeader className="py-4">
+                      <div className="flex justify-between items-start gap-4">
+                        <CardTitle className="font-mono text-base text-primary shrink-0">{t.name}</CardTitle>
+                      </div>
+                      <CardDescription>{t.description}</CardDescription>
+                    </CardHeader>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          ))}
         </section>
 
         {/* Pricing */}
         <section className="space-y-6">
-          <h2 className="text-2xl font-bold font-headline">Pricing for Developers</h2>
-
+          <h2 className="text-2xl font-bold font-headline">Pricing</h2>
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <div className="p-6 rounded-lg border-2 border-primary bg-card relative">
-              <div className="absolute -top-3 right-4 px-2 py-0.5 bg-primary text-primary-foreground text-xs font-bold rounded">
-                FREE
-              </div>
-              <div className="text-sm text-primary mb-2">MCP API</div>
-              <div className="text-3xl font-bold mb-4">$0</div>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ All 18 tools unlocked</li>
-                <li>✓ No auth, no API key</li>
-                <li>✓ SSE transport</li>
-                <li>✓ Rate-limited fairly; reach out for heavy use</li>
-                <li>✓ Same data as the webapp, same second</li>
-              </ul>
-            </div>
             <div className="p-6 rounded-lg border bg-card relative">
               <div className="absolute -top-3 right-4 px-2 py-0.5 bg-foreground text-background text-xs font-bold rounded">
-                PRO
+                FREE
               </div>
-              <div className="text-sm text-muted-foreground mb-2">
-                WhatsApp + Chat Agent
+              <div className="text-sm text-muted-foreground mb-2">The Website</div>
+              <div className="text-3xl font-bold mb-4">$0</div>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>✓ Today&apos;s curated pool, human-readable</li>
+                <li>✓ Daily reports + per-ticker deep dives</li>
+                <li>✓ Public scorecard + the Lab</li>
+                <li>✓ Methodology + full disclosures</li>
+                <li>✓ Free forever — it&apos;s not a trial</li>
+              </ul>
+            </div>
+            <div className="p-6 rounded-lg border-2 border-primary bg-card relative">
+              <div className="absolute -top-3 right-4 px-2 py-0.5 bg-primary text-primary-foreground text-xs font-bold rounded">
+                THE PRODUCT
               </div>
+              <div className="text-sm text-primary mb-2">Agent Access — MCP</div>
               <div className="text-3xl font-bold mb-4">
                 $39<span className="text-base text-muted-foreground">/mo</span>
               </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ Everything in Free</li>
-                <li>✓ WhatsApp push at 09:50 ET</li>
-                <li>✓ Exit reminder at 15:45 ET same day</li>
-                <li>✓ AI chat agent in private group</li>
-                <li>✓ 7-day free trial</li>
+                <li>✓ All 23 tools + the built-in prompts</li>
+                <li>✓ Opportunity surfaces + outcome database</li>
+                <li>✓ Exit-rule simulation + regime context</li>
+                <li>✓ Methodology playbooks</li>
+                <li>✓ 7-day free trial · cancel anytime</li>
               </ul>
               <Link href="/pricing" className="block mt-4">
-                <Button variant="outline" className="w-full">
-                  See full pricing →
-                </Button>
+                <Button className="w-full">Get Your API Key &rarr;</Button>
               </Link>
             </div>
           </div>
@@ -273,13 +307,15 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
 
         {/* Bottom CTA */}
         <section className="text-center space-y-6">
-          <h2 className="text-2xl font-bold font-headline">Ready to Build?</h2>
-          <p className="text-muted-foreground">
-            Point your agent at the endpoint and start querying. That's it.
+          <h2 className="text-2xl font-bold font-headline">Give your agent something real to reason over</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            A chatbot with no data improvises. An agent with the pool, the
+            surfaces, and the methodology does analysis. Connect yours in
+            minutes.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/pricing">
-              <Button size="lg">Start Free Trial →</Button>
+              <Button size="lg">Start the 7-Day Free Trial &rarr;</Button>
             </Link>
             <a
               href="https://x.com/GammaRips"
@@ -317,48 +353,11 @@ async with Client("https://gammarips-mcp-406581297632.us-central1.run.app/sse") 
             </a>
           </p>
           <p className="text-xs text-muted-foreground max-w-2xl mx-auto">
-            Paper-trading performance, educational only. Not investment advice. Past
-            performance is not a guarantee of future results.
+            Data on a paper-trading basis, educational only. Not investment
+            advice. Past performance is not a guarantee of future results.
           </p>
         </div>
       </footer>
     </div>
-  );
-}
-
-function ToolCard({
-  name,
-  description,
-  params,
-  badge,
-}: {
-  name: string;
-  description: string;
-  params: Record<string, string>;
-  badge?: string;
-}) {
-  return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex justify-between items-start">
-          <CardTitle className="font-mono text-lg text-primary">{name}</CardTitle>
-          {badge && <Badge variant="secondary">{badge}</Badge>}
-        </div>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="text-xs font-mono bg-muted/50 p-3 rounded space-y-1">
-          <div className="text-muted-foreground uppercase tracking-wider text-[10px] mb-2">
-            Parameters
-          </div>
-          {Object.entries(params).map(([key, val]) => (
-            <div key={key} className="flex gap-2">
-              <span className="text-foreground min-w-[80px]">{key}:</span>
-              <span className="text-muted-foreground">{String(val)}</span>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
   );
 }

@@ -21,11 +21,11 @@ export default function ArenaPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Today&apos;s pick is on the home page at 09:50 ET, the full signals list is at <Link href="/signals" className="underline">/signals</Link>, and the latest overnight report is at <Link href="/reports" className="underline">/reports</Link>.
+            The curated pool is at <Link href="/signals" className="underline">/signals</Link>, the latest overnight report is at <Link href="/reports" className="underline">/reports</Link>, and your AI agent can run the tournament pattern itself over <Link href="/developers" className="underline">MCP</Link> — against your own objective.
           </p>
           <div className="flex gap-3">
             <Button asChild>
-              <Link href="/">See today&apos;s pick</Link>
+              <Link href="/signals">Browse the pool</Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/pricing">Pricing</Link>

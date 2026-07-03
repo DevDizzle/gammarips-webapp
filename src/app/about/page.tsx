@@ -8,12 +8,12 @@ import Faq, { faqs } from '@/components/landing/faq';
 import ContactForm from './contact-form';
 
 export const metadata: Metadata = {
-  title: 'About GammaRips — One options trade a day, pushed at 9:50 ET',
-  description: "The engine, the methodology, and the person behind GammaRips. One pick a day, scored while you sleep, picked by a bracket tournament, pushed to your phone at 09:50 ET, right before the 10:00 entry. Paper-trading performance, educational only.",
+  title: 'About GammaRips — The options-flow data layer for AI agents',
+  description: "The engine, the methodology, and the person behind GammaRips. A nightly scan of 5,230+ tickers, curated to a high-signal bullish pool, validated by a public paper-traded cohort, and served to AI agents over MCP. Data on a paper-trading basis, educational only.",
   alternates: { canonical: 'https://gammarips.com/about' },
   openGraph: {
-    title: 'About GammaRips — One options trade a day, pushed at 9:50 ET',
-    description: "The engine, the methodology, and the person behind GammaRips. Paper-trading performance, educational only.",
+    title: 'About GammaRips — The options-flow data layer for AI agents',
+    description: "The engine, the methodology, and the person behind GammaRips. Paper-trading data, educational only.",
     url: 'https://gammarips.com/about',
   },
 };
@@ -31,22 +31,22 @@ const engineSteps = [
   },
   {
     icon: <MessageSquare className="h-6 w-6 text-primary" />,
-    title: 'One pick, or none',
-    description: 'At ~09:50 ET, just before the 10:00 entry, two safety rails run first (no earnings during the same-day hold, VIX ≤ VIX3M), then a randomized bracket tournament over the ~50 bullish setups picks one ticker by 3-bracket consensus. A live open-interest check drops any contract too illiquid to actually trade. Some days the pool is empty or it fails closed and the push says no trade.',
+    title: 'Publication',
+    description: 'By the open, the curated pool is live: human-readable on /signals (free, always), and in structured form over MCP for connected agents — point-in-time features, opportunity surfaces, outcome history, and methodology playbooks. Every field is leakage-checked.',
   },
   {
     icon: <AlarmClock className="h-6 w-6 text-primary" />,
-    title: 'Exit reminder',
-    description: 'The trade is held the same day with a −30% option stop and +40% target, exiting flat at 15:45 ET. Pro subscribers get the exit reminder pushed to WhatsApp the same minute the engine writes it.',
+    title: 'Validation',
+    description: 'Every market day a paper-traded cohort tests the selection methodology under fixed mechanical rules (two safety rails, a live liquidity re-check, 10:00 entry, −30% stop / +40% target, flat by 15:45 ET). Every outcome — winners and losers — lands on the public scorecard, unedited.',
   },
 ];
 
 const whyList = [
-  'One pick per day, or none. No firehose, no FOMO, no "look how many signals we have."',
-  'Every pick carries its exit rules and its paper-trading outcome, updated automatically in the public ledger.',
-  'Free users and Pro subscribers see the same pick at the exact same second. No paid-first tier.',
-  'Selection runs a leakage-checked LLM tournament; execution is fixed code. Every filter, threshold, and bracket rule is documented and logged.',
-  'Paper-trading performance only. Nothing marketed until the V7 ledger has ≥30 closed trades. This page is about what was built, not what it returned.',
+  'A small curated pool, not a firehose. No FOMO, no "look how many signals we have."',
+  'No pick endpoint, on purpose. Shared picks crowd thin contracts; data lets every agent reach its own conclusion.',
+  'The honest baseline is published: buying the whole pool blindly under a fixed exit loses. The Lab shows the receipts — including the killed hypotheses.',
+  'Everything is leakage-checked and mechanical. Every filter, threshold, and selection rule is documented, logged, and shipped as playbooks your agent can read.',
+  'Paper-trading data only. No aggregate performance marketing until a cohort has ≥30 closed trades. This page is about what was built, not what it returned.',
 ];
 
 interface AboutPageProps {
@@ -54,9 +54,8 @@ interface AboutPageProps {
 }
 
 export default async function AboutPage({ searchParams }: AboutPageProps) {
-  const { welcome, session_id } = await searchParams;
+  const { welcome } = await searchParams;
   const isWelcome = welcome === '1';
-  const whatsappInvite = isWelcome && session_id ? process.env.WHATSAPP_GROUP_INVITE_URL : undefined;
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -72,7 +71,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
     "@context": "https://schema.org",
     "@type": "AboutPage",
     "name": "About GammaRips",
-    "description": "One options pick a day, scored while you sleep, picked by a bracket tournament, pushed to your phone at 09:50 ET, right before the 10:00 entry.",
+    "description": "The options-flow data layer for AI agents: a nightly scan of 5,230+ tickers curated to a high-signal bullish pool, validated by a public paper-traded cohort, served over MCP.",
     "url": "https://gammarips.com/about",
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
   };
@@ -83,32 +82,22 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
         {isWelcome && (
           <Card className="bg-primary/5 border-primary/40 mb-12">
             <CardHeader>
-              <p className="text-sm font-semibold uppercase tracking-wider text-primary">Welcome to GammaRips Pro</p>
-              <CardTitle className="font-headline text-2xl sm:text-3xl">You&apos;re in. Here&apos;s your 09:50 ET routine.</CardTitle>
+              <p className="text-sm font-semibold uppercase tracking-wider text-primary">Welcome to Agent Access</p>
+              <CardTitle className="font-headline text-2xl sm:text-3xl">You&apos;re in. Let&apos;s get your agent connected.</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {whatsappInvite && (
-                <div className="rounded-lg border border-primary/40 bg-background p-4">
-                  <p className="text-sm font-semibold text-foreground mb-2">Step 1 — Join the private WhatsApp group</p>
-                  <p className="text-xs text-muted-foreground mb-3">Your invite is ready. Click below on your phone or open the link on any device with WhatsApp installed.</p>
-                  <Button asChild size="lg" className="w-full sm:w-auto">
-                    <a href={whatsappInvite} target="_blank" rel="noopener noreferrer">Join GammaRips Pro group</a>
-                  </Button>
-                  <p className="text-xs text-muted-foreground mt-3">A welcome email with this same link is also in your inbox (check Spam / Promotions / All Mail if you don&apos;t see it).</p>
-                </div>
-              )}
               <ul className="space-y-3 text-sm text-foreground/90">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>Tomorrow at ~09:50 ET, just before the 10:00 entry, today&apos;s pick lands in the group. Or the pick says &ldquo;no trade today&rdquo; and you do nothing.</span>
+                  <span><strong>Step 1 — Grab your API key.</strong> It&apos;s in your welcome email and on your <Link href="/account" className="text-primary hover:underline">account page</Link>. (Check Spam / Promotions if you don&apos;t see the email.)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>Exit reminder pushes at 15:45 ET the same day. −30% option stop, +40% target, whichever comes first.</span>
+                  <span><strong>Step 2 — Add the server to your agent.</strong> Claude, ChatGPT, Cursor, or any MCP client — copy-paste setup is on the <Link href="/developers" className="text-primary hover:underline">MCP docs page</Link>.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>Tag @gamma in the group to ask about today&apos;s pick, the open position, or any row in the 30-day ledger.</span>
+                  <span><strong>Step 3 — Run your first brief.</strong> Ask your agent to run the <code className="text-primary">morning_brief</code> prompt, or just say &ldquo;pull the GammaRips pool and tell me what&apos;s interesting.&rdquo;</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -117,14 +106,14 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
               </ul>
               <div className="flex flex-wrap gap-3 pt-2">
                 <Button asChild variant="outline">
-                  <Link href="/">See today&apos;s pick</Link>
+                  <Link href="/developers">MCP setup docs</Link>
                 </Button>
                 <Button asChild variant="outline">
                   <Link href="/account">Manage subscription</Link>
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground pt-2 leading-relaxed">
-                Paper-trading performance, educational content only. Not investment advice. You trade your own account; GammaRips does not manage your money.
+                Data on a paper-trading basis, educational content only. Not investment advice. What your agent concludes is your analysis; you trade your own account.
               </p>
             </CardContent>
           </Card>
@@ -133,13 +122,13 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
         <header className="text-center">
           <p className="text-sm font-semibold uppercase tracking-wider text-primary">About</p>
           <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-            One options trade a day.
+            An options-flow engine
             <span className="block mt-2 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Scored while you sleep. Pushed at 09:50 ET, right before the 10:00 entry.
+              built for the agentic era.
             </span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
-            GammaRips is a systematic options scanner wrapped around a single daily push. The engine runs overnight, one pick (or none) lands in your phone at the open, and every trade — winners and losers — is written to a public paper-trading ledger. That&apos;s the whole product.
+            GammaRips is a systematic overnight scanner that curates unusual options activity into a small, high-signal pool — free for humans to browse, served to AI agents over MCP. A public paper-traded cohort validates the methodology every market day, winners and losers counted the same way. Data, receipts, and no pick to follow: that&apos;s the product.
           </p>
         </header>
 
@@ -149,7 +138,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">How the engine works</h2>
             <p className="mt-3 max-w-2xl mx-auto text-muted-foreground">
-              V7 &ldquo;GIGO&rdquo; (Get In, Get Out) &mdash; the only active strategy &mdash; is a scanned, enriched, tournament-selected, single-pick-per-day pipeline: one option, traded and closed the same day. No discretion, no override, no paid-first tier.
+              A scanned, enriched, leakage-checked pipeline: 5,230+ tickers cut to a curated bullish pool nightly, with a fixed-rule paper cohort validating the selection methodology in public. No discretion, no override, no black box.
             </p>
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -207,7 +196,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  The autonomous AI operator behind GammaRips&apos; daily pipeline &mdash; scanning overnight institutional options flow, scoring signals, enriching with contract recommendations, and delivering morning alerts. Built on Claude Opus via OpenClaw. Inside the WhatsApp group, GammaMolt is the @gamma chat agent &mdash; ask about today&apos;s pick, historical signals, open positions, or any data in the system. Powered by real-time BigQuery queries, not canned responses.
+                  The autonomous AI operator behind GammaRips&apos; daily pipeline &mdash; scanning overnight institutional options flow, scoring signals, enriching with contract recommendations, and publishing the pool. Built on Claude via OpenClaw, powered by real-time BigQuery queries. GammaMolt was the first agent ever wired to the GammaRips MCP &mdash; the same 23 tools your agent gets are the ones it runs on.
                 </p>
               </CardContent>
             </Card>
@@ -240,14 +229,14 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm max-w-2xl mx-auto">
                 <div className="p-4 rounded-lg bg-background">
-                  <p className="font-bold text-lg">Free</p>
+                  <p className="font-bold text-lg">You</p>
                   <p className="text-primary font-semibold text-xs mb-1">$0 · FOREVER</p>
-                  <p className="text-muted-foreground">Today&apos;s pick at 09:50 ET on the home page, full signals list, daily report, public ledger.</p>
+                  <p className="text-muted-foreground">The whole website: curated pool, daily reports, scorecard, the Lab, methodology.</p>
                 </div>
                 <div className="p-4 rounded-lg bg-background border border-primary/30">
-                  <p className="font-bold text-lg">Pro</p>
+                  <p className="font-bold text-lg">Your Agent</p>
                   <p className="text-primary font-semibold text-xs mb-1">$39/MO · 7-DAY TRIAL</p>
-                  <p className="text-muted-foreground">WhatsApp push at 09:50 ET, same-day exit reminder, AI chat agent in the private group.</p>
+                  <p className="text-muted-foreground">Full MCP access: 23 tools, opportunity surfaces, outcome history, methodology playbooks.</p>
                 </div>
               </div>
               <Button asChild size="lg">
@@ -274,7 +263,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
           <div>
             <h2 className="font-headline text-3xl text-foreground">Trust &amp; responsibility</h2>
             <p className="mt-3 text-muted-foreground leading-relaxed">
-              Financial content falls under &ldquo;Your Money or Your Life&rdquo; (YMYL). GammaRips presents paper-trading performance and educational content only. Every pick, page, and push carries the disclaimer.
+              Financial content falls under &ldquo;Your Money or Your Life&rdquo; (YMYL). GammaRips presents options-flow data, paper-trading performance, and educational content only. Every page and dataset carries the disclaimer.
             </p>
           </div>
           <aside className="bg-muted/50 p-6 rounded-lg">

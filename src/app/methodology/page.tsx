@@ -315,7 +315,7 @@ export default function MethodologyPage() {
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
                 <strong>Forward paper-trading ledger</strong> — every entry, exit, and outcome lives
-                in BigQuery. The same row is rendered into the public scorecard.
+                in BigQuery. The whole pool&apos;s outcomes are aggregated into the public Track Record; per-row data is queryable over the MCP.
               </span>
             </li>
             <li className="flex gap-3">

@@ -12,7 +12,7 @@ Data on a paper-trading basis, educational only. Not investment advice.
 
 - [How it works (V7.1 engine)](https://gammarips.com/how-it-works)
 - [Today's curated pool (free)](https://gammarips.com/signals)
-- [Scorecard — paper-trading ledger](https://gammarips.com/scorecard)
+- [Track Record — whole-pool outcomes](https://gammarips.com/scorecard)
 - [The Lab — published experiments](https://gammarips.com/lab)
 - [Pricing — free website / $39 Agent Access](https://gammarips.com/pricing)
 - [MCP docs — 23 tools](https://gammarips.com/developers)
@@ -23,7 +23,7 @@ Data on a paper-trading basis, educational only. Not investment advice.
 2. **Enrichment** — `overnight_score >= 4 AND directional_uoa_usd > 500000`, bullish-only, delta edge-ranked to the strongest ~50; thesis, technicals, news context, and a recommended contract attached per name.
 3. **Safety rails** — no earnings in the window; volatility regime check (VIX <= VIX3M).
 4. **Leakage discipline** — every field is point-in-time; nothing an agent reads contains information that wasn't knowable at the time it's dated.
-5. **Validation** — a paper-traded cohort tests the selection methodology daily under fixed mechanical rules; outcomes are logged, published, and never edited.
+5. **Validation & tracking** — every pool candidate is tracked to its realized outcome and published as distributions (Track Record); a small paper-traded cohort additionally exercises the selection methodology daily under fixed rules, privately, with no stats marketed pre-30 trades.
 
 ## MCP server (Agent Access — API key required)
 

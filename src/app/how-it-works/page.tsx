@@ -49,7 +49,7 @@ export default function HowItWorksPage() {
             <strong className="text-foreground">23:00 ET</strong> &mdash; the scanner ingests the day&apos;s institutional options flow across every optionable US equity and scores it. <strong className="text-foreground">Overnight</strong> &mdash; the standouts are enriched: news context, technicals, flow dollars, a recommended contract per name. <strong className="text-foreground">By the open</strong> &mdash; the curated bullish pool (~50 names) is live on <Link href="/signals" className="text-primary hover:underline">/signals</Link> and, in structured form, on the MCP for connected agents.
           </p>
           <p>
-            <strong className="text-foreground">~09:50 ET</strong> &mdash; the safety rails and a live liquidity re-check run, and the engine&apos;s validation cohort selects and paper-trades one setup under fixed mechanical rules (10:00 entry, &minus;30% stop, +40% target, flat by 15:45 ET) so the selection methodology is tested against reality every single market day. Every outcome lands on the <Link href="/scorecard" className="text-primary hover:underline">public scorecard</Link>.
+            <strong className="text-foreground">~09:50 ET</strong> &mdash; the safety rails and a live liquidity re-check run, and the engine&apos;s validation cohort selects and paper-trades one setup under fixed mechanical rules (10:00 entry, &minus;30% stop, +40% target, flat by 15:45 ET) so the selection methodology is tested against reality every single market day. That cohort runs privately as a measurement instrument; what&apos;s public is the <em>whole pool&apos;s</em> outcome record on the <Link href="/scorecard" className="text-primary hover:underline">Track Record</Link> page.
           </p>
           <p className="text-primary font-semibold">
             The product is the data layer: the pool, the surfaces, and the methodology. Everything below is how it&apos;s built.
@@ -149,7 +149,7 @@ export default function HowItWorksPage() {
           <li><strong className="text-foreground">Conservative tiebreak:</strong> if a single bar touches both stop and target, the stop wins (lower-bound assumption).</li>
         </ul>
         <p className="text-muted-foreground leading-relaxed">
-          Every closed trade &mdash; winners and losers, counted the same way &mdash; is written to the public paper-trading ledger at <Link href="/scorecard" className="text-primary hover:underline">/scorecard</Link>. One honest caveat, straight from <Link href="/lab" className="text-primary hover:underline">the Lab</Link>: a fixed bracket like this is a measurement instrument, not a strategy &mdash; our own research shows the same setups produce very different outcomes under different exits. That&apos;s exactly why the MCP ships an exit-rule simulator instead of a rule to copy.
+          Every pool candidate &mdash; winners and losers, counted the same way &mdash; is tracked to its realized outcome in the public <Link href="/scorecard" className="text-primary hover:underline">Track Record</Link>; the cohort itself stays private per our no-small-sample-marketing rule. One honest caveat, straight from <Link href="/lab" className="text-primary hover:underline">the Lab</Link>: a fixed bracket like this is a measurement instrument, not a strategy &mdash; our own research shows the same setups produce very different outcomes under different exits. That&apos;s exactly why the MCP ships an exit-rule simulator instead of a rule to copy.
         </p>
       </section>
 
@@ -214,7 +214,7 @@ export default function HowItWorksPage() {
             <Link href="/developers">Connect your agent <ArrowRight className="ml-2 h-5 w-5" /></Link>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link href="/scorecard">Check the public ledger</Link>
+            <Link href="/scorecard">See the Track Record</Link>
           </Button>
         </div>
       </div>

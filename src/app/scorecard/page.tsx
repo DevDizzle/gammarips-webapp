@@ -242,7 +242,7 @@ export default async function ScorecardPage() {
               The V7 cohort started {cohortStart}. As trades resolve, the numbers show up here automatically. Every signal is timestamped when published &mdash; we can&apos;t edit history.
             </p>
             <p className="text-muted-foreground">
-              Check back for verified results. In the meantime, browse our daily signals and reports.
+              Check back as trades resolve. In the meantime, browse our daily signals and reports.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button asChild size="lg">

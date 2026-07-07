@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
 
       // Old top-level ticker pages (1-5 chars) -> canonical /signals/:ticker,
       // preserving the ticker. Excludes real page slugs in that length range.
-      { source: '/:ticker((?!arena|about|terms|auth|api|blog|login|signup|dashboard|war-room|history)[a-zA-Z]{1,5})', destination: '/signals/:ticker', permanent: true },
+      { source: '/:ticker((?!(?:arena|about|terms|auth|api|blog|lab|login|signup|dashboard|war-room|history)$)[a-zA-Z]{1,5})', destination: '/signals/:ticker', permanent: true },
     ];
   },
   images: {

@@ -28,7 +28,7 @@ export const faqs = [
   },
   {
     question: "Where's the track record?",
-    answer: "On the Scorecard page, and in the Lab. A paper-traded cohort tests the selection methodology every market day under fixed mechanical rules — every trade timestamped, every outcome logged, nothing edited after the fact. Preliminary aggregates always carry their sample size and a small-sample warning, and we make no marketing claims from them until a cohort has at least 30 closed trades. We also tell you the unflattering part up front: the whole pool bought blindly under a fixed exit is negative. That number is exactly why we sell the data layer and not a pick."
+    answer: "On the Track Record page, and in the Lab. Every candidate in the pool is tracked to its realized outcome — peak excursion, drawdown, and a fixed-bracket baseline — published as distributions with sample sizes attached, winners and losers counted the same way. We tell you the unflattering part up front: the whole pool bought blindly under a fixed exit is negative. That number is exactly why we sell the data layer and not a pick — the exit is your agent's job."
   },
   {
     question: "Is this financial advice?",

@@ -85,128 +85,88 @@ export async function sendEmail(options: EmailOptions) {
 
 
 export async function buildWelcomeEmailContent(name: string): Promise<{ text: string; html: string }> {
-    const whatsappInviteUrl = process.env.WHATSAPP_GROUP_INVITE_URL || 'https://gammarips.com/account';
     const textContent = `
 Hi ${name},
 
-You're in. GammaRips Pro is live on your account.
+You're in. GammaRips Agent Access is live on your account.
 
-Here's the routine starting tomorrow (weekdays, ~09:50 ET — right before the 10:00 entry):
+Here's how to get your agent working the data:
 
-1. At ~09:50 ET each weekday, just before the 10:00 entry, the day's pick lands in your inbox AND the private WhatsApp group.
-   One ticker. One contract. Pre-set stop (-30%), target (+40%), exit (3:45 PM ET same day).
-   V7 "GIGO" — Get In, Get Out: one option, traded and closed the same day.
-   Some days the engine skips — you'll get a message either way.
+1. Get your API key.
+   It's issued with your subscription — find it on your account page
+   (https://gammarips.com/account), or just reply to this email and
+   we'll sort it immediately.
 
-2. Join the WhatsApp group for live discussion with gamma-bot.
-   Invite: ${whatsappInviteUrl}
-   (If the link doesn't work, reply to this email with the number you'll use on WhatsApp and we'll add you manually.)
+2. Connect your agent.
+   Claude Code, Cursor, or any MCP client that can send an
+   Authorization header — copy-paste setup at
+   https://gammarips.com/developers
 
-3. At 10:00 ET, place the trade.
-   Buy one contract at market, arm both GTC exit orders, put your phone down.
+3. Run your first brief.
+   Ask your agent to run the morning_brief prompt, or say "pull the
+   GammaRips pool and tell me what's interesting." All 23 tools —
+   the curated pool, opportunity surfaces, outcome history, exit-rule
+   simulation, and methodology playbooks — are live on your key.
 
-4. At 15:45 ET the same day, the exit reminder fires if the trade is still open.
-   Close at market, log the outcome, move on — nothing carries overnight.
+Your 7-day free trial started today. No charge if you cancel before
+day 7 — manage anytime at https://gammarips.com/account.
 
-Tag @gamma in the group to ask about today's pick, the open position, the 30-day ledger, or any enriched signal. The whole group sees the exchange.
+One honest note, because it's the whole point: we sell data, not
+picks. The engine curates the pool and tracks every outcome in
+public; what your agent concludes from it is your analysis.
 
-Your 7-day free trial started today. Manage your subscription anytime at https://gammarips.com/account.
-
-Paper-trading performance, educational only. Not investment advice. Past performance is not a guarantee of future results.
+Questions? Reply — it goes straight to me.
 
 Welcome aboard,
 Evan Parra
 Founder, GammaRips
 evan@gammarips.com
+
+Data on a paper-trading basis, educational only. Not investment advice. Past performance is not a guarantee of future results.
 `;
 
-    const htmlContent = `
-<!DOCTYPE html>
+    const step = (n: string, title: string, body: string) => `
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 24px;">
+                                <tr>
+                                    <td width="40" valign="top" style="font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">${n}.</td>
+                                    <td valign="top">
+                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0; color: #ffffff;">${title}</h3>
+                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">${body}</p>
+                                    </td>
+                                </tr>
+                            </table>`;
+
+    const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <title>Welcome to GammaRips</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
-    <div style="display: none; max-height: 0px; overflow: hidden;">&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌</div>
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', Arial, sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
-                     <tr>
+                    <tr>
                         <td align="center" style="padding: 40px 20px;">
-                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                            <h1 style="font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 0 40px 40px;">
-                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">You're in. GammaRips Pro is live on your account.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Here's the routine starting tomorrow (weekdays, ~09:50 ET — right before the 10:00 entry):</p>
-
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 32px;">
-                                <tr>
-                                    <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">1.</td>
-                                    <td valign="top">
-                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">~09:50 ET — the day's pick lands in your inbox + WhatsApp group (right before the 10:00 entry)</h3>
-                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">One ticker, one contract, pre-set stop (−30%), target (+40%), exit at 3:45 PM ET the same day. V7 &ldquo;GIGO&rdquo; — Get In, Get Out: traded and closed the same day. Some days the engine skips — you'll get a message either way.</p>
-                                    </td>
-                                </tr>
-                                <tr><td height="24"></td></tr>
-                                <tr>
-                                    <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">2.</td>
-                                    <td valign="top">
-                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Join the WhatsApp group for live Q&amp;A</h3>
-                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Use the invite link below for in-group discussion + gamma-bot. If the link doesn't work, reply to this email with your WhatsApp number and we'll add you manually.</p>
-                                    </td>
-                                </tr>
-                                <tr><td height="24"></td></tr>
-                                <tr>
-                                    <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">3.</td>
-                                    <td valign="top">
-                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">10:00 ET — place the trade</h3>
-                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Buy one contract at market, arm both GTC exit orders, put your phone down. The engine handles the rest.</p>
-                                    </td>
-                                </tr>
-                                <tr><td height="24"></td></tr>
-                                <tr>
-                                    <td width="40" valign="top" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(74, 80%, 50%);">4.</td>
-                                    <td valign="top">
-                                        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px 0;">Tag @gamma anytime</h3>
-                                        <p style="font-size: 15px; line-height: 1.6; margin: 0; color: #A0A0A0;">Ask about today's pick, the open position, the 30-day ledger, or any enriched signal. The whole group sees the exchange — one ask benefits everyone.</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" style="padding: 0 40px 30px;">
-                            <a href="${whatsappInviteUrl}" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Join the WhatsApp group →</a>
-                        </td>
-                    </tr>
-                     <tr>
-                        <td style="padding: 0 40px 20px;">
-                             <p style="font-size: 14px; line-height: 1.6; color: #A0A0A0; text-align: center; border-top: 1px solid #393b4d; padding-top: 30px;">
-                                Your 7-day free trial started today. Manage your subscription anytime at <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">gammarips.com/account</a>.
-                            </p>
-                            <p style="text-align: center; margin-top: 16px;">
-                                <a href="https://x.com/GammaRips" style="color: hsl(74, 80%, 50%); text-decoration: none; margin: 0 10px;">Follow on X</a>
-                            </p>
-                        </td>
-                     </tr>
-                     <tr>
-                        <td style="padding: 20px 40px 20px; font-size: 12px; line-height: 1.5; color: #6A6A6A; text-align: center; border-top: 1px solid #393b4d;">
-                            Paper-trading performance, educational only. Not investment advice. Past performance is not a guarantee of future results.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td style="padding: 20px 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
-                            <p style="margin: 0;">Welcome aboard,</p>
-                            <p style="margin-top: 4px;">Evan Parra<br>Founder, GammaRips<br><a href="mailto:evan@gammarips.com" style="color: hsl(74, 80%, 50%);">evan@gammarips.com</a></p>
+                            <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">You're in. <strong>GammaRips Agent Access</strong> is live on your account. Here's how to get your agent working the data:</p>
+                            ${step('1', 'Get your API key', `It's issued with your subscription — find it on your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>, or just reply to this email and we'll sort it immediately.`)}
+                            ${step('2', 'Connect your agent', `Claude Code, Cursor, or any MCP client that can send an Authorization header — copy-paste setup on the <a href="https://gammarips.com/developers" style="color: hsl(74, 80%, 50%);">MCP docs page</a>.`)}
+                            ${step('3', 'Run your first brief', `Ask your agent to run the <code>morning_brief</code> prompt, or say &ldquo;pull the GammaRips pool and tell me what's interesting.&rdquo; All 23 tools — the curated pool, opportunity surfaces, outcome history, exit-rule simulation, and methodology playbooks — are live on your key.`)}
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding: 32px 0 8px;">
+                                <a href="https://gammarips.com/developers" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Set up your agent →</a>
+                            </td></tr></table>
+                            <p style="font-size: 14px; line-height: 1.6; margin-top: 24px; color: #A0A0A0;">Your 7-day free trial started today — no charge if you cancel before day 7, manage anytime from your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>.</p>
+                            <p style="font-size: 14px; line-height: 1.6; margin-top: 16px; color: #A0A0A0;">One honest note, because it's the whole point: we sell data, not picks. The engine curates the pool and tracks every outcome in public; what your agent concludes from it is your analysis.</p>
+                            <p style="font-size: 14px; line-height: 1.6; margin-top: 16px;">Questions? Reply — it goes straight to me.<br/>— Evan Parra, Founder</p>
+                            <p style="font-size: 12px; line-height: 1.5; margin-top: 24px; color: #707070;">Data on a paper-trading basis, educational only. Not investment advice. Past performance is not a guarantee of future results.</p>
                         </td>
                     </tr>
                 </table>
@@ -214,8 +174,7 @@ evan@gammarips.com
         </tr>
     </table>
 </body>
-</html>
-`;
+</html>`;
 
     return { text: textContent, html: htmlContent };
 }
@@ -224,7 +183,7 @@ export async function sendWelcomeEmail({ to, name }: { to: string, name: string 
     const { text, html } = await buildWelcomeEmailContent(name);
     return sendEmail({
         to: `${name} <${to}>`,
-        subject: `You're in. Here's your 09:50 ET routine.`,
+        subject: `You're in. Let's get your agent connected.`,
         text,
         html,
     });
@@ -236,80 +195,63 @@ Hi ${name},
 
 Welcome to GammaRips. Your free account is live.
 
-What that gets you:
+What that gets you — free, forever:
 
-- gammarips.com/signals — every options signal that cleared the enrichment gates this morning. Browse the haystack the engine scans for you.
-- gammarips.com/blog — methodology deep-dives, post-mortems, weekly research notes.
-- @gammarips on X — daily teaser at 09:05 ET, Friday scorecard.
+- gammarips.com/signals — today's curated pool: ~50 bullish setups from a nightly scan of 5,000+ tickers, with flow, technicals, and context.
+- gammarips.com/scorecard — the Track Record: every candidate tracked to its outcome, including the honest baseline (buying everything blindly loses — we publish that).
+- gammarips.com/lab — the Lab: our research experiments, including the killed ideas.
+- gammarips.com/blog and @gammarips on X — methodology and research notes.
 
-The differentiator on the paid tier is curation. Each weekday at ~09:50 ET, just before the 10:00 entry, the engine picks ONE trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.
+The paid tier is for your AI agent. Agent Access ($39/mo, 7-day free
+trial) connects Claude, ChatGPT, or your own agent to the full data
+layer over MCP — the structured pool, opportunity surfaces, outcome
+history, and the methodology as playbooks your agent can run. Your
+agent analyzes; you decide.
 
-$39/month. 7-day free trial. Cancel anytime.
-Pick a plan: https://gammarips.com/pricing
+See how it works: https://gammarips.com/developers
 
 Reply to this email if you have questions — it goes straight to me.
 
-Paper-trading performance, educational only. Not investment advice. Past performance is not a guarantee of future results.
-
-— Evan Parra
+Evan Parra
 Founder, GammaRips
 evan@gammarips.com
+
+Data on a paper-trading basis, educational only. Not investment advice.
 `;
 
-    const htmlContent = `
-<!DOCTYPE html>
+    const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <title>Welcome to GammaRips</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
+<body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', Arial, sans-serif; color: #E0E0E0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: hsl(224, 20%, 12%);">
         <tr>
             <td align="center" style="padding: 20px;">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: hsl(224, 20%, 15%); border-radius: 8px; overflow: hidden;">
                     <tr>
-                        <td align="center" style="padding: 40px 20px 20px;">
-                            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
+                        <td align="center" style="padding: 40px 20px;">
+                            <h1 style="font-size: 36px; font-weight: 700; color: #ffffff; margin: 0;">Gamma<span style="color: hsl(74, 80%, 50%);">Rips</span></h1>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 0 40px 20px;">
-                            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h2>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 20px;">Welcome to GammaRips. Your free account is live.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 20px;"><strong style="color: #ffffff;">What that gets you:</strong></p>
-                            <ul style="font-size: 15px; line-height: 1.7; color: #C0C0C0; padding-left: 20px;">
-                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">gammarips.com/signals</a> — every options signal that cleared the enrichment gates this morning. Browse the haystack the engine scans.</li>
-                                <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">gammarips.com/blog</a> — methodology deep-dives, post-mortems, weekly research.</li>
-                                <li><a href="https://x.com/GammaRips" style="color: hsl(74, 80%, 50%);">@gammarips on X</a> — daily teaser at 09:05 ET, Friday scorecard.</li>
+                        <td style="padding: 0 40px 40px;">
+                            <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">Welcome to GammaRips. Your free account is live. Everything human-readable is free, forever:</p>
+                            <ul style="font-size: 15px; line-height: 1.8; color: #A0A0A0; padding-left: 20px;">
+                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">Today's Pool</a> — ~50 curated bullish setups from a nightly scan of 5,000+ tickers.</li>
+                                <li><a href="https://gammarips.com/scorecard" style="color: hsl(74, 80%, 50%);">Track Record</a> — every candidate tracked to its outcome, honest baseline included.</li>
+                                <li><a href="https://gammarips.com/lab" style="color: hsl(74, 80%, 50%);">The Lab</a> — our research experiments, including the killed ideas.</li>
+                                <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">Blog</a> + @gammarips on X — methodology and research notes.</li>
                             </ul>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">The differentiator on the paid tier is <strong style="color: #ffffff;">curation</strong>. Each weekday at ~09:50 ET, just before the 10:00 entry, the engine picks ONE trade — strike, DTE, contract, exit timing — and sends it to your inbox + private WhatsApp group. You don't have to scan the haystack.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" style="padding: 10px 40px 30px;">
-                            <a href="https://gammarips.com/pricing" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Start 7-day free trial — $39/mo</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 0 40px 20px;">
-                            <p style="font-size: 14px; line-height: 1.6; color: #A0A0A0; border-top: 1px solid #393b4d; padding-top: 24px;">
-                                Reply to this email if you have questions — it goes straight to me.
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px 40px 20px; font-size: 12px; line-height: 1.5; color: #6A6A6A; text-align: center; border-top: 1px solid #393b4d;">
-                            Paper-trading performance, educational only. Not investment advice. Past performance is not a guarantee of future results.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
-                            <p style="margin: 0;">— Evan Parra<br>Founder, GammaRips<br><a href="mailto:evan@gammarips.com" style="color: hsl(74, 80%, 50%);">evan@gammarips.com</a></p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">The paid tier is for your <strong>AI agent</strong>: Agent Access ($39/mo, 7-day free trial) connects Claude, ChatGPT, or your own agent to the full data layer over MCP — structured pool, opportunity surfaces, outcome history, and the methodology as playbooks. Your agent analyzes; you decide.</p>
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding: 28px 0 8px;">
+                                <a href="https://gammarips.com/developers" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">See how Agent Access works →</a>
+                            </td></tr></table>
+                            <p style="font-size: 14px; line-height: 1.6; margin-top: 24px;">Reply to this email if you have questions — it goes straight to me.<br/>— Evan Parra, Founder</p>
+                            <p style="font-size: 12px; line-height: 1.5; margin-top: 24px; color: #707070;">Data on a paper-trading basis, educational only. Not investment advice.</p>
                         </td>
                     </tr>
                 </table>
@@ -317,8 +259,7 @@ evan@gammarips.com
         </tr>
     </table>
 </body>
-</html>
-`;
+</html>`;
 
     return { text: textContent, html: htmlContent };
 }
@@ -347,16 +288,16 @@ Hi ${name},
 
 Quick heads-up: your GammaRips Pro 7-day trial ends in 3 days.
 
-Your card will be charged ${amountDisplay} on ${chargeDate} and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if you want to continue — just keep using the routine.
+Your card will be charged ${amountDisplay} on ${chargeDate} and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if you want to continue — just keep using the data.
 
-If the routine isn't for you:
+If it isn't for you:
 - Cancel anytime before ${chargeDate} and you won't be charged.
 - Manage subscription: https://gammarips.com/account
 
-What's worked so far in the trial:
-- The ~09:50 ET pick lands in your inbox and the private WhatsApp group on trading days, right before the 10:00 entry.
-- The engine also skips on days nothing clears the engine's filters — those are free money in your attention budget.
-- Tag @gamma in the group for any question about today's pick, the open position, or the ledger.
+What you keep with Agent Access:
+- All 23 MCP tools on your key — the curated pool, opportunity surfaces, outcome history, exit-rule simulation, and methodology playbooks.
+- Fresh pool data every trading day, leakage-checked, plus the full labeled history your agent reasons over.
+- The Track Record and Lab stay free either way — the subscription is the machine connection.
 
 If anything's off or you have a question before the trial ends, reply to this email — it goes straight to me.
 
@@ -389,7 +330,7 @@ evan@gammarips.com
                         <td style="padding: 0 40px 20px;">
                             <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: #ffffff; margin: 0;">Your trial ends in 3 days.</h2>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 20px;">Hi ${name},</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Your card will be charged <strong style="color: #ffffff;">${amountDisplay}</strong> on <strong style="color: #ffffff;">${chargeDate}</strong> and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if the routine's working for you.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Your card will be charged <strong style="color: #ffffff;">${amountDisplay}</strong> on <strong style="color: #ffffff;">${chargeDate}</strong> and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if the data's earning its keep.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">If it's not for you — cancel anytime before the charge and you won't pay a cent.</p>
                         </td>
                     </tr>
@@ -919,7 +860,7 @@ Good news! We've made a big change to our platform.
 
 GammaRips is now free for all early adopters. That includes you.
 
-You now have full access to the curated signals pool, the enriched signals list, the daily report, and the public paper-trading ledger. No strings attached.
+You now have full access to the curated signals pool, the enriched signals list, the daily report, and the public Track Record. No strings attached.
 
 We're doing this to gather feedback from a core group of traders as we continue to build out the platform.
 
@@ -965,7 +906,7 @@ Founder, GammaRips
                                 </p>
                             </div>
 
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">You now have full access to the curated signals pool, the enriched signals list, the daily report, and the public paper-trading ledger. No strings attached.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">You now have full access to the curated signals pool, the enriched signals list, the daily report, and the public Track Record. No strings attached.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We're doing this to gather feedback from a core group of traders as we continue to build out the platform.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Log in now to see today's top Call & Put contracts.</p>
                         </td>

@@ -29,9 +29,22 @@ const nextConfig: NextConfig = {
       { source: '/war-room', destination: '/pricing', permanent: true },
       { source: '/history', destination: '/reports', permanent: true },
 
+      // Blog posts archived in the 2026-07-03 repositioning (they sold or
+      // taught the retired pick-push/WhatsApp products and dead V6 exits).
+      // 301 each indexed URL to the closest living content instead of 404ing.
+      { source: '/blog/whatsapp-group-tag-the-agent', destination: '/developers', permanent: true },
+      { source: '/blog/19-per-month-signal-service', destination: '/pricing', permanent: true },
+      { source: '/blog/whats-pushed-to-my-phone-at-9am', destination: '/how-it-works', permanent: true },
+      { source: '/blog/15-minute-morning-options-routine', destination: '/how-it-works', permanent: true },
+      { source: '/blog/math-of-five-hundred-dollar-options-position', destination: '/lab', permanent: true },
+      { source: '/blog/why-90-percent-of-options-traders-fail-systems', destination: '/how-it-works', permanent: true },
+      { source: '/blog/systems-problem-not-pick-problem', destination: '/how-it-works', permanent: true },
+      { source: '/blog/one-trade-a-day-discipline', destination: '/how-it-works', permanent: true },
+      { source: '/blog/gammarips-morning-90-seconds', destination: '/signals', permanent: true },
+
       // Old top-level ticker pages (1-5 chars) -> canonical /signals/:ticker,
       // preserving the ticker. Excludes real page slugs in that length range.
-      { source: '/:ticker((?!arena|about|terms|auth|api|blog|login|signup|dashboard|war-room|history)[a-zA-Z]{1,5})', destination: '/signals/:ticker', permanent: true },
+      { source: '/:ticker((?!(?:arena|about|terms|auth|api|blog|lab|login|signup|dashboard|war-room|history)$)[a-zA-Z]{1,5})', destination: '/signals/:ticker', permanent: true },
     ];
   },
   images: {

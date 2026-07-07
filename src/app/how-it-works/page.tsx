@@ -31,7 +31,7 @@ export default function HowItWorksPage() {
     <section className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <header className="text-center">
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">Education</p>
+        <p className="text-sm font-semibold uppercase tracking-wider text-primary">Learn</p>
         <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
           How GammaRips Works
         </h1>
@@ -49,7 +49,7 @@ export default function HowItWorksPage() {
             <strong className="text-foreground">23:00 ET</strong> &mdash; the scanner ingests the day&apos;s institutional options flow across every optionable US equity and scores it. <strong className="text-foreground">Overnight</strong> &mdash; the standouts are enriched: news context, technicals, flow dollars, a recommended contract per name. <strong className="text-foreground">By the open</strong> &mdash; the curated bullish pool (~50 names) is live on <Link href="/signals" className="text-primary hover:underline">/signals</Link> and, in structured form, on the MCP for connected agents.
           </p>
           <p>
-            <strong className="text-foreground">~09:50 ET</strong> &mdash; the safety rails and a live liquidity re-check run, and the engine&apos;s validation cohort selects and paper-trades one setup under fixed mechanical rules (10:00 entry, &minus;30% stop, +40% target, flat by 15:45 ET) so the selection methodology is tested against reality every single market day. Every outcome lands on the <Link href="/scorecard" className="text-primary hover:underline">public scorecard</Link>.
+            <strong className="text-foreground">~09:50 ET</strong> &mdash; the safety rails and a live liquidity re-check run, and the engine&apos;s validation cohort selects and paper-trades one setup under fixed mechanical rules (10:00 entry, &minus;30% stop, +40% target, flat by 15:45 ET) so the selection methodology is tested against reality every single market day. That cohort runs privately as a measurement instrument; what&apos;s public is the <em>whole pool&apos;s</em> outcome record on the <Link href="/scorecard" className="text-primary hover:underline">Track Record</Link> page.
           </p>
           <p className="text-primary font-semibold">
             The product is the data layer: the pool, the surfaces, and the methodology. Everything below is how it&apos;s built.
@@ -149,7 +149,41 @@ export default function HowItWorksPage() {
           <li><strong className="text-foreground">Conservative tiebreak:</strong> if a single bar touches both stop and target, the stop wins (lower-bound assumption).</li>
         </ul>
         <p className="text-muted-foreground leading-relaxed">
-          Every closed trade &mdash; winners and losers, counted the same way &mdash; is written to the public paper-trading ledger at <Link href="/scorecard" className="text-primary hover:underline">/scorecard</Link>. One honest caveat, straight from <Link href="/lab" className="text-primary hover:underline">the Lab</Link>: a fixed bracket like this is a measurement instrument, not a strategy &mdash; our own research shows the same setups produce very different outcomes under different exits. That&apos;s exactly why the MCP ships an exit-rule simulator instead of a rule to copy.
+          Every pool candidate &mdash; winners and losers, counted the same way &mdash; is tracked to its realized outcome in the public <Link href="/scorecard" className="text-primary hover:underline">Track Record</Link>; the cohort itself stays private per our no-small-sample-marketing rule. One honest caveat, straight from <Link href="/lab" className="text-primary hover:underline">the Lab</Link>: a fixed bracket like this is a measurement instrument, not a strategy &mdash; our own research shows the same setups produce very different outcomes under different exits. That&apos;s exactly why the MCP ships an exit-rule simulator instead of a rule to copy.
+        </p>
+      </section>
+
+      <Separator className="my-12 sm:my-16" />
+
+      <section className="space-y-4">
+        <h2 className="text-3xl font-bold font-headline">What is agentic trading &mdash; and how do you try it?</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          Agentic trading means using an AI agent &mdash; Claude, ChatGPT, or one you build &mdash;
+          as your own market analyst instead of following someone else&apos;s calls. You don&apos;t ask
+          it for a pick. You give it real data, it reasons over the whole surface &mdash; today&apos;s
+          pool, how similar setups actually resolved, what the volatility regime looks like &mdash;
+          and it hands you a decision surface. The judgment, the sizing, and the trade stay yours.
+        </p>
+        <p className="text-muted-foreground leading-relaxed">
+          The catch most people discover the hard way: a chatbot without data will happily improvise.
+          Ask a raw model about a ticker&apos;s options flow and you get confident fiction &mdash; its
+          knowledge froze months ago and no options-flow data exists in any training set. The fix is
+          not a smarter model; it&apos;s a connected one.
+        </p>
+        <p className="text-muted-foreground leading-relaxed">
+          Here&apos;s the on-ramp, cheapest step first. <strong className="text-foreground">Step 1 — free,
+          no account:</strong> browse <Link href="/signals" className="text-primary hover:underline">today&apos;s
+          pool</Link> and the <Link href="/scorecard" className="text-primary hover:underline">Track
+          Record</Link> yourself; that&apos;s the same data your agent would reason over.{' '}
+          <strong className="text-foreground">Step 2 &mdash; free, no card:</strong> point any MCP-capable
+          agent at our server&apos;s anonymous tier and let it taste the pool preview, daily reports, and
+          methodology playbooks. <strong className="text-foreground">Step 3 &mdash; the full data
+          layer:</strong> with <Link href="/developers" className="text-primary hover:underline">Agent
+          Access</Link>, your agent queries the complete outcome history, opportunity surfaces, and
+          exit-rule simulator &mdash; and can even run our bracket-tournament selection pattern against
+          your own objective. Setup for all three takes minutes, and the{' '}
+          <Link href="/developers" className="text-primary hover:underline">For Your Agent</Link> page
+          walks you through it.
         </p>
       </section>
 
@@ -180,7 +214,7 @@ export default function HowItWorksPage() {
             <Link href="/developers">Connect your agent <ArrowRight className="ml-2 h-5 w-5" /></Link>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link href="/scorecard">Check the public ledger</Link>
+            <Link href="/scorecard">See the Track Record</Link>
           </Button>
         </div>
       </div>

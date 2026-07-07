@@ -8,12 +8,12 @@ import { ArrowRight, Database, Filter, Calculator, GitBranch, ShieldCheck, Code 
 export const metadata: Metadata = {
   title: 'GammaRips Methodology — Where every number comes from',
   description:
-    "The data sources, the enrichment bar, the selection tournament, and the bracket math behind every V7 pick. V7 'GIGO' (Get In, Get Out) is a same-day intraday trade. Polygon end-of-day options, FRED VIX, BigQuery ledger. Auditable, fully logged, paper-trading only.",
+    "The data sources, the enrichment bar, the selection tournament, and the bracket math behind the GammaRips pool and its validation cohort. Polygon end-of-day options, FRED VIX, BigQuery ledger. Auditable, fully logged, paper-trading only.",
   alternates: { canonical: 'https://gammarips.com/methodology' },
   openGraph: {
     title: 'GammaRips Methodology — Where every number comes from',
     description:
-      'The enrichment bar, the bracket tournament, and the execution math behind every V7 pick. Auditable and fully logged.',
+      'The enrichment bar, the bracket tournament, and the validation-cohort math behind the GammaRips pool. Auditable and fully logged.',
     url: 'https://gammarips.com/methodology',
   },
 };
@@ -40,7 +40,7 @@ const filters = [
   {
     name: 'overnight_score ≥ 4',
     where: 'enrichment-trigger',
-    why: 'Five deterministic premium-flow flags combine into a 0–8 score. The floor was raised from 1 to 4 on 2026-06-05 to drop the proven-weak low-score dregs. It is a floor, not a ceiling — we deliberately do not cap the top, because the tournament does the discriminating from here.',
+    why: 'Deterministic premium-flow flags (call/put dollar skew, Vol/OI, active strikes, new positioning, divergence) sum to a base score, and a sector-cluster boost can lift it — capped at 10. The floor was raised from 1 to 4 on 2026-06-05 to drop the proven-weak low-score dregs. It is a floor, not a ceiling — we deliberately do not cap the top, because the tournament does the discriminating from here.',
   },
   {
     name: 'directional UOA > $500K',
@@ -120,7 +120,7 @@ const methodologySchema = {
   '@type': 'TechArticle',
   headline: 'GammaRips Methodology — Where every number comes from',
   description:
-    'The data sources, the enrichment bar, the selection tournament, and the bracket math behind every V7 pick. Auditable and fully logged.',
+    'The data sources, the enrichment bar, the selection tournament, and the bracket math behind the GammaRips pool. Auditable and fully logged.',
   url: 'https://gammarips.com/methodology',
   publisher: {
     '@type': 'Organization',
@@ -144,7 +144,7 @@ export default function MethodologyPage() {
           </h1>
           <p className="text-lg text-muted-foreground">
             Every threshold, every data source, every step — documented and logged. Selection runs an
-            LLM bracket tournament; execution is fixed code. Nothing in the pick path is human-curated,
+            LLM bracket tournament; execution is fixed code. Nothing in the selection path is human-curated,
             and every candidate is leakage-checked. This page is the audit trail.
           </p>
         </header>
@@ -279,9 +279,9 @@ export default function MethodologyPage() {
             <h2 className="text-2xl font-bold">The bracket math</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            Every pick ships with the same execution rules, and they have not changed across strategy
-            versions. The bracket isn't a guess — it came out of a sweep across thousands of historical
-            signals; V7 tightens that envelope to a −30/+40/same-day intraday configuration.
+            The validation cohort's bracket rules are fixed within a cohort and versioned across eras —
+            the live V7 configuration is −30/+40/same-day intraday. The bracket isn't a guess: it came
+            out of a sweep across thousands of historical signals.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {bracketRules.map((rule) => (
@@ -315,7 +315,7 @@ export default function MethodologyPage() {
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
                 <strong>Forward paper-trading ledger</strong> — every entry, exit, and outcome lives
-                in BigQuery. The same row is rendered into the public scorecard.
+                in BigQuery. The whole pool&apos;s outcomes are aggregated into the public Track Record; per-row data is queryable over the MCP.
               </span>
             </li>
             <li className="flex gap-3">

@@ -24,9 +24,9 @@ const disclosures = [
     number: '01',
     title: 'Paper-trading only — no live execution.',
     body: [
-      "Every V7 pick is paper-traded. There is no brokerage account behind these signals, no real capital at risk on any signal we publish, and no order ever hits a real exchange via GammaRips.",
-      "The forward paper-trading ledger is a forward simulator: it ingests Polygon end-of-day options data, applies the V7 intraday entry and exit rules at the same timestamps a live trader would, and records the outcome. The same data feeds the public scorecard.",
-      "If you act on a signal in your own brokerage account, that is your decision, your capital, and your risk. We do not place trades, hold positions, or receive any commission tied to trades you place.",
+      "Every validation-cohort trade is paper-traded. There is no brokerage account behind this data, no real capital at risk on anything we publish, and no order ever hits a real exchange via GammaRips.",
+      "The outcome record is a forward simulator: it ingests Polygon options data, applies fixed tracking rules at the same timestamps a live trader would face, and records the result. The same data feeds the public Track Record page.",
+      "If you act on anything you read here in your own brokerage account, that is your decision, your capital, and your risk. We do not place trades, hold positions, or receive any commission tied to trades you place.",
     ],
   },
   {
@@ -44,8 +44,8 @@ const disclosures = [
     number: '03',
     title: 'No track-record marketing pre-30-trades.',
     body: [
-      "The raw paper-trading ledger is public from day one — every trade, timestamped, winners and losers counted the same way. Preliminary aggregates (like the scorecard's win rate) appear alongside it, always with the sample size and an explicit small-sample warning attached.",
-      "But until a cohort has 30 closed paper trades, GammaRips makes no MARKETING claim from any aggregate number — no advertised win rate, no Sharpe ratio, no expectancy claim, no \"we returned X%.\" Below 30 closed trades the sample is too small for any statistic to be load-bearing, we say so next to the numbers themselves, and we will not be talked into selectively quoting early winners.",
+      "Every candidate the engine surfaces is tracked to its realized outcome in a public record — the whole pool, winners and losers counted the same way, published as distributions with sample sizes attached (see the Track Record page). Nothing is edited after the fact.",
+      "The aggregate baselines we publish are honest to a fault — the blind-buy composite of our own pool under a fixed exit is negative, and we say so prominently. Beyond that, GammaRips makes no MARKETING claim from any small-sample number: no advertised win rate, no Sharpe ratio, no expectancy claim, no \"we returned X%.\" No cohort statistic is marketed before 30 closed trades, and we will not be talked into selectively quoting early winners.",
       "Once the 30-trade gate is reached, aggregate performance numbers will be presented with their confidence intervals, the full sample, and the methodology used to compute them. Until then: the raw ledger, the sample-size warnings, and the methodology.",
     ],
   },
@@ -143,13 +143,13 @@ export default function DisclosuresPage() {
               <Link href="/methodology" className="text-primary underline underline-offset-2 hover:no-underline">
                 Methodology
               </Link>{' '}
-              — every threshold, every data source, and the selection tournament behind a V7 pick.
+              — every threshold, every data source, and the selection tournament behind the pool.
             </li>
             <li>
               <Link href="/about" className="text-primary underline underline-offset-2 hover:no-underline">
                 About
               </Link>{' '}
-              — the engine, the routine, and the person behind it.
+              — the engine, the data, and the person behind it.
             </li>
             <li>
               <Link href="/terms" className="text-primary underline underline-offset-2 hover:no-underline">

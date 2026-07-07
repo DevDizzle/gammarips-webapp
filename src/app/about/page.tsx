@@ -3,8 +3,7 @@ import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowRight, Shield, Bot, User, CheckCircle2, Clock, MessageSquare, AlarmClock } from 'lucide-react';
-import Faq, { faqs } from '@/components/landing/faq';
+import { Shield, Bot, User, CheckCircle2 } from 'lucide-react';
 import ContactForm from './contact-form';
 
 export const metadata: Metadata = {
@@ -18,28 +17,6 @@ export const metadata: Metadata = {
   },
 };
 
-const engineSteps = [
-  {
-    icon: <Clock className="h-6 w-6 text-primary" />,
-    title: 'Overnight scan',
-    description: 'At 23:00 ET the scanner ingests Polygon end-of-day options data across 5,230+ tickers — volume, open interest, unusual activity, dollar flow.',
-  },
-  {
-    icon: <CheckCircle2 className="h-6 w-6 text-primary" />,
-    title: 'Enrichment',
-    description: 'After the scan, candidates clear a thin enrichment bar: overnight_score ≥ 4 with directional UOA > $500K, then a BULLISH-only gate and a delta edge-rank to the ~50 strongest bullish setups.',
-  },
-  {
-    icon: <MessageSquare className="h-6 w-6 text-primary" />,
-    title: 'Publication',
-    description: 'By the open, the curated pool is live: human-readable on /signals (free, always), and in structured form over MCP for connected agents — point-in-time features, opportunity surfaces, outcome history, and methodology playbooks. Every field is leakage-checked.',
-  },
-  {
-    icon: <AlarmClock className="h-6 w-6 text-primary" />,
-    title: 'Validation',
-    description: 'Every market day a paper-traded cohort tests the selection methodology under fixed mechanical rules (two safety rails, a live liquidity re-check, 10:00 entry, −30% stop / +40% target, flat by 15:45 ET). Every outcome — winners and losers — lands on the public scorecard, unedited.',
-  },
-];
 
 const whyList = [
   'A small curated pool, not a firehose. No FOMO, no "look how many signals we have."',
@@ -56,16 +33,6 @@ interface AboutPageProps {
 export default async function AboutPage({ searchParams }: AboutPageProps) {
   const { welcome } = await searchParams;
   const isWelcome = welcome === '1';
-
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqs.map(faq => ({
-      "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": { "@type": "Answer", "text": faq.answer },
-    })),
-  };
 
   const aboutSchema = {
     "@context": "https://schema.org",
@@ -134,32 +101,6 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
 
         <Separator className="my-12 sm:my-16" />
 
-        <section id="how-it-works" className="scroll-mt-20">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold font-headline">How the engine works</h2>
-            <p className="mt-3 max-w-2xl mx-auto text-muted-foreground">
-              A scanned, enriched, leakage-checked pipeline: 5,230+ tickers cut to a curated bullish pool nightly, with a fixed-rule paper cohort validating the selection methodology in public. No discretion, no override, no black box.
-            </p>
-          </div>
-          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
-            {engineSteps.map((step) => (
-              <Card key={step.title} className="bg-card/50">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-primary/10">
-                      {step.icon}
-                    </div>
-                    <h3 className="text-lg font-bold font-headline">{step.title}</h3>
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <Separator className="my-12 sm:my-16" />
-
         <section id="team">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold font-headline">Who&apos;s behind this</h2>
@@ -221,44 +162,6 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
 
         <Separator className="my-12 sm:my-16" />
 
-        <section>
-          <Card className="text-center bg-primary/5 border-primary/20">
-            <CardHeader>
-              <CardTitle className="font-headline text-2xl">Two ways to use GammaRips</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm max-w-2xl mx-auto">
-                <div className="p-4 rounded-lg bg-background">
-                  <p className="font-bold text-lg">You</p>
-                  <p className="text-primary font-semibold text-xs mb-1">$0 · FOREVER</p>
-                  <p className="text-muted-foreground">The whole website: curated pool, daily reports, scorecard, the Lab, methodology.</p>
-                </div>
-                <div className="p-4 rounded-lg bg-background border border-primary/30">
-                  <p className="font-bold text-lg">Your Agent</p>
-                  <p className="text-primary font-semibold text-xs mb-1">$39/MO · 7-DAY TRIAL</p>
-                  <p className="text-muted-foreground">Full MCP access: 23 tools, opportunity surfaces, outcome history, methodology playbooks.</p>
-                </div>
-              </div>
-              <Button asChild size="lg">
-                <Link href="/pricing">
-                  See pricing <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </section>
-
-        <Separator className="my-12 sm:my-16" />
-
-        <section id="faq" className="scroll-mt-20">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold font-headline">Frequently asked questions</h2>
-          </div>
-          <Faq />
-        </section>
-
-        <Separator className="my-12 sm:my-16" />
-
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
             <h2 className="font-headline text-3xl text-foreground">Trust &amp; responsibility</h2>
@@ -285,7 +188,6 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
       </section>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     </>
   );
 }

@@ -27,7 +27,7 @@ const freeFeatures = [
   "Today's curated pool, browsable across 5,230+ scanned tickers",
   'Daily market report with AI-authored thesis',
   'Per-ticker deep dives',
-  'Public scorecard (paper-trading ledger)',
+  'Track Record — every pool candidate tracked to its outcome',
   'The Lab — published experiments, including the failed ones',
   'Methodology, blog, FAQ, and all disclosures',
 ];

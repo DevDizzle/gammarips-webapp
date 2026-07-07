@@ -1,260 +1,148 @@
 import type { Metadata } from 'next';
-import { Separator } from '@/components/ui/separator';
+import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { BarChart3, Target, TrendingUp, DollarSign } from 'lucide-react';
-import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from '@/components/ui/table';
-import { getCohortStats, getLedgerTrades, type LedgerTrade } from '@/lib/firebase-admin';
+import { Separator } from '@/components/ui/separator';
+import { FlaskConical, LineChart, Scale, Beaker } from 'lucide-react';
+import { getPoolOutcomes } from '@/lib/firebase-admin';
+import { PoolOutcomesTiles } from '@/components/landing/pool-outcomes-tiles';
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: 'GammaRips Scorecard — Public Paper-Trading Ledger',
-  description: 'The public paper-trading ledger of the GammaRips validation cohort — every selection timestamped and marked to realized option P&L, winners and losers counted the same way. No cherry-picking, no hindsight edits. Educational only.',
+  title: 'Track Record — Every Candidate, Tracked',
+  description:
+    'The full GammaRips pool outcome record: every candidate the engine surfaces is tracked to its realized outcome — peak excursions, drawdowns, and the honest blind-buy baseline (which loses). Distributions with sample sizes, not a highlight reel. Paper-trading data, educational only.',
   alternates: { canonical: 'https://gammarips.com/scorecard' },
   openGraph: {
-    title: 'GammaRips Scorecard — Public Paper-Trading Ledger',
-    description: 'The GammaRips validation cohort, tracked in public. Paper-trading ledger, educational only.',
+    title: 'Track Record — Every Candidate, Tracked | GammaRips',
+    description:
+      'The whole pool, tracked to outcome — excursion distributions and the honest blind-buy baseline. No highlight reel.',
     url: 'https://gammarips.com/scorecard',
-  }
+  },
 };
 
-// Public evaluation gate — matches disclosure #03: no marketing claims from
-// aggregates until a cohort has 30 closed trades.
-const EVAL_THRESHOLD = 30;
+export default async function TrackRecordPage() {
+  const outcomes = await getPoolOutcomes();
 
-const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
-
-// Format an ISO date string ("2026-05-13") without timezone rollback.
-function formatCohortStart(iso?: string): string {
-  if (!iso) return 'May 13, 2026';
-  const [y, m, d] = iso.split('-').map(Number);
-  if (!y || !m || !d) return iso;
-  return `${MONTHS[m - 1]} ${d}, ${y}`;
-}
-
-// Short date for the ledger table ("May 29").
-function formatShort(iso?: string): string {
-  if (!iso) return '—';
-  const [, m, d] = iso.split('-').map(Number);
-  if (!m || !d) return iso;
-  return `${MONTHS[m - 1].slice(0, 3)} ${d}`;
-}
-
-// Whole-dollar money with thousands separators, e.g. "$1,913". Signed variant
-// for the Profit column ("+$483" / "-$314").
-function usd(v: number, signed = false): string {
-  const sign = signed ? (v >= 0 ? '+' : '-') : v < 0 ? '-' : '';
-  return `${sign}$${Math.abs(Math.round(v)).toLocaleString()}`;
-}
-
-// "$525 PUT" when parsed; otherwise the raw OCC symbol.
-function contractLabel(t: LedgerTrade): string {
-  if (t.strike != null && t.option_type) {
-    const strike = Number.isInteger(t.strike) ? `${t.strike}` : t.strike.toFixed(2);
-    return `$${strike} ${t.option_type}`;
-  }
-  return t.recommended_contract;
-}
-
-export default async function ScorecardPage() {
-  // V7-only cohort — the same source the home-page panel uses. NOT the
-  // all-signals / underlying-peak-return win-tracker data (that's a different,
-  // hindsight-favorable methodology that would contradict this page's promise).
-  const [stats, trades] = await Promise.all([getCohortStats(), getLedgerTrades()]);
-  const hasData = !!stats && stats.trades_closed > 0;
-
-  const roi = hasData ? stats!.roi_pct * 100 : null;
-  const pl = hasData ? stats!.total_pl_usd : null;
-  const cohortStart = formatCohortStart(stats?.cohort_start);
-
-  const winRateText = hasData ? `${Math.round(stats!.win_rate * 100)}%` : '—';
-  const tradesText = hasData ? `${stats!.trades_closed}` : '—';
-  const roiText = roi === null ? '—' : `${roi >= 0 ? '+' : ''}${roi.toFixed(1)}%`;
-  const plText = pl === null
-    ? '—'
-    : `${pl >= 0 ? '+' : '-'}$${Math.abs(Math.round(pl)).toLocaleString()}`;
-
-  const roiColor = roi === null ? '' : roi >= 0 ? 'text-emerald-500' : 'text-red-500';
-  const plColor = pl === null ? '' : pl >= 0 ? 'text-emerald-500' : 'text-red-500';
-
-  // The ledger is, literally, a tracked dataset of closed paper trades. Describe
-  // it as schema.org/Dataset and surface the aggregate metrics as
-  // variableMeasured when we actually have closed trades.
-  const scorecardSchema = {
-    "@context": "https://schema.org",
-    "@type": "Dataset",
-    "name": "GammaRips V7 Paper-Trading Ledger",
-    "description": "Public, timestamped record of every GammaRips validation-cohort trade and its realized option P&L on a fixed same-day +40% / -30% bracket. No cherry-picking, no hindsight edits. Paper-trading, educational only.",
-    "url": "https://gammarips.com/scorecard",
-    "creator": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
-    "license": "https://gammarips.com/disclosures",
-    "isAccessibleForFree": true,
-    ...(hasData && stats!.trades_closed >= EVAL_THRESHOLD
-      ? {
-          "temporalCoverage": `${stats!.cohort_start}/..`,
-          "variableMeasured": [
-            { "@type": "PropertyValue", "name": "Win Rate", "value": `${Math.round(stats!.win_rate * 100)}%` },
-            { "@type": "PropertyValue", "name": "ROI", "value": `${roi!.toFixed(1)}%` },
-            { "@type": "PropertyValue", "name": "Net P&L (USD)", "value": Math.round(pl!) },
-            { "@type": "PropertyValue", "name": "Trades Closed", "value": stats!.trades_closed },
-          ],
-        }
+  const datasetSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: 'GammaRips Pool Outcome Record',
+    description:
+      'Realized outcomes for every candidate in the GammaRips curated options-flow pool: per-contract peak/trough excursions (the opportunity surface) and fixed-bracket baseline labels, tracked daily on a paper-trading basis. Published as distributions with sample sizes; the blind-buy composite baseline is negative and published as such. Not investment advice.',
+    url: 'https://gammarips.com/scorecard',
+    creator: { '@type': 'Organization', name: 'GammaRips', url: 'https://gammarips.com' },
+    license: 'https://gammarips.com/disclosures',
+    isAccessibleForFree: true,
+    ...(outcomes
+      ? { temporalCoverage: `${outcomes.first_scan_date}/${outcomes.last_scan_date}` }
       : {}),
   };
 
   return (
     <section className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(scorecardSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }}
+      />
       <header className="text-center">
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">Performance</p>
+        <p className="text-sm font-semibold uppercase tracking-wider text-primary">Track Record</p>
         <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-          Signal Scorecard
+          Every candidate, tracked.
         </h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-          Every signal is timestamped. Every result is tracked. No cherry-picking. No hindsight bias. Just data.
+          Not a highlight reel and not one lucky account: every contract the engine
+          surfaces enters the outcome record and is tracked to its result — winners
+          and losers counted the same way, nothing edited after the fact.
         </p>
       </header>
 
       <Separator className="my-12 sm:my-16" />
 
-      {/* Live V7 cohort stats — cohort_stats/current */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-card/50 text-center">
-          <CardContent className="p-6">
-            <BarChart3 className="h-8 w-8 text-primary mx-auto mb-3" />
-            <p className="text-3xl font-bold font-headline">{winRateText}</p>
-            <p className="text-sm text-muted-foreground">Overall Win Rate</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-card/50 text-center">
-          <CardContent className="p-6">
-            <Target className="h-8 w-8 text-primary mx-auto mb-3" />
-            <p className="text-3xl font-bold font-headline">{tradesText}</p>
-            <p className="text-sm text-muted-foreground">Signals Tracked</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-card/50 text-center">
-          <CardContent className="p-6">
-            <TrendingUp className="h-8 w-8 text-primary mx-auto mb-3" />
-            <p className={`text-3xl font-bold font-headline ${roiColor}`}>{roiText}</p>
-            <p className="text-sm text-muted-foreground">ROI</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-card/50 text-center">
-          <CardContent className="p-6">
-            <DollarSign className="h-8 w-8 text-primary mx-auto mb-3" />
-            <p className={`text-3xl font-bold font-headline ${plColor}`}>{plText}</p>
-            <p className="text-sm text-muted-foreground">Net P&amp;L</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {trades.length > 0 && (
-        <div className="mt-12 sm:mt-16">
-          <h2 className="text-2xl font-bold font-headline text-center">The Ledger</h2>
-          <p className="text-sm text-muted-foreground text-center mt-2 mb-8 max-w-2xl mx-auto">
-            Every closed V7 trade, most recent first &mdash; realized option P&amp;L on the same-day +40% / &minus;30% bracket. Winners and losers, counted the same way.
-          </p>
-          <div className="overflow-x-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Ticker</TableHead>
-                  <TableHead>Side</TableHead>
-                  <TableHead>Contract</TableHead>
-                  <TableHead className="text-right">Entry</TableHead>
-                  <TableHead className="text-right">#</TableHead>
-                  <TableHead className="text-right">Invested</TableHead>
-                  <TableHead className="text-right">Exit Value</TableHead>
-                  <TableHead className="text-right">Profit</TableHead>
-                  <TableHead className="text-right">ROI</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {trades.map((t) => {
-                  const ret = t.return_pct * 100;
-                  const retColor = ret >= 0 ? 'text-emerald-500' : 'text-red-500';
-                  // Defensive fallbacks for docs synced before the n_contracts /
-                  // exit_value_usd fields were added (exit value = invested + P&L).
-                  const contracts = t.n_contracts ?? Math.max(1, Math.round(t.capital_usd / (t.entry_price * 100)));
-                  const exitValue = t.exit_value_usd ?? t.capital_usd + t.pl_usd;
-                  return (
-                    <TableRow key={`${t.scan_date}_${t.ticker}`}>
-                      <TableCell className="whitespace-nowrap text-muted-foreground">{formatShort(t.entry_date)}</TableCell>
-                      <TableCell className="font-semibold">{t.ticker}</TableCell>
-                      <TableCell className="text-muted-foreground">{t.direction === 'BULLISH' ? 'Bullish' : 'Bearish'}</TableCell>
-                      <TableCell className="whitespace-nowrap">{contractLabel(t)}</TableCell>
-                      <TableCell className="text-right whitespace-nowrap">${t.entry_price.toFixed(2)}</TableCell>
-                      <TableCell className="text-right text-muted-foreground">{contracts}</TableCell>
-                      <TableCell className="text-right whitespace-nowrap">{usd(t.capital_usd)}</TableCell>
-                      <TableCell className="text-right whitespace-nowrap">{usd(exitValue)}</TableCell>
-                      <TableCell className={`text-right whitespace-nowrap font-semibold ${t.pl_usd >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
-                        {usd(t.pl_usd, true)}
-                      </TableCell>
-                      <TableCell className={`text-right font-semibold ${retColor}`}>
-                        <div>{ret >= 0 ? '+' : ''}{ret.toFixed(1)}%</div>
-                        <div className="text-xs font-normal capitalize text-muted-foreground">{t.exit_reason.toLowerCase()}</div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
-      )}
+      <PoolOutcomesTiles outcomes={outcomes} />
 
       <Separator className="my-12 sm:my-16" />
 
-      {hasData ? (
-        <Card className="bg-primary/5 border-primary/20">
-          <CardContent className="p-8 text-center space-y-4">
-            <h2 className="text-2xl font-bold font-headline">
-              Live V7 paper-trading ledger — since {cohortStart}
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Every validation-cohort selection is timestamped and marked to its realized option P&amp;L on a fixed same-day +40% / &minus;30% bracket &mdash; winners and losers counted the same way. We can&apos;t edit history. This cohort tests the selection methodology; it is not a product to follow &mdash; the honest context is in the Lab.
+      {/* How to read these numbers */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="bg-card/50">
+          <CardContent className="p-5 space-y-2">
+            <LineChart className="h-5 w-5 text-primary" />
+            <h2 className="font-bold font-headline">The opportunity surface</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              For each contract we record how far it actually ran (peak) and how far
+              it fell (drawdown) over its tracked window. That&apos;s profit{' '}
+              <em>potential</em> — what was there for someone with the right exit —
+              not a return anyone earned. The median candidate touched a meaningful
+              peak; the tail touched very large ones. The drawdowns are published
+              with equal prominence.
             </p>
-            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-              Preliminary: {stats!.trades_closed} of {EVAL_THRESHOLD} trades closed. Treat these aggregates as an early, small sample &mdash; not evidence of an edge. Per our disclosures, we make no marketing claims from them before {EVAL_THRESHOLD} resolved trades.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button asChild size="lg">
-                <Link href="/lab">Read the Lab</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/how-it-works">Learn How Scoring Works</Link>
-              </Button>
-            </div>
           </CardContent>
         </Card>
-      ) : (
-        <Card className="bg-primary/5 border-primary/20">
-          <CardContent className="p-8 text-center space-y-4">
-            <h2 className="text-2xl font-bold font-headline">Win Tracking Begins {cohortStart}</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              The V7 cohort started {cohortStart}. As trades resolve, the numbers show up here automatically. Every signal is timestamped when published &mdash; we can&apos;t edit history.
+        <Card className="bg-card/50">
+          <CardContent className="p-5 space-y-2">
+            <Scale className="h-5 w-5 text-primary" />
+            <h2 className="font-bold font-headline">The honest baseline</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              &ldquo;Blind-buy baseline&rdquo; answers the question every visitor
+              should ask: what if you just bought everything? Under a fixed same-day
+              bracket, the whole pool <strong className="text-foreground">loses</strong>. We
+              publish that number on purpose — it&apos;s why we sell data instead of
+              picks, and why selection and exits are your agent&apos;s job, not a
+              subscription&apos;s promise.
             </p>
-            <p className="text-muted-foreground">
-              Check back as trades resolve. In the meantime, browse our daily signals and reports.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button asChild size="lg">
-                <Link href="/lab">Read the Lab</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/how-it-works">Learn How Scoring Works</Link>
-              </Button>
-            </div>
           </CardContent>
         </Card>
-      )}
+        <Card className="bg-card/50">
+          <CardContent className="p-5 space-y-2">
+            <Beaker className="h-5 w-5 text-primary" />
+            <h2 className="font-bold font-headline">The validation cohort</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Separately, a small paper-traded cohort exercises the engine&apos;s
+              selection methodology every market day under fixed mechanical rules.
+              It exists to test the machinery against reality — a measurement
+              instrument, not a strategy — and per our{' '}
+              <Link href="/disclosures" className="text-primary hover:underline">
+                disclosures
+              </Link>{' '}
+              we make no marketing claims from small cohorts.
+            </p>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-12 sm:my-16" />
+
+      <section className="text-center space-y-4">
+        <div className="flex justify-center">
+          <FlaskConical className="h-6 w-6 text-primary" />
+        </div>
+        <h2 className="text-2xl font-bold font-headline">
+          The research these numbers power
+        </h2>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          This outcome record is the substrate the Lab runs experiments on — including
+          the ones that killed our own ideas — and the same data your agent can query
+          over MCP: per-contract excursions, cohort aggregates, and exit-rule
+          simulation across the full history.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
+          <Button asChild size="lg">
+            <Link href="/lab">Read the Lab</Link>
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <Link href="/developers">Put your agent on this data</Link>
+          </Button>
+        </div>
+      </section>
+
+      <p className="mt-16 text-xs text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
+        Paper-trading data, educational content only. Not investment advice.
+        Excursion figures are realized per-contract extremes, conditional on the
+        stated tracking windows — not returns achieved by any account. Past
+        performance is not a guarantee of future results.
+      </p>
     </section>
   );
 }

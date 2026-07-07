@@ -973,11 +973,163 @@ export async function setUserSubscriptionStatusAdmin(
 export async function getUserByStripeCustomerIdAdmin(stripeCustomerId: string): Promise<DbUser | null> {
     const usersRef = getDb().collection('users');
     const q = await usersRef.where('stripeCustomerId', '==', stripeCustomerId).limit(1).get();
-    
+
     if (!q.empty) {
         return q.docs[0].data() as DbUser;
     }
     return null;
+}
+
+// ---------------------------------------------------------------------------
+// MCP API key lifecycle
+// ---------------------------------------------------------------------------
+//
+// The gammarips-mcp server (separate repo) authenticates by SHA-256-hashing the
+// bearer key and reading `mcp_api_keys/{hash}` -> {uid, tier, status}. It grants
+// `pro` ONLY on status=='active' AND tier=='pro'. This webapp OWNS writes to
+// that collection; the MCP only reads it. We mirror the (non-secret) key hash +
+// prefix onto the user doc so the Stripe webhook can revoke by hash with no
+// query, and /account can show the key's prefix + created date.
+
+const MCP_KEYS_COLLECTION = 'mcp_api_keys';
+
+/**
+ * REAL paid entitlement for issuing an MCP key. Deliberately independent of the
+ * site-wide FREE_MODE flag: the human UI may be free, but MCP access is the paid
+ * product, so a key is only issued to a genuinely subscribed / trialing /
+ * founder user.
+ */
+export function isUserMcpEntitledAdmin(user: DbUser): boolean {
+    if (user.subscriptionStatus === 'founder_lifetime') return true;
+    // A live trial IS entitled (it's a trial OF the paid product). Honor the
+    // Stripe status directly so a subscription.updated event that transiently
+    // clears isSubscribed/proUntil mid-trial can't lock a trial user out.
+    if (user.subscriptionStatus === 'trialing') return true;
+    if (user.isSubscribed === true) return true;
+    const proUntil = (user as any).proUntil;
+    if (proUntil && typeof proUntil.toDate === 'function' && proUntil.toDate() > new Date()) {
+        return true;
+    }
+    return false;
+}
+
+async function revokeKeyHashAdmin(keyHash: string, reason: string): Promise<void> {
+    await getDb().collection(MCP_KEYS_COLLECTION).doc(keyHash).set(
+        {
+            status: 'revoked',
+            revokedAt: FieldValue.serverTimestamp(),
+            revokedReason: reason,
+        },
+        { merge: true }
+    );
+}
+
+/**
+ * Mint a new MCP key for a user (enforcing one active key per user — any prior
+ * active key is revoked first). Returns the RAW key ONCE; only its hash is
+ * stored. Caller MUST have verified entitlement.
+ */
+export async function provisionMcpKeyAdmin(
+    uid: string
+): Promise<{ rawKey: string; keyPrefix: string; createdAtISO: string }> {
+    const { generateRawKey, hashKey, keyPrefixOf } = await import('./mcp-keys');
+    const db = getDb();
+    const userRef = db.collection('users').doc(uid);
+    const userSnap = await userRef.get();
+    const existing = userSnap.exists ? (userSnap.data() as DbUser) : null;
+
+    // Revoke any prior active key so a user always has exactly one live key.
+    if (existing?.mcpKeyHash && existing.mcpKeyStatus === 'active') {
+        await revokeKeyHashAdmin(existing.mcpKeyHash, 'rotated');
+    }
+
+    const rawKey = generateRawKey();
+    const keyHash = hashKey(rawKey);
+    const keyPrefix = keyPrefixOf(rawKey);
+
+    await db.collection(MCP_KEYS_COLLECTION).doc(keyHash).set({
+        uid,
+        tier: 'pro',
+        status: 'active',
+        keyPrefix,
+        source: 'account_self_serve',
+        createdAt: FieldValue.serverTimestamp(),
+    });
+
+    await userRef.set(
+        {
+            mcpKeyHash: keyHash,
+            mcpKeyPrefix: keyPrefix,
+            mcpKeyStatus: 'active',
+            mcpKeyCreatedAt: FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+    );
+
+    return { rawKey, keyPrefix, createdAtISO: new Date().toISOString() };
+}
+
+/**
+ * Revoke every active MCP key belonging to a user. Idempotent. Returns the
+ * number of keys revoked. Uses the mirrored hash for the fast path plus a
+ * uid query to sweep any stragglers.
+ */
+export async function revokeMcpKeysForUserAdmin(uid: string, reason: string): Promise<number> {
+    const db = getDb();
+    const userRef = db.collection('users').doc(uid);
+    const revoked = new Set<string>();
+
+    const userSnap = await userRef.get();
+    const existing = userSnap.exists ? (userSnap.data() as DbUser) : null;
+    if (existing?.mcpKeyHash && existing.mcpKeyStatus === 'active') {
+        await revokeKeyHashAdmin(existing.mcpKeyHash, reason);
+        revoked.add(existing.mcpKeyHash);
+    }
+
+    // Sweep any active keys for this uid not reflected in the mirror (uid is
+    // single-field auto-indexed; status filtered in memory to avoid needing a
+    // composite index).
+    const q = await db.collection(MCP_KEYS_COLLECTION).where('uid', '==', uid).get();
+    for (const doc of q.docs) {
+        if (doc.data().status === 'active' && !revoked.has(doc.id)) {
+            await revokeKeyHashAdmin(doc.id, reason);
+            revoked.add(doc.id);
+        }
+    }
+
+    if (existing) {
+        await userRef.set({ mcpKeyStatus: 'revoked' }, { merge: true });
+    }
+    return revoked.size;
+}
+
+export async function getMcpKeyMetaAdmin(
+    uid: string
+): Promise<{ hasActiveKey: boolean; keyPrefix: string | null; createdAtISO: string | null }> {
+    const userSnap = await getDb().collection('users').doc(uid).get();
+    if (!userSnap.exists) return { hasActiveKey: false, keyPrefix: null, createdAtISO: null };
+    const u = userSnap.data() as DbUser;
+    const createdAt = (u as any).mcpKeyCreatedAt;
+    return {
+        hasActiveKey: u.mcpKeyStatus === 'active' && !!u.mcpKeyHash,
+        keyPrefix: u.mcpKeyPrefix ?? null,
+        createdAtISO:
+            createdAt && typeof createdAt.toDate === 'function'
+                ? createdAt.toDate().toISOString()
+                : null,
+    };
+}
+
+/** All currently-active MCP keys, for the reconciliation cron. */
+export async function listActiveMcpKeysAdmin(): Promise<Array<{ keyHash: string; uid: string }>> {
+    const q = await getDb().collection(MCP_KEYS_COLLECTION).where('status', '==', 'active').get();
+    return q.docs.map((d) => ({ keyHash: d.id, uid: d.data().uid as string }));
+}
+
+/** Read-only user fetch by uid (does NOT create — unlike getOrCreateUserAdmin). */
+export async function getUserAdmin(uid: string): Promise<DbUser | null> {
+    const snap = await getDb().collection('users').doc(uid).get();
+    return snap.exists ? (snap.data() as DbUser) : null;
 }
 
 // FirebaseFirestore.DocumentData → BlogPost. Reads the producer's snake_case

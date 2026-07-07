@@ -77,6 +77,7 @@ export const UserSchema = z.object({
     message: "Expected Firestore Timestamp",
   }).optional(),
   stripeCustomerId: z.string().optional().nullable(),
+  stripeSubscriptionId: z.string().optional().nullable(),
   insiderActivationToken: z.string().optional().nullable(),
   plan: z.enum(['free', 'trial', 'pro', 'edge', 'warroom']).optional(),
   subscriptionStatus: z.string().optional(),
@@ -84,6 +85,13 @@ export const UserSchema = z.object({
   trialEnd: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data)).optional(),
   apiKeyHash: z.string().optional(),
   apiKeyCreatedAt: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data)).optional(),
+  // MCP API key mirror (non-secret): lets the webhook revoke by hash with no
+  // query and lets /account show the key's prefix + created date. The raw key
+  // is never stored — only its SHA-256 hash, which is the mcp_api_keys doc id.
+  mcpKeyHash: z.string().optional().nullable(),
+  mcpKeyPrefix: z.string().optional().nullable(),
+  mcpKeyCreatedAt: z.custom((data) => data instanceof Timestamp || data === null || (data && typeof data === 'object' && 'seconds' in data && 'nanoseconds' in data)).optional().nullable(),
+  mcpKeyStatus: z.enum(['active', 'revoked']).optional().nullable(),
 });
 export type DbUser = z.infer<typeof UserSchema>;
 

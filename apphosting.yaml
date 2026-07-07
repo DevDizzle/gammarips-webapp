@@ -39,6 +39,9 @@ env:
     value: pk_live_51Rrp1v9rAjmDTprozdVxjqH7hFntQlAovc71LiE4theOZQfuDtcUvCcDPcIq1t0EHIBZn9MVb7h43fnns82hqEai00js1IxoBK
   - variable: NEXT_PUBLIC_STRIPE_PRICE_ID
     value: price_1TOlIM9rAjmDTproDjwmelyw
+  # Billing Portal (cancel/update card) — createStripePortalSession throws without it
+  - variable: NEXT_PUBLIC_STRIPE_BILLING_PORTAL_CONFIG_ID
+    value: bpc_1SMRaZ9rAjmDTproUFJHV3vW
 
   # Google Analytics (measurement ID is public)
   - variable: NEXT_PUBLIC_GA_MEASUREMENT_ID
@@ -51,6 +54,8 @@ secretEnv:
   # Cron authentication
   - secret: CRON_SECRET
     env: CRON_SECRET
+  - secret: RECONCILE_CRON_SECRET
+    env: RECONCILE_CRON_SECRET
 
   # Stripe (checkout + webhook)
   - secret: STRIPE_SECRET_KEY

@@ -18,6 +18,26 @@ service cloud.firestore {
       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
     }
 
+    // Users may read ONLY their own doc (auth bootstrap + account UI) and may
+    // CREATE it only in the unentitled first-sign-in shape. Entitlement fields
+    // (isSubscribed / plan / proUntil / subscriptionStatus / stripeCustomerId)
+    // are written exclusively by the server (Stripe webhook via Admin SDK) —
+    // a client-writable user doc would let anyone self-entitle and mint a paid
+    // MCP key from the browser console.
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly(['uid', 'email', 'displayName',
+             'isAnonymous', 'isSubscribed', 'usageCount', 'createdAt',
+             'stripeCustomerId', 'plan'])
+        && request.resource.data.uid == userId
+        && request.resource.data.isSubscribed == false
+        && request.resource.data.plan == 'free'
+        && request.resource.data.stripeCustomerId == null
+        && request.resource.data.usageCount == 0;
+      allow update, delete: if false;
+    }
+
     // MCP API keys are server-only (Admin SDK). No client may read or write —
     // the doc id is a key hash and the collection is the auth source of truth
     // for the paid MCP. Explicit here (also covered by the default-deny below)

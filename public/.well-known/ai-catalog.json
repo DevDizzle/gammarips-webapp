@@ -1,0 +1,67 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "GammaRips",
+    "identifier": "gammarips.com",
+    "documentationUrl": "https://gammarips.com/developers",
+    "logoUrl": "https://gammarips.com/logo.png"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:gammarips.com:server:gammarips",
+      "displayName": "GammaRips Options Intelligence",
+      "type": "application/mcp-server-card+json",
+      "url": "https://gammarips-mcp-406581297632.us-central1.run.app/.well-known/mcp/server-card.json",
+      "description": "Options-flow intelligence primitives for AI agents: a hard-curated overnight candidate pool, point-in-time features, realized opportunity surfaces (MFE/MAE excursions), bracket outcome labels, and methodology playbooks. Your agent reasons to its own contract and exit — there is no pick endpoint. Paper-traded research data; educational only; not investment advice.",
+      "version": "3.0.0",
+      "tags": [
+        "options",
+        "finance",
+        "market-data",
+        "unusual-options-activity",
+        "options-flow",
+        "trading-research",
+        "data-vendor",
+        "mcp"
+      ],
+      "capabilities": [
+        "get_overnight_signals",
+        "get_enriched_signals",
+        "get_signal_detail",
+        "get_freemium_preview",
+        "get_contract_snapshot",
+        "get_pool_liquidity",
+        "get_earnings_window",
+        "get_contract_marks",
+        "replay_contract",
+        "get_pool_features",
+        "get_opportunity_surface",
+        "query_outcomes",
+        "get_outcome_summary",
+        "estimate_exit_rule",
+        "get_harvest_curve",
+        "get_regime_context",
+        "list_playbooks",
+        "get_playbook",
+        "get_signal_performance",
+        "get_win_rate_summary",
+        "get_position_history",
+        "get_historical_performance",
+        "get_daily_report",
+        "get_report_list",
+        "get_available_dates",
+        "get_enriched_signal_schema",
+        "get_market_calendar_status",
+        "get_signal_explainer",
+        "web_search"
+      ],
+      "representativeQueries": [
+        "what is in today's curated bullish options pool and why was each name flagged",
+        "show the realized MFE/MAE opportunity surface for historical setups like this one",
+        "how has the whole pool performed under a +40%/-30% same-day exit bracket",
+        "explain the selection methodology and curation gates behind the daily pool",
+        "replay how a specific contract traded minute-by-minute after it was surfaced"
+      ]
+    }
+  ]
+}

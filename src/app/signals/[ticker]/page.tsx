@@ -1,7 +1,7 @@
 import { getSignalByTicker, getLatestOvernightSummary, getBlogPostsAdmin, getMostRecentSignalForTicker, getRelatedSignals } from "@/lib/firebase-admin";
 import SignalClientPage from "./signal-client";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Metadata } from "next";
 
 interface PageProps {
@@ -45,7 +45,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
-    alternates: { canonical: `https://gammarips.com/signals/${ticker}` },
+    // Canonical must be the UPPERCASE url regardless of the casing that arrived:
+    // the route resolves case-insensitively, and the case-preserving redirects in
+    // next.config.ts (/:ticker, /stocks/:ticker) feed lowercase variants in. A
+    // raw-casing canonical made /signals/aapl and /signals/AAPL compete as
+    // duplicates in GSC (48 pages). The page component 308s non-uppercase paths.
+    alternates: { canonical: `https://gammarips.com/signals/${T}` },
   };
 }
 
@@ -89,7 +94,14 @@ function buildSignalDescription(signal: any, T: string): string {
 
 export default async function SignalPage({ params }: PageProps) {
   const { ticker } = await params;
-  
+
+  // One casing, one URL: 308 anything non-uppercase to the canonical form so
+  // lowercase arrivals (old /:ticker and /stocks/:ticker redirects preserve
+  // casing) can't mint duplicate 200s that compete with /signals/TICKER.
+  if (ticker !== ticker.toUpperCase()) {
+    permanentRedirect(`/signals/${ticker.toUpperCase()}`);
+  }
+
   // Latest scan first; fall back to the most recent scan that contained this
   // ticker so historical (ranking) detail pages resolve instead of 404ing.
   const summary = await getLatestOvernightSummary();

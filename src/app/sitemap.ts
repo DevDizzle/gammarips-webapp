@@ -9,6 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: BASE_URL, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
     { url: `${BASE_URL}/reports`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
     { url: `${BASE_URL}/signals`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
+    { url: `${BASE_URL}/signals/archive`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.5 },
     { url: `${BASE_URL}/developers`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE_URL}/lab`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE_URL}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
@@ -52,11 +53,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Sitemap: failed to fetch blog posts', e);
   }
 
-  // Per-ticker signal pages — our largest indexable inventory, previously absent
-  // from the sitemap (Google discovered them only via internal links).
+  // Per-ticker signal pages — our largest indexable inventory. WINDOWED to the
+  // last ~90 days of scans (2026-07-07): pushing the full multi-thousand-page
+  // tail earned "Crawled - currently not indexed" on 1,962 pages in GSC. Fresh
+  // pages get the sitemap's crawl-priority hint; the complete inventory stays
+  // internally linked (and indexable) via /signals/archive.
   let signalPages: MetadataRoute.Sitemap = [];
   try {
-    const tickers = await getSignalTickersForSitemap();
+    const since = new Date(Date.now() - 90 * 86400_000).toISOString().slice(0, 10);
+    const tickers = await getSignalTickersForSitemap(6000, since);
     signalPages = tickers.map(({ ticker, scanDate }) => ({
       url: `${BASE_URL}/signals/${ticker}`,
       lastModified: scanDate || new Date().toISOString(),

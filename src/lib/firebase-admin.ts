@@ -689,34 +689,38 @@ export async function getRecentSignals(
 }
 
 /**
- * Distinct tickers (with the most recent scan_date that contained them) for the
- * sitemap. The /signals/:ticker pages are our largest indexable inventory.
+ * Distinct tickers (with the most recent scan_date that contained them),
+ * newest-first. The /signals/:ticker pages are our largest indexable inventory.
  *
- * The sitemap MUST be a SUPERSET of every indexable detail page. The route
- * (`/signals/[ticker]`) resolves a page for ANY ticker that has at least one
- * doc in `overnight_signals` (via getMostRecentSignalForTicker) and 404s only
- * when none exists. The previous per-date bull/bear loop capped at `perDate`
- * per direction and only walked the most-recent N scan dates, so tickers that
- * ranked below the cap, or whose only signal predated the window, stayed live
- * + indexable yet dropped out of the sitemap (AMD/ABBV/AVGO/CMG/JPM were all
- * missing). We now enumerate the collection directly: one ordered scan over
- * `overnight_signals` (newest scan_date first), deduped to the most-recent
- * scan per ticker. That makes "in the sitemap" == "the route would render an
- * indexable page", which is the definition of indexable from the route's own
- * 404 logic (any ticker with a doc → 200; none → notFound).
+ * Two consumers, two windows (design changed 2026-07-07):
+ * - sitemap.ts passes `sinceDate` (~90 days): GSC showed Google crawling the
+ *   full multi-thousand-page tail from the sitemap and declining it
+ *   ("Crawled - currently not indexed", 1,962 pages) — a giant sitemap of
+ *   thin historical pages dilutes crawl priority on a low-authority domain.
+ *   The sitemap is a priority hint, not an inventory list.
+ * - /signals/archive calls it unfiltered: the FULL inventory stays one
+ *   internal link from a hub page, so older pages remain live, indexable,
+ *   and discoverable through real links rather than sitemap-only orphans.
+ * Every indexable detail page is therefore reachable via sitemap OR the
+ * archive hub (the route 404s any ticker with no doc, so archive == the
+ * complete set of pages that resolve).
  *
  * Efficiency: a single bounded query (`maxDocs`, default 6000) ordered by
  * scan_date desc — first-seen-per-ticker is therefore the most recent scan, so
- * no in-memory date compare is needed. Resilience: the existing try/catch still
- * returns [] on any failure so the sitemap build never blocks.
+ * no in-memory date compare is needed. `sinceDate` is a range filter on the
+ * same field as the orderBy (no composite index needed). Resilience: the
+ * try/catch returns [] on any failure so the sitemap build never blocks.
  */
 export async function getSignalTickersForSitemap(
-  maxDocs: number = 6000
+  maxDocs: number = 6000,
+  sinceDate?: string
 ): Promise<Array<{ ticker: string; scanDate: string }>> {
   noStore();
   try {
-    const snapshot = await getDb().collection('overnight_signals')
-      .orderBy('scan_date', 'desc')
+    let query = getDb().collection('overnight_signals')
+      .orderBy('scan_date', 'desc');
+    if (sinceDate) query = query.where('scan_date', '>=', sinceDate);
+    const snapshot = await query
       .limit(maxDocs)
       .get();
     const seen = new Map<string, string>(); // ticker -> most-recent scanDate (first seen wins)

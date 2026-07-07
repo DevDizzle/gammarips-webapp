@@ -63,6 +63,7 @@ export default async function SignalsPage() {
             <Link href="/how-it-works" className="text-primary hover:underline">How the scan works →</Link>
             <Link href="/scorecard" className="text-primary hover:underline">Track record →</Link>
             <Link href="/reports" className="text-primary hover:underline">Daily reports →</Link>
+            <Link href="/signals/archive" className="text-primary hover:underline">Full signal archive →</Link>
           </div>
         </div>
 

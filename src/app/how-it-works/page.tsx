@@ -102,7 +102,7 @@ export default function HowItWorksPage() {
         <div className="mt-6 rounded-lg border bg-card/50 p-5 space-y-3">
           <h3 className="font-bold font-headline text-lg">The conviction score, in plain English</h3>
           <p className="text-sm text-muted-foreground">
-            The score is a checklist, not a model. Every night, for every stock, the scanner asks five plain questions about where option money went. Each yes is a point, a strong yes is two:
+            The score is a checklist, not a model. Every night, for every stock, the scanner asks five plain questions about where option money went. Each yes is a point, a strong yes is usually two:
           </p>
           <ul className="space-y-1.5 text-sm text-muted-foreground list-disc list-outside ml-4">
             <li><strong className="text-foreground">One-sided money</strong> &mdash; option dollars piled onto one side (calls way over puts).</li>

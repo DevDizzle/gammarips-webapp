@@ -56,7 +56,7 @@ export default async function LandingPage() {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": report?.title || summary?.headline || "Today's curated options-flow pool",
-    "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "Overnight options flow signals explicitly ranked by conviction.",
+    "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "Overnight options-flow signals — the curated, conviction-scored bullish pool.",
     "url": "https://gammarips.com",
     "publisher": {
       "@type": "Organization",

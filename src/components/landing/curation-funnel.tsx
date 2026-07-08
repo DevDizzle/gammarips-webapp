@@ -116,7 +116,8 @@ export function CurationFunnel() {
                   <div className="px-4 pb-4 text-sm text-muted-foreground space-y-3">
                     <p>
                       Five plain questions about last night&apos;s options
-                      activity. Each yes is a point, a strong yes is two:
+                      activity. Each yes is a point, a strong yes is usually
+                      two:
                     </p>
                     <ul className="space-y-1.5 list-disc list-outside ml-4">
                       <li>

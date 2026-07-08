@@ -40,7 +40,7 @@ const filters = [
   {
     name: 'overnight_score ≥ 4',
     where: 'enrichment-trigger',
-    why: 'Deterministic premium-flow flags (call/put dollar skew, Vol/OI, active strikes, new positioning, divergence) sum to a base score, and a sector-cluster boost can lift it — capped at 10. The floor was raised from 1 to 4 on 2026-06-05 to drop the proven-weak low-score dregs. It is a floor, not a ceiling — we deliberately do not cap the top, because the tournament does the discriminating from here.',
+    why: 'Deterministic premium-flow flags (call/put dollar skew, Vol/OI, active strikes, new positioning, price momentum, plus a divergence bonus) sum to a base score, and a sector-cluster boost can lift it — capped at 10. The floor was raised from 1 to 4 on 2026-06-05 to drop the proven-weak low-score dregs. It is a floor, not a ceiling — we deliberately do not cap the top, because the tournament does the discriminating from here.',
   },
   {
     name: 'directional UOA > $500K',

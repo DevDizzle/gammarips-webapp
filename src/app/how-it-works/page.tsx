@@ -83,7 +83,7 @@ export default function HowItWorksPage() {
           <Card className="bg-card/50">
             <CardContent className="p-5">
               <h3 className="font-bold font-headline text-lg">Overnight score &ge; 4</h3>
-              <p className="text-sm text-muted-foreground mt-1">The scanner&apos;s internal conviction score must clear a floor that combines positioning size, strike breadth, Vol/OI, and directional imbalance. A floor, not a ceiling &mdash; the tournament does the discriminating from here.</p>
+              <p className="text-sm text-muted-foreground mt-1">The scanner&apos;s internal conviction score must clear a floor that combines positioning size, strike breadth, Vol/OI, and directional imbalance. A floor, not a ceiling &mdash; the tournament does the discriminating from here. Decoded in plain English below.</p>
             </CardContent>
           </Card>
           <Card className="bg-card/50">
@@ -98,6 +98,25 @@ export default function HowItWorksPage() {
               <p className="text-sm text-muted-foreground mt-1">Bullish calls only &mdash; a hard gate since 2026-06-11. The pool is then delta-edge-ranked to the ~50 strongest bullish setups.</p>
             </CardContent>
           </Card>
+        </div>
+        <div className="mt-6 rounded-lg border bg-card/50 p-5 space-y-3">
+          <h3 className="font-bold font-headline text-lg">The conviction score, in plain English</h3>
+          <p className="text-sm text-muted-foreground">
+            The score is a checklist, not a model. Every night, for every stock, the scanner asks five plain questions about where option money went. Each yes is a point, a strong yes is usually two:
+          </p>
+          <ul className="space-y-1.5 text-sm text-muted-foreground list-disc list-outside ml-4">
+            <li><strong className="text-foreground">One-sided money</strong> &mdash; option dollars piled onto one side (calls way over puts).</li>
+            <li><strong className="text-foreground">New money</strong> &mdash; today&apos;s trading dwarfs the positions already on the books. Fresh bets, not old ones adjusting.</li>
+            <li><strong className="text-foreground">Built like an institution</strong> &mdash; buying spread across several strikes, not one lotto ticket.</li>
+            <li><strong className="text-foreground">Real size</strong> &mdash; $500K+ of fresh premium on that side.</li>
+            <li><strong className="text-foreground">The stock moved too</strong> &mdash; price confirmed with a real move on the day.</li>
+          </ul>
+          <p className="text-sm text-muted-foreground">
+            Small bonuses when smart money fades the crowd (heavy call buying on a red day) or a whole industry lights up the same direction at once.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            <strong className="text-foreground">Reading it:</strong> 4&ndash;5 means enough independent evidence to make the pool. 6&ndash;7 means most of the checklist fired. 8&ndash;10 means everything lit up &mdash; rare, and often it means the story is already public. The score counts evidence of positioning; it&apos;s not a prediction, and higher isn&apos;t automatically better. That&apos;s why 4 is a floor, not a ranking.
+          </p>
         </div>
         <p className="text-muted-foreground mt-6 leading-relaxed">
           Whatever clears the bar is enriched with news context, technical levels, and a recommended contract &mdash; the ~50 bullish setups are published to <Link href="/signals" className="text-primary hover:underline">/signals</Link>.

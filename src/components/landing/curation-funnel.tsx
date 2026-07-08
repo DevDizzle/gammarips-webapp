@@ -8,6 +8,8 @@ import { ArrowRight } from 'lucide-react';
 // must stay in lockstep with /how-it-works — everything shown is already
 // public there. Flavor, not recipe: the exact delta band and edge-rank
 // weights stay on the MCP. The funnel ends at the POOL, never the pick.
+// The score key below (plain-English checklist, no exact sub-thresholds)
+// mirrors the "conviction score, in plain English" section on /how-it-works.
 const stages = [
   {
     num: '5,230+',
@@ -29,6 +31,7 @@ const stages = [
     bar: 16,
     title: 'An institutional footprint, or out',
     desc: 'Conviction score of 4+ and over $500K in net directional premium — real positioning, not one weird trade. Bullish only, then ranked by the few features that actually separated winners from losers across 1,375 measured trades.',
+    scoreKey: true,
   },
   {
     num: 'The pool',
@@ -46,7 +49,7 @@ const recordGroups: { group: string; rows: [string, string, string][] }[] = [
   {
     group: 'The flow',
     rows: [
-      ['overnight_score', '7', '← the bar is 4; this is what “high-signal” means'],
+      ['overnight_score', '7', '← the bar is 4; the key above decodes it'],
       ['call_dollar_volume', '$6.8M', '← call premium traded overnight'],
       ['flow_intent', 'opening_sweep', '← fresh position, not a hedge unwind'],
     ],
@@ -105,6 +108,61 @@ export function CurationFunnel() {
                 {stage.title}
               </h3>
               <p className="text-sm text-muted-foreground mt-1 max-w-xl">{stage.desc}</p>
+              {stage.scoreKey && (
+                <details className="mt-3 max-w-xl rounded-lg border bg-card/50">
+                  <summary className="cursor-pointer select-none px-4 py-2.5 text-sm font-semibold text-primary">
+                    What&apos;s a conviction score? The 30-second version
+                  </summary>
+                  <div className="px-4 pb-4 text-sm text-muted-foreground space-y-3">
+                    <p>
+                      Five plain questions about last night&apos;s options
+                      activity. Each yes is a point, a strong yes is usually
+                      two:
+                    </p>
+                    <ul className="space-y-1.5 list-disc list-outside ml-4">
+                      <li>
+                        <strong className="text-foreground">One-sided money</strong>{' '}
+                        &mdash; option dollars piled onto one side (calls way
+                        over puts).
+                      </li>
+                      <li>
+                        <strong className="text-foreground">New money</strong>{' '}
+                        &mdash; today&apos;s trading dwarfs the positions
+                        already on the books. Fresh bets, not old ones
+                        adjusting.
+                      </li>
+                      <li>
+                        <strong className="text-foreground">Built like an institution</strong>{' '}
+                        &mdash; buying spread across several strikes, not one
+                        lotto ticket.
+                      </li>
+                      <li>
+                        <strong className="text-foreground">Real size</strong>{' '}
+                        &mdash; $500K+ of fresh premium on that side.
+                      </li>
+                      <li>
+                        <strong className="text-foreground">The stock moved too</strong>{' '}
+                        &mdash; price confirmed with a real move on the day.
+                      </li>
+                    </ul>
+                    <p>
+                      Small bonuses when smart money fades the crowd (heavy
+                      call buying on a red day) or a whole industry lights up
+                      the same direction at once.
+                    </p>
+                    <p>
+                      <strong className="text-foreground">Reading it:</strong>{' '}
+                      4&ndash;5 means enough independent evidence to make the
+                      pool. 6&ndash;7 means most of the checklist fired.
+                      8&ndash;10 means everything lit up &mdash; rare, and
+                      often it means the story is already public. The score
+                      counts evidence of positioning; it&apos;s not a
+                      prediction, and higher isn&apos;t automatically better.
+                      That&apos;s why 4 is a floor, not a ranking.
+                    </p>
+                  </div>
+                </details>
+              )}
             </div>
           </div>
         ))}
@@ -149,7 +207,7 @@ export function CurationFunnel() {
           <p className="text-xs text-muted-foreground text-center px-5 py-3 mt-2 border-t">
             Illustrative values, not a live signal and not a recommendation.
             Every name in the pool carries 30+ fields like these &mdash;
-            leakage-checked before anything sees them.
+            leakage-checked (no hindsight data) before anything sees them.
           </p>
         </CardContent>
       </Card>

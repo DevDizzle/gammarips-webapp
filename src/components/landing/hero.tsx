@@ -15,18 +15,18 @@ export function Hero() {
       </h1>
       <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
         GammaRips scans 5,000+ tickers overnight for unusual options flow and
-        curates it down to a small, high-signal pool — served to Claude,
+        curates it down to a small, high-signal pool, served to Claude,
         ChatGPT, or your own agent over MCP. Your agent analyzes. You decide.
       </p>
       <p className="text-sm text-muted-foreground mb-8">
-        5,230 tickers scanned nightly · curated bullish pool · every number leakage-checked · public paper-traded receipts
+        5,230 tickers scanned nightly · curated bullish pool · no hindsight data · public paper-traded receipts
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <Button asChild size="lg">
           <Link href="/developers">Connect Your Agent &rarr;</Link>
         </Button>
         <Button asChild variant="outline" size="lg">
-          <Link href="/signals">Browse Today&apos;s Pool — Free</Link>
+          <Link href="/signals">Browse Today&apos;s Pool, Free</Link>
         </Button>
       </div>
     </section>

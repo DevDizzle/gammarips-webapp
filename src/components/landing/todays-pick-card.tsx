@@ -6,23 +6,23 @@ import { TrendingUp, TrendingDown, AlertCircle, ArrowRight } from "lucide-react"
 
 const SKIP_REASON_COPY: Record<string, string> = {
   no_candidates_passed_gates:
-    "Nothing made it into today's pool — no signal cleared the enrichment bar (overnight score ≥ 4 with directional unusual-options flow above $500K). On empty days the engine stays out — routine over FOMO.",
+    "Nothing made it into today's pool. No signal cleared the bar (overnight score of 4+ with over $500K bet in one direction). On empty days the engine stays out. Routine over FOMO.",
   regime_fail_closed:
     "Regime data was unavailable (VIX or VIX3M missing). Fail-closed: no trade today.",
   vix_backwardation:
-    "VIX closed above VIX3M today. Backwardation regime — the engine skips these days because long-premium setups fail disproportionately here.",
+    "VIX closed above VIX3M today, meaning short-term fear is running above long-term fear. The engine skips these days because buying options fails disproportionately here.",
   earnings_overlap_all_candidates:
-    "Every candidate reports earnings during the same-day hold window. The engine skips these days — holding long single-leg options through an earnings print is a literature-documented loss pattern (De Silva et al. 2026, RoF).",
+    "Every candidate reports earnings during the same-day hold window. The engine skips these days: holding options through an earnings report is a well-documented way to lose money (De Silva et al. 2026).",
   earnings_calendar_unavailable:
-    "Earnings calendar unavailable — engine is standing down (fail-closed). The no-options-through-earnings rule is hard; we skip rather than guess.",
+    "Earnings calendar unavailable, so the engine is standing down (fail-closed). The no-options-through-earnings rule is hard; we skip rather than guess.",
   v5_4_unavailable:
-    "The selection tournament couldn't complete (engine error). It fails closed rather than guess — no trade today.",
+    "The selection tournament couldn't complete (engine error). It fails closed rather than guess. No trade today.",
   v5_4_out_of_set:
-    "The tournament returned a pick outside today's eligible pool. Fail-closed — no trade today.",
+    "The tournament returned a pick outside today's eligible pool. Fail-closed. No trade today.",
   v5_4_mass_leakage:
-    "Today's candidates were held back by the leakage safeguard. The engine fails closed rather than risk a contaminated pick — no trade today.",
+    "Today's candidates were held back by the leakage safeguard. The engine fails closed rather than risk a contaminated pick. No trade today.",
   market_holiday:
-    "U.S. markets are closed today (exchange holiday). The engine is standing down — no signal. The next pick posts on the following trading day.",
+    "U.S. markets are closed today (exchange holiday). The engine is standing down, no signal. The next pick posts on the following trading day.",
 };
 
 function formatEffectiveAt(isoString: string | null): string {

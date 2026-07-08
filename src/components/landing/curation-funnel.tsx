@@ -16,29 +16,29 @@ const stages = [
     unit: 'tickers',
     bar: 100,
     title: 'The whole market goes in',
-    desc: '23:00 ET, every optionable U.S. equity. The night’s full options tape — volume, open interest, dollar flow — scored while you sleep.',
+    desc: 'Every night at 11 PM ET we scan every U.S. stock that trades options. The day’s options activity gets scored while you sleep: how much traded, how big the bets were, and which side the money took.',
   },
   {
     num: '~300',
     unit: 'unusual',
     bar: 44,
-    title: 'An institutional footprint, or out',
-    desc: 'Conviction score of 4+ and over $500K bet in one direction — several independent signs of real positioning, not one weird trade.',
+    title: 'Big money showed up, or it’s out',
+    desc: 'A stock survives this cut only with a conviction score of 4+ and over $500K bet in one direction. That means several independent signs of big money taking a position, not one weird trade.',
     scoreKey: true,
   },
   {
     num: '~50',
     unit: 'strongest',
     bar: 16,
-    title: 'Bullish only — then the strongest 50',
-    desc: 'A ranking, not another filter. Bullish names are sorted by the contract sweet spot that separated winners from losers across 1,375 measured trades, plus a tilt toward stocks already moving — and the top 50 make the pool. Hard cap.',
+    title: 'Bullish only, then the strongest 50',
+    desc: 'A ranking, not another filter. We keep the bullish names and sort them by the one trait that separated winners from losers across 1,375 measured trades: a contract in the middle ground, not a cheap lottery ticket and not an expensive sure thing. Stocks already moving up get a boost. The top 50 make the pool. Hard cap.',
   },
   {
     num: 'The pool',
     unit: 'by the open',
     bar: 16,
-    title: 'Shipped by the open — then the rails run',
-    desc: 'The ~50 survivors ARE the pool — free to browse, structured for agents. At ~09:50 the morning rails sweep it: earnings that day, a broken volatility regime (VIX above VIX3M), or too little live liquidity, and the engine’s own validation cohort won’t touch the name. Skipping is correct behavior.',
+    title: 'Live by the open, then the safety checks',
+    desc: 'Those ~50 survivors ARE the pool: free to browse, structured for agents. Just before trading starts we check every name for same-day earnings, a stressed market (short-term fear running above long-term fear), and thin live trading. Our own paper-trading validation skips any name that fails. Some days the right move is no trade.',
     final: true,
   },
 ];
@@ -50,7 +50,7 @@ const recordGroups: { group: string; rows: [string, string, string][] }[] = [
     group: 'The flow',
     rows: [
       ['overnight_score', '7', '← the bar is 4; the key above decodes it'],
-      ['call_dollar_volume', '$6.8M', '← call premium traded overnight'],
+      ['call_dollar_volume', '$6.8M', '← call dollars traded overnight'],
       ['flow_intent', 'opening_sweep', '← fresh position, not a hedge unwind'],
     ],
   },
@@ -58,7 +58,7 @@ const recordGroups: { group: string; rows: [string, string, string][] }[] = [
     group: 'The contract the flow points at',
     rows: [
       ['recommended_contract', 'AVGO 08/21 $310C', ''],
-      ['recommended_delta', '0.34', '← inside the band the research favors'],
+      ['recommended_delta', '0.34', '← in the middle ground the research favors'],
       ['risk_reward_ratio', '1.18', ''],
     ],
   },
@@ -84,7 +84,7 @@ export function CurationFunnel() {
       </h2>
       <p className="text-sm md:text-base text-muted-foreground text-center max-w-2xl mx-auto mb-10">
         Four cuts between the close and the open. Every cut is mechanical and
-        the thresholds are public &mdash; no discretion, no black box.
+        the thresholds are public. No discretion, no black box.
       </p>
 
       {/* The funnel */}
@@ -121,41 +121,40 @@ export function CurationFunnel() {
                     </p>
                     <ul className="space-y-1.5 list-disc list-outside ml-4">
                       <li>
-                        <strong className="text-foreground">One-sided money</strong>{' '}
-                        &mdash; option dollars piled onto one side (calls way
-                        over puts).
+                        <strong className="text-foreground">One-sided money.</strong>{' '}
+                        Option dollars piled onto one side (calls way over
+                        puts).
                       </li>
                       <li>
-                        <strong className="text-foreground">New money</strong>{' '}
-                        &mdash; today&apos;s trading dwarfs the positions
-                        already on the books. Fresh bets, not old ones
-                        adjusting.
+                        <strong className="text-foreground">New money.</strong>{' '}
+                        Today&apos;s trading dwarfs the positions already on
+                        the books. Fresh bets, not old ones adjusting.
                       </li>
                       <li>
-                        <strong className="text-foreground">Built like an institution</strong>{' '}
-                        &mdash; buying spread across several strikes, not one
-                        lotto ticket.
+                        <strong className="text-foreground">Built like an institution.</strong>{' '}
+                        Buying spread across several strikes, not one lotto
+                        ticket.
                       </li>
                       <li>
-                        <strong className="text-foreground">Real size</strong>{' '}
-                        &mdash; $500K+ of fresh premium on that side.
+                        <strong className="text-foreground">Real size.</strong>{' '}
+                        At least $500K of new money on that side.
                       </li>
                       <li>
-                        <strong className="text-foreground">The stock moved too</strong>{' '}
-                        &mdash; price confirmed with a real move on the day.
+                        <strong className="text-foreground">The stock moved too.</strong>{' '}
+                        The price confirmed with a real move on the day.
                       </li>
                     </ul>
                     <p>
-                      Small bonuses when smart money fades the crowd (heavy
-                      call buying on a red day) or a whole industry lights up
-                      the same direction at once.
+                      Small bonuses when smart money bets against the crowd
+                      (heavy call buying on a red day) or a whole industry
+                      lights up the same direction at once.
                     </p>
                     <p>
                       <strong className="text-foreground">Reading it:</strong>{' '}
-                      4&ndash;5 means enough independent evidence to clear the
-                      bar. 6&ndash;7 means most of the checklist fired.
-                      8&ndash;10 means everything lit up &mdash; rare, and
-                      often it means the story is already public. The score
+                      4 or 5 means enough independent evidence to clear the
+                      bar. 6 or 7 means most of the checklist fired. 8 to 10
+                      means everything lit up at once. That&apos;s rare, and
+                      it often means the story is already public. The score
                       counts evidence of positioning; it&apos;s not a
                       prediction, and higher isn&apos;t automatically better.
                       That&apos;s why 4 is a floor, not a ranking.
@@ -206,8 +205,8 @@ export function CurationFunnel() {
           </div>
           <p className="text-xs text-muted-foreground text-center px-5 py-3 mt-2 border-t">
             Illustrative values, not a live signal and not a recommendation.
-            Every name in the pool carries 30+ fields like these &mdash;
-            leakage-checked (no hindsight data) before anything sees them.
+            Every name in the pool carries 30+ fields like these, all checked
+            so nothing includes hindsight data.
           </p>
         </CardContent>
       </Card>
@@ -215,7 +214,7 @@ export function CurationFunnel() {
       <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
         <Button asChild size="lg">
           <Link href="/signals">
-            Browse Today&apos;s Pool &mdash; Free <ArrowRight className="ml-2 h-5 w-5" />
+            Browse Today&apos;s Pool, Free <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
         </Button>
         <Button asChild variant="outline" size="lg">

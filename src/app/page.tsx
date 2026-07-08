@@ -14,16 +14,16 @@ import { CurationFunnel } from "@/components/landing/curation-funnel";
 export const revalidate = 60; // keep the daily pool summary fresh without a full static rebuild
 
 export const metadata: Metadata = {
-  title: "GammaRips — Options-flow data for AI agents",
-  description: "Stop asking AI for stock picks. Start giving it real data. GammaRips scans 5,000+ tickers overnight for unusual options activity and curates it to a small high-signal pool — browse it free, or connect Claude, ChatGPT, or your own agent over MCP for the full data layer. Your agent analyzes. You decide. Paper-trading data, educational only.",
+  title: "GammaRips | Options-flow data for AI agents",
+  description: "Stop asking AI for stock picks. Start giving it real data. GammaRips scans 5,000+ tickers overnight for unusual options activity and curates it to a small high-signal pool. Browse it free, or connect Claude, ChatGPT, or your own agent over MCP for the full data layer. Your agent analyzes. You decide. Paper-trading data, educational only.",
   alternates: {
     canonical: '/',
   },
 };
 
 const pillars = [
-  { icon: <Scan className="h-6 w-6 text-primary" />, title: 'The Curated Pool', desc: 'The market prints hundreds of unusual-flow names a night. The engine scores and cuts them to a pool your agent can actually reason over — flow, technicals, and context attached.' },
-  { icon: <LineChart className="h-6 w-6 text-primary" />, title: 'The Opportunity Surface', desc: 'For every historical setup: what was actually possible. Peak excursion, worst drawdown, the full path — wins and losses. Your agent learns how these contracts really behave.' },
+  { icon: <Scan className="h-6 w-6 text-primary" />, title: 'The Curated Pool', desc: 'The market prints hundreds of unusual-flow names a night. The engine scores and cuts them to a pool your agent can actually reason over, with flow, technicals, and context attached.' },
+  { icon: <LineChart className="h-6 w-6 text-primary" />, title: 'The Opportunity Surface', desc: 'For every historical setup: what was actually possible. The best it hit, the worst it fell, the full path. Wins and losses both. Your agent learns how these contracts really behave.' },
   { icon: <Bot className="h-6 w-6 text-primary" />, title: 'Your Agent, Your Conclusion', desc: 'There is no pick endpoint. On purpose. 23 MCP tools return data and methodology; your agent reasons to its own contract. A thousand users, a thousand different conclusions.' },
 ];
 
@@ -56,7 +56,7 @@ export default async function LandingPage() {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": report?.title || summary?.headline || "Today's curated options-flow pool",
-    "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "Overnight options-flow signals — the curated, conviction-scored bullish pool.",
+    "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "Overnight options-flow signals: the curated, conviction-scored bullish pool.",
     "url": "https://gammarips.com",
     "publisher": {
       "@type": "Organization",
@@ -250,9 +250,9 @@ export default async function LandingPage() {
             <Link href="/scorecard" className="text-primary hover:underline">
               publish the ledger
             </Link>
-            . The pool is where opportunity concentrates —
-            the excursion data proves the winners are in there — but which
-            ones, and how they&apos;re traded, is analysis. That&apos;s your
+            . The pool is where opportunity concentrates, and the outcome data
+            proves the winners are in there. But which ones, and how
+            they&apos;re traded, is analysis. That&apos;s your
             agent&apos;s job. Anyone who sells you a shortcut past that step is
             selling you a story.
           </p>
@@ -277,8 +277,8 @@ export default async function LandingPage() {
               </div>
               <h2 className="text-2xl font-bold font-headline">The Lab</h2>
               <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-                We run experiments on our own data substrate and publish the
-                results — hypothesis, method, sample size, verdict — including
+                We run experiments on our own data and publish the results
+                (hypothesis, method, sample size, verdict), including
                 the ideas that got killed. It&apos;s how the pool&apos;s
                 methodology earns its keep, in public.
               </p>
@@ -295,7 +295,7 @@ export default async function LandingPage() {
           <BlogTeaserList
             posts={blogPosts}
             heading="From the Blog"
-            subheading="How the engine reads institutional options flow — methodology, research, and plain-English explainers."
+            subheading="How the engine reads institutional options flow: methodology, research, and plain-English explainers."
             limit={3}
           />
         )}

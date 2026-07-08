@@ -17,7 +17,7 @@ const turns = [
   {
     role: 'agent',
     tools: ['get_opportunity_surface', 'query_outcomes'],
-    text: 'Setups like candidate #2 (delta 0.31, momentum-positive, $2.1M directional flow) have historically shown a wide excursion range — strong peaks on the winners, but roughly two-thirds fade without an exit plan. Here are all three with their excursion distributions and the caveats. Which risk profile do you want me to dig into?',
+    text: 'Setups like candidate #2 (delta 0.31, momentum-positive, $2.1M directional flow) have historically shown a wide range of outcomes: strong peaks on the winners, but roughly two-thirds fade without an exit plan. Here are all three with their outcome distributions and the caveats. Which risk profile do you want me to dig into?',
   },
 ];
 
@@ -54,7 +54,7 @@ export function AgentDemo() {
         )}
       </div>
       <p className="text-[11px] text-muted-foreground text-center leading-tight">
-        Illustrative session — not live data, not a recommendation. Your agent
+        Illustrative session. Not live data, not a recommendation. Your agent
         reasons over the real pool and reaches its own conclusions.
       </p>
       <div className="flex justify-center">

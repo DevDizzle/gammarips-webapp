@@ -8,39 +8,39 @@ import {
 export const faqs = [
   {
     question: "What is agentic trading?",
-    answer: "Using an AI agent — Claude, ChatGPT, or one you build — as your own market analyst instead of following someone else's calls. The agent pulls real data, reasons over it, and presents you a decision surface; you keep the judgment and place (or skip) the trade. The catch: agents are only as good as the data they can reach. A chatbot with no market data will happily improvise. GammaRips is the data layer that fixes that for options flow — your agent connects over MCP and reasons over curated, timestamped, leakage-checked data instead of vibes."
+    answer: "Using an AI agent (Claude, ChatGPT, or one you build) as your own market analyst instead of following someone else's calls. The agent pulls real data, reasons over it, and lays out the picture; you keep the judgment and place (or skip) the trade. The catch: agents are only as good as the data they can reach. A chatbot with no market data will happily improvise. GammaRips is the data layer that fixes that for options flow. Your agent connects over MCP and reasons over curated, timestamped data with no hindsight in it, instead of vibes."
   },
   {
     question: "What does GammaRips actually sell?",
-    answer: "Data and tools, not picks. The paid product is MCP access for your AI agent: today's curated options-flow pool in structured form, the opportunity surface for historical setups (how far each contract actually ran, and how far it drew down), a queryable outcome database, regime context, and methodology playbooks — 23 tools in total. Everything human-readable on gammarips.com is free, forever. The $39/mo is the machine connection."
+    answer: "Data and tools, not picks. The paid product is MCP access for your AI agent: today's curated options-flow pool in structured form, the opportunity surface for historical setups (how far each contract actually ran, and how far it drew down), a queryable outcome database, regime context, and methodology playbooks: 29 tools in total. Everything human-readable on gammarips.com is free, forever. The $39/mo is the machine connection."
   },
   {
     question: "Which AI agents work with this?",
-    answer: "Anything that speaks MCP (Model Context Protocol): Claude via connectors or Claude Code, ChatGPT with MCP support, Cursor, or any custom agent using an MCP client library. You add the GammaRips server to your agent's config with your API key, and the 23 tools show up like native capabilities. Setup takes a few minutes; the Developers page has copy-paste instructions."
+    answer: "Anything that speaks MCP (Model Context Protocol): Claude via connectors or Claude Code, ChatGPT with MCP support, Cursor, or any custom agent using an MCP client library. You add the GammaRips server to your agent's config with your API key, and the 29 tools show up like native capabilities. Setup takes a few minutes; the Developers page has copy-paste instructions."
   },
   {
     question: "Why don't you just tell me what to buy?",
-    answer: "Two reasons, and we mean both. First, shared picks get crowded — everyone piling into the same thin options contract destroys the very thing they paid for. Second, our own published data shows that mechanically buying everything the engine surfaces, under a fixed exit rule, loses money. The value isn't a pick — it's the surface a good trade comes from: a small curated pool plus the historical data showing how setups like each one actually behaved. We give your agent that surface. It reasons to its own conclusion, sized to your risk, on your horizon."
+    answer: "Two reasons, and we mean both. First, shared picks get crowded: everyone piling into the same thin options contract destroys the very thing they paid for. Second, our own published data shows that mechanically buying everything the engine surfaces, under a fixed exit rule, loses money. The value isn't a pick. It's the surface a good trade comes from: a small curated pool plus the historical data showing how setups like each one actually behaved. We give your agent that surface. It reasons to its own conclusion, sized to your risk, on your horizon."
   },
   {
     question: "How is the pool curated?",
-    answer: "Every weeknight the engine scans 5,230+ US tickers for unusual options activity. A name needs an overnight score ≥ 4 and directional dollar volume above $500K to be enriched at all. Then a bullish-only gate and a delta-based edge-rank — levers validated on over a thousand historically labeled trades — cut the list to the strongest ~50 setups, each carrying its flow data, technicals, news context, and a recommended contract. Two safety rails sit on top: no names with earnings in the window, and a volatility regime check (VIX ≤ VIX3M). Every candidate is leakage-checked — no field your agent sees contains information that wasn't knowable at scan time."
+    answer: "Every weeknight the engine scans 5,230+ US tickers for unusual options activity. A name needs a conviction score of 4+ and over $500K bet in one direction to survive at all. Then we keep the bullish names and rank them, using levers validated on over a thousand historically measured trades, down to the strongest ~50 setups, each carrying its flow data, technicals, news context, and a recommended contract. Two safety checks sit on top: no names with earnings in the window, and a market-stress check (VIX at or below VIX3M). Every candidate is checked so that nothing your agent sees contains information that wasn't knowable at scan time."
   },
   {
     question: "Where's the track record?",
-    answer: "On the Track Record page, and in the Lab. Every candidate in the pool is tracked to its realized outcome — peak excursion, drawdown, and a fixed-bracket baseline — published as distributions with sample sizes attached, winners and losers counted the same way. We tell you the unflattering part up front: the whole pool bought blindly under a fixed exit is negative. That number is exactly why we sell the data layer and not a pick — the exit is your agent's job."
+    answer: "On the Track Record page, and in the Lab. Every candidate in the pool is tracked to its real outcome (how high it ran, how far it fell, and a fixed-exit baseline), published as distributions with sample sizes attached, winners and losers counted the same way. We tell you the unflattering part up front: the whole pool bought blindly under a fixed exit is negative. That number is exactly why we sell the data layer and not a pick. The exit is your agent's job."
   },
   {
     question: "Is this financial advice?",
-    answer: "No. GammaRips is a data vendor. We publish market data, methodology, and research on a paper-trading basis. We never see your account, never manage money, and never make personalized recommendations — and the MCP deliberately has no 'what should I buy' endpoint. What your agent concludes from the data is your analysis, not our advice. If you want personalized investment advice, work with a licensed advisor."
+    answer: "No. GammaRips is a data vendor. We publish market data, methodology, and research on a paper-trading basis. We never see your account, never manage money, and never make personalized recommendations, and the MCP deliberately has no 'what should I buy' endpoint. What your agent concludes from the data is your analysis, not our advice. If you want personalized investment advice, work with a licensed advisor."
   },
   {
     question: "Can't I just scrape the free site?",
-    answer: "The webapp shows today's pool and reports in human-readable form, and it always will, free. The MCP is a different animal: structured point-in-time data built for machine reasoning, the historical opportunity-surface and outcome databases that never render on a webpage, exit-rule simulation, regime context, and the methodology playbooks — including the bracket-tournament selection pattern your agent can run against its own objective. You could rebuild some of that from scraping. By the time you have, you'll have built a worse version of the thing we sell for $39."
+    answer: "The webapp shows today's pool and reports in human-readable form, and it always will, free. The MCP is a different animal: structured point-in-time data built for machine reasoning, the historical opportunity-surface and outcome databases that never render on a webpage, exit-rule simulation, regime context, and the methodology playbooks, including the bracket-tournament selection pattern your agent can run against its own objective. You could rebuild some of that from scraping. By the time you have, you'll have built a worse version of the thing we sell for $39."
   },
   {
     question: "Who runs this?",
-    answer: "Evan Parra (founder, ML engineer, data architect) built the engine. The nightly pipeline — scanning, scoring, enriching, publishing — runs autonomously, and every decision is logged to BigQuery. The Lab publishes experiments run on the engine's own data, including the failed ones. Read more on the About page."
+    answer: "Evan Parra (founder, ML engineer, data architect) built the engine. The nightly pipeline (scanning, scoring, enriching, publishing) runs autonomously, and every decision is logged to BigQuery. The Lab publishes experiments run on the engine's own data, including the failed ones. Read more on the About page."
   },
   {
     question: "What happened to the WhatsApp pick subscription?",
@@ -48,7 +48,7 @@ export const faqs = [
   },
   {
     question: "What happens if I cancel?",
-    answer: "Your agent's MCP access ends with your billing cycle — no retention tricks. Everything human-readable stays free forever: the daily pool, reports, scorecard, methodology, blog, and Lab. Come back whenever your agent misses the data."
+    answer: "Your agent's MCP access ends with your billing cycle. No retention tricks. Everything human-readable stays free forever: the daily pool, reports, scorecard, methodology, blog, and Lab. Come back whenever your agent misses the data."
   },
 ];
 

@@ -373,6 +373,10 @@ export interface LifeDistributionAgg {
   expiry_median: number | null;
   peak_ge_40: number;           // contracts whose life peak touched >= +40%
   peak_ge_100: number;          // ... >= +100%
+  n_peak_day?: number;          // contracts with a peak-timing label
+  peak_day_1_3?: number;        // peak hit on trading day 1-3 (1 = surfacing morning)
+  peak_day_4_12?: number;       // ... day 4-12
+  peak_day_13_plus?: number;    // ... day 13 or later
   peak_buckets: LifeBucket[];   // 7 fixed-edge buckets, ascending
   expiry_buckets: LifeBucket[]; // 7 fixed-edge buckets, ascending (loss -> gain)
 }

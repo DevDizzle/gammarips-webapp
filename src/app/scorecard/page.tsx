@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { FlaskConical, LineChart, Scale, Beaker } from 'lucide-react';
+import { FlaskConical } from 'lucide-react';
 import { getPoolOutcomes } from '@/lib/firebase-admin';
 import { LifeDistribution } from '@/components/scorecard/life-distribution';
 
@@ -49,14 +48,12 @@ export default async function TrackRecordPage() {
       <header className="text-center">
         <p className="text-sm font-semibold uppercase tracking-wider text-primary">Track Record</p>
         <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-          Surfaced to expiration.<br />Every contract, the whole ride.
+          We track every contract to the end.
         </h1>
-        <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-          No win rate, no average return, no exit rule pretending to be the truth.
-          For every contract the engine has ever surfaced: what its price did from
-          that morning until the contract expired — the peaks, and what happens to
-          people who never leave. Winners and losers counted the same way, nothing
-          edited after the fact.
+        <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+          Every morning we surface about 50 contracts. We follow every one from
+          that morning until it expires — nothing gets edited out. Here is what
+          actually happens to them.
         </p>
       </header>
 
@@ -66,83 +63,24 @@ export default async function TrackRecordPage() {
 
       <Separator className="my-12 sm:my-16" />
 
-      {/* How to read these numbers */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-card/50">
-          <CardContent className="p-5 space-y-2">
-            <LineChart className="h-5 w-5 text-primary" />
-            <h2 className="font-bold font-headline">The opportunity surface</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              For each contract we record how far it actually ran (peak) and how far
-              it fell (drawdown) over its <em>entire life</em> — from the morning it
-              was surfaced to the day it expired. That&apos;s profit{' '}
-              <em>potential</em> — what was there for someone with the right exit —
-              not a return anyone earned. The drawdowns and the hold-to-expiry floor
-              are published with equal prominence.
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="bg-card/50">
-          <CardContent className="p-5 space-y-2">
-            <Scale className="h-5 w-5 text-primary" />
-            <h2 className="font-bold font-headline">The honest baseline</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              &ldquo;Blind-buy baseline&rdquo; answers the question every visitor
-              should ask: what if you just bought everything? Under a fixed same-day
-              bracket, the whole pool{' '}
-              <strong className="text-foreground">
-                {/* The inline number is sanctioned ONLY while negative — if the
-                    recompute ever crosses >= 0 this sentence needs a human, so
-                    the automatic rendering gates on the sign. */}
-                loses{outcomes?.bracket_avg_return != null && outcomes.bracket_avg_return < 0
-                  ? ` (${Math.round(outcomes.bracket_avg_return * 1000) / 10}% per contract on average)`
-                  : ''}
-              </strong>
-              . We say that on purpose — it&apos;s why we sell data instead of
-              picks, and why selection and exits are your agent&apos;s job, not a
-              subscription&apos;s promise.
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="bg-card/50">
-          <CardContent className="p-5 space-y-2">
-            <Beaker className="h-5 w-5 text-primary" />
-            <h2 className="font-bold font-headline">The validation cohort</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Separately, a small paper-traded cohort exercises the engine&apos;s
-              selection methodology every market day under fixed mechanical rules.
-              It exists to test the machinery against reality — a measurement
-              instrument, not a strategy — and per our{' '}
-              <Link href="/disclosures" className="text-primary hover:underline">
-                disclosures
-              </Link>{' '}
-              we make no marketing claims from small cohorts.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
-
-      <Separator className="my-12 sm:my-16" />
-
       <section className="text-center space-y-4">
         <div className="flex justify-center">
           <FlaskConical className="h-6 w-6 text-primary" />
         </div>
         <h2 className="text-2xl font-bold font-headline">
-          The research these numbers power
+          Want to work this data?
         </h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          This outcome record is the substrate the Lab runs experiments on — including
-          the ones that killed our own ideas — and the same data your agent can query
-          over MCP: per-contract excursions, cohort aggregates, and exit-rule
-          simulation across the full history.
+        <p className="text-muted-foreground max-w-xl mx-auto">
+          Everything on this page — and the contract-by-contract detail behind
+          it — is what your AI agent gets over MCP. Our Lab publishes the
+          experiments we run on it, including the ideas that failed.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
           <Button asChild size="lg">
-            <Link href="/lab">Read the Lab</Link>
+            <Link href="/developers">Put your agent on this data</Link>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link href="/developers">Put your agent on this data</Link>
+            <Link href="/lab">Read the Lab</Link>
           </Button>
         </div>
       </section>

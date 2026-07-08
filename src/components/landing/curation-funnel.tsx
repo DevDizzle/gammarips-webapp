@@ -49,7 +49,7 @@ const recordGroups: { group: string; rows: [string, string, string][] }[] = [
   {
     group: 'The flow',
     rows: [
-      ['overnight_score', '7', '← the bar is 4; the key above decodes it'],
+      ['overnight_score', '7', '← the bar is 4; scoring explained in How It Works'],
       ['call_dollar_volume', '$6.8M', '← call dollars traded overnight'],
       ['flow_intent', 'opening_sweep', '← fresh position, not a hedge unwind'],
     ],
@@ -109,58 +109,14 @@ export function CurationFunnel() {
               </h3>
               <p className="text-sm text-muted-foreground mt-1 max-w-xl">{stage.desc}</p>
               {stage.scoreKey && (
-                <details className="mt-3 max-w-xl rounded-lg border bg-card/50">
-                  <summary className="cursor-pointer select-none px-4 py-2.5 text-sm font-semibold text-primary">
-                    What&apos;s a conviction score? The 30-second version
-                  </summary>
-                  <div className="px-4 pb-4 text-sm text-muted-foreground space-y-3">
-                    <p>
-                      Five plain questions about last night&apos;s options
-                      activity. Each yes is a point, a strong yes is usually
-                      two:
-                    </p>
-                    <ul className="space-y-1.5 list-disc list-outside ml-4">
-                      <li>
-                        <strong className="text-foreground">One-sided money.</strong>{' '}
-                        Option dollars piled onto one side (calls way over
-                        puts).
-                      </li>
-                      <li>
-                        <strong className="text-foreground">New money.</strong>{' '}
-                        Today&apos;s trading dwarfs the positions already on
-                        the books. Fresh bets, not old ones adjusting.
-                      </li>
-                      <li>
-                        <strong className="text-foreground">Built like an institution.</strong>{' '}
-                        Buying spread across several strikes, not one lotto
-                        ticket.
-                      </li>
-                      <li>
-                        <strong className="text-foreground">Real size.</strong>{' '}
-                        At least $500K of new money on that side.
-                      </li>
-                      <li>
-                        <strong className="text-foreground">The stock moved too.</strong>{' '}
-                        The price confirmed with a real move on the day.
-                      </li>
-                    </ul>
-                    <p>
-                      Small bonuses when smart money bets against the crowd
-                      (heavy call buying on a red day) or a whole industry
-                      lights up the same direction at once.
-                    </p>
-                    <p>
-                      <strong className="text-foreground">Reading it:</strong>{' '}
-                      4 or 5 means enough independent evidence to clear the
-                      bar. 6 or 7 means most of the checklist fired. 8 to 10
-                      means everything lit up at once. That&apos;s rare, and
-                      it often means the story is already public. The score
-                      counts evidence of positioning; it&apos;s not a
-                      prediction, and higher isn&apos;t automatically better.
-                      That&apos;s why 4 is a floor, not a ranking.
-                    </p>
-                  </div>
-                </details>
+                <p className="text-sm mt-2">
+                  <Link
+                    href="/how-it-works#conviction-score"
+                    className="font-semibold text-primary hover:underline"
+                  >
+                    What&apos;s a conviction score? The 30-second version &rarr;
+                  </Link>
+                </p>
               )}
             </div>
           </div>

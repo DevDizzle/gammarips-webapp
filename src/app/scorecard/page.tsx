@@ -5,19 +5,19 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { FlaskConical, LineChart, Scale, Beaker } from 'lucide-react';
 import { getPoolOutcomes } from '@/lib/firebase-admin';
-import { PoolOutcomesTiles } from '@/components/landing/pool-outcomes-tiles';
+import { LifeDistribution } from '@/components/scorecard/life-distribution';
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: 'Track Record — Every Candidate, Tracked',
+  title: 'Track Record — Surfaced to Expiration, Every Contract',
   description:
-    'The full GammaRips pool outcome record: every candidate the engine surfaces is tracked to its realized outcome — peak excursions, drawdowns, and the honest blind-buy baseline (which loses). Distributions with sample sizes, not a highlight reel. Paper-trading data, educational only.',
+    'The full GammaRips pool outcome record: what every surfaced contract\'s premium did from that morning to expiration — the peak-return distribution (the ceiling) and the hold-to-settlement distribution (the floor). No win rate, no average-ROI headline; distributions with sample sizes. Paper-trading data, educational only.',
   alternates: { canonical: 'https://gammarips.com/scorecard' },
   openGraph: {
-    title: 'Track Record — Every Candidate, Tracked | GammaRips',
+    title: 'Track Record — Surfaced to Expiration | GammaRips',
     description:
-      'The whole pool, tracked to outcome — excursion distributions and the honest blind-buy baseline. No highlight reel.',
+      'Every surfaced contract, tracked from that morning to expiration: the ceiling and the floor, as distributions. No highlight reel.',
     url: 'https://gammarips.com/scorecard',
   },
 };
@@ -30,7 +30,7 @@ export default async function TrackRecordPage() {
     '@type': 'Dataset',
     name: 'GammaRips Pool Outcome Record',
     description:
-      'Realized outcomes for every candidate in the GammaRips curated options-flow pool: per-contract peak/trough excursions (the opportunity surface) and fixed-bracket baseline labels, tracked daily on a paper-trading basis. Published as distributions with sample sizes; the blind-buy composite baseline is negative and published as such. Not investment advice.',
+      'Realized outcomes for every candidate in the GammaRips curated options-flow pool: the full-life surface from surfacing to expiration — peak/trough excursion distributions (the ceiling) and hold-to-settlement distributions (the floor) — tracked daily on a paper-trading basis. Published as distributions with sample sizes; the blind-buy composite baseline is negative and stated as such. Not investment advice.',
     url: 'https://gammarips.com/scorecard',
     creator: { '@type': 'Organization', name: 'GammaRips', url: 'https://gammarips.com' },
     license: 'https://gammarips.com/disclosures',
@@ -49,18 +49,20 @@ export default async function TrackRecordPage() {
       <header className="text-center">
         <p className="text-sm font-semibold uppercase tracking-wider text-primary">Track Record</p>
         <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-          Every candidate, tracked.
+          Surfaced to expiration.<br />Every contract, the whole ride.
         </h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-          Not a highlight reel and not one lucky account: every contract the engine
-          surfaces enters the outcome record and is tracked to its result — winners
-          and losers counted the same way, nothing edited after the fact.
+          No win rate, no average return, no exit rule pretending to be the truth.
+          For every contract the engine has ever surfaced: what its price did from
+          that morning until the contract expired — the peaks, and what happens to
+          people who never leave. Winners and losers counted the same way, nothing
+          edited after the fact.
         </p>
       </header>
 
       <Separator className="my-12 sm:my-16" />
 
-      <PoolOutcomesTiles outcomes={outcomes} />
+      <LifeDistribution outcomes={outcomes} />
 
       <Separator className="my-12 sm:my-16" />
 
@@ -72,11 +74,11 @@ export default async function TrackRecordPage() {
             <h2 className="font-bold font-headline">The opportunity surface</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
               For each contract we record how far it actually ran (peak) and how far
-              it fell (drawdown) over its tracked window. That&apos;s profit{' '}
+              it fell (drawdown) over its <em>entire life</em> — from the morning it
+              was surfaced to the day it expired. That&apos;s profit{' '}
               <em>potential</em> — what was there for someone with the right exit —
-              not a return anyone earned. The median candidate touched a meaningful
-              peak; the tail touched very large ones. The drawdowns are published
-              with equal prominence.
+              not a return anyone earned. The drawdowns and the hold-to-expiry floor
+              are published with equal prominence.
             </p>
           </CardContent>
         </Card>
@@ -87,8 +89,16 @@ export default async function TrackRecordPage() {
             <p className="text-sm text-muted-foreground leading-relaxed">
               &ldquo;Blind-buy baseline&rdquo; answers the question every visitor
               should ask: what if you just bought everything? Under a fixed same-day
-              bracket, the whole pool <strong className="text-foreground">loses</strong>. We
-              publish that number on purpose — it&apos;s why we sell data instead of
+              bracket, the whole pool{' '}
+              <strong className="text-foreground">
+                {/* The inline number is sanctioned ONLY while negative — if the
+                    recompute ever crosses >= 0 this sentence needs a human, so
+                    the automatic rendering gates on the sign. */}
+                loses{outcomes?.bracket_avg_return != null && outcomes.bracket_avg_return < 0
+                  ? ` (${Math.round(outcomes.bracket_avg_return * 1000) / 10}% per contract on average)`
+                  : ''}
+              </strong>
+              . We say that on purpose — it&apos;s why we sell data instead of
               picks, and why selection and exits are your agent&apos;s job, not a
               subscription&apos;s promise.
             </p>

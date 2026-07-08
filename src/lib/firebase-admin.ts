@@ -346,10 +346,42 @@ export interface CohortStats {
   roi_pct: number;               // decimal (multiply by 100 for %)
 }
 
+/** One fixed-edge histogram bucket of the full-life distribution. Labels are
+ *  authored by win-tracker /pool_outcomes and rendered verbatim. */
+export interface LifeBucket {
+  label: string;
+  n: number;
+}
+
+/** Pool-level aggregates of the full-life (surfaced -> expiration) surface —
+ *  the scorecard-redesign centerpiece (2026-07-08). Aggregates only; the
+ *  per-contract life paths never leave BigQuery on the free surface. */
+export interface LifeDistributionAgg {
+  sim_version: string;
+  label: string;
+  processed: number;            // expired rows examined (incl. exclusions)
+  no_entry_excluded: number;    // no clean 10:00 ET fill — documented exclusion
+  n_peak: number;               // contracts in the peak/trough distributions
+  n_expiry: number;             // contracts with a hold-to-settlement mark
+  first_scan_date: string | null;
+  last_scan_date: string | null;
+  peak_median: number | null;   // fractions (0.21 = +21%)
+  peak_p75: number | null;
+  peak_p90: number | null;
+  trough_median: number | null; // negative fraction
+  trough_p10: number | null;
+  expiry_median: number | null;
+  peak_ge_40: number;           // contracts whose life peak touched >= +40%
+  peak_ge_100: number;          // ... >= +100%
+  peak_buckets: LifeBucket[];   // 7 fixed-edge buckets, ascending
+  expiry_buckets: LifeBucket[]; // 7 fixed-edge buckets, ascending (loss -> gain)
+}
+
 /** Aggregates over the FULL labeled pool (enriched_option_outcomes), written
  *  daily by win-tracker's /pool_outcomes. Replaced the pick-cohort scorecard
  *  (owner call 2026-07-03). All return values are FRACTIONS (0.21 = +21%). */
 export interface PoolOutcomes {
+  life?: LifeDistributionAgg;
   contracts_total: number;
   scan_days: number;
   first_scan_date: string;       // ISO date

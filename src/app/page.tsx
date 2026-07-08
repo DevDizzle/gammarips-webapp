@@ -6,11 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Scan, LineChart, Bot, FlaskConical } from "lucide-react";
-import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getPoolOutcomes, getBlogPostsAdmin } from "@/lib/firebase-admin";
+import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getBlogPostsAdmin } from "@/lib/firebase-admin";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import { AgentDemo } from "@/components/landing/agent-demo";
-import { PoolOutcomesTiles } from "@/components/landing/pool-outcomes-tiles";
-import { Separator } from "@/components/ui/separator";
+import { CurationFunnel } from "@/components/landing/curation-funnel";
 
 export const revalidate = 60; // keep the daily pool summary fresh without a full static rebuild
 
@@ -32,7 +31,6 @@ export default async function LandingPage() {
   const summary = await getLatestOvernightSummary();
   const reportDate = summary ? (summary.report_date || summary.scan_date) : null;
   const report = reportDate ? await getDailyReport(reportDate) : null;
-  const poolOutcomes = await getPoolOutcomes();
   const blogPosts = await getBlogPostsAdmin();
 
   const topBull = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 5) : [];
@@ -110,65 +108,11 @@ export default async function LandingPage() {
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
 
-        {/* Live panel — whole-pool outcome record above the divider,
-            an illustrative agent session below it. The pool + the data
-            layer are the product; there is no public pick. */}
-        <section id="engine-live">
-          <Card className="border-primary/40 bg-card/90 shadow-[0_0_30px_rgba(234,179,8,0.08)]">
-            <CardContent className="p-6 md:p-8 space-y-6">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-primary font-semibold">
-                    GammaRips · Engine Live
-                  </p>
-                  <h2 className="text-xl md:text-2xl font-bold font-headline mt-1">
-                    Every candidate, tracked to its outcome.
-                  </h2>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    The whole pool enters the outcome record — winners and
-                    losers counted the same way, nothing edited after the fact.
-                  </p>
-                </div>
-                {poolOutcomes && (
-                  <Badge variant="outline" className="text-[11px] text-muted-foreground border-muted-foreground/30">
-                    Since {poolOutcomes.first_scan_date} · {poolOutcomes.scan_days} scan days
-                  </Badge>
-                )}
-              </div>
-
-              <PoolOutcomesTiles outcomes={poolOutcomes} />
-
-              <Separator />
-
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4 text-center">
-                  What working the pool with an agent looks like
-                </h3>
-                <AgentDemo />
-              </div>
-
-              <p className="text-[11px] text-muted-foreground text-center leading-tight">
-                Paper-traded · Educational only · Not investment advice
-              </p>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* What your agent gets */}
-        <section>
-          <h2 className="text-2xl font-bold font-headline text-center mb-6">What your agent gets</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {pillars.map((pillar) => (
-              <Card key={pillar.title} className="bg-card/50 text-center">
-                <CardContent className="p-5">
-                  <div className="flex justify-center mb-3">{pillar.icon}</div>
-                  <h3 className="font-bold font-headline">{pillar.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">{pillar.desc}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
+        {/* How the pool gets made — the curation funnel + one example
+            record. This pays off the hero's "curates it down" promise
+            before anything else. The funnel ends at the POOL, never the
+            pick; every number here is already public on /how-it-works. */}
+        <CurationFunnel />
 
         {/* Today's Market Snapshot */}
         {summary && (
@@ -274,13 +218,39 @@ export default async function LandingPage() {
           </section>
         )}
 
+        {/* What your agent gets — the pillars, then the illustrative
+            agent session (moved here from the old outcomes panel). */}
+        <section>
+          <h2 className="text-2xl font-bold font-headline text-center mb-6">What your agent gets</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {pillars.map((pillar) => (
+              <Card key={pillar.title} className="bg-card/50 text-center">
+                <CardContent className="p-5">
+                  <div className="flex justify-center mb-3">{pillar.icon}</div>
+                  <h3 className="font-bold font-headline">{pillar.title}</h3>
+                  <p className="text-xs text-muted-foreground mt-1">{pillar.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="mt-8">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4 text-center">
+              What working the pool with an agent looks like
+            </h3>
+            <AgentDemo />
+          </div>
+        </section>
+
         {/* The honesty section */}
         <section className="text-center space-y-4 max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold font-headline">Read this before you pay us</h2>
           <p className="text-muted-foreground">
             If you bought every contract in our pool every morning with a fixed
-            exit, you would lose money. We know because we tested it, and we
-            publish the ledger. The pool is where opportunity concentrates —
+            exit, you would lose money. We know because we tested it, and we{' '}
+            <Link href="/scorecard" className="text-primary hover:underline">
+              publish the ledger
+            </Link>
+            . The pool is where opportunity concentrates —
             the excursion data proves the winners are in there — but which
             ones, and how they&apos;re traded, is analysis. That&apos;s your
             agent&apos;s job. Anyone who sells you a shortcut past that step is

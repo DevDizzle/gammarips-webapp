@@ -72,7 +72,7 @@ export function NextPickCountdown({
         <Clock className="h-4 w-4 text-primary shrink-0" />
         {elapsed ? (
           <span className="text-muted-foreground">
-            Standing by — next pick posts at the open.
+            Standing by. The next pick posts at the open.
           </span>
         ) : (
           <span className="text-muted-foreground">

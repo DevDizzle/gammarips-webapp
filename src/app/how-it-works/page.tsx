@@ -95,7 +95,7 @@ export default function HowItWorksPage() {
           <Card className="bg-card/50">
             <CardContent className="p-5">
               <h3 className="font-bold font-headline text-lg">Bullish only</h3>
-              <p className="text-sm text-muted-foreground mt-1">Bullish calls only &mdash; a hard gate since 2026-06-11. The pool is then delta-edge-ranked to the ~50 strongest bullish setups.</p>
+              <p className="text-sm text-muted-foreground mt-1">Bullish calls only &mdash; a hard gate since 2026-06-11. Survivors are ranked by the research levers &mdash; the delta band the study confirmed, plus a soft tilt toward stocks already moving &mdash; then hard-capped at the top ~50.</p>
             </CardContent>
           </Card>
         </div>
@@ -115,7 +115,7 @@ export default function HowItWorksPage() {
             Small bonuses when smart money fades the crowd (heavy call buying on a red day) or a whole industry lights up the same direction at once.
           </p>
           <p className="text-sm text-muted-foreground">
-            <strong className="text-foreground">Reading it:</strong> 4&ndash;5 means enough independent evidence to make the pool. 6&ndash;7 means most of the checklist fired. 8&ndash;10 means everything lit up &mdash; rare, and often it means the story is already public. The score counts evidence of positioning; it&apos;s not a prediction, and higher isn&apos;t automatically better. That&apos;s why 4 is a floor, not a ranking.
+            <strong className="text-foreground">Reading it:</strong> 4&ndash;5 means enough independent evidence to clear the bar. 6&ndash;7 means most of the checklist fired. 8&ndash;10 means everything lit up &mdash; rare, and often it means the story is already public. The score counts evidence of positioning; it&apos;s not a prediction, and higher isn&apos;t automatically better. That&apos;s why 4 is a floor, not a ranking.
           </p>
         </div>
         <p className="text-muted-foreground mt-6 leading-relaxed">

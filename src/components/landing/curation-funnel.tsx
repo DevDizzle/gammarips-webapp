@@ -22,16 +22,16 @@ const stages = [
     num: '~300',
     unit: 'unusual',
     bar: 44,
-    title: 'Only the abnormal survives',
-    desc: 'Flow that’s out of character for that name: volume way out of proportion to open interest, dollars leaning hard in one direction.',
+    title: 'An institutional footprint, or out',
+    desc: 'Conviction score of 4+ and over $500K bet in one direction — several independent signs of real positioning, not one weird trade.',
+    scoreKey: true,
   },
   {
     num: '~50',
-    unit: 'standouts',
+    unit: 'strongest',
     bar: 16,
-    title: 'An institutional footprint, or out',
-    desc: 'Conviction score of 4+ and over $500K in net directional premium — real positioning, not one weird trade. Bullish only, then ranked by the few features that actually separated winners from losers across 1,375 measured trades.',
-    scoreKey: true,
+    title: 'Bullish only — then the strongest 50',
+    desc: 'A ranking, not another filter. Bullish names are sorted by the contract sweet spot that separated winners from losers across 1,375 measured trades, plus a tilt toward stocks already moving — and the top 50 make the pool. Hard cap.',
   },
   {
     num: 'The pool',
@@ -152,8 +152,8 @@ export function CurationFunnel() {
                     </p>
                     <p>
                       <strong className="text-foreground">Reading it:</strong>{' '}
-                      4&ndash;5 means enough independent evidence to make the
-                      pool. 6&ndash;7 means most of the checklist fired.
+                      4&ndash;5 means enough independent evidence to clear the
+                      bar. 6&ndash;7 means most of the checklist fired.
                       8&ndash;10 means everything lit up &mdash; rare, and
                       often it means the story is already public. The score
                       counts evidence of positioning; it&apos;s not a

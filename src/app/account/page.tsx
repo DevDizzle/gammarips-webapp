@@ -19,6 +19,7 @@ import { AuthDialog } from '@/components/auth/auth-dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { FREE_MODE } from '@/lib/config';
+import { TOOL_COUNT, PRICE_MONTHLY } from '@/lib/constants';
 
 const MCP_ENDPOINT = 'https://gammarips-mcp-406581297632.us-central1.run.app/mcp';
 
@@ -43,7 +44,7 @@ export default function AccountPage() {
       const token = await user.getIdToken();
       setKeyStatus(await getMcpApiKeyStatus(token));
     } catch {
-      // non-fatal — the section still renders a generate button
+      // non-fatal: the section still renders a generate button
     }
   }, [user, isPro]);
 
@@ -59,7 +60,7 @@ export default function AccountPage() {
       const { key } = await generateMcpApiKey(token);
       setNewKey(key);
       await refreshKeyStatus();
-      toast({ title: 'API key generated', description: 'Copy it now — it is shown only once.' });
+      toast({ title: 'API key generated', description: 'Copy it now; it is shown only once.' });
     } catch (error: any) {
       toast({
         title: 'Could not generate key',
@@ -159,11 +160,11 @@ export default function AccountPage() {
 
         {/* API Access Section */}
         <section className="p-6 rounded-lg border bg-card space-y-4">
-          <h2 className="text-xl font-bold">Agent Access — MCP API Key</h2>
+          <h2 className="text-xl font-bold">Agent Access: MCP API Key</h2>
           {isPro ? (
             <>
               <p className="text-muted-foreground">
-                Your subscription includes full MCP Agent Access (all 23 tools).
+                Your subscription includes full MCP Agent Access (all {TOOL_COUNT} tools).
                 Generate an API key and connect Claude, ChatGPT, or your own
                 agent.
               </p>
@@ -172,7 +173,7 @@ export default function AccountPage() {
               {newKey && (
                 <div className="p-4 rounded border border-green-600 bg-green-500/10 space-y-2">
                   <p className="text-sm font-semibold text-green-500">
-                    ⚠️ Copy this key now — you won&apos;t be able to see it again.
+                    ⚠️ Copy this key now. You won&apos;t be able to see it again.
                   </p>
                   <code className="block p-2 bg-muted rounded text-sm font-mono break-all">
                     {newKey}
@@ -234,8 +235,8 @@ export default function AccountPage() {
             <>
               <p className="text-muted-foreground">
                 Connect Claude, ChatGPT, or your own agent to the GammaRips
-                data layer — the curated pool, opportunity surfaces, outcome
-                history, and methodology playbooks. $39/mo, 7-day free trial.
+                data layer: the curated pool, opportunity surfaces, outcome
+                history, and methodology playbooks. {PRICE_MONTHLY}/mo, 7-day free trial.
               </p>
               <Button asChild>
                 <Link href="/pricing">Get Agent Access &rarr;</Link>

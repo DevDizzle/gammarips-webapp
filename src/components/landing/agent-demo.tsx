@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { TOOL_COUNT } from '@/lib/constants';
 
 // Static, clearly-labeled illustrative MCP session. No live data, no buy
-// instruction — the agent ends in analysis, per the forbidden-claims list.
+// instruction: the agent ends in analysis, per the forbidden-claims list.
 const turns = [
   {
     role: 'you',
@@ -59,7 +60,7 @@ export function AgentDemo() {
       </p>
       <div className="flex justify-center">
         <Button asChild size="sm" variant="outline">
-          <Link href="/developers">See all 23 MCP tools &rarr;</Link>
+          <Link href="/developers">See all {TOOL_COUNT} MCP tools &rarr;</Link>
         </Button>
       </div>
     </div>

@@ -1,10 +1,10 @@
 # GammaRips
 
-> The options-flow data layer for AI agents. Stop asking AI for stock picks — give it real data.
+> The options-flow data layer for AI agents. Stop asking AI for stock picks. Give it real data.
 
 GammaRips is an options-flow intelligence engine and data vendor. Every weeknight it scans 5,230+ US equities for unusual institutional options activity and curates the firehose down to a small, high-signal bullish pool. Humans browse everything free at gammarips.com; AI agents connect over MCP (paid, $39/mo, 7-day free trial) for the structured data layer: the curated pool, point-in-time feature vectors, opportunity surfaces (realized peak/drawdown excursions per historical setup), a queryable outcome database, exit-rule simulation, regime context, and methodology playbooks.
 
-There is no pick endpoint, deliberately. GammaRips sells the surface a good trade comes from, not a trade. Each user's agent reasons over the same data to its own conclusion — including via the published bracket-tournament selection playbook, run against the user's own objective. Honest baseline, published openly: buying the whole pool mechanically under a fixed exit is negative. The value is curation + history + your agent's analysis.
+There is no pick endpoint, deliberately. GammaRips sells the surface a good trade comes from, not a trade. Each user's agent reasons over the same data to its own conclusion, including via the published bracket-tournament selection playbook, run against the user's own objective. Honest baseline, published openly: buying the whole pool mechanically under a fixed exit is negative. The value is curation + history + your agent's analysis.
 
 Data on a paper-trading basis, educational only. Not investment advice.
 
@@ -12,33 +12,33 @@ Data on a paper-trading basis, educational only. Not investment advice.
 
 - [How it works (V7.1 engine)](https://gammarips.com/how-it-works)
 - [Today's curated pool (free)](https://gammarips.com/signals)
-- [Track Record — whole-pool outcomes](https://gammarips.com/scorecard)
-- [The Lab — published experiments](https://gammarips.com/lab)
-- [Pricing — free website / $39 Agent Access](https://gammarips.com/pricing)
-- [MCP docs — 23 tools](https://gammarips.com/developers)
+- [Track Record: whole-pool outcomes](https://gammarips.com/scorecard)
+- [The Lab: published experiments](https://gammarips.com/lab)
+- [Pricing: free website / $39 Agent Access](https://gammarips.com/pricing)
+- [MCP docs: 29 tools](https://gammarips.com/developers)
 
 ## Curation stack (V7.1)
 
-1. **Scanner** — overnight unusual-options-activity scan across 5,230+ tickers.
-2. **Enrichment** — `overnight_score >= 4 AND directional_uoa_usd > 500000`, bullish-only, delta edge-ranked to the strongest ~50; thesis, technicals, news context, and a recommended contract attached per name.
-3. **Safety rails** — no earnings in the window; volatility regime check (VIX <= VIX3M).
-4. **Leakage discipline** — every field is point-in-time; nothing an agent reads contains information that wasn't knowable at the time it's dated.
-5. **Validation & tracking** — every pool candidate is tracked to its realized outcome and published as distributions (Track Record); a small paper-traded cohort additionally exercises the selection methodology daily under fixed rules, privately, with no stats marketed pre-30 trades.
+1. **Scanner**: overnight unusual-options-activity scan across 5,230+ tickers.
+2. **Enrichment**: `overnight_score >= 4 AND directional_uoa_usd > 500000`, bullish-only, delta edge-ranked to the strongest ~50; thesis, technicals, news context, and a recommended contract attached per name.
+3. **Safety rails**: no earnings in the window; volatility regime check (VIX <= VIX3M).
+4. **Leakage discipline**: every field is point-in-time; nothing an agent reads contains information that wasn't knowable at the time it's dated.
+5. **Validation & tracking**: every pool candidate is tracked to its realized outcome and published as distributions (Track Record); a small paper-traded cohort additionally exercises the selection methodology daily under fixed rules, privately, with no stats marketed pre-30 trades.
 
-## MCP server (Agent Access — API key required)
+## MCP server (Agent Access, API key required)
 
 - Endpoint: `https://gammarips-mcp-406581297632.us-central1.run.app/mcp`
 - Transport: Streamable HTTP (legacy SSE at `/sse`)
-- Auth: `Authorization: Bearer <API key>` — delivered by email with an active subscription (subscribe at https://gammarips.com/pricing — $39/mo, 7-day free trial)
-- Anonymous funnel tier (no key): pool preview, daily reports, methodology playbooks, and reference tools. The full 23-tool surface — substrate, surfaces, outcomes — requires a key.
+- Auth: `Authorization: Bearer <API key>`, delivered by email with an active subscription (subscribe at https://gammarips.com/pricing; $39/mo, 7-day free trial)
+- Anonymous funnel tier (no key): pool preview, daily reports, methodology playbooks, and reference tools. The full 29-tool surface (substrate, surfaces, outcomes) requires a key.
 - Start with: `get_enriched_signals`, `get_opportunity_surface`, `get_playbook`
-- All 23 tools: `get_enriched_signals`, `get_signal_detail`, `get_overnight_signals`, `get_freemium_preview`, `get_pool_features`, `get_opportunity_surface`, `query_outcomes`, `get_outcome_summary`, `estimate_exit_rule`, `get_regime_context`, `list_playbooks`, `get_playbook`, `get_signal_performance`, `get_win_rate_summary`, `get_position_history`, `get_historical_performance`, `get_daily_report`, `get_report_list`, `get_available_dates`, `get_enriched_signal_schema`, `get_market_calendar_status`, `get_signal_explainer`, `web_search`
-- Built-in prompts: `morning_brief`, `analyze_candidate`, `run_your_own_tournament` — workflows that end in a decision surface, never a pick.
+- All 29 tools: `get_enriched_signals`, `get_signal_detail`, `get_overnight_signals`, `get_freemium_preview`, `get_pool_features`, `get_opportunity_surface`, `query_outcomes`, `get_outcome_summary`, `estimate_exit_rule`, `get_regime_context`, `list_playbooks`, `get_playbook`, `get_signal_performance`, `get_win_rate_summary`, `get_position_history`, `get_historical_performance`, `get_daily_report`, `get_report_list`, `get_available_dates`, `get_enriched_signal_schema`, `get_market_calendar_status`, `get_signal_explainer`, `web_search`
+- Built-in prompts: `morning_brief`, `analyze_candidate`, `run_your_own_tournament`: workflows that end in a decision surface, never a pick.
 
 ## Pricing
 
-- **Free** — the entire human-readable website: today's curated pool, daily reports, per-ticker deep dives, scorecard, the Lab, methodology. Free forever, no account required.
-- **Agent Access $39/mo** — full MCP access for Claude, ChatGPT, or any MCP client. 7-day free trial. Cancel anytime.
+- **Free**: the whole human-readable website. Today's curated pool, daily reports, per-ticker deep dives, scorecard, the Lab, methodology. Free forever, no account required.
+- **Agent Access $39/mo**: full MCP access for Claude, ChatGPT, or any MCP client. 7-day free trial. Cancel anytime.
 
 ## Disclaimers
 

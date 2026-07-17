@@ -5,13 +5,14 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Shield, Bot, User, CheckCircle2 } from 'lucide-react';
 import ContactForm from './contact-form';
+import { TOOL_COUNT } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'About GammaRips — The options-flow data layer for AI agents',
+  title: 'About GammaRips: The options-flow data layer for AI agents',
   description: "The engine, the methodology, and the person behind GammaRips. A nightly scan of 5,230+ tickers, curated to a high-signal bullish pool, validated by a public paper-traded cohort, and served to AI agents over MCP. Data on a paper-trading basis, educational only.",
   alternates: { canonical: 'https://gammarips.com/about' },
   openGraph: {
-    title: 'About GammaRips — The options-flow data layer for AI agents',
+    title: 'About GammaRips: The options-flow data layer for AI agents',
     description: "The engine, the methodology, and the person behind GammaRips. Paper-trading data, educational only.",
     url: 'https://gammarips.com/about',
   },
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
 const whyList = [
   'A small curated pool, not a firehose. No FOMO, no "look how many signals we have."',
   'No pick endpoint, on purpose. Shared picks crowd thin contracts; data lets every agent reach its own conclusion.',
-  'The honest baseline is published: buying the whole pool blindly under a fixed exit loses. The Lab shows the receipts — including the killed hypotheses.',
+  'The honest baseline is published: buying the whole pool blindly under a fixed exit loses. The Lab shows the receipts, including the killed hypotheses.',
   'Everything is leakage-checked and mechanical. Every filter, threshold, and selection rule is documented, logged, and shipped as playbooks your agent can read.',
   'Paper-trading data only. No aggregate performance marketing until a cohort has ≥30 closed trades. This page is about what was built, not what it returned.',
 ];
@@ -56,19 +57,19 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
               <ul className="space-y-3 text-sm text-foreground/90">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span><strong>Step 1 — Grab your API key.</strong> It arrives by email shortly after checkout — check Spam / Promotions if you don&apos;t see it, or email <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">evan@gammarips.com</a> and we&apos;ll sort it immediately.</span>
+                  <span><strong>Step 1: Grab your API key.</strong> It arrives by email shortly after checkout. Check Spam / Promotions if you don&apos;t see it, or email <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">evan@gammarips.com</a> and we&apos;ll sort it immediately.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span><strong>Step 2 — Add the server to your agent.</strong> Claude, ChatGPT, Cursor, or any MCP client — copy-paste setup is on the <Link href="/developers" className="text-primary hover:underline">MCP docs page</Link>.</span>
+                  <span><strong>Step 2: Add the server to your agent.</strong> Claude, ChatGPT, Cursor, or any MCP client. Copy-paste setup is on the <Link href="/developers" className="text-primary hover:underline">MCP docs page</Link>.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span><strong>Step 3 — Run your first brief.</strong> Ask your agent to run the <code className="text-primary">morning_brief</code> prompt, or just say &ldquo;pull the GammaRips pool and tell me what&apos;s interesting.&rdquo;</span>
+                  <span><strong>Step 3: Run your first brief.</strong> Ask your agent to run the <code className="text-primary">morning_brief</code> prompt, or just say &ldquo;pull the GammaRips pool and tell me what&apos;s interesting.&rdquo;</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>Your trial is active for 7 days. Cancel anytime from your account page — no charge if you cancel before day-7.</span>
+                  <span>Your trial is active for 7 days. Cancel anytime from your account page. No charge if you cancel before day-7.</span>
                 </li>
               </ul>
               <div className="flex flex-wrap gap-3 pt-2">
@@ -95,7 +96,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
             </span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
-            GammaRips is a systematic overnight scanner that curates unusual options activity into a small, high-signal pool — free for humans to browse, served to AI agents over MCP. A public paper-traded cohort validates the methodology every market day, winners and losers counted the same way. Data, receipts, and no pick to follow: that&apos;s the product.
+            GammaRips is a systematic overnight scanner that curates unusual options activity into a small, high-signal pool, free for humans to browse and served to AI agents over MCP. A public paper-traded cohort validates the methodology every market day, winners and losers counted the same way. Data, receipts, and no pick to follow: that&apos;s the product.
           </p>
         </header>
 
@@ -118,10 +119,10 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">
-                  ML engineer and data architect. Built the scanner, the enrichment layer, the V7 tournament, and the execution policy. Solo operator — no team of analysts, no &ldquo;room of traders.&rdquo; One person with a pipeline.
+                  ML engineer and data architect. Built the scanner, the enrichment layer, the V7 tournament, and the execution policy. Solo operator, no team of analysts, no &ldquo;room of traders.&rdquo; One person with a pipeline.
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Also runs <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link> &mdash; AI strategy and data integration consulting.
+                  Also runs <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link> for AI strategy and data integration consulting.
                 </p>
               </CardContent>
             </Card>
@@ -137,7 +138,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  The autonomous AI operator behind GammaRips&apos; daily pipeline &mdash; scanning overnight institutional options flow, scoring signals, enriching with contract recommendations, and publishing the pool. Built on Claude via OpenClaw, powered by real-time BigQuery queries. GammaMolt was the first agent ever wired to the GammaRips MCP &mdash; the same 23 tools your agent gets are the ones it runs on.
+                  The autonomous AI operator behind GammaRips&apos; daily pipeline: scanning overnight institutional options flow, scoring signals, enriching with contract recommendations, and publishing the pool. Built on Claude via OpenClaw, powered by real-time BigQuery queries. GammaMolt was the first agent ever wired to the GammaRips MCP, and the same {TOOL_COUNT} tools your agent gets are the ones it runs on.
                 </p>
               </CardContent>
             </Card>

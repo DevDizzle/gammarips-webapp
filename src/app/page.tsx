@@ -10,6 +10,7 @@ import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getBlog
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import { AgentDemo } from "@/components/landing/agent-demo";
 import { CurationFunnel } from "@/components/landing/curation-funnel";
+import { TOOL_COUNT } from "@/lib/constants";
 
 export const revalidate = 60; // keep the daily pool summary fresh without a full static rebuild
 
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 const pillars = [
   { icon: <Scan className="h-6 w-6 text-primary" />, title: 'The Curated Pool', desc: 'The market prints hundreds of unusual-flow names a night. The engine scores and cuts them to a pool your agent can actually reason over, with flow, technicals, and context attached.' },
   { icon: <LineChart className="h-6 w-6 text-primary" />, title: 'The Opportunity Surface', desc: 'For every historical setup: what was actually possible. The best it hit, the worst it fell, the full path. Wins and losses both. Your agent learns how these contracts really behave.' },
-  { icon: <Bot className="h-6 w-6 text-primary" />, title: 'Your Agent, Your Conclusion', desc: 'There is no pick endpoint. On purpose. 23 MCP tools return data and methodology; your agent reasons to its own contract. A thousand users, a thousand different conclusions.' },
+  { icon: <Bot className="h-6 w-6 text-primary" />, title: 'Your Agent, Your Conclusion', desc: `There is no pick endpoint. On purpose. ${TOOL_COUNT} MCP tools return data and methodology; your agent reasons to its own contract. A thousand users, a thousand different conclusions.` },
 ];
 
 export default async function LandingPage() {
@@ -108,7 +109,7 @@ export default async function LandingPage() {
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
 
-        {/* How the pool gets made — the curation funnel + one example
+        {/* How the pool gets made: the curation funnel + one example
             record. This pays off the hero's "curates it down" promise
             before anything else. The funnel ends at the POOL, never the
             pick; every number here is already public on /how-it-works. */}
@@ -137,7 +138,7 @@ export default async function LandingPage() {
                   </Link>
                 </div>
 
-                {/* Pool counts — the enriched candidate set. Bullish-only is a
+                {/* Pool counts: the enriched candidate set. Bullish-only is a
                     deliberate gate (see methodology), so bear is expected to be 0. */}
                 <p className="text-xs text-muted-foreground mb-2">Today&apos;s enriched pool (bullish-only by design)</p>
                 <div className="flex gap-6 mb-4">
@@ -218,7 +219,7 @@ export default async function LandingPage() {
           </section>
         )}
 
-        {/* What your agent gets — the pillars, then the illustrative
+        {/* What your agent gets: the pillars, then the illustrative
             agent session (moved here from the old outcomes panel). */}
         <section>
           <h2 className="text-2xl font-bold font-headline text-center mb-6">What your agent gets</h2>
@@ -289,7 +290,7 @@ export default async function LandingPage() {
           </Card>
         </section>
 
-        {/* Latest from the blog — cross-link into the /blog section so posts
+        {/* Latest from the blog: cross-link into the /blog section so posts
             get crawled and pick up link-equity from the highest-traffic page. */}
         {blogPosts.length > 0 && (
           <BlogTeaserList

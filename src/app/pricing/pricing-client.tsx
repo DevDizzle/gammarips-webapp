@@ -8,18 +8,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
+import { TOOL_COUNT, PRICE_MONTHLY } from '@/lib/constants';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''
 );
 
 const agentFeatures = [
-  'All 23 MCP tools for Claude, ChatGPT, or any MCP client',
+  `All ${TOOL_COUNT} MCP tools for Claude, ChatGPT, or any MCP client`,
   "Today's curated pool in structured, agent-readable form",
-  'Opportunity surfaces — realized peak/drawdown excursions per historical setup',
+  'Opportunity surfaces: realized peak/drawdown excursions per historical setup',
   'Queryable outcome database + exit-rule simulation',
   'Regime context (volatility term structure rail)',
-  'Methodology playbooks — including the tournament selection pattern, run against YOUR objective',
+  'Methodology playbooks, including the tournament selection pattern, run against YOUR objective',
   '7-day free trial · cancel anytime',
 ];
 
@@ -27,8 +28,8 @@ const freeFeatures = [
   "Today's curated pool, browsable across 5,230+ scanned tickers",
   'Daily market report with AI-authored thesis',
   'Per-ticker deep dives',
-  'Track Record — every pool candidate tracked to its outcome',
-  'The Lab — published experiments, including the failed ones',
+  'Track Record: every pool candidate tracked to its outcome',
+  'The Lab: published experiments, including the failed ones',
   'Methodology, blog, FAQ, and all disclosures',
 ];
 
@@ -83,9 +84,9 @@ export function PricingClient() {
           </span>
         </h1>
         <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Everything human-readable &mdash; the pool, the reports, the
-          scorecard, the Lab &mdash; is free, forever. $39/month buys the
-          machine connection: full MCP access for the AI agent of your choice.
+          Everything human-readable (the pool, the reports, the scorecard,
+          the Lab) is free, forever. {PRICE_MONTHLY}/month buys the machine
+          connection: full MCP access for the AI agent of your choice.
           7-day free trial. Cancel anytime.
         </p>
       </header>
@@ -127,11 +128,11 @@ export function PricingClient() {
           <CardHeader className="pb-4 border-b">
             <CardTitle className="text-2xl font-bold font-headline">Your Agent</CardTitle>
             <div className="mt-2">
-              <span className="text-4xl font-bold">$39</span>
+              <span className="text-4xl font-bold">{PRICE_MONTHLY}</span>
               <span className="text-muted-foreground ml-2">/month</span>
             </div>
             <p className="text-sm text-muted-foreground mt-2">
-              Full MCP access for Claude, ChatGPT, or your own agent — the
+              Full MCP access for Claude, ChatGPT, or your own agent: the
               curated pool, the deep data a human never browses, and the
               methodology tools. 7-day free trial.
             </p>
@@ -157,7 +158,7 @@ export function PricingClient() {
                   Starting checkout…
                 </>
               ) : (
-                'Connect Your Agent — Free for 7 Days'
+                'Connect Your Agent, Free for 7 Days'
               )}
             </Button>
             <p className="text-xs text-muted-foreground text-center mt-3">
@@ -180,8 +181,8 @@ export function PricingClient() {
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               There is no pick endpoint, and no promised return. You&apos;re
-              paying for curation — hundreds of unusual-flow names cut to a
-              reasoning-sized pool — and for history nobody else keeps.
+              paying for curation (hundreds of unusual-flow names cut to a
+              reasoning-sized pool) and for history nobody else keeps.
             </p>
           </div>
           <div className="space-y-2">
@@ -218,7 +219,7 @@ export function PricingClient() {
             <p className="text-sm text-muted-foreground leading-relaxed">
               Card on file, no charge for seven days, full MCP access from
               minute one. If you cancel before day 7 you pay nothing. After
-              day 7 your card is charged $39 and you&apos;re billed monthly
+              day 7 your card is charged {PRICE_MONTHLY} and you&apos;re billed monthly
               until you cancel.
             </p>
           </div>
@@ -227,8 +228,8 @@ export function PricingClient() {
               How do I know the methodology is real?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Read the Lab. We publish our experiments — hypothesis, method,
-              sample size, verdict — including the ones that killed our own
+              Read the Lab. We publish our experiments (hypothesis, method,
+              sample size, verdict), including the ones that killed our own
               ideas. The paper-traded scorecard runs in public, and we tell
               you plainly that the pool bought blindly under a fixed exit is
               negative. If we were selling hype, that would be a strange thing
@@ -261,7 +262,7 @@ export function PricingClient() {
               Will the price go up?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              $39/mo is the launch price. If we raise it, existing subscribers
+              {PRICE_MONTHLY}/mo is the launch price. If we raise it, existing subscribers
               are grandfathered at the rate they signed up on.
             </p>
           </div>
@@ -270,7 +271,7 @@ export function PricingClient() {
               I subscribed to the old WhatsApp pick push. What now?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              That product is retired — a single shared pick concentrates
+              That product is retired. A single shared pick concentrates
               everyone into one contract, and our research kept showing the
               edge lives in how a setup is traded, not the name itself. Email
               evan@gammarips.com with any billing question and we&apos;ll make

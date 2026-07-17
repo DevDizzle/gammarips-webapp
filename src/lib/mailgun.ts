@@ -4,6 +4,7 @@
 
 import { Buffer } from 'node:buffer';
 import type { Winner, PerformanceSignal, Stock } from '@/lib/firebase-admin';
+import { TOOL_COUNT, PRICE_MONTHLY } from '@/lib/constants';
 
 
 // Node 18+ has global fetch. If you're on older Node, install `node-fetch`.
@@ -93,29 +94,29 @@ You're in. GammaRips Agent Access is live on your account.
 Here's how to get your agent working the data:
 
 1. Get your API key.
-   It's issued with your subscription — find it on your account page
+   It's issued with your subscription. Find it on your account page
    (https://gammarips.com/account), or just reply to this email and
    we'll sort it immediately.
 
 2. Connect your agent.
    Claude Code, Cursor, or any MCP client that can send an
-   Authorization header — copy-paste setup at
+   Authorization header. Copy-paste setup at
    https://gammarips.com/developers
 
 3. Run your first brief.
    Ask your agent to run the morning_brief prompt, or say "pull the
-   GammaRips pool and tell me what's interesting." All 23 tools —
-   the curated pool, opportunity surfaces, outcome history, exit-rule
-   simulation, and methodology playbooks — are live on your key.
+   GammaRips pool and tell me what's interesting." All ${TOOL_COUNT} tools
+   (the curated pool, opportunity surfaces, outcome history, exit-rule
+   simulation, and methodology playbooks) are live on your key.
 
 Your 7-day free trial started today. No charge if you cancel before
-day 7 — manage anytime at https://gammarips.com/account.
+day 7. Manage anytime at https://gammarips.com/account.
 
 One honest note, because it's the whole point: we sell data, not
 picks. The engine curates the pool and tracks every outcome in
 public; what your agent concludes from it is your analysis.
 
-Questions? Reply — it goes straight to me.
+Questions? Reply and it goes straight to me.
 
 Welcome aboard,
 Evan Parra
@@ -157,15 +158,15 @@ Data on a paper-trading basis, educational only. Not investment advice. Past per
                         <td style="padding: 0 40px 40px;">
                             <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">You're in. <strong>GammaRips Agent Access</strong> is live on your account. Here's how to get your agent working the data:</p>
-                            ${step('1', 'Get your API key', `It's issued with your subscription — find it on your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>, or just reply to this email and we'll sort it immediately.`)}
-                            ${step('2', 'Connect your agent', `Claude Code, Cursor, or any MCP client that can send an Authorization header — copy-paste setup on the <a href="https://gammarips.com/developers" style="color: hsl(74, 80%, 50%);">MCP docs page</a>.`)}
-                            ${step('3', 'Run your first brief', `Ask your agent to run the <code>morning_brief</code> prompt, or say &ldquo;pull the GammaRips pool and tell me what's interesting.&rdquo; All 23 tools — the curated pool, opportunity surfaces, outcome history, exit-rule simulation, and methodology playbooks — are live on your key.`)}
+                            ${step('1', 'Get your API key', `It's issued with your subscription. Find it on your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>, or just reply to this email and we'll sort it immediately.`)}
+                            ${step('2', 'Connect your agent', `Claude Code, Cursor, or any MCP client that can send an Authorization header. Copy-paste setup on the <a href="https://gammarips.com/developers" style="color: hsl(74, 80%, 50%);">MCP docs page</a>.`)}
+                            ${step('3', 'Run your first brief', `Ask your agent to run the <code>morning_brief</code> prompt, or say &ldquo;pull the GammaRips pool and tell me what's interesting.&rdquo; All ${TOOL_COUNT} tools (the curated pool, opportunity surfaces, outcome history, exit-rule simulation, and methodology playbooks) are live on your key.`)}
                             <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding: 32px 0 8px;">
                                 <a href="https://gammarips.com/developers" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Set up your agent →</a>
                             </td></tr></table>
-                            <p style="font-size: 14px; line-height: 1.6; margin-top: 24px; color: #A0A0A0;">Your 7-day free trial started today — no charge if you cancel before day 7, manage anytime from your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>.</p>
+                            <p style="font-size: 14px; line-height: 1.6; margin-top: 24px; color: #A0A0A0;">Your 7-day free trial started today. No charge if you cancel before day 7; manage anytime from your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>.</p>
                             <p style="font-size: 14px; line-height: 1.6; margin-top: 16px; color: #A0A0A0;">One honest note, because it's the whole point: we sell data, not picks. The engine curates the pool and tracks every outcome in public; what your agent concludes from it is your analysis.</p>
-                            <p style="font-size: 14px; line-height: 1.6; margin-top: 16px;">Questions? Reply — it goes straight to me.<br/>— Evan Parra, Founder</p>
+                            <p style="font-size: 14px; line-height: 1.6; margin-top: 16px;">Questions? Reply and it goes straight to me.<br/>Evan Parra, Founder</p>
                             <p style="font-size: 12px; line-height: 1.5; margin-top: 24px; color: #707070;">Data on a paper-trading basis, educational only. Not investment advice. Past performance is not a guarantee of future results.</p>
                         </td>
                     </tr>
@@ -195,22 +196,22 @@ Hi ${name},
 
 Welcome to GammaRips. Your free account is live.
 
-What that gets you — free, forever:
+What that gets you, free, forever:
 
-- gammarips.com/signals — today's curated pool: ~50 bullish setups from a nightly scan of 5,000+ tickers, with flow, technicals, and context.
-- gammarips.com/scorecard — the Track Record: every candidate tracked to its outcome, including the honest baseline (buying everything blindly loses — we publish that).
-- gammarips.com/lab — the Lab: our research experiments, including the killed ideas.
-- gammarips.com/blog and @gammarips on X — methodology and research notes.
+- gammarips.com/signals is today's curated pool: ~50 bullish setups from a nightly scan of 5,000+ tickers, with flow, technicals, and context.
+- gammarips.com/scorecard is the Track Record: every candidate tracked to its outcome, including the honest baseline (buying everything blindly loses, and we publish that).
+- gammarips.com/lab is the Lab: our research experiments, including the killed ideas.
+- gammarips.com/blog and @gammarips on X: methodology and research notes.
 
-The paid tier is for your AI agent. Agent Access ($39/mo, 7-day free
+The paid tier is for your AI agent. Agent Access (${PRICE_MONTHLY}/mo, 7-day free
 trial) connects Claude, ChatGPT, or your own agent to the full data
-layer over MCP — the structured pool, opportunity surfaces, outcome
+layer over MCP: the structured pool, opportunity surfaces, outcome
 history, and the methodology as playbooks your agent can run. Your
 agent analyzes; you decide.
 
 See how it works: https://gammarips.com/developers
 
-Reply to this email if you have questions — it goes straight to me.
+Reply to this email if you have questions and it goes straight to me.
 
 Evan Parra
 Founder, GammaRips
@@ -241,16 +242,16 @@ Data on a paper-trading basis, educational only. Not investment advice.
                             <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">Welcome to GammaRips. Your free account is live. Everything human-readable is free, forever:</p>
                             <ul style="font-size: 15px; line-height: 1.8; color: #A0A0A0; padding-left: 20px;">
-                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">Today's Pool</a> — ~50 curated bullish setups from a nightly scan of 5,000+ tickers.</li>
-                                <li><a href="https://gammarips.com/scorecard" style="color: hsl(74, 80%, 50%);">Track Record</a> — every candidate tracked to its outcome, honest baseline included.</li>
-                                <li><a href="https://gammarips.com/lab" style="color: hsl(74, 80%, 50%);">The Lab</a> — our research experiments, including the killed ideas.</li>
-                                <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">Blog</a> + @gammarips on X — methodology and research notes.</li>
+                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">Today's Pool</a>: ~50 curated bullish setups from a nightly scan of 5,000+ tickers.</li>
+                                <li><a href="https://gammarips.com/scorecard" style="color: hsl(74, 80%, 50%);">Track Record</a>: every candidate tracked to its outcome, honest baseline included.</li>
+                                <li><a href="https://gammarips.com/lab" style="color: hsl(74, 80%, 50%);">The Lab</a>: our research experiments, including the killed ideas.</li>
+                                <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">Blog</a> + @gammarips on X: methodology and research notes.</li>
                             </ul>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">The paid tier is for your <strong>AI agent</strong>: Agent Access ($39/mo, 7-day free trial) connects Claude, ChatGPT, or your own agent to the full data layer over MCP — structured pool, opportunity surfaces, outcome history, and the methodology as playbooks. Your agent analyzes; you decide.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">The paid tier is for your <strong>AI agent</strong>: Agent Access (${PRICE_MONTHLY}/mo, 7-day free trial) connects Claude, ChatGPT, or your own agent to the full data layer over MCP: structured pool, opportunity surfaces, outcome history, and the methodology as playbooks. Your agent analyzes; you decide.</p>
                             <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding: 28px 0 8px;">
                                 <a href="https://gammarips.com/developers" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">See how Agent Access works →</a>
                             </td></tr></table>
-                            <p style="font-size: 14px; line-height: 1.6; margin-top: 24px;">Reply to this email if you have questions — it goes straight to me.<br/>— Evan Parra, Founder</p>
+                            <p style="font-size: 14px; line-height: 1.6; margin-top: 24px;">Reply to this email if you have questions and it goes straight to me.<br/>Evan Parra, Founder</p>
                             <p style="font-size: 12px; line-height: 1.5; margin-top: 24px; color: #707070;">Data on a paper-trading basis, educational only. Not investment advice.</p>
                         </td>
                     </tr>
@@ -268,7 +269,7 @@ export async function sendSignupWelcomeEmail({ to, name }: { to: string, name: s
     const { text, html } = await buildSignupWelcomeEmailContent(name);
     return sendEmail({
         to: `${name} <${to}>`,
-        subject: `Welcome to GammaRips — here's how it works.`,
+        subject: `Welcome to GammaRips: here's how it works.`,
         text,
         html,
     });
@@ -288,22 +289,22 @@ Hi ${name},
 
 Quick heads-up: your GammaRips Pro 7-day trial ends in 3 days.
 
-Your card will be charged ${amountDisplay} on ${chargeDate} and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if you want to continue — just keep using the data.
+Your card will be charged ${amountDisplay} on ${chargeDate} and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if you want to continue; just keep using the data.
 
 If it isn't for you:
 - Cancel anytime before ${chargeDate} and you won't be charged.
 - Manage subscription: https://gammarips.com/account
 
 What you keep with Agent Access:
-- All 23 MCP tools on your key — the curated pool, opportunity surfaces, outcome history, exit-rule simulation, and methodology playbooks.
+- All ${TOOL_COUNT} MCP tools on your key: the curated pool, opportunity surfaces, outcome history, exit-rule simulation, and methodology playbooks.
 - Fresh pool data every trading day, leakage-checked, plus the full labeled history your agent reasons over.
-- The Track Record and Lab stay free either way — the subscription is the machine connection.
+- The Track Record and Lab stay free either way; the subscription is the machine connection.
 
-If anything's off or you have a question before the trial ends, reply to this email — it goes straight to me.
+If anything's off or you have a question before the trial ends, reply to this email and it goes straight to me.
 
 Paper-trading, educational only. Not investment advice.
 
-— Evan
+Evan
 evan@gammarips.com
 `;
 
@@ -331,7 +332,7 @@ evan@gammarips.com
                             <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: #ffffff; margin: 0;">Your trial ends in 3 days.</h2>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 20px;">Hi ${name},</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Your card will be charged <strong style="color: #ffffff;">${amountDisplay}</strong> on <strong style="color: #ffffff;">${chargeDate}</strong> and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if the data's earning its keep.</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">If it's not for you — cancel anytime before the charge and you won't pay a cent.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">If it's not for you, cancel anytime before the charge and you won't pay a cent.</p>
                         </td>
                     </tr>
                     <tr>
@@ -342,7 +343,7 @@ evan@gammarips.com
                     <tr>
                         <td style="padding: 0 40px 20px;">
                             <p style="font-size: 14px; line-height: 1.6; color: #A0A0A0; border-top: 1px solid #393b4d; padding-top: 24px;">
-                                If anything's off or you have a question before the trial ends, reply to this email — it goes straight to me.
+                                If anything's off or you have a question before the trial ends, reply to this email and it goes straight to me.
                             </p>
                         </td>
                     </tr>
@@ -353,7 +354,7 @@ evan@gammarips.com
                     </tr>
                     <tr>
                         <td style="padding: 10px 40px 40px; text-align: left; font-size: 14px; color: #A0A0A0;">
-                            <p style="margin: 0;">— Evan<br><a href="mailto:evan@gammarips.com" style="color: hsl(74, 80%, 50%);">evan@gammarips.com</a></p>
+                            <p style="margin: 0;">Evan<br><a href="mailto:evan@gammarips.com" style="color: hsl(74, 80%, 50%);">evan@gammarips.com</a></p>
                         </td>
                     </tr>
                 </table>
@@ -384,7 +385,7 @@ export async function sendTrialEndingEmail({
     });
     return sendEmail({
         to: `${name} <${to}>`,
-        subject: `Your GammaRips trial ends in 3 days — ${amountDisplay} charges on ${chargeDateShort}.`,
+        subject: `Your GammaRips trial ends in 3 days; ${amountDisplay} charges on ${chargeDateShort}.`,
         text,
         html,
     });

@@ -3,20 +3,21 @@
 ## What I Am
 The options-flow data layer for agentic trading. Every weeknight I scan 5,230+ US equities for unusual institutional options activity and curate it down to a small, high-signal bullish pool. I serve data and methodology over MCP; I never return a pick. You (the agent) reason over the surface to your own conclusion for your user.
 
-## What I Serve
-- **The curated pool**: today's ~50 strongest bullish setups with thesis, technicals, flow dollars, and a recommended contract per name (`get_enriched_signals`, `get_signal_detail`)
-- **Opportunity surfaces**: realized peak/drawdown excursions per historical setup: what was actually possible, wins and losses (`get_opportunity_surface`)
-- **Outcome database**: queryable realized labels across horizons and features, plus cohort aggregates with sample sizes (`query_outcomes`, `get_outcome_summary`)
-- **Exit-rule simulation**: test a target/stop/horizon rule against history before real money meets it (`estimate_exit_rule`)
-- **Regime context**: point-in-time VIX term structure and the engine's regime rail (`get_regime_context`)
-- **Methodology playbooks**: including the bracket-tournament selection pattern to run against YOUR user's objective (`list_playbooks`, `get_playbook`)
+## What I Serve (9 tools)
+- **The curated pool**: today's strongest bullish setups with thesis, technicals, flow dollars, and a recommended contract per name. `get_pool` with `view=preview` is a free teaser; `view=enriched`, `raw`, or `features` needs a pro key. `get_signal` is the one-ticker deep dive plus the earnings-window check.
+- **Fresh liquidity**: `get_liquidity` gives entry-day open interest, session volume, and greeks for one contract or the whole pool in one call. The pool's own numbers are session-frozen, so re-check here before you decide.
+- **The outcome and receipts database**: `query_outcomes`, one tool with nine views: realized bracket labels, grouped summaries, the opportunity surface (realized peak/drawdown with no exit applied), the touch-probability curve, exit-rule scoring for your own target/stop/horizon, and the paper cohort's receipts.
+- **The raw price tape**: `replay_contract` returns the intraday minute path or the daily marks for a contract. I return bars; I never simulate an exit for you.
+- **Regime context**: `get_regime_context` gives the point-in-time VIX versus VIX3M rail.
+- **Methodology and reference**: `get_playbook` serves the playbooks (including the bracket-tournament selection pattern to run against YOUR user's objective), the plain-English field dictionary, and the data-contract schema. `get_market_calendar_status` and `get_daily_report` round out the free context.
 
 ## How to Work the Pool
 1. `get_market_calendar_status`: is the market even open?
 2. `get_regime_context`: does the volatility rail pass?
-3. `get_enriched_signals`: pull today's pool.
-4. `get_opportunity_surface` / `query_outcomes`: how did setups like these actually behave?
-5. Synthesize a decision surface for your user. State the caveats. Do not output a single "buy this". Sizing, horizon, and the final call belong to the human.
+3. `get_pool`: pull today's pool (`view=enriched` with a key, `view=preview` without one).
+4. `get_liquidity`: re-check entry-day liquidity on the names you like.
+5. `query_outcomes`: how did setups like these actually behave? Use `view=surface` for the excursion data and `view=labels` or `view=summary` for realized outcomes.
+6. Synthesize a decision surface for your user. State the caveats. Do not output a single "buy this". Sizing, horizon, and the final call belong to the human.
 
 Built-in prompts that encode this: `morning_brief`, `analyze_candidate`, `run_your_own_tournament`.
 

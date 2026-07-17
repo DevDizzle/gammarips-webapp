@@ -34,64 +34,88 @@ const webApiSchema = {
   },
 };
 
-const toolGroups: { group: string; blurb: string; tools: { name: string; description: string }[] }[] = [
+type Tier = "free" | "pro" | "free-preview";
+const TIER_LABEL: Record<Tier, string> = {
+  free: "Free",
+  pro: "Pro",
+  "free-preview": "Free preview · Pro full",
+};
+
+const toolGroups: {
+  group: string;
+  blurb: string;
+  tools: { name: string; tier: Tier; description: string }[];
+}[] = [
   {
-    group: "Live pool",
+    group: "The pool",
     blurb: "Today's curated candidates, structured for machine reasoning.",
     tools: [
-      { name: "get_enriched_signals", description: "The curated pool for a scan date: thesis, technicals, flow, and recommended contract per name. Served from the leakage-safe enriched view." },
-      { name: "get_signal_detail", description: "Deep dive on one ticker: full narrative enrichment (news, thesis, catalyst) plus point-in-time features and the recommended contract." },
-      { name: "get_overnight_signals", description: "The raw overnight scan across 5,230+ tickers, before curation. Filter by direction, score, or ticker." },
-      { name: "get_freemium_preview", description: "A minimal public teaser of the top pool names: ticker, direction, score, headline. The taste, not the meal." },
+      {
+        name: "get_pool",
+        tier: "free-preview",
+        description:
+          "The candidate pool for a scan date, in one tool. view=preview is a free public teaser: ticker, direction, score, headline, flow dollars. The full pool needs a pro key: view=enriched (thesis, technicals, catalyst, a delta-targeted recommended contract, the 60-day momentum feature), view=raw (the wide pre-curation scan), and view=features (point-in-time feature vectors from the leakage-safe view).",
+      },
+      {
+        name: "get_signal",
+        tier: "pro",
+        description:
+          "Deep dive on one ticker. view=detail is the full enriched signal (thesis, catalyst, recommended contract, point-in-time features). view=earnings is the doctrine check: is there an earnings date on or before the contract expiration? The pool can carry earnings-window names, so check each candidate yourself.",
+      },
+      {
+        name: "get_liquidity",
+        tier: "pro",
+        description:
+          "Fresh entry-day liquidity, the read the pool's session-frozen snapshots cannot give you. Pass one contract for its live open interest, session volume, last trade, and greeks, or omit it to batch the whole pool in one call for the 10:00 ET decision window. No bid/ask on the current data plan.",
+      },
     ],
   },
   {
     group: "Research substrate",
     blurb: "The deep data a human never browses. This is what you're paying for.",
     tools: [
-      { name: "get_pool_features", description: "Point-in-time feature vectors for the labeled candidate pool: every field knowable at selection time, nothing after." },
-      { name: "get_opportunity_surface", description: "Realized excursion surfaces per historical setup: how far each contract actually ran (peak) and drew down (trough), so your agent learns what was possible." },
-      { name: "query_outcomes", description: "Query the labeled outcome database across horizons, dates, tickers, and feature filters: the raw material for your agent's own research." },
-      { name: "get_outcome_summary", description: "Cohort-shaped aggregate outcomes (grouped by delta bucket, momentum, horizon…) with sample sizes attached." },
-      { name: "estimate_exit_rule", description: "Simulate a target/stop/horizon exit rule against the historical pool. Test YOUR exit idea before your money meets it." },
-      { name: "get_regime_context", description: "Point-in-time volatility regime for a scan date: VIX vs VIX3M, SPY trend, and the engine's regime rail evaluated on those values." },
+      {
+        name: "query_outcomes",
+        tier: "pro",
+        description:
+          "The realized-outcome and receipts database, one tool with nine views. view=labels and view=summary are row-level and grouped bracket outcomes. view=surface is the opportunity surface: realized peak and drawdown per contract with no exit applied. view=harvest is the touch-probability curve. view=exit_rule scores your own target/stop/horizon. view=positions and view=performance are the paper cohort's receipts. Whole-pool composites under a fixed exit are negative by design; this is a research surface, not a track record.",
+      },
+      {
+        name: "replay_contract",
+        tier: "pro",
+        description:
+          "The raw option price tape for your own entry and exit rule. granularity=minute returns the intraday minute path for one session and, if you pass a bracket, the exact first-crossing sequence. granularity=day returns the daily mark series. This server returns bars; it never simulates or validates an exit for you.",
+      },
     ],
   },
   {
-    group: "Methodology",
-    blurb: "How the engine thinks, as playbooks your agent can execute.",
+    group: "Free context, methodology, and reports",
+    blurb: "The reference layer that kills whole classes of hallucination. No key needed.",
     tools: [
-      { name: "list_playbooks", description: "List the published methodology playbooks." },
-      { name: "get_playbook", description: "Fetch one playbook in markdown, including the bracket-tournament selection pattern your agent can run against your own objective." },
-    ],
-  },
-  {
-    group: "Performance & receipts",
-    blurb: "The track record, queryable, including the unflattering parts.",
-    tools: [
-      { name: "get_signal_performance", description: "Forward outcome tracking per enriched signal: signal-level results across the whole pool, not a curated highlight reel." },
-      { name: "get_win_rate_summary", description: "Aggregate underlying-direction statistics for the broad pool over a lookback window, with the caveats attached." },
-      { name: "get_position_history", description: "Closed trades from the paper-trading validation cohort's ledger." },
-      { name: "get_historical_performance", description: "Ledger aggregates by window, direction, and policy version." },
-    ],
-  },
-  {
-    group: "Reports & metadata",
-    blurb: "Context and contracts.",
-    tools: [
-      { name: "get_daily_report", description: "The full daily intelligence report (markdown): the editorial synthesis of the scan." },
-      { name: "get_report_list", description: "List available daily reports." },
-      { name: "get_available_dates", description: "Which scan dates have data." },
-      { name: "get_enriched_signal_schema", description: "The machine-readable data contract: every substrate column with its leakage classification and as-of boundary." },
-    ],
-  },
-  {
-    group: "Reference & external",
-    blurb: "Utilities that kill hallucination classes.",
-    tools: [
-      { name: "get_market_calendar_status", description: "Is the US market open today? Deterministic NYSE calendar. Holidays and early closes included." },
-      { name: "get_signal_explainer", description: "Plain-English definition of any GammaRips signal field." },
-      { name: "web_search", description: "Google web search for real-time fact verification and grounding." },
+      {
+        name: "get_regime_context",
+        tier: "free",
+        description:
+          "Point-in-time volatility regime for a scan date: VIX versus VIX3M and the engine's regime rail evaluated on those values.",
+      },
+      {
+        name: "get_market_calendar_status",
+        tier: "free",
+        description:
+          "view=status answers is the US market open today, from the deterministic NYSE calendar with holidays and early closes. view=scan_dates lists which recent scan dates have GammaRips data.",
+      },
+      {
+        name: "get_playbook",
+        tier: "free",
+        description:
+          "Methodology and reference. Pass a name for a playbook in markdown, including the bracket-tournament selection pattern your agent runs against your own objective. Pass field= for the plain-English definition of any signal field. Pass name=schema for the machine-readable data contract: every column with its leakage classification and as-of boundary.",
+      },
+      {
+        name: "get_daily_report",
+        tier: "free",
+        description:
+          "view=report is the full daily intelligence report in markdown, the editorial synthesis of the scan. view=list returns the recent reports.",
+      },
     ],
   },
 ];
@@ -166,7 +190,7 @@ export default function DevelopersPage() {
               </div>
               <div className="flex gap-4">
                 <span className="text-muted-foreground">Start with:</span>
-                <span className="text-primary">get_enriched_signals · get_opportunity_surface · get_playbook</span>
+                <span className="text-primary">get_pool · query_outcomes · get_playbook</span>
               </div>
             </div>
             <div className="mt-6 pt-4 border-t border-border/50">
@@ -188,7 +212,7 @@ transport = StreamableHttpTransport(
     headers={"Authorization": "Bearer YOUR_API_KEY"},
 )
 async with Client(transport) as client:
-    pool = await client.call_tool("get_enriched_signals", {})
+    pool = await client.call_tool("get_pool", {})
     print(pool)`}
               </pre>
             </div>
@@ -262,6 +286,9 @@ async with Client(transport) as client:
                     <CardHeader className="py-4">
                       <div className="flex justify-between items-start gap-4">
                         <CardTitle className="font-mono text-base text-primary shrink-0">{t.name}</CardTitle>
+                        <Badge variant={t.tier === "pro" ? "default" : "secondary"} className="shrink-0 whitespace-nowrap">
+                          {TIER_LABEL[t.tier]}
+                        </Badge>
                       </div>
                       <CardDescription>{t.description}</CardDescription>
                     </CardHeader>

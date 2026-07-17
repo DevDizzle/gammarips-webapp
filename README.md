@@ -51,7 +51,7 @@ The Arena produces exactly one consensus trade with specific contract details (s
 
 Free, no auth, no API key. Built for AI agents to discover and consume overnight signals programmatically.
 
-**Endpoint:** `https://gammarips-mcp-406581297632.us-central1.run.app/sse`
+**Endpoint:** `https://mcp.gammarips.com/sse`
 
 9 tools available — get signals, reports, enriched data, arena consensus, and more. See [gammarips.com/developers](https://gammarips.com/developers) for documentation.
 

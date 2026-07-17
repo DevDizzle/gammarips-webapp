@@ -1,7 +1,7 @@
 {
   "name": "GammaRips",
   "description": "The options-flow data layer for AI agents. 9 MCP tools over the GammaRips engine: the curated overnight unusual-options-activity pool (with a free preview), point-in-time feature vectors, opportunity surfaces (realized excursion distributions), a queryable outcome database, exit-rule scoring, the raw option price tape, regime context, and methodology playbooks. No pick endpoint, deliberately; your agent reasons to its own conclusion. Data on a paper-trading basis, educational only. Not investment advice.",
-  "url": "https://gammarips-mcp-406581297632.us-central1.run.app/mcp",
+  "url": "https://mcp.gammarips.com/mcp",
   "transport": "streamable-http",
   "auth": {
     "type": "bearer",

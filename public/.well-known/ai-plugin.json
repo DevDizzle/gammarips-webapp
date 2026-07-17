@@ -10,7 +10,7 @@
   },
   "api": {
     "type": "mcp",
-    "url": "https://gammarips-mcp-406581297632.us-central1.run.app/mcp",
+    "url": "https://mcp.gammarips.com/mcp",
     "manifest": "https://gammarips.com/mcp.json"
   },
   "logo_url": "https://gammarips.com/icon.png",

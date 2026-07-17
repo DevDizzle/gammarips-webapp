@@ -27,7 +27,7 @@ Data on a paper-trading basis, educational only. Not investment advice.
 
 ## MCP server (Agent Access, API key required)
 
-- Endpoint: `https://gammarips-mcp-406581297632.us-central1.run.app/mcp`
+- Endpoint: `https://mcp.gammarips.com/mcp`
 - Transport: Streamable HTTP (legacy SSE at `/sse`)
 - Auth: `Authorization: Bearer <API key>`, delivered by email with an active subscription (subscribe at https://gammarips.com/pricing; $39/mo, 7-day free trial)
 - Anonymous funnel tier (no key): the pool preview (`get_pool` with `view=preview`), daily reports, methodology playbooks, and the regime and calendar reference tools. The full pool and the outcome substrate require a key.

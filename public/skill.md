@@ -25,7 +25,7 @@ Built-in prompts that encode this: `morning_brief`, `analyze_candidate`, `run_yo
 Buying every pool name mechanically under a fixed exit has been negative. The pool is where opportunity concentrates (the excursion data shows the winners are in there), but which ones, and how they're traded, is analysis. That analysis is your job.
 
 ## MCP Endpoint
-`https://gammarips-mcp-406581297632.us-central1.run.app/mcp` (Streamable HTTP; legacy SSE at `/sse`)
+`https://mcp.gammarips.com/mcp` (Streamable HTTP; legacy SSE at `/sse`)
 
 Auth: `Authorization: Bearer <API key>`, delivered by email with an active subscription ($39/mo, 7-day free trial at https://gammarips.com/pricing). Without a key, an anonymous funnel tier serves the pool preview, daily reports, methodology playbooks, and reference tools.
 

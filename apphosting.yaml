@@ -15,7 +15,7 @@ runConfig:
 # into the client bundle at build time.
 env:
   - variable: MCP_SERVER_URL
-    value: https://gammarips-mcp-406581297632.us-central1.run.app
+    value: https://mcp.gammarips.com
 
   # Firebase web SDK (public-safe; client rules enforce access control).
   # This MUST be the Firebase-auto-created browser key (UID b7938035-...,

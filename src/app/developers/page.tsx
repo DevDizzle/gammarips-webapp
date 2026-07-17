@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { TOOL_COUNT, PRICE_MONTHLY } from "@/lib/constants";
 
-const MCP_ENDPOINT = "https://gammarips-mcp-406581297632.us-central1.run.app/mcp";
+const MCP_ENDPOINT = "https://mcp.gammarips.com/mcp";
 
 export const metadata = {
   title: "GammaRips MCP: The Options-Flow Data Layer for AI Agents",

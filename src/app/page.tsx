@@ -9,7 +9,7 @@ import { ArrowRight, Scan, LineChart, Bot, FlaskConical } from "lucide-react";
 import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getBlogPostsAdmin } from "@/lib/firebase-admin";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import { AgentDemo } from "@/components/landing/agent-demo";
-import { CurationFunnel } from "@/components/landing/curation-funnel";
+import { HarnessCta } from "@/components/landing/harness-cta";
 import { TOOL_COUNT } from "@/lib/constants";
 
 export const revalidate = 60; // keep the daily pool summary fresh without a full static rebuild
@@ -109,11 +109,11 @@ export default async function LandingPage() {
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
 
-        {/* How the pool gets made: the curation funnel + one example
-            record. This pays off the hero's "curates it down" promise
-            before anything else. The funnel ends at the POOL, never the
-            pick; every number here is already public on /how-it-works. */}
-        <CurationFunnel />
+        {/* Promote the open-source harness: the clone-me GTM artifact for
+            agentic options trading. Sits right after the hero. The detailed
+            curation methodology lives on /how-it-works (and the pillars +
+            Today's Market Snapshot below still pay off the hero's promise). */}
+        <HarnessCta />
 
         {/* Today's Market Snapshot */}
         {summary && (

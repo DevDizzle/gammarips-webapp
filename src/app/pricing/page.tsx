@@ -1,15 +1,16 @@
 import type { Metadata } from 'next';
 import { PricingClient } from './pricing-client';
+import { TOOL_COUNT, PRICE_MONTHLY } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'Pricing — GammaRips',
+  title: 'Pricing | GammaRips',
   description:
-    'Humans browse free. Agents subscribe. The whole website is free forever; $39/mo buys full MCP access for your AI agent — the curated options-flow pool, opportunity surfaces, outcome history, and methodology tools. 7-day free trial.',
+    `Humans browse free. Agents subscribe. The whole website is free forever; ${PRICE_MONTHLY}/mo buys full MCP access for your AI agent: the curated options-flow pool, opportunity surfaces, outcome history, and methodology tools. 7-day free trial.`,
   alternates: { canonical: 'https://gammarips.com/pricing' },
   openGraph: {
-    title: 'Pricing — GammaRips',
+    title: 'Pricing | GammaRips',
     description:
-      'Humans browse free. Agents subscribe. $39/mo for full MCP data access for your AI agent. 7-day free trial.',
+      `Humans browse free. Agents subscribe. ${PRICE_MONTHLY}/mo for full MCP data access for your AI agent. 7-day free trial.`,
     url: 'https://gammarips.com/pricing',
   },
 };
@@ -20,7 +21,7 @@ export default function PricingPage() {
     '@type': 'Product',
     name: 'GammaRips Agent Access',
     description:
-      'MCP data access for AI agents: the curated overnight options-flow pool in structured form, opportunity surfaces (realized excursion distributions per historical setup), a queryable outcome database, regime context, and methodology playbooks. 23 tools for Claude, ChatGPT, or any MCP client. Data on a paper-trading basis — not investment advice.',
+      `MCP data access for AI agents: the curated overnight options-flow pool in structured form, opportunity surfaces (realized excursion distributions per historical setup), a queryable outcome database, regime context, and methodology playbooks. ${TOOL_COUNT} tools for Claude, ChatGPT, or any MCP client. Data on a paper-trading basis, not investment advice.`,
     image: 'https://gammarips.com/og-image.png?v=3',
     brand: { '@type': 'Brand', name: 'GammaRips' },
     offers: {

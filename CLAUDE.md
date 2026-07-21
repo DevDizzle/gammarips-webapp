@@ -47,7 +47,7 @@ uncomfortable true thing before the flattering one. Numbers always carry their
 conditions. No rocket emojis, no "moon," no urgency theater.
 
 ## Key facts copy must get right
-- MCP endpoint: `https://gammarips-mcp-406581297632.us-central1.run.app/mcp`
+- MCP endpoint: `https://mcp.gammarips.com/mcp`
   (Streamable HTTP, primary) — legacy SSE at `/sse`. **23 tools** (see
   `gammarips-mcp/src/server.py` `_ALL_TOOLS`). Auth: bearer API key (Phase 2).
 - Engine mechanics: nightly scan of 5,230+ tickers → enrichment (score ≥ 4,

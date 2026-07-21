@@ -44,7 +44,7 @@ const findings: {
       'Robustly negative — a composite on the order of −2 to −6% per contract per day depending on window, with a win rate around 30%. The excursion data shows real winners inside the pool; the fixed exit and the blind sizing destroy them in aggregate.',
     changed:
       'This finding shaped the product. We do not publish a "buy the pool" index, we do not sell picks, and we tell you on the homepage that blind buying loses. The pool is a surface for analysis — the edge lives in selection and exits.',
-    mcp: 'Reproduce it: query_outcomes + get_outcome_summary over any window you like.',
+    mcp: 'Reproduce it: query_outcomes(view="labels") + query_outcomes(view="summary") over any window you like.',
   },
   {
     slug: 'delta-separates-outcomes',
@@ -58,7 +58,7 @@ const findings: {
       'Delta was the only feature that cleanly separated the two groups. A mid-delta band (roughly |delta| 0.20–0.46) concentrated the favorable outcomes; scores, narrative features, and volume statistics did not separate.',
     changed:
       'The delta band became a live ranking lever in pool curation. It is also why the data layer exposes per-contract feature vectors — the lever is only usable if you can see delta at selection time.',
-    mcp: 'Reproduce it: get_pool_features + query_outcomes, group by delta bucket.',
+    mcp: 'Reproduce it: get_pool(view="features") + query_outcomes, group by delta bucket.',
   },
   {
     slug: 'voloi-gates-remove-winners',
@@ -72,7 +72,7 @@ const findings: {
       'The gates removed real winners. Root cause: scan-time open interest is stale — the overnight sweep that makes a name interesting only becomes visible OI the next morning, so the filter punished exactly the fresh-flow setups the scanner exists to find.',
     changed:
       'The selection-time V/OI and OI gates were removed (2026-06-04). Liquidity is now handled where it is actually knowable: fresh open interest near the open, not stale snapshots at scan time.',
-    mcp: 'Reproduce it: get_enriched_signal_schema documents which fields are stale-by-construction and how they are walled off.',
+    mcp: 'Reproduce it: get_playbook(name="schema") documents which fields are stale-by-construction and how they are walled off.',
   },
   {
     slug: 'momentum-exit-conditional',
@@ -86,7 +86,7 @@ const findings: {
       'Real but exit-conditional: the momentum-stacked cohort beats baseline under a 3-day hold and shows no detectable edge under the same-day exit. Same signal, different exit, opposite conclusion — exits are not a detail.',
     changed:
       'Momentum is used as a soft pre-rank tilt in curation, not a hard gate, and we are accruing an independent forward sample before claiming more. Published here precisely because it is fragile — that is what honest research status looks like.',
-    mcp: 'Reproduce it: estimate_exit_rule with your own target/stop/horizon, then get_outcome_summary grouped by momentum.',
+    mcp: 'Reproduce it: query_outcomes(view="exit_rule", target_pct=, stop_pct=) with your own target/stop/horizon, then query_outcomes(view="summary") grouped by momentum.',
   },
 ];
 

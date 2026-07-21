@@ -4,14 +4,15 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, AlertTriangle, BookOpen, Eye, Clock, UserX } from 'lucide-react';
+import { PRICE_MONTHLY } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'GammaRips Disclosures — What we are NOT',
+  title: 'GammaRips Disclosures: What we are NOT',
   description:
     'Five explicit disclosures about what GammaRips is and is not. Paper-trading only, educational only, no track record marketing pre-30-trades, no registered investment advisor, past performance does not predict future results.',
   alternates: { canonical: 'https://gammarips.com/disclosures' },
   openGraph: {
-    title: 'GammaRips Disclosures — What we are NOT',
+    title: 'GammaRips Disclosures: What we are NOT',
     description:
       'Five explicit disclosures about what GammaRips is and is not.',
     url: 'https://gammarips.com/disclosures',
@@ -22,7 +23,7 @@ const disclosures = [
   {
     icon: BookOpen,
     number: '01',
-    title: 'Paper-trading only — no live execution.',
+    title: 'Paper-trading only. No live execution.',
     body: [
       "Every validation-cohort trade is paper-traded. There is no brokerage account behind this data, no real capital at risk on anything we publish, and no order ever hits a real exchange via GammaRips.",
       "The outcome record is a forward simulator: it ingests Polygon options data, applies fixed tracking rules at the same timestamps a live trader would face, and records the result. The same data feeds the public Track Record page.",
@@ -34,7 +35,7 @@ const disclosures = [
     number: '02',
     title: 'Educational only. Not investment advice.',
     body: [
-      "GammaRips publishes options-flow data, methodology writeups, research findings, and a paper-trading ledger as educational content. Nothing on this site, in our emails, over the MCP API, on @gammarips on X, or in any direct communication constitutes investment, financial, tax, accounting, or legal advice — and anything an AI agent concludes from our data is the user's own analysis, not a GammaRips recommendation.",
+      "GammaRips publishes options-flow data, methodology writeups, research findings, and a paper-trading ledger as educational content. Nothing on this site, in our emails, over the MCP API, on @gammarips on X, or in any direct communication constitutes investment, financial, tax, accounting, or legal advice, and anything an AI agent concludes from our data is the user's own analysis, not a GammaRips recommendation.",
       "We do not know your financial situation, risk tolerance, time horizon, or tax position. A trade that would be reasonable for one person can be ruinous for another. Consult a registered investment advisor before making any trading decision based on what you read here.",
       "Options trading involves risk and is not suitable for every investor. The seller of an uncovered short option faces theoretically unlimited loss. The buyer of an option faces total loss of premium. Read the OCC's Characteristics and Risks of Standardized Options before trading any option.",
     ],
@@ -44,8 +45,8 @@ const disclosures = [
     number: '03',
     title: 'No track-record marketing pre-30-trades.',
     body: [
-      "Every candidate the engine surfaces is tracked to its realized outcome in a public record — the whole pool, winners and losers counted the same way, published as distributions with sample sizes attached (see the Track Record page). Nothing is edited after the fact.",
-      "The aggregate baselines we publish are honest to a fault — the blind-buy composite of our own pool under a fixed exit is negative, and we say so prominently. Beyond that, GammaRips makes no MARKETING claim from any small-sample number: no advertised win rate, no Sharpe ratio, no expectancy claim, no \"we returned X%.\" No cohort statistic is marketed before 30 closed trades, and we will not be talked into selectively quoting early winners.",
+      "Every candidate the engine surfaces is tracked to its realized outcome in a public record: the whole pool, winners and losers counted the same way, published as distributions with sample sizes attached (see the Track Record page). Nothing is edited after the fact.",
+      "The aggregate baselines we publish are honest to a fault: the blind-buy composite of our own pool under a fixed exit is negative, and we say so prominently. Beyond that, GammaRips makes no MARKETING claim from any small-sample number: no advertised win rate, no Sharpe ratio, no expectancy claim, no \"we returned X%.\" No cohort statistic is marketed before 30 closed trades, and we will not be talked into selectively quoting early winners.",
       "Once the 30-trade gate is reached, aggregate performance numbers will be presented with their confidence intervals, the full sample, and the methodology used to compute them. Until then: the raw ledger, the sample-size warnings, and the methodology.",
     ],
   },
@@ -65,8 +66,8 @@ const disclosures = [
     title: 'Founder is not a registered investment advisor.',
     body: [
       "GammaRips is built by Evan Parra. Evan is not a registered investment advisor, broker-dealer, securities lawyer, CFP, CFA, or licensed financial professional of any kind. GammaRips is not a registered investment advisory firm, broker-dealer, or money-management business.",
-      "We do not solicit, manage, or accept assets under management. We sell access to data and software tools: a pipeline that publishes options-flow data on a paper-trading basis, plus programmatic (MCP) access for subscribers' own AI agents. The $39/month Agent Access subscription is a data-and-tools subscription, not an advisory or management fee — and the service deliberately provides no personalized recommendation of any kind.",
-      "If you require advice on options trading specifically tailored to your situation, the responsible path is to consult a licensed advisor in your jurisdiction. We can build the engine but we cannot give you advice — that is, by design, not what this is.",
+      `We do not solicit, manage, or accept assets under management. We sell access to data and software tools: a pipeline that publishes options-flow data on a paper-trading basis, plus programmatic (MCP) access for subscribers' own AI agents. The ${PRICE_MONTHLY}/month Agent Access subscription is a data-and-tools subscription, not an advisory or management fee, and the service deliberately provides no personalized recommendation of any kind.`,
+      "If you require advice on options trading specifically tailored to your situation, the responsible path is to consult a licensed advisor in your jurisdiction. We can build the engine but we cannot give you advice; that is, by design, not what this is.",
     ],
   },
 ];
@@ -74,7 +75,7 @@ const disclosures = [
 const disclosureSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
-  name: 'GammaRips Disclosures — What we are NOT',
+  name: 'GammaRips Disclosures: What we are NOT',
   description:
     'Five explicit disclosures about what GammaRips is and is not.',
   url: 'https://gammarips.com/disclosures',
@@ -100,7 +101,7 @@ export default function DisclosuresPage() {
           </h1>
           <p className="text-lg text-muted-foreground">
             Five explicit disclosures, written plainly. If you only have ninety seconds for this
-            page, read the headlines below — those are the load-bearing claims.
+            page, read the headlines below. Those are the load-bearing claims.
           </p>
         </header>
 
@@ -143,13 +144,13 @@ export default function DisclosuresPage() {
               <Link href="/methodology" className="text-primary underline underline-offset-2 hover:no-underline">
                 Methodology
               </Link>{' '}
-              — every threshold, every data source, and the selection tournament behind the pool.
+              covers every threshold, every data source, and the selection tournament behind the pool.
             </li>
             <li>
               <Link href="/about" className="text-primary underline underline-offset-2 hover:no-underline">
                 About
               </Link>{' '}
-              — the engine, the data, and the person behind it.
+              covers the engine, the data, and the person behind it.
             </li>
             <li>
               <Link href="/terms" className="text-primary underline underline-offset-2 hover:no-underline">
@@ -180,7 +181,7 @@ export default function DisclosuresPage() {
         <section className="text-center">
           <h2 className="text-2xl font-bold mb-3">Questions about a specific disclosure?</h2>
           <p className="text-muted-foreground mb-6">
-            Reply to any GammaRips email — it goes straight to Evan. No autoresponder, no support
+            Reply to any GammaRips email. It goes straight to Evan. No autoresponder, no support
             queue.
           </p>
           <Button asChild variant="outline">

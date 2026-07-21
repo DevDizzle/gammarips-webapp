@@ -4,6 +4,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
+import { TOOL_COUNT, PRICE_MONTHLY } from "@/lib/constants"
 
 export const faqs = [
   {
@@ -12,11 +13,11 @@ export const faqs = [
   },
   {
     question: "What does GammaRips actually sell?",
-    answer: "Data and tools, not picks. The paid product is MCP access for your AI agent: today's curated options-flow pool in structured form, the opportunity surface for historical setups (how far each contract actually ran, and how far it drew down), a queryable outcome database, regime context, and methodology playbooks: 29 tools in total. Everything human-readable on gammarips.com is free, forever. The $39/mo is the machine connection."
+    answer: `Data and tools, not picks. The paid product is MCP access for your AI agent: today's curated options-flow pool in structured form, the opportunity surface for historical setups (how far each contract actually ran, and how far it drew down), a queryable outcome database, regime context, and methodology playbooks: ${TOOL_COUNT} tools in total. Everything human-readable on gammarips.com is free, forever. The ${PRICE_MONTHLY}/mo is the machine connection.`
   },
   {
     question: "Which AI agents work with this?",
-    answer: "Anything that speaks MCP (Model Context Protocol): Claude via connectors or Claude Code, ChatGPT with MCP support, Cursor, or any custom agent using an MCP client library. You add the GammaRips server to your agent's config with your API key, and the 29 tools show up like native capabilities. Setup takes a few minutes; the Developers page has copy-paste instructions."
+    answer: `Anything that speaks MCP (Model Context Protocol): Claude via connectors or Claude Code, ChatGPT with MCP support, Cursor, or any custom agent using an MCP client library. You add the GammaRips server to your agent's config with your API key, and the ${TOOL_COUNT} tools show up like native capabilities. Setup takes a few minutes; the Developers page has copy-paste instructions.`
   },
   {
     question: "Why don't you just tell me what to buy?",
@@ -36,7 +37,7 @@ export const faqs = [
   },
   {
     question: "Can't I just scrape the free site?",
-    answer: "The webapp shows today's pool and reports in human-readable form, and it always will, free. The MCP is a different animal: structured point-in-time data built for machine reasoning, the historical opportunity-surface and outcome databases that never render on a webpage, exit-rule simulation, regime context, and the methodology playbooks, including the bracket-tournament selection pattern your agent can run against its own objective. You could rebuild some of that from scraping. By the time you have, you'll have built a worse version of the thing we sell for $39."
+    answer: `The webapp shows today's pool and reports in human-readable form, and it always will, free. The MCP is a different animal: structured point-in-time data built for machine reasoning, the historical opportunity-surface and outcome databases that never render on a webpage, exit-rule simulation, regime context, and the methodology playbooks, including the bracket-tournament selection pattern your agent can run against its own objective. You could rebuild some of that from scraping. By the time you have, you'll have built a worse version of the thing we sell for ${PRICE_MONTHLY}.`
   },
   {
     question: "Who runs this?",
@@ -44,7 +45,7 @@ export const faqs = [
   },
   {
     question: "What happened to the WhatsApp pick subscription?",
-    answer: "Retired. We used to sell a daily pushed pick for $39/mo; we ended it deliberately. A single shared pick concentrates everyone into one contract, and our research kept showing the edge lives in how a setup is traded, not in the name itself. The same $39 now buys something better-aligned: full MCP data access, so your agent works the whole pool your way. If you had an active subscription, email evan@gammarips.com and we'll make it right."
+    answer: `Retired. We used to sell a daily pushed pick for ${PRICE_MONTHLY}/mo; we ended it deliberately. A single shared pick concentrates everyone into one contract, and our research kept showing the edge lives in how a setup is traded, not in the name itself. The same ${PRICE_MONTHLY} now buys something better-aligned: full MCP data access, so your agent works the whole pool your way. If you had an active subscription, email evan@gammarips.com and we'll make it right.`
   },
   {
     question: "What happens if I cancel?",
@@ -54,7 +55,7 @@ export const faqs = [
 
 export default function Faq() {
     // FAQPage JSON-LD is emitted by the pages that render this component
-    // (home, about) — not here, to avoid duplicate FAQPage markup per page.
+    // (home, about), not here, to avoid duplicate FAQPage markup per page.
     return (
         <>
             <Accordion type="single" collapsible className="w-full mt-12">

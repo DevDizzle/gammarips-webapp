@@ -1,3 +1,5 @@
+import { PRICE_MONTHLY } from '@/lib/constants';
+
 export const metadata = {
   title: 'Terms of Service | GammaRips',
   description: 'Terms of service for GammaRips.',
@@ -12,7 +14,7 @@ export default function TermsPage() {
       
       <div className="prose prose-invert max-w-none space-y-6">
         <h2>1. Service Description</h2>
-        <p>GammaRips is an options-flow data service. Every weeknight it scans US equities for unusual options activity and curates a pool of candidate setups, published with supporting data on a paper-trading basis. The webapp (gammarips.com) is free. The paid subscription ("Agent Access," $39/mo) provides an API key for programmatic access to the GammaRips MCP server — structured data and analysis tools intended for use by AI agents and software the subscriber controls. GammaRips sells data and tools; it does not sell trade recommendations, and the MCP deliberately provides no "what should I buy" endpoint. All content is educational; nothing published by GammaRips constitutes personalized investment advice.</p>
+        <p>GammaRips is an options-flow data service. Every weeknight it scans US equities for unusual options activity and curates a pool of candidate setups, published with supporting data on a paper-trading basis. The webapp (gammarips.com) is free. The paid subscription ("Agent Access," {PRICE_MONTHLY}/mo) provides an API key for programmatic access to the GammaRips MCP server: structured data and analysis tools intended for use by AI agents and software the subscriber controls. GammaRips sells data and tools; it does not sell trade recommendations, and the MCP deliberately provides no "what should I buy" endpoint. All content is educational; nothing published by GammaRips constitutes personalized investment advice.</p>
 
         <h2>2. Not Financial Advice</h2>
         <p><strong>The information provided by GammaRips is for informational purposes only and does not constitute investment advice, financial advice, trading advice, or any other sort of advice.</strong> You should not treat any of the website's content as such. GammaRips does not recommend that any securities, options, or strategies are suitable for any particular investor. You are solely responsible for your own investment decisions.</p>
@@ -24,7 +26,7 @@ export default function TermsPage() {
         <ul>
           <li>Subscriptions are billed monthly through Stripe</li>
           <li>You may cancel at any time through the customer portal</li>
-          <li>Refunds are handled on a case-by-case basis — email evan@gammarips.com</li>
+          <li>Refunds are handled on a case-by-case basis; email evan@gammarips.com</li>
           <li>Prices may change with 30 days notice</li>
         </ul>
 

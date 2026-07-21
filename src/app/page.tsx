@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Scan, LineChart, Bot, FlaskConical } from "lucide-react";
 import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getBlogPostsAdmin } from "@/lib/firebase-admin";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
-import { AgentDemo } from "@/components/landing/agent-demo";
 import { HarnessCta } from "@/components/landing/harness-cta";
 import { TOOL_COUNT } from "@/lib/constants";
 
@@ -16,7 +15,7 @@ export const revalidate = 60; // keep the daily pool summary fresh without a ful
 
 export const metadata: Metadata = {
   title: "GammaRips | Options-flow data for AI agents",
-  description: "Stop asking AI for stock picks. Start giving it real data. GammaRips scans 5,000+ tickers overnight for unusual options activity and curates it to a small high-signal pool. Browse it free, or connect Claude, ChatGPT, or your own agent over MCP for the full data layer. Your agent analyzes. You decide. Paper-trading data, educational only.",
+  description: "Stop asking AI for stock picks. Start giving it real data. GammaRips scans 5,230+ tickers overnight for unusual options activity and curates it to a small high-signal pool. Browse it free, or connect Claude, ChatGPT, or your own agent over MCP for the full data layer. Your agent analyzes. You decide. Paper-trading data, educational only.",
   alternates: {
     canonical: '/',
   },
@@ -108,12 +107,6 @@ export default async function LandingPage() {
 
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
-
-        {/* Promote the open-source harness: the clone-me GTM artifact for
-            agentic options trading. Sits right after the hero. The detailed
-            curation methodology lives on /how-it-works (and the pillars +
-            Today's Market Snapshot below still pay off the hero's promise). */}
-        <HarnessCta />
 
         {/* Today's Market Snapshot */}
         {summary && (
@@ -219,8 +212,9 @@ export default async function LandingPage() {
           </section>
         )}
 
-        {/* What your agent gets: the pillars, then the illustrative
-            agent session (moved here from the old outcomes panel). */}
+        {/* What your agent gets: the three pillars + a single link into the
+            9-tool MCP surface. The one illustrative agent session lives in the
+            hero; deduped 2026-07-21 so it is not shown twice. */}
         <section>
           <h2 className="text-2xl font-bold font-headline text-center mb-6">What your agent gets</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -234,11 +228,10 @@ export default async function LandingPage() {
               </Card>
             ))}
           </div>
-          <div className="mt-8">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4 text-center">
-              What working the pool with an agent looks like
-            </h3>
-            <AgentDemo />
+          <div className="mt-8 text-center">
+            <Button asChild variant="outline" size="sm">
+              <Link href="/developers">See all {TOOL_COUNT} MCP tools &rarr;</Link>
+            </Button>
           </div>
         </section>
 
@@ -252,15 +245,15 @@ export default async function LandingPage() {
               publish the ledger
             </Link>
             . The pool is where opportunity concentrates, and the outcome data
-            proves the winners are in there. But which ones, and how
+            shows the winners are in there. But which ones, and how
             they&apos;re traded, is analysis. That&apos;s your
             agent&apos;s job. Anyone who sells you a shortcut past that step is
             selling you a story.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg">
-              <Link href="/developers">
-                Connect Your Agent <ArrowRight className="ml-2 h-5 w-5" />
+              <Link href="/pricing">
+                Start Your 7-Day Free Trial <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
@@ -268,6 +261,11 @@ export default async function LandingPage() {
             </Button>
           </div>
         </section>
+
+        {/* Open-source harness: the clone-me activation step. Placed after the
+            honesty beat ("the exit is your agent's job") so a convinced visitor
+            flows straight into cloning the loop and minting a key. */}
+        <HarnessCta />
 
         {/* Lab teaser */}
         <section>

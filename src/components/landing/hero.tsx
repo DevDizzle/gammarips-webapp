@@ -92,7 +92,7 @@ export function Hero() {
 
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <Button asChild size="lg">
-          <Link href="/developers">Connect Your Agent &rarr;</Link>
+          <Link href="/pricing">Start Your 7-Day Free Trial &rarr;</Link>
         </Button>
         <Button asChild variant="outline" size="lg">
           <Link href="/signals">Browse Today&apos;s Pool, Free</Link>

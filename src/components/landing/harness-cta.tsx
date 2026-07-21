@@ -53,13 +53,13 @@ export function HarnessCta() {
 
       <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
         <Button asChild size="lg">
-          <Link href={HARNESS_REPO} target="_blank" rel="noopener noreferrer">
-            <Github className="mr-2 h-5 w-5" /> Get the Harness on GitHub
+          <Link href="/pricing">
+            Start Your Trial, Get Your Key <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
         </Button>
         <Button asChild variant="outline" size="lg">
-          <Link href="/developers">
-            Connect Your Agent <ArrowRight className="ml-2 h-5 w-5" />
+          <Link href={HARNESS_REPO} target="_blank" rel="noopener noreferrer">
+            <Github className="mr-2 h-5 w-5" /> Get the Harness on GitHub
           </Link>
         </Button>
       </div>

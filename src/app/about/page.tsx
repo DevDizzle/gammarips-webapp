@@ -57,7 +57,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
               <ul className="space-y-3 text-sm text-foreground/90">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span><strong>Step 1: Grab your API key.</strong> It arrives by email shortly after checkout. Check Spam / Promotions if you don&apos;t see it, or email <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">evan@gammarips.com</a> and we&apos;ll sort it immediately.</span>
+                  <span><strong>Step 1: Generate your API key.</strong> Head to your <Link href="/account" className="text-primary hover:underline">account page</Link> and click Generate API key. The key is shown once, so copy it right then. Any trouble, email <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">evan@gammarips.com</a> and we&apos;ll sort it immediately.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />

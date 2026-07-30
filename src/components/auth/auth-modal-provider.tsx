@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { createCheckoutSession } from '@/app/actions';
 import { loadStripe } from "@stripe/stripe-js";
+import { event as trackEvent } from '@/lib/gtag';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -33,6 +34,7 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
 
   // Auth Handlers
   const openAuthModal = (initialView: 'signIn' | 'signUp' = 'signUp') => {
+    trackEvent('auth_modal_open', { view: initialView });
     setAuthView(initialView);
     setIsAuthOpen(true);
   };

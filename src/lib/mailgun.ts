@@ -93,10 +93,11 @@ You're in. GammaRips Agent Access is live on your account.
 
 Here's how to get your agent working the data:
 
-1. Get your API key.
-   It's issued with your subscription. Find it on your account page
-   (https://gammarips.com/account), or just reply to this email and
-   we'll sort it immediately.
+1. Generate your API key.
+   Go to your account page (https://gammarips.com/account) and click
+   "Generate API key". The key is shown once, so copy it right then.
+   Any trouble, just reply to this email and we'll sort it
+   immediately.
 
 2. Connect your agent.
    Claude Code, Cursor, or any MCP client that can send an
@@ -158,7 +159,7 @@ Data on a paper-trading basis, educational only. Not investment advice. Past per
                         <td style="padding: 0 40px 40px;">
                             <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">You're in. <strong>GammaRips Agent Access</strong> is live on your account. Here's how to get your agent working the data:</p>
-                            ${step('1', 'Get your API key', `It's issued with your subscription. Find it on your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>, or just reply to this email and we'll sort it immediately.`)}
+                            ${step('1', 'Generate your API key', `Go to your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a> and click &ldquo;Generate API key&rdquo;. The key is shown once, so copy it right then. Any trouble, just reply to this email and we'll sort it immediately.`)}
                             ${step('2', 'Connect your agent', `Claude Code, Cursor, or any MCP client that can send an Authorization header. Copy-paste setup on the <a href="https://gammarips.com/developers" style="color: hsl(74, 80%, 50%);">MCP docs page</a>.`)}
                             ${step('3', 'Run your first brief', `Ask your agent to run the <code>morning_brief</code> prompt, or say &ldquo;pull the GammaRips pool and tell me what's interesting.&rdquo; All ${TOOL_COUNT} tools (the curated pool, opportunity surfaces, outcome history, exit-rule simulation, and methodology playbooks) are live on your key.`)}
                             <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding: 32px 0 8px;">

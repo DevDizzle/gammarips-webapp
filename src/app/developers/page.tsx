@@ -155,8 +155,9 @@ export default function DevelopersPage() {
               <p className="text-muted-foreground">
                 The full data layer (outcome history, opportunity surfaces,
                 exit-rule simulation, all {TOOL_COUNT} tools) is {PRICE_MONTHLY}/mo
-                with a 7-day free trial. Your API key arrives by email shortly
-                after you subscribe.
+                with a 7-day free trial. After you subscribe, generate your
+                API key on your account page. It&apos;s shown once, so copy
+                it then.
               </p>
               <Link href="/pricing">
                 <Button size="lg">Get Your API Key &rarr;</Button>

@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
+import { event as trackEvent } from '@/lib/gtag';
 import { TOOL_COUNT, PRICE_MONTHLY } from '@/lib/constants';
 
 const stripePromise = loadStripe(
@@ -39,6 +40,12 @@ export function PricingClient() {
   const [loading, setLoading] = useState(false);
 
   async function handleCheckout() {
+    trackEvent('begin_checkout', {
+      currency: 'USD',
+      value: Number(PRICE_MONTHLY.replace(/[^0-9.]/g, '')) || 0,
+      plan: 'pro',
+      authenticated: !!user,
+    });
     if (!user) {
       window.location.href = '/auth/action?mode=signUp&redirect=/pricing';
       return;
@@ -162,8 +169,9 @@ export function PricingClient() {
               )}
             </Button>
             <p className="text-xs text-muted-foreground text-center mt-3">
-              No charge during trial. Your API key arrives by email shortly
-              after checkout; cancel anytime from your account.
+              No charge during trial. After checkout, generate your API key
+              on your account page (it&apos;s shown once, so copy it then).
+              Cancel anytime from your account.
             </p>
           </CardContent>
         </Card>

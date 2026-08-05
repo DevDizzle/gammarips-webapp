@@ -5,7 +5,7 @@
   "transport": "streamable-http",
   "auth": {
     "type": "bearer",
-    "instructions": "Subscribe at https://gammarips.com/pricing ($39/mo, 7-day free trial); your API key arrives by email shortly after checkout. Send it as 'Authorization: Bearer <key>'. Without a key, an anonymous funnel tier is available: pool preview, daily reports, methodology playbooks, and reference tools."
+    "instructions": "Subscribe at https://gammarips.com/pricing ($39/mo, 7-day free trial); after checkout, generate your API key at https://gammarips.com/account (it is shown once, at creation). Send it as 'Authorization: Bearer <key>'. Without a key, an anonymous funnel tier is available: pool preview, daily reports, methodology playbooks, and reference tools."
   },
   "tools": [
     "get_pool",

@@ -32,8 +32,16 @@ interface AboutPageProps {
 }
 
 export default async function AboutPage({ searchParams }: AboutPageProps) {
-  const { welcome } = await searchParams;
+  const { welcome, session_id } = await searchParams;
   const isWelcome = welcome === '1';
+
+  // Provision entitlement synchronously from the checkout session, redundant
+  // with the Stripe webhook on purpose: the paying user's first landing must
+  // not depend on webhook registration or delivery. Idempotent; never throws.
+  if (isWelcome && session_id) {
+    const { provisionFromCheckoutSession } = await import('@/lib/stripe-sync');
+    await provisionFromCheckoutSession(session_id);
+  }
 
   const aboutSchema = {
     "@context": "https://schema.org",
@@ -57,7 +65,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
               <ul className="space-y-3 text-sm text-foreground/90">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span><strong>Step 1: Generate your API key.</strong> Head to your <Link href="/account" className="text-primary hover:underline">account page</Link> and click Generate API key. The key is shown once, so copy it right then. Any trouble, email <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">evan@gammarips.com</a> and we&apos;ll sort it immediately.</span>
+                  <span><strong>Step 1: Generate your API key.</strong> Head to your <Link href="/account?welcome=1" className="text-primary hover:underline">account page</Link> and click Generate API key. The key is shown once, so copy it right then. Any trouble, email <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">evan@gammarips.com</a> and we&apos;ll sort it immediately.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />

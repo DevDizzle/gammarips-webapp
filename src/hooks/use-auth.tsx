@@ -64,14 +64,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (!dbUser) return false;
 
-    // Lifetime/founder status, legacy war-room/edge grants, or Pro
-    if (dbUser.plan === 'pro' || dbUser.plan === 'warroom' || dbUser.plan === 'edge') return true;
+    // Mirrors isUserMcpEntitledAdmin (firebase-admin.ts) — the server-side
+    // gate on key issuance. Diverging here shows users a Generate button the
+    // server will reject (or hides one it would honor). Notably: plan and
+    // bare isSubscribed do NOT grant — legacy pre-Stripe 'warroom'/'edge'
+    // accounts carry both without a Stripe subscription.
     if (dbUser.subscriptionStatus === 'founder_lifetime') return true;
+    if (dbUser.subscriptionStatus === 'trialing') return true;
+    if (dbUser.isSubscribed && dbUser.stripeSubscriptionId) return true;
 
-    // If the user has an active Stripe subscription, they are Pro.
-    if (dbUser.isSubscribed) return true;
-
-    // If the user is in their trial period (proUntil > Now), they are Pro.
+    // Trial/paid period still running (proUntil > now).
     if (dbUser.proUntil) {
         try {
             return (dbUser.proUntil as any).toDate() > new Date();

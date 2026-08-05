@@ -1045,7 +1045,10 @@ export function isUserMcpEntitledAdmin(user: DbUser): boolean {
     // Stripe status directly so a subscription.updated event that transiently
     // clears isSubscribed/proUntil mid-trial can't lock a trial user out.
     if (user.subscriptionStatus === 'trialing') return true;
-    if (user.isSubscribed === true) return true;
+    // isSubscribed alone is NOT sufficient: legacy pre-Stripe grants (e.g.
+    // ProfitScout-era 'warroom' accounts) carry isSubscribed=true with no
+    // Stripe subscription and must not mint keys for the paid product.
+    if (user.isSubscribed === true && user.stripeSubscriptionId) return true;
     const proUntil = (user as any).proUntil;
     if (proUntil && typeof proUntil.toDate === 'function' && proUntil.toDate() > new Date()) {
         return true;

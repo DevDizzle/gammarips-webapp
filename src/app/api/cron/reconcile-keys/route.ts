@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { timingSafeEqual } from 'crypto';
 import { stripe } from '@/lib/stripe';
+import { subscriptionPeriodEnd } from '@/lib/stripe-sync';
 import {
   listActiveMcpKeysAdmin,
   getUserAdmin,
@@ -49,6 +50,7 @@ export async function POST(req: NextRequest) {
     checkedUids: 0,
     revokedUids: 0,
     revokedKeys: 0,
+    refreshedUids: 0,
     errors: [] as string[],
   };
 
@@ -68,11 +70,13 @@ export async function POST(req: NextRequest) {
         // etc.) -> DO NOT touch. Revoking only on a DEFINITIVE not-entitled
         // signal means a Stripe outage can never mass-revoke paying customers.
         let entitled: boolean | null = false;
+        let liveSub: import('stripe').Stripe.Subscription | null = null;
         if (user?.subscriptionStatus === 'founder_lifetime') {
           entitled = true;
         } else if (user?.stripeSubscriptionId) {
           try {
             const sub = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
+            liveSub = sub;
             entitled = ENTITLED_STRIPE_STATUSES.has(sub.status);
           } catch (err: any) {
             // A canceled/expired sub still RETURNS (status='canceled') — the
@@ -99,6 +103,16 @@ export async function POST(req: NextRequest) {
           summary.revokedUids++;
           summary.revokedKeys += n;
           console.log(`Reconcile: revoked ${n} MCP key(s) for lapsed user ${uid}`);
+        } else if (entitled === true && liveSub) {
+          // Entitled users get their mirror refreshed too. Without this a
+          // missed renewal webhook leaves proUntil frozen at its first value
+          // forever (observed in production) and one bad event later the user
+          // drops to unentitled with no proUntil fallback.
+          const periodEnd = subscriptionPeriodEnd(liveSub);
+          if (periodEnd) {
+            await setUserSubscriptionStatusAdmin(uid, true, periodEnd, 'pro');
+            summary.refreshedUids++;
+          }
         }
       } catch (err: any) {
         summary.errors.push(`${uid}: ${err?.message || 'error'}`);

@@ -38,6 +38,18 @@ export default function AccountPage() {
   const [newKey, setNewKey] = useState<string | null>(null); // shown once
   const [keyBusy, setKeyBusy] = useState(false);
 
+  // Arrived from checkout (?welcome=1)? If entitlement hasn't landed yet,
+  // show a finalizing state instead of the upsell — the Firestore snapshot in
+  // useAuth flips isPro live the moment the webhook or the post-checkout
+  // provisioning writes the user doc. window.location, not useSearchParams:
+  // this page is client-only and not an SEO surface.
+  const [fromCheckout, setFromCheckout] = useState(false);
+  useEffect(() => {
+    setFromCheckout(
+      new URLSearchParams(window.location.search).get('welcome') === '1'
+    );
+  }, []);
+
   const refreshKeyStatus = useCallback(async () => {
     if (!user || !isPro) return;
     try {
@@ -231,6 +243,16 @@ export default function AccountPage() {
                 </code>
               </div>
             </>
+          ) : fromCheckout ? (
+            <div className="flex items-start gap-3">
+              <Loader2 className="h-5 w-5 animate-spin shrink-0 mt-0.5" />
+              <p className="text-muted-foreground">
+                Finalizing your subscription. This page updates automatically,
+                usually within a few seconds. If this message doesn&apos;t clear,
+                email <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">evan@gammarips.com</a> and
+                we&apos;ll sort it immediately.
+              </p>
+            </div>
           ) : (
             <>
               <p className="text-muted-foreground">

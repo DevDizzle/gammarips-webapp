@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
-import { setUserSubscriptionStatusAdmin, getUserByStripeCustomerIdAdmin, revokeMcpKeysForUserAdmin } from '@/lib/firebase-admin';
+import { getUserByStripeCustomerIdAdmin, revokeMcpKeysForUserAdmin } from '@/lib/firebase-admin';
+import { syncSubscriptionToUser } from '@/lib/stripe-sync';
 import { sendWelcomeEmail, sendTrialEndingEmail } from '@/lib/mailgun';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'; // Import direct firestore access
 
@@ -27,121 +28,43 @@ const MCP_REVOKE_STATUSES = new Set<Stripe.Subscription.Status>([
   'incomplete_expired',
 ]);
 
-async function updateSubscriptionStatus(
-    customerId: string, 
-    status: string, 
-    plan?: 'pro' | 'free',
-    subscriptionId?: string
-) {
-    const user = await getUserByStripeCustomerIdAdmin(customerId);
-    if (!user) {
-        console.warn(`Webhook Error: No user found with Stripe Customer ID: ${customerId}`);
-        // Optionally create pending record here if needed
-        return;
-    }
-
-    const db = getFirestore();
-    const userRef = db.collection('users').doc(user.uid);
-    
-    const updates: any = {
-        subscriptionStatus: status,
-    };
-
-    if (plan) {
-        updates.plan = plan;
-    }
-    
-    if (subscriptionId) {
-        updates.stripeSubscriptionId = subscriptionId;
-    }
-
-    if (status === 'active') {
-        updates.isSubscribed = true;
-        // Only set subscribedAt if it's not already set? Or update it on renewal/upgrade?
-        // Prompt says "subscribedAt: serverTimestamp()" on checkout.session.completed
-    } else if (status === 'canceled' || status === 'unpaid') {
-        updates.isSubscribed = false;
-        if (status === 'canceled') {
-            updates.canceledAt = FieldValue.serverTimestamp();
-        }
-    }
-
-    await userRef.set(updates, { merge: true });
-    
-    // Also call the old helper for compatibility if needed, but we are doing direct updates now for more control
-    // setUserSubscriptionStatusAdmin sets isSubscribed and proUntil. 
-    // We might want to keep using it or replicate its logic.
-    // Let's rely on this specific update function for the new logic and also ensure proUntil is handled if active.
-    
-    if (status === 'active') {
-         // We need subscription object to get period end... passed in?
-         // For now, let's assume the calling function handles the period_end update via setUserSubscriptionStatusAdmin if needed,
-         // OR we just set isSubscribed here.
-         // Actually, let's look at how handleSubscriptionChange did it.
-         // It calls setUserSubscriptionStatusAdmin.
-    }
-}
-
-
 async function handleSubscriptionChange(
     subscription: Stripe.Subscription,
-    isSubscribed: boolean,
     isNew: boolean = false,
     planOverride?: 'pro'
 ) {
-    const customerId = subscription.customer as string;
-    const user = await getUserByStripeCustomerIdAdmin(customerId);
+    // Entitlement + status-field writes live in stripe-sync (shared with the
+    // post-checkout landing page and the reconcile cron). An unresolvable user
+    // is already logged loudly there.
+    const synced = await syncSubscriptionToUser(subscription, { isNew, planOverride });
+    if (!synced) return;
+    const { uid, user } = synced;
 
-    if (user) {
-        // Determine plan from price ID
-        const priceId = subscription.items.data[0].price.id;
-        const mappedPlan = PRICE_TO_PLAN[priceId];
-        const finalPlan = planOverride || mappedPlan || 'pro';
-
-        await setUserSubscriptionStatusAdmin(
-            user.uid,
-            isSubscribed,
-            subscription.current_period_end,
-            finalPlan
-        );
-
-        // Update detailed status fields
-        const db = getFirestore();
-        await db.collection('users').doc(user.uid).set({
-            subscriptionStatus: subscription.status,
-            stripeSubscriptionId: subscription.id,
-            plan: finalPlan, // Ensure plan is set
-            ...(isNew ? { subscribedAt: FieldValue.serverTimestamp() } : {})
-        }, { merge: true });
-
-        // Real-time MCP key revocation on lapse. Keyed on the ACTUAL terminal
-        // Stripe status (NOT `isSubscribed`, which treats 'trialing' as false
-        // and would wrongly revoke a trial user's key). 'past_due' is left
-        // active during dunning to match the 2-day proUntil grace; the
-        // reconciliation cron is the safety net for any missed webhook.
-        if (MCP_REVOKE_STATUSES.has(subscription.status)) {
-            try {
-                const n = await revokeMcpKeysForUserAdmin(user.uid, `stripe_${subscription.status}`);
-                if (n > 0) console.log(`Webhook: revoked ${n} MCP key(s) for ${user.uid} (${subscription.status})`);
-            } catch (err) {
-                console.error(`Webhook: failed to revoke MCP keys for ${user.uid}`, err);
-            }
+    // Real-time MCP key revocation on lapse. Keyed on the ACTUAL terminal
+    // Stripe status. 'past_due' is left active during dunning to match the
+    // 2-day proUntil grace; the reconciliation cron is the safety net for any
+    // missed webhook.
+    if (MCP_REVOKE_STATUSES.has(subscription.status)) {
+        try {
+            const n = await revokeMcpKeysForUserAdmin(uid, `stripe_${subscription.status}`);
+            if (n > 0) console.log(`Webhook: revoked ${n} MCP key(s) for ${uid} (${subscription.status})`);
+        } catch (err) {
+            console.error(`Webhook: failed to revoke MCP keys for ${uid}`, err);
         }
+    }
 
-        // Send the powerful new welcome email ONLY on a new active subscription.
-        if (isSubscribed && isNew && user.email) {
-            console.log(`Webhook: Sending welcome email to new subscriber ${user.email}`);
-            await sendWelcomeEmail({
-                to: user.email,
-                name: user.displayName || user.email.split('@')[0],
-            }).catch(err => {
-                // Log error but don't fail the webhook processing
-                console.error(`Webhook: Failed to send welcome email to new subscriber ${user.email}`, err);
-            });
-        }
-
-    } else {
-        console.warn(`Webhook Error: No user found with Stripe Customer ID: ${customerId}`);
+    // Send the welcome email ONLY on a new entitled subscription (a 7-day
+    // trial IS entitled — it's a trial of the paid product).
+    const entitled = subscription.status === 'active' || subscription.status === 'trialing';
+    if (entitled && isNew && user.email) {
+        console.log(`Webhook: Sending welcome email to new subscriber ${user.email}`);
+        await sendWelcomeEmail({
+            to: user.email,
+            name: user.displayName || user.email.split('@')[0],
+        }).catch(err => {
+            // Log error but don't fail the webhook processing
+            console.error(`Webhook: Failed to send welcome email to new subscriber ${user.email}`, err);
+        });
     }
 }
 
@@ -165,7 +88,9 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
             events: [{
                 name: 'purchase',
                 params: {
-                    transaction_id: session.payment_intent as string,
+                    // Trial checkouts have no payment_intent (no charge yet);
+                    // fall back to the session id so the event still sends.
+                    transaction_id: (session.payment_intent as string) || session.id,
                     value: (session.amount_total || 0) / 100,
                     currency: session.currency?.toUpperCase() || 'USD',
                     items: [{
@@ -218,9 +143,9 @@ export async function POST(req: NextRequest) {
   switch (event.type) {
     case 'customer.subscription.created':
         const subscriptionCreated = event.data.object as Stripe.Subscription;
-        // We rely on checkout.session.completed for plan info usually, 
+        // We rely on checkout.session.completed for plan info usually,
         // but this handles purely backend subscription creations if any.
-        await handleSubscriptionChange(subscriptionCreated, true, true);
+        await handleSubscriptionChange(subscriptionCreated, true);
         break;
     case 'customer.subscription.updated':
         const subscriptionUpdated = event.data.object as Stripe.Subscription;
@@ -228,15 +153,28 @@ export async function POST(req: NextRequest) {
         // set to the trial end and the user isn't locked out mid-trial by an
         // update event. Only genuinely non-entitled statuses flip isSubscribed
         // off (which, via MCP_REVOKE_STATUSES, also revokes the key).
-        await handleSubscriptionChange(
-            subscriptionUpdated,
-            subscriptionUpdated.status === 'active' || subscriptionUpdated.status === 'trialing',
-            false
-        );
+        await handleSubscriptionChange(subscriptionUpdated, false);
         break;
+    case 'invoice.paid':
+    case 'invoice.payment_succeeded': {
+        // Renewal path. Without this, proUntil is only refreshed if
+        // customer.subscription.updated happens to be registered and delivered;
+        // a paying customer's proUntil freezing at its first value was the
+        // observed failure. Re-retrieve the subscription for a fresh
+        // current_period_end and resync.
+        const invoice = event.data.object as Stripe.Invoice;
+        const invSub = (invoice as any).subscription
+            ?? (invoice as any).parent?.subscription_details?.subscription;
+        const invSubId = typeof invSub === 'string' ? invSub : invSub?.id;
+        if (invSubId) {
+            const renewedSub = await stripe.subscriptions.retrieve(invSubId);
+            await handleSubscriptionChange(renewedSub, false);
+        }
+        break;
+    }
     case 'customer.subscription.deleted':
         const subscriptionDeleted = event.data.object as Stripe.Subscription;
-        await handleSubscriptionChange(subscriptionDeleted, false, false);
+        await handleSubscriptionChange(subscriptionDeleted, false);
         
         // Explicitly handle cancellation timestamp
         const customerId = subscriptionDeleted.customer as string;
@@ -261,7 +199,7 @@ export async function POST(req: NextRequest) {
                  plan = PRICE_TO_PLAN[priceId];
             }
 
-            await handleSubscriptionChange(subscription, true, true, plan);
+            await handleSubscriptionChange(subscription, true, plan);
             await sendPurchaseEventToGA(session);
 
             // Provision WhatsApp access: write a Firestore doc the OpenClaw

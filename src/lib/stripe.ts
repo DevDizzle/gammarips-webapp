@@ -31,6 +31,11 @@ export async function createStripeCheckoutSession(
         await getOrCreateUserAdmin(uid, user.isAnonymous, (user.displayName || undefined) as string | undefined, (user.email || undefined) as string | undefined, customerId);
     }
 
+    // firebaseUID on both the session and the subscription lets the webhook
+    // and the post-checkout landing page resolve the user even if the
+    // users.stripeCustomerId mirror is missing or stale.
+    const fullMetadata: { [key: string]: string } = { ...(metadata ?? {}), firebaseUID: uid };
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'subscription',
@@ -41,12 +46,10 @@ export async function createStripeCheckoutSession(
           quantity: 1,
         },
       ],
-      metadata,
+      metadata: fullMetadata,
       subscription_data: opts?.trialPeriodDays
-        ? { trial_period_days: opts.trialPeriodDays, metadata }
-        : metadata
-        ? { metadata }
-        : undefined,
+        ? { trial_period_days: opts.trialPeriodDays, metadata: fullMetadata }
+        : { metadata: fullMetadata },
       allow_promotion_codes: true,
       success_url: successUrl,
       cancel_url: cancelUrl,

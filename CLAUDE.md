@@ -13,7 +13,7 @@ in another (`gammarips-mcp`). This repo is presentation + Stripe + Firebase auth
   human-readable is paywalled.
 - **The paid product is MCP access — $39/mo ("Agent Access").** Bring-your-own-
   agent traders connect Claude/ChatGPT/any MCP client to the GammaRips MCP
-  server (23 tools: curated pool, opportunity surfaces, outcome history,
+  server (9 tools: curated pool, opportunity surfaces, outcome history,
   methodology playbooks).
 - **We are a data vendor, not an advisor.** We sell the opportunity surface —
   curated data + tools an agent reasons over — never a pick, never a return.
@@ -48,8 +48,12 @@ conditions. No rocket emojis, no "moon," no urgency theater.
 
 ## Key facts copy must get right
 - MCP endpoint: `https://mcp.gammarips.com/mcp`
-  (Streamable HTTP, primary) — legacy SSE at `/sse`. **23 tools** (see
-  `gammarips-mcp/src/server.py` `_ALL_TOOLS`). Auth: bearer API key (Phase 2).
+  (Streamable HTTP, primary) — legacy SSE at `/sse`. **9 tools** since the MCP v4
+  consolidation (2026-07-17, 29 → 9 arg-driven tools). Auth: bearer API key (Phase 2);
+  5 free tools, 4 pro. **Never hardcode the count in copy** — import `TOOL_COUNT` from
+  `src/lib/constants.ts`, which is the single source of truth and already propagates to
+  all 28 usages. The static `public/` agent-discovery files cannot import it and are
+  synced by hand; upstream truth is `gammarips-mcp/src/server.py` `_ALL_TOOLS`.
 - Engine mechanics: nightly scan of 5,230+ tickers → enrichment (score ≥ 4,
   UOA > $500K, bullish-only, edge-ranked to ~50) → two safety rails (earnings,
   VIX ≤ VIX3M). The paper cohort validates selection under the V7.1 GIGO exit

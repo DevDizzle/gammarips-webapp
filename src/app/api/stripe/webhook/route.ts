@@ -37,7 +37,9 @@ async function handleSubscriptionChange(
     // post-checkout landing page and the reconcile cron). An unresolvable user
     // is already logged loudly there.
     const synced = await syncSubscriptionToUser(subscription, { isNew, planOverride });
-    if (!synced) return;
+    // applied=false means the event was for a stale subscription and nothing
+    // was written — acting on it (revoke/email) is exactly the lockout bug.
+    if (!synced || !synced.applied) return;
     const { uid, user } = synced;
 
     // Real-time MCP key revocation on lapse. Keyed on the ACTUAL terminal
@@ -54,9 +56,11 @@ async function handleSubscriptionChange(
     }
 
     // Send the welcome email ONLY on a new entitled subscription (a 7-day
-    // trial IS entitled — it's a trial of the paid product).
+    // trial IS entitled — it's a trial of the paid product). `user` is the
+    // pre-sync snapshot: an already-set subscribedAt means another event
+    // (created vs checkout.completed both run isNew) already sent it.
     const entitled = subscription.status === 'active' || subscription.status === 'trialing';
-    if (entitled && isNew && user.email) {
+    if (entitled && isNew && user.email && !(user as any).subscribedAt) {
         console.log(`Webhook: Sending welcome email to new subscriber ${user.email}`);
         await sendWelcomeEmail({
             to: user.email,
@@ -139,7 +143,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
   }
 
-  // Handle the event
+  // Handle the event. The try/catch exists to LOG failures with the event
+  // identity — the 500 is deliberate so Stripe retries (its backoff is the
+  // recovery path for transient Firestore/Stripe errors).
+  try {
   switch (event.type) {
     case 'customer.subscription.created':
         const subscriptionCreated = event.data.object as Stripe.Subscription;
@@ -175,11 +182,13 @@ export async function POST(req: NextRequest) {
     case 'customer.subscription.deleted':
         const subscriptionDeleted = event.data.object as Stripe.Subscription;
         await handleSubscriptionChange(subscriptionDeleted, false);
-        
-        // Explicitly handle cancellation timestamp
+
+        // Explicitly handle cancellation timestamp — but ONLY if the deleted
+        // sub is the user's current one; a stale delete for an old sub must
+        // not stamp a resubscribed user as canceled.
         const customerId = subscriptionDeleted.customer as string;
         const user = await getUserByStripeCustomerIdAdmin(customerId);
-        if (user) {
+        if (user && user.stripeSubscriptionId === subscriptionDeleted.id) {
              const db = getFirestore();
              await db.collection('users').doc(user.uid).set({
                  subscriptionStatus: 'canceled',
@@ -256,6 +265,10 @@ export async function POST(req: NextRequest) {
         break;
     default:
       // console.log(`Unhandled event type ${event.type}`);
+  }
+  } catch (err) {
+    console.error(`Webhook: handler failed for ${event.type} (${event.id})`, err);
+    return NextResponse.json({ error: 'handler failure' }, { status: 500 });
   }
 
   return NextResponse.json({ received: true });

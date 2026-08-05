@@ -24,9 +24,18 @@ this app owns all writes).
 3. **Subscribe.** `/pricing` → `createCheckoutSession` (Stripe Checkout,
    subscription mode, 7-day trial). Stripe creates the Customer; `stripeCustomerId`
    is saved on the user.
-4. **Entitlement.** Stripe → webhook `checkout.session.completed` /
-   `customer.subscription.created` → `setUserSubscriptionStatusAdmin(true, …)`
-   (`isSubscribed`, `plan`, `proUntil`+2-day grace). **No key is minted here.**
+4. **Entitlement.** Three writers, all funneling through
+   `syncSubscriptionToUser` (`src/lib/stripe-sync.ts`), so they agree by
+   construction: (a) the Stripe webhook (`checkout.session.completed`,
+   `customer.subscription.*`, and `invoice.paid`/`invoice.payment_succeeded`
+   for renewals); (b) the post-checkout landing page (`/about?welcome=1` +
+   session_id) provisioning synchronously so the first landing never depends
+   on webhook delivery; (c) the reconcile cron refreshing entitled users'
+   `proUntil` from the live subscription. Writes: `isSubscribed`, `plan`,
+   `proUntil`+2-day grace (period end resolved across Stripe API shapes:
+   top-level, per-item, trial_end). A non-entitled event only downgrades if it
+   is for the user's CURRENT subscription and the customer has no other live
+   one (stale-event guard). **No key is minted here.**
 5. **Generate key (self-serve, show-once).** `/account` → "Generate API Key" →
    server action `generateMcpApiKey(idToken)` verifies the token, re-checks
    *real* entitlement server-side (`isUserMcpEntitledAdmin` — subscribed / trial /
@@ -80,7 +89,12 @@ gcloud scheduler jobs create http mcp-reconcile-keys \
 
 1. Register the Stripe webhook endpoint (`/api/stripe/webhook`) for events:
    `checkout.session.completed`, `customer.subscription.created|updated|deleted`,
-   `customer.subscription.trial_will_end`. Set `STRIPE_WEBHOOK_SECRET`.
+   `customer.subscription.trial_will_end`, `invoice.paid`,
+   `invoice.payment_succeeded` (the invoice events drive renewal `proUntil`
+   refresh — without them a renewal only syncs if a `subscription.updated`
+   happens to fire). Set `STRIPE_WEBHOOK_SECRET`. As of 2026-08-05 the two
+   invoice events still need to be added to the live endpoint's event list
+   (operator task, Stripe dashboard).
 2. Set the $39 price id + Billing Portal config id + `RECONCILE_CRON_SECRET`.
 3. Create the reconciliation Cloud Scheduler job (above).
 4. Deploy the webapp; verify `/account` generate → key resolves on the MCP.

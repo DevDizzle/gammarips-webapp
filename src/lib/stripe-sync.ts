@@ -108,11 +108,18 @@ export async function syncSubscriptionToUser(
           `stripe-sync: customer has live subscription ${other.id}; syncing it ` +
             `instead of downgrading from ${sub.id}`
         );
-        return syncSubscriptionToUser(other, {});
+        const synced = await syncSubscriptionToUser(other, {});
+        // State was corrected from the live sub, but THIS event was not
+        // applied — applied:false so callers never act on the stale event's
+        // terminal status (a customer with a live sub must not lose keys).
+        return synced ? { ...synced, applied: false } : synced;
       }
     } catch (err) {
       // Verification unavailable: fall through and apply the matching-sub
       // downgrade (the reconcile cron re-verifies against Stripe daily).
+      // Accepted residual: missing-mirror + list-failure + other-live-sub
+      // downgrades wrongly; missing-mirror population is zero (2026-08-05
+      // audit) and failing closed is the deliberate choice.
       console.error(
         `stripe-sync: could not verify other live subscriptions for ${sub.customer}`,
         err

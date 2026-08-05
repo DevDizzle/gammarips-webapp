@@ -56,11 +56,18 @@ async function handleSubscriptionChange(
     }
 
     // Send the welcome email ONLY on a new entitled subscription (a 7-day
-    // trial IS entitled — it's a trial of the paid product). `user` is the
-    // pre-sync snapshot: an already-set subscribedAt means another event
-    // (created vs checkout.completed both run isNew) already sent it.
+    // trial IS entitled — it's a trial of the paid product). Dedup on a
+    // dedicated welcomeEmailSentAt flag written ONLY here: subscribedAt is
+    // also stamped by the /about landing provisioner (which sends no email),
+    // so keying on it would suppress the only send. Set-then-send: a send
+    // failure loses at most one email, never double-sends.
     const entitled = subscription.status === 'active' || subscription.status === 'trialing';
-    if (entitled && isNew && user.email && !(user as any).subscribedAt) {
+    if (entitled && isNew && user.email && !(user as any).welcomeEmailSentAt) {
+        const db = getFirestore();
+        await db.collection('users').doc(uid).set(
+            { welcomeEmailSentAt: FieldValue.serverTimestamp() },
+            { merge: true }
+        );
         console.log(`Webhook: Sending welcome email to new subscriber ${user.email}`);
         await sendWelcomeEmail({
             to: user.email,

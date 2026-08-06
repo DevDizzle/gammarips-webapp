@@ -85,6 +85,9 @@ export default async function RootLayout({
               gtag('get', '${GA_MEASUREMENT_ID}', 'client_id', function(cid) {
                 if (cid) localStorage.setItem('ga_client_id', cid);
               });
+              gtag('get', '${GA_MEASUREMENT_ID}', 'session_id', function(sid) {
+                if (sid) localStorage.setItem('ga_session_id', String(sid));
+              });
             } catch (e) {}
           `,
         }} />

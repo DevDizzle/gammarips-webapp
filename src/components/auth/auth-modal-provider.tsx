@@ -61,8 +61,9 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
     setIsSubscribing(true);
     try {
       const gaClientId = localStorage.getItem('ga_client_id');
+      const gaSessionId = localStorage.getItem('ga_session_id');
       const idToken = await user.getIdToken();
-      const { sessionId } = await createCheckoutSession(idToken, gaClientId);
+      const { sessionId } = await createCheckoutSession(idToken, gaClientId, gaSessionId);
       const stripe = await stripePromise;
       if (stripe) {
         const { error } = await stripe.redirectToCheckout({ sessionId });

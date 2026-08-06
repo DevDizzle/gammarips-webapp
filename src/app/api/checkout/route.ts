@@ -29,6 +29,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}));
     const gaClientId =
       typeof body?.gaClientId === 'string' ? body.gaClientId : undefined;
+    const gaSessionId =
+      typeof body?.gaSessionId === 'string' ? body.gaSessionId : undefined;
 
     const forwardedHost = req.headers.get('x-forwarded-host') ?? req.headers.get('host');
     const forwardedProto = req.headers.get('x-forwarded-proto') ?? 'https';
@@ -39,6 +41,7 @@ export async function POST(req: NextRequest) {
 
     const metadata: Record<string, string> = { plan: 'pro' };
     if (gaClientId) metadata.ga_client_id = gaClientId;
+    if (gaSessionId) metadata.ga_session_id = gaSessionId;
 
     const sessionId = await createStripeCheckoutSession(
       uid,

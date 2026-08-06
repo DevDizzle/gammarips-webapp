@@ -53,17 +53,23 @@ export function PricingClient() {
     setLoading(true);
     try {
       const token = await user.getIdToken();
-      // Captured by the ga-client-id-capture script in layout.tsx; without it
-      // the webhook cannot attribute the purchase event to this browser.
+      // Captured by the ga-client-id-capture script in layout.tsx; without them
+      // the webhook cannot attribute the purchase event to this browser/session.
       const gaClientId =
         typeof window !== 'undefined' ? localStorage.getItem('ga_client_id') : null;
+      const gaSessionId =
+        typeof window !== 'undefined' ? localStorage.getItem('ga_session_id') : null;
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ plan: 'pro', ...(gaClientId ? { gaClientId } : {}) }),
+        body: JSON.stringify({
+          plan: 'pro',
+          ...(gaClientId ? { gaClientId } : {}),
+          ...(gaSessionId ? { gaSessionId } : {}),
+        }),
       });
       if (!res.ok) throw new Error('Checkout failed');
       const { sessionId } = await res.json();

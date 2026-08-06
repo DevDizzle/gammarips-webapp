@@ -94,16 +94,22 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
         const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
         const item = lineItems.data[0];
 
+        // Trial checkouts have no payment_intent (no charge yet);
+        // fall back to the session id so the event still sends.
+        const transactionId = (session.payment_intent as string) || session.id;
+        // Without session_id + engagement_time_msec, GA4 records the purchase
+        // against a phantom (not set) session and source attribution is lost.
+        const gaSessionId = session.metadata?.ga_session_id;
         const purchaseEvent = {
             client_id: gaClientId,
             events: [{
                 name: 'purchase',
                 params: {
-                    // Trial checkouts have no payment_intent (no charge yet);
-                    // fall back to the session id so the event still sends.
-                    transaction_id: (session.payment_intent as string) || session.id,
+                    transaction_id: transactionId,
                     value: (session.amount_total || 0) / 100,
                     currency: session.currency?.toUpperCase() || 'USD',
+                    ...(gaSessionId ? { session_id: gaSessionId } : {}),
+                    engagement_time_msec: 1,
                     items: [{
                         item_id: item.price?.product as string,
                         item_name: 'GammaRips Pro Subscription',
@@ -113,6 +119,9 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
                 },
             }],
         };
+        if (!gaSessionId) {
+            console.warn('Webhook: Missing ga_session_id in checkout session metadata; purchase event will land unattributed (not set).');
+        }
         
         console.log('Webhook: Sending purchase event to Google Analytics:', JSON.stringify(purchaseEvent, null, 2));
 
@@ -123,7 +132,7 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
         });
 
         if (response.ok) {
-            console.log('Successfully sent purchase event to Google Analytics for transaction:', session.payment_intent);
+            console.log('Successfully sent purchase event to Google Analytics for transaction:', transactionId);
         } else {
             const errorBody = await response.text();
             console.error('Failed to send purchase event to Google Analytics. Status:', response.status, 'Body:', errorBody);

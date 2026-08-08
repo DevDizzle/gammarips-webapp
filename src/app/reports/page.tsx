@@ -48,6 +48,14 @@ export default async function ReportsPage() {
           <p className="text-muted-foreground text-lg max-w-2xl">
             Every trading day, we publish what institutional money did overnight. Pick a date. See what happened.
           </p>
+          <p className="text-sm text-muted-foreground mt-3">
+            This page shows the most recent briefings. Every report we have ever published is in
+            the{" "}
+            <Link href="/reports/archive" className="text-primary hover:underline">
+              full report archive
+            </Link>
+            .
+          </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -9,7 +9,7 @@ import { OG_IMAGE } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'GammaRips Methodology — Where every number comes from',
   description:
-    "The data sources, the enrichment bar, the selection tournament, and the bracket math behind the GammaRips pool and its validation cohort. Polygon end-of-day options, FRED VIX, BigQuery ledger. Auditable, fully logged, paper-trading only.",
+    "The data sources, enrichment bar, selection tournament, and bracket math behind the pool. Polygon options, FRED VIX. Paper-trading only.",
   alternates: { canonical: 'https://gammarips.com/methodology' },
   openGraph: {
     images: [OG_IMAGE],

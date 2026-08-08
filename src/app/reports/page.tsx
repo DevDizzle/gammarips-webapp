@@ -7,7 +7,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Daily Reports — GammaRips V7",
-  description: "Every trading day, GammaRips publishes a daily intelligence report — the overnight scan, the curated bullish pool, and market context across 5,230+ tickers. Paper-trading data, educational only.",
+  description:
+    "A daily options-flow briefing every trading day: the overnight scan and the curated bullish pool. Paper-trading data, educational only.",
   alternates: { canonical: 'https://gammarips.com/reports' },
 };
 

@@ -9,7 +9,7 @@ import { OG_IMAGE } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'The Lab — Published Experiments',
   description:
-    'GammaRips runs experiments on its own options-flow data substrate and publishes the results — hypothesis, method, sample size, verdict — including the ideas that got killed. Transparency into how the pool is curated.',
+    "Experiments on the GammaRips options-flow substrate, published with hypothesis, method, sample size, and verdict, including the ideas that got killed.",
   alternates: { canonical: 'https://gammarips.com/lab' },
   openGraph: {
     images: [OG_IMAGE],

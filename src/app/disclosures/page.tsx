@@ -8,7 +8,7 @@ import { PRICE_MONTHLY, OG_IMAGE } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'GammaRips Disclosures: What we are NOT',
   description:
-    'Five explicit disclosures about what GammaRips is and is not. Paper-trading only, educational only, no track record marketing pre-30-trades, no registered investment advisor, past performance does not predict future results.',
+    "What GammaRips is and is not: paper-trading only, educational only, no track-record marketing, and no registered investment advisor.",
   alternates: { canonical: 'https://gammarips.com/disclosures' },
   openGraph: {
     images: [OG_IMAGE],

@@ -5,7 +5,7 @@ import { TOOL_COUNT, PRICE_MONTHLY, OG_IMAGE } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
-    `Humans browse free. Agents subscribe. The whole website is free forever; ${PRICE_MONTHLY}/mo buys full MCP access for your AI agent: the curated options-flow pool, opportunity surfaces, outcome history, and methodology tools. 7-day free trial.`,
+    `Humans browse free, agents subscribe. The website is free forever; ${PRICE_MONTHLY}/mo buys full MCP access for your AI agent. 7-day free trial.`,
   alternates: { canonical: 'https://gammarips.com/pricing' },
   openGraph: {
     images: [OG_IMAGE],

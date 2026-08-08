@@ -10,7 +10,8 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   // Root layout applies the `%s | GammaRips` title template — no suffix here.
   title: "Blog — Options Flow Methodology & Research",
-  description: "How GammaRips reads institutional options flow: methodology, the research we trade on, and plain-English explainers on unusual options activity, V/OI, moneyness, and the overnight scan.",
+  description:
+    "How GammaRips reads institutional options flow: methodology, research, and plain-English explainers on unusual options activity, V/OI, and moneyness.",
   alternates: { canonical: "https://gammarips.com/blog" },
   openGraph: {
     images: [OG_IMAGE],

@@ -8,7 +8,7 @@ const MCP_ENDPOINT = "https://mcp.gammarips.com/mcp";
 export const metadata = {
   title: "GammaRips MCP: The Options-Flow Data Layer for AI Agents",
   description:
-    `Connect Claude, ChatGPT, or your own agent to ${TOOL_COUNT} MCP tools: the curated overnight options-flow pool, opportunity surfaces, a queryable outcome database, regime context, and methodology playbooks. ${PRICE_MONTHLY}/mo, 7-day free trial.`,
+    `The GammaRips options flow API: ${TOOL_COUNT} MCP tools serving the curated pool, opportunity surfaces, and outcome history to your AI agent.`,
   alternates: { canonical: "https://gammarips.com/developers" },
   openGraph: {
     images: [OG_IMAGE],

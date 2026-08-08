@@ -1,7 +1,7 @@
 import { PRICE_MONTHLY } from '@/lib/constants';
 
 export const metadata = {
-  title: 'Terms of Service | GammaRips',
+  title: 'Terms of Service',
   description: 'Terms of service for GammaRips.',
   alternates: { canonical: 'https://gammarips.com/terms' },
 };

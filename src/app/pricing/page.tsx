@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import { PricingClient } from './pricing-client';
-import { TOOL_COUNT, PRICE_MONTHLY } from '@/lib/constants';
+import { TOOL_COUNT, PRICE_MONTHLY, OG_IMAGE } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'Pricing | GammaRips',
+  title: 'Pricing',
   description:
     `Humans browse free. Agents subscribe. The whole website is free forever; ${PRICE_MONTHLY}/mo buys full MCP access for your AI agent: the curated options-flow pool, opportunity surfaces, outcome history, and methodology tools. 7-day free trial.`,
   alternates: { canonical: 'https://gammarips.com/pricing' },
   openGraph: {
+    images: [OG_IMAGE],
     title: 'Pricing | GammaRips',
     description:
       `Humans browse free. Agents subscribe. ${PRICE_MONTHLY}/mo for full MCP data access for your AI agent. 7-day free trial.`,

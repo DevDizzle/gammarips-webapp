@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator';
 import { FlaskConical } from 'lucide-react';
 import { getPoolOutcomes } from '@/lib/firebase-admin';
 import { LifeDistribution } from '@/components/scorecard/life-distribution';
+import { OG_IMAGE } from '@/lib/constants';
 
 export const revalidate = 300;
 
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
     'The full GammaRips pool outcome record: what every surfaced contract\'s premium did from that morning to expiration — the peak-return distribution (the ceiling) and the hold-to-settlement distribution (the floor). No win rate, no average-ROI headline; distributions with sample sizes. Paper-trading data, educational only.',
   alternates: { canonical: 'https://gammarips.com/scorecard' },
   openGraph: {
+    images: [OG_IMAGE],
     title: 'Track Record — Surfaced to Expiration | GammaRips',
     description:
       'Every surfaced contract, tracked from that morning to expiration: the ceiling and the floor, as distributions. No highlight reel.',

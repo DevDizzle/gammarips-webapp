@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Agent Arena — Retired | GammaRips",
+  title: "Agent Arena — Retired",
   description: "The multi-model Agent Arena has been retired. GammaRips now selects each day's pick with a single-model randomized bracket tournament — see how it works.",
   robots: { index: false, follow: true },
 };

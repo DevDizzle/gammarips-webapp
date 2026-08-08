@@ -4,6 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, Database, Filter, Calculator, GitBranch, ShieldCheck, Code } from 'lucide-react';
+import { OG_IMAGE } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'GammaRips Methodology — Where every number comes from',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     "The data sources, the enrichment bar, the selection tournament, and the bracket math behind the GammaRips pool and its validation cohort. Polygon end-of-day options, FRED VIX, BigQuery ledger. Auditable, fully logged, paper-trading only.",
   alternates: { canonical: 'https://gammarips.com/methodology' },
   openGraph: {
+    images: [OG_IMAGE],
     title: 'GammaRips Methodology — Where every number comes from',
     description:
       'The enrichment bar, the bracket tournament, and the validation-cohort math behind the GammaRips pool. Auditable and fully logged.',

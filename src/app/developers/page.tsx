@@ -2,8 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { TOOL_COUNT, PRICE_MONTHLY } from "@/lib/constants";
-
+import { TOOL_COUNT, PRICE_MONTHLY, OG_IMAGE } from '@/lib/constants';
 const MCP_ENDPOINT = "https://mcp.gammarips.com/mcp";
 
 export const metadata = {
@@ -12,6 +11,7 @@ export const metadata = {
     `Connect Claude, ChatGPT, or your own agent to ${TOOL_COUNT} MCP tools: the curated overnight options-flow pool, opportunity surfaces, a queryable outcome database, regime context, and methodology playbooks. ${PRICE_MONTHLY}/mo, 7-day free trial.`,
   alternates: { canonical: "https://gammarips.com/developers" },
   openGraph: {
+    images: [OG_IMAGE],
     title: "GammaRips MCP: The Options-Flow Data Layer for AI Agents",
     description:
       `${TOOL_COUNT} MCP tools for AI agents: curated options-flow pool, opportunity surfaces, outcome history, methodology playbooks. ${PRICE_MONTHLY}/mo, 7-day free trial.`,

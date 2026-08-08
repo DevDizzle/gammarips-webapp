@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { FlaskConical } from 'lucide-react';
+import { OG_IMAGE } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'The Lab — Published Experiments',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     'GammaRips runs experiments on its own options-flow data substrate and publishes the results — hypothesis, method, sample size, verdict — including the ideas that got killed. Transparency into how the pool is curated.',
   alternates: { canonical: 'https://gammarips.com/lab' },
   openGraph: {
+    images: [OG_IMAGE],
     title: 'The Lab — Published Experiments | GammaRips',
     description:
       'Hypothesis, method, N, verdict — including the killed ideas. How the GammaRips pool methodology earns its keep, in public.',

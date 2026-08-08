@@ -15,3 +15,20 @@ export const TOOL_COUNT = 9;
 // Structured-data numeric price fields (e.g. "39.00" in JSON-LD) are a separate
 // format and are left as literals.
 export const PRICE_MONTHLY = '$39';
+
+// OG_IMAGE: the social/link-preview card, in Next's openGraph image shape.
+//
+// Next.js merges metadata SHALLOWLY: a page declaring its own `openGraph` block
+// REPLACES the root layout's entirely, images included. Eleven pages did exactly
+// that and silently shipped with no og:image — every link to /pricing,
+// /developers, /how-it-works, a blog post or a daily report rendered as a bare
+// text card on X, Slack, iMessage, Discord and HN.
+//
+// So: any page that declares `openGraph` MUST also set `images: [OG_IMAGE]`.
+// Once the block exists, inheritance is not an option.
+export const OG_IMAGE = {
+  url: 'https://gammarips.com/og-image.png?v=3',
+  width: 1200,
+  height: 630,
+  alt: 'GammaRips — Options-flow data for AI agents',
+};

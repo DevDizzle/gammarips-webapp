@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { remarkTickerLinks } from "@/lib/remark-ticker-links";
+import { OG_IMAGE } from '@/lib/constants';
 
 interface Props {
   params: Promise<{ date: string }>;
@@ -27,6 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `https://gammarips.com/reports/${date}`,
     },
     openGraph: {
+      images: [OG_IMAGE],
       title,
       description,
       type: "article",

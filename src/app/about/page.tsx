@@ -5,13 +5,13 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Shield, Bot, User, CheckCircle2 } from 'lucide-react';
 import ContactForm from './contact-form';
-import { TOOL_COUNT } from '@/lib/constants';
-
+import { TOOL_COUNT, OG_IMAGE } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'About GammaRips: The options-flow data layer for AI agents',
   description: "The engine, the methodology, and the person behind GammaRips. A nightly scan of 5,230+ tickers, curated to a high-signal bullish pool, validated by a public paper-traded cohort, and served to AI agents over MCP. Data on a paper-trading basis, educational only.",
   alternates: { canonical: 'https://gammarips.com/about' },
   openGraph: {
+    images: [OG_IMAGE],
     title: 'About GammaRips: The options-flow data layer for AI agents',
     description: "The engine, the methodology, and the person behind GammaRips. Paper-trading data, educational only.",
     url: 'https://gammarips.com/about',

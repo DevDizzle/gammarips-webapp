@@ -33,7 +33,7 @@ export async function handleFeedback(uid: string | null, message: string, replyT
   return { success: true };
 }
 
-export async function createCheckoutSession(idToken: string, gaClientId: string | null): Promise<{ sessionId: string }> {
+export async function createCheckoutSession(idToken: string, gaClientId: string | null, gaSessionId: string | null = null): Promise<{ sessionId: string }> {
     if (!idToken) {
         throw new Error('Authentication required.');
     }
@@ -51,9 +51,12 @@ export async function createCheckoutSession(idToken: string, gaClientId: string 
         throw new Error('Stripe Price ID is not configured.');
     }
 
-    const sessionMetadata: { ga_client_id?: string; plan?: string } = { plan: 'pro' };
+    const sessionMetadata: { ga_client_id?: string; ga_session_id?: string; plan?: string } = { plan: 'pro' };
     if (gaClientId) {
         sessionMetadata.ga_client_id = gaClientId;
+    }
+    if (gaSessionId) {
+        sessionMetadata.ga_session_id = gaSessionId;
     }
 
     const sessionId = await createStripeCheckoutSession(

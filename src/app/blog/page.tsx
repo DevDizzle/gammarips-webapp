@@ -2,6 +2,7 @@ import { getBlogPostsAdmin } from "@/lib/firebase-admin";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Metadata } from "next";
+import { OG_IMAGE } from '@/lib/constants';
 
 // ISR: pick up newly published posts without a redeploy.
 export const revalidate = 300;
@@ -9,9 +10,11 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   // Root layout applies the `%s | GammaRips` title template — no suffix here.
   title: "Blog — Options Flow Methodology & Research",
-  description: "How GammaRips reads institutional options flow: methodology, the research we trade on, and plain-English explainers on unusual options activity, V/OI, moneyness, and the overnight scan.",
+  description:
+    "How GammaRips reads institutional options flow: methodology, research, and plain-English explainers on unusual options activity, V/OI, and moneyness.",
   alternates: { canonical: "https://gammarips.com/blog" },
   openGraph: {
+    images: [OG_IMAGE],
     title: "GammaRips Blog — Options Flow Methodology & Research",
     description: "Methodology, research, and plain-English explainers on overnight options flow.",
     type: "website",

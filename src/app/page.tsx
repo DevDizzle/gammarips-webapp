@@ -15,7 +15,8 @@ export const revalidate = 60; // keep the daily pool summary fresh without a ful
 
 export const metadata: Metadata = {
   title: "GammaRips | Options-flow data for AI agents",
-  description: "Stop asking AI for stock picks. Start giving it real data. GammaRips scans 5,230+ tickers overnight for unusual options activity and curates it to a small high-signal pool. Browse it free, or connect Claude, ChatGPT, or your own agent over MCP for the full data layer. Your agent analyzes. You decide. Paper-trading data, educational only.",
+  description:
+    "Overnight scan of 5,230+ tickers for unusual options activity, curated to a small bullish pool. Free to browse, or pipe it to your AI agent over MCP.",
   alternates: {
     canonical: '/',
   },

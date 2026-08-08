@@ -37,7 +37,14 @@ in another (`gammarips-mcp`). This repo is presentation + Stripe + Firebase auth
 4. The whole-pool composite under a fixed exit is NEGATIVE — we publish that
    honestly. Never publish a selected-positive blended ROI number.
 5. Every performance-adjacent surface carries: paper-trading, educational only,
-   not investment advice.
+   not investment advice. **Scope, owner-ruled 2026-08-08:** "surface" means the
+   page. A `<meta name="description">` that makes no performance claim does not
+   need the marker, and must not be padded with one at the cost of the value
+   proposition — GammaRips is a data vendor, not an advisor, and the SERP snippet
+   is not where that line gets drawn. Markers stay on the descriptions for
+   /scorecard, /disclosures, /methodology, /about and /reports because those do
+   reference results. SETTLED: do not re-add a disclaimer to the homepage
+   description.
 6. No aggregate live-cohort performance marketing until 30 closed trades
    (see /disclosures #03).
 

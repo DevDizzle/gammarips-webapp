@@ -5,6 +5,7 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { OG_IMAGE } from '@/lib/constants';
 
 // ISR: serve published posts and pick up edits without a redeploy.
 export const revalidate = 300;
@@ -27,6 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     keywords: post.keywords,
     alternates: { canonical: `https://gammarips.com/blog/${post.slug}` },
     openGraph: {
+      images: [OG_IMAGE],
       title: post.title,
       description: post.description,
       type: "article",

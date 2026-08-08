@@ -4,12 +4,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
+import { OG_IMAGE } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'How GammaRips Works | Overnight Options Scanner, V7 Intraday',
-  description: "The scanner ingests overnight institutional options flow across 5,230+ tickers, enriches the standouts, and applies a BULLISH-only gate and delta edge-rank to curate the top ~50 bullish setups. A paper-traded validation cohort tests the selection methodology daily under fixed rules. Humans browse the pool free; AI agents get the full data layer over MCP. Here is the full pipeline. No discretion, no black box.",
+  description:
+    "The full pipeline: overnight flow across 5,230+ tickers, an enrichment bar, a bullish-only gate, and a delta edge-rank down to about 50 setups.",
   alternates: { canonical: 'https://gammarips.com/how-it-works' },
   openGraph: {
+    images: [OG_IMAGE],
     title: 'How GammaRips Works | Overnight Options Scanner',
     description: 'Scanned, enriched, curated: 5,230+ tickers cut to a high-signal bullish pool nightly, validated by a public paper-traded cohort.',
     url: 'https://gammarips.com/how-it-works',

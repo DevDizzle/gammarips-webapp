@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Privacy Policy | GammaRips',
+  title: 'Privacy Policy',
   description: 'Privacy policy for GammaRips and GammaRips Pro.',
   alternates: { canonical: 'https://gammarips.com/privacy' },
 };

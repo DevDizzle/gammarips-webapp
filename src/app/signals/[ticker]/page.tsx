@@ -49,7 +49,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // the route resolves case-insensitively, and the case-preserving redirects in
     // next.config.ts (/:ticker, /stocks/:ticker) feed lowercase variants in. A
     // raw-casing canonical made /signals/aapl and /signals/AAPL compete as
-    // duplicates in GSC (48 pages). The page component 308s non-uppercase paths.
+    // duplicates in GSC (48 pages). src/middleware.ts 308s non-uppercase paths
+    // before render — the component-level check below never fired in production.
     alternates: { canonical: `https://gammarips.com/signals/${T}` },
   };
 }
@@ -95,9 +96,10 @@ function buildSignalDescription(signal: any, T: string): string {
 export default async function SignalPage({ params }: PageProps) {
   const { ticker } = await params;
 
-  // One casing, one URL: 308 anything non-uppercase to the canonical form so
-  // lowercase arrivals (old /:ticker and /stocks/:ticker redirects preserve
-  // casing) can't mint duplicate 200s that compete with /signals/TICKER.
+  // Fallback only — src/middleware.ts does the real 308 before this renders.
+  // Kept because it costs nothing and covers a platform that skips middleware;
+  // do NOT rely on it, it does not produce a 308 on Firebase App Hosting (the
+  // head is already streamed by the time this throws).
   if (ticker !== ticker.toUpperCase()) {
     permanentRedirect(`/signals/${ticker.toUpperCase()}`);
   }

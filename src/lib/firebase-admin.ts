@@ -517,6 +517,36 @@ export async function getAllDailyReports(limit: number = 30): Promise<DailyRepor
   }
 }
 
+/** The reports immediately newer and older than `scanDate`.
+ *
+ *  Replaces "fetch the last N reports, then findIndex". That approach silently
+ *  broke the prev/next chain outside its window: a report older than the Nth
+ *  most recent got idx === -1, both neighbours resolved to null, and the crawl
+ *  path dead-ended precisely at the archive it was meant to reach. Two limit-1
+ *  queries are O(1) in archive size, so the chain cannot break as it grows.
+ *
+ *  Both queries order by the same field they filter on, so no composite index
+ *  is required. */
+export async function getAdjacentReports(
+  scanDate: string
+): Promise<{ newer: DailyReport | null; older: DailyReport | null }> {
+  noStore();
+  try {
+    const reports = getDb().collection('daily_reports');
+    const [newerSnap, olderSnap] = await Promise.all([
+      reports.where('scan_date', '>', scanDate).orderBy('scan_date', 'asc').limit(1).get(),
+      reports.where('scan_date', '<', scanDate).orderBy('scan_date', 'desc').limit(1).get(),
+    ]);
+    return {
+      newer: newerSnap.empty ? null : (newerSnap.docs[0].data() as DailyReport),
+      older: olderSnap.empty ? null : (olderSnap.docs[0].data() as DailyReport),
+    };
+  } catch (error) {
+    console.error(`Error fetching adjacent reports for ${scanDate}:`, error);
+    return { newer: null, older: null };
+  }
+}
+
 export async function getAllOvernightSummaries(limit: number = 30): Promise<OvernightSummary[]> {
   noStore();
   try {

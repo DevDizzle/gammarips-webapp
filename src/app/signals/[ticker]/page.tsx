@@ -1,6 +1,7 @@
 import { getSignalByTicker, getLatestOvernightSummary, getBlogPostsAdmin, getMostRecentSignalForTicker, getRelatedSignals } from "@/lib/firebase-admin";
 import SignalClientPage from "./signal-client";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
+import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Metadata } from "next";
 
@@ -146,6 +147,31 @@ export default async function SignalPage({ params }: PageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <SignalClientPage signal={signal} relatedSignals={relatedSignals} />
+      {/* Back-link to the morning briefing this signal came from.
+       *
+       * Ticker pages are the largest inventory on the site (~800) and linked to
+       * no report at all, while the reports are the surface that actually ranks
+       * (GSC 90d: pos 3.0 and 9.3 on dated analyst queries). This points the
+       * bulk inventory at the surface that earns, and gives the reader the
+       * market context the ticker page alone does not carry. */}
+      {signal.scan_date && (
+        <section className="container mx-auto px-4 pb-8 max-w-4xl">
+          <div className="rounded-lg border border-muted bg-muted/20 p-4 text-sm">
+            <Link
+              href={`/reports/${signal.scan_date}`}
+              className="text-primary hover:underline font-medium"
+            >
+              Read the {signal.scan_date} morning briefing
+            </Link>
+            <span className="text-muted-foreground">
+              {" "}
+              for the full scan this {signal.ticker} signal came from: the bull and bear
+              split, the themes institutional money leaned into, and every other ticker
+              that cleared the bar that day.
+            </span>
+          </div>
+        </section>
+      )}
       {blogPosts.length > 0 && (
         <section className="container mx-auto px-4 pb-12 max-w-4xl">
           <BlogTeaserList

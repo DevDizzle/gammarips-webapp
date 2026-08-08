@@ -1,4 +1,4 @@
-import { getDailyReport, getAllDailyReports, getOvernightSignals } from "@/lib/firebase-admin";
+import { getDailyReport, getAdjacentReports, getOvernightSignals } from "@/lib/firebase-admin";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -44,21 +44,19 @@ export default async function ReportPage({ params }: Props) {
   if (!report) return notFound();
 
   // Fetch the scan's signals (for the in-report link block + a safe allow-list
-  // that constrains ticker auto-linking) plus the report index (prev/next nav).
-  const [bullSignals, bearSignals, allReports] = await Promise.all([
+  // that constrains ticker auto-linking) plus the two neighbouring reports.
+  const [bullSignals, bearSignals, neighbours] = await Promise.all([
     getOvernightSignals(report.scan_date, 'bull', 0, 8),
     getOvernightSignals(report.scan_date, 'bear', 0, 8),
-    getAllDailyReports(60),
+    getAdjacentReports(report.scan_date),
   ]);
   const reportSignals = [...bullSignals, ...bearSignals].sort(
     (a, b) => (b.overnight_score || 0) - (a.overnight_score || 0)
   );
   const tickerAllowList = new Set(reportSignals.map((s) => s.ticker.toUpperCase()));
 
-  // Reports are ordered newest-first; neighbours give a crawlable report chain.
-  const idx = allReports.findIndex((r) => r.scan_date === report.scan_date);
-  const newerReport = idx > 0 ? allReports[idx - 1] : null;
-  const olderReport = idx >= 0 && idx < allReports.length - 1 ? allReports[idx + 1] : null;
+  // Neighbours give a crawlable report chain that spans the whole archive.
+  const { newer: newerReport, older: olderReport } = neighbours;
 
   const articleSchema = {
     "@context": "https://schema.org",

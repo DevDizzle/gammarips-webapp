@@ -34,6 +34,57 @@ const webApiSchema = {
   },
 };
 
+/* FAQ. Single source of truth for both the rendered section and the FAQPage
+ * JSON-LD below, so the two can never drift.
+ *
+ * SEO intent: GSC (90d to 2026-08-05) has `options flow api` at position 24.2 —
+ * page 3 on the one query with real buyer intent that matches this product. The
+ * page ranked poorly for it because it never addressed the question in those
+ * words: the copy is all "data layer" and "MCP tools". These answers are the
+ * literal question-and-answer form of facts already stated elsewhere on this
+ * page, which is also what FAQPage structured data wants.
+ *
+ * Every answer here is descriptive of the product surface. None asserts a
+ * return, a win rate, a timing advantage, or a trade to follow (see the
+ * forbidden-claims list in CLAUDE.md), and the recommendations answer states the
+ * no-pick position outright. */
+const FAQ: { q: string; a: string }[] = [
+  {
+    q: "Is there a GammaRips options flow API?",
+    a: `Yes. The GammaRips options flow API is an MCP server at ${MCP_ENDPOINT}, served over Streamable HTTP with bearer-token auth, exposing ${TOOL_COUNT} tools. Any MCP client can call it, and so can an ordinary HTTP client. An anonymous tier is open with no key and no card.`,
+  },
+  {
+    q: "What options flow data does the API return?",
+    a: "The curated overnight pool (ticker, direction, conviction score, flow dollars, thesis, technicals, catalyst, and a delta-targeted contract), point-in-time feature vectors from a leakage-safe view, opportunity surfaces giving realized excursion distributions for historical setups, a queryable outcome database, exit-rule simulation, regime context, the daily reports, and the methodology playbooks.",
+  },
+  {
+    q: "Is the options flow data real time or overnight?",
+    a: "Overnight. The scan runs across 5,230+ US tickers after the close and the curated pool publishes each trading morning. It is an unusual-options-activity feed built for analysis, not a real-time tape for execution.",
+  },
+  {
+    q: "How do I connect Claude or ChatGPT to options flow data?",
+    a: `Run: claude mcp add --transport http gammarips ${MCP_ENDPOINT}. That reaches the anonymous tier immediately. For the full data layer, add a header of Authorization: Bearer plus your API key. This works today in Claude Code, Cursor, and any MCP client that can send an Authorization header. The consumer claude.ai and ChatGPT connector UIs need OAuth, which is on the roadmap.`,
+  },
+  {
+    q: "Does the API return trade recommendations?",
+    a: "No, and there is no pick endpoint, deliberately. The API serves data and tools that your own agent reasons over to reach its own conclusion. All data is on a paper-trading basis, educational only, and is not investment advice.",
+  },
+  {
+    q: "What does the options flow API cost?",
+    a: `The anonymous tier is free: pool preview, daily reports, methodology playbooks, and reference tools. Full access to all ${TOOL_COUNT} tools is ${PRICE_MONTHLY}/mo with a 7-day free trial. The entire human web interface is free and always will be.`,
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
 type Tier = "free" | "pro" | "free-preview";
 const TIER_LABEL: Record<Tier, string> = {
   free: "Free",
@@ -126,6 +177,10 @@ export default function DevelopersPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webApiSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       <main className="flex-1 container mx-auto px-4 py-8 max-w-5xl space-y-16">
@@ -341,6 +396,21 @@ async with Client(transport) as client:
         </section>
 
         {/* Bottom CTA */}
+        {/* FAQ — renders from the same FAQ array that builds the FAQPage JSON-LD */}
+        <section id="faq" className="space-y-6">
+          <h2 className="text-2xl font-bold font-headline">
+            Options flow API: common questions
+          </h2>
+          <div className="space-y-6">
+            {FAQ.map(({ q, a }) => (
+              <div key={q} className="border-b border-border/50 pb-6 last:border-0">
+                <h3 className="text-lg font-semibold mb-2">{q}</h3>
+                <p className="text-muted-foreground leading-relaxed">{a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <section className="text-center space-y-6">
           <h2 className="text-2xl font-bold font-headline">Give your agent something real to reason over</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">

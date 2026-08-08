@@ -8,6 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
     { url: `${BASE_URL}/reports`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
+    { url: `${BASE_URL}/reports/archive`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.5 },
     { url: `${BASE_URL}/signals`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
     { url: `${BASE_URL}/signals/archive`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.5 },
     { url: `${BASE_URL}/developers`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
@@ -25,10 +26,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/privacy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
   ];
 
-  // Dynamic report pages from Firestore
+  // Dynamic report pages from Firestore.
+  // NOT windowed (unlike the ticker section below). A dated market report does
+  // not go stale as a search asset — the date IS the asset, and reports are the
+  // only surface with demonstrated organic pull (GSC 2026-08-08: pos 3.0 for
+  // "market flow options gamma cta liquidity 2026-06", pos 9.3 for "sector
+  // rotation june 2026"). The old limit of 30 left ~43 live, indexed report
+  // pages with no sitemap entry and no internal link. /reports/archive is the
+  // matching crawl path.
   let reportPages: MetadataRoute.Sitemap = [];
   try {
-    const reports = await getAllDailyReports(30);
+    const reports = await getAllDailyReports(1000);
     reportPages = reports.map(report => ({
       url: `${BASE_URL}/reports/${report.scan_date}`,
       lastModified: report.scan_date, // assuming scan_date is ISO string or handle accordingly if needed

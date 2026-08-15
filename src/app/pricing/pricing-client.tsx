@@ -26,7 +26,7 @@ const agentFeatures = [
 ];
 
 const freeFeatures = [
-  "Today's curated pool, browsable across 5,230+ scanned tickers",
+  "Today's curated pool, browsable across 3,500+ scanned stocks",
   'Daily market report with AI-authored thesis',
   'Per-ticker deep dives',
   'Track Record: every pool candidate tracked to its outcome',

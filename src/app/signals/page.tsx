@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   // Root layout applies the `%s | GammaRips` title template — no suffix here.
   title: "Overnight Options Flow Scanner — Daily Unusual Options Activity",
   description:
-    "The ~50 bullish setups from each overnight scan of 5,230+ tickers: volume, open interest, and directional dollar flow, ranked before the open.",
+    "The ~50 bullish setups from each overnight scan of 3,500+ optionable US stocks: volume, open interest, and directional dollar flow, ranked before the open.",
   alternates: { canonical: 'https://gammarips.com/signals' },
 };
 
@@ -27,7 +27,7 @@ export default async function SignalsPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "Overnight Options Flow Scanner",
-    "description": "The ~50 bullish setups GammaRips analyzes each morning, drawn from an overnight scan across 5,230+ tickers and reported before the market opens.",
+    "description": "The ~50 bullish setups GammaRips analyzes each morning, drawn from an overnight scan across 3,500+ optionable US stocks and reported before the market opens.",
     "url": "https://gammarips.com/signals",
     "mainEntity": {
       "@type": "ItemList",
@@ -47,7 +47,7 @@ export default async function SignalsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold font-headline mb-2">Overnight Options Flow</h1>
           <p className="text-muted-foreground mb-6">
-            The bullish setups GammaRips analyzed today, from an overnight scan across 5,230+ tickers — reported {reportDate}.
+            The bullish setups GammaRips analyzed today, from an overnight scan across 3,500+ optionable US stocks — reported {reportDate}.
             {summary?.underlying_scan_date && summary.underlying_scan_date !== reportDate && (
               <span className="block text-sm opacity-80 mt-1">Based on overnight flow from {summary.underlying_scan_date}</span>
             )}

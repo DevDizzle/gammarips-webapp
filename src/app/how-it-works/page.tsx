@@ -9,12 +9,12 @@ import { OG_IMAGE } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'How GammaRips Works | Overnight Options Scanner, V7 Intraday',
   description:
-    "The full pipeline: overnight flow across 5,230+ tickers, an enrichment bar, a bullish-only gate, and a delta edge-rank down to about 50 setups.",
+    "The full pipeline: overnight flow across 3,500+ optionable US stocks, an enrichment bar, a bullish-only gate, and a delta edge-rank down to about 50 setups.",
   alternates: { canonical: 'https://gammarips.com/how-it-works' },
   openGraph: {
     images: [OG_IMAGE],
     title: 'How GammaRips Works | Overnight Options Scanner',
-    description: 'Scanned, enriched, curated: 5,230+ tickers cut to a high-signal bullish pool nightly, validated by a public paper-traded cohort.',
+    description: 'Scanned, enriched, curated: 3,500+ optionable US stocks cut to a high-signal bullish pool nightly, validated by a public paper-traded cohort.',
     url: 'https://gammarips.com/how-it-works',
   }
 };
@@ -24,7 +24,7 @@ export default function HowItWorksPage() {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "How GammaRips Works | Overnight Options Scanner, V7 Intraday",
-    "description": "Scanned, enriched, curated: 5,230+ tickers cut to a high-signal bullish pool nightly, validated by a public paper-traded cohort.",
+    "description": "Scanned, enriched, curated: 3,500+ optionable US stocks cut to a high-signal bullish pool nightly, validated by a public paper-traded cohort.",
     "image": "https://gammarips.com/og-image.png?v=3",
     "author": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
@@ -39,7 +39,7 @@ export default function HowItWorksPage() {
           How GammaRips Works
         </h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-          Every night the engine scans 5,230+ tickers for unusual options flow and curates the firehose down to a small bullish pool: scored, enriched, and checked for hindsight data while you sleep. Here&apos;s the full pipeline, end to end.
+          Every night the engine scans 3,500+ optionable US stocks for unusual options flow and curates the firehose down to a small bullish pool: scored, enriched, and checked for hindsight data while you sleep. Here&apos;s the full pipeline, end to end.
         </p>
       </header>
 
@@ -71,7 +71,7 @@ export default function HowItWorksPage() {
           Key indicators include the <strong className="text-foreground">volume-to-open-interest ratio</strong> (fresh activity vs. existing positions), <strong className="text-foreground">dollar flow</strong> (total capital deployed), and <strong className="text-foreground">directional imbalance</strong> (calls vs. puts).
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          GammaRips tracks this across 5,230+ tickers every night, then applies deterministic filters to isolate the single highest-conviction setup.
+          GammaRips tracks this across 3,500+ optionable US stocks every night, then applies deterministic filters to isolate the single highest-conviction setup.
         </p>
       </section>
 

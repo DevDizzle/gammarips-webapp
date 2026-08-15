@@ -89,7 +89,7 @@ export default async function ReportPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "Dataset",
     "name": `GammaRips V7 enriched signals — ${report.scan_date}`,
-    "description": `V7 tournament scan of 5,230+ tickers for ${report.scan_date}. ${report.total_signals} signals detected.`,
+    "description": `Overnight options-flow scan for ${report.scan_date}. ${report.total_signals} signals detected.`,
     "url": `https://gammarips.com/reports/${report.scan_date}`,
     "datePublished": `${report.scan_date}T08:00:00Z`,
     "creator": { "@type": "Organization", "name": "GammaRips" },

@@ -25,7 +25,7 @@ export const faqs = [
   },
   {
     question: "How is the pool curated?",
-    answer: "Every weeknight the engine scans 5,230+ US tickers for unusual options activity. A name needs a conviction score of 4+ and over $500K bet in one direction to survive at all. Then we keep the bullish names and rank them, using levers validated on over a thousand historically measured trades, down to the strongest ~50 setups, each carrying its flow data, technicals, news context, and a recommended contract. Two safety checks sit on top: no names with earnings in the window, and a market-stress check (VIX at or below VIX3M). Every candidate is checked so that nothing your agent sees contains information that wasn't knowable at scan time."
+    answer: "Every weeknight the engine scans 3,500+ optionable US stocks for unusual options activity. A name needs a conviction score of 4+ and over $500K bet in one direction to survive at all. Then we keep the bullish names and rank them, using levers validated on over a thousand historically measured trades, down to the strongest ~50 setups, each carrying its flow data, technicals, news context, and a recommended contract. Two safety checks sit on top: no names with earnings in the window, and a market-stress check (VIX at or below VIX3M). Every candidate is checked so that nothing your agent sees contains information that wasn't knowable at scan time."
   },
   {
     question: "Where's the track record?",

@@ -59,7 +59,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Is the options flow data real time or overnight?",
-    a: "Overnight. The scan runs across 5,230+ US tickers after the close and the curated pool publishes each trading morning. It is an unusual-options-activity feed built for analysis, not a real-time tape for execution.",
+    a: "Overnight. The scan runs across 3,500+ optionable US stocks after the close and the curated pool publishes each trading morning. It is an unusual-options-activity feed built for analysis, not a real-time tape for execution.",
   },
   {
     q: "How do I connect Claude or ChatGPT to options flow data?",

@@ -38,7 +38,7 @@ export function Hero() {
         before the entry. Your agent analyzes. You decide.
       </p>
       <p className="text-sm text-muted-foreground mb-8">
-        5,230+ tickers scanned nightly · curated bullish pool · no hindsight data · public paper-traded receipts
+        3,500+ optionable US stocks scanned nightly · curated bullish pool · no hindsight data · public paper-traded receipts
       </p>
 
       {/* The three layers of the product statement. Data is paid, the loop is

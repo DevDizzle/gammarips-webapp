@@ -29,7 +29,7 @@ const features = [
     },
     {
         title: "Full-Market Coverage",
-        description: "~5,230-ticker overnight scan for momentum, flow, and opportunity"
+        description: "3,500+ stock overnight scan for momentum, flow, and opportunity"
     },
     {
         title: "Full Confluence Dashboard",

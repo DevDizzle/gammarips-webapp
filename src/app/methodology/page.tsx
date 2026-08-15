@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 const dataSources = [
   {
     name: 'Polygon.io',
-    purpose: 'End-of-day options chains, volume, open interest, dollar flow, contract metadata across 5,230+ tickers.',
+    purpose: 'End-of-day options chains, volume, open interest, dollar flow, contract metadata across 3,500+ optionable US stocks.',
     cadence: 'Pulled at 23:00 ET nightly by overnight-scanner.',
   },
   {

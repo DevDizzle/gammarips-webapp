@@ -70,7 +70,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span><strong>Step 2: Add the server to your agent.</strong> Claude, ChatGPT, Cursor, or any MCP client. Copy-paste setup is on the <Link href="/developers" className="text-primary hover:underline">MCP docs page</Link>.</span>
+                  <span><strong>Step 2: Add the server to your agent with your key.</strong> Claude Code, Codex, Cursor, Gemini CLI, or any MCP client that can send a bearer key. ChatGPT cannot send a key yet. Exact steps per client are in the <Link href="/#connect" className="text-primary hover:underline">connect section</Link> on the homepage.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />

@@ -71,7 +71,7 @@ export default function HowItWorksPage() {
           Key indicators include the <strong className="text-foreground">volume-to-open-interest ratio</strong> (fresh activity vs. existing positions), <strong className="text-foreground">dollar flow</strong> (total capital deployed), and <strong className="text-foreground">directional imbalance</strong> (calls vs. puts).
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          GammaRips tracks this across 3,500+ optionable US stocks every night, then applies deterministic filters to isolate the single highest-conviction setup.
+          GammaRips tracks this across 3,500+ optionable US stocks every night, then curates them to the strongest ~50 setups, the pool your agent reasons over.
         </p>
       </section>
 

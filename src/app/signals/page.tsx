@@ -47,7 +47,7 @@ export default async function SignalsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold font-headline mb-2">Overnight Options Flow</h1>
           <p className="text-muted-foreground mb-6">
-            The bullish setups GammaRips analyzed today, from an overnight scan across 3,500+ optionable US stocks — reported {reportDate}.
+            The bullish setups GammaRips analyzed today, from an overnight scan across 3,500+ optionable US stocks, reported {reportDate}.
             {summary?.underlying_scan_date && summary.underlying_scan_date !== reportDate && (
               <span className="block text-sm opacity-80 mt-1">Based on overnight flow from {summary.underlying_scan_date}</span>
             )}

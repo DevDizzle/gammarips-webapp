@@ -6,7 +6,7 @@ const LAYERS = [
   {
     eyebrow: 'The data, over MCP',
     title: `${PRICE_MONTHLY}/mo, 7-day trial`,
-    desc: `All ${TOOL_COUNT} tools, 4 of them pro: the curated overnight pool, per-contract liquidity, the outcome history of past setups, and exit-rule replay. It answers three questions. Can I get in? Can I get out? What did this setup do before?`,
+    desc: `All ${TOOL_COUNT} tools, 4 of them pro: the enriched overnight pool, per-contract liquidity, per-name detail, the outcome history of past setups, and exit-rule replay. It answers three questions. Can I get in? Can I get out? What did this setup do before?`,
   },
   {
     eyebrow: 'The harness, open source',

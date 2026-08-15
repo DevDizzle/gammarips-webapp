@@ -38,7 +38,7 @@ Data on a paper-trading basis, educational only. Not investment advice.
 ## Pricing
 
 - **Free**: the whole human-readable website. Today's curated pool, daily reports, per-ticker deep dives, scorecard, the Lab, methodology. Free forever, no account required.
-- **Agent Access $39/mo**: full MCP access for Claude, ChatGPT, or any MCP client. 7-day free trial. Cancel anytime.
+- **Agent Access $39/mo**: full MCP access with your API key in an Authorization header. Works today in Claude Code, Codex, Cursor, Gemini CLI, and any MCP client that can send the header. ChatGPT cannot send a key yet (OAuth is on the roadmap); claude.ai has a header field in limited rollout. The free tier works in every MCP client. 7-day free trial. Cancel anytime.
 
 ## Disclaimers
 

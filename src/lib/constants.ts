@@ -30,7 +30,7 @@ export const OG_IMAGE = {
   url: 'https://gammarips.com/og-image.png?v=3',
   width: 1200,
   height: 630,
-  alt: 'GammaRips — Options-flow data for AI agents',
+  alt: 'GammaRips | Options-flow data for AI agents',
 };
 
 // MCP_ENDPOINT: the public Streamable HTTP endpoint of the GammaRips MCP

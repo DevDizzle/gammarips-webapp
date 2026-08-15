@@ -17,8 +17,10 @@ cd gammarips-harness
 # 2. Subscribe at gammarips.com/pricing, then mint your MCP key at gammarips.com/account
 export GAMMARIPS_MCP_KEY="<your key>"
 
-# 3. Open in Claude Code, then run the daily loop:
-#    /morning-pool  →  /select-contract  →  /exit-plan  →  /trade-journal`;
+# 3. Open in Claude Code (or any MCP client that reads .mcp.json), then run the loop:
+#    /trade    morning: screen the pool, rank 2-3 candidates or no-trade; you decide
+#    /review   after the close: score every pool name
+#    /coach    on demand: behavioral feedback from your own record`;
 
 export function HarnessCta() {
   return (

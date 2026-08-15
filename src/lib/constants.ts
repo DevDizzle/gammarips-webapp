@@ -32,3 +32,11 @@ export const OG_IMAGE = {
   height: 630,
   alt: 'GammaRips — Options-flow data for AI agents',
 };
+
+// MCP_ENDPOINT: the public Streamable HTTP endpoint of the GammaRips MCP
+// server. Legacy SSE lives at /sse. Used by the connect tabs; the developers
+// and account pages carry their own literal for historical reasons.
+export const MCP_ENDPOINT = 'https://mcp.gammarips.com/mcp';
+
+// HARNESS_REPO: the open-source harness, the clone-me GTM artifact.
+export const HARNESS_REPO = 'https://github.com/DevDizzle/gammarips-harness';

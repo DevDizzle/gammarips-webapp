@@ -5,11 +5,11 @@ import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Scan, LineChart, Bot, FlaskConical } from "lucide-react";
+import { ArrowRight, FlaskConical } from "lucide-react";
 import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getBlogPostsAdmin } from "@/lib/firebase-admin";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import { HarnessCta } from "@/components/landing/harness-cta";
-import { TOOL_COUNT } from "@/lib/constants";
+import { ConnectTabs } from "@/components/landing/connect-tabs";
 
 export const revalidate = 60; // keep the daily pool summary fresh without a full static rebuild
 
@@ -22,11 +22,6 @@ export const metadata: Metadata = {
   },
 };
 
-const pillars = [
-  { icon: <Scan className="h-6 w-6 text-primary" />, title: 'The Curated Pool', desc: 'The market prints hundreds of unusual-flow names a night. The engine scores and cuts them to a pool your agent can actually reason over, with flow, technicals, and context attached.' },
-  { icon: <LineChart className="h-6 w-6 text-primary" />, title: 'The Opportunity Surface', desc: 'For every historical setup: what was actually possible. The best it hit, the worst it fell, the full path. Wins and losses both. Your agent learns how these contracts really behave.' },
-  { icon: <Bot className="h-6 w-6 text-primary" />, title: 'Your Agent, Your Conclusion', desc: `There is no pick endpoint. On purpose. ${TOOL_COUNT} MCP tools return data and methodology; your agent reasons to its own contract. A thousand users, a thousand different conclusions.` },
-];
 
 export default async function LandingPage() {
   const summary = await getLatestOvernightSummary();
@@ -108,6 +103,13 @@ export default async function LandingPage() {
 
       <main className="flex-1 container mx-auto px-4 py-8 space-y-12 max-w-5xl">
         <Hero />
+
+        {/* Activation above the fold: per-client connect (free first, then the
+            honest pro line), then the open-source harness. Proof (today's pool,
+            the honesty section) follows. Order per the 2026-08-13 landing plan. */}
+        <ConnectTabs />
+
+        <HarnessCta />
 
         {/* Today's Market Snapshot */}
         {summary && (
@@ -213,29 +215,6 @@ export default async function LandingPage() {
           </section>
         )}
 
-        {/* What your agent gets: the three pillars + a single link into the
-            9-tool MCP surface. The one illustrative agent session lives in the
-            hero; deduped 2026-07-21 so it is not shown twice. */}
-        <section>
-          <h2 className="text-2xl font-bold font-headline text-center mb-6">What your agent gets</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {pillars.map((pillar) => (
-              <Card key={pillar.title} className="bg-card/50 text-center">
-                <CardContent className="p-5">
-                  <div className="flex justify-center mb-3">{pillar.icon}</div>
-                  <h3 className="font-bold font-headline">{pillar.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">{pillar.desc}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/developers">See all {TOOL_COUNT} MCP tools &rarr;</Link>
-            </Button>
-          </div>
-        </section>
-
         {/* The honesty section */}
         <section className="text-center space-y-4 max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold font-headline">Read this before you pay us</h2>
@@ -262,11 +241,6 @@ export default async function LandingPage() {
             </Button>
           </div>
         </section>
-
-        {/* Open-source harness: the clone-me activation step. Placed after the
-            honesty beat ("the exit is your agent's job") so a convinced visitor
-            flows straight into cloning the loop and minting a key. */}
-        <HarnessCta />
 
         {/* Lab teaser */}
         <section>

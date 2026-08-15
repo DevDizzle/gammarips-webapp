@@ -1,6 +1,24 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { PRICE_MONTHLY } from '@/lib/constants';
+import { PRICE_MONTHLY, TOOL_COUNT } from '@/lib/constants';
+
+const LAYERS = [
+  {
+    eyebrow: 'The data, over MCP',
+    title: `${PRICE_MONTHLY}/mo, 7-day trial`,
+    desc: `${TOOL_COUNT} tools: the curated overnight pool, per-contract liquidity, the outcome history of past setups, and exit-rule replay. It answers three questions. Can I get in? Can I get out? What did this setup do before?`,
+  },
+  {
+    eyebrow: 'The harness, open source',
+    title: 'Free. Clone it.',
+    desc: 'Three commands. /trade screens the pool and ranks candidates or says no-trade. /review scores every pool name after the close. /coach reads your own record back to you. The exit plan exists before the entry.',
+  },
+  {
+    eyebrow: 'Your agent',
+    title: 'Claude Code, Codex, Cursor, Gemini CLI, Claude, ChatGPT, Grok',
+    desc: 'It reasons over the data to its own contract, sized to your risk. There is no pick endpoint, on purpose. A thousand users, a thousand different conclusions. All of them read the free tier today. The paid tools run where the client can send a key.',
+  },
+];
 
 export function Hero() {
   return (
@@ -9,19 +27,33 @@ export function Hero() {
         Agentic Trading
       </p>
       <h1 className="text-4xl md:text-6xl font-bold font-headline mb-6 tracking-tight">
-        Stop asking AI for stock picks.
+        MCP + harness
         <span className="block mt-2 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-          Start giving it real data.
+          = agentic trading.
         </span>
       </h1>
       <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
-        GammaRips scans 5,230+ tickers overnight for unusual options flow and
-        curates it down to a small, high-signal pool, served to Claude,
-        ChatGPT, or your own agent over MCP. Your agent analyzes. You decide.
+        Stop asking AI for stock picks. Give your agent real options-flow data
+        over MCP, and a free open-source loop that makes the exit plan exist
+        before the entry. Your agent analyzes. You decide.
       </p>
       <p className="text-sm text-muted-foreground mb-8">
         5,230+ tickers scanned nightly · curated bullish pool · no hindsight data · public paper-traded receipts
       </p>
+
+      {/* The three layers of the product statement. Data is paid, the loop is
+          free, the agent is yours. Kept to one line each on purpose. */}
+      <div className="max-w-3xl mx-auto mb-8 grid grid-cols-1 md:grid-cols-3 gap-3 text-left">
+        {LAYERS.map((layer) => (
+          <div key={layer.title} className="rounded-xl border bg-card/50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-1">
+              {layer.eyebrow}
+            </p>
+            <p className="font-bold font-headline text-base mb-1">{layer.title}</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">{layer.desc}</p>
+          </div>
+        ))}
+      </div>
 
       {/*
         Static agent-session visual for launch. When the YouTube walkthrough is
@@ -32,7 +64,8 @@ export function Hero() {
           <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-primary/30">
             <iframe
               className="absolute inset-0 h-full w-full"
-              src="https://www.youtube.com/embed/VIDEO_ID"
+              src="https://www.youtube-nocookie.com/embed/VIDEO_ID"
+              loading="lazy"
               title="A morning with GammaRips"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -92,7 +125,7 @@ export function Hero() {
 
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <Button asChild size="lg">
-          <Link href="/pricing">Start Your 7-Day Free Trial &rarr;</Link>
+          <Link href="#connect">Connect your agent &rarr;</Link>
         </Button>
         <Button asChild variant="outline" size="lg">
           <Link href="/signals">Browse Today&apos;s Pool, Free</Link>

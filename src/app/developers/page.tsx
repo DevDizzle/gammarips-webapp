@@ -59,11 +59,11 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Is the options flow data real time or overnight?",
-    a: "Overnight. The scan runs across 5,230+ US tickers after the close and the curated pool publishes each trading morning. It is an unusual-options-activity feed built for analysis, not a real-time tape for execution.",
+    a: "Overnight. The scan runs across about 3,500 optionable US stocks after the close and the curated pool publishes each trading morning. It is an unusual-options-activity feed built for analysis, not a real-time tape for execution.",
   },
   {
     q: "How do I connect Claude or ChatGPT to options flow data?",
-    a: `Run: claude mcp add --transport http gammarips ${MCP_ENDPOINT}. That reaches the anonymous tier immediately. For the full data layer, add a header of Authorization: Bearer plus your API key. This works today in Claude Code, Cursor, and any MCP client that can send an Authorization header. The consumer claude.ai and ChatGPT connector UIs need OAuth, which is on the roadmap.`,
+    a: `In Claude Code, run: claude mcp add --transport http gammarips ${MCP_ENDPOINT}. That reaches the anonymous tier immediately. Every other MCP client can add the same URL: claude.ai, ChatGPT (Developer mode) and Grok as a custom connector, Codex, Cursor and Gemini CLI in their MCP config. For the full data layer, add a header of Authorization: Bearer plus your API key. This works today in Claude Code, Codex, Cursor, Gemini CLI, and any MCP client that can send an Authorization header. ChatGPT cannot send a key and needs OAuth, which is on the roadmap. claude.ai has a header field in limited rollout. Full steps per client are in the connect section on the homepage.`,
   },
   {
     q: "Does the API return trade recommendations?",
@@ -218,10 +218,11 @@ export default function DevelopersPage() {
                 <Button size="lg">Get Your API Key &rarr;</Button>
               </Link>
               <p className="text-xs text-muted-foreground">
-                Works today with Claude Code, Cursor, and any MCP client that
-                can send an Authorization header. Consumer claude.ai and
-                ChatGPT connector UIs need OAuth. It&apos;s on the roadmap; the
-                anonymous tier works everywhere now.
+                Works today with Claude Code, Codex, Cursor, Gemini CLI, and any
+                MCP client that can send an Authorization header. ChatGPT cannot
+                send a key and needs OAuth, which is on the roadmap. claude.ai has
+                a header field in limited rollout. The anonymous tier works
+                everywhere now.
               </p>
             </div>
           </div>
@@ -255,6 +256,36 @@ export default function DevelopersPage() {
 {`claude mcp add --transport http gammarips \\
   ${MCP_ENDPOINT} \\
   --header "Authorization: Bearer YOUR_API_KEY"`}
+              </pre>
+            </div>
+            <div className="mt-6 pt-4 border-t border-border/50">
+              <div className="text-muted-foreground mb-2"># Codex CLI (~/.codex/config.toml)</div>
+              <pre className="text-primary overflow-x-auto whitespace-pre-wrap break-all">
+{`# export GAMMARIPS_MCP_KEY=YOUR_API_KEY
+[mcp_servers.gammarips]
+url = "${MCP_ENDPOINT}"
+bearer_token_env_var = "GAMMARIPS_MCP_KEY"`}
+              </pre>
+            </div>
+            <div className="mt-6 pt-4 border-t border-border/50">
+              <div className="text-muted-foreground mb-2"># Cursor (.cursor/mcp.json), after export GAMMARIPS_MCP_KEY=YOUR_API_KEY</div>
+              <pre className="text-primary overflow-x-auto whitespace-pre-wrap break-all">
+{`{
+  "mcpServers": {
+    "gammarips": {
+      "url": "${MCP_ENDPOINT}",
+      "headers": { "Authorization": "Bearer \${env:GAMMARIPS_MCP_KEY}" }
+    }
+  }
+}`}
+              </pre>
+            </div>
+            <div className="mt-6 pt-4 border-t border-border/50">
+              <div className="text-muted-foreground mb-2"># Gemini CLI</div>
+              <pre className="text-primary overflow-x-auto whitespace-pre-wrap break-all">
+{`gemini mcp add --transport http -s user \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  gammarips ${MCP_ENDPOINT}`}
               </pre>
             </div>
             <div className="mt-6 pt-4 border-t border-border/50">

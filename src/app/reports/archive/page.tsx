@@ -69,7 +69,7 @@ export default async function ReportArchivePage() {
           <p className="text-muted-foreground leading-relaxed">
             Every daily options-flow briefing GammaRips has published, oldest kept and newest
             first. Each report is the record of what the overnight scan saw that morning across
-            5,230+ tickers: the bull/bear split, the themes institutional money leaned into, and
+            about 3,500 optionable US stocks: the bull/bear split, the themes institutional money leaned into, and
             the pool that cleared the{" "}
             <Link href="/methodology" className="text-primary hover:underline">
               enrichment bar

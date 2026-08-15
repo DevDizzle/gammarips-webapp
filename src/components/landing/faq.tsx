@@ -17,7 +17,7 @@ export const faqs = [
   },
   {
     question: "Which AI agents work with this?",
-    answer: `Anything that speaks MCP (Model Context Protocol): Claude via connectors or Claude Code, ChatGPT with MCP support, Cursor, or any custom agent using an MCP client library. You add the GammaRips server to your agent's config with your API key, and the ${TOOL_COUNT} tools show up like native capabilities. Setup takes a few minutes; the Developers page has copy-paste instructions.`
+    answer: `Anything that speaks MCP (Model Context Protocol). The free tier works in every MCP client: Claude Code, Codex, Cursor, Gemini CLI, claude.ai and Claude Desktop custom connectors, ChatGPT with Developer mode, Grok connectors, or any MCP client library. The paid tools need your API key in an Authorization header, and today Claude Code, Codex, Cursor and Gemini CLI can send it. ChatGPT cannot send a key (OAuth sign-in is on the roadmap), and claude.ai gets a header field in a limited rollout. Pick your client in the connect section on the homepage. Each tab shows the exact steps and states whether the paid tools run in that client today. Once connected, the ${TOOL_COUNT} tools show up like native capabilities.`
   },
   {
     question: "Why don't you just tell me what to buy?",
@@ -25,7 +25,7 @@ export const faqs = [
   },
   {
     question: "How is the pool curated?",
-    answer: "Every weeknight the engine scans 5,230+ US tickers for unusual options activity. A name needs a conviction score of 4+ and over $500K bet in one direction to survive at all. Then we keep the bullish names and rank them, using levers validated on over a thousand historically measured trades, down to the strongest ~50 setups, each carrying its flow data, technicals, news context, and a recommended contract. Two safety checks sit on top: no names with earnings in the window, and a market-stress check (VIX at or below VIX3M). Every candidate is checked so that nothing your agent sees contains information that wasn't knowable at scan time."
+    answer: "Every weeknight the engine scans about 3,500 optionable US stocks for unusual options activity. A name needs a conviction score of 4+ and over $500K bet in one direction to survive at all. Then we keep the bullish names and rank them, using levers validated on over a thousand historically measured trades, down to the strongest ~50 setups, each carrying its flow data, technicals, news context, and a recommended contract. Two safety checks sit on top: no names with earnings in the window, and a market-stress check (VIX at or below VIX3M). Every candidate is checked so that nothing your agent sees contains information that wasn't knowable at scan time."
   },
   {
     question: "Where's the track record?",

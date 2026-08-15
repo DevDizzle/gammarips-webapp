@@ -17,8 +17,10 @@ cd gammarips-harness
 # 2. Subscribe at gammarips.com/pricing, then mint your MCP key at gammarips.com/account
 export GAMMARIPS_MCP_KEY="<your key>"
 
-# 3. Open in Claude Code, then run the daily loop:
-#    /morning-pool  →  /select-contract  →  /exit-plan  →  /trade-journal`;
+# 3. Open in Claude Code, then run the loop (the three commands are Claude Code skills):
+#    /trade    morning: screen the pool, rank 2-3 candidates or no-trade; you decide
+#    /review   after the close: score every pool name
+#    /coach    on demand: behavioral feedback from your own record`;
 
 export function HarnessCta() {
   return (
@@ -31,8 +33,8 @@ export function HarnessCta() {
       </h2>
       <p className="text-sm md:text-base text-muted-foreground text-center max-w-2xl mx-auto mb-10">
         The harness is the open-source agentic trading loop. Your agent reads the
-        curated pool, reasons to one contract candidate a day (or none), designs
-        its own exit, and journals every decision. The harness is free. The data
+        curated pool, screens it to two or three candidates a day (or none), designs
+        its own exit, and journals every decision. You decide. The harness is free. The data
         is the {PRICE_MONTHLY}/mo MCP key. A workflow, not a signal service.
       </p>
 

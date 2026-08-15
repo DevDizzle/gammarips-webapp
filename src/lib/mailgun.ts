@@ -199,14 +199,14 @@ Welcome to GammaRips. Your free account is live.
 
 What that gets you, free, forever:
 
-- gammarips.com/signals is today's curated pool: ~50 bullish setups from a nightly scan of 5,000+ tickers, with flow, technicals, and context.
+- gammarips.com/signals is today's curated pool: ~50 bullish setups from a nightly scan of about 3,500 optionable US stocks, with flow, technicals, and context.
 - gammarips.com/scorecard is the Track Record: every candidate tracked to its outcome, including the honest baseline (buying everything blindly loses, and we publish that).
 - gammarips.com/lab is the Lab: our research experiments, including the killed ideas.
 - gammarips.com/blog and @gammarips on X: methodology and research notes.
 
 The paid tier is for your AI agent. Agent Access (${PRICE_MONTHLY}/mo, 7-day free
-trial) connects Claude, ChatGPT, or your own agent to the full data
-layer over MCP: the structured pool, opportunity surfaces, outcome
+trial) connects Claude Code, Codex, Cursor, Gemini CLI, or any agent that
+can send a bearer key to the full data layer over MCP: the structured pool, opportunity surfaces, outcome
 history, and the methodology as playbooks your agent can run. Your
 agent analyzes; you decide.
 
@@ -243,12 +243,12 @@ Data on a paper-trading basis, educational only. Not investment advice.
                             <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">Welcome to GammaRips. Your free account is live. Everything human-readable is free, forever:</p>
                             <ul style="font-size: 15px; line-height: 1.8; color: #A0A0A0; padding-left: 20px;">
-                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">Today's Pool</a>: ~50 curated bullish setups from a nightly scan of 5,000+ tickers.</li>
+                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">Today's Pool</a>: ~50 curated bullish setups from a nightly scan of about 3,500 optionable US stocks.</li>
                                 <li><a href="https://gammarips.com/scorecard" style="color: hsl(74, 80%, 50%);">Track Record</a>: every candidate tracked to its outcome, honest baseline included.</li>
                                 <li><a href="https://gammarips.com/lab" style="color: hsl(74, 80%, 50%);">The Lab</a>: our research experiments, including the killed ideas.</li>
                                 <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">Blog</a> + @gammarips on X: methodology and research notes.</li>
                             </ul>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">The paid tier is for your <strong>AI agent</strong>: Agent Access (${PRICE_MONTHLY}/mo, 7-day free trial) connects Claude, ChatGPT, or your own agent to the full data layer over MCP: structured pool, opportunity surfaces, outcome history, and the methodology as playbooks. Your agent analyzes; you decide.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">The paid tier is for your <strong>AI agent</strong>: Agent Access (${PRICE_MONTHLY}/mo, 7-day free trial) connects Claude Code, Codex, Cursor, Gemini CLI, or any agent that can send a bearer key to the full data layer over MCP: structured pool, opportunity surfaces, outcome history, and the methodology as playbooks. Your agent analyzes; you decide.</p>
                             <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding: 28px 0 8px;">
                                 <a href="https://gammarips.com/developers" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">See how Agent Access works →</a>
                             </td></tr></table>

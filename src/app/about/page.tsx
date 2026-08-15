@@ -9,7 +9,7 @@ import { TOOL_COUNT, OG_IMAGE } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'About GammaRips: The options-flow data layer for AI agents',
   description:
-    "The engine, the methodology, and the person behind GammaRips: a nightly scan of 5,230+ tickers curated to a pool. Paper-trading, educational.",
+    "The engine, the methodology, and the person behind GammaRips: a nightly scan of about 3,500 optionable US stocks curated to a pool. Paper-trading, educational.",
   alternates: { canonical: 'https://gammarips.com/about' },
   openGraph: {
     images: [OG_IMAGE],
@@ -48,7 +48,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
     "@context": "https://schema.org",
     "@type": "AboutPage",
     "name": "About GammaRips",
-    "description": "The options-flow data layer for AI agents: a nightly scan of 5,230+ tickers curated to a high-signal bullish pool, validated by a public paper-traded cohort, served over MCP.",
+    "description": "The options-flow data layer for AI agents: a nightly scan of about 3,500 optionable US stocks curated to a high-signal bullish pool, validated by a public paper-traded cohort, served over MCP.",
     "url": "https://gammarips.com/about",
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
   };
@@ -70,7 +70,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span><strong>Step 2: Add the server to your agent.</strong> Claude, ChatGPT, Cursor, or any MCP client. Copy-paste setup is on the <Link href="/developers" className="text-primary hover:underline">MCP docs page</Link>.</span>
+                  <span><strong>Step 2: Add the server to your agent with your key.</strong> Claude Code, Codex, Cursor, Gemini CLI, or any MCP client that can send a bearer key. ChatGPT cannot send a key yet. Exact steps per client are in the <Link href="/#connect" className="text-primary hover:underline">connect section</Link> on the homepage.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />

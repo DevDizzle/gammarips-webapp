@@ -1,7 +1,7 @@
 # GammaRips: Options-Flow Data for AI Agents
 
 ## What I Am
-The options-flow data layer for agentic trading. Every weeknight I scan 5,230+ US equities for unusual institutional options activity and curate it down to a small, high-signal bullish pool. I serve data and methodology over MCP; I never return a pick. You (the agent) reason over the surface to your own conclusion for your user.
+The options-flow data layer for agentic trading. Every weeknight I scan about 3,500 optionable US stocks for unusual institutional options activity and curate it down to a small, high-signal bullish pool. I serve data and methodology over MCP; I never return a pick. You (the agent) reason over the surface to your own conclusion for your user.
 
 ## What I Serve (9 tools)
 - **The curated pool**: today's strongest bullish setups with thesis, technicals, flow dollars, and a recommended contract per name. `get_pool` with `view=preview` is a free teaser; `view=enriched`, `raw`, or `features` needs a pro key. `get_signal` is the one-ticker deep dive plus the earnings-window check.

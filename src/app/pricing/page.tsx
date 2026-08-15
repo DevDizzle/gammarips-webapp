@@ -22,7 +22,7 @@ export default function PricingPage() {
     '@type': 'Product',
     name: 'GammaRips Agent Access',
     description:
-      `MCP data access for AI agents: the curated overnight options-flow pool in structured form, opportunity surfaces (realized excursion distributions per historical setup), a queryable outcome database, regime context, and methodology playbooks. ${TOOL_COUNT} tools for Claude, ChatGPT, or any MCP client. Data on a paper-trading basis, not investment advice.`,
+      `MCP data access for AI agents: the curated overnight options-flow pool in structured form, opportunity surfaces (realized excursion distributions per historical setup), a queryable outcome database, regime context, and methodology playbooks. ${TOOL_COUNT} tools for Claude Code, Codex, Cursor, Gemini CLI, or any MCP client that can send a bearer key. Data on a paper-trading basis, not investment advice.`,
     image: 'https://gammarips.com/og-image.png?v=3',
     brand: { '@type': 'Brand', name: 'GammaRips' },
     offers: {

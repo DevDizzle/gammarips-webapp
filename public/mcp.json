@@ -20,7 +20,7 @@
   ],
   "prompts": ["morning_brief", "analyze_candidate", "run_your_own_tournament"],
   "start_with": ["get_pool", "query_outcomes", "get_playbook"],
-  "universe": "5,230+ US equities, scanned nightly",
+  "universe": "about 3,500 optionable US stocks, scanned nightly",
   "tags": ["options", "options-flow", "unusual-options-activity", "agentic-trading", "ai-agents", "institutional-flow", "paper-trading", "mcp", "data-vendor"],
   "links": {
     "home": "https://gammarips.com",

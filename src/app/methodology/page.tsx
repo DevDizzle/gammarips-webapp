@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 const dataSources = [
   {
     name: 'Polygon.io',
-    purpose: 'End-of-day options chains, volume, open interest, dollar flow, contract metadata across 5,230+ tickers.',
+    purpose: 'End-of-day options chains, volume, open interest, dollar flow, contract metadata across about 3,500 optionable US stocks.',
     cadence: 'Pulled at 23:00 ET nightly by overnight-scanner.',
   },
   {
@@ -363,9 +363,10 @@ export default function MethodologyPage() {
         <section className="text-center">
           <h2 className="text-2xl font-bold mb-3">Want your agent working this methodology?</h2>
           <p className="text-muted-foreground mb-6">
-            Browse the pool free on the signals page — or connect Claude, ChatGPT, or your own
-            agent over MCP and let it query the pool, the opportunity surfaces, and the outcome
-            history directly. The methodology on this page ships as playbooks your agent can run.
+            Browse the pool free on the signals page, or connect your agent over MCP and let it
+            query the pool, the opportunity surfaces, and the outcome history directly. The paid
+            tools run in Claude Code, Codex, Cursor, Gemini CLI, and any client that can send a
+            bearer key. The methodology on this page ships as playbooks your agent can run.
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
             <Button asChild>

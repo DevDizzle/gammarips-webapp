@@ -10,7 +10,7 @@ import { PRICE_MONTHLY, TOOL_COUNT } from '@/lib/constants';
 // The activation step, above the fold: every client gets the free ten-second
 // connect first, then the honest pro line for that client. Facts come from
 // src/lib/connect-clients.ts (checked against vendor docs); this component
-// only renders them. Order: the four clients that run the paid loop today
+// only renders them. Order: the four clients that can send the key today
 // come first, the chat clients after.
 
 function Steps({ steps }: { steps: ConnectStep[] }) {
@@ -46,7 +46,7 @@ export function ConnectTabs() {
       </h2>
       <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto mb-8">
         Pick your client. The free tier needs no card, no key, and no signup.
-        Agent Access ({PRICE_MONTHLY}/mo, 7-day trial) unlocks all {TOOL_COUNT}{' '}
+        Agent Access ({PRICE_MONTHLY}/mo, 7-day trial) gives your agent all {TOOL_COUNT}{' '}
         tools. Some chat clients cannot send a key yet, and we say so on the tab.
       </p>
 
@@ -64,7 +64,7 @@ export function ConnectTabs() {
             <div className="rounded-xl border bg-card/60 p-5 md:p-6 space-y-6 text-left">
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold font-headline">Free, about ten seconds</h3>
+                  <h3 className="font-bold font-headline">Free</h3>
                   <Badge variant="outline" className="text-[10px]">
                     no card, no key
                   </Badge>
@@ -85,7 +85,7 @@ export function ConnectTabs() {
                 </div>
                 <p className="text-sm text-muted-foreground">{c.pro.intro}</p>
                 <Steps steps={c.pro.steps} />
-                {c.pro.status === 'full' && (
+                {(c.pro.status === 'full' || c.pro.status === 'beta') && (
                   <div className="pt-1">
                     <Button asChild size="sm">
                       <Link href="/pricing">Start your 7-day free trial, get your key</Link>
@@ -104,6 +104,12 @@ export function ConnectTabs() {
         </Button>
         <p className="text-xs text-muted-foreground">
           The Python SDK connects the same way. Steps are on the developer docs.
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Before you pay: the whole pool under one fixed exit loses money.{' '}
+          <Link href="#honesty" className="text-primary hover:underline">
+            Read why.
+          </Link>
         </p>
       </div>
     </section>

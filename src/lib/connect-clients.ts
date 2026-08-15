@@ -16,7 +16,7 @@ export type ClientId =
   | 'chatgpt'
   | 'grok';
 
-// full: the client sends the Authorization header, the paid loop runs today.
+// full: the client sends the Authorization header, all paid tools work today.
 // beta: the client can send it only through a feature in limited rollout.
 // not-yet: the client cannot send our key; the paid tools need OAuth on our side.
 // unverified: the vendor docs do not say; we have not confirmed a header field.
@@ -50,7 +50,7 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
     },
     pro: {
       status: 'full',
-      intro: 'Full paid loop. Add the same server with your key.',
+      intro: 'All paid tools, and the harness loop. Add the same server with your key.',
       steps: [
         {
           text: 'Mint your key on the account page after the trial starts. Paste it with no spaces and no newline.',
@@ -77,7 +77,7 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
     },
     pro: {
       status: 'full',
-      intro: 'Full paid loop. Codex reads the key from an environment variable.',
+      intro: 'All paid tools. Codex reads the key from an environment variable.',
       steps: [
         {
           text: 'Export GAMMARIPS_MCP_KEY in your shell, then point Codex at it.',
@@ -101,7 +101,7 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
     },
     pro: {
       status: 'full',
-      intro: 'Full paid loop. Cursor sends headers and reads the key from your shell.',
+      intro: 'All paid tools. Cursor sends headers and reads the key from your shell.',
       steps: [
         {
           text: 'Export GAMMARIPS_MCP_KEY, then add the header.',
@@ -125,7 +125,7 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
     },
     pro: {
       status: 'full',
-      intro: 'Full paid loop. Add the same server with your key.',
+      intro: 'All paid tools. Add the same server with your key.',
       steps: [
         {
           text: 'Mint your key on the account page after the trial starts. Paste it with no spaces and no newline.',
@@ -139,7 +139,7 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
     label: 'Claude',
     kind: 'chat',
     free: {
-      intro: 'claude.ai and Claude Desktop. About ten seconds.',
+      intro: 'claude.ai and Claude Desktop.',
       steps: [
         { text: 'Open Customize, then Connectors, then Add custom connector.' },
         { text: `Paste ${MCP_ENDPOINT} and add it.` },
@@ -153,7 +153,7 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
         {
           text: 'If the Add custom connector dialog shows a Request headers section, add a header named authorization with the value Bearer YOUR_API_KEY (one space, no newline).',
         },
-        { text: 'If it does not show it yet, use Claude Code for the paid loop today.' },
+        { text: 'If it does not show it yet, use Claude Code for the paid tools today.' },
       ],
     },
   },
@@ -173,7 +173,7 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
       status: 'not-yet',
       intro: 'ChatGPT cannot send our key. The paid tools need OAuth on our side.',
       steps: [
-        { text: 'OAuth sign-in for ChatGPT is next on our roadmap. Until then the paid loop runs in Claude Code, Codex, Cursor, or Gemini CLI.' },
+        { text: 'OAuth sign-in for ChatGPT is on the roadmap. Until then the paid tools run in Claude Code, Codex, Cursor, or Gemini CLI.' },
       ],
     },
   },
@@ -199,7 +199,7 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
 ];
 
 export const PRO_STATUS_LABEL: Record<ProStatus, string> = {
-  full: 'Full paid loop today',
+  full: 'All paid tools today',
   beta: 'Pro in limited rollout',
   'not-yet': 'Free tier today',
   unverified: 'Free tier today',

@@ -17,7 +17,7 @@ export const faqs = [
   },
   {
     question: "Which AI agents work with this?",
-    answer: `Anything that speaks MCP (Model Context Protocol). The free tier works in every MCP client: Claude Code, Codex, Cursor, Gemini CLI, claude.ai and Claude Desktop custom connectors, ChatGPT with Developer mode, Grok connectors, or any MCP client library. The paid tools need your API key in an Authorization header, and today Claude Code, Codex, Cursor and Gemini CLI can send it. ChatGPT cannot send a key (OAuth sign-in is next on our roadmap), and claude.ai gets a header field in a limited rollout. Pick your client in the connect section on the homepage. Each tab shows the exact steps and the honest pro line, and the ${TOOL_COUNT} tools show up like native capabilities.`
+    answer: `Anything that speaks MCP (Model Context Protocol). The free tier works in every MCP client: Claude Code, Codex, Cursor, Gemini CLI, claude.ai and Claude Desktop custom connectors, ChatGPT with Developer mode, Grok connectors, or any MCP client library. The paid tools need your API key in an Authorization header, and today Claude Code, Codex, Cursor and Gemini CLI can send it. ChatGPT cannot send a key (OAuth sign-in is on the roadmap), and claude.ai gets a header field in a limited rollout. Pick your client in the connect section on the homepage. Each tab shows the exact steps and states whether the paid tools run in that client today. Once connected, the ${TOOL_COUNT} tools show up like native capabilities.`
   },
   {
     question: "Why don't you just tell me what to buy?",

@@ -63,7 +63,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do I connect Claude or ChatGPT to options flow data?",
-    a: `Run: claude mcp add --transport http gammarips ${MCP_ENDPOINT}. That reaches the anonymous tier immediately in any MCP client, and claude.ai, ChatGPT (Developer mode) and Grok can add the same URL as a custom connector. For the full data layer, add a header of Authorization: Bearer plus your API key. This works today in Claude Code, Codex, Cursor, Gemini CLI, and any MCP client that can send an Authorization header. ChatGPT cannot send a key and needs OAuth, which is on the roadmap. claude.ai has a header field in limited rollout. Full steps per client are in the connect section on the homepage.`,
+    a: `In Claude Code, run: claude mcp add --transport http gammarips ${MCP_ENDPOINT}. That reaches the anonymous tier immediately. Every other MCP client can add the same URL: claude.ai, ChatGPT (Developer mode) and Grok as a custom connector, Codex, Cursor and Gemini CLI in their MCP config. For the full data layer, add a header of Authorization: Bearer plus your API key. This works today in Claude Code, Codex, Cursor, Gemini CLI, and any MCP client that can send an Authorization header. ChatGPT cannot send a key and needs OAuth, which is on the roadmap. claude.ai has a header field in limited rollout. Full steps per client are in the connect section on the homepage.`,
   },
   {
     q: "Does the API return trade recommendations?",

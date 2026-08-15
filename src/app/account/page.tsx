@@ -177,8 +177,9 @@ export default function AccountPage() {
             <>
               <p className="text-muted-foreground">
                 Your subscription includes full MCP Agent Access (all {TOOL_COUNT} tools).
-                Generate an API key and connect Claude, ChatGPT, or your own
-                agent.
+                Generate an API key and connect Claude Code, Codex, Cursor, Gemini CLI,
+                or any agent that can send a bearer key. Steps per client are in
+                the connect section on the homepage.
               </p>
 
               {/* One-time reveal of a freshly generated key */}
@@ -256,8 +257,8 @@ export default function AccountPage() {
           ) : (
             <>
               <p className="text-muted-foreground">
-                Connect Claude, ChatGPT, or your own agent to the GammaRips
-                data layer: the curated pool, opportunity surfaces, outcome
+                Connect Claude Code, Codex, Cursor, Gemini CLI, or any agent that
+                can send a bearer key to the GammaRips data layer: the curated pool, opportunity surfaces, outcome
                 history, and methodology playbooks. {PRICE_MONTHLY}/mo, 7-day free trial.
               </p>
               <Button asChild>

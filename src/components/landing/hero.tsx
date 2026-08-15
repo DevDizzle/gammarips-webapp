@@ -6,17 +6,17 @@ const LAYERS = [
   {
     eyebrow: 'The data, over MCP',
     title: `${PRICE_MONTHLY}/mo, 7-day trial`,
-    desc: `${TOOL_COUNT} tools: the curated overnight pool, per-contract liquidity, the outcome history of past setups, and exit-rule replay. It answers three questions. Can I get in? Can I get out? What did this setup do before?`,
+    desc: `All ${TOOL_COUNT} tools, 4 of them pro: the curated overnight pool, per-contract liquidity, the outcome history of past setups, and exit-rule replay. It answers three questions. Can I get in? Can I get out? What did this setup do before?`,
   },
   {
     eyebrow: 'The harness, open source',
     title: 'Free. Clone it.',
-    desc: 'Three commands. /trade screens the pool and ranks candidates or says no-trade. /review scores every pool name after the close. /coach reads your own record back to you. The exit plan exists before the entry.',
+    desc: 'Three Claude Code commands. /trade screens the pool and ranks candidates or says no-trade. /review scores every pool name after the close. /coach reads your own record back to you. The exit plan exists before the entry.',
   },
   {
     eyebrow: 'Your agent',
     title: 'Claude Code, Codex, Cursor, Gemini CLI, Claude, ChatGPT, Grok',
-    desc: 'It reasons over the data to its own contract, sized to your risk. There is no pick endpoint, on purpose. A thousand users, a thousand different conclusions. All of them read the free tier today. The paid tools run where the client can send a key.',
+    desc: 'It reasons over the data to its own contract, sized to your risk. There is no pick endpoint, on purpose. A thousand users, a thousand different conclusions. All seven clients read the free tier today. The paid tools run where the client can send a key.',
   },
 ];
 
@@ -24,7 +24,7 @@ export function Hero() {
   return (
     <section className="py-12 md:py-20 text-center container px-4">
       <p className="text-sm font-semibold uppercase tracking-widest text-primary mb-4">
-        Agentic Trading
+        Options-flow data for AI agents
       </p>
       <h1 className="text-4xl md:text-6xl font-bold font-headline mb-6 tracking-tight">
         MCP + harness

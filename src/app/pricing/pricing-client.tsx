@@ -16,7 +16,7 @@ const stripePromise = loadStripe(
 );
 
 const agentFeatures = [
-  `All ${TOOL_COUNT} MCP tools for Claude, ChatGPT, or any MCP client`,
+  `All ${TOOL_COUNT} MCP tools for Claude Code, Codex, Cursor, Gemini CLI, or any MCP client that can send a bearer key`,
   "Today's curated pool in structured, agent-readable form",
   'Opportunity surfaces: realized peak/drawdown excursions per historical setup',
   'Queryable outcome database + exit-rule simulation',
@@ -149,7 +149,7 @@ export function PricingClient() {
               <span className="text-muted-foreground ml-2">/month</span>
             </div>
             <p className="text-sm text-muted-foreground mt-2">
-              Full MCP access for Claude, ChatGPT, or your own agent: the
+              Full MCP access for Claude Code, Codex, Cursor, Gemini CLI, or any agent that can send a bearer key: the
               curated pool, the deep data a human never browses, and the
               methodology tools. 7-day free trial.
             </p>

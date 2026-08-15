@@ -216,7 +216,7 @@ export default async function LandingPage() {
         )}
 
         {/* The honesty section */}
-        <section className="text-center space-y-4 max-w-3xl mx-auto">
+        <section id="honesty" className="scroll-mt-24 text-center space-y-4 max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold font-headline">Read this before you pay us</h2>
           <p className="text-muted-foreground">
             If you bought every contract in our pool every morning with a fixed

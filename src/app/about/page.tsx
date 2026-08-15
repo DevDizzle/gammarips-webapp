@@ -9,7 +9,7 @@ import { TOOL_COUNT, OG_IMAGE } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'About GammaRips: The options-flow data layer for AI agents',
   description:
-    "The engine, the methodology, and the person behind GammaRips: a nightly scan of 3,500+ optionable US stocks curated to a pool. Paper-trading, educational.",
+    "The engine, the methodology, and the person behind GammaRips: a nightly scan of about 3,500 optionable US stocks curated to a pool. Paper-trading, educational.",
   alternates: { canonical: 'https://gammarips.com/about' },
   openGraph: {
     images: [OG_IMAGE],
@@ -48,7 +48,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
     "@context": "https://schema.org",
     "@type": "AboutPage",
     "name": "About GammaRips",
-    "description": "The options-flow data layer for AI agents: a nightly scan of 3,500+ optionable US stocks curated to a high-signal bullish pool, validated by a public paper-traded cohort, served over MCP.",
+    "description": "The options-flow data layer for AI agents: a nightly scan of about 3,500 optionable US stocks curated to a high-signal bullish pool, validated by a public paper-traded cohort, served over MCP.",
     "url": "https://gammarips.com/about",
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
   };

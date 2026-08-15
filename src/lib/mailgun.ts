@@ -199,7 +199,7 @@ Welcome to GammaRips. Your free account is live.
 
 What that gets you, free, forever:
 
-- gammarips.com/signals is today's curated pool: ~50 bullish setups from a nightly scan of 3,500+ optionable US stocks, with flow, technicals, and context.
+- gammarips.com/signals is today's curated pool: ~50 bullish setups from a nightly scan of about 3,500 optionable US stocks, with flow, technicals, and context.
 - gammarips.com/scorecard is the Track Record: every candidate tracked to its outcome, including the honest baseline (buying everything blindly loses, and we publish that).
 - gammarips.com/lab is the Lab: our research experiments, including the killed ideas.
 - gammarips.com/blog and @gammarips on X: methodology and research notes.
@@ -243,7 +243,7 @@ Data on a paper-trading basis, educational only. Not investment advice.
                             <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">Welcome to GammaRips. Your free account is live. Everything human-readable is free, forever:</p>
                             <ul style="font-size: 15px; line-height: 1.8; color: #A0A0A0; padding-left: 20px;">
-                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">Today's Pool</a>: ~50 curated bullish setups from a nightly scan of 3,500+ optionable US stocks.</li>
+                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">Today's Pool</a>: ~50 curated bullish setups from a nightly scan of about 3,500 optionable US stocks.</li>
                                 <li><a href="https://gammarips.com/scorecard" style="color: hsl(74, 80%, 50%);">Track Record</a>: every candidate tracked to its outcome, honest baseline included.</li>
                                 <li><a href="https://gammarips.com/lab" style="color: hsl(74, 80%, 50%);">The Lab</a>: our research experiments, including the killed ideas.</li>
                                 <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">Blog</a> + @gammarips on X: methodology and research notes.</li>

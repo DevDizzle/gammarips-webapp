@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     default: 'GammaRips | Options-flow data for AI agents',
     template: `%s | GammaRips`,
   },
-  description: "GammaRips scans 3,500+ optionable US stocks overnight for unusual options activity and curates it to a small, high-signal pool. Browse it free on the web, or connect your AI agent over MCP for the full data layer: curated pool, opportunity surfaces, outcome history, and methodology. Your agent analyzes. You decide. Paper-trading data, educational only.",
+  description: "GammaRips scans about 3,500 optionable US stocks overnight for unusual options activity and curates it to a small, high-signal pool. Browse it free on the web, or connect your AI agent over MCP for the full data layer: curated pool, opportunity surfaces, outcome history, and methodology. Your agent analyzes. You decide. Paper-trading data, educational only.",
   keywords: ['agentic trading', 'AI trading agent', 'MCP server trading', 'options flow', 'unusual options activity', 'options flow data', 'institutional options activity', 'overnight options scanner', 'AI trading analysis', 'options data for AI agents'],
   openGraph: {
     title: 'GammaRips | Options-flow data for AI agents',
@@ -51,7 +51,7 @@ const organizationSchema = {
   "url": "https://gammarips.com",
   "logo": "https://gammarips.com/icon.png",
   "email": "evan@gammarips.com",
-  "description": "GammaRips is an options-flow intelligence engine and data vendor for AI agents. It scans 3,500+ optionable US stocks overnight for unusual options activity, curates a small high-signal pool, and serves the data (pool, opportunity surfaces, outcome history, methodology) to bring-your-own AI agents over MCP. The human web UI is free; agents subscribe.",
+  "description": "GammaRips is an options-flow intelligence engine and data vendor for AI agents. It scans about 3,500 optionable US stocks overnight for unusual options activity, curates a small high-signal pool, and serves the data (pool, opportunity surfaces, outcome history, methodology) to bring-your-own AI agents over MCP. The human web UI is free; agents subscribe.",
   "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO" },
   "sameAs": ["https://twitter.com/GammaRips"],
 };

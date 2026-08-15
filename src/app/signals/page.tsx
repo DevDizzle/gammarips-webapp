@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   // Root layout applies the `%s | GammaRips` title template — no suffix here.
   title: "Overnight Options Flow Scanner — Daily Unusual Options Activity",
   description:
-    "The ~50 bullish setups from each overnight scan of 3,500+ optionable US stocks: volume, open interest, and directional dollar flow, ranked before the open.",
+    "The ~50 bullish setups from each overnight scan of about 3,500 optionable US stocks: volume, open interest, and directional dollar flow, ranked before the open.",
   alternates: { canonical: 'https://gammarips.com/signals' },
 };
 
@@ -27,7 +27,7 @@ export default async function SignalsPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "Overnight Options Flow Scanner",
-    "description": "The ~50 bullish setups GammaRips analyzes each morning, drawn from an overnight scan across 3,500+ optionable US stocks and reported before the market opens.",
+    "description": "The ~50 bullish setups GammaRips analyzes each morning, drawn from an overnight scan across about 3,500 optionable US stocks and reported before the market opens.",
     "url": "https://gammarips.com/signals",
     "mainEntity": {
       "@type": "ItemList",
@@ -47,14 +47,14 @@ export default async function SignalsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold font-headline mb-2">Overnight Options Flow</h1>
           <p className="text-muted-foreground mb-6">
-            The bullish setups GammaRips analyzed today, from an overnight scan across 3,500+ optionable US stocks, reported {reportDate}.
+            The bullish setups GammaRips analyzed today, from an overnight scan across about 3,500 optionable US stocks, reported {reportDate}.
             {summary?.underlying_scan_date && summary.underlying_scan_date !== reportDate && (
               <span className="block text-sm opacity-80 mt-1">Based on overnight flow from {summary.underlying_scan_date}</span>
             )}
           </p>
           <div className="text-sm text-muted-foreground space-y-3 max-w-3xl leading-relaxed">
             <p>
-              GammaRips is a daily options signals scanner. Every night at 23:00 ET, the engine ingests institutional options flow &mdash; volume, open interest, unusual activity, and directional dollar flow &mdash; across every optionable U.S. equity. Candidates clear a thin <Link href="/methodology" className="text-primary hover:underline">enrichment bar</Link>: <strong className="text-foreground">overnight score &ge; 4 with directional UOA &gt; $500K</strong> &mdash; then a BULLISH-only gate and a delta edge-rank keep the ~50 strongest bullish setups. What you see below is that bullish set (we trade calls only).
+              GammaRips is a daily options signals scanner. Every night at 23:00 ET, the engine ingests institutional options flow &mdash; volume, open interest, unusual activity, and directional dollar flow &mdash; across every optionable US common stock. Candidates clear a thin <Link href="/methodology" className="text-primary hover:underline">enrichment bar</Link>: <strong className="text-foreground">overnight score &ge; 4 with directional UOA &gt; $500K</strong> &mdash; then a BULLISH-only gate and a delta edge-rank keep the ~50 strongest bullish setups. What you see below is that bullish set (we trade calls only).
             </p>
             <p>
               This page is the human-readable view, and it&apos;s free forever. The same pool &mdash; plus <Link href="/developers" className="text-primary hover:underline">point-in-time features, opportunity surfaces, and a queryable outcome history</Link> &mdash; is served to AI agents over MCP. Every field is leakage-checked: nothing here contains information that wasn&apos;t knowable at scan time. A <Link href="/scorecard" className="text-primary hover:underline">paper-traded cohort</Link> validates the selection methodology daily, in public.

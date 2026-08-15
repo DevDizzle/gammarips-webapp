@@ -16,7 +16,7 @@ export const revalidate = 60; // keep the daily pool summary fresh without a ful
 export const metadata: Metadata = {
   title: "GammaRips | Options-flow data for AI agents",
   description:
-    "Overnight scan of 3,500+ optionable US stocks for unusual options activity, curated to a small bullish pool. Free to browse, or pipe it to your AI agent over MCP.",
+    "Overnight scan of about 3,500 optionable US stocks for unusual options activity, curated to a small bullish pool. Free to browse, or pipe it to your AI agent over MCP.",
   alternates: {
     canonical: '/',
   },

@@ -76,7 +76,7 @@ export default function SignalClientPage({
               <FileText className="w-4 h-4" /> See the {signal.scan_date} Morning Briefing
             </Link>
             <p className="mt-3 text-sm text-muted-foreground max-w-xl">
-              This is one candidate from GammaRips&apos; nightly scan of 3,500+
+              This is one candidate from GammaRips&apos; nightly scan of about 3,500
               optionable US stocks, curated into a small high-signal pool and tracked
               to its outcome. Data, not a recommendation.{" "}
               <Link href="/how-it-works" className="text-primary hover:underline">

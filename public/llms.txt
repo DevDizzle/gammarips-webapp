@@ -2,7 +2,7 @@
 
 > The options-flow data layer for AI agents. Stop asking AI for stock picks. Give it real data.
 
-GammaRips is an options-flow intelligence engine and data vendor. Every weeknight it scans 3,500+ optionable US stocks for unusual institutional options activity and curates the firehose down to a small, high-signal bullish pool. Humans browse everything free at gammarips.com; AI agents connect over MCP (paid, $39/mo, 7-day free trial) for the structured data layer: the curated pool, point-in-time feature vectors, opportunity surfaces (realized peak/drawdown excursions per historical setup), a queryable outcome database, exit-rule simulation, regime context, and methodology playbooks.
+GammaRips is an options-flow intelligence engine and data vendor. Every weeknight it scans about 3,500 optionable US stocks for unusual institutional options activity and curates the firehose down to a small, high-signal bullish pool. Humans browse everything free at gammarips.com; AI agents connect over MCP (paid, $39/mo, 7-day free trial) for the structured data layer: the curated pool, point-in-time feature vectors, opportunity surfaces (realized peak/drawdown excursions per historical setup), a queryable outcome database, exit-rule simulation, regime context, and methodology playbooks.
 
 There is no pick endpoint, deliberately. GammaRips sells the surface a good trade comes from, not a trade. Each user's agent reasons over the same data to its own conclusion, including via the published bracket-tournament selection playbook, run against the user's own objective. Honest baseline, published openly: buying the whole pool mechanically under a fixed exit is negative. The value is curation + history + your agent's analysis.
 
@@ -19,7 +19,7 @@ Data on a paper-trading basis, educational only. Not investment advice.
 
 ## Curation stack (V7.1)
 
-1. **Scanner**: overnight unusual-options-activity scan across 3,500+ optionable US stocks.
+1. **Scanner**: overnight unusual-options-activity scan across about 3,500 optionable US stocks.
 2. **Enrichment**: `overnight_score >= 4 AND directional_uoa_usd > 500000`, bullish-only, delta edge-ranked to the strongest ~50; thesis, technicals, news context, and a recommended contract attached per name.
 3. **Safety rails**: no earnings in the window; volatility regime check (VIX <= VIX3M).
 4. **Leakage discipline**: every field is point-in-time; nothing an agent reads contains information that wasn't knowable at the time it's dated.

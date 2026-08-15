@@ -61,7 +61,7 @@ conditions. No rocket emojis, no "moon," no urgency theater.
   `src/lib/constants.ts`, which is the single source of truth and already propagates to
   all 28 usages. The static `public/` agent-discovery files cannot import it and are
   synced by hand; upstream truth is `gammarips-mcp/src/server.py` `_ALL_TOOLS`.
-- Engine mechanics: nightly scan of 3,500+ optionable US stocks (the universe is
+- Engine mechanics: nightly scan of about 3,500 optionable US stocks (say "about 3,500"; the universe is
   refreshed weekly since 2026-08-05; it was 5,230 nominal before, of which ~1,700
   had no listed options; never write 5,230 again) → enrichment (score ≥ 4,
   UOA > $500K, bullish-only, edge-ranked to ~50) → two safety rails (earnings,

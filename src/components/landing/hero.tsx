@@ -6,7 +6,7 @@ const LAYERS = [
   {
     eyebrow: 'The data, over MCP',
     title: `${PRICE_MONTHLY}/mo, 7-day trial`,
-    desc: `All ${TOOL_COUNT} tools, 4 of them pro: the enriched overnight pool, per-contract liquidity, per-name detail, the outcome history of past setups, and exit-rule replay. It answers three questions. Can I get in? Can I get out? What did this setup do before?`,
+    desc: `All ${TOOL_COUNT} tools. A pro key opens the enriched pool view and the 4 pro tools: per-contract liquidity, per-name detail, outcome history, exit-rule replay. It answers three questions. Can I get in? Can I get out? What did this setup do before?`,
   },
   {
     eyebrow: 'The harness, open source',
@@ -38,7 +38,7 @@ export function Hero() {
         before the entry. Your agent analyzes. You decide.
       </p>
       <p className="text-sm text-muted-foreground mb-8">
-        3,500+ optionable US stocks scanned nightly · curated bullish pool · no hindsight data · public paper-traded receipts
+        about 3,500 optionable US stocks scanned nightly · curated bullish pool · no hindsight data · public paper-traded receipts
       </p>
 
       {/* The three layers of the product statement. Data is paid, the loop is

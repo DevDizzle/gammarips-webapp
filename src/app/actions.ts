@@ -16,6 +16,8 @@ import { headers } from 'next/headers';
 import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { sendFeedbackAcknowledgmentEmail } from '@/lib/mailgun';
+import { createMachineClient } from '@/lib/oauth/clients';
+import { listMachineClientsForUser, revokeClient } from '@/lib/oauth/store';
 
 export async function handleFeedback(uid: string | null, message: string, replyToEmail: string): Promise<{success: boolean}> {
   let userData: { uid: string, email: string | null } | null = null;
@@ -118,6 +120,44 @@ export async function revokeMcpApiKey(idToken: string): Promise<{ revoked: numbe
   if (!idToken) throw new Error('Authentication required.');
   const decoded = await getAdminAuth(getAdminApp()).verifyIdToken(idToken);
   const revoked = await revokeMcpKeysForUserAdmin(decoded.uid, 'user_revoked');
+  return { revoked };
+}
+
+// --- OAuth machine clients (client_credentials, for headless agents) ------
+//
+// A machine client is a confidential OAuth client bound to the caller's uid.
+// A VM agent posts grant_type=client_credentials to /oauth/token and gets a
+// short-lived access token whose tier is re-read from the subscription on
+// every mint. The secret is shown once; only its hash is stored.
+
+export async function createOAuthMachineClient(
+  idToken: string,
+  name: string
+): Promise<{ clientId: string; clientSecret: string; clientName: string }> {
+  const uid = await requireEntitledUid(idToken);
+  const { client_id, client_secret, client_name } = await createMachineClient(uid, name);
+  return { clientId: client_id, clientSecret: client_secret, clientName: client_name };
+}
+
+export async function listOAuthMachineClients(idToken: string): Promise<
+  Array<{ clientId: string; clientName: string; status: string; createdAtISO: string | null; lastUsedAtISO: string | null }>
+> {
+  if (!idToken) throw new Error('Authentication required.');
+  const decoded = await getAdminAuth(getAdminApp()).verifyIdToken(idToken);
+  const rows = await listMachineClientsForUser(decoded.uid);
+  return rows.map((r) => ({
+    clientId: r.client_id,
+    clientName: r.client_name,
+    status: r.status,
+    createdAtISO: r.createdAtISO,
+    lastUsedAtISO: r.lastUsedAtISO,
+  }));
+}
+
+export async function revokeOAuthMachineClient(idToken: string, clientId: string): Promise<{ revoked: boolean }> {
+  if (!idToken) throw new Error('Authentication required.');
+  const decoded = await getAdminAuth(getAdminApp()).verifyIdToken(idToken);
+  const revoked = await revokeClient(clientId, decoded.uid, 'user_revoked');
   return { revoked };
 }
 

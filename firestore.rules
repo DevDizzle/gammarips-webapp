@@ -46,6 +46,23 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // OAuth authorization-server state (clients, pending consent requests,
+    // single-use codes, rotating refresh tokens). Server-only, Admin SDK. The
+    // doc ids of codes/refresh tokens are SHA-256 hashes of the secret. Same
+    // explicit deny as the API keys, for the same reason.
+    match /oauth_clients/{clientId} {
+      allow read, write: if false;
+    }
+    match /oauth_requests/{rid} {
+      allow read, write: if false;
+    }
+    match /oauth_codes/{codeHash} {
+      allow read, write: if false;
+    }
+    match /oauth_refresh_tokens/{tokenHash} {
+      allow read, write: if false;
+    }
+
     // Default deny all other collections for security.
     // We can add specific rules for other collections like 'users' later if needed.
     match /{document=**} {

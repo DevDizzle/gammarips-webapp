@@ -20,6 +20,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { FREE_MODE } from '@/lib/config';
 import { TOOL_COUNT, PRICE_MONTHLY } from '@/lib/constants';
+import { MachineClientsSection } from '@/components/account/machine-clients';
 
 const MCP_ENDPOINT = 'https://mcp.gammarips.com/mcp';
 
@@ -270,6 +271,8 @@ export default function AccountPage() {
             View full API documentation →
           </Link>
         </section>
+
+        <MachineClientsSection />
       </div>
     </div>
   );

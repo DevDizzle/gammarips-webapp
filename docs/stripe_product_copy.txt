@@ -1,0 +1,35 @@
+GAMMARIPS STRIPE PRODUCT COPY  (replaces the retired WhatsApp / one-trade-a-day tier)
+No em dashes. Data-vendor framing. No performance/ROI claim. $39/mo recurring, 7-day free trial.
+
+=====================================================================
+PRODUCT NAME
+=====================================================================
+GammaRips Agent Access
+
+(matches the site's "Agent Access" naming)
+
+
+=====================================================================
+DESCRIPTION  (primary)
+=====================================================================
+GammaRips is the options-flow data layer for AI agents. Every weeknight the engine scans 5,230+ US tickers for unusual options activity and curates the firehose down to a small, high-signal bullish pool. Your subscription gives your AI agent full MCP access to that data layer: the curated pool, point-in-time feature vectors, opportunity surfaces (the realized peak and drawdown of every historical setup), a queryable outcome history, an exit-rule simulator, regime context, and methodology playbooks. 9 tools, and no pick endpoint by design, so your agent reasons to its own conclusion. Humans browse everything free at gammarips.com. Paper-trading data, educational only. Not investment advice.
+
+
+=====================================================================
+DESCRIPTION  (short, if Stripe truncates the field)
+=====================================================================
+Full MCP access for your AI agent to the GammaRips options-flow data layer: the curated overnight pool, point-in-time features, opportunity surfaces (realized peak and drawdown per setup), outcome history, an exit simulator, regime context, and methodology. 9 tools, no pick endpoint by design. Humans browse free at gammarips.com. Paper-trading data, educational only. Not investment advice.
+
+
+=====================================================================
+STATEMENT DESCRIPTOR  (what shows on the card statement, max 22 chars)
+=====================================================================
+GAMMARIPS AGENT
+
+
+=====================================================================
+CONFIG CHECK before you save + repoint the Payment Link
+=====================================================================
+- Price: $39.00 USD, recurring, monthly.
+- Free trial: 7 days on the subscription/price.
+- This is the product the Payment Link must point at (the current link is on the wrong/retired product).

@@ -344,9 +344,12 @@ async function main() {
   log('C: revoked machine client can no longer mint');
 
   // --- D. non-subscriber: tier=free -----------------------------------------
-  const d = new MemoryProvider('http://127.0.0.1:40000/callback', {
+  // localhost, not 127.0.0.1: the App Hosting edge rewrites a literal
+  // "127.0.0.1" token in a query param (SSRF normalization), so a 127.0.0.1
+  // redirect_uri fails on prod though it passes locally. See the decision note.
+  const d = new MemoryProvider('http://localhost:40000/callback', {
     client_name: 'gammarips e2e (free)',
-    redirect_uris: ['http://127.0.0.1/callback'],
+    redirect_uris: ['http://localhost/callback'],
     grant_types: ['authorization_code', 'refresh_token'],
     response_types: ['code'],
     token_endpoint_auth_method: 'none',

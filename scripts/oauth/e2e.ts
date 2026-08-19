@@ -26,6 +26,7 @@
  */
 import 'dotenv/config';
 import assert from 'node:assert/strict';
+import { randomBytes } from 'node:crypto';
 import { initializeApp, applicationDefault, getApps } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
@@ -47,7 +48,9 @@ const WEB_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY || '';
 const RUN = Math.random().toString(36).slice(2, 8);
 const UID = `oauth-e2e-pro-${RUN}`;
 const FREE_UID = `oauth-e2e-free-${RUN}`;
-const PASSWORD = 'e2e-' + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2) + 'A1!';
+// Throwaway credential for the two temp Auth users this run creates and then
+// deletes. Generated per run; nothing here is a stored or shared secret.
+const TEMP_USER_PASSWORD = randomBytes(18).toString('base64url');
 
 if (!WEB_API_KEY) {
   console.error('NEXT_PUBLIC_FIREBASE_API_KEY is required');
@@ -66,8 +69,8 @@ function log(msg: string) {
 }
 
 async function setupUsers() {
-  await getAuth().createUser({ uid: UID, email: `${UID}@e2e.invalid`, password: PASSWORD, emailVerified: true });
-  await getAuth().createUser({ uid: FREE_UID, email: `${FREE_UID}@e2e.invalid`, password: PASSWORD, emailVerified: true });
+  await getAuth().createUser({ uid: UID, email: `${UID}@e2e.invalid`, password: TEMP_USER_PASSWORD, emailVerified: true });
+  await getAuth().createUser({ uid: FREE_UID, email: `${FREE_UID}@e2e.invalid`, password: TEMP_USER_PASSWORD, emailVerified: true });
   // The pro user: a founder_lifetime doc is what isUserMcpEntitledAdmin honors
   // without Stripe. The free user has no doc at all.
   await db.collection('users').doc(UID).set({
@@ -87,7 +90,7 @@ async function idTokenFor(uid: string): Promise<string> {
   const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${WEB_API_KEY}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Referer: process.env.E2E_REFERER || 'https://gammarips.com/' },
-    body: JSON.stringify({ email: `${uid}@e2e.invalid`, password: PASSWORD, returnSecureToken: true }),
+    body: JSON.stringify({ email: `${uid}@e2e.invalid`, password: TEMP_USER_PASSWORD, returnSecureToken: true }),
   });
   const j = (await res.json()) as { idToken?: string; error?: unknown };
   if (!j.idToken) throw new Error('signInWithPassword failed: ' + JSON.stringify(j.error));

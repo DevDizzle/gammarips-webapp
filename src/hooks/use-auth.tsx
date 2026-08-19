@@ -22,6 +22,7 @@ import { getFirestore } from 'firebase/firestore';
 import { event as trackEvent } from '@/lib/gtag';
 import { useRouter } from 'next/navigation';
 import { FREE_MODE } from '@/lib/config';
+import { safeLocalPath } from '@/lib/safe-redirect';
 
 // Read ?redirect= from window.location only when an auth handler runs (always
 // client-side after a click). We deliberately avoid useSearchParams() here
@@ -31,8 +32,9 @@ import { FREE_MODE } from '@/lib/config';
 function getRedirectFromLocation(): string {
   if (typeof window === 'undefined') return '/';
   const params = new URLSearchParams(window.location.search);
-  return params.get('redirect') || '/';
+  return safeLocalPath(params.get('redirect'));
 }
+
 
 const auth = getAuth(app);
 const db = getFirestore(app);

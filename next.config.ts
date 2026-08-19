@@ -7,6 +7,26 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  async headers() {
+    return [
+      {
+        // OAuth authorization server surfaces (consent page above all): never
+        // frameable (OAuth 2.1 §7.10 clickjacking), never cached by a shared cache.
+        source: '/oauth/:path*',
+        headers: [
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
+          { key: 'Referrer-Policy', value: 'no-referrer' },
+        ],
+      },
+      {
+        // The consent page carries a live request id; never let a shared cache
+        // keep it. (The JWKS and metadata routes set their own public max-age.)
+        source: '/oauth/consent:path*',
+        headers: [{ key: 'Cache-Control', value: 'no-store' }],
+      },
+    ];
+  },
   async redirects() {
     return [
       { source: '/signup', destination: '/', permanent: true },

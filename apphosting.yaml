@@ -47,6 +47,18 @@ env:
   - variable: NEXT_PUBLIC_GA_MEASUREMENT_ID
     value: G-ZF0DQVQEKJ
 
+  # OAuth 2.1 authorization server for the MCP (gammarips.com is the issuer;
+  # mcp.gammarips.com verifies tokens against /oauth/jwks). The kid names the
+  # current signing key in the JWKS. Rotation: create a new secret version +
+  # new kid here, and carry the old pair for one hour as
+  #   - variable: OAUTH_SIGNING_KID_PREV   value: "<old kid>"
+  #   - secret: OAUTH_SIGNING_KEY_PREV     env: OAUTH_SIGNING_KEY_PREV   (under secretEnv)
+  # so tokens signed before the rotation still verify until they expire.
+  - variable: OAUTH_ISSUER
+    value: https://gammarips.com
+  - variable: OAUTH_SIGNING_KID
+    value: "2026-08-19"
+
 # Server-side secrets pulled from Google Secret Manager at runtime.
 # Each secret must be granted to the App Hosting service account —
 # use `firebase apphosting:secrets:grantaccess <NAME> --backend=gammarips-webapp`.
@@ -74,6 +86,12 @@ secretEnv:
   # WhatsApp group invite (referenced in welcome email)
   - secret: WHATSAPP_GROUP_INVITE_URL
     env: WHATSAPP_GROUP_INVITE_URL
+
+  # OAuth access-token signing key (RSA 2048, PKCS#8 PEM). Public half is
+  # published at /oauth/jwks. Grant:
+  #   firebase apphosting:secrets:grantaccess OAUTH_SIGNING_KEY --backend=gammarips-webapp
+  - secret: OAUTH_SIGNING_KEY
+    env: OAUTH_SIGNING_KEY
 
   # Firebase Admin SDK (server-side Firestore + Auth)
   - secret: FIREBASE_CLIENT_EMAIL

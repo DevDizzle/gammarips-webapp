@@ -52,16 +52,35 @@ env:
   # current signing key in the JWKS. Rotation: create a new secret version +
   # new kid here, and carry the old pair for one hour as
   #   - variable: OAUTH_SIGNING_KID_PREV   value: "<old kid>"
-  #   - secret: OAUTH_SIGNING_KEY_PREV     env: OAUTH_SIGNING_KEY_PREV   (under secretEnv)
+  #   - variable: OAUTH_SIGNING_KEY_PREV   secret: OAUTH_SIGNING_KEY_PREV  (RUNTIME)
   # so tokens signed before the rotation still verify until they expire.
   - variable: OAUTH_ISSUER
     value: https://gammarips.com
   - variable: OAUTH_SIGNING_KID
     value: "2026-08-19"
+  # The private key. Declared HERE, in `env:` with `secret:`, because that is
+  # the App Hosting schema. The top-level `secretEnv:` block below is NOT part
+  # of the schema and the preparer ignores it silently (verified in the
+  # 2026-08-19 build log: none of those entries reach the revision; the live
+  # secrets come from values typed into the Firebase Console). RUNTIME only:
+  # the build never signs a token.
+  - variable: OAUTH_SIGNING_KEY
+    secret: OAUTH_SIGNING_KEY
+    availability:
+      - RUNTIME
 
 # Server-side secrets pulled from Google Secret Manager at runtime.
 # Each secret must be granted to the App Hosting service account —
 # use `firebase apphosting:secrets:grantaccess <NAME> --backend=gammarips-webapp`.
+#
+# WARNING (found 2026-08-19): `secretEnv:` is NOT an App Hosting schema key.
+# The preparer ignores this whole block. What the live backend actually gets
+# is (a) the plain `env:` values above and (b) env vars set in the Firebase
+# Console (App Hosting > backend > Settings), where these secrets were typed
+# in as plain values. A secret that should reach the runtime must be declared
+# in `env:` as `- variable: NAME` + `secret: NAME` (see OAUTH_SIGNING_KEY).
+# Migrating the rest is an owner call (the console values are the live ones;
+# the Secret Manager copies may differ).
 secretEnv:
   # Cron authentication
   - secret: CRON_SECRET
@@ -86,12 +105,6 @@ secretEnv:
   # WhatsApp group invite (referenced in welcome email)
   - secret: WHATSAPP_GROUP_INVITE_URL
     env: WHATSAPP_GROUP_INVITE_URL
-
-  # OAuth access-token signing key (RSA 2048, PKCS#8 PEM). Public half is
-  # published at /oauth/jwks. Grant:
-  #   firebase apphosting:secrets:grantaccess OAUTH_SIGNING_KEY --backend=gammarips-webapp
-  - secret: OAUTH_SIGNING_KEY
-    env: OAUTH_SIGNING_KEY
 
   # Firebase Admin SDK (server-side Firestore + Auth)
   - secret: FIREBASE_CLIENT_EMAIL

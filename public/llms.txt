@@ -20,7 +20,7 @@ Data on a paper-trading basis, educational only. Not investment advice.
 ## Curation stack (V7.1)
 
 1. **Scanner**: overnight unusual-options-activity scan across about 3,500 optionable US stocks.
-2. **Enrichment**: `overnight_score >= 4 AND directional_uoa_usd > 500000`, bullish-only, delta edge-ranked to the strongest ~50; thesis, technicals, news context, and a recommended contract attached per name.
+2. **Enrichment**: `directional_uoa_usd > 500000`, bullish-only, delta edge-ranked to the strongest ~50 (`overnight_score >= 1` is a cosmetic floor; the dollar-flow gate does the work); thesis, technicals, news context, and a recommended contract attached per name.
 3. **Safety rails**: no earnings in the window; volatility regime check (VIX <= VIX3M).
 4. **Leakage discipline**: every field is point-in-time; nothing an agent reads contains information that wasn't knowable at the time it's dated.
 5. **Validation & tracking**: every pool candidate is tracked to its realized outcome and published as distributions (Track Record); a small paper-traded cohort additionally exercises the selection methodology daily under fixed rules, privately, with no stats marketed pre-30 trades.

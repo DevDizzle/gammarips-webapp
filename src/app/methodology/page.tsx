@@ -40,14 +40,14 @@ const dataSources = [
 
 const filters = [
   {
-    name: 'overnight_score ≥ 4',
-    where: 'enrichment-trigger',
-    why: 'Deterministic premium-flow flags (call/put dollar skew, Vol/OI, active strikes, new positioning, price momentum, plus a divergence bonus) sum to a base score, and a sector-cluster boost can lift it — capped at 10. The floor was raised from 1 to 4 on 2026-06-05 to drop the proven-weak low-score dregs. It is a floor, not a ceiling — we deliberately do not cap the top, because the tournament does the discriminating from here.',
-  },
-  {
     name: 'directional UOA > $500K',
     where: 'enrichment-trigger',
-    why: 'Direction-aware unusual options activity. Bullish candidates need call dollar volume above $500K. Below this, flow is too thin to be informative.',
+    why: 'Direction-aware unusual options activity. Bullish candidates need call dollar volume above $500K. Below this, flow is too thin to be informative. This is the gate that does the work at the enrichment bar.',
+  },
+  {
+    name: 'overnight_score ≥ 1',
+    where: 'enrichment-trigger',
+    why: 'Deterministic premium-flow flags (call/put dollar skew, Vol/OI, active strikes, new positioning, price momentum, plus a divergence bonus) sum to a base score, and a sector-cluster boost can lift it, capped at 10. The floor is 1 and it is cosmetic: nearly every name with $500K of directional flow already clears it. On its own the score barely predicts outcomes, so we do not filter harder on it. The dollar-flow gate and the edge-rank do the filtering, and the tournament does the discriminating from here.',
   },
   {
     name: 'BULLISH-only + delta edge-rank to top ~50',

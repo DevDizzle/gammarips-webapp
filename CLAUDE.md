@@ -63,8 +63,11 @@ conditions. No rocket emojis, no "moon," no urgency theater.
   synced by hand; upstream truth is `gammarips-mcp/src/server.py` `_ALL_TOOLS`.
 - Engine mechanics: nightly scan of about 3,500 optionable US stocks (say "about 3,500"; the universe is
   refreshed weekly since 2026-08-05; it was 5,230 nominal before, of which ~1,700
-  had no listed options; never write 5,230 again) → enrichment (score ≥ 4,
-  UOA > $500K, bullish-only, edge-ranked to ~50) → two safety rails (earnings,
+  had no listed options; never write 5,230 again) → enrichment (UOA > $500K,
+  bullish-only, edge-ranked to ~50; overnight_score ≥ 1 is a cosmetic floor —
+  the ≥ 4 floor never ran in production, so never claim it; see gammarips-engine
+  `docs/DECISIONS/2026-08-20-score-floor-accepted-print-floor-25-shipped.md`)
+  → two safety rails (earnings,
   VIX ≤ VIX3M). The paper cohort validates selection under the V7.1 GIGO exit
   (10:00 entry, +40/−30, flat 15:45 ET).
 - Pricing: Free (whole webapp) / Agent Access $39/mo (MCP), 7-day trial, Stripe.

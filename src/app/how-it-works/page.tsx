@@ -85,14 +85,14 @@ export default function HowItWorksPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           <Card className="bg-card/50">
             <CardContent className="p-5">
-              <h3 className="font-bold font-headline text-lg">Overnight score &ge; 4</h3>
-              <p className="text-sm text-muted-foreground mt-1">The scanner&apos;s internal conviction score must clear a floor that combines positioning size, strike breadth, Vol/OI, and directional imbalance. A floor, not a ceiling: the tournament does the discriminating from here. Decoded in plain English below.</p>
+              <h3 className="font-bold font-headline text-lg">Directional UOA &gt; $500K</h3>
+              <p className="text-sm text-muted-foreground mt-1">The name-level net directional dollar flow must exceed $500K. Institutional footprint, not single-contract anomalies. This is the gate that does the work.</p>
             </CardContent>
           </Card>
           <Card className="bg-card/50">
             <CardContent className="p-5">
-              <h3 className="font-bold font-headline text-lg">Directional UOA &gt; $500K</h3>
-              <p className="text-sm text-muted-foreground mt-1">The name-level net directional dollar flow must exceed $500K. Institutional footprint, not single-contract anomalies.</p>
+              <h3 className="font-bold font-headline text-lg">Overnight score &ge; 1</h3>
+              <p className="text-sm text-muted-foreground mt-1">The scanner&apos;s internal conviction score sums positioning size, strike breadth, Vol/OI, and directional imbalance. The floor is 1 and it is cosmetic: nearly every name with real flow clears it. The score is context for the tournament, not the filter. Decoded in plain English below.</p>
             </CardContent>
           </Card>
           <Card className="bg-card/50">
@@ -118,7 +118,7 @@ export default function HowItWorksPage() {
             Small bonuses when smart money bets against the crowd (heavy call buying on a red day) or a whole industry lights up the same direction at once.
           </p>
           <p className="text-sm text-muted-foreground">
-            <strong className="text-foreground">Reading it:</strong> 4 or 5 means enough independent evidence to clear the bar. 6 or 7 means most of the checklist fired. 8 to 10 means everything lit up at once. That&apos;s rare, and it often means the story is already public. The score counts evidence of positioning; it&apos;s not a prediction, and higher isn&apos;t automatically better. That&apos;s why 4 is a floor, not a ranking.
+            <strong className="text-foreground">Reading it:</strong> 4 or 5 means several independent checks fired. 6 or 7 means most of the checklist fired. 8 to 10 means everything lit up at once. That&apos;s rare, and it often means the story is already public. The score counts evidence of positioning; it&apos;s not a prediction, and higher isn&apos;t automatically better. That&apos;s why we publish it as context, not a ranking.
           </p>
         </div>
         <p className="text-muted-foreground mt-6 leading-relaxed">

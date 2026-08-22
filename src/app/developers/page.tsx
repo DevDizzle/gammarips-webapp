@@ -361,7 +361,10 @@ async with Client(transport) as client:
             Nothing to register by hand: your client registers itself. Refresh
             tokens rotate, and replaying a spent one revokes the whole family.
             An API key still works on {MCP_PRO_ENDPOINT}, and {MCP_ENDPOINT}
-            stays anonymous, so the free tier never needs an account.
+            stays anonymous, so the free tier never needs an account. If you are
+            building a native client, bind your loopback redirect to localhost
+            rather than the literal 127.0.0.1: our edge normalizes that token
+            and will refuse the redirect. The port can be anything.
           </p>
           <div className="space-y-2">
             <h3 className="font-bold font-headline text-lg">Headless agents</h3>

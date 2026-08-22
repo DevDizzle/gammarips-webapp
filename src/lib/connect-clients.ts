@@ -38,32 +38,25 @@ export type ConnectClient = {
 
 const KEY = 'YOUR_API_KEY';
 
-// The sign-in path, shared by every chat client. One definition, because the
-// steps that matter are OURS (add the /pro URL, approve the consent screen)
-// and they are identical everywhere. The per-client dialog wording is
-// deliberately absent: we have not driven each vendor's connector UI against
-// /pro yet, and an invented step is worse than a missing one. Fill one in only
-// after a real sign-in in that client (engine repo:
-// docs/GTM-CLIENT-CONNECT-MATRIX.md).
-const oauthPro = (client: string): ConnectClient['pro'] => ({
+// The sign-in path. The steps that matter are OURS (add the /pro URL, approve
+// the consent screen) and are identical everywhere, so the closing step is
+// shared. The dialog steps are per client and come from each vendor's own
+// docs, the same source the free-tier steps have always used.
+//
+// Our side is measured, not assumed: scripts/oauth/client-profiles.ts runs the
+// full flow once per client shape against production (2026-08-22: 9/10, the
+// only failure being the known 127.0.0.1 App Hosting residual, which no
+// shipped chat client uses). Re-run it before changing anything here.
+const signedIn: ConnectStep = {
+  text:
+    'Approve access with the account that carries your subscription. ' +
+    'The paid tools appear, and the token refreshes itself from then on. Nothing to paste, and no key to leak.',
+};
+
+const oauthPro = (intro: string, steps: ConnectStep[]): ConnectClient['pro'] => ({
   status: 'oauth',
-  intro: 'No key to paste. Add the pro endpoint and approve the sign-in your client opens.',
-  steps: [
-    {
-      text: `Add this URL in ${client}, exactly the way you added the free one.`,
-      code: MCP_PRO_ENDPOINT,
-    },
-    {
-      text:
-        'The endpoint answers with a sign-in challenge, so your client sends you to gammarips.com. ' +
-        'Approve access with the account that carries your subscription. The paid tools appear, and the token refreshes itself from then on.',
-    },
-    {
-      text:
-        'This needs a client that supports OAuth for remote MCP servers. We verified our side end to end against production. ' +
-        'We have not driven this connector dialog ourselves yet, so tell us if it balks, and use Claude Code, Codex, Cursor or Gemini CLI while we check.',
-    },
-  ],
+  intro,
+  steps: [...steps, signedIn],
 });
 
 export const CONNECT_CLIENTS: ConnectClient[] = [
@@ -182,7 +175,11 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
         { text: 'Ask Claude for a morning brief. Free plans get one custom connector.' },
       ],
     },
-    pro: oauthPro('Claude'),
+    pro: oauthPro('No key to paste. Add the pro endpoint as a connector and sign in.', [
+      { text: 'Open Customize, then Connectors, then Add custom connector.' },
+      { text: 'Paste the pro URL and add it. Free plans get one custom connector, so use this in place of the free one.', code: MCP_PRO_ENDPOINT },
+      { text: 'Claude reads the sign-in challenge and sends you to gammarips.com.' },
+    ]),
   },
   {
     id: 'chatgpt',
@@ -196,7 +193,11 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
         { text: 'Ask ChatGPT for a morning brief.' },
       ],
     },
-    pro: oauthPro('ChatGPT'),
+    pro: oauthPro('No key to paste, which matters because ChatGPT cannot send one. Sign in instead.', [
+      { text: 'Settings, then Security and login, then turn Developer mode on.' },
+      { text: 'Open Plugins, press +, and enter a name and the pro URL.', code: MCP_PRO_ENDPOINT },
+      { text: 'Set Authentication to OAuth. ChatGPT registers itself with us, so there is no client ID or secret to fill in.' },
+    ]),
   },
   {
     id: 'grok',
@@ -209,7 +210,11 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
         { text: `Paste ${MCP_ENDPOINT} and finish. Ask Grok for a morning brief.` },
       ],
     },
-    pro: oauthPro('Grok'),
+    pro: oauthPro('No key to paste. Add the pro endpoint and complete the sign-in.', [
+      { text: 'Open grok.com/connectors, press New Connector, then Custom.' },
+      { text: 'Paste the pro URL and finish.', code: MCP_PRO_ENDPOINT },
+      { text: 'Grok does not document its auth field, so if the dialog never offers a sign-in, tell us and keep the free URL meanwhile. Our side is verified.' },
+    ]),
   },
 ];
 

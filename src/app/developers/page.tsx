@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { TOOL_COUNT, PRICE_MONTHLY, OG_IMAGE } from '@/lib/constants';
+import { TOOL_COUNT, PRICE_MONTHLY, OG_IMAGE, MCP_PRO_ENDPOINT } from '@/lib/constants';
 const MCP_ENDPOINT = "https://mcp.gammarips.com/mcp";
 
 export const metadata = {
@@ -24,7 +24,7 @@ const webApiSchema = {
   "@type": "WebAPI",
   name: "GammaRips MCP",
   description:
-    `Model Context Protocol (MCP) server for AI agents: ${TOOL_COUNT} tools covering the curated overnight options-flow pool, point-in-time feature vectors, opportunity surfaces (realized excursion distributions), a queryable outcome database, exit-rule simulation, regime context, methodology playbooks, and daily reports. Requires a bearer API key (${PRICE_MONTHLY}/mo subscription, 7-day free trial). Data on a paper-trading basis, not investment advice.`,
+    `Model Context Protocol (MCP) server for AI agents: ${TOOL_COUNT} tools covering the curated overnight options-flow pool, point-in-time feature vectors, opportunity surfaces (realized excursion distributions), a queryable outcome database, exit-rule simulation, regime context, methodology playbooks, and daily reports. The pro tools need a credential (${PRICE_MONTHLY}/mo subscription, 7-day free trial): a bearer API key, or an OAuth 2.1 sign-in for chat clients that cannot send a header. An anonymous free tier needs neither. Data on a paper-trading basis, not investment advice.`,
   url: MCP_ENDPOINT,
   documentation: "https://gammarips.com/developers",
   provider: {
@@ -51,7 +51,7 @@ const webApiSchema = {
 const FAQ: { q: string; a: string }[] = [
   {
     q: "Is there a GammaRips options flow API?",
-    a: `Yes. The GammaRips options flow API is an MCP server at ${MCP_ENDPOINT}, served over Streamable HTTP with bearer-token auth, exposing ${TOOL_COUNT} tools. Any MCP client can call it, and so can an ordinary HTTP client. An anonymous tier is open with no key and no card.`,
+    a: `Yes. The GammaRips options flow API is an MCP server at ${MCP_ENDPOINT}, served over Streamable HTTP, exposing ${TOOL_COUNT} tools. Any MCP client can call it, and so can an ordinary HTTP client. An anonymous tier is open with no key and no card. The pro tools take either a bearer API key or an OAuth 2.1 access token at ${MCP_PRO_ENDPOINT}.`,
   },
   {
     q: "What options flow data does the API return?",
@@ -63,7 +63,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do I connect Claude or ChatGPT to options flow data?",
-    a: `In Claude Code, run: claude mcp add --transport http gammarips ${MCP_ENDPOINT}. That reaches the anonymous tier immediately. Every other MCP client can add the same URL: claude.ai, ChatGPT (Developer mode) and Grok as a custom connector, Codex, Cursor and Gemini CLI in their MCP config. For the full data layer, add a header of Authorization: Bearer plus your API key. This works today in Claude Code, Codex, Cursor, Gemini CLI, and any MCP client that can send an Authorization header. ChatGPT cannot send a key and needs OAuth, which is on the roadmap. claude.ai has a header field in limited rollout. Full steps per client are in the connect section on the homepage.`,
+    a: `In Claude Code, run: claude mcp add --transport http gammarips ${MCP_ENDPOINT}. That reaches the anonymous tier immediately. Every other MCP client can add the same URL: claude.ai, ChatGPT (Developer mode) and Grok as a custom connector, Codex, Cursor and Gemini CLI in their MCP config. For the full data layer there are two ways in. If your client can send headers, keep the same URL and add Authorization: Bearer plus your API key. That is Claude Code, Codex, Cursor and Gemini CLI. If your client cannot send a header, add ${MCP_PRO_ENDPOINT} instead and it will walk you through an OAuth sign-in, which is how a chat client reaches the paid tools without a key. Full steps per client are in the connect section on the homepage.`,
   },
   {
     q: "Does the API return trade recommendations?",
@@ -218,11 +218,11 @@ export default function DevelopersPage() {
                 <Button size="lg">Get Your API Key &rarr;</Button>
               </Link>
               <p className="text-xs text-muted-foreground">
-                Works today with Claude Code, Codex, Cursor, Gemini CLI, and any
-                MCP client that can send an Authorization header. ChatGPT cannot
-                send a key and needs OAuth, which is on the roadmap. claude.ai has
-                a header field in limited rollout. The anonymous tier works
-                everywhere now.
+                Two ways to reach the paid tools. Claude Code, Codex, Cursor,
+                Gemini CLI and any client that can send an Authorization header
+                use your API key on {MCP_ENDPOINT}. A chat client that cannot
+                send a header adds {MCP_PRO_ENDPOINT} instead and signs in with
+                OAuth. The anonymous tier works everywhere, with neither.
               </p>
             </div>
           </div>
@@ -244,6 +244,10 @@ export default function DevelopersPage() {
               <div className="flex gap-4">
                 <span className="text-muted-foreground">Auth:</span>
                 <span className="text-foreground">Authorization: Bearer &lt;your API key&gt;</span>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-muted-foreground">Or sign in:</span>
+                <span className="text-foreground break-all">{MCP_PRO_ENDPOINT} (OAuth 2.1, no key to paste)</span>
               </div>
               <div className="flex gap-4">
                 <span className="text-muted-foreground">Start with:</span>
@@ -303,6 +307,74 @@ async with Client(transport) as client:
     print(pool)`}
               </pre>
             </div>
+          </div>
+        </section>
+
+        {/* OAuth / sign-in path */}
+        <section id="oauth" className="space-y-6">
+          <h2 className="text-2xl font-bold font-headline">Sign in instead of pasting a key</h2>
+          <p className="text-muted-foreground">
+            Some chat clients cannot send an Authorization header, so they could
+            never reach the paid tools. They can now. {MCP_PRO_ENDPOINT} serves
+            the same transport and the same {TOOL_COUNT} tools, and it answers an
+            anonymous request with a challenge that names our authorization
+            server. Your client follows it, you approve the consent screen with
+            the account that carries your subscription, and the tools appear. The
+            token refreshes itself and re-reads your subscription every time.
+          </p>
+          <div className="bg-muted/30 p-6 rounded-lg border font-mono text-sm overflow-x-auto">
+            <div className="space-y-2">
+              <div className="flex gap-4">
+                <span className="text-muted-foreground">Pro endpoint:</span>
+                <span className="text-foreground break-all">{MCP_PRO_ENDPOINT}</span>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-muted-foreground">Auth server:</span>
+                <span className="text-foreground break-all">https://gammarips.com</span>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-muted-foreground">Discovery:</span>
+                <span className="text-foreground break-all">
+                  /.well-known/oauth-protected-resource/pro (RFC 9728) and
+                  /.well-known/oauth-authorization-server (RFC 8414)
+                </span>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-muted-foreground">Grants:</span>
+                <span className="text-foreground">authorization_code, refresh_token, client_credentials</span>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-muted-foreground">Registration:</span>
+                <span className="text-foreground">dynamic (RFC 7591) or a client ID metadata document</span>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-muted-foreground">PKCE:</span>
+                <span className="text-foreground">S256, required</span>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-muted-foreground">Scope:</span>
+                <span className="text-primary">mcp:read</span>
+              </div>
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Nothing to register by hand: your client registers itself. Refresh
+            tokens rotate, and replaying a spent one revokes the whole family.
+            An API key still works on {MCP_PRO_ENDPOINT}, and {MCP_ENDPOINT}
+            stays anonymous, so the free tier never needs an account.
+          </p>
+          <div className="space-y-2">
+            <h3 className="font-bold font-headline text-lg">Headless agents</h3>
+            <p className="text-sm text-muted-foreground">
+              A cron job or a server-side agent has no browser to send you to.
+              Create a machine client on your account page and use the
+              client_credentials grant: your agent exchanges its client ID and
+              secret for an access token and calls {MCP_PRO_ENDPOINT} directly.
+              Revoke it there too, and the next mint fails.
+            </p>
+            <Link href="/account">
+              <Button variant="outline" size="sm">Create a machine client &rarr;</Button>
+            </Link>
           </div>
         </section>
 

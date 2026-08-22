@@ -36,7 +36,18 @@ export const OG_IMAGE = {
 // MCP_ENDPOINT: the public Streamable HTTP endpoint of the GammaRips MCP
 // server. Legacy SSE lives at /sse. Used by the connect tabs; the developers
 // and account pages carry their own literal for historical reasons.
+//
+// /mcp stays anonymous forever: it is the free funnel. A bearer API key on
+// /mcp unlocks the pro tools for any client that can send a header.
 export const MCP_ENDPOINT = 'https://mcp.gammarips.com/mcp';
+
+// MCP_PRO_ENDPOINT: the credentialed twin of MCP_ENDPOINT, live 2026-08-19.
+// Same transport and the same 9 tools; it just refuses an anonymous request
+// with a 401 that names the authorization server (RFC 9728). That 401 is the
+// whole point: it is what makes a chat client START the OAuth sign-in, so a
+// client that cannot send a header can still reach the paid tools. An API key
+// works here too. Never point the free CTA at this URL.
+export const MCP_PRO_ENDPOINT = 'https://mcp.gammarips.com/pro';
 
 // HARNESS_REPO: the open-source harness, the clone-me GTM artifact.
 export const HARNESS_REPO = 'https://github.com/DevDizzle/gammarips-harness';

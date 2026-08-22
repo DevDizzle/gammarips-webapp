@@ -4,8 +4,27 @@
   "url": "https://mcp.gammarips.com/mcp",
   "transport": "streamable-http",
   "auth": {
-    "type": "bearer",
-    "instructions": "Subscribe at https://gammarips.com/pricing ($39/mo, 7-day free trial); after checkout, generate your API key at https://gammarips.com/account (it is shown once, at creation). Send it as 'Authorization: Bearer <key>'. Without a key, an anonymous funnel tier is available: pool preview, daily reports, methodology playbooks, and reference tools."
+    "type": "bearer-or-oauth2",
+    "instructions": "Subscribe at https://gammarips.com/pricing ($39/mo, 7-day free trial). Then pick whichever your client supports. (1) API key: generate it at https://gammarips.com/account (shown once, at creation) and send it as 'Authorization: Bearer <key>' to https://mcp.gammarips.com/mcp. (2) OAuth 2.1: point the client at https://mcp.gammarips.com/pro instead and complete the sign-in it offers. That is the path for chat clients that cannot send a custom header. Without any credential, an anonymous funnel tier is available on https://mcp.gammarips.com/mcp: pool preview, daily reports, methodology playbooks, and reference tools.",
+    "oauth2": {
+      "resource": "https://mcp.gammarips.com/pro",
+      "authorization_server": "https://gammarips.com",
+      "protected_resource_metadata": "https://mcp.gammarips.com/.well-known/oauth-protected-resource/pro",
+      "authorization_server_metadata": "https://gammarips.com/.well-known/oauth-authorization-server",
+      "grant_types": [
+        "authorization_code",
+        "refresh_token",
+        "client_credentials"
+      ],
+      "code_challenge_methods": [
+        "S256"
+      ],
+      "dynamic_registration": true,
+      "client_id_metadata_document_supported": true,
+      "scopes": [
+        "mcp:read"
+      ]
+    }
   },
   "tools": [
     "get_pool",
@@ -18,10 +37,28 @@
     "get_playbook",
     "get_daily_report"
   ],
-  "prompts": ["morning_brief", "analyze_candidate", "run_your_own_tournament"],
-  "start_with": ["get_pool", "query_outcomes", "get_playbook"],
+  "prompts": [
+    "morning_brief",
+    "analyze_candidate",
+    "run_your_own_tournament"
+  ],
+  "start_with": [
+    "get_pool",
+    "query_outcomes",
+    "get_playbook"
+  ],
   "universe": "about 3,500 optionable US stocks, scanned nightly",
-  "tags": ["options", "options-flow", "unusual-options-activity", "agentic-trading", "ai-agents", "institutional-flow", "paper-trading", "mcp", "data-vendor"],
+  "tags": [
+    "options",
+    "options-flow",
+    "unusual-options-activity",
+    "agentic-trading",
+    "ai-agents",
+    "institutional-flow",
+    "paper-trading",
+    "mcp",
+    "data-vendor"
+  ],
   "links": {
     "home": "https://gammarips.com",
     "pricing": "https://gammarips.com/pricing",
@@ -29,6 +66,10 @@
     "lab": "https://gammarips.com/lab",
     "llms_txt": "https://gammarips.com/llms.txt"
   },
-  "creator": { "name": "GammaRips", "url": "https://gammarips.com" },
-  "license": "https://gammarips.com/terms"
+  "creator": {
+    "name": "GammaRips",
+    "url": "https://gammarips.com"
+  },
+  "license": "https://gammarips.com/terms",
+  "url_pro": "https://mcp.gammarips.com/pro"
 }

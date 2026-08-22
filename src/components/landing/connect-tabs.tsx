@@ -42,12 +42,13 @@ export function ConnectTabs() {
         Connect your agent
       </p>
       <h2 className="text-2xl md:text-3xl font-bold font-headline text-center text-balance mb-3">
-        Free first. Then the paid tools, where your client can send a key.
+        Free first. Then the paid tools, with a key or a sign-in.
       </h2>
       <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto mb-8">
         Pick your client. The free tier needs no card, no key, and no signup.
         Agent Access ({PRICE_MONTHLY}/mo, 7-day trial) gives your agent all {TOOL_COUNT}{' '}
-        tools. Some chat clients cannot send a key yet, and we say so on the tab.
+        tools. Paste a key if your client sends headers. If it does not, add the
+        pro endpoint and sign in: every tab reaches the same {TOOL_COUNT} tools.
       </p>
 
       <Tabs defaultValue={CONNECT_CLIENTS[0].id} className="max-w-3xl mx-auto">
@@ -76,22 +77,21 @@ export function ConnectTabs() {
               <div className="space-y-3 border-t border-border/60 pt-5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="font-bold font-headline">Pro, {PRICE_MONTHLY}/mo</h3>
-                  <Badge
-                    variant={c.pro.status === 'full' ? 'default' : 'secondary'}
-                    className="text-[10px]"
-                  >
+                  <Badge variant="default" className="text-[10px]">
                     {PRO_STATUS_LABEL[c.pro.status]}
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">{c.pro.intro}</p>
                 <Steps steps={c.pro.steps} />
-                {(c.pro.status === 'full' || c.pro.status === 'beta') && (
-                  <div className="pt-1">
-                    <Button asChild size="sm">
-                      <Link href="/pricing">Start your 7-day free trial, get your key</Link>
-                    </Button>
-                  </div>
-                )}
+                <div className="pt-1">
+                  <Button asChild size="sm">
+                    <Link href="/pricing">
+                      {c.pro.status === 'full'
+                        ? 'Start your 7-day free trial, get your key'
+                        : 'Start your 7-day free trial, then sign in'}
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </TabsContent>

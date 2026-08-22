@@ -5,7 +5,7 @@
 // 2026-08-15 (engine repo: docs/GTM-CLIENT-CONNECT-MATRIX.md, with sources).
 // Re-check before you change a step. Never invent a step. When a client cannot
 // send our key, say so plainly: the honest line converts better than a blur.
-import { MCP_ENDPOINT } from '@/lib/constants';
+import { MCP_ENDPOINT, MCP_PRO_ENDPOINT } from '@/lib/constants';
 
 export type ClientId =
   | 'claude-code'
@@ -16,11 +16,15 @@ export type ClientId =
   | 'chatgpt'
   | 'grok';
 
-// full: the client sends the Authorization header, all paid tools work today.
-// beta: the client can send it only through a feature in limited rollout.
-// not-yet: the client cannot send our key; the paid tools need OAuth on our side.
-// unverified: the vendor docs do not say; we have not confirmed a header field.
-export type ProStatus = 'full' | 'beta' | 'not-yet' | 'unverified';
+// full:  the client sends the Authorization header, all paid tools work today.
+// oauth: the client cannot (or need not) send a header, so it signs in instead.
+//        Our OAuth 2.1 server went live 2026-08-19 and /pro is the credentialed
+//        endpoint. Verified end to end against production with a real MCP
+//        client, INCLUDING Claude Code's client-metadata document. What is NOT
+//        yet verified is each chat vendor's own connector dialog, so an 'oauth'
+//        tab describes OUR side and never invents the client's UI steps.
+//        Do not promote a client to 'full' on a header field we have not sent.
+export type ProStatus = 'full' | 'oauth';
 
 export type ConnectStep = { text: string; code?: string };
 
@@ -33,6 +37,34 @@ export type ConnectClient = {
 };
 
 const KEY = 'YOUR_API_KEY';
+
+// The sign-in path, shared by every chat client. One definition, because the
+// steps that matter are OURS (add the /pro URL, approve the consent screen)
+// and they are identical everywhere. The per-client dialog wording is
+// deliberately absent: we have not driven each vendor's connector UI against
+// /pro yet, and an invented step is worse than a missing one. Fill one in only
+// after a real sign-in in that client (engine repo:
+// docs/GTM-CLIENT-CONNECT-MATRIX.md).
+const oauthPro = (client: string): ConnectClient['pro'] => ({
+  status: 'oauth',
+  intro: 'No key to paste. Add the pro endpoint and approve the sign-in your client opens.',
+  steps: [
+    {
+      text: `Add this URL in ${client}, exactly the way you added the free one.`,
+      code: MCP_PRO_ENDPOINT,
+    },
+    {
+      text:
+        'The endpoint answers with a sign-in challenge, so your client sends you to gammarips.com. ' +
+        'Approve access with the account that carries your subscription. The paid tools appear, and the token refreshes itself from then on.',
+    },
+    {
+      text:
+        'This needs a client that supports OAuth for remote MCP servers. We verified our side end to end against production. ' +
+        'We have not driven this connector dialog ourselves yet, so tell us if it balks, and use Claude Code, Codex, Cursor or Gemini CLI while we check.',
+    },
+  ],
+});
 
 export const CONNECT_CLIENTS: ConnectClient[] = [
   {
@@ -55,6 +87,10 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
         {
           text: 'Mint your key on the account page after the trial starts. Paste it with no spaces and no newline.',
           code: `claude mcp add --transport http gammarips ${MCP_ENDPOINT} \\\n  --header "Authorization: Bearer ${KEY}"`,
+        },
+        {
+          text: 'Or skip the key and sign in. Add the /pro endpoint, then run /mcp inside Claude Code and authenticate.',
+          code: `claude mcp add --transport http gammarips ${MCP_PRO_ENDPOINT}`,
         },
         {
           text: 'Or clone the harness: its .mcp.json reads GAMMARIPS_MCP_KEY from your shell.',
@@ -146,16 +182,7 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
         { text: 'Ask Claude for a morning brief. Free plans get one custom connector.' },
       ],
     },
-    pro: {
-      status: 'beta',
-      intro: 'Pro needs a header field that Anthropic is rolling out slowly.',
-      steps: [
-        {
-          text: 'If the Add custom connector dialog shows a Request headers section, add a header named authorization with the value Bearer YOUR_API_KEY (one space, no newline).',
-        },
-        { text: 'If it does not show it yet, use Claude Code for the paid tools today.' },
-      ],
-    },
+    pro: oauthPro('Claude'),
   },
   {
     id: 'chatgpt',
@@ -169,13 +196,7 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
         { text: 'Ask ChatGPT for a morning brief.' },
       ],
     },
-    pro: {
-      status: 'not-yet',
-      intro: 'ChatGPT cannot send our key. The paid tools need OAuth on our side.',
-      steps: [
-        { text: 'OAuth sign-in for ChatGPT is on the roadmap. Until then the paid tools run in Claude Code, Codex, Cursor, or Gemini CLI.' },
-      ],
-    },
+    pro: oauthPro('ChatGPT'),
   },
   {
     id: 'grok',
@@ -188,19 +209,11 @@ export const CONNECT_CLIENTS: ConnectClient[] = [
         { text: `Paste ${MCP_ENDPOINT} and finish. Ask Grok for a morning brief.` },
       ],
     },
-    pro: {
-      status: 'unverified',
-      intro: 'Grok reads the free tier today.',
-      steps: [
-        { text: 'The grok.com connector dialog does not document a key or header field, so we have not confirmed that it can send one. The Grok Build CLI (paid) supports --header. Until we confirm the web dialog, Grok gets the free tier.' },
-      ],
-    },
+    pro: oauthPro('Grok'),
   },
 ];
 
 export const PRO_STATUS_LABEL: Record<ProStatus, string> = {
-  full: 'All paid tools today',
-  beta: 'Pro in limited rollout',
-  'not-yet': 'Free tier today',
-  unverified: 'Free tier today',
+  full: 'All paid tools, with your key',
+  oauth: 'All paid tools, sign in instead',
 };

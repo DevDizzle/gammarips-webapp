@@ -10,6 +10,7 @@ import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getBlog
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import { HarnessCta } from "@/components/landing/harness-cta";
 import { ConnectTabs } from "@/components/landing/connect-tabs";
+import { TRIAL_DAYS } from "@/lib/constants";
 
 export const revalidate = 60; // keep the daily pool summary fresh without a full static rebuild
 
@@ -233,7 +234,7 @@ export default async function LandingPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg">
               <Link href="/pricing">
-                Start Your 7-Day Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+                Start Your {TRIAL_DAYS}-Day Free Trial <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">

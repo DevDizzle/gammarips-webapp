@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CONNECT_CLIENTS, PRO_STATUS_LABEL, type ConnectStep } from '@/lib/connect-clients';
-import { PRICE_MONTHLY, TOOL_COUNT } from '@/lib/constants';
+import { PRICE_MONTHLY, TOOL_COUNT, TRIAL_DAYS } from '@/lib/constants';
 
 // The activation step, above the fold: every client gets the free ten-second
 // connect first, then the honest pro line for that client. Facts come from
@@ -46,7 +46,7 @@ export function ConnectTabs() {
       </h2>
       <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto mb-8">
         Pick your client. The free tier needs no card, no key, and no signup.
-        Agent Access ({PRICE_MONTHLY}/mo, 7-day trial) gives your agent all {TOOL_COUNT}{' '}
+        Agent Access ({PRICE_MONTHLY}/mo, {TRIAL_DAYS}-day trial) gives your agent all {TOOL_COUNT}{' '}
         tools. Paste a key if your client sends headers. If it does not, add the
         pro endpoint and sign in: every tab reaches the same {TOOL_COUNT} tools.
       </p>
@@ -87,8 +87,8 @@ export function ConnectTabs() {
                   <Button asChild size="sm">
                     <Link href="/pricing">
                       {c.pro.status === 'full'
-                        ? 'Start your 7-day free trial, get your key'
-                        : 'Start your 7-day free trial, then sign in'}
+                        ? `Start your ${TRIAL_DAYS}-day free trial, get your key`
+                        : `Start your ${TRIAL_DAYS}-day free trial, then sign in`}
                     </Link>
                   </Button>
                 </div>

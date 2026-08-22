@@ -12,9 +12,31 @@
 export const TOOL_COUNT = 9;
 
 // PRICE_MONTHLY: the Agent Access subscription price, display form ($ + amount).
-// Structured-data numeric price fields (e.g. "39.00" in JSON-LD) are a separate
-// format and are left as literals.
-export const PRICE_MONTHLY = '$39';
+// This is the FOUNDING price (owner decision 2026-08-22): $29/mo for the first
+// FOUNDING_CAP subscribers, locked as long as they stay subscribed. PRICE_STANDARD
+// is the price after the cap fills. Structured-data numeric price fields derive
+// from this constant, so there is only one number to change.
+export const PRICE_MONTHLY = '$29';
+
+// PRICE_ANNUAL: the optional annual Agent Access price, display form. The annual
+// option only renders when NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID is set, because the
+// owner creates that Stripe price by hand in the dashboard.
+export const PRICE_ANNUAL = '$299';
+
+// PRICE_STANDARD: the price after the founding cap fills. Copy only. No Stripe
+// price object points at it yet.
+export const PRICE_STANDARD = '$39';
+
+// FOUNDING_CAP: how many subscribers keep PRICE_MONTHLY. Copy only. Code does not
+// count subscribers. The owner closes the founding price in Stripe.
+export const FOUNDING_CAP = 100;
+
+// TRIAL_DAYS: the Stripe trial length in days, and the number that all trial copy
+// must agree with. Single source of truth for both checkout paths
+// (src/app/api/checkout/route.ts and the createCheckoutSession server action).
+// Stripe fires trial_will_end 3 days before the end of a trial of ANY length, so
+// the "ends in 3 days" email stays correct at any value here.
+export const TRIAL_DAYS = 30;
 
 // OG_IMAGE: the social/link-preview card, in Next's openGraph image shape.
 //

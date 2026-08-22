@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AuthDialog } from '@/components/auth/auth-dialog';
-import { PRICE_MONTHLY } from '@/lib/constants';
+import { PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
 
 export interface ConsentSummary {
   rid: string;
@@ -105,7 +105,7 @@ export function ConsentClient({ summary }: { summary: ConsentSummary }) {
                 ) : (
                   <p className="mt-1 text-muted-foreground">
                     Your plan: Free. The free tools work now. The pro tools need Agent Access ({PRICE_MONTHLY}/mo,
-                    7-day trial).{' '}
+                    {TRIAL_DAYS}-day trial).{' '}
                     <Link href="/pricing" target="_blank" className="underline">
                       See pricing
                     </Link>

@@ -2,7 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { TOOL_COUNT, PRICE_MONTHLY, OG_IMAGE, MCP_PRO_ENDPOINT } from '@/lib/constants';
+import {
+  TOOL_COUNT,
+  PRICE_MONTHLY,
+  PRICE_STANDARD,
+  FOUNDING_CAP,
+  TRIAL_DAYS,
+  OG_IMAGE,
+  MCP_PRO_ENDPOINT,
+} from '@/lib/constants';
 const MCP_ENDPOINT = "https://mcp.gammarips.com/mcp";
 
 export const metadata = {
@@ -14,7 +22,7 @@ export const metadata = {
     images: [OG_IMAGE],
     title: "GammaRips MCP: The Options-Flow Data Layer for AI Agents",
     description:
-      `${TOOL_COUNT} MCP tools for AI agents: curated options-flow pool, opportunity surfaces, outcome history, methodology playbooks. ${PRICE_MONTHLY}/mo, 7-day free trial.`,
+      `${TOOL_COUNT} MCP tools for AI agents: curated options-flow pool, opportunity surfaces, outcome history, methodology playbooks. ${PRICE_MONTHLY}/mo, ${TRIAL_DAYS}-day free trial.`,
     url: "https://gammarips.com/developers",
   },
 };
@@ -24,7 +32,7 @@ const webApiSchema = {
   "@type": "WebAPI",
   name: "GammaRips MCP",
   description:
-    `Model Context Protocol (MCP) server for AI agents: ${TOOL_COUNT} tools covering the curated overnight options-flow pool, point-in-time feature vectors, opportunity surfaces (realized excursion distributions), a queryable outcome database, exit-rule simulation, regime context, methodology playbooks, and daily reports. The pro tools need a credential (${PRICE_MONTHLY}/mo subscription, 7-day free trial): a bearer API key, or an OAuth 2.1 sign-in for chat clients that cannot send a header. An anonymous free tier needs neither. Data on a paper-trading basis, not investment advice.`,
+    `Model Context Protocol (MCP) server for AI agents: ${TOOL_COUNT} tools covering the curated overnight options-flow pool, point-in-time feature vectors, opportunity surfaces (realized excursion distributions), a queryable outcome database, exit-rule simulation, regime context, methodology playbooks, and daily reports. The pro tools need a credential (${PRICE_MONTHLY}/mo subscription, ${TRIAL_DAYS}-day free trial): a bearer API key, or an OAuth 2.1 sign-in for chat clients that cannot send a header. An anonymous free tier needs neither. Data on a paper-trading basis, not investment advice.`,
   url: MCP_ENDPOINT,
   documentation: "https://gammarips.com/developers",
   provider: {
@@ -71,7 +79,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What does the options flow API cost?",
-    a: `The anonymous tier is free: pool preview, daily reports, methodology playbooks, and reference tools. Full access to all ${TOOL_COUNT} tools is ${PRICE_MONTHLY}/mo with a 7-day free trial. The entire human web interface is free and always will be.`,
+    a: `The anonymous tier is free: pool preview, daily reports, methodology playbooks, and reference tools. Full access to all ${TOOL_COUNT} tools is ${PRICE_MONTHLY}/mo with a ${TRIAL_DAYS}-day free trial. The entire human web interface is free and always will be.`,
   },
 ];
 
@@ -210,8 +218,8 @@ export default function DevelopersPage() {
               <p className="text-muted-foreground">
                 The full data layer (outcome history, opportunity surfaces,
                 exit-rule simulation, all {TOOL_COUNT} tools) is {PRICE_MONTHLY}/mo
-                with a 7-day free trial. After you subscribe, generate your
-                API key on your account page. It&apos;s shown once, so copy
+                with a {TRIAL_DAYS}-day free trial. After you subscribe, generate
+                your API key on your account page. It&apos;s shown once, so copy
                 it then.
               </p>
               <Link href="/pricing">
@@ -489,8 +497,13 @@ async with Client(transport) as client:
                 <li>✓ Opportunity surfaces + outcome database</li>
                 <li>✓ Exit-rule simulation + regime context</li>
                 <li>✓ Methodology playbooks</li>
-                <li>✓ 7-day free trial · cancel anytime</li>
+                <li>✓ {TRIAL_DAYS}-day free trial · cancel anytime</li>
               </ul>
+              <p className="mt-4 text-sm text-foreground">
+                Founding price: {PRICE_MONTHLY}/mo for the first {FOUNDING_CAP}{' '}
+                subscribers, locked as long as you stay subscribed.{' '}
+                {PRICE_STANDARD}/mo after that.
+              </p>
               <Link href="/pricing" className="block mt-4">
                 <Button className="w-full">Get Your API Key &rarr;</Button>
               </Link>
@@ -523,7 +536,7 @@ async with Client(transport) as client:
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/pricing">
-              <Button size="lg">Start the 7-Day Free Trial &rarr;</Button>
+              <Button size="lg">Start the {TRIAL_DAYS}-Day Free Trial &rarr;</Button>
             </Link>
             <a
               href="https://x.com/GammaRips"

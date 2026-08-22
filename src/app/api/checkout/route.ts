@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createStripeCheckoutSession } from '@/lib/stripe';
+import { TRIAL_DAYS } from '@/lib/constants';
 import { getAuth } from 'firebase-admin/auth';
 import { getAdminApp } from '@/lib/firebase-admin';
 
@@ -15,9 +16,27 @@ export async function POST(req: NextRequest) {
     const uid = decodedToken.uid;
     const email = decodedToken.email;
 
-    const priceId =
+    const body = await req.json().catch(() => ({}));
+    const gaClientId =
+      typeof body?.gaClientId === 'string' ? body.gaClientId : undefined;
+    const gaSessionId =
+      typeof body?.gaSessionId === 'string' ? body.gaSessionId : undefined;
+    const interval = body?.interval === 'year' ? 'year' : 'month';
+
+    const monthlyPriceId =
       process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID ||
       process.env.NEXT_PUBLIC_STRIPE_PRICE_ID;
+    const annualPriceId = process.env.NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID;
+
+    // The annual Stripe price is created by hand in the dashboard. Until that
+    // env var is set, an annual request degrades to the monthly price. It must
+    // never fail the checkout.
+    if (interval === 'year' && !annualPriceId) {
+      console.warn(
+        'Annual checkout requested but NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID is unset. Falling back to the monthly price.'
+      );
+    }
+    const priceId = (interval === 'year' && annualPriceId) || monthlyPriceId;
     if (!priceId) {
       console.error('No Stripe price ID configured (NEXT_PUBLIC_STRIPE_PRICE_ID)');
       return NextResponse.json(
@@ -25,12 +44,6 @@ export async function POST(req: NextRequest) {
         { status: 503 }
       );
     }
-
-    const body = await req.json().catch(() => ({}));
-    const gaClientId =
-      typeof body?.gaClientId === 'string' ? body.gaClientId : undefined;
-    const gaSessionId =
-      typeof body?.gaSessionId === 'string' ? body.gaSessionId : undefined;
 
     const forwardedHost = req.headers.get('x-forwarded-host') ?? req.headers.get('host');
     const forwardedProto = req.headers.get('x-forwarded-proto') ?? 'https';
@@ -50,7 +63,7 @@ export async function POST(req: NextRequest) {
       successUrl,
       cancelUrl,
       metadata,
-      { trialPeriodDays: 7 }
+      { trialPeriodDays: TRIAL_DAYS }
     );
 
     return NextResponse.json({ sessionId });

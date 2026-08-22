@@ -19,7 +19,7 @@ import { AuthDialog } from '@/components/auth/auth-dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { FREE_MODE } from '@/lib/config';
-import { TOOL_COUNT, PRICE_MONTHLY } from '@/lib/constants';
+import { TOOL_COUNT, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
 import { MachineClientsSection } from '@/components/account/machine-clients';
 
 const MCP_ENDPOINT = 'https://mcp.gammarips.com/mcp';
@@ -260,7 +260,7 @@ export default function AccountPage() {
               <p className="text-muted-foreground">
                 Connect Claude Code, Codex, Cursor, Gemini CLI, or any agent that
                 can send a bearer key to the GammaRips data layer: the curated pool, opportunity surfaces, outcome
-                history, and methodology playbooks. {PRICE_MONTHLY}/mo, 7-day free trial.
+                history, and methodology playbooks. {PRICE_MONTHLY}/mo, {TRIAL_DAYS}-day free trial.
               </p>
               <Button asChild>
                 <Link href="/pricing">Get Agent Access &rarr;</Link>

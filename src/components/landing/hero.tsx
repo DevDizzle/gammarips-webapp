@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { PRICE_MONTHLY, TOOL_COUNT } from '@/lib/constants';
+import { PRICE_MONTHLY, TOOL_COUNT, TRIAL_DAYS } from '@/lib/constants';
 
 const LAYERS = [
   {
     eyebrow: 'The data, over MCP',
-    title: `${PRICE_MONTHLY}/mo, 7-day trial`,
+    title: `${PRICE_MONTHLY}/mo, ${TRIAL_DAYS}-day trial`,
     desc: `All ${TOOL_COUNT} tools. A pro key opens the enriched pool view and the 4 pro tools: per-contract liquidity, per-name detail, outcome history, exit-rule replay. It answers three questions. Can I get in? Can I get out? What did this setup do before?`,
   },
   {

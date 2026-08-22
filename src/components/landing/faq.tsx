@@ -45,7 +45,7 @@ export const faqs = [
   },
   {
     question: "What happened to the WhatsApp pick subscription?",
-    answer: `Retired. We used to sell a daily pushed pick for ${PRICE_MONTHLY}/mo; we ended it deliberately. A single shared pick concentrates everyone into one contract, and our research kept showing the edge lives in how a setup is traded, not in the name itself. The same ${PRICE_MONTHLY} now buys something better-aligned: full MCP data access, so your agent works the whole pool your way. If you had an active subscription, email evan@gammarips.com and we'll make it right.`
+    answer: `Retired. We used to sell a daily pushed pick, and we ended it deliberately. A single shared pick concentrates everyone into one contract, and our research kept showing the edge lives in how a setup is traded, not in the name itself. Agent Access buys something better-aligned: full MCP data access, so your agent works the whole pool your way. If you had an active subscription, email evan@gammarips.com and we'll make it right.`
   },
   {
     question: "What happens if I cancel?",

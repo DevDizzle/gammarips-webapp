@@ -17,6 +17,7 @@ import { getAuth as getClientAuth, sendPasswordResetEmail } from 'firebase/auth'
 import { app } from '@/lib/firebase';
 import { sendFeedbackAcknowledgmentEmail } from '@/lib/mailgun';
 import { createMachineClient } from '@/lib/oauth/clients';
+import { TRIAL_DAYS } from '@/lib/constants';
 import { listMachineClientsForUser, revokeClient } from '@/lib/oauth/store';
 
 export async function handleFeedback(uid: string | null, message: string, replyToEmail: string): Promise<{success: boolean}> {
@@ -35,7 +36,7 @@ export async function handleFeedback(uid: string | null, message: string, replyT
   return { success: true };
 }
 
-export async function createCheckoutSession(idToken: string, gaClientId: string | null, gaSessionId: string | null = null): Promise<{ sessionId: string }> {
+export async function createCheckoutSession(idToken: string, gaClientId: string | null, gaSessionId: string | null = null, interval: 'month' | 'year' = 'month'): Promise<{ sessionId: string }> {
     if (!idToken) {
         throw new Error('Authentication required.');
     }
@@ -48,7 +49,10 @@ export async function createCheckoutSession(idToken: string, gaClientId: string 
     const forwardedProto = headersList.get('x-forwarded-proto') ?? 'https';
     const origin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : headersList.get('origin') ?? 'https://gammarips.com';
 
-    const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
+    // The annual Stripe price is created by hand in the dashboard. Until that
+    // env var is set, an annual request degrades to the monthly price.
+    const annualPriceId = process.env.NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID;
+    const priceId = (interval === 'year' && annualPriceId) || process.env.NEXT_PUBLIC_STRIPE_PRICE_ID;
     if (!priceId) {
         throw new Error('Stripe Price ID is not configured.');
     }
@@ -68,7 +72,7 @@ export async function createCheckoutSession(idToken: string, gaClientId: string 
         `${origin}/about?welcome=1&session_id={CHECKOUT_SESSION_ID}`,
         `${origin}/pricing`,
         sessionMetadata,
-        { trialPeriodDays: 7 }
+        { trialPeriodDays: TRIAL_DAYS }
     );
 
     return { sessionId };

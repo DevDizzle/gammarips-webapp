@@ -40,19 +40,19 @@ const dataSources = [
 
 const filters = [
   {
-    name: 'directional UOA > $500K',
-    where: 'enrichment-trigger',
-    why: 'Direction-aware unusual options activity. Bullish candidates need call dollar volume above $500K. Below this, flow is too thin to be informative. This is the gate that does the work at the enrichment bar.',
+    name: 'liquid universe: 3M+ shares, 25+ listed strikes, top 100 by z(chain $ volume) + z(share volume)',
+    where: 'overnight-scanner',
+    why: 'This is the gate that does the work, and it selects on tradeability rather than on unusual activity. A name must have traded 3M+ shares that session and carry a chain with 25 or more listed strikes, then the top 100 by combined chain dollar volume and share volume survive. Live since 2026-08-24. The $500K directional-UOA floor it replaced was dropped in the same change: inside a liquid universe every name already carries heavy flow, so the floor stopped selecting and only thinned the pool. Open interest is deliberately not an input, because no OI history exists in this stack and ranking on the current snapshot would be lookahead.',
   },
   {
     name: 'overnight_score ≥ 1',
     where: 'enrichment-trigger',
-    why: 'Deterministic premium-flow flags (call/put dollar skew, Vol/OI, active strikes, new positioning, price momentum, plus a divergence bonus) sum to a base score, and a sector-cluster boost can lift it, capped at 10. The floor is 1 and it is cosmetic: nearly every name with $500K of directional flow already clears it. On its own the score barely predicts outcomes, so we do not filter harder on it. The dollar-flow gate and the edge-rank do the filtering, and the tournament does the discriminating from here.',
+    why: 'Deterministic premium-flow flags (call/put dollar skew, Vol/OI, active strikes, new positioning, price momentum, plus a divergence bonus) sum to a base score, and a sector-cluster boost can lift it, capped at 10. The floor is 1 and it is cosmetic: nearly every name in the liquid universe already clears it. On its own the score barely predicts outcomes, so we do not filter harder on it. Flow orders the pool; it no longer decides membership.',
   },
   {
-    name: 'BULLISH-only + delta edge-rank to top ~50',
+    name: 'BULLISH-only, one out-of-the-money call per name',
     where: 'enrichment-trigger',
-    why: 'A hard bullish gate (since 2026-06-11): only call setups enter the pool. The surviving bullish names are then delta-edge-ranked to the ~50 strongest setups before the tournament.',
+    why: 'A hard bullish gate (since 2026-06-11): only call setups enter the pool. One out-of-the-money call is priced per surviving name, chosen on contract liquidity. The cap of 50 does not currently bind, so the pool is simply every bullish name in the top-100 liquid universe: there is no hidden ranking deciding membership. Note that we surface the most liquid NAMES and then choose a contract inside each, not the most liquid contracts in the market, which would be the same index products every day.',
   },
   {
     name: 'no earnings during the same-day hold',

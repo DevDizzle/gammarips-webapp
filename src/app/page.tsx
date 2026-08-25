@@ -16,7 +16,7 @@ export const revalidate = 60; // keep the daily pool summary fresh without a ful
 export const metadata: Metadata = {
   title: "GammaRips | Options-flow data for AI agents",
   description:
-    "Overnight scan of about 3,500 optionable US stocks for unusual options activity, curated to a small bullish pool. Free to browse, or pipe it to your AI agent over MCP.",
+    "Overnight liquidity ranking of 3,532 optionable US names, cut to the top 100 and one out-of-the-money call per bullish name. Free to browse, or pipe it to your AI agent over MCP.",
   alternates: {
     canonical: '/',
   },
@@ -40,7 +40,7 @@ export default async function LandingPage() {
     "name": "GammaRips",
     "image": "https://gammarips.com/og-image.png?v=3",
     "url": "https://gammarips.com",
-    "description": summary?.market_narrative || "Options-flow data for AI agents: overnight unusual-activity scans, curated to a high-signal pool and served over MCP.",
+    "description": summary?.market_narrative || "Options-flow data for AI agents: an overnight liquidity ranking of the US options universe, cut to a small pool of tradeable contracts and served over MCP.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://gammarips.com/reports?q={search_term_string}",

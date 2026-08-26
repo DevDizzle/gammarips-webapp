@@ -9,7 +9,7 @@ import { TOOL_COUNT, OG_IMAGE } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'About GammaRips: The options-flow data layer for AI agents',
   description:
-    "The engine, the methodology, and the person behind GammaRips: a nightly liquidity ranking of 3,532 optionable US names, cut to a small pool of tradeable contracts. Paper-trading, educational.",
+    "The engine, the methodology, and the person behind GammaRips: a nightly liquidity rank of about 3,500 optionable US names, cut to a small bullish pool of liquid calls. Paper-trading, educational only. Not investment advice.",
   alternates: { canonical: 'https://gammarips.com/about' },
   openGraph: {
     images: [OG_IMAGE],
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 
 const whyList = [
-  'A small curated pool, not a firehose. No FOMO, no "look how many signals we have."',
+  'A small pool, not a firehose. Membership is liquidity, not unusual activity. No FOMO, no "look how many alerts we have."',
   'No pick endpoint, on purpose. Shared picks crowd thin contracts; data lets every agent reach its own conclusion.',
   'The honest baseline is published: buying the whole pool blindly under a fixed exit loses. The Lab shows the receipts, including the killed hypotheses.',
   'Everything is leakage-checked and mechanical. Every filter, threshold, and selection rule is documented, logged, and shipped as playbooks your agent can read.',
@@ -48,7 +48,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
     "@context": "https://schema.org",
     "@type": "AboutPage",
     "name": "About GammaRips",
-    "description": "The options-flow data layer for AI agents: a nightly liquidity ranking of 3,532 optionable US names, cut to a small bullish pool of tradeable contracts, tracked by a public paper-traded cohort and served over MCP.",
+    "description": "The options-flow data layer for AI agents: a nightly liquidity rank of about 3,500 optionable US names, cut to a small bullish pool of liquid calls, tracked by a public paper-traded cohort and served over MCP.",
     "url": "https://gammarips.com/about",
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
   };
@@ -105,7 +105,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
             </span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
-            GammaRips is a systematic overnight scanner that ranks the US options universe by liquidity and hands back a small pool of contracts an agent can actually trade, free for humans to browse and served to AI agents over MCP. A public paper-traded cohort tracks that pool every market day, winners and losers counted the same way. Data, receipts, and no pick to follow: that&apos;s the product.
+            GammaRips is a systematic overnight scanner. It ranks the US options universe by liquidity and hands back a small bullish pool, roughly 40 to 50 out-of-the-money calls. Humans browse it free. AI agents read it over MCP. Every market day the whole pool gets paper-traded and published, winners and losers counted the same way. The fixed exit is same-day, and the opportunity surface next to it is a 3-day MFE and MAE window. Data, receipts, and no pick to follow: that&apos;s the product.
           </p>
         </header>
 
@@ -128,7 +128,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">
-                  ML engineer and data architect. Built the scanner, the enrichment layer, the V7 tournament, and the execution policy. Solo operator, no team of analysts, no &ldquo;room of traders.&rdquo; One person with a pipeline.
+                  ML engineer and data architect. Built the scanner, the enrichment layer, the selection tournament, and the execution policy. Solo operator, no team of analysts, no &ldquo;room of traders.&rdquo; One person with a pipeline.
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Also runs <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link> for AI strategy and data integration consulting.
@@ -147,7 +147,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  The autonomous AI operator behind GammaRips&apos; daily pipeline: scanning overnight institutional options flow, scoring signals, enriching with contract recommendations, and publishing the pool. Built on Claude via OpenClaw, powered by real-time BigQuery queries. GammaMolt was the first agent ever wired to the GammaRips MCP, and the same {TOOL_COUNT} tools your agent gets are the ones it runs on.
+                  The autonomous AI operator behind GammaRips&apos; daily pipeline: ranking the options universe by liquidity, attaching overnight flow context, pricing one out-of-the-money call per bullish name, and publishing the pool. Built on Claude via OpenClaw, powered by real-time BigQuery queries. GammaMolt was the first agent ever wired to the GammaRips MCP, and the same {TOOL_COUNT} tools your agent gets are the ones it runs on.
                 </p>
               </CardContent>
             </Card>

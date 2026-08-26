@@ -76,9 +76,12 @@ export default function SignalClientPage({
               <FileText className="w-4 h-4" /> See the {signal.scan_date} Morning Briefing
             </Link>
             <p className="mt-3 text-sm text-muted-foreground max-w-xl">
-              This is one candidate from GammaRips&apos; nightly scan of about 3,500
-              optionable US stocks, curated into a small high-signal pool and tracked
-              to its outcome. Data, not a recommendation.{" "}
+              This is one row from the GammaRips nightly scan of about 3,500 optionable
+              US stocks, tracked to its outcome. What membership means depends on the
+              date. From 2026-08-25, it is a liquidity rank: the 100 most liquid names,
+              bullish only. Before that date, the scan selected on unusual options
+              activity and included bearish names. The two sets are not one population.
+              Data, not a recommendation.{" "}
               <Link href="/how-it-works" className="text-primary hover:underline">
                 New here? See how the pool is built →
               </Link>{" "}
@@ -94,6 +97,9 @@ export default function SignalClientPage({
               <div className={`text-2xl font-bold font-code ${signal.overnight_score >= 7 ? (isBullish ? 'text-green-500' : 'text-red-500') : 'text-foreground'}`}>
                 {signal.overnight_score}/10
               </div>
+              <p className="mt-1 max-w-[7.5rem] text-[10px] leading-snug text-muted-foreground">
+                Descriptive context. Not a quality rank and not a forecast.
+              </p>
             </div>
             <div className="p-3 bg-card rounded-lg border">
               <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Move</div>
@@ -121,7 +127,7 @@ export default function SignalClientPage({
                 <CardTitle className="flex items-center gap-2">
                   Engine Flags
                   <span className="text-sm font-normal text-muted-foreground ml-2">
-                    ({engineFlagCount}/5 patterns matched — diagnostic, not a trade signal)
+                    ({engineFlagCount} of 5 patterns matched. Descriptive, not a trade signal.)
                   </span>
                 </CardTitle>
               </CardHeader>
@@ -129,46 +135,41 @@ export default function SignalClientPage({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                   {signal.premium_hedge && (
                     <div className="flex items-start gap-2">
-                      <span className="text-lg">🛡️</span>
                       <div>
-                        <span className="font-semibold block">Institutional Hedging</span>
-                        <span className="text-muted-foreground">When big money hedges, the underlying moves</span>
+                        <span className="font-semibold block">Hedging Flow Intent</span>
+                        <span className="text-muted-foreground">The engine classified the day&apos;s flow intent as hedging.</span>
                       </div>
                     </div>
                   )}
                   {signal.premium_high_rr && (
                     <div className="flex items-start gap-2">
-                      <span className="text-lg">📐</span>
                       <div>
-                        <span className="font-semibold block">High Risk/Reward</span>
-                        <span className="text-muted-foreground">Clean setup with room to run</span>
+                        <span className="font-semibold block">Reward/Risk Above 2.0</span>
+                        <span className="text-muted-foreground">Distance to the next level in the trade direction is more than 2x the distance to the level behind it, and the day&apos;s move is not tagged overdone.</span>
                       </div>
                     </div>
                   )}
                   {signal.premium_bull_flow && (
                     <div className="flex items-start gap-2">
-                      <span className="text-lg">📈</span>
                       <div>
-                        <span className="font-semibold block">Strong Call Flow</span>
-                        <span className="text-muted-foreground">Aggressive bullish accumulation</span>
+                        <span className="font-semibold block">Call Volume Above Open Interest</span>
+                        <span className="text-muted-foreground">Call volume was more than 1.5x call open interest on a bullish row, and the day&apos;s move is not tagged overdone.</span>
                       </div>
                     </div>
                   )}
                   {signal.premium_high_atr && (
                     <div className="flex items-start gap-2">
-                      <span className="text-lg">⚡</span>
                       <div>
-                        <span className="font-semibold block">Explosive Move</span>
-                        <span className="text-muted-foreground">2x+ normal range on unusual flow</span>
+                        <span className="font-semibold block">Move Above 2x ATR</span>
+                        <span className="text-muted-foreground">The session move was more than 2x the average true range.</span>
                       </div>
                     </div>
                   )}
                   {signal.premium_bear_flow && (
                     <div className="flex items-start gap-2">
-                      <span className="text-lg">📉</span>
                       <div>
-                        <span className="font-semibold block">Strong Put Flow</span>
-                        <span className="text-muted-foreground">Heavy bearish conviction</span>
+                        <span className="font-semibold block">Put Volume Above Open Interest</span>
+                        <span className="text-muted-foreground">Put volume was more than 2x put open interest on a bearish row.</span>
                       </div>
                     </div>
                   )}
@@ -177,14 +178,18 @@ export default function SignalClientPage({
             </Card>
           )}
 
-          {/* AI Trade Thesis */}
+          {/* AI Analysis — model-written context on the row, not advice. */}
           <Card>
             <CardHeader>
-              <CardTitle>AI Trade Thesis</CardTitle>
+              <CardTitle>AI Analysis</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Model-written context on what the scan saw that night. It is context, not
+                advice and not a trade instruction.
+              </p>
             </CardHeader>
             <CardContent>
               <div className="prose prose-invert max-w-none">
-                <Markdown content={signal.thesis || "No thesis generated for this signal."} />
+                <Markdown content={signal.thesis || "No analysis was generated for this row."} />
               </div>
             </CardContent>
           </Card>

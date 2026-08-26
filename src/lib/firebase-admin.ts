@@ -432,9 +432,10 @@ export async function getCohortStats(): Promise<CohortStats | null> {
   }
 }
 
-/** One closed V6 paper-trade, synced from BigQuery forward_paper_ledger by
- *  signal-notifier (compute_and_write_ledger_trades) into Firestore
- *  ledger_trades/{scan_date}_{ticker}. SAME V6 cohort + fixed-dollar sizing
+/** One closed paper-trade from the live cohort (V7.1 same-day exit), synced
+ *  from BigQuery forward_paper_ledger by signal-notifier
+ *  (compute_and_write_ledger_trades) into Firestore
+ *  ledger_trades/{scan_date}_{ticker}. SAME cohort + fixed-dollar sizing
  *  as cohort_stats/current, so the scorecard table and aggregate tiles agree. */
 export interface LedgerTrade {
   scan_date: string;

@@ -22,11 +22,11 @@ export const metadata: Metadata = {
     default: 'GammaRips | Options-flow data for AI agents',
     template: `%s | GammaRips`,
   },
-  description: "GammaRips scans about 3,500 optionable US stocks overnight for unusual options activity and curates it to a small, high-signal pool. Browse it free on the web, or connect your AI agent over MCP for the full data layer: curated pool, opportunity surfaces, outcome history, and methodology. Your agent analyzes. You decide. Paper-trading data, educational only.",
+  description: "Every night GammaRips ranks 3,532 optionable US names by liquidity, keeps the top 100, and prices one out-of-the-money call in each bullish name: a pool of roughly 40 to 50 contracts an agent can actually trade. Browse it free on the web, or connect your AI agent over MCP for the full data layer: pool, opportunity surfaces, outcome history, and methodology. Your agent analyzes. You decide.",
   keywords: ['agentic trading', 'AI trading agent', 'MCP server trading', 'options flow', 'unusual options activity', 'options flow data', 'institutional options activity', 'overnight options scanner', 'AI trading analysis', 'options data for AI agents'],
   openGraph: {
     title: 'GammaRips | Options-flow data for AI agents',
-    description: 'Stop asking AI for stock picks. Start giving it real data. Overnight unusual-options-activity scans, curated to a high-signal pool and served to your AI agent over MCP.',
+    description: 'Stop asking AI for stock picks. Start giving it real data. An overnight liquidity ranking of the US options universe, cut to a small bullish pool of liquid calls and served to your AI agent over MCP.',
     url: siteUrl,
     siteName: 'GammaRips',
     images: [{ url: `${siteUrl}/og-image.png?v=3`, width: 1200, height: 630, alt: 'GammaRips | Options-flow data for AI agents' }],
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'GammaRips | Options-flow data for AI agents',
-    description: 'Stop asking AI for stock picks. Start giving it real data. Overnight unusual-options-activity scans, curated and served to your AI agent over MCP.',
+    description: 'Stop asking AI for stock picks. Start giving it real data. An overnight liquidity ranking of the US options universe, cut to a small bullish pool of liquid calls and served to your AI agent over MCP.',
     images: [`${siteUrl}/og-image.png?v=3`],
   },
 };
@@ -51,7 +51,7 @@ const organizationSchema = {
   "url": "https://gammarips.com",
   "logo": "https://gammarips.com/icon.png",
   "email": "evan@gammarips.com",
-  "description": "GammaRips is an options-flow intelligence engine and data vendor for AI agents. It scans about 3,500 optionable US stocks overnight for unusual options activity, curates a small high-signal pool, and serves the data (pool, opportunity surfaces, outcome history, methodology) to bring-your-own AI agents over MCP. The human web UI is free; agents subscribe.",
+  "description": "GammaRips is an options-flow data vendor for AI agents. Every night it ranks 3,532 optionable US names by liquidity, keeps the top 100, and prices one out-of-the-money call in each bullish name, producing a pool of roughly 40 to 50 tradeable contracts. It serves that pool plus opportunity surfaces, outcome history and methodology to bring-your-own AI agents over MCP. The human web UI is free; agents subscribe.",
   "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO" },
   "sameAs": ["https://twitter.com/GammaRips"],
 };

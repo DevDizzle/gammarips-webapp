@@ -229,8 +229,8 @@ export function PricingClient() {
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               There is no pick endpoint, and no promised return. You&apos;re
-              paying for curation (hundreds of unusual-flow names cut to a
-              reasoning-sized pool) and for history nobody else keeps.
+              paying for a clean, liquidity-ranked pool sized for agent
+              reasoning, and for history nobody else keeps.
             </p>
           </div>
           <div className="space-y-2">

@@ -34,11 +34,13 @@ apologetically: it is WHY there is no pick endpoint, and it converts skeptics.
 - **Category claim (product/dev surfaces):** "The options-flow data layer for
   AI agents."
 - **Pricing frame:** "Humans browse free. Agents subscribe."
-- **Three pillars:** (1) The curated pool — anti-firehose, ~344 UOA names cut
-  to a reasoning-sized pool with context attached. (2) The opportunity
-  surface — what was actually possible per contract (MFE/MAE excursions),
-  wins AND losses. (3) Your agent, your conclusion — no pick endpoint, on
-  purpose; a thousand subscribers, a thousand different conclusions.
+- **Three pillars:** (1) The tradeable pool — anti-firehose: the 100 most
+  liquid optionable names cut to a reasoning-sized bullish pool (~40-50) with
+  context attached; membership is liquidity, not unusual activity. (2) The
+  opportunity surface — what was actually possible per contract (MFE/MAE
+  excursions), wins AND losses. (3) Your agent, your conclusion — no pick
+  endpoint, on purpose; a thousand subscribers, a thousand different
+  conclusions.
 - **The honesty weapon:** buying everything with a fixed exit loses; the
   winners are in the pool (the excursion data proves it); finding and trading
   them is analysis — that's the agent's job.

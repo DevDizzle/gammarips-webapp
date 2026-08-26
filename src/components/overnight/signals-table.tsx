@@ -54,7 +54,7 @@ export function SignalsTable({ signals, title }: SignalsTableProps) {
           {signals.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                No signals found for this category.
+                No contracts in the pool for this date.
               </TableCell>
             </TableRow>
           ) : (

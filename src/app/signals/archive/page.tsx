@@ -5,9 +5,9 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   // Root layout applies the `%s | GammaRips` title template — no suffix here.
-  title: "Signal Archive — Every Ticker Flagged by the Overnight Scan",
+  title: "Signal Archive: Every Ticker in the Overnight Options Flow Scan",
   description:
-    "The complete archive of tickers that have appeared in GammaRips' enriched overnight options-flow pool, each linking to its most recent flow breakdown.",
+    "Every ticker that has appeared in a GammaRips overnight options flow scan, with the date of its most recent appearance. Each links to its flow breakdown.",
   alternates: { canonical: "https://gammarips.com/signals/archive" },
 };
 
@@ -40,11 +40,14 @@ export default async function SignalArchivePage() {
         <div className="mb-8 max-w-3xl">
           <h1 className="text-3xl font-bold font-headline mb-2">Signal Archive</h1>
           <p className="text-muted-foreground leading-relaxed">
-            Every ticker that has appeared in the GammaRips enriched overnight pool, with the date
-            of its most recent appearance. An appearance means the overnight scan detected unusual
-            options activity that cleared the <Link href="/methodology" className="text-primary hover:underline">enrichment bar</Link> on
-            that day — it is a historical record, not a recommendation. Each link opens the
-            ticker&apos;s most recent institutional options-flow breakdown.
+            Every ticker that has appeared in a GammaRips overnight scan, with the date of its most
+            recent appearance. What an appearance means depends on the date. From 2026-08-25,
+            membership is a liquidity rank: the 100 most liquid optionable US names, bullish only.
+            Before that date, the scan selected on unusual options activity and included bearish
+            names. The two sets are not one population. The full rule is on the{" "}
+            <Link href="/methodology" className="text-primary hover:underline">methodology page</Link>.
+            This is a historical record, not a recommendation. Each link opens the ticker&apos;s most
+            recent options-flow breakdown.
           </p>
           <p className="text-sm text-muted-foreground mt-3">
             Looking for today&apos;s pool? See the <Link href="/signals" className="text-primary hover:underline">live signals page</Link>.

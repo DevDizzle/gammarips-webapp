@@ -6,9 +6,9 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   // Root layout applies the `%s | GammaRips` title template — no suffix here.
-  title: "Overnight Options Flow Scanner — Daily Unusual Options Activity",
+  title: "Overnight Options Flow Scanner: Daily Bullish Call Pool",
   description:
-    "The ~50 bullish setups from each overnight scan of about 3,500 optionable US stocks: volume, open interest, and directional dollar flow, ranked before the open.",
+    "Every bullish name in the 100 most liquid optionable US stocks, with one out-of-the-money call each. Roughly 40 to 50 contracts, published nightly. Free.",
   alternates: { canonical: 'https://gammarips.com/signals' },
 };
 
@@ -27,7 +27,7 @@ export default async function SignalsPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "Overnight Options Flow Scanner",
-    "description": "The ~50 bullish setups GammaRips analyzes each morning, drawn from an overnight scan across about 3,500 optionable US stocks and reported before the market opens.",
+    "description": "Every bullish name in the 100 most liquid optionable US stocks, with one out-of-the-money call each. Roughly 40 to 50 contracts, published nightly. Free.",
     "url": "https://gammarips.com/signals",
     "mainEntity": {
       "@type": "ItemList",
@@ -47,17 +47,26 @@ export default async function SignalsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold font-headline mb-2">Overnight Options Flow</h1>
           <p className="text-muted-foreground mb-6">
-            The bullish setups GammaRips analyzed today, from an overnight scan across about 3,500 optionable US stocks, reported {reportDate}.
+            Today&apos;s pool, published {reportDate}. One out-of-the-money call for every bullish name in the 100 most liquid optionable US stocks.
             {summary?.underlying_scan_date && summary.underlying_scan_date !== reportDate && (
               <span className="block text-sm opacity-80 mt-1">Based on overnight flow from {summary.underlying_scan_date}</span>
             )}
           </p>
           <div className="text-sm text-muted-foreground space-y-3 max-w-3xl leading-relaxed">
             <p>
-              GammaRips is a daily options signals scanner. Every night at 23:00 ET, the engine ingests institutional options flow (volume, open interest, unusual activity, and directional dollar flow) across every optionable US common stock. Candidates clear a thin <Link href="/methodology" className="text-primary hover:underline">enrichment bar</Link>: <strong className="text-foreground">overnight score &ge; 4 with directional UOA &gt; $500K</strong>. Then a BULLISH-only gate and a delta edge-rank keep the ~50 strongest bullish setups. What you see below is that bullish set (we trade calls only).
+              GammaRips is a daily options data scanner. The engine runs at 23:00 ET and the whole rule fits in one breath. <strong className="text-foreground">Start with about 3,500 optionable US stocks. Keep the names that traded 3M or more shares that session and carry 25 or more listed strikes. <Link href="/methodology" className="text-primary hover:underline">Rank those by combined chain dollar volume and share volume</Link> and take the top 100. Keep the bullish names. Price one out-of-the-money call in each, chosen on contract liquidity.</strong> That set is the table below, roughly 40 to 50 contracts. Calls only.
             </p>
             <p>
-              This page is the human-readable view, and it&apos;s free forever. The same pool, plus <Link href="/developers" className="text-primary hover:underline">point-in-time features, opportunity surfaces, and a queryable outcome history</Link>, is served to AI agents over MCP. Every field is leakage-checked: nothing here contains information that wasn&apos;t knowable at scan time. A <Link href="/scorecard" className="text-primary hover:underline">paper-traded cohort</Link> validates the selection methodology daily, in public.
+              Liquidity decides membership, not unusual activity. Flow gives context. It does not decide who gets in. The cap of 50 does not bind, so the pool is every bullish name in the top 100. There is no hidden ranking behind it. Note what the rank measures: the most liquid names, then one contract inside each. It is not the most liquid contracts in the market, which would be SPY and QQQ every day. Being in the pool is not a forecast that a name will go up.
+            </p>
+            <p>
+              Liquidity is here for one reason. Over the 60 trading days ending 2026-08-14, a study measured the old flow-first funnel with no fill at 10:00 ET on 40.5% of contracts. The liquid universe measured 6.1% on the same tape. Those are study numbers on a past window. They are not a live property of tonight&apos;s pool.
+            </p>
+            <p>
+              This page is the human-readable view and it is free. The same pool, plus <Link href="/developers" className="text-primary hover:underline">point-in-time features, opportunity surfaces, and a queryable outcome history</Link>, is served to AI agents over MCP. Every field is leakage-checked. Nothing here contains information that was not knowable at scan time. A <Link href="/scorecard" className="text-primary hover:underline">paper-traded cohort</Link> tracks the pool in public, winners and losers counted the same way. Buying the whole pool on one fixed exit loses money. We publish that, and it is why there is no pick on this site. The analysis is your agent&apos;s job.
+            </p>
+            <p className="text-xs opacity-80">
+              Paper trading and educational data only. Not investment advice.
             </p>
           </div>
           <div className="mt-5 flex flex-wrap gap-4 text-sm">
@@ -69,7 +78,12 @@ export default async function SignalsPage() {
         </div>
 
         <div className="grid gap-12">
-          <SignalsTable title="Bullish Flow" signals={bullSignals} />
+          <div>
+            <SignalsTable title="The Pool" signals={bullSignals} />
+            <p className="mt-3 text-xs text-muted-foreground max-w-3xl">
+              The table is ordered by the scan score. That score is descriptive context. It is not a quality rank and it is not a forecast.
+            </p>
+          </div>
         </div>
 
         {/* Recent Signals — keeps prior-day detail pages one click from this
@@ -78,7 +92,7 @@ export default async function SignalsPage() {
           <section className="mt-12">
             <h2 className="text-2xl font-bold font-headline mb-2">Recent Signals</h2>
             <p className="text-sm text-muted-foreground mb-4 max-w-2xl">
-              Top flow from the last few sessions. Each links to its full institutional options-flow breakdown.
+              A sample from the last few sessions. Each one links to its options-flow breakdown.
             </p>
             <div className="flex flex-wrap gap-2">
               {recentSignals.map((s) => (

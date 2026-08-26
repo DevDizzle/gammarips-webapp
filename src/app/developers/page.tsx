@@ -9,9 +9,10 @@ import {
   FOUNDING_CAP,
   TRIAL_DAYS,
   OG_IMAGE,
+  MCP_ENDPOINT,
   MCP_PRO_ENDPOINT,
+  HARNESS_REPO,
 } from '@/lib/constants';
-const MCP_ENDPOINT = "https://mcp.gammarips.com/mcp";
 
 export const metadata = {
   title: "GammaRips MCP: The Options-Flow Data Layer for AI Agents",
@@ -59,15 +60,15 @@ const webApiSchema = {
 const FAQ: { q: string; a: string }[] = [
   {
     q: "Is there a GammaRips options flow API?",
-    a: `Yes. The GammaRips options flow API is an MCP server at ${MCP_ENDPOINT}, served over Streamable HTTP, exposing ${TOOL_COUNT} tools. Any MCP client can call it, and so can an ordinary HTTP client. An anonymous tier is open with no key and no card. The pro tools take either a bearer API key or an OAuth 2.1 access token at ${MCP_PRO_ENDPOINT}.`,
+    a: `Yes. The GammaRips options flow API is an MCP server at ${MCP_ENDPOINT}, served over Streamable HTTP, exposing ${TOOL_COUNT} tools. Any MCP client can call it, and so can an ordinary HTTP client. An anonymous tier is open with no key and no card. The pro tools take a bearer API key on either endpoint, or an OAuth 2.1 sign-in at ${MCP_PRO_ENDPOINT} for clients that cannot send a header.`,
   },
   {
     q: "What options flow data does the API return?",
-    a: "The curated overnight pool (ticker, direction, conviction score, flow dollars, thesis, technicals, catalyst, and a delta-targeted contract), point-in-time feature vectors from a leakage-safe view, opportunity surfaces giving realized excursion distributions for historical setups, a queryable outcome database, exit-rule simulation, regime context, the daily reports, and the methodology playbooks.",
+    a: "The curated overnight pool (ticker, direction, overnight score, flow dollars, thesis, technicals, catalyst, and one call contract per name, chosen on contract liquidity), point-in-time feature vectors from a leakage-safe view, opportunity surfaces giving realized excursion distributions for historical setups, a queryable outcome database, exit-rule simulation, regime context, the daily reports, and the methodology playbooks.",
   },
   {
     q: "Is the options flow data real time or overnight?",
-    a: "Overnight. The scan runs across about 3,500 optionable US stocks after the close and the curated pool publishes each trading morning. It is an unusual-options-activity feed built for analysis, not a real-time tape for execution.",
+    a: "Overnight. The scan runs after the close across about 3,500 optionable US stocks. It keeps the 100 most liquid names, takes the bullish ones, and picks one out-of-the-money call in each. The pool is roughly 40 to 50 contracts and publishes each trading morning. Liquidity decides membership, not unusual activity. Flow is context, not a filter. This is a data layer for analysis, not a real-time tape for execution.",
   },
   {
     q: "How do I connect Claude or ChatGPT to options flow data?",
@@ -107,13 +108,14 @@ const toolGroups: {
 }[] = [
   {
     group: "The pool",
-    blurb: "Today's curated candidates, structured for machine reasoning.",
+    blurb:
+      "The 100 most liquid optionable names, bullish only, one out-of-the-money call each. Roughly 40 to 50 contracts, structured for machine reasoning.",
     tools: [
       {
         name: "get_pool",
         tier: "free-preview",
         description:
-          "The candidate pool for a scan date, in one tool. view=preview is a free public teaser: ticker, direction, score, headline, flow dollars. The full pool needs a pro key: view=enriched (thesis, technicals, catalyst, a delta-targeted recommended contract, the 60-day momentum feature), view=raw (the wide pre-curation scan), and view=features (point-in-time feature vectors from the leakage-safe view).",
+          "The candidate pool for a scan date, in one tool. view=preview is a free public teaser: ticker, direction, score, headline, flow dollars. The full pool needs a pro key: view=enriched (thesis, technicals, catalyst, the selected contract, the 60-day momentum feature), view=raw (the wide pre-curation scan), and view=features (point-in-time feature vectors from the leakage-safe view).",
       },
       {
         name: "get_signal",
@@ -208,7 +210,7 @@ export default function DevelopersPage() {
             id="connect"
           >
             <div className="text-center space-y-4">
-              <h2 className="text-2xl font-bold font-headline">Taste it right now: free, no card, no key</h2>
+              <h2 className="text-2xl font-bold font-headline">Try it right now. No card, no key.</h2>
               <pre className="p-3 bg-muted rounded text-sm text-left overflow-x-auto whitespace-pre-wrap break-all"><code>{`claude mcp add --transport http gammarips ${MCP_ENDPOINT}`}</code></pre>
               <p className="text-sm text-muted-foreground">
                 The anonymous tier serves the pool preview, daily reports,
@@ -218,9 +220,13 @@ export default function DevelopersPage() {
               <p className="text-muted-foreground">
                 The full data layer (outcome history, opportunity surfaces,
                 exit-rule simulation, all {TOOL_COUNT} tools) is {PRICE_MONTHLY}/mo
-                with a {TRIAL_DAYS}-day free trial. After you subscribe, generate
-                your API key on your account page. It&apos;s shown once, so copy
-                it then.
+                with a {TRIAL_DAYS}-day free trial. That is the founding price
+                for the first {FOUNDING_CAP} subscribers; it is {PRICE_STANDARD}/mo
+                after the cap. After you subscribe, generate your API key at{" "}
+                <Link href="/account" className="underline hover:text-foreground">
+                  /account
+                </Link>
+                . It is shown once, so copy it then.
               </p>
               <Link href="/pricing">
                 <Button size="lg">Get Your API Key &rarr;</Button>
@@ -315,6 +321,22 @@ async with Client(transport) as client:
     print(pool)`}
               </pre>
             </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-bold font-headline text-lg">Start from a working loop</h3>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              The harness is open source. It is a daily agent loop over these
+              tools: grade tradeability, form a thesis, design your own exit,
+              pre-register every decision as data, and score the whole pool
+              after the close. Paper-only by default. It ships no pick, because
+              there is none to ship. Clone it and change the parts you disagree
+              with.
+            </p>
+            <a href={HARNESS_REPO} target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="sm">
+                Clone the harness on GitHub &rarr;
+              </Button>
+            </a>
           </div>
         </section>
 
@@ -434,8 +456,8 @@ async with Client(transport) as client:
             <p className="text-sm text-muted-foreground max-w-3xl">
               Every tool is leakage-checked: nothing your agent reads contains
               information that wasn&apos;t knowable at the time it&apos;s dated.
-              The outcome database behind these tools holds 3,000+ labeled
-              contracts across 50+ scan days: every pool candidate since
+              The outcome database behind these tools holds 4,900+ labeled
+              contracts across 90+ scan days: every pool candidate since
               April 2026, growing every trading day. Full parameter schemas are
               self-describing over MCP.
             </p>

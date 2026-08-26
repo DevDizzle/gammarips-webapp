@@ -10,15 +10,15 @@ import { OG_IMAGE } from '@/lib/constants';
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: 'Track Record — Surfaced to Expiration, Every Contract',
+  title: 'Track Record: Every Contract, Surfaced to Expiration',
   description:
-    "What every surfaced contract did from morning to expiration, as distributions with sample sizes. No win rate, no average ROI. Paper-trading only.",
+    'What every surfaced contract did from the 10:00 ET fill to expiration, as distributions with sample sizes. Paper trading, educational only, not investment advice.',
   alternates: { canonical: 'https://gammarips.com/scorecard' },
   openGraph: {
     images: [OG_IMAGE],
-    title: 'Track Record — Surfaced to Expiration | GammaRips',
+    title: 'Track Record: Every Contract, Surfaced to Expiration | GammaRips',
     description:
-      'Every surfaced contract, tracked from that morning to expiration: the ceiling and the floor, as distributions. No highlight reel.',
+      'Every surfaced contract, tracked from the 10:00 ET fill to expiration: the ceiling and the floor, as distributions. No highlight reel. Paper trading, educational only.',
     url: 'https://gammarips.com/scorecard',
   },
 };
@@ -31,7 +31,7 @@ export default async function TrackRecordPage() {
     '@type': 'Dataset',
     name: 'GammaRips Pool Outcome Record',
     description:
-      'Realized outcomes for every candidate in the GammaRips curated options-flow pool: the full-life surface from surfacing to expiration — peak/trough excursion distributions (the ceiling) and hold-to-settlement distributions (the floor) — tracked daily on a paper-trading basis. Published as distributions with sample sizes; the blind-buy composite baseline is negative and stated as such. Not investment advice.',
+      'Realized outcomes for every candidate in the GammaRips curated options-flow pool. The full-life window runs from the 10:00 ET surfacing fill to expiration with no exit rule: peak and trough excursion distributions (the ceiling) and hold-to-settlement distributions (the floor), tracked daily on a paper-trading basis. A separate baseline applies one fixed same-day bracket to every contract (10:00 ET entry, +40% target, -30% stop, flat 15:45 ET). That composite is negative and stated as such. Published as distributions with sample sizes. Contracts surfaced before 2026-08-25 came from the earlier unusual-activity funnel and are not one population with the liquid-universe funnel that replaced it. Not investment advice.',
     url: 'https://gammarips.com/scorecard',
     creator: { '@type': 'Organization', name: 'GammaRips', url: 'https://gammarips.com' },
     license: 'https://gammarips.com/disclosures',
@@ -53,9 +53,9 @@ export default async function TrackRecordPage() {
           We track every contract to the end.
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Every morning we surface about 50 contracts. We follow every one from
-          that morning until it expires — nothing gets edited out. Here is what
-          actually happens to them.
+          Every morning we surface roughly 40 to 50 contracts. We follow every
+          one from the 10:00 ET fill until it expires. Nothing gets edited out.
+          Here is what happened to them.
         </p>
       </header>
 
@@ -73,8 +73,8 @@ export default async function TrackRecordPage() {
           Want to work this data?
         </h2>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          Everything on this page — and the contract-by-contract detail behind
-          it — is what your AI agent gets over MCP. Our Lab publishes the
+          Everything on this page, plus the contract-by-contract detail behind
+          it, is what your AI agent gets over MCP. Our Lab publishes the
           experiments we run on it, including the ideas that failed.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
@@ -90,8 +90,8 @@ export default async function TrackRecordPage() {
       <p className="mt-16 text-xs text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
         Paper-trading data, educational content only. Not investment advice.
         Excursion figures are realized per-contract extremes, conditional on the
-        stated tracking windows — not returns achieved by any account. Past
-        performance is not a guarantee of future results.
+        stated tracking window. They are not returns achieved by any account.
+        Past performance is not a guarantee of future results.
       </p>
     </section>
   );

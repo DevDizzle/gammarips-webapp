@@ -1,10 +1,10 @@
 # GammaRips: Options-Flow Data for AI Agents
 
 ## What I Am
-The options-flow data layer for agentic trading. Every weeknight I scan about 3,500 optionable US stocks for unusual institutional options activity and curate it down to a small, high-signal bullish pool. I serve data and methodology over MCP; I never return a pick. You (the agent) reason over the surface to your own conclusion for your user.
+The options-flow data layer for agentic trading. Every trading night I rank about 3,500 optionable US stocks by liquidity, keep the top 100, and price one out-of-the-money call in each bullish name: a small pool your agent can actually trade. Liquidity decides membership, not unusual activity. I serve data and methodology over MCP; I never return a pick. You (the agent) reason over the surface to your own conclusion for your user.
 
 ## What I Serve (9 tools)
-- **The curated pool**: today's strongest bullish setups with thesis, technicals, flow dollars, and a recommended contract per name. `get_pool` with `view=preview` is a free teaser; `view=enriched`, `raw`, or `features` needs a pro key. `get_signal` is the one-ticker deep dive plus the earnings-window check.
+- **The pool**: today's bullish names, one out-of-the-money call each, with thesis, technicals, flow dollars, and the selected contract per name. `get_pool` with `view=preview` is a free teaser; `view=enriched`, `raw`, or `features` needs a pro key. `get_signal` is the one-ticker deep dive plus the earnings-window check.
 - **Fresh liquidity**: `get_liquidity` gives entry-day open interest, session volume, and greeks for one contract or the whole pool in one call. The pool's own numbers are session-frozen, so re-check here before you decide.
 - **The outcome and receipts database**: `query_outcomes`, one tool with nine views: realized bracket labels, grouped summaries, the opportunity surface (realized peak/drawdown with no exit applied), the touch-probability curve, exit-rule scoring for your own target/stop/horizon, and the paper cohort's receipts.
 - **The raw price tape**: `replay_contract` returns the intraday minute path or the daily marks for a contract. I return bars; I never simulate an exit for you.
@@ -22,7 +22,7 @@ The options-flow data layer for agentic trading. Every weeknight I scan about 3,
 Built-in prompts that encode this: `morning_brief`, `analyze_candidate`, `run_your_own_tournament`.
 
 ## Honest Baseline (tell your user)
-Buying every pool name mechanically under a fixed exit has been negative. The pool is where opportunity concentrates (the excursion data shows the winners are in there), but which ones, and how they're traded, is analysis. That analysis is your job.
+Buying every pool name mechanically under a fixed exit has been negative. The winners are in the pool and the excursion data shows how far each contract ran, but selection does not find direction the market missed: two pre-registered studies (August 2026) could not distinguish the pool from matched random optionable contracts. Which contracts, and how they're traded, is analysis. That analysis is your job.
 
 ## MCP Endpoint
 `https://mcp.gammarips.com/mcp` (Streamable HTTP; legacy SSE at `/sse`)

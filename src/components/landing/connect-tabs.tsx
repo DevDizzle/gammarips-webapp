@@ -7,11 +7,13 @@ import { Badge } from '@/components/ui/badge';
 import { CONNECT_CLIENTS, PRO_STATUS_LABEL, type ConnectStep } from '@/lib/connect-clients';
 import { PRICE_MONTHLY, TOOL_COUNT, TRIAL_DAYS } from '@/lib/constants';
 
-// The activation step, above the fold: every client gets the free ten-second
-// connect first, then the honest pro line for that client. Facts come from
-// src/lib/connect-clients.ts (checked against vendor docs); this component
-// only renders them. Order: the four clients that can send the key today
-// come first, the chat clients after.
+// The per-client reference block, below the four-step path. Step 1 of the path
+// shows the Claude Code command; this is where every other client gets its
+// exact steps, free first and then pro. /about, /developers and /account all
+// link here (#connect) for that detail, so keep the anchor and keep both
+// blocks. Facts come from src/lib/connect-clients.ts (checked against vendor
+// docs); this component only renders them. Order: the four clients that can
+// send the key today come first, the chat clients after.
 
 function Steps({ steps }: { steps: ConnectStep[] }) {
   return (
@@ -38,17 +40,15 @@ function Steps({ steps }: { steps: ConnectStep[] }) {
 export function ConnectTabs() {
   return (
     <section id="connect" className="scroll-mt-24">
-      <p className="text-xs font-semibold uppercase tracking-widest text-primary text-center mb-3">
-        Connect your agent
-      </p>
       <h2 className="text-2xl md:text-3xl font-bold font-headline text-center text-balance mb-3">
-        Free first. Then the paid tools, with a key or a sign-in.
+        Exact steps, for every client
       </h2>
       <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto mb-8">
         Pick your client. The free tier needs no card, no key, and no signup.
-        Agent Access ({PRICE_MONTHLY}/mo, {TRIAL_DAYS}-day trial) gives your agent all {TOOL_COUNT}{' '}
-        tools. Paste a key if your client sends headers. If it does not, add the
-        pro endpoint and sign in: every tab reaches the same {TOOL_COUNT} tools.
+        Agent Access ({PRICE_MONTHLY}/mo, {TRIAL_DAYS}-day trial) opens the pro
+        tools. Paste a key if your client sends headers. If it cannot, add the pro
+        endpoint and sign in instead. Every tab reaches the same {TOOL_COUNT}{' '}
+        tools.
       </p>
 
       <Tabs defaultValue={CONNECT_CLIENTS[0].id} className="max-w-3xl mx-auto">
@@ -104,12 +104,6 @@ export function ConnectTabs() {
         </Button>
         <p className="text-xs text-muted-foreground">
           The Python SDK connects the same way. Steps are on the developer docs.
-        </p>
-        <p className="text-xs text-muted-foreground">
-          Before you pay: the whole pool under one fixed exit loses money.{' '}
-          <Link href="#honesty" className="text-primary hover:underline">
-            Read why.
-          </Link>
         </p>
       </div>
     </section>

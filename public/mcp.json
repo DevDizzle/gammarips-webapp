@@ -1,6 +1,6 @@
 {
   "name": "GammaRips",
-  "description": "The options-flow data layer for AI agents. 9 MCP tools over the GammaRips engine: the curated overnight unusual-options-activity pool (with a free preview), point-in-time feature vectors, opportunity surfaces (realized excursion distributions), a queryable outcome database, exit-rule scoring, the raw option price tape, regime context, and methodology playbooks. No pick endpoint, deliberately; your agent reasons to its own conclusion. Data on a paper-trading basis, educational only. Not investment advice.",
+  "description": "The options-flow data layer for AI agents. 9 MCP tools over the GammaRips engine: the overnight liquidity-ranked bullish pool (with a free preview), point-in-time feature vectors, opportunity surfaces (realized excursion distributions), a queryable outcome database, exit-rule scoring, the raw option price tape, regime context, and methodology playbooks. Liquidity decides pool membership, not unusual activity. No pick endpoint, deliberately; your agent reasons to its own conclusion. Data on a paper-trading basis, educational only. Not investment advice.",
   "url": "https://mcp.gammarips.com/mcp",
   "transport": "streamable-http",
   "auth": {
@@ -47,7 +47,7 @@
     "query_outcomes",
     "get_playbook"
   ],
-  "universe": "about 3,500 optionable US stocks, scanned nightly",
+  "universe": "about 3,500 optionable US stocks, ranked nightly by liquidity; the pool is the bullish slice of the top 100",
   "tags": [
     "options",
     "options-flow",

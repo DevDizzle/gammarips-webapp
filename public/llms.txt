@@ -2,28 +2,28 @@
 
 > The options-flow data layer for AI agents. Stop asking AI for stock picks. Give it real data.
 
-GammaRips is an options-flow intelligence engine and data vendor. Every weeknight it scans about 3,500 optionable US stocks for unusual institutional options activity and curates the firehose down to a small, high-signal bullish pool. Humans browse everything free at gammarips.com; AI agents connect over MCP (paid, $29/mo founding price, 30-day free trial) for the structured data layer: the curated pool, point-in-time feature vectors, opportunity surfaces (realized peak/drawdown excursions per historical setup), a queryable outcome database, exit-rule simulation, regime context, and methodology playbooks.
+GammaRips is an options-flow intelligence engine and data vendor. Every trading night it ranks about 3,500 optionable US stocks by liquidity, keeps the top 100, and prices one out-of-the-money call in each bullish name: a pool of roughly 40 to 50 contracts an agent can actually trade. Liquidity decides membership, not unusual activity. Humans browse everything free at gammarips.com; AI agents connect over MCP (paid, $29/mo founding price, 30-day free trial) for the structured data layer: the pool, point-in-time feature vectors, opportunity surfaces (realized peak/drawdown excursions per historical contract), a queryable outcome database, exit-rule simulation, regime context, and methodology playbooks.
 
-There is no pick endpoint, deliberately. GammaRips sells the surface a good trade comes from, not a trade. Each user's agent reasons over the same data to its own conclusion, including via the published bracket-tournament selection playbook, run against the user's own objective. Honest baseline, published openly: buying the whole pool mechanically under a fixed exit is negative. The value is curation + history + your agent's analysis.
+There is no pick endpoint, deliberately. GammaRips sells the data a decision comes from, not the decision. Each user's agent reasons over the same data to its own conclusion, including via the published bracket-tournament selection playbook, run against the user's own objective. Honest baselines, published openly: buying the whole pool mechanically under a fixed exit is negative, and two pre-registered studies (August 2026) could not distinguish the pool from matched random optionable contracts. What the liquidity rule measurably improves is executability (study window, 60 trading days ending 2026-08-14: no-fill at 10:00 ET fell from 40.5% to 6.1%). The value is a fillable pool + history + your agent's analysis.
 
 Data on a paper-trading basis, educational only. Not investment advice.
 
 ## Core pages
 
 - [How it works (V7.1 engine)](https://gammarips.com/how-it-works)
-- [Today's curated pool (free)](https://gammarips.com/signals)
+- [Today's pool (free)](https://gammarips.com/signals)
 - [Track Record: whole-pool outcomes](https://gammarips.com/scorecard)
 - [The Lab: published experiments](https://gammarips.com/lab)
 - [Pricing: free website / $29 Agent Access](https://gammarips.com/pricing)
 - [MCP docs: 9 tools](https://gammarips.com/developers)
 
-## Curation stack (V7.1)
+## The funnel (V7.1, liquidity-first since 2026-08-24)
 
-1. **Scanner**: overnight unusual-options-activity scan across about 3,500 optionable US stocks.
-2. **Enrichment**: `directional_uoa_usd > 500000`, bullish-only, delta edge-ranked to the strongest ~50 (`overnight_score >= 1` is a cosmetic floor; the dollar-flow gate does the work); thesis, technicals, news context, and a recommended contract attached per name.
+1. **Scanner**: nightly liquidity rank of about 3,500 optionable US stocks. A name needs 3M+ session share volume and 25+ listed strikes; the top 100 by combined chain dollar volume and share volume survive. Liquidity decides membership, not unusual activity; flow is context in the data, not a gate.
+2. **Pool**: bullish names only; one out-of-the-money call per name, chosen on contract liquidity; roughly 40 to 50 contracts (`overnight_score >= 1` is a cosmetic floor, and the cap of 50 does not bind, so no hidden ranking decides membership). Thesis, technicals, news context, and the selected contract attached per name.
 3. **Safety rails**: no earnings in the window; volatility regime check (VIX <= VIX3M).
 4. **Leakage discipline**: every field is point-in-time; nothing an agent reads contains information that wasn't knowable at the time it's dated.
-5. **Validation & tracking**: every pool candidate is tracked to its realized outcome and published as distributions (Track Record); a small paper-traded cohort additionally exercises the selection methodology daily under fixed rules, privately, with no stats marketed pre-30 trades.
+5. **Validation & tracking**: every pool candidate is tracked to its realized outcome and published as distributions (Track Record); a small paper-traded cohort additionally exercises the methodology daily under fixed rules, privately, with no stats marketed pre-30 trades.
 
 ## MCP server (Agent Access: API key or OAuth sign-in)
 
@@ -38,7 +38,7 @@ Data on a paper-trading basis, educational only. Not investment advice.
 
 ## Pricing
 
-- **Free**: the whole human-readable website. Today's curated pool, daily reports, per-ticker deep dives, scorecard, the Lab, methodology. Free forever, no account required.
+- **Free**: the whole human-readable website. Today's pool, daily reports, per-ticker deep dives, scorecard, the Lab, methodology. Free forever, no account required.
 - **Agent Access $29/mo**: full MCP access. $29/mo is the founding price, for the first 100 subscribers, and it stays at that rate as long as the subscription stays active. The price is $39/mo after that. Send your API key in an Authorization header (Claude Code, Codex, Cursor, Gemini CLI, and any MCP client that can send the header), or add `https://mcp.gammarips.com/pro` and sign in with OAuth, which is how a chat client that cannot send a header reaches the same tools. The free tier works in every MCP client with no credential at all. 30-day free trial. Cancel anytime.
 
 ## Disclaimers

@@ -3,7 +3,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { type OvernightSignal } from "@/lib/firebase-admin";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, ArrowRight, FileText } from "lucide-react";
 import Link from "next/link";
 import { Markdown } from "@/components/markdown";
@@ -66,7 +66,7 @@ export default function SignalClientPage({
               </Badge>
             </div>
             <p className="text-lg text-muted-foreground">
-              Overnight Institutional Flow Signal
+              Overnight Scan Record
               {signal.sector ? <span className="text-muted-foreground/70"> · {signal.sector}</span> : null}
             </p>
             <Link
@@ -78,9 +78,10 @@ export default function SignalClientPage({
             <p className="mt-3 text-sm text-muted-foreground max-w-xl">
               This is one row from the GammaRips nightly scan of about 3,500 optionable
               US stocks, tracked to its outcome. What membership means depends on the
-              date. From 2026-08-25, it is a liquidity rank: the 100 most liquid names,
-              bullish only. Before that date, the scan selected on unusual options
-              activity and included bearish names. The two sets are not one population.
+              scan date. For scan dates from 2026-08-24, it is a liquidity rank: the 100
+              most liquid names, bullish only. For earlier scan dates, the scan selected
+              on unusual options activity and included bearish names. The two sets are
+              not one population.
               Data, not a recommendation.{" "}
               <Link href="/how-it-works" className="text-primary hover:underline">
                 New here? See how the pool is built →
@@ -94,7 +95,7 @@ export default function SignalClientPage({
           <div className="flex gap-4 text-center">
             <div className="p-3 bg-card rounded-lg border">
               <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Score</div>
-              <div className={`text-2xl font-bold font-code ${signal.overnight_score >= 7 ? (isBullish ? 'text-green-500' : 'text-red-500') : 'text-foreground'}`}>
+              <div className="text-2xl font-bold font-code text-foreground">
                 {signal.overnight_score}/10
               </div>
               <p className="mt-1 max-w-[7.5rem] text-[10px] leading-snug text-muted-foreground">
@@ -256,6 +257,10 @@ export default function SignalClientPage({
             <Card className="relative overflow-hidden">
               <CardHeader>
                 <CardTitle>Engine-Selected Contract</CardTitle>
+                <CardDescription>
+                  The contract the engine priced for this row. Descriptive,
+                  not a recommendation.
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between py-2 border-b">
@@ -269,14 +274,6 @@ export default function SignalClientPage({
                 <div className="flex justify-between py-2 border-b">
                   <span className="text-muted-foreground">Expiration</span>
                   <span className="font-mono">{signal.recommended_expiration || "—"}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b">
-                  <span className="text-muted-foreground">Contract Score</span>
-                  <span className="font-mono">{signal.contract_score ? `${signal.contract_score}/10` : "—"}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b">
-                  <span className="text-muted-foreground">Risk/Reward</span>
-                  <span className="font-mono">{signal.risk_reward_ratio ? `${signal.risk_reward_ratio.toFixed(1)}:1` : "—"}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b">
                   <span className="text-muted-foreground">Delta</span>

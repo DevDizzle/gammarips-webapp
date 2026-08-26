@@ -97,7 +97,7 @@ const bracketRules = [
 const dontDoList = [
   {
     label: 'No black-box scoring model.',
-    detail: 'The selection tournament is an LLM, but it has no learned weights, no rubric, and no memory of past trades, just a simple prompt and a randomized bracket, run three times for consensus. Every candidate is leakage-checked before the model ever sees it.',
+    detail: 'The selection tournament is an LLM, but it has no learned weights, no rubric, and no memory of past trades, just a simple prompt and a randomized bracket, run three times for consensus. A deterministic pre-rank chooses which 12 candidates enter it. Every candidate is leakage-checked before the model ever sees it.',
   },
   {
     label: 'No model in the execution path.',
@@ -184,11 +184,12 @@ export default function MethodologyPage() {
             <h2 className="text-2xl font-bold">The liquidity rule and two safety rails</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            Membership is a <strong className="text-foreground">liquidity rule, not a
-            ranking</strong>. Every name in the top-100 liquid universe that reads bullish enters
-            the pool. The cap of 50 does not currently bind, so no hidden ranking decides who is
-            in. The pool runs roughly 40 to 50 names and it floats with the market, so a down day
-            gives a smaller pool. The old moneyness, open-interest, volume, DTE, and V/OI filters
+            Membership starts as a <strong className="text-foreground">liquidity
+            rule</strong>. Every name in the top-100 liquid universe that reads bullish is
+            eligible, and most days more than 50 qualify. A deterministic point-in-time rank
+            (delta band, 60-day momentum, a liquidity demotion) cuts to 50, using no outcome
+            data and no learned weights. The pool runs roughly 40 to 50 names and it floats
+            with the market, so a down day gives a smaller pool. The old moneyness, open-interest, volume, DTE, and V/OI filters
             were removed on 2026-06-04. They choked real winners on stale scan-time data. Bid/ask
             spread is no longer shown or gated, because this Polygon data tier serves no live
             options quotes.
@@ -233,10 +234,11 @@ export default function MethodologyPage() {
             <li className="flex gap-3">
               <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Three independent brackets.</strong> Each one shuffles the bullish pool
-                into a fresh random order, then reduces it in batches of ≤10: an LLM (Gemini)
-                reads each batch and advances the top 2, round after round, until one winner
-                remains (about 45 → 10 → 1 per bracket).
+                <strong>Three independent brackets.</strong> A deterministic point-in-time rank
+                first narrows the pool to 12 (delta band, reward/risk, ATR-normalized move).
+                Each bracket shuffles those 12 into a fresh random order, then reduces them in
+                batches of ≤10: an LLM (Gemini) reads each batch and advances the top 2, round
+                after round, until one winner remains.
               </span>
             </li>
             <li className="flex gap-3">

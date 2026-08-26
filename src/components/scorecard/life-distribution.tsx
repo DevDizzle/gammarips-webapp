@@ -14,8 +14,14 @@ const pct = (f: number | null | undefined, signed = true) =>
 const share = (n: number | undefined, total: number | undefined) =>
   !n || !total ? 0 : n / total;
 
-/** "6 out of 10" phrasing for a 0-1 share. */
-const outOf10 = (s: number) => `${Math.min(Math.max(Math.round(s * 10), 1), 9)} out of 10`;
+/** "6 out of 10" phrasing for a 0-1 share. Extremes say so instead of
+ *  rounding a performance-adjacent number toward the flattering side. */
+const outOf10 = (s: number) => {
+  const n = Math.round(s * 10);
+  if (n < 1) return 'fewer than 1 out of 10';
+  if (n > 9) return 'more than 9 out of 10';
+  return `${n} out of 10`;
+};
 
 /** "1 out of 6" phrasing for a small 0-1 share. */
 const oneOutOf = (s: number) => (s > 0 ? `1 out of ${Math.max(Math.round(1 / s), 2)}` : '—');
@@ -305,8 +311,9 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
             nightly labeler
             {otherExcluded > 0 ? `, and ${otherExcluded.toLocaleString()} whose labeling failed` : ''}.
             All counted, none hidden. Cohort break: contracts surfaced before
-            2026-08-25 came from the earlier unusual-activity funnel, which the
-            liquid-universe funnel replaced. The two are not one population, and
+            the morning of 2026-08-25 (scan dates before 2026-08-24) came from
+            the earlier unusual-activity funnel, which the liquid-universe
+            funnel replaced. The two are not one population, and
             this record is still dominated by the older pool, because a contract
             only joins it after it expires. Separately, a small paper-traded
             cohort exercises the engine daily under fixed mechanical rules as a

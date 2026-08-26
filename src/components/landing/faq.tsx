@@ -29,7 +29,7 @@ export const faqs = [
   },
   {
     question: "How is the pool curated?",
-    answer: "Every trading night the engine ranks about 3,500 optionable US names by liquidity: the name must have traded 3M+ shares that session and carry a chain with 25 or more listed strikes, then the top 100 by combined chain dollar volume and share volume survive. We keep the bullish names and price one out-of-the-money call in each, chosen on contract liquidity. That is a pool of roughly 40 to 50 contracts, each carrying its flow data, technicals, news context and contract detail. Two safety checks sit on top: no names with earnings in the window, and a market-stress check (VIX at or below VIX3M). Every candidate is checked so nothing your agent sees contains information that wasn't knowable at scan time. Note what this is not: we do not claim these are the best contracts, and we tested that claim. See the next question."
+    answer: "Every trading night the engine ranks about 3,500 optionable US names by liquidity: the name must have traded 3M+ shares that session and carry a chain with 25 or more listed strikes, then the top 100 by combined chain dollar volume and share volume survive. We keep the bullish names and price one out-of-the-money call in each, chosen on contract liquidity. That is a pool of roughly 40 to 50 contracts, each carrying its flow data, technicals, news context and contract detail. Two safety rails run before our paper cohort's entry: an earnings exclusion and a market-stress check (VIX at or below VIX3M). They screen the cohort's entry, not pool membership, so the pool itself can carry earnings-window names; check any candidate you take. Every field is point-in-time, so nothing your agent sees contains information that wasn't knowable at scan time. Note what this is not: we do not claim these are the best contracts, and we tested that claim. See the next question."
   },
   {
     question: "Is the pool better than picking at random?",
@@ -53,7 +53,7 @@ export const faqs = [
   },
   {
     question: "What happened to the WhatsApp pick subscription?",
-    answer: `Retired. We used to sell a daily pushed pick, and we ended it deliberately. A single shared pick concentrates everyone into one contract, and our research kept showing the edge lives in how a setup is traded, not in the name itself. Agent Access buys something better-aligned: full MCP data access, so your agent works the whole pool your way. If you had an active subscription, email evan@gammarips.com and we'll make it right.`
+    answer: `Retired. We used to sell a daily pushed pick, and we ended it deliberately. A single shared pick concentrates everyone into one contract, and our own published data keeps showing that buying one shared name under one fixed exit loses money. What varies is how each trader exits, and the exit belongs to the trader. Agent Access buys something better-aligned: full MCP data access, so your agent works the whole pool your way. If you had an active subscription, email evan@gammarips.com and we'll make it right.`
   },
   {
     question: "What happens if I cancel?",

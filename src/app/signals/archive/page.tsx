@@ -41,10 +41,11 @@ export default async function SignalArchivePage() {
           <h1 className="text-3xl font-bold font-headline mb-2">Signal Archive</h1>
           <p className="text-muted-foreground leading-relaxed">
             Every ticker that has appeared in a GammaRips overnight scan, with the date of its most
-            recent appearance. What an appearance means depends on the date. From 2026-08-25,
-            membership is a liquidity rank: the 100 most liquid optionable US names, bullish only.
-            Before that date, the scan selected on unusual options activity and included bearish
-            names. The two sets are not one population. The full rule is on the{" "}
+            recent appearance. What an appearance means depends on the scan date. For scan
+            dates from 2026-08-24, membership comes from a liquidity rank: the 100 most liquid
+            optionable US names, bullish only. For earlier scan dates, the scan selected on
+            unusual options activity and included bearish names. The two sets are not one
+            population. The full rule is on the{" "}
             <Link href="/methodology" className="text-primary hover:underline">methodology page</Link>.
             This is a historical record, not a recommendation. Each link opens the ticker&apos;s most
             recent options-flow breakdown.

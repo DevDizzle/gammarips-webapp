@@ -64,7 +64,7 @@ export default function HowItWorksPage() {
         <div className="mt-6 rounded-lg border bg-card/50 p-5 space-y-3">
           <h3 className="font-bold font-headline text-lg">Two things worth saying out loud</h3>
           <p className="text-sm text-muted-foreground">
-            <strong className="text-foreground">The cap of 50 does not bind.</strong> There is a ceiling of 50 in the code, and on current pool sizes it never gets reached. So the pool is simply every bullish name in the top-100 liquid universe. No hidden ranking decides who makes it.
+            <strong className="text-foreground">A published rule cuts to 50 when more qualify.</strong> Every bullish name in the top-100 liquid universe is eligible, and most days more than 50 qualify. A deterministic point-in-time rank (delta band, 60-day momentum, a liquidity demotion) keeps 50. It uses no outcome data and no learned weights, and this page is where it is published.
           </p>
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">We rank the most liquid names, then choose a contract inside each.</strong> We do not rank the most liquid contracts in the market. That list would be SPY and QQQ every single day.
@@ -77,14 +77,14 @@ export default function HowItWorksPage() {
       <section className="space-y-4">
         <h2 className="text-3xl font-bold font-headline">The two safety rails</h2>
         <p className="text-muted-foreground leading-relaxed">
-          Two rails run over the pool in the morning. They remove risk, they do not hunt for winners:
+          Two rails run each morning before the paper cohort&apos;s entry. They remove risk, they do not hunt for winners. And they screen the cohort&apos;s entry, not the published pool:
         </p>
         <ul className="space-y-2 text-muted-foreground list-disc list-inside ml-4 leading-relaxed">
-          <li><strong className="text-foreground">Earnings exclusion.</strong> Any ticker reporting earnings during the hold is dropped. Holding options through an earnings report is a documented way to lose money.</li>
-          <li><strong className="text-foreground">VIX &le; VIX3M.</strong> Short-term fear must sit at or below long-term fear. If VIX runs above VIX3M, the rail fails closed and the engine stands down for the day.</li>
+          <li><strong className="text-foreground">Earnings exclusion.</strong> The cohort drops any ticker reporting earnings during its hold. Holding options through an earnings report is a documented way to lose money. The published pool can carry earnings-window names, so run the same check on any candidate you take.</li>
+          <li><strong className="text-foreground">VIX &le; VIX3M.</strong> Short-term fear must sit at or below long-term fear. If VIX runs above VIX3M, the rail fails closed and the cohort stands down for the day.</li>
         </ul>
         <p className="text-muted-foreground leading-relaxed">
-          Some days the rails clear the board, or the pool comes up empty. The engine stands down. No forced trade, no fallback. Skipping is correct behavior.
+          Some days the rails clear the board, or the pool comes up empty. The cohort stands down. No forced trade. Skipping is correct behavior.
         </p>
       </section>
 
@@ -174,7 +174,7 @@ export default function HowItWorksPage() {
       <section className="space-y-4">
         <h2 className="text-3xl font-bold font-headline">What we do not claim</h2>
         <p className="text-muted-foreground leading-relaxed">
-          <strong className="text-foreground">No selection edge.</strong> Two pre-registered studies on 2026-08-22 tested the pool against matched random optionable contracts on the same tape. The pool measured indistinguishable from random. So this is not a list of better contracts, and we will not call it one.
+          <strong className="text-foreground">No selection edge.</strong> Two pre-registered studies on 2026-08-22 tested this. One measured the pool against matched random optionable contracts on the same tape: indistinguishable. The other looked for an unusual-activity signal inside the liquid universe: none found. So this is not a list of better contracts, and we will not call it one.
         </p>
         <p className="text-muted-foreground leading-relaxed">
           <strong className="text-foreground">Buying the whole pool under a fixed exit loses money.</strong> The whole-pool composite is negative, we measured it, and we publish it on the <Link href="/scorecard" className="text-primary hover:underline">Track Record</Link>. That single fact is why there is no pick endpoint anywhere in this product. A pool average is not a strategy. The winners are in the pool, the excursion data shows they were reachable, and finding them is analysis. That work belongs to your agent and to you.

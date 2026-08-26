@@ -61,15 +61,25 @@ conditions. No rocket emojis, no "moon," no urgency theater.
   `src/lib/constants.ts`, which is the single source of truth and already propagates to
   all 28 usages. The static `public/` agent-discovery files cannot import it and are
   synced by hand; upstream truth is `gammarips-mcp/src/server.py` `_ALL_TOOLS`.
-- Engine mechanics: nightly scan of about 3,500 optionable US stocks (say "about 3,500"; the universe is
-  refreshed weekly since 2026-08-05; it was 5,230 nominal before, of which ~1,700
-  had no listed options; never write 5,230 again) → enrichment (UOA > $500K,
-  bullish-only, edge-ranked to ~50; overnight_score ≥ 1 is a cosmetic floor —
-  the ≥ 4 floor never ran in production, so never claim it; see gammarips-engine
-  `docs/DECISIONS/2026-08-20-score-floor-accepted-print-floor-25-shipped.md`)
-  → two safety rails (earnings,
-  VIX ≤ VIX3M). The paper cohort validates selection under the V7.1 GIGO exit
-  (10:00 entry, +40/−30, flat 15:45 ET).
+- Engine mechanics (LIQUID-UNIVERSE funnel, live 2026-08-24, public cohort starts
+  2026-08-25): nightly scan of about 3,500 optionable US stocks (say "about 3,500";
+  the universe is refreshed weekly since 2026-08-05; it was 5,230 nominal before,
+  of which ~1,700 had no listed options; never write 5,230 again) → keep names with
+  3M+ session share volume and 25+ listed strikes → top 100 by combined liquidity
+  rank (z of chain dollar volume + z of share volume) → bullish names only → one
+  OTM call per name, chosen on contract liquidity → pool of roughly 40-50 (the
+  cap of 50 does not bind; overnight_score ≥ 1 is a cosmetic floor — the ≥ 4 floor
+  never ran in production, so never claim it) → two safety rails (earnings,
+  VIX ≤ VIX3M). The $500K UOA floor is GONE (dropped 2026-08-24). Never describe
+  the scan as unusual-activity-driven: flow gives context, liquidity decides
+  membership. The change shipped on executability (study, 60 trading days ending
+  2026-08-14: no-fill at 10:00 ET 40.5% → 6.1%; study numbers, not live results).
+  NEVER frame it as better picks, more edge, or higher-probability setups.
+  Selection research CLOSED 2026-08-22: the pool measured indistinguishable from
+  matched random; no selection-edge claim, anywhere. The paper cohort validates
+  under the V7.1 GIGO exit (10:00 entry, +40/−30, flat 15:45 ET). Spec:
+  gammarips-engine `docs/GTM-COPY-REWRITE-BRIEF.md` +
+  `docs/DECISIONS/2026-08-24-liquid-universe-funnel.md`.
 - Pricing: Free (whole webapp) / Agent Access $39/mo (MCP), 7-day trial, Stripe.
 
 ## Repo landmines

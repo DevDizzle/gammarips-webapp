@@ -126,7 +126,7 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
     return (
       <Card className="bg-card/50">
         <CardContent className="p-8 text-center text-sm text-muted-foreground">
-          The record is filling in — every contract joins it the evening after
+          The record is filling in. Every contract joins it the evening after
           its option expires. Check back shortly.
         </CardContent>
       </Card>
@@ -159,14 +159,15 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
 
   return (
     <div className="space-y-16">
-      {/* ---- Story 1: the win is real ---- */}
+      {/* ---- Story 1: most contracts had a moment ---- */}
       <section className="space-y-5">
         <h2 className="text-2xl md:text-3xl font-bold font-headline text-center">
-          The win is real.
+          Most of these contracts had a moment.
         </h2>
         <p className="text-muted-foreground text-center max-w-xl mx-auto">
-          Between the morning we surfaced them and the day they expired, most of
-          these contracts had a real moment:
+          This is the full-life window: the 10:00 ET fill on the morning we
+          surfaced the contract, through to expiration, with no exit rule
+          applied.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
           <BigStat value={outOf10(touched40)} caption="were up +40% or better at some point" />
@@ -174,7 +175,16 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
           <BigStat value={outOf10(touched100)} caption="doubled at some point" />
         </div>
         <p className="text-xs font-mono text-muted-foreground text-center">
-          measured on all {nPeak.toLocaleString()} contracts that have expired so far · updated daily
+          full-life window, no exit rule · all {nPeak.toLocaleString()} contracts
+          that have expired so far, {life.first_scan_date ?? '—'} to{' '}
+          {life.last_scan_date ?? '—'} · updated daily
+        </p>
+        <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
+          Read that as a property of liquid optionable calls, not as proof that
+          our selection creates it. Two pre-registered studies in August 2026
+          measured the pool against matched random contracts on the same tape
+          and could not tell them apart. We publish the studies, not a selection
+          claim.
         </p>
       </section>
 
@@ -182,11 +192,11 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
       {nPeakDay > 0 && (
         <section className="space-y-5">
           <h2 className="text-2xl md:text-3xl font-bold font-headline text-center">
-            The win doesn&apos;t wait forever.
+            The best moment usually comes early.
           </h2>
           <p className="text-muted-foreground text-center max-w-xl mx-auto">
             When did each contract hit its best price, counting from the morning
-            we surfaced it?
+            we surfaced it? Day 1 is that morning.
           </p>
           <div className="max-w-2xl mx-auto space-y-3">
             <TimingBar label="In the first 3 days" s={early} />
@@ -194,8 +204,15 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
             <TimingBar label="Later than that" s={late} />
           </div>
           <p className="text-muted-foreground text-center max-w-xl mx-auto">
-            Most best moments come early — but {oneOutOf(late)} contracts
-            doesn&apos;t hit its best price until more than two weeks in.
+            Most best moments come early. Even so, about {oneOutOf(late)}{' '}
+            contracts does not hit its best price until more than two weeks in.
+          </p>
+          <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
+            This chart is the full-life window. Our own paper cohort exits the
+            same day and is flat by 15:45 ET, so it never reaches the later
+            peaks shown here. The same contract can read strong on this chart
+            and flat under a same-day exit. Match the window to the hold you
+            actually plan to take.
           </p>
         </section>
       )}
@@ -208,33 +225,43 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
         <p className="text-muted-foreground">
           Held all the way to the end, about{' '}
           <strong className="text-foreground">{outOf10(wipedOut).replace(' out of 10', ' out of every 10')}</strong>{' '}
-          of these contracts finished nearly worthless — down 90% or more. The
-          ride is violent too: the typical contract was at some point down more
-          than 90% from where it started, even when it also had a big up moment.
+          of these contracts finished nearly worthless, down 90% or more. The
+          ride is violent too. The typical contract&apos;s worst moment along
+          the way was {pct(life.trough_median)} from the fill, even when it also
+          had a big up moment.
         </p>
         <p className="text-muted-foreground">
-          We even tested buying every single contract with one fixed selling
-          rule.{' '}
+          We also ran the naive version. Buy every single contract, then exit on
+          one fixed same-day rule: in at the 10:00 ET mark, take profit at +40%,
+          stop at -30%, close anything still open at 15:45 ET.{' '}
           <strong className="text-foreground">
             It loses money
             {outcomes?.bracket_avg_return != null && outcomes.bracket_avg_return < 0
               ? ` (${Math.round(outcomes.bracket_avg_return * 1000) / 10}% per contract on average)`
               : ''}
           </strong>
-          . We publish that on purpose — it&apos;s why we sell data, not picks.
+          . We publish that on purpose. It is why we sell data and not picks.
         </p>
         <p className="text-foreground font-semibold">
-          The win is real, and it&apos;s temporary. Finding the contracts is our
-          job. Selling at the right time is yours — or your agent&apos;s.
+          The moves are real and they are temporary. Building a pool you can
+          actually trade is our job. Entry and exit are yours, or your
+          agent&apos;s.
         </p>
       </section>
 
       {/* ---- The full data, folded away ---- */}
       <details className="max-w-3xl mx-auto border rounded-lg bg-card/30 px-5 py-4">
         <summary className="cursor-pointer text-sm font-semibold text-muted-foreground hover:text-foreground">
-          See the full data — charts and tables, for people and agents who want the detail
+          See the full data: charts and tables for people and agents who want the detail
         </summary>
         <div className="space-y-8 pt-6">
+          <p className="text-xs text-muted-foreground">
+            Every figure below sits in the full-life window: the 10:00 ET
+            surfacing fill through to expiration, with no exit rule applied. It
+            is a different window from the same-day bracket above and from the
+            3-day opportunity surface served over MCP. Do not read one against
+            another.
+          </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <BigStat value={pct(life.peak_median)} caption="median best moment (peak premium return)" />
             <BigStat value={pct(life.peak_p90)} caption="the top 10% of contracts peaked here or higher" />
@@ -245,8 +272,8 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
           <div>
             <h3 className="font-bold font-headline mb-1">Best moment before expiration</h3>
             <p className="text-xs text-muted-foreground mb-6">
-              Each contract&apos;s best price after surfacing, vs the 10:00 ET
-              surfacing price. Share of all {nPeak.toLocaleString()} tracked contracts per bucket.
+              Each contract&apos;s best price after surfacing, against the 10:00
+              ET surfacing price. Share of all {nPeak.toLocaleString()} tracked contracts per bucket.
             </p>
             <Histogram buckets={peakBuckets} total={nPeak} />
           </div>
@@ -255,8 +282,8 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
             <div>
               <h3 className="font-bold font-headline mb-1">Value if held to expiration</h3>
               <p className="text-xs text-muted-foreground mb-6">
-                The same pool, never sold — settlement value vs the surfacing
-                price. Blue = loss side, gold = gain side. N ={' '}
+                The same pool, never sold. Settlement value against the
+                surfacing price. Blue = loss side, gold = gain side. N ={' '}
                 {nExpiry.toLocaleString()}.
               </p>
               <Histogram buckets={expiryBuckets} total={nExpiry} negativeCount={lossBucketCount} />
@@ -269,18 +296,21 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
           </div>
 
           <p className="text-[11px] text-muted-foreground leading-relaxed">
-            Peak figures are realized per-contract extremes — profit potential,
-            not a return anyone earned; nobody sells at the exact top.
-            Distributions cover {life.first_scan_date ?? '—'} to{' '}
+            Peak figures are realized per-contract extremes. They are profit
+            potential, not a return anyone earned. Nobody sells at the exact
+            top. Distributions cover {life.first_scan_date ?? '—'} to{' '}
             {life.last_scan_date ?? '—'} and exclude {noEntry.toLocaleString()}{' '}
             contracts too illiquid to price cleanly at entry,{' '}
             {notYetExpired.toLocaleString()} not yet expired or awaiting the
             nightly labeler
-            {otherExcluded > 0 ? `, and ${otherExcluded.toLocaleString()} whose labeling failed` : ''}{' '}
-            — all counted, none hidden. Separately, a small paper-traded cohort
-            exercises the engine&apos;s selection daily under fixed mechanical
-            rules as a measurement instrument; we make no marketing claims from
-            it.
+            {otherExcluded > 0 ? `, and ${otherExcluded.toLocaleString()} whose labeling failed` : ''}.
+            All counted, none hidden. Cohort break: contracts surfaced before
+            2026-08-25 came from the earlier unusual-activity funnel, which the
+            liquid-universe funnel replaced. The two are not one population, and
+            this record is still dominated by the older pool, because a contract
+            only joins it after it expires. Separately, a small paper-traded
+            cohort exercises the engine daily under fixed mechanical rules as a
+            measurement instrument. We make no marketing claims from it.
           </p>
         </div>
       </details>

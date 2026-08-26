@@ -7,15 +7,15 @@ import { ArrowRight, Database, Filter, Calculator, GitBranch, ShieldCheck, Code 
 import { OG_IMAGE } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'GammaRips Methodology — Where every number comes from',
+  title: 'GammaRips Methodology: Where every number comes from',
   description:
-    "The data sources, enrichment bar, selection tournament, and bracket math behind the pool. Polygon options, FRED VIX. Paper-trading only.",
+    "How the pool is built: a nightly liquidity rank of about 3,500 optionable US names, cut to roughly 40-50 bullish calls. Polygon options, FRED VIX. Paper-trading, educational only. Not investment advice.",
   alternates: { canonical: 'https://gammarips.com/methodology' },
   openGraph: {
     images: [OG_IMAGE],
-    title: 'GammaRips Methodology — Where every number comes from',
+    title: 'GammaRips Methodology: Where every number comes from',
     description:
-      'The enrichment bar, the bracket tournament, and the validation-cohort math behind the GammaRips pool. Auditable and fully logged.',
+      'The liquidity rule, the two safety rails, and the same-day paper bracket behind the GammaRips pool. Auditable and fully logged.',
     url: 'https://gammarips.com/methodology',
   },
 };
@@ -28,7 +28,7 @@ const dataSources = [
   },
   {
     name: 'FRED (Federal Reserve Economic Data)',
-    purpose: 'VIX and VIX3M daily close — used for the term-structure regime gate.',
+    purpose: 'VIX and VIX3M daily close, used for the term-structure regime gate.',
     cadence: 'Pulled at signal-decision time (~09:50 ET, just before the 10:00 entry) by signal-notifier.',
   },
   {
@@ -52,7 +52,7 @@ const filters = [
   {
     name: 'BULLISH-only, one out-of-the-money call per name',
     where: 'enrichment-trigger',
-    why: 'A hard bullish gate (since 2026-06-11): only call setups enter the pool. One out-of-the-money call is priced per surviving name, chosen on contract liquidity. The cap of 50 does not currently bind, so the pool is simply every bullish name in the top-100 liquid universe: there is no hidden ranking deciding membership. Note that we surface the most liquid NAMES and then choose a contract inside each, not the most liquid contracts in the market, which would be the same index products every day.',
+    why: 'A hard bullish gate (since 2026-06-11): only call setups enter the pool. One out-of-the-money call is priced per surviving name, chosen on contract liquidity. The cap of 50 does not currently bind, so the pool is simply every bullish name in the top-100 liquid universe: there is no hidden ranking deciding membership. Note that we surface the most liquid NAMES and then choose a contract inside each, not the most liquid contracts in the market, which would be the same index products every day. Why bullish only: on a 3-day +80/−60 bracket replay of the pre-2026-08-25 pool (N=1,375 fills), the bearish arm measured worse than the bullish one. That is the reason the gate exists, not a signal the funnel acts on. The pool no longer carries a bearish arm, so the comparison cannot be re-run inside it.',
   },
   {
     name: 'no earnings during the same-day hold',
@@ -75,29 +75,29 @@ const bracketRules = [
   {
     label: 'Stop',
     value: '−30% on option premium',
-    why: 'Stop-limit on the contract. The intraday V7 envelope tightens the stop to −30% — on a same-day hold there is no overnight gamma whipsaw to ride out.',
+    why: 'Stop-limit on the contract. The intraday V7 envelope tightens the stop to −30%. On a same-day hold there is no overnight gamma whipsaw to ride out.',
   },
   {
     label: 'Target',
     value: '+40% on option premium',
-    why: 'Limit sell. Asymmetric vs. the stop — 4:3 reward/risk in option-premium space. The bracket is a measurement instrument for the validation cohort, not a profitability claim: our own published research shows a fixed bracket applied blindly across the whole pool loses.',
+    why: 'Limit sell. Asymmetric against the stop, 4:3 reward/risk in option-premium space. The bracket is a measurement instrument for the paper cohort, not a profitability claim. Our own published research, measured on the pre-2026-08-25 pool, shows a fixed bracket applied blindly across the whole pool loses.',
   },
   {
     label: 'Hold',
     value: 'Same trading day',
-    why: 'V7 “GIGO” — Get In, Get Out. Enter at the open, take profit or stop intraday, and flatten before the close. Nothing carries overnight.',
+    why: 'V7 “GIGO”: Get In, Get Out. Enter at the open, take profit or stop intraday, and flatten before the close. Nothing carries overnight.',
   },
   {
     label: 'Exit',
     value: '15:45 ET, same day',
-    why: 'If neither stop nor target filled, market sell at 15:45 the same day — before the close-print volatility, after most of the day\'s move is in.',
+    why: 'If neither stop nor target filled, market sell at 15:45 the same day, before the close-print volatility and after most of the day\'s move is in.',
   },
 ];
 
 const dontDoList = [
   {
     label: 'No black-box scoring model.',
-    detail: 'The selection tournament is an LLM, but it has no learned weights, no rubric, and no memory of past trades — just a simple prompt and a randomized bracket, run three times for consensus. Every candidate is leakage-checked before the model ever sees it.',
+    detail: 'The selection tournament is an LLM, but it has no learned weights, no rubric, and no memory of past trades, just a simple prompt and a randomized bracket, run three times for consensus. Every candidate is leakage-checked before the model ever sees it.',
   },
   {
     label: 'No model in the execution path.',
@@ -105,7 +105,7 @@ const dontDoList = [
   },
   {
     label: 'No manual override of the engine.',
-    detail: 'Whatever wins the tournament is the pick. No "I\'ve got a feeling" veto, no last-minute swap.',
+    detail: 'Whatever wins the tournament is what the cohort tracks. No "I\'ve got a feeling" veto, no last-minute swap.',
   },
   {
     label: 'No live execution.',
@@ -113,16 +113,16 @@ const dontDoList = [
   },
   {
     label: 'No track-record marketing pre-30-trades.',
-    detail: 'The raw ledger and preliminary aggregates are public from day one, always with sample size attached — but until a cohort has 30 closed paper trades we make no marketing claims from them: no advertised win rate, no Sharpe, no expectancy claims.',
+    detail: 'The raw ledger and preliminary aggregates are public from day one, always with sample size attached. But until a cohort has 30 closed paper trades we make no marketing claims from them: no advertised win rate, no Sharpe, no expectancy claims.',
   },
 ];
 
 const methodologySchema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  headline: 'GammaRips Methodology — Where every number comes from',
+  headline: 'GammaRips Methodology: Where every number comes from',
   description:
-    'The data sources, the enrichment bar, the selection tournament, and the bracket math behind the GammaRips pool. Auditable and fully logged.',
+    'The data sources, the liquidity rule, the two safety rails, and the same-day paper bracket behind the GammaRips pool. Auditable and fully logged.',
   url: 'https://gammarips.com/methodology',
   publisher: {
     '@type': 'Organization',
@@ -145,9 +145,10 @@ export default function MethodologyPage() {
             Where every number in our engine comes from.
           </h1>
           <p className="text-lg text-muted-foreground">
-            Every threshold, every data source, every step — documented and logged. Selection runs an
-            LLM bracket tournament; execution is fixed code. Nothing in the selection path is human-curated,
-            and every candidate is leakage-checked. This page is the audit trail.
+            Every threshold, every data source, every step is documented and logged. Pool
+            membership is a liquidity rule, not a ranking. Execution is fixed code. Nothing in
+            the path is human-curated, and every candidate is leakage-checked. This page is the
+            audit trail.
           </p>
         </header>
 
@@ -180,17 +181,17 @@ export default function MethodologyPage() {
         <section className="mb-16">
           <div className="flex items-center gap-2 mb-6">
             <Filter className="h-5 w-5 text-primary" />
-            <h2 className="text-2xl font-bold">The enrichment bar and two safety rails</h2>
+            <h2 className="text-2xl font-bold">The liquidity rule and two safety rails</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            In V7, selection remains the <strong className="text-foreground">BULLISH-only gate plus a
-            delta edge-rank to the top ~50 bullish setups</strong>. The old moneyness, open-interest,
-            volume, DTE, and V/OI filters were removed on 2026-06-04 — they choked real winners on
-            stale scan-time data. The ~50 bullish setups that clear the enrichment bar below and the
-            two safety rails go into the tournament; the engine does its discriminating there, not
-            with a filter cascade. (Bid/ask spread is no longer shown or
-            gated — this Polygon data tier serves no live options quotes, so there is no real spread
-            to display.)
+            Membership is a <strong className="text-foreground">liquidity rule, not a
+            ranking</strong>. Every name in the top-100 liquid universe that reads bullish enters
+            the pool. The cap of 50 does not currently bind, so no hidden ranking decides who is
+            in. The pool runs roughly 40 to 50 names and it floats with the market, so a down day
+            gives a smaller pool. The old moneyness, open-interest, volume, DTE, and V/OI filters
+            were removed on 2026-06-04. They choked real winners on stale scan-time data. Bid/ask
+            spread is no longer shown or gated, because this Polygon data tier serves no live
+            options quotes.
           </p>
           <div className="space-y-4">
             {filters.map((filter, i) => (
@@ -220,18 +221,22 @@ export default function MethodologyPage() {
             <h2 className="text-2xl font-bold">The selection tournament</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            Once the enriched pool clears the two safety rails — on a busy day that&apos;s around 50
-            bullish candidates — one pick is chosen by a <strong className="text-foreground">randomized
-            bracket tournament</strong>. Not a scoring formula, not a human.
+            The pool that clears the two safety rails runs roughly 40 to 50 bullish candidates.
+            The paper cohort tracks one of them per day, chosen by a{' '}
+            <strong className="text-foreground">randomized bracket tournament</strong>. Not a
+            scoring formula, not a human. That result is not published and there is no pick
+            endpoint. Two pre-registered studies on 2026-08-22 measured the pool as
+            indistinguishable from matched random contracts, so read the tournament as how the
+            cohort chooses one position to track, not as evidence of a selection edge.
           </p>
           <ul className="space-y-3 text-sm">
             <li className="flex gap-3">
               <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Three independent brackets.</strong> Each one shuffles the ~50-name bullish
-                pool into a fresh random order, then reduces it in batches of ≤10: an LLM (Gemini)
-                reads each batch and advances the top 2, round after round, until one winner remains
-                (≈50 → 10 → 1 per bracket).
+                <strong>Three independent brackets.</strong> Each one shuffles the bullish pool
+                into a fresh random order, then reduces it in batches of ≤10: an LLM (Gemini)
+                reads each batch and advances the top 2, round after round, until one winner
+                remains (about 45 → 10 → 1 per bracket).
               </span>
             </li>
             <li className="flex gap-3">
@@ -244,26 +249,27 @@ export default function MethodologyPage() {
             <li className="flex gap-3">
               <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Dead-simple prompt.</strong> Each batch call gets one instruction — make money
-                buying a single option and sell it for a profit within one day — plus the daily
-                report and a per-contract JSON. No memory, no rubric, no composite weights.
+                <strong>Dead-simple prompt.</strong> Each batch call gets one instruction, quoted
+                verbatim from the prompt: make money buying a single option and sell it for a
+                profit within one day. It also gets the daily report and a per-contract JSON. No
+                memory, no rubric, no composite weights.
               </span>
             </li>
             <li className="flex gap-3">
               <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Fail-closed.</strong> Any error — a timeout, a pick outside the eligible set,
-                an all-leakage day — produces no email and a no-trade day. There is no fallback path;
-                tournament uptime is the only SLO.
+                <strong>Fail-closed.</strong> Any error (a timeout, a pick outside the eligible set,
+                an all-leakage day) produces no email and a no-trade day.
               </span>
             </li>
             <li className="flex gap-3">
               <Calculator className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Live liquidity check.</strong> At selection time (~09:50 ET, just before the
-                10:00 paper entry), the engine re-checks each candidate&apos;s live open interest and
-                drops any contract too illiquid to actually trade — the validation cohort only
-                simulates contracts a real trader could realistically enter and exit at fair prices.
+                <strong>Live liquidity check.</strong> At selection time (~09:50 ET, just before
+                the 10:00 paper entry), the engine re-checks each candidate&apos;s live open
+                interest and recent print activity, then drops any contract that reads too thin.
+                It fails closed, and a dropped candidate never comes back. The cohort should not
+                simulate a fill nobody could have gotten.
               </span>
             </li>
           </ul>
@@ -281,9 +287,11 @@ export default function MethodologyPage() {
             <h2 className="text-2xl font-bold">The bracket math</h2>
           </div>
           <p className="text-muted-foreground mb-6">
-            The validation cohort's bracket rules are fixed within a cohort and versioned across eras —
-            the live V7 configuration is −30/+40/same-day intraday. The bracket isn't a guess: it came
-            out of a sweep across thousands of historical signals.
+            The paper cohort&apos;s bracket is fixed within a cohort and versioned across eras. The
+            live V7.1 configuration is a same-day envelope: −30% stop, +40% target, flat at 15:45
+            ET. It is not a guess. It came out of a bracket sweep across thousands of historical
+            signals, measured on the pre-2026-08-25 pool. It is a measurement instrument, not a
+            recommended exit. Your agent picks its own hold.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {bracketRules.map((rule) => (
@@ -316,14 +324,14 @@ export default function MethodologyPage() {
             <li className="flex gap-3">
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Forward paper-trading ledger</strong> — every entry, exit, and outcome lives
+                <strong>Forward paper-trading ledger</strong>: every entry, exit, and outcome lives
                 in BigQuery. The whole pool&apos;s outcomes are aggregated into the public Track Record; per-row data is queryable over the MCP.
               </span>
             </li>
             <li className="flex gap-3">
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Decision trail</strong> — every change to the strategy (V7 today, and its
+                <strong>Decision trail</strong>: every change to the strategy (V7 today, and its
                 predecessors back to V3) ships with a dated decision document explaining the rationale
                 and the evidence.
               </span>
@@ -331,7 +339,7 @@ export default function MethodologyPage() {
             <li className="flex gap-3">
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong>Trace logging</strong> — enrichment, the tournament judge, and
+                <strong>Trace logging</strong>: enrichment, the tournament judge, and
                 overnight-report-generator each write structured trace rows so a downstream auditor can
                 reconstruct any specific morning's reasoning end-to-end, including every bracket round.
               </span>
@@ -364,9 +372,10 @@ export default function MethodologyPage() {
           <h2 className="text-2xl font-bold mb-3">Want your agent working this methodology?</h2>
           <p className="text-muted-foreground mb-6">
             Browse the pool free on the signals page, or connect your agent over MCP and let it
-            query the pool, the opportunity surfaces, and the outcome history directly. The paid
-            tools run in Claude Code, Codex, Cursor, Gemini CLI, and any client that can send a
-            bearer key. The methodology on this page ships as playbooks your agent can run.
+            query the pool, the 3-day opportunity surfaces (realized MFE and MAE), and the outcome
+            history directly. The paid tools run in Claude Code, Codex, Cursor, Gemini CLI, and any
+            client that can send a bearer key. The methodology on this page ships as playbooks your
+            agent can run.
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
             <Button asChild>

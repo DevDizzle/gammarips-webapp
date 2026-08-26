@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   keywords: ['agentic trading', 'AI trading agent', 'MCP server trading', 'options flow', 'unusual options activity', 'options flow data', 'institutional options activity', 'overnight options scanner', 'AI trading analysis', 'options data for AI agents'],
   openGraph: {
     title: 'GammaRips | Options-flow data for AI agents',
-    description: 'Stop asking AI for stock picks. Start giving it real data. An overnight liquidity ranking of the US options universe, cut to a small pool of tradeable contracts and served to your AI agent over MCP.',
+    description: 'Stop asking AI for stock picks. Start giving it real data. An overnight liquidity ranking of the US options universe, cut to a small bullish pool of liquid calls and served to your AI agent over MCP.',
     url: siteUrl,
     siteName: 'GammaRips',
     images: [{ url: `${siteUrl}/og-image.png?v=3`, width: 1200, height: 630, alt: 'GammaRips | Options-flow data for AI agents' }],
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'GammaRips | Options-flow data for AI agents',
-    description: 'Stop asking AI for stock picks. Start giving it real data. Overnight unusual-options-activity scans, curated and served to your AI agent over MCP.',
+    description: 'Stop asking AI for stock picks. Start giving it real data. An overnight liquidity ranking of the US options universe, cut to a small bullish pool of liquid calls and served to your AI agent over MCP.',
     images: [`${siteUrl}/og-image.png?v=3`],
   },
 };

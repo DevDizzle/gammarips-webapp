@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { PublicHeader } from '@/components/layout/public-header'
-import { Footer } from '@/components/layout/footer' // Assuming footer is exported as named export or default
+import Footer from '@/components/layout/footer'
 
 export default function NotFound() {
   return (

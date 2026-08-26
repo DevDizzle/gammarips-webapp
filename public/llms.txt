@@ -20,8 +20,8 @@ Data on a paper-trading basis, educational only. Not investment advice.
 ## The funnel (V7.1, liquidity-first since 2026-08-24)
 
 1. **Scanner**: nightly liquidity rank of about 3,500 optionable US stocks. A name needs 3M+ session share volume and 25+ listed strikes; the top 100 by combined chain dollar volume and share volume survive. Liquidity decides membership, not unusual activity; flow is context in the data, not a gate.
-2. **Pool**: bullish names only; one out-of-the-money call per name, chosen on contract liquidity; roughly 40 to 50 contracts (`overnight_score >= 1` is a cosmetic floor, and the cap of 50 does not bind, so no hidden ranking decides membership). Thesis, technicals, news context, and the selected contract attached per name.
-3. **Safety rails**: no earnings in the window; volatility regime check (VIX <= VIX3M).
+2. **Pool**: bullish names only; one out-of-the-money call per name, chosen on contract liquidity; roughly 40 to 50 contracts (`overnight_score >= 1` is a cosmetic floor; most days more than 50 bullish names qualify, and a deterministic point-in-time rank (delta band, 60-day momentum, a liquidity demotion) keeps 50, using no outcome data). Thesis, technicals, news context, and the selected contract attached per name.
+3. **Safety rails (cohort entry, not pool membership)**: before its paper entry the validation cohort drops names with earnings in the hold window and stands down when VIX > VIX3M. The published pool is NOT earnings-screened; run `get_signal` with `view=earnings` on any candidate before acting.
 4. **Leakage discipline**: every field is point-in-time; nothing an agent reads contains information that wasn't knowable at the time it's dated.
 5. **Validation & tracking**: every pool candidate is tracked to its realized outcome and published as distributions (Track Record); a small paper-traded cohort additionally exercises the methodology daily under fixed rules, privately, with no stats marketed pre-30 trades.
 

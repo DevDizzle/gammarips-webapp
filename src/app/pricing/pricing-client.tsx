@@ -280,8 +280,8 @@ export function PricingClient() {
               Will the price go up?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              {PRICE_MONTHLY}/mo is the launch price. If we raise it, existing subscribers
-              are grandfathered at the rate they signed up on.
+              {PRICE_MONTHLY}/mo. If the price ever changes, existing
+              subscribers keep the rate they signed up on.
             </p>
           </div>
           <div>
@@ -290,8 +290,9 @@ export function PricingClient() {
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               That product is retired. A single shared pick concentrates
-              everyone into one contract, and our research kept showing the
-              edge lives in how a setup is traded, not the name itself. Email
+              everyone into one contract, and our own published data keeps
+              showing that buying one shared name under one fixed exit loses
+              money. The exit belongs to the trader. Email
               evan@gammarips.com with any billing question and we&apos;ll make
               it right.
             </p>

@@ -67,10 +67,15 @@ conditions. No rocket emojis, no "moon," no urgency theater.
   of which ~1,700 had no listed options; never write 5,230 again) → keep names with
   3M+ session share volume and 25+ listed strikes → top 100 by combined liquidity
   rank (z of chain dollar volume + z of share volume) → bullish names only → one
-  OTM call per name, chosen on contract liquidity → pool of roughly 40-50 (the
-  cap of 50 does not bind; overnight_score ≥ 1 is a cosmetic floor — the ≥ 4 floor
-  never ran in production, so never claim it) → two safety rails (earnings,
-  VIX ≤ VIX3M). The $500K UOA floor is GONE (dropped 2026-08-24). Never describe
+  OTM call per name, chosen on contract liquidity → pool of roughly 40-50 (most
+  days MORE than 50 bullish names qualify and a deterministic edge rank — delta
+  band, mom_60, liquidity demotion — cuts to ENRICH_TOP_N=50. The cap DOES bind:
+  never write "the cap does not bind" or "no hidden ranking" (that was a dry-run
+  artifact, corrected 2026-08-26); overnight_score ≥ 1 is a cosmetic floor — the
+  ≥ 4 floor never ran in production, so never claim it) → two safety rails at the paper
+  COHORT's entry, not on the published pool (earnings exclusion, VIX ≤ VIX3M;
+  the published pool is NOT earnings-screened, and copy must never say it is).
+  The $500K UOA floor is GONE (dropped 2026-08-24). Never describe
   the scan as unusual-activity-driven: flow gives context, liquidity decides
   membership. The change shipped on executability (study, 60 trading days ending
   2026-08-14: no-fill at 10:00 ET 40.5% → 6.1%; study numbers, not live results).

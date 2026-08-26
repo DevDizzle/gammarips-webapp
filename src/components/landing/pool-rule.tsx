@@ -43,8 +43,10 @@ export function PoolRule() {
 
         <div className="space-y-3 text-sm text-muted-foreground max-w-2xl mx-auto">
           <p>
-            Two safety rails sit on top. No name with earnings in the window,
-            and no entry when the VIX sits above VIX3M.
+            Two safety rails guard the paper cohort&apos;s entry, not this
+            list. The cohort drops any name with earnings in its hold window
+            and stands down when the VIX sits above VIX3M. The pool you browse
+            is not earnings-screened, so check each candidate yourself.
           </p>
           <p>
             Liquidity decides membership. Not unusual activity. Flow gives your

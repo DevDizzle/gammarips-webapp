@@ -227,6 +227,9 @@ export interface OvernightSignal {
 
 export interface OvernightSummary {
   scan_date: string;
+  /** Set at read time when the summary is served for a later calendar date
+   *  than its scan_date (weekend/holiday gap); absent otherwise. */
+  underlying_scan_date?: string;
   total_signals: number;
   bullish_count: number;
   bearish_count: number;

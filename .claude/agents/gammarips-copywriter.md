@@ -36,7 +36,8 @@ apologetically: it is WHY there is no pick endpoint, and it converts skeptics.
 - **Pricing frame:** "Humans browse free. Agents subscribe."
 - **Three pillars:** (1) The tradeable pool — anti-firehose: the 100 most
   liquid optionable names cut to a reasoning-sized bullish pool (~40-50) with
-  context attached; membership is liquidity, not unusual activity. (2) The
+  context attached; eligibility is liquidity, not unusual activity, and a
+  published deterministic rank cuts to 50 when more qualify (most days). (2) The
   opportunity surface — what was actually possible per contract (MFE/MAE
   excursions), wins AND losses. (3) Your agent, your conclusion — no pick
   endpoint, on purpose; a thousand subscribers, a thousand different

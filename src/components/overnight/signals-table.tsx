@@ -21,11 +21,10 @@ export function SignalsTable({ signals, title }: SignalsTableProps) {
     return `$${amount.toFixed(0)}`;
   };
 
-  const getScoreColor = (score: number) => {
-    if (score >= 9) return "bg-green-500 hover:bg-green-600";
-    if (score >= 7) return "bg-amber-500 hover:bg-amber-600";
-    return "bg-slate-500 hover:bg-slate-600";
-  };
+  // One neutral color on purpose: the score is descriptive context, and a
+  // green/amber tier would render it as the quality grade the copy says it
+  // is not.
+  const getScoreColor = (_score: number) => "bg-slate-500 hover:bg-slate-600";
 
   // Calculate total dollar volume as positioning
   const getPositioning = (signal: OvernightSignal) => {

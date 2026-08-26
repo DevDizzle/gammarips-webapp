@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   // NOTE: the root layout applies the `%s | GammaRips` title template, so titles
   // here must NOT include a "| GammaRips" suffix (that produced the duplicated
   // "... | GammaRips | GammaRips" titles). Engine seoTitle is brand-free too.
-  let title = `${T} Unusual Options Flow`;
-  let description = `Institutional options flow analysis for ${T}.`;
+  let title = `${T} Options Flow Data`;
+  let description = `${T} options flow data from the GammaRips overnight scan. Contract detail, flow breakdown, and key levels for the day it appeared.`;
 
   try {
     const summary = await getLatestOvernightSummary();
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       // ticker page carries distinct metadata.
       const dir = (signal.direction || "").toUpperCase();
       const dirWord = dir === "BULLISH" ? "Bullish" : dir === "BEARISH" ? "Bearish" : "";
-      title = dirWord ? `${T} Unusual Options Flow — ${dirWord}` : `${T} Unusual Options Flow`;
+      title = dirWord ? `${T} ${dirWord} Options Flow Data` : `${T} Options Flow Data`;
       description = buildSignalDescription(signal, T);
     }
   } catch (error) {
@@ -85,9 +85,10 @@ function buildSignalDescription(signal: any, T: string): string {
   const sector = (signal.sector || "").trim();
 
   const parts = [
-    `${T} flagged for ${dirWord} unusual options activity`,
-    flowStr ? `on ${flowStr} directional flow` : "",
-    sector ? `in ${sector}` : "",
+    `${T} ${dirWord} options flow`,
+    flowStr ? `on ${flowStr} directional volume` : "",
+    sector ? `(${sector})` : "",
+    "in the GammaRips overnight scan",
   ].filter(Boolean);
   let out = parts.join(" ") + ".";
   if (catalyst && out.length + catalyst.length + 2 <= 158) out += ` ${catalyst}.`;
@@ -126,7 +127,7 @@ export default async function SignalPage({ params }: PageProps) {
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": signal.seoMetadata?.seoTitle || `${signal.ticker} Institutional Options Flow Analysis`,
+    "headline": signal.seoMetadata?.seoTitle || `${signal.ticker} Options Flow Data, ${signal.scan_date}`,
     "image": "https://gammarips.com/og-image.png?v=3",
     "datePublished": `${signal.scan_date}T08:00:00Z`,
     "dateModified": signal.updated_at ? new Date(signal.updated_at).toISOString() : `${signal.scan_date}T08:00:00Z`,
@@ -134,12 +135,16 @@ export default async function SignalPage({ params }: PageProps) {
     "author": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/icon.png" } },
     ...(signal.seoMetadata?.keywords ? { "keywords": signal.seoMetadata.keywords.join(', ') } : {}),
-    "articleBody": signal.thesis || `Institutional ${signal.direction} options flow analysis for ${signal.ticker}.`,
+    "articleBody": signal.thesis || `Overnight scan record for ${signal.ticker} on ${signal.scan_date}. Direction ${signal.direction}, with the flow breakdown, the contract the engine priced, and key levels. Data, not a recommendation.`,
+    // Dataset, not FinancialProduct: this page is a historical scan record, not
+    // an offer or a recommendation. Naming a strike and an expiration here made
+    // the structured data read as a pick, which the site does not publish.
     "mainEntity": {
-      "@type": "FinancialProduct",
-      "name": signal.recommended_contract || `${signal.ticker} Options`,
-      "category": "Options Contract",
-      "description": `Options flow for ${signal.ticker} indicating ${signal.direction} intent. Strike: ${signal.recommended_strike}, Expiration: ${signal.recommended_expiration}`
+      "@type": "Dataset",
+      "name": `${signal.ticker} overnight options flow scan record, ${signal.scan_date}`,
+      "description": `One row from the GammaRips overnight options flow scan for ${signal.ticker} on ${signal.scan_date}. Direction ${signal.direction}, with the flow breakdown, contract detail, and key levels as they stood at scan time. Historical record, not a recommendation.`,
+      "creator": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
+      "isAccessibleForFree": true
     }
   };
 
@@ -165,9 +170,8 @@ export default async function SignalPage({ params }: PageProps) {
             </Link>
             <span className="text-muted-foreground">
               {" "}
-              for the full scan this {signal.ticker} signal came from: the bull and bear
-              split, the themes institutional money leaned into, and every other ticker
-              that cleared the bar that day.
+              for the full scan this {signal.ticker} row came from: the shape of the pool
+              that day, the themes in the flow, and every other name in it.
             </span>
           </div>
         </section>

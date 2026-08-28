@@ -37,19 +37,16 @@ env:
   # Stripe public-side (publishable key + price ID are designed to be public)
   - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
     value: pk_live_51Rrp1v9rAjmDTprozdVxjqH7hFntQlAovc71LiE4theOZQfuDtcUvCcDPcIq1t0EHIBZn9MVb7h43fnns82hqEai00js1IxoBK
-  # Founding offer (2026-08-22): point this at the NEW $29/mo recurring price
-  # after you create it in the Stripe dashboard. The old $39 price id is
-  # price_1TOlIM9rAjmDTproDjwmelyw. Set the same value in the Firebase Console
-  # (App Hosting > backend > Settings), because the Console value is what the
-  # live backend reads.
+  # Founding offer (created 2026-08-28 via Stripe API): $29/mo founding price,
+  # first 100. The old $39 price id was price_1TOlIM9rAjmDTproDjwmelyw and it
+  # stays active in Stripe for the existing subscriber. The same value must be
+  # set in the Firebase Console (App Hosting > backend > Settings), because
+  # the Console value is what the live backend reads.
   - variable: NEXT_PUBLIC_STRIPE_PRICE_ID
-    value: price_1TOlIM9rAjmDTproDjwmelyw
-  # Optional $299/yr price. Uncomment and fill in the yearly price id to make
-  # the "or $299/yr" link appear on /pricing. While it is unset, the annual
-  # option does not render and an annual checkout falls back to the monthly
-  # price. It never fails.
-  # - variable: NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID
-  #   value: price_REPLACE_WITH_YEARLY_PRICE_ID
+    value: price_1U9VqV9rAjmDTprot69xWT12
+  # $299/yr annual price. Renders the "or $299/yr" link on /pricing.
+  - variable: NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID
+    value: price_1U9VqV9rAjmDTproVmiKIc9N
   # Billing Portal (cancel/update card) — createStripePortalSession throws without it
   - variable: NEXT_PUBLIC_STRIPE_BILLING_PORTAL_CONFIG_ID
     value: bpc_1SMRaZ9rAjmDTproUFJHV3vW

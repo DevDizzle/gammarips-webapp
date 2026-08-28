@@ -1,17 +1,21 @@
 import type { Metadata } from 'next';
 import { PricingClient } from './pricing-client';
-import { TOOL_COUNT, PRICE_MONTHLY, OG_IMAGE } from '@/lib/constants';
+import { TOOL_COUNT, PRICE_MONTHLY, TRIAL_DAYS, OG_IMAGE } from '@/lib/constants';
+
+// The JSON-LD price is a numeric string ("29.00"), a different format from the
+// display constant. Derive it so there is one number to change, not three.
+const PRICE_NUMERIC = (Number(PRICE_MONTHLY.replace(/[^0-9.]/g, '')) || 0).toFixed(2);
 
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
-    `Humans browse free, agents subscribe. The website is free forever; ${PRICE_MONTHLY}/mo buys full MCP access for your AI agent. 7-day free trial.`,
+    `Humans browse free, agents subscribe. The website is free forever; ${PRICE_MONTHLY}/mo buys full MCP access for your AI agent. ${TRIAL_DAYS}-day free trial.`,
   alternates: { canonical: 'https://gammarips.com/pricing' },
   openGraph: {
     images: [OG_IMAGE],
     title: 'Pricing | GammaRips',
     description:
-      `Humans browse free. Agents subscribe. ${PRICE_MONTHLY}/mo for full MCP data access for your AI agent. 7-day free trial.`,
+      `Humans browse free. Agents subscribe. ${PRICE_MONTHLY}/mo for full MCP data access for your AI agent. ${TRIAL_DAYS}-day free trial.`,
     url: 'https://gammarips.com/pricing',
   },
 };
@@ -28,13 +32,13 @@ export default function PricingPage() {
     offers: {
       '@type': 'Offer',
       priceCurrency: 'USD',
-      price: '39.00',
+      price: PRICE_NUMERIC,
       name: 'GammaRips Agent Access (monthly)',
       availability: 'https://schema.org/InStock',
       url: 'https://gammarips.com/pricing',
       priceSpecification: {
         '@type': 'UnitPriceSpecification',
-        price: '39.00',
+        price: PRICE_NUMERIC,
         priceCurrency: 'USD',
         unitText: 'MONTH',
       },

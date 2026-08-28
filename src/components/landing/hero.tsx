@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { PRICE_MONTHLY } from '@/lib/constants';
+import { PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
 
 // The fold does one job: say what this is, and send the visitor into the
 // four-step path below (#start). Everything that used to live here (the
@@ -39,7 +39,7 @@ export function Hero() {
       </div>
       <p className="text-xs text-muted-foreground mt-4">
         The whole website is free. The free MCP tier needs no card and no key.
-        Agent Access is {PRICE_MONTHLY}/mo with a 7-day trial.
+        Agent Access is {PRICE_MONTHLY}/mo with a {TRIAL_DAYS}-day trial.
       </p>
     </section>
   );

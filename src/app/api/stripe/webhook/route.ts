@@ -55,7 +55,7 @@ async function handleSubscriptionChange(
         }
     }
 
-    // Send the welcome email ONLY on a new entitled subscription (a 7-day
+    // Send the welcome email ONLY on a new entitled subscription (a free
     // trial IS entitled — it's a trial of the paid product). Dedup on a
     // dedicated welcomeEmailSentAt flag written ONLY here: subscribedAt is
     // also stamped by the /about landing provisioner (which sends no email),

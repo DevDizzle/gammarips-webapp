@@ -7,6 +7,7 @@ import {
   MCP_ENDPOINT,
   MCP_PRO_ENDPOINT,
   PRICE_MONTHLY,
+  TRIAL_DAYS,
 } from '@/lib/constants';
 
 // The spine of the homepage: nothing to trading, in four steps, in the order
@@ -154,7 +155,7 @@ export function StartHere() {
         <Step
           n={3}
           title="Subscribe for the pro tools"
-          badge={`${PRICE_MONTHLY}/mo, 7-day trial`}
+          badge={`${PRICE_MONTHLY}/mo, ${TRIAL_DAYS}-day trial`}
         >
           <p>
             Start the trial on the{' '}
@@ -183,7 +184,7 @@ export function StartHere() {
             instead and signs in.
           </p>
           <Button asChild size="sm">
-            <Link href="/pricing">Start your 7-day trial</Link>
+            <Link href="/pricing">Start your {TRIAL_DAYS}-day trial</Link>
           </Button>
         </Step>
 

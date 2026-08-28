@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CONNECT_CLIENTS, PRO_STATUS_LABEL, type ConnectStep } from '@/lib/connect-clients';
-import { PRICE_MONTHLY, TOOL_COUNT } from '@/lib/constants';
+import { PRICE_MONTHLY, TOOL_COUNT, TRIAL_DAYS } from '@/lib/constants';
 
 // The per-client reference block, below the four-step path. Step 1 of the path
 // shows the Claude Code command; this is where every other client gets its
@@ -45,7 +45,8 @@ export function ConnectTabs() {
       </h2>
       <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto mb-8">
         Pick your client. The free tier needs no card, no key, and no signup.
-        Paste a key if your client sends headers. If it cannot, add the pro
+        Agent Access ({PRICE_MONTHLY}/mo, {TRIAL_DAYS}-day trial) opens the pro
+        tools. Paste a key if your client sends headers. If it cannot, add the pro
         endpoint and sign in instead. Every tab reaches the same {TOOL_COUNT}{' '}
         tools.
       </p>
@@ -86,8 +87,8 @@ export function ConnectTabs() {
                   <Button asChild size="sm">
                     <Link href="/pricing">
                       {c.pro.status === 'full'
-                        ? 'Start your 7-day free trial, get your key'
-                        : 'Start your 7-day free trial, then sign in'}
+                        ? `Start your ${TRIAL_DAYS}-day free trial, get your key`
+                        : `Start your ${TRIAL_DAYS}-day free trial, then sign in`}
                     </Link>
                   </Button>
                 </div>

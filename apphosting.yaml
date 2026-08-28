@@ -37,8 +37,17 @@ env:
   # Stripe public-side (publishable key + price ID are designed to be public)
   - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
     value: pk_live_51Rrp1v9rAjmDTprozdVxjqH7hFntQlAovc71LiE4theOZQfuDtcUvCcDPcIq1t0EHIBZn9MVb7h43fnns82hqEai00js1IxoBK
+  # Founding offer (created 2026-08-28 via Stripe API): $29/mo founding price,
+  # first 100. The old $39 price id was price_1TOlIM9rAjmDTproDjwmelyw and it
+  # stays active in Stripe for the existing subscriber. Verified 2026-08-28
+  # against the backend resource: this variable is NOT in the Console
+  # overrideEnv (only secrets are), so this yaml value alone controls the
+  # build. Console overrideEnv, when present, wins over this file.
   - variable: NEXT_PUBLIC_STRIPE_PRICE_ID
-    value: price_1TOlIM9rAjmDTproDjwmelyw
+    value: price_1U9VqV9rAjmDTprot69xWT12
+  # $299/yr annual price. Renders the "or $299/yr" link on /pricing.
+  - variable: NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID
+    value: price_1U9VqV9rAjmDTproVmiKIc9N
   # Billing Portal (cancel/update card) — createStripePortalSession throws without it
   - variable: NEXT_PUBLIC_STRIPE_BILLING_PORTAL_CONFIG_ID
     value: bpc_1SMRaZ9rAjmDTproUFJHV3vW

@@ -11,7 +11,7 @@ in another (`gammarips-mcp`). This repo is presentation + Stripe + Firebase auth
 ## Positioning (owner-locked 2026-07-03) — every page must agree with this
 - **The human web UI is 100% free.** It is the SEO top-of-funnel. Nothing
   human-readable is paywalled.
-- **The paid product is MCP access — $39/mo ("Agent Access").** Bring-your-own-
+- **The paid product is MCP access — $29/mo founding price ("Agent Access").** Bring-your-own-
   agent traders connect Claude/ChatGPT/any MCP client to the GammaRips MCP
   server (9 tools: curated pool, opportunity surfaces, outcome history,
   methodology playbooks).
@@ -85,7 +85,14 @@ conditions. No rocket emojis, no "moon," no urgency theater.
   under the V7.1 GIGO exit (10:00 entry, +40/−30, flat 15:45 ET). Spec:
   gammarips-engine `docs/GTM-COPY-REWRITE-BRIEF.md` +
   `docs/DECISIONS/2026-08-24-liquid-universe-funnel.md`.
-- Pricing: Free (whole webapp) / Agent Access $39/mo (MCP), 7-day trial, Stripe.
+- Pricing: Free (whole webapp) / Agent Access $29/mo (MCP), 30-day trial, Stripe.
+  $29 is the FOUNDING price (owner call 2026-08-22): the first 100 subscribers keep
+  it as long as they stay subscribed, and the price is $39/mo after the cap. An
+  optional annual price is $299/yr. Never write a price or a trial length as a
+  literal: import `PRICE_MONTHLY`, `PRICE_ANNUAL`, `PRICE_STANDARD`, `FOUNDING_CAP`
+  and `TRIAL_DAYS` from `src/lib/constants.ts`. The annual option only renders when
+  `NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID` is set, so copy must not promise it
+  unconditionally. The founding offer carries no countdown and no urgency copy.
 
 ## Repo landmines
 - `src/lib/config.ts` `FREE_MODE = true` — everyone is treated as Pro; UI

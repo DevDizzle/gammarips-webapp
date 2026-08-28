@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Shield, Bot, User, CheckCircle2 } from 'lucide-react';
 import ContactForm from './contact-form';
-import { TOOL_COUNT, OG_IMAGE } from '@/lib/constants';
+import { TOOL_COUNT, TRIAL_DAYS, OG_IMAGE } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'About GammaRips: The options-flow data layer for AI agents',
   description:
@@ -78,7 +78,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>Your trial is active for 7 days. Cancel anytime from your account page. No charge if you cancel before day-7.</span>
+                  <span>Your trial is active for {TRIAL_DAYS} days. Cancel anytime from your account page. No charge if you cancel before day {TRIAL_DAYS}.</span>
                 </li>
               </ul>
               <div className="flex flex-wrap gap-3 pt-2">

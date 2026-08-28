@@ -9,7 +9,18 @@ import { Check, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
 import { event as trackEvent } from '@/lib/gtag';
-import { TOOL_COUNT, PRICE_MONTHLY } from '@/lib/constants';
+import {
+  TOOL_COUNT,
+  PRICE_MONTHLY,
+  PRICE_ANNUAL,
+  PRICE_STANDARD,
+  FOUNDING_CAP,
+  TRIAL_DAYS,
+} from '@/lib/constants';
+
+// Next inlines a NEXT_PUBLIC_ var at build time only where the full
+// process.env.NAME expression is written out, so keep this literal.
+const ANNUAL_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID;
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''
@@ -22,7 +33,7 @@ const agentFeatures = [
   'Queryable outcome database + exit-rule simulation',
   'Regime context (volatility term structure rail)',
   'Methodology playbooks, including the tournament selection pattern, run against YOUR objective',
-  '7-day free trial · cancel anytime',
+  `${TRIAL_DAYS}-day free trial · cancel anytime`,
 ];
 
 const freeFeatures = [
@@ -39,10 +50,11 @@ export function PricingClient() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
-  async function handleCheckout() {
+  async function handleCheckout(interval: 'month' | 'year' = 'month') {
+    const displayPrice = interval === 'year' ? PRICE_ANNUAL : PRICE_MONTHLY;
     trackEvent('begin_checkout', {
       currency: 'USD',
-      value: Number(PRICE_MONTHLY.replace(/[^0-9.]/g, '')) || 0,
+      value: Number(displayPrice.replace(/[^0-9.]/g, '')) || 0,
       plan: 'pro',
       authenticated: !!user,
     });
@@ -67,6 +79,7 @@ export function PricingClient() {
         },
         body: JSON.stringify({
           plan: 'pro',
+          interval,
           ...(gaClientId ? { gaClientId } : {}),
           ...(gaSessionId ? { gaSessionId } : {}),
         }),
@@ -104,7 +117,7 @@ export function PricingClient() {
           Everything human-readable (the pool, the reports, the scorecard,
           the Lab) is free, forever. {PRICE_MONTHLY}/month buys the machine
           connection: full MCP access for the AI agent of your choice.
-          7-day free trial. Cancel anytime.
+          {TRIAL_DAYS}-day free trial. Cancel anytime.
         </p>
       </header>
 
@@ -151,7 +164,12 @@ export function PricingClient() {
             <p className="text-sm text-muted-foreground mt-2">
               Full MCP access for Claude Code, Codex, Cursor, Gemini CLI, or any agent that can send a bearer key: the
               curated pool, the deep data a human never browses, and the
-              methodology tools. 7-day free trial.
+              methodology tools. {TRIAL_DAYS}-day free trial.
+            </p>
+            <p className="text-sm text-foreground mt-3">
+              Founding price: {PRICE_MONTHLY}/mo for the first {FOUNDING_CAP}{' '}
+              subscribers, locked as long as you stay subscribed.{' '}
+              {PRICE_STANDARD}/mo after that.
             </p>
           </CardHeader>
           <CardContent className="pt-6">
@@ -166,7 +184,7 @@ export function PricingClient() {
             <Button
               size="lg"
               className="w-full"
-              onClick={handleCheckout}
+              onClick={() => handleCheckout('month')}
               disabled={loading}
             >
               {loading ? (
@@ -175,9 +193,21 @@ export function PricingClient() {
                   Starting checkout…
                 </>
               ) : (
-                'Connect Your Agent, Free for 7 Days'
+                `Connect Your Agent, Free for ${TRIAL_DAYS} Days`
               )}
             </Button>
+            {ANNUAL_PRICE_ID ? (
+              <p className="text-xs text-center mt-3">
+                <button
+                  type="button"
+                  onClick={() => handleCheckout('year')}
+                  disabled={loading}
+                  className="text-muted-foreground underline underline-offset-4 hover:text-foreground disabled:opacity-50"
+                >
+                  or {PRICE_ANNUAL}/yr
+                </button>
+              </p>
+            ) : null}
             <p className="text-xs text-muted-foreground text-center mt-3">
               No charge during trial. After checkout, generate your API key
               on your account page (it&apos;s shown once, so copy it then).
@@ -232,13 +262,13 @@ export function PricingClient() {
         <div className="space-y-6">
           <div>
             <h3 className="font-semibold text-foreground mb-1">
-              How does the 7-day trial work?
+              How does the {TRIAL_DAYS}-day trial work?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Card on file, no charge for seven days, full MCP access from
-              minute one. If you cancel before day 7 you pay nothing. After
-              day 7 your card is charged {PRICE_MONTHLY} and you&apos;re billed monthly
-              until you cancel.
+              Card on file, no charge for {TRIAL_DAYS} days, full MCP access
+              from minute one. If you cancel before day {TRIAL_DAYS} you pay
+              nothing. After day {TRIAL_DAYS} your card is charged{' '}
+              {PRICE_MONTHLY} and you&apos;re billed monthly until you cancel.
             </p>
           </div>
           <div>
@@ -269,10 +299,10 @@ export function PricingClient() {
               What&apos;s the refund policy?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              We don&apos;t offer pro-rated refunds mid-cycle, but the 7-day
-              trial gives you a full week to evaluate without paying anything.
-              If something breaks, email evan@gammarips.com and we&apos;ll make
-              it right.
+              We don&apos;t offer pro-rated refunds mid-cycle, but the{' '}
+              {TRIAL_DAYS}-day trial gives you a full month to evaluate without
+              paying anything. If something breaks, email evan@gammarips.com and
+              we&apos;ll make it right.
             </p>
           </div>
           <div>
@@ -280,8 +310,11 @@ export function PricingClient() {
               Will the price go up?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              {PRICE_MONTHLY}/mo. If the price ever changes, existing
-              subscribers keep the rate they signed up on.
+              {PRICE_MONTHLY}/mo is the founding price, for the first{' '}
+              {FOUNDING_CAP} subscribers. It stays at that rate as long as you
+              stay subscribed. After the first {FOUNDING_CAP}, the price is{' '}
+              {PRICE_STANDARD}/mo. If you cancel and subscribe again later, you
+              pay the rate that applies then.
             </p>
           </div>
           <div>

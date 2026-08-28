@@ -4,7 +4,7 @@
 
 import { Buffer } from 'node:buffer';
 import type { Winner, PerformanceSignal, Stock } from '@/lib/firebase-admin';
-import { TOOL_COUNT, PRICE_MONTHLY } from '@/lib/constants';
+import { TOOL_COUNT, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
 
 
 // Node 18+ has global fetch. If you're on older Node, install `node-fetch`.
@@ -110,8 +110,8 @@ Here's how to get your agent working the data:
    (the curated pool, opportunity surfaces, outcome history, exit-rule
    simulation, and methodology playbooks) are live on your key.
 
-Your 7-day free trial started today. No charge if you cancel before
-day 7. Manage anytime at https://gammarips.com/account.
+Your ${TRIAL_DAYS}-day free trial started today. No charge if you cancel
+before day ${TRIAL_DAYS}. Manage anytime at https://gammarips.com/account.
 
 One honest note, because it's the whole point: we sell data, not
 picks. The engine curates the pool and tracks every outcome in
@@ -165,7 +165,7 @@ Data on a paper-trading basis, educational only. Not investment advice. Past per
                             <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding: 32px 0 8px;">
                                 <a href="https://gammarips.com/developers" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Set up your agent →</a>
                             </td></tr></table>
-                            <p style="font-size: 14px; line-height: 1.6; margin-top: 24px; color: #A0A0A0;">Your 7-day free trial started today. No charge if you cancel before day 7; manage anytime from your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>.</p>
+                            <p style="font-size: 14px; line-height: 1.6; margin-top: 24px; color: #A0A0A0;">Your ${TRIAL_DAYS}-day free trial started today. No charge if you cancel before day ${TRIAL_DAYS}; manage anytime from your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>.</p>
                             <p style="font-size: 14px; line-height: 1.6; margin-top: 16px; color: #A0A0A0;">One honest note, because it's the whole point: we sell data, not picks. The engine curates the pool and tracks every outcome in public; what your agent concludes from it is your analysis.</p>
                             <p style="font-size: 14px; line-height: 1.6; margin-top: 16px;">Questions? Reply and it goes straight to me.<br/>Evan Parra, Founder</p>
                             <p style="font-size: 12px; line-height: 1.5; margin-top: 24px; color: #707070;">Data on a paper-trading basis, educational only. Not investment advice. Past performance is not a guarantee of future results.</p>
@@ -204,8 +204,8 @@ What that gets you, free, forever:
 - gammarips.com/lab is the Lab: our research experiments, including the killed ideas.
 - gammarips.com/blog and @gammarips on X: methodology and research notes.
 
-The paid tier is for your AI agent. Agent Access (${PRICE_MONTHLY}/mo, 7-day free
-trial) connects Claude Code, Codex, Cursor, Gemini CLI, or any agent that
+The paid tier is for your AI agent. Agent Access (${PRICE_MONTHLY}/mo, ${TRIAL_DAYS}-day
+free trial) connects Claude Code, Codex, Cursor, Gemini CLI, or any agent that
 can send a bearer key to the full data layer over MCP: the structured pool, opportunity surfaces, outcome
 history, and the methodology as playbooks your agent can run. Your
 agent analyzes; you decide.
@@ -248,7 +248,7 @@ Data on a paper-trading basis, educational only. Not investment advice.
                                 <li><a href="https://gammarips.com/lab" style="color: hsl(74, 80%, 50%);">The Lab</a>: our research experiments, including the killed ideas.</li>
                                 <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">Blog</a> + @gammarips on X: methodology and research notes.</li>
                             </ul>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">The paid tier is for your <strong>AI agent</strong>: Agent Access (${PRICE_MONTHLY}/mo, 7-day free trial) connects Claude Code, Codex, Cursor, Gemini CLI, or any agent that can send a bearer key to the full data layer over MCP: structured pool, opportunity surfaces, outcome history, and the methodology as playbooks. Your agent analyzes; you decide.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">The paid tier is for your <strong>AI agent</strong>: Agent Access (${PRICE_MONTHLY}/mo, ${TRIAL_DAYS}-day free trial) connects Claude Code, Codex, Cursor, Gemini CLI, or any agent that can send a bearer key to the full data layer over MCP: structured pool, opportunity surfaces, outcome history, and the methodology as playbooks. Your agent analyzes; you decide.</p>
                             <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding: 28px 0 8px;">
                                 <a href="https://gammarips.com/developers" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">See how Agent Access works →</a>
                             </td></tr></table>
@@ -288,7 +288,7 @@ export async function buildTrialEndingEmailContent(
     const textContent = `
 Hi ${name},
 
-Quick heads-up: your GammaRips Pro 7-day trial ends in 3 days.
+Quick heads-up: your GammaRips Pro ${TRIAL_DAYS}-day trial ends in 3 days.
 
 Your card will be charged ${amountDisplay} on ${chargeDate} and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if you want to continue; just keep using the data.
 

@@ -110,6 +110,71 @@ env:
     availability:
       - RUNTIME
 
+  # --- Migrated off Firebase Console plain values, 2026-08-31 ---------------
+  # Console `overrideEnv` values are printed IN CLEARTEXT in every Cloud Build
+  # log (the Stripe LIVE key among them). Declaring the var here with `secret:`
+  # makes the log show the pinned Secret Manager path instead of the value.
+  #
+  # For each of these the Secret Manager value was proven identical to the
+  # console value by sha256 of the stripped bytes before the console row was
+  # removed, so this is a like-for-like swap.
+  #
+  # availability is BUILD + RUNTIME deliberately: that is what the preparer was
+  # already applying to these as console vars, and narrowing it risks failing
+  # the Next.js build. Tightening to RUNTIME-only is a separate change that
+  # needs a build test per variable.
+  #
+  # NOT migrated: GEMINI_API_KEY, GOOGLE_API_KEY, FMP_API_KEY. Their console
+  # values DIFFER from Secret Manager, and enrichment-trigger, gammarips-mcp,
+  # overnight-report-generator and signal-notifier all read those secrets at
+  # `latest`. Writing the console value into Secret Manager would change what
+  # four production services receive. Owner decides which value is correct.
+  - variable: STRIPE_SECRET_KEY
+    secret: STRIPE_SECRET_KEY
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: STRIPE_WEBHOOK_SECRET
+    secret: STRIPE_WEBHOOK_SECRET
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: MAILGUN_SENDING_KEY
+    secret: MAILGUN_SENDING_KEY
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: MAILGUN_API_KEY
+    secret: MAILGUN_API_KEY
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: MAILGUN_DOMAIN
+    secret: MAILGUN_DOMAIN
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: POLYGON_API_KEY
+    secret: POLYGON_API_KEY
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: CRON_SECRET
+    secret: CRON_SECRET
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: FIREBASE_PROJECT_ID
+    secret: FIREBASE_PROJECT_ID
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: FIREBASE_CLIENT_EMAIL
+    secret: FIREBASE_CLIENT_EMAIL
+    availability:
+      - BUILD
+      - RUNTIME
+
 # Server-side secrets pulled from Google Secret Manager at runtime.
 # Each secret must be granted to the App Hosting service account —
 # use `firebase apphosting:secrets:grantaccess <NAME> --backend=gammarips-webapp`.
@@ -124,34 +189,18 @@ env:
 # the Secret Manager copies may differ).
 secretEnv:
   # Cron authentication
-  - secret: CRON_SECRET
-    env: CRON_SECRET
 
   # Stripe (checkout + webhook)
-  - secret: STRIPE_SECRET_KEY
-    env: STRIPE_SECRET_KEY
-  - secret: STRIPE_WEBHOOK_SECRET
-    env: STRIPE_WEBHOOK_SECRET
 
   # Mailgun (welcome + trial-reminder + transactional)
-  - secret: MAILGUN_SENDING_KEY
-    env: MAILGUN_SENDING_KEY
-  - secret: MAILGUN_API_KEY
-    env: MAILGUN_API_KEY
-  - secret: MAILGUN_DOMAIN
-    env: MAILGUN_DOMAIN
 
   # WhatsApp group invite (referenced in welcome email)
   - secret: WHATSAPP_GROUP_INVITE_URL
     env: WHATSAPP_GROUP_INVITE_URL
 
   # Firebase Admin SDK (server-side Firestore + Auth)
-  - secret: FIREBASE_CLIENT_EMAIL
-    env: FIREBASE_CLIENT_EMAIL
   - secret: FIREBASE_PRIVATE_KEY
     env: FIREBASE_PRIVATE_KEY
-  - secret: FIREBASE_PROJECT_ID
-    env: FIREBASE_PROJECT_ID
 
   # GA_API_SECRET moved to `env:` above on 2026-08-31 — it is the one secret
   # in this file that is actually wired the supported way. The rest of this
@@ -164,7 +213,5 @@ secretEnv:
     env: GOOGLE_API_KEY
 
   # Market data APIs (Polygon primary; FMP legacy, still referenced in some routes)
-  - secret: POLYGON_API_KEY
-    env: POLYGON_API_KEY
   - secret: FMP_API_KEY
     env: FMP_API_KEY

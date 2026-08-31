@@ -78,6 +78,22 @@ env:
     availability:
       - RUNTIME
 
+  # Google Analytics Measurement Protocol secret, for the server-side purchase
+  # event fired by the Stripe webhook. Moved here from the dead `secretEnv:`
+  # block on 2026-08-31 (see the WARNING below) so it actually reaches the
+  # runtime. RUNTIME only: the build never sends an event.
+  #
+  # Root cause of four months of zero `purchase` events in GA4: property
+  # 534472819 had never attested the User Data Collection Acknowledgement, so
+  # NO Measurement Protocol secret could exist on the stream at all. The value
+  # stored in Secret Manager on 2026-02-02 could therefore never have been
+  # valid. Attested and re-minted 2026-08-31 (secret id 15534172427);
+  # GA_API_SECRET is now at version 2.
+  - variable: GA_API_SECRET
+    secret: GA_API_SECRET
+    availability:
+      - RUNTIME
+
 # Server-side secrets pulled from Google Secret Manager at runtime.
 # Each secret must be granted to the App Hosting service account —
 # use `firebase apphosting:secrets:grantaccess <NAME> --backend=gammarips-webapp`.
@@ -123,9 +139,9 @@ secretEnv:
   - secret: FIREBASE_PROJECT_ID
     env: FIREBASE_PROJECT_ID
 
-  # Google Analytics Measurement Protocol (server-side purchase event)
-  - secret: GA_API_SECRET
-    env: GA_API_SECRET
+  # GA_API_SECRET moved to `env:` above on 2026-08-31 — it is the one secret
+  # in this file that is actually wired the supported way. The rest of this
+  # block still does nothing; migrating them stays an owner call.
 
   # Gemini / Google AI (used by enrichment + arena features)
   - secret: GEMINI_API_KEY

@@ -94,6 +94,22 @@ env:
     availability:
       - RUNTIME
 
+  # Shared secret for the reconcile-keys cron (Cloud Scheduler job
+  # `mcp-reconcile-keys`, 08:00 daily, sends it as the x-reconcile-secret
+  # header on POST /api/cron/reconcile-keys).
+  #
+  # This was a Firebase Console variable that ended up with a NAME AND NO
+  # VALUE. App Hosting then rejects the whole config with
+  #   fah/invalid-apphosting-yaml: either 'value' or 'secret' field is required
+  # and EVERY deploy fails, whatever is in the commit. That is what blocked the
+  # 2026-08-31 18:47 and 18:51 builds. Verified the Secret Manager value is the
+  # same one the scheduler sends (sha256 match, 64 chars, no trailing newline),
+  # so sourcing it here is a like-for-like swap. Delete the empty console row.
+  - variable: RECONCILE_CRON_SECRET
+    secret: RECONCILE_CRON_SECRET
+    availability:
+      - RUNTIME
+
 # Server-side secrets pulled from Google Secret Manager at runtime.
 # Each secret must be granted to the App Hosting service account —
 # use `firebase apphosting:secrets:grantaccess <NAME> --backend=gammarips-webapp`.
@@ -110,8 +126,6 @@ secretEnv:
   # Cron authentication
   - secret: CRON_SECRET
     env: CRON_SECRET
-  - secret: RECONCILE_CRON_SECRET
-    env: RECONCILE_CRON_SECRET
 
   # Stripe (checkout + webhook)
   - secret: STRIPE_SECRET_KEY

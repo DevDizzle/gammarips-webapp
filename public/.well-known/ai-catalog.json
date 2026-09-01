@@ -13,7 +13,7 @@
       "type": "application/mcp-server-card+json",
       "url": "https://mcp.gammarips.com/.well-known/mcp/server-card.json",
       "description": "Options-flow intelligence primitives for AI agents: a hard-curated overnight candidate pool, point-in-time features, realized opportunity surfaces (MFE/MAE excursions), bracket outcome labels, and methodology playbooks. Your agent reasons to its own contract and exit; there is no pick endpoint. Paper-traded research data; educational only; not investment advice.",
-      "version": "4.3.0",
+      "version": "4.4.0",
       "tags": [
         "options",
         "finance",
@@ -36,7 +36,7 @@
         "get_daily_report"
       ],
       "representativeQueries": [
-        "what is in today's curated bullish options pool and why was each name flagged",
+        "what is in today's curated bullish options pool and how was it selected",
         "show the realized MFE/MAE opportunity surface for historical setups like this one",
         "how has the whole pool performed under a +40%/-30% same-day exit bracket",
         "explain the selection methodology and curation gates behind the daily pool",

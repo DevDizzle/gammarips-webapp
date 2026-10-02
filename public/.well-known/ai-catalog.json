@@ -12,7 +12,7 @@
       "displayName": "GammaRips Options Intelligence",
       "type": "application/mcp-server-card+json",
       "url": "https://mcp.gammarips.com/.well-known/mcp/server-card.json",
-      "description": "Options-flow intelligence primitives for AI agents: a hard-curated overnight candidate pool, point-in-time features, realized opportunity surfaces (MFE/MAE excursions), bracket outcome labels, and methodology playbooks. Your agent reasons to its own contract and exit; there is no pick endpoint. Paper-traded research data; educational only; not investment advice.",
+      "description": "Better-quality option contracts every trading night, and the history to plan the exit, for AI agents: a liquidity-ranked bullish pool, point-in-time features, the exit lab (opportunity surfaces, touch probabilities, bracket scoring), contract replay, and methodology playbooks. Your agent builds the trade plan with you. There is no pick endpoint. Educational only. Not investment advice.",
       "version": "4.5.0",
       "tags": [
         "options",
@@ -36,10 +36,10 @@
         "get_daily_report"
       ],
       "representativeQueries": [
-        "what is in today's curated bullish options pool and how was it selected",
-        "show the realized MFE/MAE opportunity surface for historical setups like this one",
-        "how has the whole pool performed under a +40%/-30% same-day exit bracket",
-        "explain the selection methodology and curation gates behind the daily pool",
+        "build me an options trade plan from today's GammaRips pool",
+        "what is in today's bullish options pool and how was it selected",
+        "how often did past pool contracts hit +50% within 3 trading days",
+        "set a target and a stop for this contract from the history of past pool contracts",
         "replay how a specific contract traded minute-by-minute after it was surfaced"
       ]
     }

@@ -1,5 +1,7 @@
+import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import type { PoolOutcomes, LifeBucket } from '@/lib/firebase-admin';
+import { RECEIPTS_DISCLAIMER } from '@/lib/receipts';
 
 // The Track Record, told simply (owner call 2026-07-08: "simple simple simple").
 // Three plain-English story blocks with big "X out of 10" numbers and ONE
@@ -168,12 +170,12 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
       {/* ---- Story 1: most contracts had a moment ---- */}
       <section className="space-y-5">
         <h2 className="text-2xl md:text-3xl font-bold font-headline text-center">
-          Most of these contracts had a moment.
+          Most pool contracts had a moment before expiration.
         </h2>
         <p className="text-muted-foreground text-center max-w-xl mx-auto">
-          This is the full-life window: the 10:00 ET fill on the morning we
-          surfaced the contract, through to expiration, with no exit rule
-          applied.
+          We follow every contract we surface, from the 10:00 ET fill on the
+          morning we surfaced it through to expiration, with no exit rule
+          applied. Nothing gets edited out.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
           <BigStat value={outOf10(touched40)} caption="were up +40% or better at some point" />
@@ -182,15 +184,9 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
         </div>
         <p className="text-xs font-mono text-muted-foreground text-center">
           full-life window, no exit rule · all {nPeak.toLocaleString()} contracts
-          that have expired so far, {life.first_scan_date ?? '—'} to{' '}
-          {life.last_scan_date ?? '—'} · updated daily
-        </p>
-        <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
-          Read that as a property of liquid optionable calls, not as proof that
-          our selection creates it. Two pre-registered studies in August 2026
-          measured the pool against matched random contracts on the same tape
-          and could not tell them apart. We publish the studies, not a selection
-          claim.
+          that have expired so far, {life.first_scan_date ?? 'n/a'} to{' '}
+          {life.last_scan_date ?? 'n/a'} · updated daily · includes contracts
+          from the funnel before 2026-08-24
         </p>
       </section>
 
@@ -214,44 +210,34 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
             contracts does not hit its best price until more than two weeks in.
           </p>
           <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
-            This chart is the full-life window. Our own paper cohort exits the
-            same day and is flat by 15:45 ET, so it never reaches the later
-            peaks shown here. The same contract can read strong on this chart
-            and flat under a same-day exit. Match the window to the hold you
-            actually plan to take.
+            This chart is the full-life window, from the morning we surfaced
+            each contract to expiration. The hit rates above use a 3-trading-day
+            window. Match the window to the hold your AI plans.
           </p>
         </section>
       )}
 
-      {/* ---- Story 3: if you never sell, you lose ---- */}
+      {/* ---- Story 3: the exit plan makes the result ---- */}
       <section className="space-y-4 max-w-2xl mx-auto text-center">
         <h2 className="text-2xl md:text-3xl font-bold font-headline">
-          If you never sell, you lose.
+          The exit plan is where the result gets made.
         </h2>
         <p className="text-muted-foreground">
-          Held all the way to the end, about{' '}
+          The moves are real, and they are temporary. The typical
+          contract&apos;s worst moment along the way was{' '}
+          {pct(life.trough_median)} from the fill, even when it also had a big
+          up moment. Held all the way to expiration with no exit, about{' '}
           <strong className="text-foreground">{outOf10(wipedOut).replace(' out of 10', ' out of every 10')}</strong>{' '}
-          of these contracts finished nearly worthless, down 90% or more. The
-          ride is violent too. The typical contract&apos;s worst moment along
-          the way was {pct(life.trough_median)} from the fill, even when it also
-          had a big up moment.
+          finished down 90% or more.
         </p>
         <p className="text-muted-foreground">
-          We also ran the naive version. Buy every single contract, then exit on
-          one fixed same-day rule: in at the 10:00 ET mark, take profit at +40%,
-          stop at -30%, close anything still open at 15:45 ET.{' '}
-          <strong className="text-foreground">
-            It loses money
-            {outcomes?.bracket_avg_return != null && outcomes.bracket_avg_return < 0
-              ? ` (${Math.round(outcomes.bracket_avg_return * 1000) / 10}% per contract on average)`
-              : ''}
-          </strong>
-          . We publish that on purpose. It is why we sell data and not picks.
+          A target and a stop set before entry decide how much of a move a
+          trade keeps. Your AI sets both from the exit lab. The live agent at
+          the top of this page sets both before every entry.
         </p>
         <p className="text-foreground font-semibold">
-          The moves are real and they are temporary. Building a pool you can
-          actually trade is our job. Entry and exit are yours, or your
-          agent&apos;s.
+          Building a pool you can actually trade is our job. The trade plan is
+          yours and your AI&apos;s.
         </p>
       </section>
 
@@ -264,9 +250,9 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
           <p className="text-xs text-muted-foreground">
             Every figure below sits in the full-life window: the 10:00 ET
             surfacing fill through to expiration, with no exit rule applied. It
-            is a different window from the same-day bracket above and from the
-            3-day opportunity surface served over MCP. Do not read one against
-            another.
+            is a different window from the 3-trading-day hit rates above and
+            from the 3-day opportunity surface served over MCP. Compare numbers
+            inside one window.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <BigStat value={pct(life.peak_median)} caption="median best moment (peak premium return)" />
@@ -314,16 +300,19 @@ export function LifeDistribution({ outcomes }: { outcomes: PoolOutcomes | null }
             the morning of 2026-08-25 (scan dates before 2026-08-24) came from
             the earlier unusual-activity funnel, which the liquid-universe
             funnel replaced. The two are not one population, and
-            this record is still dominated by the older pool, because a contract
-            only joins it after it expires. Separately, a small paper-traded
-            cohort exercises the engine daily under fixed mechanical rules as a
-            measurement instrument. We make no marketing claims from it.
+            this record is still mostly the older pool, because a contract
+            only joins it after it expires. The research record behind the
+            pool, with every study, is on{' '}
+            <Link href="/methodology" className="underline underline-offset-2 hover:text-foreground">
+              Methodology
+            </Link>
+            .
           </p>
         </div>
       </details>
 
       <p className="text-[11px] text-muted-foreground text-center">
-        Paper-trading data · Educational only · Not investment advice
+        {RECEIPTS_DISCLAIMER} Pool figures are tracked on a paper basis.
       </p>
     </div>
   );

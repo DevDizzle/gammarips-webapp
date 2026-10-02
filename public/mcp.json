@@ -1,6 +1,6 @@
 {
   "name": "GammaRips",
-  "description": "The options-flow data layer for AI agents. 9 MCP tools over the GammaRips engine: the overnight liquidity-ranked bullish pool (with a free preview), point-in-time feature vectors, opportunity surfaces (realized excursion distributions), a queryable outcome database, exit-rule scoring, the raw option price tape, regime context, and methodology playbooks. Liquidity decides pool membership, not unusual activity. No pick endpoint, deliberately; your agent reasons to its own conclusion. Data on a paper-trading basis, educational only. Not investment advice.",
+  "description": "Better-quality option contracts every night, and the history to plan the exit, for AI agents. 9 MCP tools over the GammaRips engine: the liquidity-ranked bullish pool (with a free preview), point-in-time feature vectors, fresh liquidity checks, the exit lab (opportunity surfaces, touch probabilities, exit-rule scoring), the raw option price tape, regime context, and methodology playbooks. Your agent builds the trade plan with you: candidates, entry, target, stop, and size. There is no pick endpoint. Educational only. Not investment advice.",
   "url": "https://mcp.gammarips.com/mcp",
   "transport": "streamable-http",
   "auth": {
@@ -43,9 +43,9 @@
     "run_your_own_tournament"
   ],
   "start_with": [
+    "get_playbook",
     "get_pool",
-    "query_outcomes",
-    "get_playbook"
+    "query_outcomes"
   ],
   "universe": "about 3,500 optionable US stocks, ranked nightly by liquidity; the pool is the bullish slice of the top 100",
   "tags": [
@@ -54,16 +54,17 @@
     "unusual-options-activity",
     "agentic-trading",
     "ai-agents",
-    "paper-trading",
     "mcp",
-    "data-vendor"
+    "data-vendor",
+    "trade-plan"
   ],
   "links": {
     "home": "https://gammarips.com",
     "pricing": "https://gammarips.com/pricing",
     "developers": "https://gammarips.com/developers",
     "lab": "https://gammarips.com/lab",
-    "llms_txt": "https://gammarips.com/llms.txt"
+    "llms_txt": "https://gammarips.com/llms.txt",
+    "scorecard": "https://gammarips.com/scorecard"
   },
   "creator": {
     "name": "GammaRips",

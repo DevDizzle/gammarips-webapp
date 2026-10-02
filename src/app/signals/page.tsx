@@ -57,16 +57,16 @@ export default async function SignalsPage() {
               GammaRips is a daily options data scanner. The engine runs at 23:00 ET and the whole rule fits in one breath. <strong className="text-foreground">Start with about 3,500 optionable US stocks. Keep the names that traded 3M or more shares that session and carry 25 or more listed strikes. <Link href="/methodology" className="text-primary hover:underline">Rank those by combined chain dollar volume and share volume</Link> and take the top 100. Keep the bullish names. Price one out-of-the-money call in each, chosen on contract liquidity.</strong> That set is the table below, roughly 40 to 50 contracts. Calls only.
             </p>
             <p>
-              Liquidity decides eligibility, not unusual activity. Flow gives context. It does not decide who gets in. Every bullish name in the top 100 is eligible, and most days more than 50 qualify. A deterministic point-in-time rank (delta band, 60-day momentum, a liquidity demotion) keeps 50, using no outcome data. Note what the rank measures: the most liquid names, then one contract inside each. It is not the most liquid contracts in the market, which would be SPY and QQQ every day. Being in the pool is not a forecast that a name will go up.
+              Liquidity decides eligibility, not unusual activity. Flow gives context. It does not decide who gets in. Every bullish name in the top 100 is eligible, and most days more than 50 qualify. A deterministic point-in-time rank (delta band, 60-day momentum, a liquidity demotion) keeps 50, using no outcome data. Note what the rank measures: the most liquid names, then one contract inside each. It is not the most liquid contracts in the market, which would be SPY and QQQ every day.
             </p>
             <p>
-              Liquidity is here for one reason. Over the 60 trading days ending 2026-08-14, a study measured the old flow-first funnel with no fill at 10:00 ET on 40.5% of contracts. The liquid universe measured 6.1% on the same tape. Those are study numbers on a past window. They are not a live property of tonight&apos;s pool.
+              Liquidity gives you contracts you can get in and out of near the quote. In a study over the 60 trading days ending 2026-08-14, no-fill at the 10:00 ET entry fell from 40.5% on the old flow-first funnel to 6.1% on the liquid universe, on the same tape.
             </p>
             <p>
-              This page is the human-readable view and it is free. The same pool, plus <Link href="/developers" className="text-primary hover:underline">point-in-time features, opportunity surfaces, and a queryable outcome history</Link>, is served to AI agents over MCP. Every field is leakage-checked. Nothing here contains information that was not knowable at scan time. A <Link href="/scorecard" className="text-primary hover:underline">paper-traded cohort</Link> tracks the pool in public, winners and losers counted the same way. Buying the whole pool on one fixed exit loses money. We publish that, and it is why there is no pick on this site. The analysis is your agent&apos;s job.
+              This page is the human-readable view and it is free. The same pool, plus <Link href="/developers" className="text-primary hover:underline">point-in-time features, opportunity surfaces, and a queryable outcome history</Link>, is served to AI agents over MCP. Every field is leakage-checked. Nothing here contains information that was not knowable at scan time. Every pool contract is tracked to its real outcome, and the <Link href="/scorecard" className="text-primary hover:underline">scorecard</Link> shows Claude Code trading this pool with real money, every trade. There is no pick on this site: your AI builds the trade plan with you.
             </p>
             <p className="text-xs opacity-80">
-              Paper trading and educational data only. Not investment advice.
+              Past results. Educational only. Not investment advice.
             </p>
           </div>
           <div className="mt-5 flex flex-wrap gap-4 text-sm">

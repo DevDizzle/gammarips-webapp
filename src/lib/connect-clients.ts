@@ -50,7 +50,7 @@ const oauthPro = (client: string): ConnectClient['pro'] => ({
   intro: 'No key to paste. Add the pro endpoint and approve the sign-in your client opens.',
   steps: [
     {
-      text: `Add this URL in ${client}, exactly the way you added the free one.`,
+      text: `Add this URL in ${client} as a new connector. If it asks for an authentication type, choose OAuth.`,
       code: MCP_PRO_ENDPOINT,
     },
     {
@@ -60,8 +60,8 @@ const oauthPro = (client: string): ConnectClient['pro'] => ({
     },
     {
       text:
-        'This needs a client that supports OAuth for remote MCP servers. We verified our side end to end against production. ' +
-        'We have not driven this connector dialog ourselves yet, so tell us if it balks, and use Claude Code, Codex, Cursor or Gemini CLI while we check.',
+        'This needs a client that supports OAuth for remote MCP servers. We tested the full sign-in against production for the Claude, ChatGPT, and Grok callback shapes. ' +
+        'If your client balks, email us, and use Claude Code, Codex, Cursor, or Gemini CLI with your API key meanwhile.',
     },
   ],
 });

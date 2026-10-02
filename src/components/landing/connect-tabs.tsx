@@ -7,11 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { CONNECT_CLIENTS, PRO_STATUS_LABEL, type ConnectStep } from '@/lib/connect-clients';
 import { PRICE_MONTHLY, TOOL_COUNT, TRIAL_DAYS } from '@/lib/constants';
 
-// The per-client reference block, below the four-step path. Step 1 of the path
-// shows the Claude Code command; this is where every other client gets its
-// exact steps, free first and then pro. /about, /developers and /account all
-// link here (#connect) for that detail, so keep the anchor and keep both
-// blocks. Facts come from src/lib/connect-clients.ts (checked against vendor
+// The per-client reference block, below the three-step path (#start). This is
+// where every client gets its exact install steps, free first and then pro.
+// /about, /developers and /account all link here (#connect) for that detail,
+// so keep the anchor and keep both blocks. Facts come from src/lib/connect-clients.ts (checked against vendor
 // docs); this component only renders them. Order: the four clients that can
 // send the key today come first, the chat clients after.
 
@@ -41,14 +40,14 @@ export function ConnectTabs() {
   return (
     <section id="connect" className="scroll-mt-24">
       <h2 className="text-2xl md:text-3xl font-bold font-headline text-center text-balance mb-3">
-        Exact steps, for every client
+        Install steps for every AI
       </h2>
       <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto mb-8">
-        Pick your client. The free tier needs no card, no key, and no signup.
-        Agent Access ({PRICE_MONTHLY}/mo, {TRIAL_DAYS}-day trial) opens the pro
-        tools. Paste a key if your client sends headers. If it cannot, add the pro
-        endpoint and sign in instead. Every tab reaches the same {TOOL_COUNT}{' '}
-        tools.
+        Pick your client. Start the {TRIAL_DAYS}-day free trial of Agent Access
+        ({PRICE_MONTHLY}/mo after), then paste your key, or add the pro endpoint
+        and sign in if your client cannot send one. Every tab reaches the same{' '}
+        {TOOL_COUNT} tools. Want to look first? The free tier needs no card and
+        no key.
       </p>
 
       <Tabs defaultValue={CONNECT_CLIENTS[0].id} className="max-w-3xl mx-auto">

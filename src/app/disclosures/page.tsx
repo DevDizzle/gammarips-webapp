@@ -8,7 +8,7 @@ import { PRICE_MONTHLY, OG_IMAGE } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'GammaRips Disclosures: What we are NOT',
   description:
-    "What GammaRips is and is not: paper-trading only, educational only, no track-record marketing, and no registered investment advisor.",
+    "What GammaRips is and is not: educational only, not investment advice, complete track records only, no trading for you, and no registered investment advisor.",
   alternates: { canonical: 'https://gammarips.com/disclosures' },
   openGraph: {
     images: [OG_IMAGE],
@@ -23,11 +23,12 @@ const disclosures = [
   {
     icon: BookOpen,
     number: '01',
-    title: 'Paper-trading only. No live execution.',
+    title: 'GammaRips does not trade for you.',
     body: [
-      "Every validation-cohort trade is paper-traded. There is no brokerage account behind this data, no real capital at risk on anything we publish, and no order ever hits a real exchange via GammaRips.",
-      "The outcome record is a forward simulator: it ingests Polygon options data, applies fixed tracking rules at the same timestamps a live trader would face, and records the result. The same data feeds the public Track Record page.",
-      "If you act on anything you read here in your own brokerage account, that is your decision, your capital, and your risk. We do not place trades, hold positions, or receive any commission tied to trades you place.",
+      "GammaRips never places an order for you or for any subscriber, and no subscriber order reaches an exchange through GammaRips. The pool data, the opportunity surfaces, and the research cohorts are tracked on a paper-trading basis: no capital is at risk on them.",
+      "The live record on the Track Record page is the one real-money record we publish. It is the founder's own Claude Code agent trading contracts from the GammaRips pool in the founder's own brokerage account, shown as realized broker fills, every trade, wins and losses. That account may hold positions in contracts that also appear in the pool. GammaRips manages no account for anyone else.",
+      "The pool outcome record is a forward simulator: it ingests Polygon options data, applies fixed tracking rules at the same timestamps a live trader would face, and records the result. The same data feeds the public Track Record page.",
+      "If you act on anything you read here in your own brokerage account, that is your decision, your capital, and your risk. We do not place trades for you, hold positions for you, or receive any commission tied to trades you place.",
     ],
   },
   {
@@ -35,7 +36,7 @@ const disclosures = [
     number: '02',
     title: 'Educational only. Not investment advice.',
     body: [
-      "GammaRips publishes options-flow data, methodology writeups, research findings, and a paper-trading ledger as educational content. Nothing on this site, in our emails, over the MCP API, on @gammarips on X, or in any direct communication constitutes investment, financial, tax, accounting, or legal advice, and anything an AI agent concludes from our data is the user's own analysis, not a GammaRips recommendation.",
+      "GammaRips publishes options-flow data, methodology writeups, research findings, a paper-trading research ledger, and a real-money agent record as educational content. Nothing on this site, in our emails, over the MCP API, on @gammarips on X, or in any direct communication constitutes investment, financial, tax, accounting, or legal advice, and anything an AI agent concludes from our data is the user's own analysis, not a GammaRips recommendation.",
       "We do not know your financial situation, risk tolerance, time horizon, or tax position. A trade that would be reasonable for one person can be ruinous for another. Consult a registered investment advisor before making any trading decision based on what you read here.",
       "Options trading involves risk and is not suitable for every investor. The seller of an uncovered short option faces theoretically unlimited loss. The buyer of an option faces total loss of premium. Read the OCC's Characteristics and Risks of Standardized Options before trading any option.",
     ],
@@ -43,11 +44,11 @@ const disclosures = [
   {
     icon: Clock,
     number: '03',
-    title: 'No track-record marketing pre-30-trades.',
+    title: 'Every trade, from trade 1, with its N and window.',
     body: [
-      "Every candidate the engine surfaces is tracked to its realized outcome in a public record: the whole pool, winners and losers counted the same way, published as distributions with sample sizes attached (see the Track Record page). Nothing is edited after the fact.",
-      "The aggregate baselines we publish are honest to a fault: the blind-buy composite of our own pool under a fixed exit is negative, and we say so prominently. Beyond that, GammaRips makes no MARKETING claim from any small-sample number: no advertised win rate, no Sharpe ratio, no expectancy claim, no \"we returned X%.\" No cohort statistic is marketed before 30 closed trades, and we will not be talked into selectively quoting early winners.",
-      "Once the 30-trade gate is reached, aggregate performance numbers will be presented with their confidence intervals, the full sample, and the methodology used to compute them. Until then: the raw ledger, the sample-size warnings, and the methodology.",
+      "The live record on the Track Record page shows every trade from the first one: wins and losses, each with its entry, exit, and realized result, and the record as a whole with its trade count (N) and its date window. Nothing is edited after the fact, and the page states the date it was last updated.",
+      "We publish complete cohorts only. Every number we show covers every trade or every contract in its stated window. We never show a cherry-picked subset, a run of early winners, or a blended return built from selected results. Every candidate the engine surfaces is tracked to its realized outcome in the public pool record, winners and losers counted the same way, with sample sizes attached. The research baselines, including whole-pool results under fixed exit rules, are on the Methodology page.",
+      "Past results do not promise future results. A record of this size can change quickly as trades are added. We never promise a return or a win rate for your own trades.",
     ],
   },
   {
@@ -55,9 +56,9 @@ const disclosures = [
     number: '04',
     title: 'Past performance does not predict future results.',
     body: [
-      "Even after the 30-trade gate is reached, all performance numbers will be paper-trading performance against historical or near-real-time data. Real execution introduces slippage, fills, partial fills, halt-and-pause behavior, and human latency that paper-trading does not capture.",
-      "Market regimes change. A strategy that worked in one volatility environment can fail in another. The 2026 regime that V7 is being tested in is not necessarily the regime you will trade in if you act on these signals later.",
-      "There is no claim, express or implied, that any past V7 paper-trade outcome is indicative of any future result, paper or live.",
+      "Pool figures are paper-tracked against historical or near-real-time data. Real execution introduces slippage, fills, partial fills, halt-and-pause behavior, and human latency that paper tracking does not capture. The live record uses real fills, and your fills, timing, and sizing will differ from it.",
+      "Market regimes change. A strategy that worked in one volatility environment can fail in another. The 2026 regime behind these results is not necessarily the regime you will trade in if you act on this data later.",
+      "There is no claim, express or implied, that any past outcome, paper or live, is indicative of any future result.",
     ],
   },
   {
@@ -144,7 +145,13 @@ export default function DisclosuresPage() {
               <Link href="/methodology" className="text-primary underline underline-offset-2 hover:no-underline">
                 Methodology
               </Link>{' '}
-              covers every threshold, every data source, and the selection tournament behind the pool.
+              covers every threshold, every data source, and the research record behind the pool.
+            </li>
+            <li>
+              <Link href="/scorecard" className="text-primary underline underline-offset-2 hover:no-underline">
+                Track Record
+              </Link>{' '}
+              shows every real-money trade of the live agent record and the pool hit rates, each with its N and window.
             </li>
             <li>
               <Link href="/about" className="text-primary underline underline-offset-2 hover:no-underline">
@@ -192,7 +199,7 @@ export default function DisclosuresPage() {
         </section>
 
         <p className="text-xs text-muted-foreground text-center mt-16">
-          Last reviewed: July 2026. Disclosures may be updated as the engine, regulatory posture,
+          Last reviewed: October 2026. Disclosures may be updated as the engine, regulatory posture,
           or business model changes; updates will be dated.
         </p>
       </main>

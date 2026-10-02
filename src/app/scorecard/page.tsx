@@ -2,23 +2,26 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { FlaskConical } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { getPoolOutcomes } from '@/lib/firebase-admin';
 import { LifeDistribution } from '@/components/scorecard/life-distribution';
-import { OG_IMAGE } from '@/lib/constants';
+import { LiveRecord } from '@/components/scorecard/live-record';
+import { PoolHitRates } from '@/components/scorecard/pool-hit-rates';
+import { OG_IMAGE, TRIAL_DAYS } from '@/lib/constants';
+import { LIVE_RECORD, POOL_HIT_RATES, int, pct, usd } from '@/lib/receipts';
 
 export const revalidate = 300;
 
+const headline = `${LIVE_RECORD.wins} of ${LIVE_RECORD.trades} real-money trades closed at a profit`;
+
 export const metadata: Metadata = {
-  title: 'Track Record: Every Contract, Surfaced to Expiration',
-  description:
-    'What every surfaced contract did from the 10:00 ET fill to expiration, as distributions with sample sizes. Paper trading, educational only, not investment advice.',
+  title: `Track Record: ${headline}`,
+  description: `${headline}, ${usd(LIVE_RECORD.netUsd)} net, ${LIVE_RECORD.windowLabel}: Claude Code trading the GammaRips pool. Every trade listed, plus pool hit rates with N. Educational only, not investment advice.`,
   alternates: { canonical: 'https://gammarips.com/scorecard' },
   openGraph: {
     images: [OG_IMAGE],
-    title: 'Track Record: Every Contract, Surfaced to Expiration | GammaRips',
-    description:
-      'Every surfaced contract, tracked from the 10:00 ET fill to expiration: the ceiling and the floor, as distributions. No highlight reel. Paper trading, educational only.',
+    title: `Track Record: ${headline} | GammaRips`,
+    description: `Claude Code trading the GammaRips pool with real money: ${headline}, ${usd(LIVE_RECORD.netUsd)} net, ${LIVE_RECORD.windowLabel}. Every trade, wins and losses. Educational only, not investment advice.`,
     url: 'https://gammarips.com/scorecard',
   },
 };
@@ -29,15 +32,14 @@ export default async function TrackRecordPage() {
   const datasetSchema = {
     '@context': 'https://schema.org',
     '@type': 'Dataset',
-    name: 'GammaRips Pool Outcome Record',
-    description:
-      'Realized outcomes for every candidate in the GammaRips curated options-flow pool. The full-life window runs from the 10:00 ET surfacing fill to expiration with no exit rule: peak and trough excursion distributions (the ceiling) and hold-to-settlement distributions (the floor), tracked daily on a paper-trading basis. A separate baseline applies one fixed same-day bracket to every contract (10:00 ET entry, +40% target, -30% stop, flat 15:45 ET). That composite is negative and stated as such. Published as distributions with sample sizes. Contracts surfaced before the morning of 2026-08-25 (scan dates before 2026-08-24) came from the earlier unusual-activity funnel and are not one population with the liquid-universe funnel that replaced it. Not investment advice.',
+    name: 'GammaRips Track Record',
+    description: `The GammaRips track record. (1) The live record: every real-money trade Claude Code made from the GammaRips pool, ${LIVE_RECORD.windowLabel}, with realized broker fills: ${headline}, ${usd(LIVE_RECORD.netUsd)} net. (2) Pool hit rates: of ${int(POOL_HIT_RATES.n)} pool contracts (${POOL_HIT_RATES.windowLabel}), ${pct(POOL_HIT_RATES.hit25, 1)} hit +25%, ${pct(POOL_HIT_RATES.hit50, 1)} hit +50%, and ${pct(POOL_HIT_RATES.hit100, 1)} hit +100% within ${POOL_HIT_RATES.horizon}. A hit is a touch, not profit kept. (3) The full-life outcome distributions for every expired pool contract, from the 10:00 ET surfacing fill to expiration with no exit rule, tracked on a paper basis and published with sample sizes. Contracts surfaced before the morning of 2026-08-25 (scan dates before 2026-08-24) came from the earlier unusual-activity funnel and are not one population with the liquid-universe funnel that replaced it. Educational only. Not investment advice.`,
     url: 'https://gammarips.com/scorecard',
     creator: { '@type': 'Organization', name: 'GammaRips', url: 'https://gammarips.com' },
     license: 'https://gammarips.com/disclosures',
     isAccessibleForFree: true,
     ...(outcomes
-      ? { temporalCoverage: `${outcomes.first_scan_date}/${outcomes.last_scan_date}` }
+      ? { temporalCoverage: `${outcomes.first_scan_date}/${LIVE_RECORD.asOf}` }
       : {}),
   };
 
@@ -47,17 +49,12 @@ export default async function TrackRecordPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }}
       />
-      <header className="text-center">
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">Track Record</p>
-        <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-          We track every contract to the end.
-        </h1>
-        <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Every morning we surface roughly 40 to 50 contracts. We follow every
-          one from the 10:00 ET fill until it expires. Nothing gets edited out.
-          Here is what happened to them.
-        </p>
-      </header>
+
+      <LiveRecord />
+
+      <Separator className="my-12 sm:my-16" />
+
+      <PoolHitRates />
 
       <Separator className="my-12 sm:my-16" />
 
@@ -66,32 +63,38 @@ export default async function TrackRecordPage() {
       <Separator className="my-12 sm:my-16" />
 
       <section className="text-center space-y-4">
-        <div className="flex justify-center">
-          <FlaskConical className="h-6 w-6 text-primary" />
-        </div>
         <h2 className="text-2xl font-bold font-headline">
-          Want to work this data?
+          Give your AI the same pool.
         </h2>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          Everything on this page, plus the contract-by-contract detail behind
-          it, is what your AI agent gets over MCP. Our Lab publishes the
-          experiments we run on it, including the ideas that failed.
+          The agent behind this record reads the same nightly pool your AI gets
+          over MCP, in Claude, ChatGPT, Cursor, or Codex. Add the exit lab, and
+          your AI builds the trade plan with you: candidates, entry, target,
+          stop, and size. You decide.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
           <Button asChild size="lg">
-            <Link href="/developers">Put your agent on this data</Link>
+            <Link href="/pricing">
+              Start your {TRIAL_DAYS}-day free trial <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link href="/lab">Read the Lab</Link>
+            <Link href="/developers">Add it to your AI</Link>
           </Button>
         </div>
+        <p className="text-sm text-muted-foreground">
+          Or <Link href="/signals" className="text-primary hover:underline">browse the pool free</Link>,
+          no account needed.
+        </p>
       </section>
 
       <p className="mt-16 text-xs text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
-        Paper-trading data, educational content only. Not investment advice.
-        Excursion figures are realized per-contract extremes, conditional on the
-        stated tracking window. They are not returns achieved by any account.
-        Past performance is not a guarantee of future results.
+        The live record is real-money trades in the founder&apos;s agent
+        account, entered on this page by hand from realized broker fills. Pool
+        figures are historical data tracked on a paper basis. Hit and excursion
+        figures are per-contract touches inside the stated window, not returns
+        earned by any account. Educational content only. Not investment advice.
+        Past results do not promise future results.
       </p>
     </section>
   );

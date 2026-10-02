@@ -4,60 +4,83 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
-import { TOOL_COUNT, PRICE_MONTHLY } from "@/lib/constants"
+import {
+  FOUNDING_CAP,
+  HARNESS_REPO,
+  MCP_PRO_ENDPOINT,
+  PRICE_MONTHLY,
+  TOOL_COUNT,
+  TRIAL_DAYS,
+} from "@/lib/constants"
+import {
+  LIVE_RECORD,
+  POOL_HIT_RATES,
+  RECEIPTS_DISCLAIMER,
+  int,
+  pct,
+  usd,
+} from "@/lib/receipts"
 
+// Positive, true answers. Numbers come from src/lib/receipts.ts and
+// src/lib/constants.ts only. An answer that shows a performance number ends
+// with RECEIPTS_DISCLAIMER (forbidden claim 5). The homepage FAQPage JSON-LD
+// derives from this array, so the schema always matches what renders.
 export const faqs = [
   {
-    question: "What is agentic trading?",
-    answer: "Using an AI agent (Claude, ChatGPT, or one you build) as your own market analyst instead of following someone else's calls. The agent pulls real data, reasons over it, and lays out the picture; you keep the judgment and place (or skip) the trade. The catch: agents are only as good as the data they can reach. A chatbot with no market data will happily improvise. GammaRips is the data layer that fixes that for options flow. Your agent connects over MCP and reasons over curated, timestamped data with no hindsight in it, instead of vibes."
+    question: "What do I get with Agent Access?",
+    answer: `Your AI gets the full GammaRips pool every trading night: roughly 40 to 50 calls with deep books, one per bullish name among the 100 most liquid US stocks, each with its thesis, technicals, catalyst, and contract detail. It also gets fresh liquidity checks, earnings dates, the exit lab (how often past pool contracts hit each profit level and each stop, plus a score for any target and stop you choose), contract replay, regime context, and the methodology playbooks. That is ${TOOL_COUNT} tools, ${PRICE_MONTHLY}/mo after a ${TRIAL_DAYS}-day free trial. Everything human-readable on gammarips.com stays free.`
   },
   {
-    question: "What does GammaRips actually sell?",
-    answer: `Data and tools, not picks. The paid product is MCP access for your AI agent: today's curated options-flow pool in structured form, the opportunity surface for historical setups (how far each contract actually ran, and how far it drew down), a queryable outcome database, regime context, and methodology playbooks: ${TOOL_COUNT} tools in total. Everything human-readable on gammarips.com is free, forever. The ${PRICE_MONTHLY}/mo is the machine connection.`
+    question: "What does a trade plan look like?",
+    answer: "Ask your AI for a trade and it comes back with 1 to 3 candidates from the pool that pass the liquidity and earnings checks. Each one has the contract, why it passed, an entry (about 10:00 ET, a limit order near the mid), a target and a stop set from the exit lab history, the maximum loss, and a size that keeps that loss inside your risk budget. If nothing passes, you get a reasoned no-trade with the check that failed. You decide, and you place the order in your own brokerage. GammaRips never places trades."
   },
   {
-    question: "Which AI agents work with this?",
-    answer: `Anything that speaks MCP (Model Context Protocol). The free tier works in every MCP client: Claude Code, Codex, Cursor, Gemini CLI, claude.ai and Claude Desktop custom connectors, ChatGPT with Developer mode, Grok connectors, or any MCP client library. The paid tools take a credential two ways. Claude Code, Codex, Cursor and Gemini CLI send your API key in an Authorization header. A chat client that cannot send a header adds https://mcp.gammarips.com/pro instead and signs in with OAuth, so ChatGPT, claude.ai and Grok reach the same tools without a key. Pick your client in the connect section on the homepage. Each tab shows the exact steps and states whether the paid tools run in that client today. Once connected, the ${TOOL_COUNT} tools show up like native capabilities.`
+    question: "Which AIs work with this?",
+    answer: `Claude (Claude Code, Claude Desktop, and claude.ai), ChatGPT, Cursor, and Codex, plus Gemini CLI, Grok, and any other client that speaks MCP (Model Context Protocol). Claude Code, Codex, Cursor, and Gemini CLI send your API key in a header. A chat client that cannot send a header, such as ChatGPT, claude.ai, or Grok, adds ${MCP_PRO_ENDPOINT} and signs in instead. Both routes reach the same ${TOOL_COUNT} tools. The install section on this page has the exact steps for each client.`
   },
   {
-    question: "Do I need the harness?",
-    answer: "No. Any MCP client can call the tools directly. The harness is a free, open-source repo that adds the discipline: it grades tradeability before it considers a story, writes one row for every pool name before any outcome is known, and scores all of them after the close, not only the ones you traded. Clone it from github.com/DevDizzle/gammarips-harness, or ignore it and drive the tools your own way. Its screen uses the paid tools, so the daily loop needs a key."
+    question: "What does the free trial include?",
+    answer: `Full Agent Access for ${TRIAL_DAYS} days: every pro tool, the full pool, the exit lab, and trade plans in your AI from minute one. Card on file, no charge during the trial. Cancel before day ${TRIAL_DAYS} and you pay nothing. After that it is ${PRICE_MONTHLY}/mo, the founding price, which the first ${FOUNDING_CAP} subscribers keep for as long as they stay subscribed.`
   },
   {
     question: "Why don't you just tell me what to buy?",
-    answer: "Two reasons, and we mean both. First, shared picks get crowded: everyone piling into the same thin options contract destroys the very thing they paid for. Second, our own published data shows that mechanically buying everything the engine surfaces, under a fixed exit rule, loses money. The value isn't a pick. It's the surface a good trade comes from: a small curated pool plus the historical data showing how setups like each one actually behaved. We give your agent that surface. It reasons to its own conclusion, sized to your risk, on your horizon."
-  },
-  {
-    question: "How is the pool curated?",
-    answer: "Every trading night the engine ranks about 3,500 optionable US names by liquidity: the name must have traded 3M+ shares that session and carry a chain with 25 or more listed strikes, then the top 100 by combined chain dollar volume and share volume survive. We keep the bullish names and price one out-of-the-money call in each, chosen on contract liquidity. That is a pool of roughly 40 to 50 contracts, each carrying its flow data, technicals, news context and contract detail. Two safety rails run before our paper cohort's entry: an earnings exclusion and a market-stress check (VIX at or below VIX3M). They screen the cohort's entry, not pool membership, so the pool itself can carry earnings-window names; check any candidate you take. Every field is point-in-time, so nothing your agent sees contains information that wasn't knowable at scan time. Note what this is not: we do not claim these are the best contracts, and we tested that claim. See the next question."
-  },
-  {
-    question: "Is the pool better than picking at random?",
-    answer: "On returns, we could not show that it is, and we say so. In August 2026 we ran two pre-registered tests, decision rules written before any data was pulled. Against liquidity-matched and random optionable controls over 87 trading days, the pool was not distinguishable on same-day return or on realized excursion. A second test over 57 days found no signal from unusual-activity ranking inside the liquid universe either. Those tests can detect a difference of about 5 percentage points per trade and cannot detect 1 to 2, so the honest reading is no large edge, not no edge. What did measurably improve is whether a contract can be traded at all: on a 60-day window ending 2026-08-14, the share of candidates with no fill at 10:00 ET fell from 40.5% to 6.1% after we moved the scan to liquidity-first. Those are study numbers on a stated window, not a live property of today's pool. This is why we sell the data layer and the outcome history rather than a ranked list."
+    answer: "Your AI builds a plan for your account and your risk: your size, your stop, your budget. Shared picks get crowded. When every subscriber piles into the same contract, the fills get worse for all of them. A plan your AI builds from the data is yours alone. That is why GammaRips has no pick endpoint."
   },
   {
     question: "Where's the track record?",
-    answer: "On the Track Record page, and in the Lab. Every candidate in the pool is tracked to its real outcome (how high it ran, how far it fell, and a fixed-exit baseline), published as distributions with sample sizes attached, winners and losers counted the same way. We tell you the unflattering part up front: the whole pool bought blindly under a fixed exit is negative. That number is exactly why we sell the data layer and not a pick. The exit is your agent's job."
+    answer: `On the scorecard. Claude Code trades the GammaRips pool with real money in an agent account: ${LIVE_RECORD.wins} of ${LIVE_RECORD.trades} trades closed at a profit, ${usd(LIVE_RECORD.netUsd)} net realized, every trade counted (entries ${LIVE_RECORD.windowLabel}). The pool history is public too. Of ${int(POOL_HIT_RATES.n)} pool contracts (${POOL_HIT_RATES.windowLabel}), ${pct(POOL_HIT_RATES.hit25, 1)} hit +25%, ${pct(POOL_HIT_RATES.hit50, 1)} hit +50%, and ${pct(POOL_HIT_RATES.hit100, 1)} hit +100% within ${POOL_HIT_RATES.horizon}. The Lab publishes the research behind the engine. ${RECEIPTS_DISCLAIMER}`
+  },
+  {
+    question: "How is the pool curated?",
+    answer: "Every trading night the engine ranks about 3,500 optionable US stocks by liquidity. A name must trade 3M+ shares that session and carry 25 or more listed strikes, then the top 100 by combined chain dollar volume and share volume go through. The engine keeps the bullish names and chooses one out-of-the-money call in each on contract liquidity. That gives a pool of roughly 40 to 50 contracts, each with its flow data, technicals, news context, and contract detail. Every field is point-in-time, so nothing your AI sees contains information that was not knowable at scan time. Earnings dates are not screened out of the pool, so your AI checks each candidate's earnings date before it plans a trade."
   },
   {
     question: "Is this financial advice?",
-    answer: "No. GammaRips is a data vendor. We publish market data, methodology, and research on a paper-trading basis. We never see your account, never manage money, and never make personalized recommendations, and the MCP deliberately has no 'what should I buy' endpoint. What your agent concludes from the data is your analysis, not our advice. If you want personalized investment advice, work with a licensed advisor."
+    answer: "No. GammaRips is a data vendor. We publish market data, methodology, and research. We never see your account, never manage money, and never make personalized recommendations, and the MCP has no 'what should I buy' endpoint. The plan your AI builds is your own analysis of GammaRips data, and you decide. For personalized investment advice, work with a licensed advisor."
+  },
+  {
+    question: "Do I need the harness?",
+    answer: `No. Any MCP client can call the tools directly, and your AI can build a trade plan in Claude, ChatGPT, Cursor, or Codex as is. The harness is a free, open-source repo for traders who want a daily loop: a morning screen, a journal, and an after-the-close review. Clone it from ${HARNESS_REPO.replace('https://', '')}. Its screen uses the pro tools, so it runs on Agent Access.`
   },
   {
     question: "Can't I just scrape the free site?",
-    answer: `The webapp shows today's pool and reports in human-readable form, and it always will, free. The MCP is a different animal: structured point-in-time data built for machine reasoning, the historical opportunity-surface and outcome databases that never render on a webpage, exit-rule simulation, regime context, and the methodology playbooks, including the bracket-tournament selection pattern your agent can run against its own objective. You could rebuild some of that from scraping. By the time you have, you'll have built a worse version of the thing we sell for ${PRICE_MONTHLY}.`
-  },
-  {
-    question: "Who runs this?",
-    answer: "Evan Parra (founder, ML engineer, data architect) built the engine. The nightly pipeline (scanning, scoring, enriching, publishing) runs autonomously, and every decision is logged to BigQuery. The Lab publishes experiments run on the engine's own data, including the failed ones. Read more on the About page."
-  },
-  {
-    question: "What happened to the WhatsApp pick subscription?",
-    answer: `Retired. We used to sell a daily pushed pick, and we ended it deliberately. A single shared pick concentrates everyone into one contract, and our own published data keeps showing that buying one shared name under one fixed exit loses money. What varies is how each trader exits, and the exit belongs to the trader. Agent Access buys something better-aligned: full MCP data access, so your agent works the whole pool your way. If you had an active subscription, email evan@gammarips.com and we'll make it right.`
+    answer: `The website shows the pool and the daily reports free, and it always will. Agent Access is a different thing: structured point-in-time data built for your AI, the outcome history and exit lab that never render on a web page, liquidity checks, contract replay, regime context, and the methodology playbooks. You could rebuild part of that from a scrape. It would cost you far more than ${PRICE_MONTHLY}/mo of your own time.`
   },
   {
     question: "What happens if I cancel?",
-    answer: "Your agent's MCP access ends with your billing cycle. No retention tricks. Everything human-readable stays free forever: the daily pool, reports, scorecard, methodology, blog, and Lab. Come back whenever your agent misses the data."
+    answer: "Your AI's MCP access ends with your billing cycle. No retention tricks. Everything human-readable stays free: the daily pool, reports, scorecard, methodology, blog, and Lab. Come back whenever your AI needs the data again."
+  },
+  {
+    question: "Who runs this?",
+    answer: "Evan Parra (founder, ML engineer, data architect) built the engine. The nightly pipeline (scan, enrichment, reports, and outcome labels) runs on its own, and every run is logged to BigQuery. The Lab publishes the experiments run on the engine's own data. Read more on the About page."
+  },
+  {
+    question: "What happened to the WhatsApp pick subscription?",
+    answer: "Retired. It pushed one shared pick to every subscriber, and a shared pick puts everyone into the same contract. Agent Access gives your AI the whole pool and the exit lab instead, so it builds a plan for your account. If you had an active subscription, email evan@gammarips.com and we'll make it right."
+  },
+  {
+    question: "What is agentic trading?",
+    answer: "Trading with an AI agent as your analyst. Your AI (Claude, ChatGPT, Cursor, Codex, or one you build) pulls real data, reasons over it, and builds a trade plan. You keep the judgment and place the trade, or skip it. An agent is only as good as the data it can reach. GammaRips is that data for options: a nightly pool of liquid contracts and the history to plan the exit, served over MCP."
   },
 ];
 

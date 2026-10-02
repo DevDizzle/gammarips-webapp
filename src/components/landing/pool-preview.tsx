@@ -8,9 +8,9 @@ import { ArrowRight } from 'lucide-react';
 // via firebase-admin); this component only renders it.
 //
 // Two deliberate omissions. The pool is bullish-only by design, so a "bear: 0"
-// counter is noise. And no per-name score is shown: the pool measured
-// indistinguishable from matched random on returns (selection research closed
-// 2026-08-22), so a ranked-looking list would imply an edge we cannot show.
+// counter is noise. And no per-name score is shown: this is a sample of the
+// pool, never a ranking, and nothing here may present names as top choices.
+// The selection research (2026-08-22) lives on /methodology and /lab.
 
 type Props = {
   summary: any;
@@ -95,8 +95,10 @@ export function PoolPreview({ summary, report, reportDate, signals }: Props) {
                 </Link>
               </div>
               <p className="text-xs text-muted-foreground mb-3">
-                Every name in the pool is free to read on this site. The pool is
-                not ranked, and nothing here is a recommendation.
+                A few names from the latest pool, in no order. Every name
+                is free to read on this site. Your AI gets the full pool, with
+                liquidity checks and the exit lab, on Agent Access. Nothing here
+                is a recommendation.
               </p>
               <div className="grid gap-2">
                 {signals.map((signal: any) => (

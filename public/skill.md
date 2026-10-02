@@ -1,33 +1,35 @@
-# GammaRips: Options-Flow Data for AI Agents
+# GammaRips: Better Option Contracts and a Real Trade Plan for AI Agents
 
 ## What I Am
-The options-flow data layer for agentic trading. Every trading night I rank about 3,500 optionable US stocks by liquidity, keep the top 100, and price one out-of-the-money call in each bullish name: a small pool your agent can actually trade. Liquidity decides membership, not unusual activity. I serve data and methodology over MCP; I never return a pick. You (the agent) reason over the surface to your own conclusion for your user.
+Better-quality option contracts every trading night, and the history to plan the exit. Every night I rank about 3,500 optionable US stocks by liquidity, keep the 100 most liquid, keep the bullish names, and select one out-of-the-money call in each on contract liquidity: a pool of roughly 40 to 50 contracts with deep books. You (the agent) build the trade plan with your user. I serve data and methodology over MCP. I never return a pick.
+
+The receipts, each with its N and window:
+- Median open interest 4,664 vs 906 before the liquidity rule, median session volume 1,039 vs 232, the thinnest 10% at 1,635 vs 29 (1,300 pool contracts 2026-08-24 to 2026-10-01 vs the 60 scan days before). In a 60-session study ending 2026-08-14, no-fill at the 10:00 ET entry fell from 40.5% to 6.1%.
+- Of 1,150 pool contracts (scan dates 2026-08-24 to 2026-09-28), 52.8% hit +25%, 34.5% hit +50%, and 15.9% hit +100% within 3 trading days. A hit is a touch, not profit kept.
+- Claude Code trading this pool with real money closed 11 of 14 trades at a profit, +$2,263 net (entries 2026-09-14 to 2026-10-02). Every trade: https://gammarips.com/scorecard
 
 ## What I Serve (9 tools)
-- **The pool**: today's bullish names, one out-of-the-money call each, with thesis, technicals, flow dollars, and the selected contract per name. `get_pool` with `view=preview` is a free teaser; `view=enriched`, `raw`, or `features` needs a pro key. `get_signal` is the one-ticker deep dive plus the earnings-window check.
-- **Fresh liquidity**: `get_liquidity` gives entry-day open interest, session volume, and greeks for one contract or the whole pool in one call. The pool's own numbers are session-frozen, so re-check here before you decide.
-- **The outcome and receipts database**: `query_outcomes`, one tool with nine views: realized bracket labels, grouped summaries, the opportunity surface (realized peak/drawdown with no exit applied), the touch-probability curve, exit-rule scoring for your own target/stop/horizon, and the paper cohort's receipts.
-- **The raw price tape**: `replay_contract` returns the intraday minute path or the daily marks for a contract. I return bars; I never simulate an exit for you.
+- **The pool**: today's bullish names, one out-of-the-money call each, with thesis, technicals, flow dollars, and the selected contract per name. `get_pool` with `view=preview` is free. `view=enriched`, `raw`, or `features` needs Pro. `get_signal` is the one-ticker deep dive plus the earnings-window check.
+- **Fresh liquidity**: `get_liquidity` gives entry-day open interest, session volume, and greeks for one contract or the whole pool. The pool's own numbers are session-frozen, so re-check here before you plan.
+- **The exit lab**: `query_outcomes`, one tool with nine views: the touch-probability curve (`view=harvest`), the opportunity surface (how far each past contract moved for and against, no exit applied), bracket labels and summaries, and scoring for your own target, stop, or trailing stop (`view=exit_rule`).
+- **The raw price tape**: `replay_contract` returns the minute path or the daily marks for a contract.
 - **Regime context**: `get_regime_context` gives the point-in-time VIX versus VIX3M rail.
-- **Methodology and reference**: `get_playbook` serves the playbooks (including the bracket-tournament selection pattern to run against YOUR user's objective), the plain-English field dictionary, and the data-contract schema. `get_market_calendar_status` and `get_daily_report` round out the free context.
+- **Methodology and reference**: `get_playbook` serves the playbooks (start with `name=start-here`), the field dictionary, and the data-contract schema. `get_market_calendar_status` and `get_daily_report` round out the free context.
 
-## How to Work the Pool
-1. `get_market_calendar_status`: is the market even open?
+## How to Build the Trade Plan
+1. `get_market_calendar_status`: is there a session, and is the pool fresh?
 2. `get_regime_context`: does the volatility rail pass?
-3. `get_pool`: pull today's pool (`view=enriched` with a key, `view=preview` without one).
-4. `get_liquidity`: re-check entry-day liquidity on the names you like.
-5. `query_outcomes`: how did setups like these actually behave? Use `view=surface` for the excursion data and `view=labels` or `view=summary` for realized outcomes.
-6. Synthesize a decision surface for your user. State the caveats. Do not output a single "buy this". Sizing, horizon, and the final call belong to the human.
+3. `get_pool` with `view=enriched`: read the pool.
+4. Shortlist 1 to 3 candidates on your user's criteria. Check earnings with `get_signal` (`view=earnings`) and fresh liquidity with `get_liquidity`.
+5. `query_outcomes` with `view=harvest` and `view=surface`: set the target and the stop from what past pool contracts did. Score the bracket with `view=exit_rule`.
+6. Give the plan: the contract, why it passed, entry (about 10:00 ET, limit near the mid), target, stop, maximum loss, and a size inside your user's risk budget. If nothing passes, give a reasoned no-trade with the check that failed. Your user decides.
 
 Built-in prompts that encode this: `morning_brief`, `analyze_candidate`, `run_your_own_tournament`.
-
-## Honest Baseline (tell your user)
-Buying every pool name mechanically under a fixed exit has been negative. The winners are in the pool and the excursion data shows how far each contract ran, but selection does not find direction the market missed: two pre-registered studies (August 2026) could not distinguish the pool from matched random optionable contracts. Which contracts, and how they're traded, is analysis. That analysis is your job.
 
 ## MCP Endpoint
 `https://mcp.gammarips.com/mcp` (Streamable HTTP; legacy SSE at `/sse`)
 
-Auth: `Authorization: Bearer <API key>` on `https://mcp.gammarips.com/mcp`, generated by the subscriber at https://gammarips.com/account with an active subscription ($29/mo founding price for the first 100 subscribers, $39/mo after that, 30-day free trial at https://gammarips.com/pricing; the key is shown once, at creation). A client that cannot send a custom header uses OAuth 2.1 instead: connect to `https://mcp.gammarips.com/pro` and complete the sign-in it offers (authorization server `https://gammarips.com`, PKCE S256, dynamic registration, scope `mcp:read`; `client_credentials` for headless agents). Without any credential, an anonymous funnel tier on `/mcp` serves the pool preview, daily reports, methodology playbooks, and reference tools.
+Auth: `Authorization: Bearer <API key>` on `https://mcp.gammarips.com/mcp`, generated by the subscriber at https://gammarips.com/account with an active subscription ($29/mo founding price for the first 100 subscribers, $39/mo after that, 30-day free trial at https://gammarips.com/pricing; the key is shown once, at creation). A client that cannot send a custom header uses OAuth 2.1 instead: connect to `https://mcp.gammarips.com/pro` and complete the sign-in it offers (authorization server `https://gammarips.com`, PKCE S256, dynamic registration, scope `mcp:read`; `client_credentials` for headless agents). Without any credential, an anonymous tier on `/mcp` serves the pool preview, daily reports, methodology playbooks, and reference tools.
 
 ## Disclaimers
-Data on a paper-trading basis, educational only. Not investment advice. Past performance is not a guarantee of future results.
+Past results, from real-money trades and historical pool data. Educational only. Not investment advice. Past performance is not a guarantee of future results.

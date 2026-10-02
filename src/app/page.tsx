@@ -3,7 +3,8 @@ import { Hero } from "@/components/landing/hero";
 import { StartHere } from "@/components/landing/start-here";
 import { PoolPreview } from "@/components/landing/pool-preview";
 import { PoolRule } from "@/components/landing/pool-rule";
-import { Honesty } from "@/components/landing/honesty";
+import { Proof } from "@/components/landing/proof";
+import { InstallCta } from "@/components/landing/install-cta";
 import { ConnectTabs } from "@/components/landing/connect-tabs";
 import Faq, { faqs } from "@/components/landing/faq";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
@@ -15,9 +16,9 @@ export const revalidate = 60; // keep the daily pool summary fresh without a ful
 // images included. If one is ever added it MUST carry images: [OG_IMAGE].
 // The description stays disclaimer-free (owner-settled 2026-08-08).
 export const metadata: Metadata = {
-  title: "GammaRips | Options-flow data for AI agents",
+  title: "Better option contracts and a trade plan in your AI | GammaRips",
   description:
-    "Give your AI agent real options-flow data over MCP. A nightly liquidity-ranked pool of roughly 40 to 50 bullish call contracts, free to browse.",
+    "GammaRips gives Claude, ChatGPT, Cursor, or Codex better option contracts every night and the history to set the target and the stop. Your AI builds the trade plan.",
   alternates: {
     canonical: '/',
   },
@@ -30,9 +31,9 @@ export default async function LandingPage() {
   const report = reportDate ? await getDailyReport(reportDate) : null;
   const blogPosts = await getBlogPostsAdmin();
 
-  // A sample of the pool, not a ranking. Selection research closed 2026-08-22:
-  // the pool is not distinguishable from matched random on returns, so nothing
-  // here may sort or present as "the best" names.
+  // A sample of the pool, not a ranking. Nothing here may sort the names or
+  // present them as top choices. The selection research (2026-08-22) lives on
+  // /methodology and /lab.
   const poolSample = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 5) : [];
 
   const webSiteSchema = {
@@ -41,7 +42,7 @@ export default async function LandingPage() {
     "name": "GammaRips",
     "image": "https://gammarips.com/og-image.png?v=3",
     "url": "https://gammarips.com",
-    "description": summary?.market_narrative || "Options-flow data for AI agents: an overnight liquidity ranking of the US options universe, cut to a small pool of tradeable contracts and served over MCP.",
+    "description": summary?.market_narrative || "Better option contracts every trading night and the history to plan the exit, served to your AI over MCP. Your AI builds the trade plan.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://gammarips.com/reports?q={search_term_string}",
@@ -102,12 +103,16 @@ export default async function LandingPage() {
       />
 
       <main className="flex-1 container mx-auto px-4 py-8 space-y-14 max-w-5xl">
-        {/* The path, in the order a person walks it: what this is, the four
-            steps, then the proof (today's pool, the rule, the unflattering
-            numbers). Per-client connect detail sits below as reference. */}
+        {/* The page sells one path: install GammaRips in your AI, then start
+            the trial. Order: the value and the headline numbers, the three
+            steps, the receipts, the latest pool, how the pool is built, then
+            per-client install detail as reference. It ends on the same
+            install-then-trial block the hero opens with. */}
         <Hero />
 
         <StartHere />
+
+        <Proof />
 
         <PoolPreview
           summary={summary}
@@ -117,8 +122,6 @@ export default async function LandingPage() {
         />
 
         <PoolRule />
-
-        <Honesty />
 
         <ConnectTabs />
 
@@ -138,6 +141,17 @@ export default async function LandingPage() {
             <h2 className="text-3xl font-bold font-headline">Frequently Asked Questions</h2>
           </div>
           <Faq />
+        </section>
+
+        <section className="rounded-2xl border border-primary/30 bg-card/60 px-4 py-10 md:p-12 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold font-headline text-balance mb-3">
+            Give your AI better contracts and a real trade plan.
+          </h2>
+          <p className="text-sm text-muted-foreground max-w-xl mx-auto mb-8">
+            Install GammaRips in the AI you already use, then start your free
+            trial. Ask for a plan before the next open.
+          </p>
+          <InstallCta />
         </section>
       </main>
     </div>

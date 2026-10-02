@@ -5,27 +5,48 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Shield, Bot, User, CheckCircle2 } from 'lucide-react';
 import ContactForm from './contact-form';
-import { TOOL_COUNT, TRIAL_DAYS, OG_IMAGE } from '@/lib/constants';
+import { TOOL_COUNT, TRIAL_DAYS, OG_IMAGE, MCP_PRO_ENDPOINT, HARNESS_REPO } from '@/lib/constants';
+import {
+  LIVE_RECORD,
+  CONTRACT_QUALITY,
+  RECEIPTS_DISCLAIMER,
+  int,
+  signedPct,
+  usd,
+} from '@/lib/receipts';
 export const metadata: Metadata = {
-  title: 'About GammaRips: The options-flow data layer for AI agents',
+  title: 'About GammaRips: the engine, the builder, and the live record',
   description:
-    "The engine, the methodology, and the person behind GammaRips: a nightly liquidity rank of about 3,500 optionable US names, cut to a small bullish pool of liquid calls. Paper-trading, educational only. Not investment advice.",
+    "Who builds GammaRips and why: a nightly liquidity rank of about 3,500 optionable US stocks, cut to a pool of liquid calls, served to your AI over MCP and traded with real money by our own Claude Code agent. Educational only. Not investment advice.",
   alternates: { canonical: 'https://gammarips.com/about' },
   openGraph: {
     images: [OG_IMAGE],
-    title: 'About GammaRips: The options-flow data layer for AI agents',
-    description: "The engine, the methodology, and the person behind GammaRips. Paper-trading data, educational only.",
+    title: 'About GammaRips: the engine, the builder, and the live record',
+    description: "The engine, the builder, and the live record behind GammaRips. Educational only. Not investment advice.",
     url: 'https://gammarips.com/about',
   },
 };
 
+const recordStats = [
+  { value: `${LIVE_RECORD.wins} of ${LIVE_RECORD.trades}`, label: 'trades closed at a profit' },
+  { value: usd(LIVE_RECORD.netUsd), label: 'net realized' },
+  { value: `${LIVE_RECORD.atTarget} of ${LIVE_RECORD.trades}`, label: "closed at the agent's pre-set target" },
+  { value: signedPct(LIVE_RECORD.medianPct, 1), label: 'median trade, on premium' },
+];
+
+const engineSteps = [
+  'After the close, the engine ranks about 3,500 optionable US stocks by liquidity.',
+  'It keeps the 100 most liquid names, then the bullish ones.',
+  'It selects one out-of-the-money call per name, on contract liquidity.',
+  'Each trading morning it publishes the pool, roughly 40 to 50 contracts, with thesis, technicals, catalyst, and the outcome history behind the exit lab.',
+];
 
 const whyList = [
-  'A small pool, not a firehose. Membership is liquidity, not unusual activity. No FOMO, no "look how many alerts we have."',
-  'No pick endpoint, on purpose. Shared picks crowd thin contracts; data lets every agent reach its own conclusion.',
-  'The honest baseline is published: buying the whole pool blindly under a fixed exit loses. The Lab shows the receipts, including the killed hypotheses.',
-  'Everything is leakage-checked and mechanical. Every filter, threshold, and selection rule is documented, logged, and shipped as playbooks your agent can read.',
-  'Paper-trading data only. No aggregate performance marketing until a cohort has ≥30 closed trades. This page is about what was built, not what it returned.',
+  'Liquidity first. The pool is selected on contract liquidity, so your AI starts from contracts you can enter and exit near the quote.',
+  'Your AI builds the plan. GammaRips serves data and tools, and your AI builds a plan for your account and your risk. Plans built from the data spread out instead of crowding into one shared contract.',
+  'The exit comes from history. The exit lab shows how often past pool contracts hit each profit level within 3 trading days, so the target and the stop are set on purpose.',
+  'Leakage-checked and documented. Every column carries its as-of boundary, and every filter and rule ships as a playbook your AI can read.',
+  'Receipts in public. The live record counts every trade in the window, wins and losses. The Lab publishes each experiment with its method, sample size, and verdict.',
 ];
 
 interface AboutPageProps {
@@ -48,7 +69,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
     "@context": "https://schema.org",
     "@type": "AboutPage",
     "name": "About GammaRips",
-    "description": "The options-flow data layer for AI agents: a nightly liquidity rank of about 3,500 optionable US names, cut to a small bullish pool of liquid calls, tracked by a public paper-traded cohort and served over MCP.",
+    "description": "The options-flow data layer for AI agents: a nightly liquidity rank of about 3,500 optionable US stocks, cut to a small bullish pool of liquid calls, served over MCP, and traded with real money by the builder's own Claude Code agent. Educational only. Not investment advice.",
     "url": "https://gammarips.com/about",
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
   };
@@ -60,21 +81,21 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
           <Card className="bg-primary/5 border-primary/40 mb-12">
             <CardHeader>
               <p className="text-sm font-semibold uppercase tracking-wider text-primary">Welcome to Agent Access</p>
-              <CardTitle className="font-headline text-2xl sm:text-3xl">You&apos;re in. Let&apos;s get your agent connected.</CardTitle>
+              <CardTitle className="font-headline text-2xl sm:text-3xl">You&apos;re in. Let&apos;s get your AI connected.</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <ul className="space-y-3 text-sm text-foreground/90">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span><strong>Step 1: Generate your API key.</strong> Head to your <Link href="/account?welcome=1" className="text-primary hover:underline">account page</Link> and click Generate API key. The key is shown once, so copy it right then. Any trouble, email <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">evan@gammarips.com</a> and we&apos;ll sort it immediately.</span>
+                  <span><strong>Step 1: Add GammaRips to your AI.</strong> In Claude, ChatGPT, Cursor, or Codex, add <code className="text-primary break-all">{MCP_PRO_ENDPOINT}</code> and sign in with this account. Or create an API key on your <Link href="/account?welcome=1" className="text-primary hover:underline">account page</Link> (it is shown once, so copy it right then). Exact steps per client are on the <Link href="/developers#connect" className="text-primary hover:underline">developer page</Link>. Any trouble, email <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">evan@gammarips.com</a> and we&apos;ll sort it immediately.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span><strong>Step 2: Add the server to your agent, with your key or a sign-in.</strong> Claude Code, Codex, Cursor, Gemini CLI, or any MCP client that can send a bearer key. A chat client that cannot send a key adds the /pro endpoint and signs in with OAuth instead. Exact steps per client are in the <Link href="/#connect" className="text-primary hover:underline">connect section</Link> on the homepage.</span>
+                  <span><strong>Step 2: Ask for a trade plan.</strong> Say &ldquo;build me a trade plan from the GammaRips pool.&rdquo; Your AI reads the pool, checks liquidity and earnings, sets the target and the stop from the exit lab, and gives you the plan. Or run the <code className="text-primary">morning_brief</code> prompt for a market overview.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span><strong>Step 3: Run your first brief.</strong> Ask your agent to run the <code className="text-primary">morning_brief</code> prompt, or just say &ldquo;pull the GammaRips pool and tell me what&apos;s interesting.&rdquo;</span>
+                  <span><strong>Step 3: You decide.</strong> The plan is your AI&apos;s analysis with you. You choose what to trade, in your own account.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -83,14 +104,14 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
               </ul>
               <div className="flex flex-wrap gap-3 pt-2">
                 <Button asChild variant="outline">
-                  <Link href="/developers">MCP setup docs</Link>
+                  <Link href="/developers#connect">Connect steps per client</Link>
                 </Button>
                 <Button asChild variant="outline">
                   <Link href="/account">Manage subscription</Link>
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground pt-2 leading-relaxed">
-                Data on a paper-trading basis, educational content only. Not investment advice. What your agent concludes is your analysis; you trade your own account.
+                Educational only. Not investment advice. What your AI concludes is its analysis with you, and you trade your own account.
               </p>
             </CardContent>
           </Card>
@@ -99,21 +120,56 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
         <header className="text-center">
           <p className="text-sm font-semibold uppercase tracking-wider text-primary">About</p>
           <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-            An options-flow engine
+            Built by an ML engineer.
             <span className="block mt-2 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              built for the agentic era.
+              Traded by Claude Code, with real money.
             </span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
-            GammaRips is a systematic overnight scanner. It ranks the US options universe by liquidity and hands back a small bullish pool, roughly 40 to 50 out-of-the-money calls. Humans browse it free. AI agents read it over MCP. Every market day the whole pool gets paper-traded and published, winners and losers counted the same way. The fixed exit is same-day, and the opportunity surface next to it is a 3-day MFE and MAE window. Data, receipts, and no pick to follow: that&apos;s the product.
+            GammaRips ranks the US options market by liquidity every night and gives your AI a pool of roughly 40 to 50 liquid calls, plus the history to plan the exit. We use it ourselves. Claude Code reads the same pool through the same {TOOL_COUNT} MCP tools and trades it in a real-money agent account. Every trade is on the record, and traces of its sessions are public.
           </p>
         </header>
 
         <Separator className="my-12 sm:my-16" />
 
-        <section id="team">
+        <section id="record" className="scroll-mt-24">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold font-headline">The live record</h2>
+            <p className="mt-3 max-w-2xl mx-auto text-muted-foreground">
+              Claude Code trades the GammaRips pool with real money in an agent account. It sets a target and a stop before every entry. Every trade in the window counts, wins and losses.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {recordStats.map((s) => (
+              <Card key={s.label} className="bg-card/50">
+                <CardContent className="p-5 text-center space-y-1">
+                  <div className="text-2xl sm:text-3xl font-bold text-primary">{s.value}</div>
+                  <p className="text-xs text-muted-foreground leading-snug">{s.label}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <p className="mt-4 text-sm text-center text-muted-foreground">
+            N={LIVE_RECORD.trades} real-money trades, entries {LIVE_RECORD.windowLabel}. Realized broker fills.
+          </p>
+          <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+            <Button asChild>
+              <Link href="/scorecard">See every trade &rarr;</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <a href={`${HARNESS_REPO}/tree/main/traces`} target="_blank" rel="noopener noreferrer">
+                Read the session traces on GitHub
+              </a>
+            </Button>
+          </div>
+          <p className="mt-4 text-xs text-center text-muted-foreground">{RECEIPTS_DISCLAIMER}</p>
+        </section>
+
+        <Separator className="my-12 sm:my-16" />
+
+        <section id="team" className="scroll-mt-24">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold font-headline">Who&apos;s behind this</h2>
+            <h2 className="text-3xl font-bold font-headline">Who builds it</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="bg-card/50">
@@ -124,11 +180,11 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold font-headline">Evan Parra</h3>
-                    <p className="text-sm text-muted-foreground">Founder &amp; operator</p>
+                    <p className="text-sm text-muted-foreground">Founder &amp; builder</p>
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">
-                  ML engineer and data architect. Built the scanner, the enrichment layer, the selection tournament, and the execution policy. Solo operator, no team of analysts, no &ldquo;room of traders.&rdquo; One person with a pipeline.
+                  ML engineer and AI architect who ships production AI systems on Google Cloud. He built GammaRips end to end: the nightly scan, the liquidity funnel, the enrichment layer, the outcome history behind the exit lab, and the MCP server your AI connects to.
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Also runs <Link href="https://evanparra.ai" target="_blank" className="underline hover:text-primary">evanparra.ai</Link> for AI strategy and data integration consulting.
@@ -142,16 +198,37 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                     <Bot className="h-8 w-8 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold font-headline">GammaMolt</h3>
-                    <p className="text-sm text-muted-foreground">Chief Intelligence Officer</p>
+                    <h3 className="text-lg font-bold font-headline">Claude Code</h3>
+                    <p className="text-sm text-muted-foreground">The live trader</p>
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  The autonomous AI operator behind GammaRips&apos; daily pipeline: ranking the options universe by liquidity, attaching overnight flow context, pricing one out-of-the-money call per bullish name, and publishing the pool. Built on Claude via OpenClaw, powered by real-time BigQuery queries. GammaMolt was the first agent ever wired to the GammaRips MCP, and the same {TOOL_COUNT} tools your agent gets are the ones it runs on.
+                  Runs unattended on a VM, one bounded session per phase: preflight, entry, monitoring, and review. It reads the GammaRips pool through the same {TOOL_COUNT} MCP tools your AI gets, builds its own plan, sets a target and a stop before every entry, and trades a real-money agent account. Redacted traces of its sessions, with its reasoning quoted verbatim, are public in the <a href={HARNESS_REPO} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">open-source harness repo</a>.
                 </p>
               </CardContent>
             </Card>
           </div>
+        </section>
+
+        <Separator className="my-12 sm:my-16" />
+
+        <section>
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold font-headline">How the engine works</h2>
+          </div>
+          <ol className="space-y-3 max-w-2xl mx-auto">
+            {engineSteps.map((step, i) => (
+              <li key={i} className="flex items-start gap-3">
+                <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full bg-primary/10 text-xs font-bold text-primary flex items-center justify-center">
+                  {i + 1}
+                </span>
+                <span className="text-muted-foreground leading-relaxed">{step}</span>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-6 max-w-2xl mx-auto text-sm text-muted-foreground leading-relaxed">
+            The result: median open interest of the pool contract is {int(CONTRACT_QUALITY.medianOi.after)}, against {int(CONTRACT_QUALITY.medianOi.before)} before the liquidity rule (N={int(CONTRACT_QUALITY.nAfter)} {CONTRACT_QUALITY.afterLabel}, vs N={int(CONTRACT_QUALITY.nBefore)} over {CONTRACT_QUALITY.beforeLabel}). Read the full method on the <Link href="/methodology" className="text-primary hover:underline">methodology page</Link>.
+          </p>
         </section>
 
         <Separator className="my-12 sm:my-16" />
@@ -168,6 +245,14 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
               </li>
             ))}
           </ul>
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+            <Button asChild size="lg">
+              <Link href="/pricing">Start your {TRIAL_DAYS}-day free trial &rarr;</Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/signals">Browse the pool free</Link>
+            </Button>
+          </div>
         </section>
 
         <Separator className="my-12 sm:my-16" />
@@ -176,7 +261,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
           <div>
             <h2 className="font-headline text-3xl text-foreground">Trust &amp; responsibility</h2>
             <p className="mt-3 text-muted-foreground leading-relaxed">
-              Financial content falls under &ldquo;Your Money or Your Life&rdquo; (YMYL). GammaRips presents options-flow data, paper-trading performance, and educational content only. Every page and dataset carries the disclaimer.
+              GammaRips is a data vendor. It publishes options data, historical pool outcomes, and our own agent&apos;s real-money record, for education. Your AI builds the plan with you, and you decide and trade your own account. GammaRips never places trades for you and never manages your money.
             </p>
           </div>
           <aside className="bg-muted/50 p-6 rounded-lg">
@@ -185,7 +270,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
               <h3 className="text-lg font-semibold text-foreground">Disclaimer</h3>
             </div>
             <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-              Paper-trading performance, educational content only. Not investment advice. You trade your own account; GammaRips does not manage your money. Past performance is not a guarantee of future results.
+              {RECEIPTS_DISCLAIMER} You trade your own account. GammaRips does not manage your money. Past performance is not a guarantee of future results.
             </p>
           </aside>
         </section>

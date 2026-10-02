@@ -59,6 +59,27 @@ export function redirectUriMatches(registered: string, requested: string): boole
   );
 }
 
+/**
+ * Token-endpoint check: does the redirect_uri presented at /oauth/token name the
+ * callback the code was issued for? Exact match, except that the loopback host
+ * names (localhost, 127.0.0.1, [::1]) are interchangeable when the port, path and
+ * query are equal. Reason: the App Hosting edge rewrites a literal 127.0.0.1 to
+ * localhost inside a query parameter before /oauth/authorize runs (MCP decision
+ * note 2026-08-15, "Known residual"), but it does not touch the token POST body.
+ * So a client that sends 127.0.0.1 (Codex) gets its code issued for localhost and
+ * presents 127.0.0.1 here. Both names reach the same machine, and PKCE still
+ * binds the code to the client that started the flow.
+ */
+export function sameIssuedRedirectUri(issued: string, presented: string): boolean {
+  if (issued === presented) return true;
+  const a = parseRedirectUri(issued);
+  const b = parseRedirectUri(presented);
+  if (!a || !b) return false;
+  if (a.protocol !== 'http:' || b.protocol !== 'http:') return false;
+  if (!isLoopbackHost(a.hostname) || !isLoopbackHost(b.hostname)) return false;
+  return a.port === b.port && a.pathname === b.pathname && a.search === b.search;
+}
+
 export function findMatchingRedirectUri(registered: readonly string[], requested: string): string | null {
   for (const r of registered) {
     if (redirectUriMatches(r, requested)) return requested;

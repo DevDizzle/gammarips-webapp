@@ -16,7 +16,7 @@ process.env.OAUTH_SIGNING_KEY = privateKey.export({ type: 'pkcs8', format: 'pem'
 process.env.OAUTH_SIGNING_KID = 'test-kid';
 
 const { verifyPkce, s256, isValidCodeChallenge } = await import('../pkce');
-const { parseRedirectUri, redirectUriMatches, findMatchingRedirectUri } = await import('../redirect');
+const { parseRedirectUri, redirectUriMatches, findMatchingRedirectUri, sameIssuedRedirectUri } = await import('../redirect');
 const { normalizeResource } = await import('../resource');
 const { authorizationServerMetadata } = await import('../metadata');
 const { getJwks, signAccessToken } = await import('../keys');
@@ -59,6 +59,22 @@ test('loopback matching ignores the port (Claude Code CIMD registers no port)', 
     'http://localhost:35535/callback'
   );
   assert.equal(findMatchingRedirectUri(['https://a.example/cb'], 'https://b.example/cb'), null);
+});
+
+test('token step: loopback host names are interchangeable, port and path are not (edge rewrites 127.0.0.1)', () => {
+  // Codex: the edge stored localhost, the token POST presents 127.0.0.1.
+  assert.equal(sameIssuedRedirectUri('http://localhost:33645/callback', 'http://127.0.0.1:33645/callback'), true);
+  assert.equal(sameIssuedRedirectUri('http://127.0.0.1:33645/callback', 'http://localhost:33645/callback'), true);
+  assert.equal(sameIssuedRedirectUri('http://localhost:33645/callback', 'http://[::1]:33645/callback'), true);
+  assert.equal(sameIssuedRedirectUri('https://chatgpt.com/cb', 'https://chatgpt.com/cb'), true);
+  // Port, path and query still bind.
+  assert.equal(sameIssuedRedirectUri('http://localhost:33645/callback', 'http://127.0.0.1:33646/callback'), false);
+  assert.equal(sameIssuedRedirectUri('http://localhost:33645/callback', 'http://127.0.0.1:33645/other'), false);
+  assert.equal(sameIssuedRedirectUri('http://localhost:33645/callback', 'http://127.0.0.1:33645/callback?x=1'), false);
+  // Never across schemes or to a non-loopback host.
+  assert.equal(sameIssuedRedirectUri('http://localhost:33645/callback', 'https://localhost:33645/callback'), false);
+  assert.equal(sameIssuedRedirectUri('http://localhost:33645/callback', 'http://evil.example:33645/callback'), false);
+  assert.equal(sameIssuedRedirectUri('https://a.example/cb', 'https://b.example/cb'), false);
 });
 
 test('resource indicators: only our MCP origins and paths', () => {

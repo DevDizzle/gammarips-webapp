@@ -16,6 +16,7 @@ import { type ResolvedClient, validateScope } from './clients';
 import { tierForUid } from './entitlement';
 import { signAccessToken } from './keys';
 import { verifyPkce } from './pkce';
+import { sameIssuedRedirectUri } from './redirect';
 import { normalizeResource } from './resource';
 import {
   consumeCode,
@@ -44,7 +45,8 @@ export async function handleAuthorizationCodeGrant(
   const code = form.get('code') || '';
   // OAuth 2.1 §4.1.3: with PKCE mandatory, redirect_uri at the token endpoint
   // is optional; when the client sends it, it must equal the one the code was
-  // issued for.
+  // issued for (loopback host names are interchangeable, see
+  // sameIssuedRedirectUri).
   const redirectUri = form.get('redirect_uri');
   const verifier = form.get('code_verifier');
   const resourceParam = form.get('resource');
@@ -68,7 +70,7 @@ export async function handleAuthorizationCodeGrant(
     await revokeRefreshFamily(rec.family_id, 'code_client_mismatch');
     throw new OAuthError('invalid_grant', 'Authorization code was issued to a different client.');
   }
-  if (redirectUri !== null && redirectUri !== rec.redirect_uri) {
+  if (redirectUri !== null && !sameIssuedRedirectUri(rec.redirect_uri, redirectUri)) {
     await revokeRefreshFamily(rec.family_id, 'code_redirect_mismatch');
     throw new OAuthError('invalid_grant', 'redirect_uri does not match the authorization request.');
   }

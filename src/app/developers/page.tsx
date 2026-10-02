@@ -14,9 +14,9 @@ import {
   HARNESS_REPO,
 } from '@/lib/constants';
 import { CONNECT_CLIENTS, type ClientId, type ConnectStep } from '@/lib/connect-clients';
+import { getReceipts } from '@/lib/receipts-server';
 import {
-  CONTRACT_QUALITY,
-  POOL_HIT_RATES,
+  type Receipts,
   RECEIPTS_DISCLAIMER,
   INSTALL_LINKS,
   int,
@@ -102,13 +102,13 @@ const faqSchema = {
 
 /* The three pillars. Every number comes from src/lib/receipts.ts with its N
  * and window, and the section carries RECEIPTS_DISCLAIMER (claim 5). */
-const PILLARS: {
+const buildPillars = ({ CONTRACT_QUALITY, TO_EXPIRY }: Receipts): {
   title: string;
   body: string;
   stat: string;
   statLabel: string;
   source: string;
-}[] = [
+}[] => [
   {
     title: "Better-quality contracts every night",
     body: "The 100 most liquid optionable names, bullish only, and one out-of-the-money call per name, selected on contract liquidity. Your AI starts from contracts it can enter and exit near the quote.",
@@ -118,10 +118,10 @@ const PILLARS: {
   },
   {
     title: "The exit lab",
-    body: "How often past pool contracts hit +25%, +50%, and +100% within 3 trading days, how far they moved for and against, and a score for any target and stop. Most contracts move both ways, so your AI sets the exit from history.",
-    stat: pct(POOL_HIT_RATES.hit50, 1),
-    statLabel: `of pool contracts hit +50% within ${POOL_HIT_RATES.horizon}`,
-    source: `N=${int(POOL_HIT_RATES.n)}, ${POOL_HIT_RATES.windowLabel}. +25%: ${pct(POOL_HIT_RATES.hit25, 1)}. +100%: ${pct(POOL_HIT_RATES.hit100, 1)}. In the same window, ${pct(POOL_HIT_RATES.stopTouch30, 1)} also touched −30%, which is why the exit plan matters.`,
+    body: "How often past pool contracts hit +20%, +50%, and +100%, within 3 trading days and before expiration, how far they moved for and against, and a score for any target and stop. Most contracts move both ways, so your AI sets the exit from history.",
+    stat: pct(TO_EXPIRY.hit50, 1),
+    statLabel: `of pool contracts hit +50% ${TO_EXPIRY.horizon}`,
+    source: `N=${int(TO_EXPIRY.n)} ${TO_EXPIRY.windowLabel}. +20%: ${pct(TO_EXPIRY.hit20, 1)}. +100%: ${pct(TO_EXPIRY.hit100, 1)}. Updated daily.`,
   },
   {
     title: "Your AI builds the trade plan",
@@ -348,7 +348,10 @@ const toolGroups: {
   },
 ];
 
-export default function DevelopersPage() {
+export const revalidate = 3600;
+
+export default async function DevelopersPage() {
+  const PILLARS = buildPillars(await getReceipts());
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <script

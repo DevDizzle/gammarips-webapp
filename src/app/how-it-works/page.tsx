@@ -5,11 +5,10 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, AlertTriangle, Layers, Target, MessageSquareText } from 'lucide-react';
 import { OG_IMAGE, TRIAL_DAYS } from '@/lib/constants';
+import { getReceipts } from '@/lib/receipts-server';
 import {
-  CONTRACT_QUALITY,
   INSTALL_LINKS,
-  LIVE_RECORD,
-  POOL_HIT_RATES,
+  type Receipts,
   RECEIPTS_DISCLAIMER,
   int,
   pct,
@@ -50,7 +49,7 @@ const pillars = [
   },
 ];
 
-const qualityRows = [
+const buildQualityRows = ({ CONTRACT_QUALITY }: Receipts) => [
   {
     label: 'Median open interest',
     before: int(CONTRACT_QUALITY.medianOi.before),
@@ -95,7 +94,12 @@ const planSteps = [
   },
 ];
 
-export default function HowItWorksPage() {
+export const revalidate = 3600;
+
+export default async function HowItWorksPage() {
+  const receipts = await getReceipts();
+  const { CONTRACT_QUALITY, POOL_HIT_RATES, TO_EXPIRY, LIVE_RECORD } = receipts;
+  const qualityRows = buildQualityRows(receipts);
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -203,7 +207,7 @@ export default function HowItWorksPage() {
       <section className="space-y-4">
         <h2 className="text-3xl font-bold font-headline">The exit lab</h2>
         <p className="text-muted-foreground leading-relaxed">
-          Pool contracts move a lot, in both directions. Of {int(POOL_HIT_RATES.n)} pool contracts ({POOL_HIT_RATES.windowLabel}), <strong className="text-foreground">{pct(POOL_HIT_RATES.hit50, 1)} hit +50% within {POOL_HIT_RATES.horizon}</strong>, and {pct(POOL_HIT_RATES.stopTouch30, 1)} also touched −30% in the same window. Most contracts move both ways, so the exit plan your AI sets decides the result. The exit lab gives your AI the history to set the target and the stop on purpose, instead of a guess.
+          Pool contracts move a lot, in both directions. Of {int(TO_EXPIRY.n)} {TO_EXPIRY.windowLabel}, <strong className="text-foreground">{pct(TO_EXPIRY.hit50, 1)} hit +50% {TO_EXPIRY.horizon}</strong> and {pct(TO_EXPIRY.hit20, 1)} hit +20%. Within {POOL_HIT_RATES.horizon}, {pct(POOL_HIT_RATES.hit50, 1)} of {int(POOL_HIT_RATES.n)} hit +50%, and {pct(POOL_HIT_RATES.stopTouch30, 1)} also touched −30%. Most contracts move both ways, so the exit plan your AI sets decides the result. The exit lab gives your AI the history to set the target and the stop on purpose, instead of a guess.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
           <Card className="bg-card/50">

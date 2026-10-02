@@ -64,24 +64,22 @@ numbers that show it. Every number carries its N and window. Research caveats go
 on research pages (/methodology, /lab). No rocket emojis, no "moon", no
 countdown urgency.
 
-## Approved numbers (owner-approved 2026-10-02; every site number comes from here)
-Recompute before you change one. Source detail is in the DECISIONS note above.
-- **Live record (headline):** 11 of 14 real-money trades closed at a profit,
-  +$2,263 net realized. Claude Code trades the GammaRips pool in an agent
-  account. Entries 2026-09-14 to 2026-10-02. Source: gammarips-trader
-  `scripts/tally.py --account LIVE`. 10 of 14 closed at the agent's pre-set
-  target. Median trade +24.5% on premium. 8 of 14 were NVDA calls.
-- **Pool hit rates (headline: +50%):** of N=1,150 pool contracts (scan dates
-  2026-08-24 to 2026-09-28, closed 3-day windows), 52.8% hit +25%, 34.5% hit
-  +50%, 15.9% hit +100% within 3 trading days. Median peak +27.7%. 74.1% also
-  touched −30% in the same window (exit-lab context). Source: MCP
-  `query_outcomes(view="harvest")`.
-- **Contract quality (headline: open interest):** median open interest 4,664 vs
-  906, median session volume 1,039 vs 232, thinnest 10% at 1,635 vs 29. After:
-  N=1,300, 2026-08-24 to 2026-10-01. Before: N=3,501, the 60 scan days
-  2026-05-27 to 2026-08-21. Do not use the old 893 / 233 / 86.
-- **No-fill at 10:00 ET:** 40.5% to 6.1% (study, 60 sessions ending
-  2026-08-14, 3,190 vs 545 legs). Label it a study.
+## Site numbers (refresh daily since 2026-10-02)
+Pages read them with `getReceipts()` (`src/lib/receipts-server.ts`). Never type a
+number in a page. `src/lib/receipts.ts` holds the helpers and the 2026-10-02
+snapshot, which renders when a Firestore read fails.
+- `site_stats/pool`: engine job `site-stats-refresh` (forward-paper-trader
+  `/refresh_site_stats`, 18:00 ET weekdays). Pool touch rates before expiration
+  (the homepage headline: hit +50%, with +20% as support) and within 3 trading
+  days, plus contract quality (median OI, volume, p10 OI vs the fixed 60 scan
+  days before the liquidity rule).
+- `site_stats/live_record`: gammarips-trader `scripts/publish_record.py`, run by
+  the laptop export timer at 17:40 ET weekdays. Every closed LIVE trade, no
+  account, no size.
+- A hit is a touch: "hit +50% before expiration", never profit kept. The no-fill
+  study (40.5% to 6.1%) is static and labeled a study.
+- `public/llms.txt` and `public/skill.md` carry a dated snapshot and point to
+  /scorecard for the live numbers.
 
 ## Key facts copy must get right
 - MCP endpoint: `https://mcp.gammarips.com/mcp`

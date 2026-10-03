@@ -37,7 +37,10 @@ export const RESOURCE_ORIGINS: readonly string[] = (
   .map((s) => s.trim().replace(/\/+$/, '').toLowerCase())
   .filter(Boolean);
 
-export const RESOURCE_PATHS: readonly string[] = ['', '/pro', '/mcp'];
+// '/openai' (2026-10-03): the ChatGPT/Codex plugin's own MCP URL. Same server
+// as /pro, always commerce-safe there. The MCP server's oauth.RESOURCE_PATHS
+// must list the same paths.
+export const RESOURCE_PATHS: readonly string[] = ['', '/pro', '/mcp', '/openai'];
 
 /** The canonical MCP resource when a client sends no `resource` parameter. */
 export const DEFAULT_RESOURCE = process.env.OAUTH_DEFAULT_RESOURCE || 'https://mcp.gammarips.com/pro';

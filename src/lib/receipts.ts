@@ -1,11 +1,23 @@
-// The approved numbers: the ONLY source for performance and quality numbers on
-// the site. Owner-approved 2026-10-02 (gammarips-engine
-// docs/DECISIONS/2026-10-02-web-revamp-positive-first-rules.md). Never type one
-// of these as a literal in a page. Recompute from the named source before you
-// change a value, and change the as-of date with it.
+// The site's performance and quality numbers. Client-safe: no server imports.
+//
+// Since 2026-10-02 the numbers refresh DAILY. The engine job site-stats-refresh
+// (forward-paper-trader /refresh_site_stats, 18:00 ET) writes Firestore
+// site_stats/pool, and the laptop export timer (gammarips-trader
+// scripts/publish_record.py, 17:40 ET) writes site_stats/live_record.
+// src/lib/receipts-server.ts getReceipts() reads both and calls buildReceipts().
+// The constants below are the FALLBACK (the owner-approved 2026-10-02 snapshot):
+// the site renders them when a Firestore read fails.
 //
 // Every number carries its N and window on the page, and the section that shows
-// it carries the not-investment-advice marker (forbidden claim 5).
+// it carries the not-investment-advice marker.
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const md = (iso: string) => `${MONTHS[+iso.slice(5, 7) - 1]} ${+iso.slice(8, 10)}`;
+// "Aug 24 to Sep 28, 2026" from two YYYY-MM-DD dates.
+export function dateRange(from: string, to: string) {
+  if (from.slice(0, 4) === to.slice(0, 4)) return `${md(from)} to ${md(to)}, ${to.slice(0, 4)}`;
+  return `${md(from)}, ${from.slice(0, 4)} to ${md(to)}, ${to.slice(0, 4)}`;
+}
 
 // LIVE_RECORD: Claude Code trading the GammaRips pool with real money in an
 // agent brokerage account. Source: gammarips-trader `scripts/tally.py
@@ -21,7 +33,7 @@ export type LiveTrade = {
   exit: number;
   pnlPct: number; // fraction on premium, from the two fills
   pnlUsd: number; // realized
-  exitReason: 'target' | 'stop' | 'end of hold';
+  exitReason: 'target' | 'stop' | 'end of hold' | 'other';
 };
 
 export const LIVE_TRADES: LiveTrade[] = [
@@ -41,24 +53,32 @@ export const LIVE_TRADES: LiveTrade[] = [
   { entryDay: '2026-10-02', exitDay: '2026-10-02', ticker: 'NVDA', contract: 'NVDA261009C00235000', entry: 5.15, exit: 3.25, pnlPct: -0.3689, pnlUsd: -570, exitReason: 'stop' },
 ];
 
-// Derived from LIVE_TRADES so the headline can never disagree with the table.
-const wins = LIVE_TRADES.filter((t) => t.pnlUsd > 0);
-const sortedPct = LIVE_TRADES.map((t) => t.pnlPct).sort((a, b) => a - b);
-const mid = Math.floor(sortedPct.length / 2);
+// Derived from the trades so the headline can never disagree with the table.
+export function liveRecordFrom(trades: LiveTrade[], asOf: string) {
+  const wins = trades.filter((t) => t.pnlUsd > 0);
+  const sortedPct = trades.map((t) => t.pnlPct).sort((x, y) => x - y);
+  const mid = Math.floor(sortedPct.length / 2);
+  const firstEntry = trades[0]?.entryDay ?? asOf;
+  const lastEntry = trades[trades.length - 1]?.entryDay ?? asOf;
+  return {
+    asOf,
+    windowLabel: dateRange(firstEntry, lastEntry),
+    firstEntry,
+    lastEntry,
+    trades: trades.length,
+    wins: wins.length,
+    losses: trades.length - wins.length,
+    netUsd: Math.round(trades.reduce((sum, t) => sum + t.pnlUsd, 0)),
+    atTarget: trades.filter((t) => t.exitReason === 'target').length,
+    medianPct: sortedPct.length
+      ? sortedPct.length % 2
+        ? sortedPct[mid]
+        : (sortedPct[mid - 1] + sortedPct[mid]) / 2
+      : 0,
+  };
+}
 
-export const LIVE_RECORD = {
-  asOf: '2026-10-02',
-  windowLabel: 'Sep 14 to Oct 2, 2026',
-  firstEntry: LIVE_TRADES[0].entryDay,
-  lastEntry: LIVE_TRADES[LIVE_TRADES.length - 1].entryDay,
-  trades: LIVE_TRADES.length, // 14
-  wins: wins.length, // 11
-  losses: LIVE_TRADES.length - wins.length, // 3
-  netUsd: LIVE_TRADES.reduce((s, t) => s + t.pnlUsd, 0), // 2263
-  atTarget: LIVE_TRADES.filter((t) => t.exitReason === 'target').length, // 10
-  medianPct:
-    sortedPct.length % 2 ? sortedPct[mid] : (sortedPct[mid - 1] + sortedPct[mid]) / 2, // ~0.245
-} as const;
+export const LIVE_RECORD = liveRecordFrom(LIVE_TRADES, '2026-10-02');
 
 // POOL_HIT_RATES: how often pool contracts hit a profit level. Source: the MCP
 // query_outcomes(view="harvest") query over enriched_features_v1 joined to
@@ -70,12 +90,28 @@ export const POOL_HIT_RATES = {
   scanDays: 25,
   windowLabel: 'scan dates Aug 24 to Sep 28, 2026',
   horizon: '3 trading days',
+  hit10: 0.719,
+  hit20: 0.589,
   hit25: 0.528,
   hit50: 0.345,
   hit100: 0.159,
   medianPeak: 0.277,
   stopTouch30: 0.741,
-} as const;
+};
+
+// TO_EXPIRY: the same touch rates over each contract's whole life, for pool
+// contracts that have already expired (life_status='OK'). The homepage headline
+// since 2026-10-02 (owner call): "hit +50% before expiration".
+export const TO_EXPIRY = {
+  n: 636,
+  windowLabel: 'expired pool contracts, scan dates Aug 24 to Sep 18, 2026',
+  horizon: 'before expiration',
+  hit10: 0.818,
+  hit20: 0.736,
+  hit25: 0.686,
+  hit50: 0.563,
+  hit100: 0.384,
+};
 
 // CONTRACT_QUALITY: the liquidity rule (live 2026-08-24), BULLISH pool
 // contracts in overnight_signals_enriched. After: N=1,300, 28 scan days
@@ -98,7 +134,16 @@ export const CONTRACT_QUALITY = {
     nAfter: 545, // legs, liquid funnel
     label: '60-session study ending Aug 14, 2026',
   },
-} as const;
+};
+
+export const FALLBACK_RECEIPTS = {
+  LIVE_TRADES,
+  LIVE_RECORD,
+  POOL_HIT_RATES,
+  TO_EXPIRY,
+  CONTRACT_QUALITY,
+};
+export type Receipts = typeof FALLBACK_RECEIPTS;
 
 // One line for every section that shows a number above (claim 5).
 export const RECEIPTS_DISCLAIMER =
@@ -121,3 +166,12 @@ export const signedPct = (x: number, digits = 0) =>
 export const usd = (x: number) =>
   `${x >= 0 ? '+' : '−'}$${Math.abs(x).toLocaleString('en-US')}`;
 export const int = (x: number) => x.toLocaleString('en-US');
+
+// A rate in words: "more than half", "about 3 in 4", "about 1 in 3".
+export function inWords(x: number) {
+  if (x > 0.5 && x < 0.6) return 'more than half';
+  const fractions: [number, number][] = [[1, 10], [1, 6], [1, 5], [1, 4], [1, 3], [2, 5], [1, 2], [3, 5], [2, 3], [3, 4], [4, 5], [9, 10]];
+  const [n, d] = fractions.reduce((best, f) =>
+    Math.abs(f[0] / f[1] - x) < Math.abs(best[0] / best[1] - x) ? f : best);
+  return n === 1 && d === 2 ? 'about half' : `about ${n} in ${d}`;
+}

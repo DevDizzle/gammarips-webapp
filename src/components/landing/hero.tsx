@@ -1,45 +1,44 @@
 import {
-  CONTRACT_QUALITY,
-  LIVE_RECORD,
-  POOL_HIT_RATES,
   RECEIPTS_DISCLAIMER,
+  inWords,
   int,
   pct,
   usd,
 } from '@/lib/receipts';
+import { getReceipts } from '@/lib/receipts-server';
 import { InstallCta } from '@/components/landing/install-cta';
 
 // The first screen sells the product: the value in one headline and one
-// subline, the three owner-approved headline numbers (each with its N and
-// window), then the one path: install in your AI, then start the trial. Every
-// number comes from src/lib/receipts.ts. This section shows performance
-// numbers, so the disclaimer sits here too (forbidden claim 5).
+// subline, the three headline numbers (each with its N and window), then the
+// one path: install in your AI, then start the trial. The numbers refresh
+// daily from Firestore (src/lib/receipts-server.ts). This section shows
+// performance numbers, so the disclaimer sits here too.
+//
+// Headline 2 is the before-expiration +50% rate (owner call 2026-10-02), with
+// the +20% rate as its support line. "More than half" and "5x" are derived
+// from the values, never typed.
 
-// Derived from the constants, never typed: "about 1 in 3" and "5x".
-const HIT50_ONE_IN = Math.round(1 / POOL_HIT_RATES.hit50);
-const OI_MULTIPLE = Math.round(
-  CONTRACT_QUALITY.medianOi.after / CONTRACT_QUALITY.medianOi.before,
-);
+export async function Hero() {
+  const { LIVE_RECORD, TO_EXPIRY, CONTRACT_QUALITY } = await getReceipts();
+  const oiMultiple = Math.round(CONTRACT_QUALITY.medianOi.after / CONTRACT_QUALITY.medianOi.before);
+  const STATS = [
+    {
+      value: `${LIVE_RECORD.wins} of ${LIVE_RECORD.trades}`,
+      label: `real-money trades closed at a profit, ${usd(LIVE_RECORD.netUsd)} net`,
+      meta: `Claude Code trading the GammaRips pool. Every trade, entries ${LIVE_RECORD.windowLabel}.`,
+    },
+    {
+      value: pct(TO_EXPIRY.hit50, 1),
+      label: `of pool contracts hit +50% ${TO_EXPIRY.horizon}, ${inWords(TO_EXPIRY.hit50)}. ${inWords(TO_EXPIRY.hit20).replace(/^./, (c) => c.toUpperCase())} hit +20%.`,
+      meta: `N=${int(TO_EXPIRY.n)} ${TO_EXPIRY.windowLabel}.`,
+    },
+    {
+      value: `${oiMultiple}x`,
+      label: `the open interest: median ${int(CONTRACT_QUALITY.medianOi.after)} per contract vs ${int(CONTRACT_QUALITY.medianOi.before)} before the liquidity rule`,
+      meta: `N=${int(CONTRACT_QUALITY.nAfter)} ${CONTRACT_QUALITY.afterLabel} vs N=${int(CONTRACT_QUALITY.nBefore)} over ${CONTRACT_QUALITY.beforeLabel}.`,
+    },
+  ];
 
-const STATS = [
-  {
-    value: `${LIVE_RECORD.wins} of ${LIVE_RECORD.trades}`,
-    label: `real-money trades closed at a profit, ${usd(LIVE_RECORD.netUsd)} net`,
-    meta: `Claude Code trading the GammaRips pool. Every trade, entries ${LIVE_RECORD.windowLabel}.`,
-  },
-  {
-    value: pct(POOL_HIT_RATES.hit50, 1),
-    label: `of pool contracts hit +50% within ${POOL_HIT_RATES.horizon}, about 1 in ${HIT50_ONE_IN}`,
-    meta: `N=${int(POOL_HIT_RATES.n)}, ${POOL_HIT_RATES.windowLabel}.`,
-  },
-  {
-    value: `${OI_MULTIPLE}x`,
-    label: `the open interest: median ${int(CONTRACT_QUALITY.medianOi.after)} per contract vs ${int(CONTRACT_QUALITY.medianOi.before)} before the liquidity rule`,
-    meta: `N=${int(CONTRACT_QUALITY.nAfter)} ${CONTRACT_QUALITY.afterLabel} vs N=${int(CONTRACT_QUALITY.nBefore)} over ${CONTRACT_QUALITY.beforeLabel}.`,
-  },
-];
-
-export function Hero() {
   return (
     <section className="pt-2 pb-6 md:pt-4 md:pb-8 text-center">
       <p className="text-xs md:text-sm font-semibold uppercase tracking-widest text-primary mb-3">

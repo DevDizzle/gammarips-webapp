@@ -1,16 +1,15 @@
 import { Card, CardContent } from '@/components/ui/card';
 import {
-  LIVE_RECORD,
-  LIVE_TRADES,
   RECEIPTS_DISCLAIMER,
   signedPct,
   usd,
   type LiveTrade,
 } from '@/lib/receipts';
 import { HARNESS_REPO } from '@/lib/constants';
+import { getReceipts } from '@/lib/receipts-server';
 
 // The live agent record: Claude Code trading the GammaRips pool with real
-// money. Every number renders from src/lib/receipts.ts, so the headline can
+// money. Every number renders from the daily live_record doc (src/lib/receipts-server.ts), so the headline can
 // never disagree with the table. Complete cohort (forbidden claim 4): every
 // closed trade in the window, wins and losses. Never show an account number.
 
@@ -44,6 +43,7 @@ const REASON_LABEL: Record<LiveTrade['exitReason'], string> = {
   target: 'Target',
   stop: 'Stop',
   'end of hold': 'End of hold',
+  other: 'Closed',
 };
 
 function Stat({ value, caption }: { value: string; caption: string }) {
@@ -57,7 +57,8 @@ function Stat({ value, caption }: { value: string; caption: string }) {
   );
 }
 
-export function LiveRecord() {
+export async function LiveRecord() {
+  const { LIVE_RECORD, LIVE_TRADES } = await getReceipts();
   const tracesUrl = `${HARNESS_REPO}/tree/main/traces`;
 
   // Names traded, most first. Derived from the table, never typed.
@@ -96,7 +97,7 @@ export function LiveRecord() {
       </div>
 
       <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
-        Record through {longDate(LIVE_RECORD.asOf)}, updated by hand. Every
+        Record through {longDate(LIVE_RECORD.asOf)}, updated daily. Every
         closed trade in the window is below, wins and losses. The agent&apos;s
         day-by-day traces are public in the{' '}
         <a

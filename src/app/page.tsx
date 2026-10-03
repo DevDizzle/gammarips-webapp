@@ -6,7 +6,8 @@ import { PoolRule } from "@/components/landing/pool-rule";
 import { Proof } from "@/components/landing/proof";
 import { InstallCta } from "@/components/landing/install-cta";
 import { ConnectTabs } from "@/components/landing/connect-tabs";
-import Faq, { faqs } from "@/components/landing/faq";
+import Faq, { buildFaqs } from "@/components/landing/faq";
+import { getReceipts } from "@/lib/receipts-server";
 import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getBlogPostsAdmin } from "@/lib/firebase-admin";
 
@@ -30,6 +31,7 @@ export default async function LandingPage() {
   const reportDate = summary ? (summary.report_date || summary.scan_date) : null;
   const report = reportDate ? await getDailyReport(reportDate) : null;
   const blogPosts = await getBlogPostsAdmin();
+  const faqs = buildFaqs(await getReceipts());
 
   // A sample of the pool, not a ranking. Nothing here may sort the names or
   // present them as top choices. The selection research (2026-08-22) lives on
@@ -140,7 +142,7 @@ export default async function LandingPage() {
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">Frequently Asked Questions</h2>
           </div>
-          <Faq />
+          <Faq faqs={faqs} />
         </section>
 
         <section className="rounded-2xl border border-primary/30 bg-card/60 px-4 py-10 md:p-12 text-center">

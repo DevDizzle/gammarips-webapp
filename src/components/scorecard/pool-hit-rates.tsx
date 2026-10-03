@@ -1,26 +1,29 @@
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
-import { POOL_HIT_RATES, RECEIPTS_DISCLAIMER, int, pct, signedPct } from '@/lib/receipts';
+import { RECEIPTS_DISCLAIMER, int, pct, signedPct } from '@/lib/receipts';
+import { getReceipts } from '@/lib/receipts-server';
 
-// Pool hit rates: how often pool contracts hit a profit level within the
-// 3-trading-day window. A TOUCH, never profit kept (forbidden claim 1).
-// stopTouch30 is exit-lab context, framed as the reason the exit plan matters.
+// Pool hit rates: how often pool contracts hit a profit level, before
+// expiration (the headline since 2026-10-02) and within 3 trading days. A
+// TOUCH, never profit kept. stopTouch30 is exit-lab context, framed as the
+// reason the exit plan matters. Refreshes daily.
 
-function HitStat({ level, value, featured = false }: { level: string; value: string; featured?: boolean }) {
+function HitStat({ level, value, horizon, featured = false }: { level: string; value: string; horizon: string; featured?: boolean }) {
   return (
     <Card className={featured ? 'bg-primary/5 border-primary/40 text-center' : 'bg-card/50 text-center'}>
       <CardContent className="p-5">
         <div className="text-3xl md:text-4xl font-bold font-headline text-primary tabular-nums">{value}</div>
         <p className="text-sm text-muted-foreground mt-2 leading-snug">
-          hit <strong className="text-foreground">{level}</strong> within {POOL_HIT_RATES.horizon}
+          hit <strong className="text-foreground">{level}</strong> {horizon}
         </p>
       </CardContent>
     </Card>
   );
 }
 
-export function PoolHitRates() {
-  const h = POOL_HIT_RATES;
+export async function PoolHitRates() {
+  const { POOL_HIT_RATES: h, TO_EXPIRY: x } = await getReceipts();
+  const within = `within ${h.horizon}`;
   return (
     <section className="space-y-6" aria-labelledby="pool-hit-rates-heading">
       <div className="text-center space-y-3">
@@ -28,17 +31,27 @@ export function PoolHitRates() {
           The pool moves. Here is how often, and how far.
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Every pool contract with a closed {h.horizon} window, measured from the
-          10:00 ET entry. This is the history your AI sets its targets from.
+          Every pool contract, measured from the 10:00 ET entry. This is the
+          history your AI sets its targets from. Updated daily.
         </p>
       </div>
 
+      <h3 className="text-lg font-bold font-headline text-center">Before expiration</h3>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
-        <HitStat level="+25%" value={pct(h.hit25, 1)} />
-        <HitStat level="+50%" value={pct(h.hit50, 1)} featured />
-        <HitStat level="+100%" value={pct(h.hit100, 1)} />
+        <HitStat level="+20%" value={pct(x.hit20, 1)} horizon={x.horizon} />
+        <HitStat level="+50%" value={pct(x.hit50, 1)} horizon={x.horizon} featured />
+        <HitStat level="+100%" value={pct(x.hit100, 1)} horizon={x.horizon} />
       </div>
+      <p className="text-xs font-mono text-muted-foreground text-center">
+        N = {int(x.n)} {x.windowLabel}
+      </p>
 
+      <h3 className="text-lg font-bold font-headline text-center pt-2">Within {h.horizon}</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+        <HitStat level="+20%" value={pct(h.hit20, 1)} horizon={within} />
+        <HitStat level="+50%" value={pct(h.hit50, 1)} horizon={within} />
+        <HitStat level="+100%" value={pct(h.hit100, 1)} horizon={within} />
+      </div>
       <p className="text-xs font-mono text-muted-foreground text-center">
         N = {int(h.n)} pool contracts · {h.windowLabel} · {h.scanDays} scan days ·
         median peak {signedPct(h.medianPeak, 1)}

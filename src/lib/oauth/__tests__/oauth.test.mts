@@ -82,6 +82,7 @@ test('resource indicators: only our MCP origins and paths', () => {
   assert.equal(normalizeResource('https://mcp.gammarips.com/pro'), 'https://mcp.gammarips.com/pro');
   assert.equal(normalizeResource('https://MCP.gammarips.com/pro/'), 'https://mcp.gammarips.com/pro');
   assert.equal(normalizeResource('https://mcp.gammarips.com/mcp'), 'https://mcp.gammarips.com/mcp');
+  assert.equal(normalizeResource('https://mcp.gammarips.com/openai'), 'https://mcp.gammarips.com/openai');
   assert.equal(normalizeResource('https://mcp.gammarips.com'), 'https://mcp.gammarips.com');
   assert.equal(normalizeResource('https://mcp.gammarips.com/other'), null);
   assert.equal(normalizeResource('https://evil.example/pro'), null);

@@ -8,7 +8,9 @@ import { syncSubscriptionToUser } from '@/lib/stripe-sync';
 import { sendWelcomeEmail, sendTrialEndingEmail } from '@/lib/mailgun';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'; // Import direct firestore access
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+// Trimmed: the Secret Manager value ends in a newline, and a newline in the
+// signing secret fails every signature check (all events 400 since 2026-09-17).
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!.trim();
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const gaApiSecret = process.env.GA_API_SECRET!;
 const PRO_PRICE_ID =

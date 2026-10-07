@@ -1,7 +1,9 @@
 import Stripe from 'stripe';
 import { getOrCreateUserAdmin } from './firebase-admin';
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+// Secret Manager values end in a newline. A newline in the key makes every
+// Stripe call fail with StripeConnectionError, so trim it.
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!.trim(), {
   apiVersion: '2024-04-10',
   typescript: true,
 });

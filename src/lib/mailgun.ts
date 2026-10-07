@@ -18,7 +18,8 @@ export interface EmailOptions {
 }
 
 export async function sendEmail(options: EmailOptions) {
-  const API_KEY = process.env.MAILGUN_SENDING_KEY;
+  // Trimmed: the Secret Manager value ends in a newline (wrong Basic auth).
+  const API_KEY = process.env.MAILGUN_SENDING_KEY?.trim();
   const DOMAIN = process.env.MAILGUN_DOMAIN || 'mg.gammarips.com';
   const DEFAULT_FROM = 'Evan Parra <evan@gammarips.com>';
 

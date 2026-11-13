@@ -47,6 +47,7 @@ const nextConfig: NextConfig = {
       { source: '/feedback', destination: '/about#contact', permanent: true },
       { source: '/api', destination: '/developers', permanent: true },
       { source: '/war-room', destination: '/pricing', permanent: true },
+      { source: '/scorecard', destination: '/how-it-works', permanent: true },
       { source: '/history', destination: '/reports', permanent: true },
 
       // Blog posts archived in the 2026-07-03 repositioning (they sold or

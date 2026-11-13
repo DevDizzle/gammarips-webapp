@@ -19,8 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/methodology`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE_URL}/disclosures`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${BASE_URL}/scorecard`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
-    // /war-room intentionally omitted — it 301s to /pricing (next.config.ts);
+    // /war-room and /scorecard intentionally omitted — they 301 (next.config.ts);
     // a sitemap should not list a redirecting URL.
     { url: `${BASE_URL}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
     { url: `${BASE_URL}/privacy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },

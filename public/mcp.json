@@ -1,11 +1,11 @@
 {
   "name": "GammaRips",
-  "description": "Better-quality option contracts every night, and the history to plan the exit, for AI agents. 9 MCP tools over the GammaRips engine: the liquidity-ranked bullish pool (with a free preview), point-in-time feature vectors, fresh liquidity checks, the exit lab (opportunity surfaces, touch probabilities, exit-rule scoring), the raw option price tape, regime context, and methodology playbooks. Your agent builds the trade plan with you: candidates, entry, target, stop, and size. There is no pick endpoint. Educational only. Not investment advice.",
+  "description": "Nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome surfaces for AI agents. 9 MCP tools over the GammaRips pipeline: the curated 40–50 contract bullish call pool (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, rv_iv_ratio) with a free 3-contract preview, point-in-time feature vectors, 10-minute intraday liquidity snapshots, 3-day MFE/MAE outcome surfaces, minute/daily option price replay, VIX/VIX3M regime context, and methodology playbooks. Your agent builds the trade plan with you. No shared pick endpoint. Educational only. Not investment advice.",
   "url": "https://mcp.gammarips.com/mcp",
   "transport": "streamable-http",
   "auth": {
     "type": "bearer-or-oauth2",
-    "instructions": "Subscribe at https://gammarips.com/pricing ($29/mo founding price for the first 100 subscribers, $39/mo after that, 30-day free trial). Then pick whichever your client supports. (1) API key: generate it at https://gammarips.com/account (shown once, at creation) and send it as 'Authorization: Bearer <key>' to https://mcp.gammarips.com/mcp. (2) OAuth 2.1: point the client at https://mcp.gammarips.com/pro instead and complete the sign-in it offers. That is the path for chat clients that cannot send a custom header. Without any credential, an anonymous funnel tier is available on https://mcp.gammarips.com/mcp: pool preview, daily reports, methodology playbooks, and reference tools.",
+    "instructions": "Free tier (no key, no card): connect to https://mcp.gammarips.com/mcp for the 3-contract pool preview (matching https://gammarips.com/signals), daily reports, methodology playbooks, regime context, and market calendar. Pro tier ($29/mo founding price for the first 100 subscribers, $39/mo after, 30-day free trial at https://gammarips.com/pricing): unlocks the full 40–50 contract daily Combo A dataset, 10-minute intraday liquidity snapshots, and 3-day outcome history via (1) OAuth 2.1 at https://mcp.gammarips.com/pro or (2) 'Authorization: Bearer gr_live_...' API key generated at https://gammarips.com/account.",
     "oauth2": {
       "resource": "https://mcp.gammarips.com/pro",
       "authorization_server": "https://gammarips.com",
@@ -47,7 +47,7 @@
     "get_pool",
     "query_outcomes"
   ],
-  "universe": "about 3,500 optionable US stocks, ranked nightly by liquidity; the pool is the bullish slice of the top 100",
+  "universe": "about 3,500 optionable US stocks, filtered nightly to the top 100 liquid universe and bullish calls passing Combo A gates (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45)",
   "tags": [
     "options",
     "options-flow",
@@ -60,11 +60,13 @@
   ],
   "links": {
     "home": "https://gammarips.com",
+    "signals": "https://gammarips.com/signals",
+    "how_it_works": "https://gammarips.com/how-it-works",
+    "methodology": "https://gammarips.com/methodology",
     "pricing": "https://gammarips.com/pricing",
     "developers": "https://gammarips.com/developers",
     "lab": "https://gammarips.com/lab",
-    "llms_txt": "https://gammarips.com/llms.txt",
-    "scorecard": "https://gammarips.com/scorecard"
+    "llms_txt": "https://gammarips.com/llms.txt"
   },
   "creator": {
     "name": "GammaRips",

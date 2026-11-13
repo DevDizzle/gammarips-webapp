@@ -1,56 +1,53 @@
 # GammaRips
 
-> Better-quality option contracts every night, the history to set targets and stops, and your AI builds the trade plan with you. In Claude, ChatGPT, Cursor, and Codex.
+> The nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history for AI agents—in Claude, ChatGPT, Cursor, and Codex.
 
-GammaRips is an options-flow intelligence engine for AI agents. Every trading night it ranks about 3,500 optionable US stocks by liquidity, keeps the 100 most liquid, keeps the bullish names, and selects one out-of-the-money call in each on contract liquidity: a pool of roughly 40 to 50 contracts with deep books. Humans browse everything free at gammarips.com. AI agents connect over MCP (Agent Access, $29/mo founding price, 30-day free trial) for the full pool, point-in-time features, liquidity checks, the exit lab (how far past pool contracts moved for and against, touch probabilities, bracket scoring), contract replay, regime context, and methodology playbooks.
+GammaRips is an options-flow and contract-microstructure data engine for AI agents. Every trading night at 23:00 ET it scans ~3,500 optionable US stocks, filters to the top 100 liquid universe (3M+ session shares, 25+ listed strikes), and selects one out-of-the-money call per bullish name passing the Combo A specification (`Mid >= $1.00`, `OI >= 500`, `Delta 0.22–0.48`, `DTE 10–45`). At 05:30 ET each candidate is enriched with point-in-time Realized-vs-Implied Volatility (`rv_iv_ratio`), technical indicators, flow context, and grounded news catalysts. During market hours (09:02–16:52 ET), 10-minute intraday snapshots track resting open interest and active session volume.
 
-Ask your agent for a trade and it builds a plan with you: candidates that pass the liquidity and earnings checks, entry, a target and a stop set from what past pool contracts did, and a size that fits your maximum loss. There is no pick endpoint. Each user's agent builds its own plan, so subscribers do not crowd into one contract.
+Ask your agent for a trade plan and it queries the dataset: shortlisting candidates that pass morning liquidity and earnings checks, inspecting historical 3-day MFE/MAE outcome surfaces, and proposing entry, target, stop, and position size inside your risk budget. There is no shared daily pick endpoint.
 
-The receipts as of 2026-10-02, each with its N and window. The live numbers update daily at https://gammarips.com/scorecard.
+## Catalyst Lab Research Findings (Why Combo A)
 
-- **Live record:** Claude Code trading the GammaRips pool with real money closed 11 of 14 trades at a profit, +$2,263 net realized (entries 2026-09-14 to 2026-10-02). Every trade is on https://gammarips.com/scorecard, and redacted day traces are public at https://github.com/DevDizzle/gammarips-harness.
-- **Pool hit rates:** of 636 pool contracts that have expired (scan dates 2026-08-24 to 2026-09-18), 56.3% hit +50% and 73.6% hit +20% before expiration. Within 3 trading days of the 10:00 ET entry, 34.5% of 1,150 pool contracts hit +50%. A hit is a touch of that level, not profit kept. Contracts move both ways, so the exit plan decides the result: that is what the exit lab is for.
-- **Contract quality:** median open interest 4,664 vs 906 before the liquidity rule, median session volume 1,039 vs 232, and the thinnest 10% at 1,635 open interest vs 29 (1,300 pool contracts 2026-08-24 to 2026-10-01 vs the 60 scan days before). In a 60-session study ending 2026-08-14, no-fill at the 10:00 ET entry fell from 40.5% to 6.1%.
+Validated across walk-forward audits of `N = 5,575` enriched contracts over 66 scan dates (`dev.parquet`) joined to BigQuery `enriched_option_outcomes`:
 
-Past results. Educational only. Not investment advice.
+- **Volatility Ratio (`rv_iv_ratio >= 0.85`):** Realized-to-Implied Volatility ratio (`(ATR_14 / Price * sqrt(252)) / IV`) is the #1 quantitative predictor of favorable 3-day option excursions.
+- **Resting Book Depth (`OI >= 500`, log-saturated to `5,000`):** Lifts 5-minute fast execution fills at the open from **30.3% to 50.1%** (`56.5%` at `OI >= 1,000`).
+- **Tick-Size Friction Floor (`Mid >= $1.00`):** Escapes the $0.05 minimum tick-size penalty on sub-dollar options.
+- **Gamma/Theta Sweet Spot (`Delta 0.22–0.48`, `DTE 10–45`):** Lifts 3-day Option Maximum Favorable Excursion (`MFE >= +40%`) from **27.6% to 35.4%**.
+
+Historical walk-forward research on paper-tracked cohorts. Educational only. Not investment advice.
 
 ## Core pages
 
-- [How it works](https://gammarips.com/how-it-works)
-- [Today's pool (free)](https://gammarips.com/signals)
-- [Scorecard: the live record and pool outcomes](https://gammarips.com/scorecard)
-- [The Lab: research experiments](https://gammarips.com/lab)
-- [Methodology: the research record](https://gammarips.com/methodology)
-- [Pricing: free website / $29 Agent Access](https://gammarips.com/pricing)
-- [MCP docs: 9 tools](https://gammarips.com/developers)
+- [Learn: Pipeline & Catalyst Lab Research](https://gammarips.com/how-it-works)
+- [Today's Pool Preview (3-contract web preview)](https://gammarips.com/signals)
+- [Methodology: Combo A Filters & Leakage Wall](https://gammarips.com/methodology)
+- [The Lab: Published Experiments](https://gammarips.com/lab)
+- [Pricing: Free 3-contract preview / $29 Pro MCP Dataset](https://gammarips.com/pricing)
+- [MCP & Developers: 9 tools](https://gammarips.com/developers)
 
-## The funnel (liquidity-first since 2026-08-24)
+## The Pipeline
 
-1. **Scanner**: nightly liquidity rank of about 3,500 optionable US stocks. A name needs 3M+ session share volume and 25+ listed strikes; the top 100 by combined chain dollar volume and share volume survive. Liquidity decides membership, not unusual activity; flow is context in the data, not a gate.
-2. **Pool**: bullish names only; one out-of-the-money call per name, chosen on contract liquidity; roughly 40 to 50 contracts (`overnight_score >= 1` is a cosmetic floor; most days more than 50 bullish names qualify, and a deterministic point-in-time rank (delta band, 60-day momentum, a liquidity demotion) keeps 50, using no outcome data). Thesis, technicals, news context, and the selected contract attached per name.
-3. **Earnings check**: the published pool is NOT earnings-screened. Run `get_signal` with `view=earnings` on any candidate before acting.
-4. **Leakage discipline**: every field is point-in-time; nothing an agent reads contains information that wasn't knowable at the time it's dated.
-5. **Outcome tracking**: every pool contract is tracked to its realized outcome. The exit lab serves that history so your agent sets the target and the stop from data.
+1. **23:00 ET Scanner:** ~3,500 optionable US stocks → 3M+ session share volume and 25+ listed strikes → top 100 by combined chain dollar volume and share volume → bullish calls passing `Mid >= $1.00`, `OI >= 500`, `Delta 0.22–0.48`, `DTE 10–45` (roughly 40 to 50 contracts).
+2. **05:30 ET Enrichment:** computes `rv_iv_ratio`, technical indicators, flow context, and Gemini grounded news catalysts.
+3. **06:30–07:00 ET Clean Feature View & Report:** materializes leakage-checked `enriched_features_v1` and publishes the daily intelligence report.
+4. **09:02–16:52 ET Intraday Liquidity:** captures 10-minute contract snapshots (`get_liquidity`) so agents verify morning OI and active session volume.
+5. **Earnings check:** the published pool is NOT earnings-screened. Agents call `get_signal(view="earnings")` on each candidate before planning a trade.
 
-## MCP server (Agent Access: API key or OAuth sign-in)
+## MCP Server (Free 3-Contract Preview vs. Pro Full Dataset)
 
-- Endpoint: `https://mcp.gammarips.com/mcp`
-- Transport: Streamable HTTP (legacy SSE at `/sse`)
-- Auth, option 1 (any client that can send a header): `Authorization: Bearer <API key>`, generated by the subscriber at https://gammarips.com/account with an active subscription (subscribe at https://gammarips.com/pricing; $29/mo, 30-day free trial; the key is shown once, at creation)
-- Auth, option 2 (chat clients that cannot send a header): OAuth 2.1 at `https://mcp.gammarips.com/pro`, the credentialed twin of `/mcp` with the same transport and the same 9 tools. An anonymous request gets a 401 naming the authorization server (`https://gammarips.com`), which starts the sign-in. PKCE S256 required; dynamic client registration (RFC 7591) and client ID metadata documents both supported; grants `authorization_code`, `refresh_token`, `client_credentials`; scope `mcp:read`. Discovery: `https://mcp.gammarips.com/.well-known/oauth-protected-resource/pro` and `https://gammarips.com/.well-known/oauth-authorization-server`. Headless agents use `client_credentials` with a machine client created at https://gammarips.com/account. An API key also works on `/pro`; `/mcp` stays anonymous.
-- Anonymous funnel tier (no key): the pool preview (`get_pool` with `view=preview`), daily reports, methodology playbooks, and the regime and calendar reference tools. The full pool and the outcome substrate require a key.
-- Start with: `get_playbook` with `name=start-here`, then `get_pool`, then `query_outcomes` with `view=harvest`
-- All 9 tools: `get_pool` (the candidate pool; `view=preview` is free, `view=enriched`/`raw`/`features` need a pro key), `get_signal` (one ticker: detail or earnings-window check), `get_liquidity` (fresh entry-day liquidity, one contract or the whole pool), `query_outcomes` (realized outcomes and receipts, nine views), `replay_contract` (raw option price tape, minute or daily), `get_regime_context` (VIX vs VIX3M regime rail), `get_market_calendar_status` (NYSE status or available scan dates), `get_playbook` (methodology, field dictionary, and data-contract schema), `get_daily_report` (the daily report or a list of recent ones)
-- Built-in prompts: `morning_brief`, `analyze_candidate`, `run_your_own_tournament`: workflows that end in a plan you decide on, never a pick.
+- **Free Preview Endpoint:** `https://mcp.gammarips.com/mcp` (Streamable HTTP; no card, no key). Serves the 3-contract pool preview (`get_pool(view="preview")`), daily reports, VIX/VIX3M regime context, NYSE market calendar, and methodology playbooks.
+- **Pro Dataset Endpoint:** `https://mcp.gammarips.com/pro` (OAuth 2.1 sign-in) or `Authorization: Bearer gr_live_...` API key on `/mcp` or `/pro` ($29/mo founding price, 30-day free trial at https://gammarips.com/pricing). Unlocks all 9 tools: the full 40–50 contract daily Combo A dataset (`get_pool(view="enriched" | "raw" | "features")`), per-ticker detail and earnings checks (`get_signal`), 10-minute intraday liquidity snapshots (`get_liquidity`), 3-day excursion outcome surfaces (`query_outcomes`), and minute/daily option price replay (`replay_contract`).
+- **All 9 tools:** `get_pool`, `get_signal`, `get_liquidity`, `query_outcomes`, `replay_contract`, `get_regime_context`, `get_market_calendar_status`, `get_playbook`, `get_daily_report`.
 
 ## Pricing
 
-- **Free**: the whole human-readable website. Today's pool, daily reports, per-ticker deep dives, scorecard, the Lab, methodology. Free forever, no account required.
-- **Agent Access $29/mo**: full MCP access. $29/mo is the founding price, for the first 100 subscribers, and it stays at that rate as long as the subscription stays active. The price is $39/mo after that. Send your API key in an Authorization header (Claude Code, Codex, Cursor, Gemini CLI, and any MCP client that can send the header), or add `https://mcp.gammarips.com/pro` and sign in with OAuth, which is how a chat client that cannot send a header reaches the same tools. The free tier works in every MCP client with no credential at all. 30-day free trial. Cancel anytime.
+- **Free ($0 forever):** 3-contract daily pool preview on https://gammarips.com/signals and `https://mcp.gammarips.com/mcp`, daily macro reports, methodology, and free reference MCP tools.
+- **Pro MCP Access ($29/mo founding price, 30-day free trial):** full daily Combo A pool (40–50 contracts), 10-minute intraday liquidity snapshots, 3-day MFE/MAE outcome surfaces, and contract replay across all 9 MCP tools. $29/mo for the first 100 subscribers ($39/mo after). Cancel anytime.
 
 ## Disclaimers
 
-Past results, from real-money trades and historical pool data. Educational only. Not investment advice. Past performance is not a guarantee of future results. Options trading involves substantial risk of loss. GammaRips does not make personalized recommendations and does not manage customer funds.
+Educational market data and historical research only. Not investment advice. Past performance is not a guarantee of future results. Options trading involves substantial risk of loss. GammaRips does not make personalized recommendations and does not manage customer funds.
 
 ## Contact
 

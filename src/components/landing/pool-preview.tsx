@@ -86,19 +86,19 @@ export function PoolPreview({ summary, report, reportDate, signals }: Props) {
           {signals.length > 0 && (
             <div className="mt-6 border-t border-border/60 pt-5">
               <div className="flex items-center justify-between mb-1">
-                <h3 className="font-bold font-headline">A sample of the pool</h3>
+                <h3 className="font-bold font-headline">Today&apos;s 3-contract preview</h3>
                 <Link
                   href="/signals"
                   className="text-sm text-primary hover:underline"
                 >
-                  See every name, free &rarr;
+                  Open pool preview &rarr;
                 </Link>
               </div>
               <p className="text-xs text-muted-foreground mb-3">
-                A few names from the latest pool, in no order. Every name
-                is free to read on this site. Your AI gets the full pool, with
-                liquidity checks and the exit lab, on Agent Access. Nothing here
-                is a recommendation.
+                A 3-contract preview from the latest Combo A scan. Your AI gets
+                the full nightly dataset of roughly 40 to 50 contracts, 10-minute
+                intraday liquidity snapshots, and 3-day outcome history on Pro
+                MCP. Nothing here is a recommendation.
               </p>
               <div className="grid gap-2">
                 {signals.map((signal: any) => (

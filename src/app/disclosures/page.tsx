@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, AlertTriangle, BookOpen, Eye, Clock, UserX } from 'lucide-react';
 import { PRICE_MONTHLY, OG_IMAGE } from '@/lib/constants';
+
 export const metadata: Metadata = {
   title: 'GammaRips Disclosures: What we are NOT',
   description:
-    "What GammaRips is and is not: educational only, not investment advice, complete track records only, no trading for you, and no registered investment advisor.",
+    'What GammaRips is and is not: educational market data only, not investment advice, point-in-time historical outcome cohorts, no trading for you, and no registered investment advisor.',
   alternates: { canonical: 'https://gammarips.com/disclosures' },
   openGraph: {
     images: [OG_IMAGE],
@@ -25,30 +26,29 @@ const disclosures = [
     number: '01',
     title: 'GammaRips does not trade for you.',
     body: [
-      "GammaRips never places an order for you or for any subscriber, and no subscriber order reaches an exchange through GammaRips. The pool data, the opportunity surfaces, and the research cohorts are tracked on a paper-trading basis: no capital is at risk on them.",
-      "The live record on the Track Record page is the one real-money record we publish. It is the founder's own Claude Code agent trading contracts from the GammaRips pool in the founder's own brokerage account, shown as realized broker fills, every trade, wins and losses. That account may hold positions in contracts that also appear in the pool. GammaRips manages no account for anyone else.",
-      "The pool outcome record is a forward simulator: it ingests Polygon options data, applies fixed tracking rules at the same timestamps a live trader would face, and records the result. The same data feeds the public Track Record page.",
-      "If you act on anything you read here in your own brokerage account, that is your decision, your capital, and your risk. We do not place trades for you, hold positions for you, or receive any commission tied to trades you place.",
+      'GammaRips is a financial data vendor. GammaRips never places an order for you or for any subscriber, and no subscriber order reaches an exchange through GammaRips. The nightly Combo A options pool, the 3-day excursion outcome surfaces, and the Catalyst Lab research cohorts are tracked on a historical and paper-trading basis.',
+      'The outcome pipeline ingests Polygon options data, applies deterministic tracking rules from the 10:00 ET morning reference window across the subsequent 3 trading days, and records Maximum Favorable Excursion (MFE) and Maximum Adverse Excursion (MAE) in BigQuery (enriched_option_outcomes).',
+      'If you act on anything you read here or over the MCP API in your own brokerage account, that is your decision, your capital, and your risk. We do not place trades for you, hold positions for you, or receive any commission tied to trades you place.',
     ],
   },
   {
     icon: AlertTriangle,
     number: '02',
-    title: 'Educational only. Not investment advice.',
+    title: 'Educational market data only. Not investment advice.',
     body: [
-      "GammaRips publishes options-flow data, methodology writeups, research findings, a paper-trading research ledger, and a real-money agent record as educational content. Nothing on this site, in our emails, over the MCP API, on @gammarips on X, or in any direct communication constitutes investment, financial, tax, accounting, or legal advice, and anything an AI agent concludes from our data is the user's own analysis, not a GammaRips recommendation.",
-      "We do not know your financial situation, risk tolerance, time horizon, or tax position. A trade that would be reasonable for one person can be ruinous for another. Consult a registered investment advisor before making any trading decision based on what you read here.",
-      "Options trading involves risk and is not suitable for every investor. The seller of an uncovered short option faces theoretically unlimited loss. The buyer of an option faces total loss of premium. Read the OCC's Characteristics and Risks of Standardized Options before trading any option.",
+      "GammaRips publishes curated options market data, point-in-time feature vectors, methodology writeups, and Catalyst Lab research findings as educational and analytical content. Nothing on this site, in our emails, over the MCP API, on @GammaRips on X, or in any direct communication constitutes investment, financial, tax, accounting, or legal advice, and anything an AI agent concludes from our data is the user's own analysis, not a GammaRips recommendation.",
+      'We do not know your financial situation, risk tolerance, time horizon, or tax position. A trade that would be reasonable for one person can be ruinous for another. Consult a registered investment advisor before making any trading decision.',
+      "Options trading involves substantial risk and is not suitable for every investor. The seller of an uncovered short option faces theoretically unlimited loss. The buyer of an option faces total loss of premium. Read the OCC's Characteristics and Risks of Standardized Options before trading any option.",
     ],
   },
   {
     icon: Clock,
     number: '03',
-    title: 'Every trade, from trade 1, with its N and window.',
+    title: 'Complete cohorts only, with sample size (N) and window.',
     body: [
-      "The live record on the Track Record page shows every trade from the first one: wins and losses, each with its entry, exit, and realized result, and the record as a whole with its trade count (N) and its date window. Nothing is edited after the fact, and the page states the date it was last updated.",
-      "We publish complete cohorts only. Every number we show covers every trade or every contract in its stated window. We never show a cherry-picked subset, a run of early winners, or a blended return built from selected results. Every candidate the engine surfaces is tracked to its realized outcome in the public pool record, winners and losers counted the same way, with sample sizes attached. The research baselines, including whole-pool results under fixed exit rules, are on the Methodology page.",
-      "Past results do not promise future results. A record of this size can change quickly as trades are added. We never promise a return or a win rate for your own trades.",
+      'We publish complete research cohorts only. Every Catalyst Lab study and excursion metric covers every qualifying contract in its stated date window, with sample size (N) attached.',
+      'We never publish cherry-picked subsets or selected-positive blended returns. Every contract surfaced in the pool is logged to the outcome warehouse (enriched_option_outcomes) under the same deterministic rules. Full methodology details live on the Methodology and Learn pages.',
+      'Past historical outcomes do not promise future results. We never promise a return, win rate, or guaranteed edge for your own trades.',
     ],
   },
   {
@@ -56,9 +56,9 @@ const disclosures = [
     number: '04',
     title: 'Past performance does not predict future results.',
     body: [
-      "Pool figures are paper-tracked against historical or near-real-time data. Real execution introduces slippage, fills, partial fills, halt-and-pause behavior, and human latency that paper tracking does not capture. The live record uses real fills, and your fills, timing, and sizing will differ from it.",
-      "Market regimes change. A strategy that worked in one volatility environment can fail in another. The 2026 regime behind these results is not necessarily the regime you will trade in if you act on this data later.",
-      "There is no claim, express or implied, that any past outcome, paper or live, is indicative of any future result.",
+      'Historical excursion and fill figures are measured against historical and intraday option tape data. Live brokerage execution introduces slippage, partial fills, queue priority, halt-and-pause behavior, and latency that historical tracking cannot fully replicate.',
+      'Market regimes change. A microstructure or volatility filter that performed well in one volatility environment can degrade in another.',
+      'There is no claim, express or implied, that any historical excursion or research finding is indicative of any future result.',
     ],
   },
   {
@@ -66,9 +66,9 @@ const disclosures = [
     number: '05',
     title: 'Founder is not a registered investment advisor.',
     body: [
-      "GammaRips is built by Evan Parra. Evan is not a registered investment advisor, broker-dealer, securities lawyer, CFP, CFA, or licensed financial professional of any kind. GammaRips is not a registered investment advisory firm, broker-dealer, or money-management business.",
-      `We do not solicit, manage, or accept assets under management. We sell access to data and software tools: a pipeline that publishes options-flow data on a paper-trading basis, plus programmatic (MCP) access for subscribers' own AI agents. The ${PRICE_MONTHLY}/month Agent Access subscription is a data-and-tools subscription, not an advisory or management fee, and the service deliberately provides no personalized recommendation of any kind.`,
-      "If you require advice on options trading specifically tailored to your situation, the responsible path is to consult a licensed advisor in your jurisdiction. We can build the engine but we cannot give you advice; that is, by design, not what this is.",
+      'GammaRips is built by Evan Parra. Evan is not a registered investment advisor, broker-dealer, securities lawyer, CFP, CFA, or licensed financial professional of any kind. GammaRips is not a registered investment advisory firm, broker-dealer, or money-management business.',
+      `We do not solicit, manage, or accept assets under management. We sell access to data and software tools: a pipeline that publishes curated options market data and historical excursion outcomes over MCP for subscribers' own AI agents. The ${PRICE_MONTHLY}/month Agent Access subscription is a data-and-tools subscription, not an advisory or management fee, and the service provides no personalized recommendation of any kind.`,
+      'If you require advice on options trading tailored to your situation, consult a licensed advisor in your jurisdiction.',
     ],
   },
 ];
@@ -102,7 +102,7 @@ export default function DisclosuresPage() {
           </h1>
           <p className="text-lg text-muted-foreground">
             Five explicit disclosures, written plainly. If you only have ninety seconds for this
-            page, read the headlines below. Those are the load-bearing claims.
+            page, read the headlines below.
           </p>
         </header>
 
@@ -142,22 +142,22 @@ export default function DisclosuresPage() {
           <h2 className="text-2xl font-bold mb-4">Where to read more</h2>
           <ul className="space-y-3 text-sm">
             <li>
+              <Link href="/how-it-works" className="text-primary underline underline-offset-2 hover:no-underline">
+                Learn (How It Works)
+              </Link>{' '}
+              covers the overnight pipeline, 10-minute intraday liquidity checks, and the Catalyst Lab walk-forward research behind Combo A.
+            </li>
+            <li>
               <Link href="/methodology" className="text-primary underline underline-offset-2 hover:no-underline">
                 Methodology
               </Link>{' '}
-              covers every threshold, every data source, and the research record behind the pool.
-            </li>
-            <li>
-              <Link href="/scorecard" className="text-primary underline underline-offset-2 hover:no-underline">
-                Track Record
-              </Link>{' '}
-              shows every real-money trade of the live agent record and the pool hit rates, each with its N and window.
+              covers every threshold, data source, point-in-time leakage wall, and 3-day excursion outcome labeling.
             </li>
             <li>
               <Link href="/about" className="text-primary underline underline-offset-2 hover:no-underline">
                 About
               </Link>{' '}
-              covers the engine, the data, and the person behind it.
+              covers the engine, the data architecture, and the builder behind it.
             </li>
             <li>
               <Link href="/terms" className="text-primary underline underline-offset-2 hover:no-underline">
@@ -188,18 +188,17 @@ export default function DisclosuresPage() {
         <section className="text-center">
           <h2 className="text-2xl font-bold mb-3">Questions about a specific disclosure?</h2>
           <p className="text-muted-foreground mb-6">
-            Reply to any GammaRips email. It goes straight to Evan. No autoresponder, no support
-            queue.
+            Reply to any GammaRips email. It goes straight to Evan.
           </p>
           <Button asChild variant="outline">
-            <Link href="/about">
+            <Link href="/about#contact">
               Contact <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </section>
 
         <p className="text-xs text-muted-foreground text-center mt-16">
-          Last reviewed: October 2026. Disclosures may be updated as the engine, regulatory posture,
+          Last reviewed: November 2026. Disclosures may be updated as the engine, regulatory posture,
           or business model changes; updates will be dated.
         </p>
       </main>

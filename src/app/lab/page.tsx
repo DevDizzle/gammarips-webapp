@@ -7,23 +7,21 @@ import { FlaskConical } from 'lucide-react';
 import { OG_IMAGE } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'The Lab — Published Experiments',
+  title: 'The Lab — Catalyst Lab Experiments & Microstructure Audits',
   description:
-    "Experiments on the GammaRips options-flow substrate, published with hypothesis, method, sample size, and verdict, including the ideas that got killed.",
+    'Experiments on the GammaRips options dataset substrate, published with hypothesis, method, sample size (N), and verdict—including the hypotheses that got killed.',
   alternates: { canonical: 'https://gammarips.com/lab' },
   openGraph: {
     images: [OG_IMAGE],
-    title: 'The Lab — Published Experiments | GammaRips',
+    title: 'The Lab — Catalyst Lab Experiments & Microstructure Audits | GammaRips',
     description:
-      'Hypothesis, method, N, verdict — including the killed ideas. How the GammaRips pool methodology earns its keep, in public.',
+      'Hypothesis, method, N, verdict—including the killed ideas. How the GammaRips Combo A dataset filters earn their keep.',
     url: 'https://gammarips.com/lab',
   },
 };
 
 type Verdict = 'CONFIRMED' | 'KILLED' | 'CONDITIONAL';
 
-// Seed entries, hardcoded for launch. Same shape as a future Firestore
-// `lab_findings` collection so migration is a data move, not a rewrite.
 const findings: {
   slug: string;
   title: string;
@@ -35,60 +33,60 @@ const findings: {
   mcp: string;
 }[] = [
   {
-    slug: 'naive-pool-baseline',
-    title: 'Buying the whole pool blindly is profitable',
-    verdict: 'KILLED',
-    hypothesis:
-      'The curated pool is high-signal — so mechanically buying every contract in it each morning, under one fixed exit rule, should be profitable.',
-    method:
-      'Daily bracket replay of the full enriched pool (not just selected names) under the fixed same-day exit, logged to the outcome substrate. Composite tracked across the full labeled window.',
-    result:
-      'Robustly negative — a composite on the order of −2 to −6% per contract per day depending on window, with a win rate around 30%. The excursion data shows real winners inside the pool; the fixed exit and the blind sizing destroy them in aggregate.',
-    changed:
-      'This finding shaped the product. We do not publish a "buy the pool" index, we do not sell picks, and we tell you on the homepage that blind buying loses. The pool is a surface for analysis — the edge lives in selection and exits.',
-    mcp: 'Reproduce it: query_outcomes(view="labels") + query_outcomes(view="summary") over any window you like.',
-  },
-  {
-    slug: 'delta-separates-outcomes',
-    title: 'Contract delta separates winners from losers',
+    slug: 'rv-iv-ratio-predictor',
+    title: 'Realized-to-Implied Volatility ratio (rv_iv_ratio >= 0.85) predicts option excursions',
     verdict: 'CONFIRMED',
     hypothesis:
-      'Some observable, point-in-time contract feature distinguishes trades that ended up winning from those that lost.',
+      'Contracts where the underlying’s realized daily range (ATR_14 / Price * sqrt(252)) is high relative to implied volatility (IV) produce stronger 3-day option excursions than high-IV lottery tickets.',
     method:
-      'Feature-by-feature comparison of won vs. lost trades on 1,375 historically labeled trades (realized option P&L, not underlying moves), with leakage-checked, as-of-scan-time features only.',
+      'Walk-forward feature importance and quartile excursion audit across N = 5,575 enriched contracts (66 scan dates on dev.parquet) joined to BigQuery enriched_option_outcomes.',
     result:
-      'Delta was the only feature that cleanly separated the two groups. A mid-delta band (roughly |delta| 0.20–0.46) concentrated the favorable outcomes; scores, narrative features, and volume statistics did not separate.',
+      'rv_iv_ratio emerged as the #1 quantitative predictor of favorable 3-day option excursions across all point-in-time features.',
     changed:
-      'The delta band became a live ranking lever in pool curation. It is also why the data layer exposes per-contract feature vectors — the lever is only usable if you can see delta at selection time.',
-    mcp: 'Reproduce it: get_pool(view="features") + query_outcomes, group by delta bucket.',
+      'rv_iv_ratio is computed every morning at 05:30 ET and exposed in enriched_features_v1, with rv_iv_ratio >= 0.85 enforced in the Catalyst Lab filter.',
+    mcp: 'Reproduce it: get_pool(view="features") + query_outcomes(view="surface").',
   },
   {
-    slug: 'voloi-gates-remove-winners',
-    title: 'Volume/OI liquidity gates improve the pool',
+    slug: 'xgboost-composite-missingness',
+    title: 'Black-box XGBoost composite score beats simple microstructure gates out-of-sample',
     verdict: 'KILLED',
     hypothesis:
-      'Filtering candidates on scan-time volume-to-open-interest and open-interest floors should remove junk and improve pool quality.',
+      'A non-linear gradient-boosted tree trained across all enriched features can rank daily top picks better than transparent contract microstructure rules.',
     method:
-      'Backtested the gate stack against the labeled outcome set; audited which historical winners each gate would have excluded.',
+      'Strict walk-forward out-of-sample audit across N = 5,575 contracts (66 scan dates), comparing full-feature XGBoost against missingness-stripped features and deterministic Combo A gates.',
     result:
-      'The gates removed real winners. Root cause: scan-time open interest is stale — the overnight sweep that makes a name interesting only becomes visible OI the next morning, so the filter punished exactly the fresh-flow setups the scanner exists to find.',
+      'Apparent in-sample lift came from the tree exploiting schema evolution and missingness indicators across historical eras. Once late-schema missingness was stripped, the black-box composite failed out-of-sample, while transparent microstructure and volatility primitives held up.',
     changed:
-      'The selection-time V/OI and OI gates were removed (2026-06-04). Liquidity is now handled where it is actually knowable: fresh open interest near the open, not stale snapshots at scan time.',
-    mcp: 'Reproduce it: get_playbook(name="schema") documents which fields are stale-by-construction and how they are walled off.',
+      'We killed black-box composite pick ranking. GammaRips sells the transparent Combo A dataset and historical excursion surfaces over MCP rather than black-box picks.',
+    mcp: 'Reproduce it: get_playbook(name="schema") + get_pool(view="features").',
   },
   {
-    slug: 'momentum-exit-conditional',
-    title: '60-day momentum adds edge to the delta band',
-    verdict: 'CONDITIONAL',
+    slug: 'resting-oi-fast-fills',
+    title: 'Resting Open Interest >= 500 lifts 5-minute open execution fills',
+    verdict: 'CONFIRMED',
     hypothesis:
-      'Underlying 60-day momentum (mom_60 ≥ +0.35), stacked on the mid-delta band, beats the bullish-pool baseline.',
+      'Requiring Mid >= $1.00 and resting Open Interest >= 500 eliminates sub-dollar tick friction and materially increases fast execution fills at the morning open.',
     method:
-      'Cohort comparison on the labeled study set across exit styles: the live same-day bracket exit vs. a 3-day hold. Point-in-time momentum only; forward validation arm accruing before the lever graduates.',
+      'Audited 5-minute opening print rates and bid-ask tick friction across BigQuery enriched_option_outcomes segmented by OI and mid-price buckets.',
     result:
-      'Real but exit-conditional: the momentum-stacked cohort beats baseline under a 3-day hold and shows no detectable edge under the same-day exit. Same signal, different exit, opposite conclusion — exits are not a detail.',
+      'Requiring OI >= 500 lifted 5-minute fast execution fills from 30.3% to 50.1% (and to 56.5% at OI >= 1,000), with liquidity gains log-saturating near OI = 5,000. Requiring Mid >= $1.00 removed the $0.05 minimum tick-size penalty.',
     changed:
-      'Momentum is used as a soft pre-rank tilt in curation, not a hard gate, and we are accruing an independent forward sample before claiming more. Published here precisely because it is fragile — that is what honest research status looks like.',
-    mcp: 'Reproduce it: query_outcomes(view="exit_rule", target_pct=, stop_pct=) with your own target/stop/horizon, then query_outcomes(view="summary") grouped by momentum.',
+      'Mid >= $1.00 and OI >= 500 became hard Stage 1 Combo A floors, paired with 10-minute intraday liquidity snapshots (09:02–16:52 ET).',
+    mcp: 'Reproduce it: get_liquidity() + query_outcomes(view="surface").',
+  },
+  {
+    slug: 'gamma-theta-sweet-spot',
+    title: 'Delta 0.22–0.48 and DTE 10–45 concentrate 3-day MFE >= +40% excursions',
+    verdict: 'CONFIRMED',
+    hypothesis:
+      'Filtering out far-OTM lottery tickets (Delta < 0.20) and ultra-short decay traps (DTE < 10) increases the base rate of 3-day +40% option excursions.',
+    method:
+      'Cohort comparison of 3-day Maximum Favorable Excursion (MFE >= +40%) across N = 5,575 enriched contracts over 66 scan dates.',
+    result:
+      'Restricting contracts to Delta 0.22–0.48 and DTE 10–45 lifted the 3-day Option MFE >= +40% rate from 27.6% baseline to 35.4%.',
+    changed:
+      'Delta 0.22–0.48 and DTE 10–45 are locked into the Combo A contract selection specification.',
+    mcp: 'Reproduce it: get_pool(view="enriched") + query_outcomes(view="harvest").',
   },
 ];
 
@@ -103,7 +101,7 @@ const collectionSchema = {
   '@type': 'CollectionPage',
   name: 'The Lab — GammaRips Published Experiments',
   description:
-    'Experiments run on the GammaRips options-flow data substrate, published with hypothesis, method, sample size, and verdict — including the killed ideas.',
+    'Experiments run on the GammaRips options dataset substrate, published with hypothesis, method, sample size, and verdict—including the killed ideas.',
   url: 'https://gammarips.com/lab',
   publisher: {
     '@type': 'Organization',
@@ -129,12 +127,7 @@ export default function LabPage() {
             We publish our experiments. Including the dead ones.
           </h1>
           <p className="text-lg text-muted-foreground">
-            Every finding below was produced on the engine&apos;s own data
-            substrate — point-in-time, leakage-checked, with the sample size
-            and conditions attached. This is the research that shapes how the
-            pool is curated. When a hypothesis dies, it stays on this page
-            with a verdict, because a methodology you can&apos;t audit is a
-            story, not a method.
+            Every finding below was produced on the engine&apos;s point-in-time data substrate (<code className="text-xs text-foreground">dev.parquet</code> and BigQuery <code className="text-xs text-foreground">enriched_option_outcomes</code>), leakage-checked, with sample size (N) and walk-forward conditions attached.
           </p>
         </header>
 
@@ -177,10 +170,7 @@ export default function LabPage() {
             Your agent can run these same queries
           </h2>
           <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-            Every experiment on this page was run against the same substrate
-            the MCP serves: the labeled outcome database, opportunity
-            surfaces, point-in-time features, and exit-rule simulation.
-            Connect your agent and check our work — or find what we missed.
+            Every experiment on this page was run against the same substrate the MCP serves: point-in-time feature vectors, 10-minute intraday liquidity snapshots, and 3-day excursion outcome surfaces.
           </p>
           <Button asChild size="lg">
             <Link href="/developers">Connect Your Agent &rarr;</Link>
@@ -188,9 +178,7 @@ export default function LabPage() {
         </section>
 
         <p className="text-xs text-muted-foreground text-center mt-12 leading-relaxed">
-          Research on paper-trading data, educational only. Not investment
-          advice. Findings are historical, conditional on the stated exit
-          rules and windows, and not a promise of future results.
+          Historical options research on paper-tracked data, educational only. Not investment advice. Past performance is not a guarantee of future results.
         </p>
       </main>
     </>

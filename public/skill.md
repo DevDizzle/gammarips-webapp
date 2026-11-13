@@ -1,35 +1,31 @@
-# GammaRips: Better Option Contracts and a Real Trade Plan for AI Agents
+# GammaRips: Nightly Combo A Options Dataset for AI Agents
 
 ## What I Am
-Better-quality option contracts every trading night, and the history to plan the exit. Every night I rank about 3,500 optionable US stocks by liquidity, keep the 100 most liquid, keep the bullish names, and select one out-of-the-money call in each on contract liquidity: a pool of roughly 40 to 50 contracts with deep books. You (the agent) build the trade plan with your user. I serve data and methodology over MCP. I never return a pick.
+The nightly filtered options dataset for AI agents. Every trading night at 23:00 ET I scan ~3,500 optionable US stocks, keep the top 100 liquid universe (3M+ session shares, 25+ listed strikes), and select one out-of-the-money call per bullish name passing Combo A microstructure and convexity gates (`Mid >= $1.00`, `OI >= 500`, `Delta 0.22–0.48`, `DTE 10–45`). At 05:30 ET each contract is enriched with Realized-vs-Implied Volatility (`rv_iv_ratio`), technicals, flow context, and grounded news catalysts. From 09:02 to 16:52 ET I capture 10-minute intraday liquidity snapshots. You (the agent) build the trade plan with your user. I never return a shared daily pick.
 
-The receipts as of 2026-10-02, each with its N and window (updated daily at https://gammarips.com/scorecard):
-- Median open interest 4,664 vs 906 before the liquidity rule, median session volume 1,039 vs 232, the thinnest 10% at 1,635 vs 29 (1,300 pool contracts 2026-08-24 to 2026-10-01 vs the 60 scan days before). In a 60-session study ending 2026-08-14, no-fill at the 10:00 ET entry fell from 40.5% to 6.1%.
-- Of 636 pool contracts that have expired (scan dates 2026-08-24 to 2026-09-18), 56.3% hit +50% and 73.6% hit +20% before expiration. Within 3 trading days, 34.5% of 1,150 hit +50%. A hit is a touch, not profit kept.
-- Claude Code trading this pool with real money closed 11 of 14 trades at a profit, +$2,263 net (entries 2026-09-14 to 2026-10-02). Every trade: https://gammarips.com/scorecard
+Validated in Catalyst Lab walk-forward audits (`N = 5,575` enriched contracts across 66 scan dates joined to BigQuery `enriched_option_outcomes`):
+- `rv_iv_ratio >= 0.85` (`(ATR_14 / Price * sqrt(252)) / IV`) is the #1 quantitative predictor of favorable 3-day option excursions.
+- Resting `OI >= 500` lifts 5-minute fast execution fills at the open from 30.3% to 50.1% (56.5% at `OI >= 1,000`), and `Mid >= $1.00` eliminates sub-dollar $0.05 tick friction.
+- `Delta 0.22–0.48` and `DTE 10–45` lift 3-day Option MFE `>= +40%` from 27.6% baseline to 35.4%.
 
 ## What I Serve (9 tools)
-- **The pool**: today's bullish names, one out-of-the-money call each, with thesis, technicals, flow dollars, and the selected contract per name. `get_pool` with `view=preview` is free. `view=enriched`, `raw`, or `features` needs Pro. `get_signal` is the one-ticker deep dive plus the earnings-window check.
-- **Fresh liquidity**: `get_liquidity` gives entry-day open interest, session volume, and greeks for one contract or the whole pool. The pool's own numbers are session-frozen, so re-check here before you plan.
-- **The exit lab**: `query_outcomes`, one tool with nine views: the touch-probability curve (`view=harvest`), the opportunity surface (how far each past contract moved for and against, no exit applied), bracket labels and summaries, and scoring for your own target, stop, or trailing stop (`view=exit_rule`).
-- **The raw price tape**: `replay_contract` returns the minute path or the daily marks for a contract.
-- **Regime context**: `get_regime_context` gives the point-in-time VIX versus VIX3M rail.
-- **Methodology and reference**: `get_playbook` serves the playbooks (start with `name=start-here`), the field dictionary, and the data-contract schema. `get_market_calendar_status` and `get_daily_report` round out the free context.
+- **The Combo A pool**: `get_pool` with `view=preview` returns the 3-contract preview on the Free tier. Pro unlocks the full 40–50 contract daily dataset (`view=enriched`, `raw`, or `features`). `get_signal` provides single-ticker deep dives (`view=detail`) and earnings-window checks (`view=earnings`).
+- **10-minute intraday liquidity**: `get_liquidity` returns 10-minute intraday open interest, active session volume, last trade, and greeks (09:02–16:52 ET) for one contract or the whole pool.
+- **3-day excursion outcome history**: `query_outcomes` queries BigQuery `enriched_option_outcomes`: touch-probability curves (`view=harvest`), unclipped 3-day MFE/MAE surfaces (`view=surface`), and custom target/stop bracket scoring (`view=exit_rule`).
+- **Raw option price tape**: `replay_contract` returns minute or daily bars for any historical pool contract.
+- **Regime, calendar, reports & playbooks (Free)**: `get_regime_context` (VIX vs VIX3M), `get_market_calendar_status`, `get_daily_report`, and `get_playbook` (start with `name=start-here` or `name=schema`).
 
 ## How to Build the Trade Plan
-1. `get_market_calendar_status`: is there a session, and is the pool fresh?
-2. `get_regime_context`: does the volatility rail pass?
-3. `get_pool` with `view=enriched`: read the pool.
-4. Shortlist 1 to 3 candidates on your user's criteria. Check earnings with `get_signal` (`view=earnings`) and fresh liquidity with `get_liquidity`.
-5. `query_outcomes` with `view=harvest` and `view=surface`: set the target and the stop from what past pool contracts did. Score the bracket with `view=exit_rule`.
-6. Give the plan: the contract, why it passed, entry (about 10:00 ET, limit near the mid), target, stop, maximum loss, and a size inside your user's risk budget. If nothing passes, give a reasoned no-trade with the check that failed. Your user decides.
+1. `get_market_calendar_status`: check session status and dataset freshness.
+2. `get_regime_context`: check the point-in-time VIX vs VIX3M term structure.
+3. `get_pool` with `view=enriched`: read the full Combo A dataset.
+4. Shortlist 1 to 3 candidates on your user's criteria (`rv_iv_ratio >= 0.85`, technical structure, catalyst). Verify earnings with `get_signal(view="earnings")` and live morning liquidity with `get_liquidity`.
+5. `query_outcomes` with `view=harvest` and `view=surface`: set the target and stop from 3-day historical excursion distributions.
+6. Present the trade plan: contract, thesis, entry near the mid, target, stop, maximum loss, and position size within your user's risk budget—or a reasoned no-trade. Your user decides.
 
-Built-in prompts that encode this: `morning_brief`, `analyze_candidate`, `run_your_own_tournament`.
-
-## MCP Endpoint
-`https://mcp.gammarips.com/mcp` (Streamable HTTP; legacy SSE at `/sse`)
-
-Auth: `Authorization: Bearer <API key>` on `https://mcp.gammarips.com/mcp`, generated by the subscriber at https://gammarips.com/account with an active subscription ($29/mo founding price for the first 100 subscribers, $39/mo after that, 30-day free trial at https://gammarips.com/pricing; the key is shown once, at creation). A client that cannot send a custom header uses OAuth 2.1 instead: connect to `https://mcp.gammarips.com/pro` and complete the sign-in it offers (authorization server `https://gammarips.com`, PKCE S256, dynamic registration, scope `mcp:read`; `client_credentials` for headless agents). Without any credential, an anonymous tier on `/mcp` serves the pool preview, daily reports, methodology playbooks, and reference tools.
+## MCP Endpoints (Free Preview vs. Pro Dataset)
+- **Free 3-Contract Preview:** `https://mcp.gammarips.com/mcp` (Streamable HTTP; no card, no key). Serves the 3-contract preview (`get_pool(view="preview")` — matching the 3-contract web preview on https://gammarips.com/signals), daily reports, playbooks, regime context, and market calendar.
+- **Pro Full Dataset ($29/mo, 30-day free trial):** Subscribe at https://gammarips.com/pricing ($29/mo founding price for the first 100 subscribers, $39/mo after). Authenticate via OAuth 2.1 at `https://mcp.gammarips.com/pro` (PKCE S256, dynamic registration, scope `mcp:read`) or send `Authorization: Bearer gr_live_...` generated at https://gammarips.com/account.
 
 ## Disclaimers
-Past results, from real-money trades and historical pool data. Educational only. Not investment advice. Past performance is not a guarantee of future results.
+Educational market data and historical research only. Not investment advice. Past performance is not a guarantee of future results.

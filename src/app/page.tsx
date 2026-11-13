@@ -5,7 +5,6 @@ import { PoolRule } from "@/components/landing/pool-rule";
 import { InstallCta } from "@/components/landing/install-cta";
 import { ConnectTabs } from "@/components/landing/connect-tabs";
 import Faq, { buildFaqs } from "@/components/landing/faq";
-import { getReceipts } from "@/lib/receipts-server";
 import { getLatestOvernightSummary, getDailyReport, getOvernightSignals } from "@/lib/firebase-admin";
 
 export const revalidate = 60; // keep the daily pool summary fresh without a full static rebuild
@@ -27,12 +26,12 @@ export default async function LandingPage() {
   const summary = await getLatestOvernightSummary();
   const reportDate = summary ? (summary.report_date || summary.scan_date) : null;
   const report = reportDate ? await getDailyReport(reportDate) : null;
-  const faqs = buildFaqs(await getReceipts());
+  const faqs = buildFaqs();
 
   // A sample of the pool, not a ranking. Nothing here may sort the names or
   // present them as top choices. The selection research (2026-08-22) lives on
   // /methodology and /lab.
-  const poolSample = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 5) : [];
+  const poolSample = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 3) : [];
 
   const webSiteSchema = {
     "@context": "https://schema.org",

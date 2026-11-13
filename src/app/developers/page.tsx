@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import {
@@ -14,25 +14,18 @@ import {
   HARNESS_REPO,
 } from '@/lib/constants';
 import { CONNECT_CLIENTS, type ClientId, type ConnectStep } from '@/lib/connect-clients';
-import { getReceipts } from '@/lib/receipts-server';
-import {
-  type Receipts,
-  RECEIPTS_DISCLAIMER,
-  INSTALL_LINKS,
-  int,
-  pct,
-} from '@/lib/receipts';
+import { INSTALL_LINKS } from '@/lib/receipts';
 
 export const metadata = {
-  title: "GammaRips MCP: The Options-Flow Data Layer for AI Agents",
+  title: "GammaRips MCP: Options Dataset & API Reference for AI Agents",
   description:
-    `Connect GammaRips to Claude, ChatGPT, Cursor, or Codex. Better-quality option contracts every night, the exit lab, and ${TOOL_COUNT} MCP tools your AI uses to build the trade plan with you.`,
+    `Connect GammaRips to Claude, ChatGPT, Cursor, or Codex. Stream the nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcomes across ${TOOL_COUNT} MCP tools.`,
   alternates: { canonical: "https://gammarips.com/developers" },
   openGraph: {
     images: [OG_IMAGE],
-    title: "GammaRips MCP: The Options-Flow Data Layer for AI Agents",
+    title: "GammaRips MCP: Options Dataset & API Reference for AI Agents",
     description:
-      `Better-quality option contracts every night and the history to plan the exit, in Claude, ChatGPT, Cursor, or Codex. ${TOOL_COUNT} MCP tools. ${PRICE_MONTHLY}/mo, ${TRIAL_DAYS}-day free trial.`,
+      `Nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day outcome history in Claude, ChatGPT, Cursor, or Codex. ${TOOL_COUNT} MCP tools. ${PRICE_MONTHLY}/mo, ${TRIAL_DAYS}-day free trial.`,
     url: "https://gammarips.com/developers",
   },
 };
@@ -42,7 +35,7 @@ const webApiSchema = {
   "@type": "WebAPI",
   name: "GammaRips MCP",
   description:
-    `Model Context Protocol (MCP) server for AI agents: ${TOOL_COUNT} tools covering the nightly liquidity-ranked options pool, point-in-time feature vectors, fresh contract liquidity, the exit lab (opportunity surfaces, touch probabilities, and exit-rule scoring), minute and daily price replay, regime context, methodology playbooks, and daily reports. The pro tools need a credential (${PRICE_MONTHLY}/mo subscription, ${TRIAL_DAYS}-day free trial): an OAuth 2.1 sign-in at ${MCP_PRO_ENDPOINT}, or a bearer API key. The free tier needs neither. Paper-traded research data, educational only, not investment advice.`,
+    `Model Context Protocol (MCP) server for AI agents: ${TOOL_COUNT} tools covering the nightly Combo A options dataset, point-in-time feature vectors, 10-minute intraday contract liquidity snapshots, 3-day excursion outcome surfaces, minute and daily price replay, regime context, methodology playbooks, and daily macro reports. The Pro dataset requires a credential (${PRICE_MONTHLY}/mo subscription, ${TRIAL_DAYS}-day free trial): an OAuth 2.1 sign-in at ${MCP_PRO_ENDPOINT}, or a bearer API key (gr_live_...). The 3-contract free preview tier at ${MCP_ENDPOINT} needs neither. Educational market data only, not investment advice.`,
   url: MCP_ENDPOINT,
   documentation: "https://gammarips.com/developers",
   provider: {
@@ -52,41 +45,30 @@ const webApiSchema = {
   },
 };
 
-/* FAQ. Single source of truth for both the rendered section and the FAQPage
- * JSON-LD below, so the two can never drift.
- *
- * SEO intent: GSC (90d to 2026-08-05) has `options flow api` at position 24.2,
- * page 3 on the one query with real buyer intent that matches this product.
- * These answers are the literal question-and-answer form of facts stated
- * elsewhere on this page, which is also what FAQPage structured data wants.
- *
- * Every answer here is descriptive of the product surface. None asserts a
- * return, a win rate, a timing advantage, or a trade to follow (see the
- * forbidden-claims list in CLAUDE.md). */
 const FAQ: { q: string; a: string }[] = [
   {
     q: "Is there a GammaRips options flow API?",
-    a: `Yes. The GammaRips options flow API is an MCP server at ${MCP_ENDPOINT}, served over Streamable HTTP, with ${TOOL_COUNT} tools. Claude, ChatGPT, Cursor, Codex, and any other MCP client can call it, and so can an ordinary HTTP client. The free tier needs no key and no card. The pro tools take an OAuth 2.1 sign-in at ${MCP_PRO_ENDPOINT}, or a bearer API key on either endpoint.`,
+    a: `Yes. The GammaRips API is a remote Model Context Protocol (MCP) server served over Streamable HTTP with ${TOOL_COUNT} tools. The anonymous free tier at ${MCP_ENDPOINT} serves the 3-contract pool preview, daily reports, regime context, market calendar, and methodology playbooks with no card and no key. The full Pro dataset (${PRICE_MONTHLY}/mo after a ${TRIAL_DAYS}-day free trial) is unlocked via OAuth 2.1 sign-in at ${MCP_PRO_ENDPOINT} or by passing a bearer API key (gr_live_...) in the Authorization header.`,
   },
   {
-    q: "What options flow data does the API return?",
-    a: "The nightly pool: roughly 40 to 50 bullish names, each with its overnight score, flow dollars, thesis, technicals, catalyst, and one out-of-the-money call selected on contract liquidity. Also point-in-time feature vectors from a leakage-safe view, fresh liquidity for any pool contract, the exit lab (opportunity surfaces, how often past contracts touched each profit level, and a score for any target and stop), minute and daily price replay, regime context, the daily reports, and the methodology playbooks.",
+    q: "What data does the MCP server return?",
+    a: "On Pro, your AI agent gets the full nightly Combo A pool (roughly 40 to 50 liquid bullish call contracts passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45), point-in-time feature vectors including Realized-vs-Implied Volatility (rv_iv_ratio), grounded news catalysts, 10-minute intraday liquidity snapshots during market hours, 3-day MFE/MAE outcome surfaces, minute and daily contract price replay, VIX/VIX3M regime context, daily reports, and methodology playbooks.",
   },
   {
-    q: "Is the options flow data real time or overnight?",
-    a: "Overnight. The scan runs after the close across about 3,500 optionable US stocks. It keeps the 100 most liquid names, takes the bullish ones, and selects one out-of-the-money call in each on contract liquidity. The pool holds roughly 40 to 50 contracts and publishes each trading morning. Liquidity decides membership, and flow gives context. For the entry window, get_liquidity reads fresh open interest and session volume on any pool contract.",
+    q: "Is the dataset real-time or overnight?",
+    a: "Both overnight and intraday. The EOD scanner runs at 23:00 ET across ~3,500 optionable US stocks, enrichment completes at 05:30 ET, and the clean dbt feature view publishes by 06:30–07:00 ET. Then from 09:02 to 16:52 ET, the pipeline captures 10-minute intraday liquidity snapshots (get_liquidity) so your AI verifies morning open interest and active session volume before planning an entry.",
   },
   {
     q: "How do I connect Claude, ChatGPT, Cursor, or Codex?",
-    a: `Each client has its own steps on this page. In Claude Code, run: claude mcp add --transport http gammarips ${MCP_ENDPOINT} for the free tier. In the Claude app and ChatGPT, add ${MCP_ENDPOINT} as a custom connector to try it free, or add ${MCP_PRO_ENDPOINT} and sign in with your GammaRips account for Pro. Cursor and Codex take one config entry, with your API key or a sign-in. GammaRips plugins are being submitted to the Claude directory, the ChatGPT and Codex plugin directory, and cursor.directory.`,
+    a: `Each client has copy-paste setup steps below (#connect). In Claude Code, run: claude mcp add --transport http gammarips ${MCP_ENDPOINT} for the free 3-contract preview, or connect ${MCP_PRO_ENDPOINT} (OAuth) or pass your gr_live_ bearer key for the full Pro dataset. In Claude Desktop/Web and ChatGPT, add ${MCP_PRO_ENDPOINT} as a custom connector and sign in via OAuth 2.1. Cursor and Codex take a single config entry.`,
   },
   {
-    q: "Why doesn't the API just tell me what to buy?",
-    a: "Because your AI can build a plan for your account and your risk: 1 to 3 candidates that pass the liquidity and earnings checks, each with an entry, a target and a stop set from history, and a size. One shared list crowds everyone into the same contracts. A plan built from the data, for your account, does not. You decide on every trade. All data is educational only and not investment advice.",
+    q: "Why doesn't the API return a single daily pick?",
+    a: "Shared picks crowd every subscriber into the same option strike at the open, degrading execution fills. Moreover, our Catalyst Lab walk-forward XGBoost audit showed black-box composite scores fail out-of-sample once schema missingness is stripped, whereas transparent microstructure and volatility primitives (Combo A) hold up cleanly. We serve the curated dataset and historical excursion surfaces so your AI builds a plan tailored to your risk budget. All data is educational only and not investment advice.",
   },
   {
-    q: "What does the options flow API cost?",
-    a: `The free tier costs nothing: the pool preview, daily reports, regime context, the market calendar, and the methodology playbooks. Pro opens all ${TOOL_COUNT} tools for ${PRICE_MONTHLY}/mo, the founding price for the first ${FOUNDING_CAP} subscribers, with a ${TRIAL_DAYS}-day free trial. The whole website is free.`,
+    q: "What does Pro MCP access cost?",
+    a: `The 3-contract preview tier at ${MCP_ENDPOINT} is $0 forever (pool preview, daily reports, regime context, market calendar, playbooks). Pro unlocks all ${TOOL_COUNT} tools and the full 40–50 contract daily dataset for ${PRICE_MONTHLY}/mo—the founding price for the first ${FOUNDING_CAP} subscribers (${PRICE_STANDARD}/mo after)—starting with a ${TRIAL_DAYS}-day free trial.`,
   },
 ];
 
@@ -100,45 +82,8 @@ const faqSchema = {
   })),
 };
 
-/* The three pillars. Every number comes from src/lib/receipts.ts with its N
- * and window, and the section carries RECEIPTS_DISCLAIMER (claim 5). */
-const buildPillars = ({ CONTRACT_QUALITY, TO_EXPIRY }: Receipts): {
-  title: string;
-  body: string;
-  stat: string;
-  statLabel: string;
-  source: string;
-}[] => [
-  {
-    title: "Better-quality contracts every night",
-    body: "The 100 most liquid optionable names, bullish only, and one out-of-the-money call per name, selected on contract liquidity. Your AI starts from contracts it can enter and exit near the quote.",
-    stat: int(CONTRACT_QUALITY.medianOi.after),
-    statLabel: `median open interest, vs ${int(CONTRACT_QUALITY.medianOi.before)} before the liquidity rule`,
-    source: `N=${int(CONTRACT_QUALITY.nAfter)} ${CONTRACT_QUALITY.afterLabel}, vs N=${int(CONTRACT_QUALITY.nBefore)} over ${CONTRACT_QUALITY.beforeLabel}.`,
-  },
-  {
-    title: "The exit lab",
-    body: "How often past pool contracts hit +20%, +50%, and +100%, within 3 trading days and before expiration, how far they moved for and against, and a score for any target and stop. Most contracts move both ways, so your AI sets the exit from history.",
-    stat: pct(TO_EXPIRY.hit50, 1),
-    statLabel: `of pool contracts hit +50% ${TO_EXPIRY.horizon}`,
-    source: `N=${int(TO_EXPIRY.n)} ${TO_EXPIRY.windowLabel}. +20%: ${pct(TO_EXPIRY.hit20, 1)}. +100%: ${pct(TO_EXPIRY.hit100, 1)}. Updated daily.`,
-  },
-  {
-    title: "Your AI builds the trade plan",
-    body: "Ask for a trade. Your AI shortlists 1 to 3 candidates that pass the liquidity and earnings checks, then gives the entry, target, stop, maximum loss, and size. If nothing passes, it tells you why. You decide.",
-    stat: "1 to 3",
-    statLabel: "candidates per plan, each with entry, target, stop, and size",
-    source: "Built by your AI from GammaRips data, for your account and your risk budget.",
-  },
-];
-
-/* Per-client connect steps. The homepage install buttons link to these ids
- * (INSTALL_LINKS in src/lib/receipts.ts), so keep claude, chatgpt, cursor and
- * codex exactly. Steps that src/lib/connect-clients.ts already holds come from
- * there (checked against vendor docs). The OAuth sign-in blocks below follow
- * the engine repo's docs/GTM-CLIENT-CONNECT-MATRIX.md: vendor-documented UI
- * steps plus the /pro sign-in, which passed a full OAuth flow per client
- * profile against production on 2026-08-22. */
+/* Per-client connect steps. Keep #connect, #claude, #chatgpt, #cursor, and #codex
+ * anchors intact for homepage and post-checkout links. */
 type Block = { title: string; pro: boolean; intro: string; steps: ConnectStep[] };
 
 function fromClient(id: ClientId, tier: "free" | "pro", title: string): Block {
@@ -154,13 +99,13 @@ const CLIENT_SECTIONS: { id: string; label: string; plugin: string; blocks: Bloc
     id: "claude",
     label: "Claude",
     plugin:
-      "The GammaRips plugin for Claude is being submitted to the Claude directory. These steps connect the same server today, in Claude Code and in the Claude app.",
+      "Connect GammaRips in Claude Code (CLI) or in the Claude desktop and web apps.",
     blocks: [
-      fromClient("claude-code", "free", "Claude Code"),
-      fromClient("claude-code", "pro", "Claude Code with Pro"),
-      fromClient("claude", "free", "Claude app"),
+      fromClient("claude-code", "free", "Claude Code (Free 3-contract preview)"),
+      fromClient("claude-code", "pro", "Claude Code with Pro (API key or OAuth)"),
+      fromClient("claude", "free", "Claude app (Free 3-contract preview)"),
       {
-        title: "Claude app with Pro",
+        title: "Claude app with Pro (OAuth sign-in)",
         pro: true,
         intro: "No key to paste. Add the Pro URL as a custom connector and sign in.",
         steps: [
@@ -175,11 +120,11 @@ const CLIENT_SECTIONS: { id: string; label: string; plugin: string; blocks: Bloc
     id: "chatgpt",
     label: "ChatGPT",
     plugin:
-      "The GammaRips plugin is being submitted to the ChatGPT and Codex plugin directory. These steps connect the same server today.",
+      "Connect GammaRips in ChatGPT Developer Mode via OAuth (Pro) or No Auth (Free preview).",
     blocks: [
-      fromClient("chatgpt", "free", "ChatGPT"),
+      fromClient("chatgpt", "free", "ChatGPT (Free 3-contract preview)"),
       {
-        title: "ChatGPT with Pro",
+        title: "ChatGPT with Pro (OAuth sign-in)",
         pro: true,
         intro: "No key to paste. Add the Pro URL and sign in.",
         steps: [
@@ -197,9 +142,9 @@ const CLIENT_SECTIONS: { id: string; label: string; plugin: string; blocks: Bloc
     id: "cursor",
     label: "Cursor",
     plugin:
-      "The GammaRips plugin is coming to cursor.directory. These steps connect the same server today.",
+      "Connect GammaRips in Cursor via .cursor/mcp.json or ~/.cursor/mcp.json.",
     blocks: [
-      fromClient("cursor", "free", "Cursor"),
+      fromClient("cursor", "free", "Cursor (Free 3-contract preview)"),
       fromClient("cursor", "pro", "Cursor with Pro, using your key"),
       {
         title: "Cursor with Pro, signing in",
@@ -219,9 +164,9 @@ const CLIENT_SECTIONS: { id: string; label: string; plugin: string; blocks: Bloc
     id: "codex",
     label: "Codex",
     plugin:
-      "The GammaRips plugin is being submitted to the ChatGPT and Codex plugin directory. These steps connect the same server today.",
+      "Connect GammaRips in ~/.codex/config.toml with a bearer token env var or OAuth login.",
     blocks: [
-      fromClient("codex", "free", "Codex"),
+      fromClient("codex", "free", "Codex (Free 3-contract preview)"),
       fromClient("codex", "pro", "Codex with Pro, using your key"),
       {
         title: "Codex with Pro, signing in",
@@ -265,7 +210,7 @@ type Tier = "free" | "pro" | "free-preview";
 const TIER_LABEL: Record<Tier, string> = {
   free: "Free",
   pro: "Pro",
-  "free-preview": "Free preview · Pro full",
+  "free-preview": "Free 3-contract preview · Pro full pool",
 };
 
 const toolGroups: {
@@ -274,75 +219,75 @@ const toolGroups: {
   tools: { name: string; tier: Tier; description: string }[];
 }[] = [
   {
-    group: "The pool",
+    group: "The Combo A dataset & intraday liquidity",
     blurb:
-      "The 100 most liquid optionable names, bullish only, one out-of-the-money call each, selected on contract liquidity. Roughly 40 to 50 contracts, structured for your AI.",
+      "The nightly filtered options dataset (40–50 bullish calls passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45) plus 10-minute intraday liquidity snapshots.",
     tools: [
       {
         name: "get_pool",
         tier: "free-preview",
         description:
-          "The candidate pool for a scan date, in one tool. view=preview is the free public view: ticker, direction, score, headline, flow dollars. The full pool comes with Pro: view=enriched (thesis, technicals, catalyst, the selected contract, the 60-day momentum feature), view=raw (the wide pre-curation scan), and view=features (point-in-time feature vectors from the leakage-safe view).",
+          "The candidate pool for a scan date. view=preview is the free 3-contract preview (ticker, direction, score, headline, flow dollars). Pro unlocks the full 40–50 contract dataset: view=enriched (thesis, technicals, rv_iv_ratio, grounded catalyst, selected contract), view=raw (wide pre-curation scan), and view=features (point-in-time feature vectors from enriched_features_v1).",
       },
       {
         name: "get_signal",
         tier: "pro",
         description:
-          "Deep dive on one ticker. view=detail is the full enriched signal (thesis, catalyst, the selected contract, point-in-time features). view=earnings checks for an earnings date on or before the contract expiration. The pool can carry earnings-window names, so your AI runs this check on each candidate.",
+          "Deep dive on one ticker. view=detail returns the full enriched signal (thesis, catalyst, selected contract, point-in-time features). view=earnings checks for an earnings date on or before the contract expiration.",
       },
       {
         name: "get_liquidity",
         tier: "pro",
         description:
-          "Fresh entry-day liquidity, beyond the pool's session-frozen snapshot. Pass one contract for its live open interest, session volume, last trade, and greeks, or omit it to read the whole pool in one call for the 10:00 ET decision window. Bid and ask are not on the current data plan.",
+          "10-minute intraday liquidity snapshots (09:02–16:52 ET) beyond the overnight session-frozen scan. Pass one contract for its current open interest, active session volume, last trade, and greeks, or omit it to inspect the whole pool before entry.",
       },
     ],
   },
   {
-    group: "The exit lab and outcome history",
-    blurb: "The history your AI uses to set the target and the stop.",
+    group: "3-day excursion outcomes & contract replay",
+    blurb: "Historical MFE/MAE outcome surfaces and minute/daily option price bars.",
     tools: [
       {
         name: "query_outcomes",
         tier: "pro",
         description:
-          "The exit lab and the outcome history, in one tool with nine views. view=harvest gives how often past pool contracts touched each profit level and each stop. view=surface is the opportunity surface: realized peak and drawdown per contract with no exit applied. view=exit_rule scores your own target, stop, and horizon. view=labels and view=summary are row-level and grouped bracket outcomes. view=positions and view=performance hold the record of the engine's retired paper test.",
+          "Query BigQuery enriched_option_outcomes across historical pool cohorts. view=harvest gives touch probabilities across profit and drawdown levels. view=surface returns the unclipped 3-day Maximum Favorable Excursion (MFE) and Maximum Adverse Excursion (MAE) per contract. view=exit_rule evaluates any target, stop, and hold horizon you specify.",
       },
       {
         name: "replay_contract",
         tier: "pro",
         description:
-          "The raw option price tape for your own entry and exit rule. granularity=minute returns the intraday minute path for one session and, if you pass a bracket, the exact first-crossing sequence. granularity=day returns the daily mark series. Your AI applies its own rule to real bars.",
+          "Raw option price tape for backtesting and review. granularity=minute returns the intraday minute path for a session and, if passed a bracket, the exact first-crossing sequence. granularity=day returns daily mark series.",
       },
     ],
   },
   {
     group: "Free context, methodology, and reports",
-    blurb: "The reference layer that keeps your AI's answers grounded. No key needed.",
+    blurb: "Reference tools available on both /mcp (free) and /pro.",
     tools: [
       {
         name: "get_regime_context",
         tier: "free",
         description:
-          "Point-in-time volatility regime for a scan date: VIX versus VIX3M and the engine's regime rail evaluated on those values.",
+          "Point-in-time volatility regime for a scan date: VIX versus VIX3M term structure.",
       },
       {
         name: "get_market_calendar_status",
         tier: "free",
         description:
-          "view=status answers whether the US market is open today, from the deterministic NYSE calendar with holidays and early closes. view=scan_dates lists which recent scan dates have GammaRips data. view=freshness confirms that the pool your AI reads is the right pool for the session.",
+          "view=status checks whether the NYSE is open today (including holidays and early closes). view=scan_dates lists available scan dates. view=freshness verifies that tonight's pool is published.",
       },
       {
         name: "get_playbook",
         tier: "free",
         description:
-          "Methodology and reference. Pass a name for a playbook in markdown: start-here, exit-lab, daily-workflow, and the bracket-tournament selection pattern your AI runs against your own objective. Pass field= for the plain-English definition of any signal field. Pass name=schema for the machine-readable data contract: every column with its leakage classification and as-of boundary.",
+          "Methodology and schema reference in markdown: start-here, daily-workflow, field definitions (field=), and the machine-readable point-in-time leakage contract (name=schema).",
       },
       {
         name: "get_daily_report",
         tier: "free",
         description:
-          "view=report is the full daily intelligence report in markdown, the editorial synthesis of the scan. view=list returns the recent reports.",
+          "view=report returns the full daily macro and options-flow intelligence report in markdown. view=list returns recent reports.",
       },
     ],
   },
@@ -350,8 +295,7 @@ const toolGroups: {
 
 export const revalidate = 3600;
 
-export default async function DevelopersPage() {
-  const PILLARS = buildPillars(await getReceipts());
+export default function DevelopersPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <script
@@ -367,69 +311,43 @@ export default async function DevelopersPage() {
         {/* Hero */}
         <section className="text-center py-12 space-y-6">
           <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-            The options-flow data layer for AI agents
+            MCP API &amp; Tool Reference
           </p>
           <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">
-            Give your AI better contracts
+            Stream the nightly options dataset
             <span className="block mt-2 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              and the history to plan the exit.
+              into Claude, ChatGPT, Cursor, or Codex.
             </span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            {TOOL_COUNT} MCP tools for Claude, ChatGPT, Cursor, and Codex. Every
-            night your AI gets a pool of liquid option contracts, the exit lab,
-            and the checks to build a trade plan with you: entry, target, stop,
-            and size. You decide.
+            {TOOL_COUNT} MCP tools serving the Combo A options dataset, 10-minute
+            intraday liquidity snapshots, and 3-day excursion outcome surfaces.
+            Start with a {TRIAL_DAYS}-day free trial of Pro ({PRICE_MONTHLY}/mo) or
+            test the 3-contract preview on <code className="text-base text-foreground">/mcp</code>.
           </p>
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex justify-center">
+            <Button asChild size="lg">
+              <Link href="/pricing">Get Pro MCP Access ({PRICE_MONTHLY}/mo) &rarr;</Link>
+            </Button>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3 pt-1">
             {INSTALL_LINKS.map((l) => (
-              <Button key={l.id} asChild variant="outline" size="lg">
+              <Button key={l.id} asChild variant="outline" size="sm">
                 <a href={`#${l.id}`}>Add to {l.label}</a>
               </Button>
             ))}
           </div>
-          <div className="flex justify-center">
-            <Button asChild size="lg">
-              <Link href="/pricing">Start your {TRIAL_DAYS}-day free trial &rarr;</Link>
-            </Button>
-          </div>
           <p className="text-xs text-muted-foreground">
-            Free tier: no card, no key, no signup. Pro: {PRICE_MONTHLY}/mo
-            founding price, {TRIAL_DAYS}-day free trial.
+            Free tier (<code className="text-foreground">{MCP_ENDPOINT}</code>): 3-contract preview, no card, no key. Pro (<code className="text-foreground">{MCP_PRO_ENDPOINT}</code> or <code className="text-foreground">gr_live_</code> key): full 40–50 contract dataset, {TRIAL_DAYS}-day free trial.
           </p>
-        </section>
-
-        {/* Three pillars */}
-        <section className="space-y-6">
-          <h2 className="text-2xl md:text-3xl font-bold font-headline text-center">
-            What your AI gets
-          </h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            {PILLARS.map((p) => (
-              <Card key={p.title} className="bg-card/50">
-                <CardHeader className="pb-3">
-                  <CardTitle className="font-headline text-lg">{p.title}</CardTitle>
-                  <CardDescription className="leading-relaxed">{p.body}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-1">
-                  <div className="text-3xl font-bold text-primary">{p.stat}</div>
-                  <p className="text-sm text-foreground">{p.statLabel}</p>
-                  <p className="text-xs text-muted-foreground pt-1">{p.source}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground text-center">{RECEIPTS_DISCLAIMER}</p>
         </section>
 
         {/* Connect, per client */}
         <section id="connect" className="scroll-mt-24 space-y-8">
           <div className="text-center space-y-3">
-            <h2 className="text-2xl md:text-3xl font-bold font-headline">Connect your AI</h2>
+            <h2 className="text-2xl md:text-3xl font-bold font-headline">Connect your AI client</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Try the free tier first: no card, no key, no signup. With Pro, sign
-              in at {MCP_PRO_ENDPOINT} or send your API key, and all {TOOL_COUNT}{" "}
-              tools open. Then ask your AI for a trade plan.
+              Use <code className="text-xs text-foreground">{MCP_ENDPOINT}</code> for the anonymous 3-contract preview, or unlock all {TOOL_COUNT} tools and the full daily pool via OAuth 2.1 at <code className="text-xs text-foreground">{MCP_PRO_ENDPOINT}</code> or a <code className="text-xs text-foreground">gr_live_</code> bearer API key.
             </p>
           </div>
 
@@ -448,7 +366,7 @@ export default async function DevelopersPage() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <h4 className="font-semibold font-headline">{b.title}</h4>
                     <Badge variant={b.pro ? "default" : "outline"} className="text-[10px]">
-                      {b.pro ? `Pro, ${PRICE_MONTHLY}/mo` : "Free, no card, no key"}
+                      {b.pro ? `Pro, ${PRICE_MONTHLY}/mo` : "Free 3-contract preview"}
                     </Badge>
                   </div>
                   {b.intro && <p className="text-sm text-muted-foreground">{b.intro}</p>}
@@ -468,23 +386,23 @@ export default async function DevelopersPage() {
             className="scroll-mt-24 rounded-xl border bg-card/60 p-5 md:p-6 space-y-6"
           >
             <div className="space-y-2">
-              <h3 className="text-xl font-bold font-headline">Any other MCP client</h3>
+              <h3 className="text-xl font-bold font-headline">Gemini CLI, Grok &amp; Python SDK</h3>
               <p className="text-sm text-muted-foreground">
-                Gemini CLI, Grok, and every other MCP client reach the same{" "}
-                {TOOL_COUNT} tools. Add {MCP_ENDPOINT} for the free tier. For Pro,
-                send your API key as an Authorization header, or add{" "}
-                {MCP_PRO_ENDPOINT} in a client that supports OAuth and sign in.
+                Gemini CLI, Grok, and any other MCP client reach the same{" "}
+                {TOOL_COUNT} tools. Add {MCP_ENDPOINT} for the free 3-contract preview. For Pro,
+                send your <code className="text-xs text-foreground">gr_live_</code> API key as an Authorization header, or add{" "}
+                {MCP_PRO_ENDPOINT} in an OAuth-capable client and sign in.
               </p>
             </div>
             {[
-              fromClient("gemini-cli", "free", "Gemini CLI"),
+              fromClient("gemini-cli", "free", "Gemini CLI (Free 3-contract preview)"),
               fromClient("gemini-cli", "pro", "Gemini CLI with Pro"),
             ].map((b) => (
               <div key={b.title} className="space-y-3 border-t border-border/60 pt-5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h4 className="font-semibold font-headline">{b.title}</h4>
                   <Badge variant={b.pro ? "default" : "outline"} className="text-[10px]">
-                    {b.pro ? `Pro, ${PRICE_MONTHLY}/mo` : "Free, no card, no key"}
+                    {b.pro ? `Pro, ${PRICE_MONTHLY}/mo` : "Free 3-contract preview"}
                   </Badge>
                 </div>
                 {b.intro && <p className="text-sm text-muted-foreground">{b.intro}</p>}
@@ -502,7 +420,7 @@ transport = StreamableHttpTransport(
     headers={"Authorization": "Bearer YOUR_API_KEY"},
 )
 async with Client(transport) as client:
-    pool = await client.call_tool("get_pool", {})
+    pool = await client.call_tool("get_pool", {"view": "enriched"})
     print(pool)`}</code>
               </pre>
             </div>
@@ -511,53 +429,43 @@ async with Client(transport) as client:
 
         {/* Reference */}
         <section id="docs" className="scroll-mt-24 space-y-6">
-          <h2 className="text-2xl font-bold font-headline">Reference</h2>
+          <h2 className="text-2xl font-bold font-headline">Endpoint &amp; Harness Reference</h2>
           <div className="bg-muted/30 p-6 rounded-lg border font-mono text-sm overflow-x-auto">
             <div className="space-y-2">
               <div className="flex gap-4">
-                <span className="text-muted-foreground">Endpoint:</span>
-                <span className="text-foreground break-all">{MCP_ENDPOINT}</span>
+                <span className="text-muted-foreground">Free Preview Endpoint:</span>
+                <span className="text-foreground break-all">{MCP_ENDPOINT} (3-contract preview, no auth)</span>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-muted-foreground">Pro OAuth Endpoint:</span>
+                <span className="text-foreground break-all">{MCP_PRO_ENDPOINT} (OAuth 2.1 or Bearer key)</span>
               </div>
               <div className="flex gap-4">
                 <span className="text-muted-foreground">Transport:</span>
                 <span className="text-foreground">Streamable HTTP (legacy SSE at /sse)</span>
               </div>
               <div className="flex gap-4">
-                <span className="text-muted-foreground">Auth:</span>
-                <span className="text-foreground">Authorization: Bearer &lt;your API key&gt;</span>
-              </div>
-              <div className="flex gap-4">
-                <span className="text-muted-foreground">Or sign in:</span>
-                <span className="text-foreground break-all">{MCP_PRO_ENDPOINT} (OAuth 2.1, no key to paste)</span>
+                <span className="text-muted-foreground">API Key Header:</span>
+                <span className="text-foreground">Authorization: Bearer gr_live_...</span>
               </div>
               <div className="flex gap-4">
                 <span className="text-muted-foreground">Start with:</span>
-                <span className="text-primary">get_playbook(&quot;start-here&quot;) · get_pool · query_outcomes</span>
+                <span className="text-primary">get_playbook(&quot;start-here&quot;) · get_pool · get_liquidity · query_outcomes</span>
               </div>
             </div>
           </div>
           <div className="space-y-3">
-            <h3 className="font-bold font-headline text-lg">Start from a working loop</h3>
+            <h3 className="font-bold font-headline text-lg">Open-Source Agent Harness</h3>
             <p className="text-sm text-muted-foreground max-w-3xl">
-              The harness is open source. It is a daily agent loop over these
-              tools: grade tradeability, form a thesis, design the exit, record
-              every decision as data, and score the whole pool after the close.
-              Paper-only by default. Install it as a Claude Code plugin, or clone
-              it and make it yours.
+              The open-source <code className="text-xs text-foreground">gammarips-harness</code> provides a ready-to-run daily agent workflow over these MCP tools—combining Stage 1 dataset screening with live X/web catalyst research, exit bracket evaluation, and structured trade logging.
             </p>
             <pre className="p-3 bg-muted rounded text-xs md:text-sm text-left overflow-x-auto whitespace-pre-wrap break-all font-mono text-primary max-w-3xl">
               <code>{`/plugin marketplace add DevDizzle/gammarips-harness
 /plugin install gammarips@gammarips`}</code>
             </pre>
-            <p className="text-sm text-muted-foreground max-w-3xl">
-              The plugin bundles the free endpoint and the loop skills. For the
-              pro tools, export GAMMARIPS_MCP_KEY and start Claude Code again. Run
-              the skills inside a clone of the repo, which holds the data
-              directory and the scripts.
-            </p>
-            <a href={HARNESS_REPO} target="_blank" rel="noopener noreferrer">
+            <a href={HARNESS_REPO} target="_blank" rel="noopener noreferrer" className="inline-block pt-1">
               <Button variant="outline" size="sm">
-                Clone the harness on GitHub &rarr;
+                Clone gammarips-harness on GitHub &rarr;
               </Button>
             </a>
           </div>
@@ -565,14 +473,9 @@ async with Client(transport) as client:
 
         {/* OAuth / sign-in path */}
         <section id="oauth" className="scroll-mt-24 space-y-6">
-          <h2 className="text-2xl font-bold font-headline">Sign in instead of pasting a key</h2>
+          <h2 className="text-2xl font-bold font-headline">OAuth 2.1 &amp; Machine Credentials</h2>
           <p className="text-muted-foreground">
-            Chat clients sign in. {MCP_PRO_ENDPOINT} serves the same transport
-            and the same {TOOL_COUNT} tools as {MCP_ENDPOINT}, and it answers an
-            anonymous request with a challenge that names our authorization
-            server. Your client follows it, you approve the consent screen with
-            the account that carries your subscription, and the tools appear. The
-            token refreshes itself and re-reads your subscription every time.
+            Chat clients connect to <code className="text-xs text-foreground">{MCP_PRO_ENDPOINT}</code> and authenticate via OAuth 2.1 (RFC 9728 / RFC 8414) using the account that carries your Pro subscription. Headless agents can use a <code className="text-xs text-foreground">gr_live_</code> bearer key or exchange <code className="text-xs text-foreground">client_credentials</code> minted on your <Link href="/account" className="text-primary hover:underline">account page</Link>.
           </p>
           <div className="bg-muted/30 p-6 rounded-lg border font-mono text-sm overflow-x-auto">
             <div className="space-y-2">
@@ -597,94 +500,28 @@ async with Client(transport) as client:
               </div>
               <div className="flex gap-4">
                 <span className="text-muted-foreground">Registration:</span>
-                <span className="text-foreground">dynamic (RFC 7591) or a client ID metadata document</span>
+                <span className="text-foreground">dynamic (RFC 7591) or client ID metadata document (CIMD)</span>
               </div>
               <div className="flex gap-4">
-                <span className="text-muted-foreground">PKCE:</span>
-                <span className="text-foreground">S256, required</span>
-              </div>
-              <div className="flex gap-4">
-                <span className="text-muted-foreground">Scope:</span>
-                <span className="text-primary">mcp:read</span>
+                <span className="text-muted-foreground">PKCE &amp; Scope:</span>
+                <span className="text-primary">S256 · mcp:read</span>
               </div>
             </div>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Nothing to register by hand: your client registers itself. Refresh
-            tokens rotate, and replaying a spent one revokes the whole family.
-            An API key also works on {MCP_PRO_ENDPOINT}, and {MCP_ENDPOINT}{" "}
-            stays open, so the free tier never needs an account.
-          </p>
-          <div className="space-y-2">
-            <h3 className="font-bold font-headline text-lg">Headless agents</h3>
-            <p className="text-sm text-muted-foreground">
-              A cron job or a server-side agent has no browser to send you to.
-              Create a machine client on your account page and use the
-              client_credentials grant: your agent exchanges its client ID and
-              secret for an access token and calls {MCP_PRO_ENDPOINT} directly.
-              Revoke it there too, and the next mint fails.
-            </p>
-            <Link href="/account">
-              <Button variant="outline" size="sm">Create a machine client &rarr;</Button>
-            </Link>
-          </div>
-        </section>
-
-        {/* Built-in prompts */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-bold font-headline">Built-in prompts</h2>
-          <p className="text-sm text-muted-foreground max-w-3xl">
-            The server ships MCP prompts: ready-made workflows your AI can run
-            over the tools. Each one ends in analysis that you decide on.
-          </p>
-          <div className="grid md:grid-cols-3 gap-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="font-mono text-base text-primary">morning_brief</CardTitle>
-                <CardDescription>
-                  Market status → regime check → today&apos;s pool → historical
-                  context by delta bucket → a briefing on the most interesting
-                  candidates, with data caveats.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="font-mono text-base text-primary">analyze_candidate</CardTitle>
-                <CardDescription>
-                  Deep-dive one name: enrichment, excursion history, realized
-                  labels of similar setups, and the risks.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="font-mono text-base text-primary">run_your_own_tournament</CardTitle>
-                <CardDescription>
-                  The engine&apos;s bracket-tournament selection pattern, run by
-                  YOUR AI against YOUR objective, horizon, and risk tolerance.
-                </CardDescription>
-              </CardHeader>
-            </Card>
           </div>
         </section>
 
         {/* Available Tools */}
         <section className="space-y-8">
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold font-headline">{TOOL_COUNT} tools</h2>
+            <h2 className="text-2xl font-bold font-headline">All {TOOL_COUNT} MCP Tools</h2>
             <p className="text-sm text-muted-foreground max-w-3xl">
-              Every tool is leakage-checked: nothing your AI reads contains
-              information that was not knowable at the time it is dated. The
-              outcome history covers every pool candidate since April 2026 and
-              grows every trading day. Full parameter schemas are
-              self-describing over MCP.
+              Every tool is point-in-time and leakage-checked. Full parameter schemas are self-describing over MCP.
             </p>
           </div>
 
           {toolGroups.map((g) => (
             <div key={g.group} className="space-y-3">
-              <div className="flex items-baseline gap-3">
+              <div className="flex items-baseline gap-3 flex-wrap">
                 <h3 className="text-lg font-bold font-headline">{g.group}</h3>
                 <span className="text-xs text-muted-foreground">{g.blurb}</span>
               </div>
@@ -707,38 +544,38 @@ async with Client(transport) as client:
           ))}
         </section>
 
-        {/* Pricing */}
+        {/* Tiers */}
         <section className="space-y-6">
-          <h2 className="text-2xl font-bold font-headline">Pricing</h2>
+          <h2 className="text-2xl font-bold font-headline">Free Preview vs. Pro Dataset</h2>
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <div className="p-6 rounded-lg border bg-card relative">
               <div className="absolute -top-3 right-4 px-2 py-0.5 bg-foreground text-background text-xs font-bold rounded">
-                FREE
+                FREE PREVIEW
               </div>
-              <div className="text-sm text-muted-foreground mb-2">The website and the free MCP tier</div>
+              <div className="text-sm text-muted-foreground mb-2">Anonymous /mcp &amp; /signals preview</div>
               <div className="text-3xl font-bold mb-4">$0</div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ The nightly pool, on the site</li>
-                <li>✓ Daily reports and per-ticker deep dives</li>
-                <li>✓ The scorecard and the Lab</li>
-                <li>✓ Free MCP tools: pool preview, reports, regime, calendar, playbooks</li>
-                <li>✓ Free forever, not a trial</li>
+                <li>✓ Daily 3-contract pool preview on web and MCP (<code className="text-xs">get_pool(view=&quot;preview&quot;)</code>)</li>
+                <li>✓ Daily macro &amp; options-flow reports</li>
+                <li>✓ Point-in-time VIX/VIX3M regime context &amp; NYSE calendar</li>
+                <li>✓ Methodology &amp; schema playbooks</li>
+                <li>✓ No card, no key, no account required</li>
               </ul>
             </div>
             <div className="p-6 rounded-lg border-2 border-primary bg-card relative">
               <div className="absolute -top-3 right-4 px-2 py-0.5 bg-primary text-primary-foreground text-xs font-bold rounded">
-                THE PRODUCT
+                PRO DATASET
               </div>
-              <div className="text-sm text-primary mb-2">Agent Access (MCP)</div>
+              <div className="text-sm text-primary mb-2">Full MCP Access (/pro or gr_live_ key)</div>
               <div className="text-3xl font-bold mb-4">
                 {PRICE_MONTHLY}<span className="text-base text-muted-foreground">/mo</span>
               </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ All {TOOL_COUNT} tools and the built-in prompts</li>
-                <li>✓ The full pool: thesis, technicals, catalyst, contract</li>
-                <li>✓ The exit lab: hit rates, surfaces, exit-rule scoring</li>
-                <li>✓ Fresh liquidity and earnings checks</li>
-                <li>✓ Sign in with OAuth, or use an API key</li>
+                <li>✓ Full daily Combo A pool (roughly 40–50 enriched contracts)</li>
+                <li>✓ Point-in-time feature vectors (<code className="text-xs">rv_iv_ratio</code>, technicals, grounded catalysts)</li>
+                <li>✓ Live 10-minute intraday liquidity snapshots (<code className="text-xs">get_liquidity</code>)</li>
+                <li>✓ Historical 3-day MFE/MAE outcome surfaces &amp; minute/daily contract replay</li>
+                <li>✓ OAuth 2.1 sign-in at <code className="text-xs">/pro</code> or <code className="text-xs">gr_live_</code> API key</li>
                 <li>✓ {TRIAL_DAYS}-day free trial · cancel anytime</li>
               </ul>
               <p className="mt-4 text-sm text-foreground">
@@ -753,10 +590,10 @@ async with Client(transport) as client:
           </div>
         </section>
 
-        {/* FAQ: renders from the same FAQ array that builds the FAQPage JSON-LD */}
+        {/* FAQ */}
         <section id="faq" className="scroll-mt-24 space-y-6">
           <h2 className="text-2xl font-bold font-headline">
-            Options flow API: common questions
+            Options flow MCP API: common questions
           </h2>
           <div className="space-y-6">
             {FAQ.map(({ q, a }) => (
@@ -765,26 +602,6 @@ async with Client(transport) as client:
                 <p className="text-muted-foreground leading-relaxed">{a}</p>
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* Bottom CTA */}
-        <section className="text-center space-y-6">
-          <h2 className="text-2xl font-bold font-headline">Give your AI something real to plan with</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            With the pool, the exit lab, and the liquidity and earnings checks,
-            your AI turns a question into a trade plan you can act on. Connect it
-            in a minute.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/pricing">
-              <Button size="lg">Start your {TRIAL_DAYS}-day free trial &rarr;</Button>
-            </Link>
-            <Link href="/signals">
-              <Button variant="outline" size="lg">
-                Browse the pool free
-              </Button>
-            </Link>
           </div>
         </section>
       </main>
@@ -812,8 +629,7 @@ async with Client(transport) as client:
             </a>
           </p>
           <p className="text-xs text-muted-foreground max-w-2xl mx-auto">
-            Paper-traded research data. Educational only. Not investment
-            advice. Past results do not guarantee future results.
+            Educational market data only. Not investment advice. Past results do not guarantee future results.
           </p>
         </div>
       </footer>

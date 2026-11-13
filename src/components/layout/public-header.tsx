@@ -19,15 +19,11 @@ export function PublicHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // Six items, two audiences: pool/track-record/learn for arriving traders,
-  // for-your-agent/pricing for buyers. Home = logo; About/Reports/Lab live in
-  // the footer and inside Track Record.
+  // Four clean top-level links: Today's Pool, Learn, Blog, Pricing.
   const links = [
     { href: '/signals', label: "Today's Pool" },
-    { href: '/scorecard', label: 'Track Record' },
     { href: '/how-it-works', label: 'Learn' },
     { href: '/blog', label: 'Blog' },
-    { href: '/developers', label: 'For Your Agent' },
     { href: '/pricing', label: 'Pricing' },
   ];
 

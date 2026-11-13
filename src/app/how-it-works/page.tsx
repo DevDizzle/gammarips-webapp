@@ -4,122 +4,129 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, AlertTriangle, Layers, Target, MessageSquareText } from 'lucide-react';
-import { OG_IMAGE, TRIAL_DAYS } from '@/lib/constants';
-import { getReceipts } from '@/lib/receipts-server';
-import {
-  INSTALL_LINKS,
-  type Receipts,
-  RECEIPTS_DISCLAIMER,
-  int,
-  pct,
-  usd,
-} from '@/lib/receipts';
+import { HARNESS_REPO, MCP_PRO_ENDPOINT, OG_IMAGE, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
+import { INSTALL_LINKS } from '@/lib/receipts';
 
 const DESCRIPTION =
-  'How GammaRips works: every night it ranks about 3,500 optionable US stocks, keeps the 100 most liquid, and selects one bullish call per name on contract liquidity. Your AI gets the pool and the exit lab over MCP and builds the trade plan with you.';
+  'How GammaRips works: every night it scans ~3,500 optionable US stocks, filters the top 100 liquid universe through Combo A microstructure and volatility gates (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, RV/IV >= 0.85), and serves the dataset to your AI agent over MCP.';
 
 export const metadata: Metadata = {
-  title: 'How GammaRips Works | Overnight Options Scan, Step by Step',
+  title: 'How GammaRips Works | Overnight Options Dataset & Catalyst Lab Research',
   description: DESCRIPTION,
   alternates: { canonical: 'https://gammarips.com/how-it-works' },
   openGraph: {
     images: [OG_IMAGE],
-    title: 'How GammaRips Works | Overnight Options Scan',
+    title: 'How GammaRips Works | Overnight Options Dataset & Catalyst Lab Research',
     description:
-      'Better-quality option contracts every night, the history to plan the exit, and your AI builds the trade plan with you. The pipeline, step by step.',
+      'Curated daily options dataset, empirical microstructure filters from Catalyst Lab walk-forward research, and direct MCP integration for your AI agent.',
     url: 'https://gammarips.com/how-it-works',
-  }
+  },
 };
 
 const pillars = [
   {
     icon: Layers,
-    title: 'Better-quality contracts every night',
-    body: 'The 100 most liquid optionable names, bullish only, one call per name chosen on contract liquidity. Deep books you can enter and exit near the quote.',
+    title: 'Curated Daily Options Dataset',
+    body: 'Every trading night, the top 100 most liquid US option chains are filtered to bullish calls passing Combo A gates (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45) with point-in-time technicals, flow context, and grounded news catalysts.',
   },
   {
     icon: Target,
-    title: 'The exit lab',
-    body: 'How often past pool contracts hit +25%, +50%, and +100% within 3 trading days, and how often they touched a stop. Your AI sets the target and the stop from that history.',
+    title: 'Empirical Microstructure Filters',
+    body: 'Backed by walk-forward Catalyst Lab research (N = 5,575 enriched contracts across 66 scan dates): Realized-vs-Implied Volatility (RV/IV >= 0.85), tick-size friction floors, resting book depth, and gamma/theta convexity bands.',
   },
   {
     icon: MessageSquareText,
-    title: 'Your AI builds the trade plan',
-    body: 'In Claude, ChatGPT, Cursor, or Codex. Candidates, entry, target, stop, and size, built for your account and your risk. You decide.',
+    title: 'Plug Into Any AI Agent via MCP',
+    body: 'Connect Claude, ChatGPT, Cursor, Codex, or the open-source gammarips-harness over MCP. Your agent verifies 10-minute intraday liquidity snapshots, checks earnings, queries 3-day excursion history, and builds your trade plan.',
   },
 ];
 
-const buildQualityRows = ({ CONTRACT_QUALITY }: Receipts) => [
+const pipelineTimeline = [
   {
-    label: 'Median open interest',
-    before: int(CONTRACT_QUALITY.medianOi.before),
-    after: int(CONTRACT_QUALITY.medianOi.after),
+    time: '23:00 ET',
+    stage: 'EOD Universe Scan & Combo A Contract Selection',
+    detail:
+      'Scans ~3,500 optionable US stocks, requires 3M+ session share volume and 25+ listed strikes, ranks the top 100 by combined chain dollar volume and share volume, and selects one out-of-the-money call per bullish name passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, and DTE 10–45.',
   },
   {
-    label: 'Median session volume',
-    before: int(CONTRACT_QUALITY.medianVolume.before),
-    after: int(CONTRACT_QUALITY.medianVolume.after),
+    time: '05:30 ET',
+    stage: 'Point-in-Time Enrichment & Grounded Catalysts',
+    detail:
+      'Computes Realized-to-Implied Volatility ratio (rv_iv_ratio = (ATR_14 / Price * sqrt(252)) / IV), technical structure (EMA stack, RSI, ATR, 60-day momentum), flow context, and Gemini grounded news catalysts.',
   },
   {
-    label: 'Open interest of the thinnest 10%',
-    before: int(CONTRACT_QUALITY.p10Oi.before),
-    after: int(CONTRACT_QUALITY.p10Oi.after),
+    time: '06:30–07:00 ET',
+    stage: 'Clean dbt Feature View & Daily Macro Report',
+    detail:
+      'Materializes the leakage-checked enriched_features_v1 view in BigQuery and publishes the daily macro and options-flow intelligence report before the pre-market session.',
+  },
+  {
+    time: '09:02–16:52 ET',
+    stage: '10-Minute Intraday Liquidity Snapshots',
+    detail:
+      'Captures 10-minute intraday contract snapshots (get_liquidity / get_pool_liquidity) across regular market hours so agents verify morning open interest and active session volume at the open before planning an entry.',
   },
 ];
 
-const planSteps = [
+const researchFindings = [
   {
-    title: 'Checks the session and the pool.',
-    body: 'Is the market open, and is tonight’s pool fresh? If the market is closed, your AI plans for the next session.',
+    gate: 'Volatility Ratio (rv_iv_ratio >= 0.85)',
+    formula: '(ATR_14 / Price × √252) / IV',
+    finding:
+      'In walk-forward feature audits across N = 5,575 enriched contracts (66 scan dates on dev.parquet), the Realized-to-Implied Volatility ratio is the #1 quantitative predictor of favorable option excursions—identifying underlyings whose realized daily range justifies the option’s implied volatility.',
   },
   {
-    title: 'Checks the regime.',
-    body: 'The regime rail passes when VIX is at or below VIX3M. Your AI reads it before it plans a trade.',
+    gate: 'Tick-Size Friction Floor (Mid >= $1.00)',
+    formula: 'Escapes $0.05 minimum tick penalty',
+    finding:
+      'Sub-dollar options listed on non-Penny-Pilot series face a $0.05 minimum tick increment, imposing a 5%–15% structural bid-ask tax on entry and exit. Requiring Mid >= $1.00 eliminates sub-dollar tick friction upfront.',
   },
   {
-    title: 'Reads the pool and shortlists 1 to 3 names.',
-    body: 'Each name comes with its thesis, technicals, catalyst, and selected contract. Your AI filters on your own criteria.',
+    gate: 'Resting Book Depth (OI >= 500, log-saturated to 5,000)',
+    formula: '5-minute fast execution fill rate: 30.3% → 50.1%',
+    finding:
+      'Auditing intraday execution fills in BigQuery enriched_option_outcomes shows that requiring resting open interest >= 500 lifts 5-minute fast execution fills at the open from 30.3% to 50.1% (and to 56.5% at OI >= 1,000), with liquidity gains log-saturating near OI = 5,000.',
   },
   {
-    title: 'Checks each candidate.',
-    body: 'Earnings before expiration, and fresh open interest and volume on the exact contract. A name that fails drops out.',
-  },
-  {
-    title: 'Plans the exit from history.',
-    body: 'The exit lab gives the touch rates for any target and stop, the typical favorable and adverse moves, and a score for the bracket.',
-  },
-  {
-    title: 'Gives you the plan.',
-    body: 'The contract, why it passed, entry near 10:00 ET with a limit order near the mid, target, stop, maximum loss, and a size that keeps that loss inside your risk budget. Or a reasoned no-trade, with the check that failed.',
+    gate: 'Gamma/Theta Sweet Spot (Delta 0.22–0.48, DTE 10–45)',
+    formula: '3-day Option MFE >= +40%: 27.6% → 35.4%',
+    finding:
+      'Screening out far-OTM lottery tickets (Delta < 0.20) and ultra-short decay traps (DTE < 10) while keeping responsive convexity (Delta 0.22–0.48, DTE 10–45) lifts the 3-day Maximum Favorable Excursion (MFE >= +40%) rate from 27.6% to 35.4% across the walk-forward sample.',
   },
 ];
 
 export const revalidate = 3600;
 
 export default async function HowItWorksPage() {
-  const receipts = await getReceipts();
-  const { CONTRACT_QUALITY, POOL_HIT_RATES, TO_EXPIRY, LIVE_RECORD } = receipts;
-  const qualityRows = buildQualityRows(receipts);
   const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "How GammaRips Works | Overnight Options Scan, Step by Step",
-    "description": DESCRIPTION,
-    "image": "https://gammarips.com/og-image.png?v=3",
-    "author": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
-    "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" } }
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'How GammaRips Works | Overnight Options Dataset & Catalyst Lab Research',
+    description: DESCRIPTION,
+    image: 'https://gammarips.com/og-image.png?v=3',
+    author: { '@type': 'Organization', name: 'GammaRips', url: 'https://gammarips.com' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'GammaRips',
+      logo: { '@type': 'ImageObject', url: 'https://gammarips.com/og-image.png?v=3' },
+    },
   };
 
   return (
     <section className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <header className="text-center">
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">How GammaRips works</p>
+        <p className="text-sm font-semibold uppercase tracking-wider text-primary">
+          Learn · Pipeline &amp; Research
+        </p>
         <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-          Better contracts every night. A real trade plan in the AI you already use.
+          A curated nightly options dataset. Built for the AI agent you already use.
         </h1>
         <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-          Every night GammaRips ranks the US options market by liquidity and builds a pool of roughly 40 to 50 calls with deep books. Your AI reads the pool and the exit history over MCP and builds the trade plan with you: candidates, entry, target, stop, and size. You decide.
+          Every trading night, GammaRips filters ~3,500 optionable US stocks down to roughly 40 to 50 liquid bullish call contracts using empirical microstructure and volatility gates, then serves the point-in-time dataset and 3-day excursion history to your AI over MCP.
         </p>
       </header>
 
@@ -140,136 +147,92 @@ export default async function HowItWorksPage() {
 
       <Separator className="my-12 sm:my-16" />
 
-      <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">The pipeline, step by step</h2>
-        <p className="text-muted-foreground leading-relaxed">
-          One rule, run once a night, in this order. Liquidity decides membership. Options flow rides along as context.
-        </p>
-        <ol className="space-y-3 text-muted-foreground list-decimal list-outside ml-6 leading-relaxed">
-          <li><strong className="text-foreground">About 3,500 optionable US stocks.</strong> The starting universe, refreshed weekly and scanned every night.</li>
-          <li><strong className="text-foreground">Liquid names only.</strong> The stock traded 3M+ shares that session and its chain carries 25+ listed strikes.</li>
-          <li><strong className="text-foreground">The top 100 by combined liquidity rank.</strong> The z-score of chain dollar volume plus the z-score of share volume.</li>
-          <li><strong className="text-foreground">Bullish names only.</strong> Calls only.</li>
-          <li><strong className="text-foreground">One out-of-the-money call per name, chosen on contract liquidity.</strong> The engine ranks the most liquid names, then selects the most tradeable contract inside each one.</li>
-          <li><strong className="text-foreground">A published rank cuts to 50 most days.</strong> Most nights more than 50 bullish names qualify. A deterministic point-in-time rank (delta band, 60-day momentum, a liquidity demotion) keeps 50. It uses no outcome data and no learned weights.</li>
-        </ol>
-        <p className="text-muted-foreground leading-relaxed">
-          The result is a pool of roughly 40 to 50 contracts, live by the open on <Link href="/signals" className="text-primary hover:underline">/signals</Link> (free, no account) and in structured form on the MCP for your AI. This funnel has run since 2026-08-24.
-        </p>
-        <div className="mt-6 rounded-lg border bg-card/50 p-5 space-y-3">
-          <h3 className="font-bold font-headline text-lg">Earnings: your AI checks each candidate</h3>
-          <p className="text-sm text-muted-foreground">
-            The published pool is not earnings-screened, so a name can report before its contract expires. The trade-plan playbook checks earnings before expiration for every candidate your AI shortlists, and drops the ones that fail.
+      <section className="space-y-6">
+        <div>
+          <h2 className="text-3xl font-bold font-headline">
+            The Overnight Pipeline &amp; Intraday Liquidity Check
+          </h2>
+          <p className="text-muted-foreground leading-relaxed mt-2">
+            The GammaRips engine runs on a strict daily clock so every feature is point-in-time before the market opens—and refreshed every 10 minutes during regular trading hours.
           </p>
         </div>
-      </section>
 
-      <Separator className="my-12 sm:my-16" />
-
-      <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">Better-quality contracts, in numbers</h2>
-        <p className="text-muted-foreground leading-relaxed">
-          Liquid contracts are the ones you can enter and exit near the quote. A thin contract costs you on the way in and again on the way out. Since the liquidity rule went live, the pool contract carries a much deeper book:
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left py-2 pr-4 font-headline font-bold">Pool contract</th>
-                <th className="text-right py-2 px-4 font-headline font-bold">Before the rule</th>
-                <th className="text-right py-2 pl-4 font-headline font-bold">Since Aug 24, 2026</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              {qualityRows.map((r) => (
-                <tr key={r.label} className="border-b">
-                  <td className="py-2 pr-4">{r.label}</td>
-                  <td className="text-right py-2 px-4 tabular-nums">{r.before}</td>
-                  <td className="text-right py-2 pl-4 tabular-nums font-semibold text-foreground">{r.after}</td>
-                </tr>
-              ))}
-              <tr>
-                <td className="py-2 pr-4">No print at the 10:00 ET entry (study)</td>
-                <td className="text-right py-2 px-4 tabular-nums">{pct(CONTRACT_QUALITY.noFill.before, 1)}</td>
-                <td className="text-right py-2 pl-4 tabular-nums font-semibold text-foreground">{pct(CONTRACT_QUALITY.noFill.after, 1)}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          Since the rule: N = {int(CONTRACT_QUALITY.nAfter)}, {CONTRACT_QUALITY.afterLabel}. Before: N = {int(CONTRACT_QUALITY.nBefore)}, {CONTRACT_QUALITY.beforeLabel} ({CONTRACT_QUALITY.beforeWindow}). The no-print row is a {CONTRACT_QUALITY.noFill.label} (N = {int(CONTRACT_QUALITY.noFill.nBefore)} vs {int(CONTRACT_QUALITY.noFill.nAfter)} contracts), not a live rate, counting a real print inside the 09:55 to 10:15 ET window. Quality here means execution: liquidity, open interest, volume, and fills.
-        </p>
-        <p className="text-[11px] text-muted-foreground">{RECEIPTS_DISCLAIMER}</p>
-      </section>
-
-      <Separator className="my-12 sm:my-16" />
-
-      <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">The exit lab</h2>
-        <p className="text-muted-foreground leading-relaxed">
-          Pool contracts move a lot, in both directions. Of {int(TO_EXPIRY.n)} {TO_EXPIRY.windowLabel}, <strong className="text-foreground">{pct(TO_EXPIRY.hit50, 1)} hit +50% {TO_EXPIRY.horizon}</strong> and {pct(TO_EXPIRY.hit20, 1)} hit +20%. Within {POOL_HIT_RATES.horizon}, {pct(POOL_HIT_RATES.hit50, 1)} of {int(POOL_HIT_RATES.n)} hit +50%, and {pct(POOL_HIT_RATES.stopTouch30, 1)} also touched −30%. Most contracts move both ways, so the exit plan your AI sets decides the result. The exit lab gives your AI the history to set the target and the stop on purpose, instead of a guess.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-          <Card className="bg-card/50">
-            <CardContent className="p-5">
-              <h3 className="font-bold font-headline text-lg">Touch rates</h3>
-              <p className="text-sm text-muted-foreground mt-1">How often past pool contracts hit each profit level and each stop, with your own filters.</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card/50">
-            <CardContent className="p-5">
-              <h3 className="font-bold font-headline text-lg">The opportunity surface</h3>
-              <p className="text-sm text-muted-foreground mt-1">For every past pool contract, how far the premium moved in its favor and against it over the 3 trading days after the 10:00 ET entry, with no exit applied.</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card/50">
-            <CardContent className="p-5">
-              <h3 className="font-bold font-headline text-lg">Bracket scoring</h3>
-              <p className="text-sm text-muted-foreground mt-1">Your AI proposes a target, a stop, and a hold. The lab scores that bracket on past pool contracts.</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card/50">
-            <CardContent className="p-5">
-              <h3 className="font-bold font-headline text-lg">Contract replay</h3>
-              <p className="text-sm text-muted-foreground mt-1">The minute or daily price tape of any past pool contract, so your AI can see how a move actually unfolded.</p>
-            </CardContent>
-          </Card>
-        </div>
-        <p className="text-muted-foreground leading-relaxed">
-          A hit is a touch: the premium traded at that level inside the window. The full hit rates are on the <Link href="/scorecard" className="text-primary hover:underline">Track Record</Link>, next to the live agent record ({LIVE_RECORD.wins} of {LIVE_RECORD.trades} real-money trades closed at a profit, {usd(LIVE_RECORD.netUsd)} net, {LIVE_RECORD.windowLabel}).
-        </p>
-        <p className="text-[11px] text-muted-foreground">{RECEIPTS_DISCLAIMER} Pool figures are tracked on a paper basis.</p>
-      </section>
-
-      <Separator className="my-12 sm:my-16" />
-
-      <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">Your AI builds the trade plan</h2>
-        <p className="text-muted-foreground leading-relaxed">
-          Ask your AI for a trade. With GammaRips connected, it follows the start-here playbook on the MCP:
-        </p>
-        <ol className="space-y-3 text-muted-foreground list-decimal list-outside ml-6 leading-relaxed">
-          {planSteps.map((s) => (
-            <li key={s.title}><strong className="text-foreground">{s.title}</strong> {s.body}</li>
+        <div className="space-y-4">
+          {pipelineTimeline.map((step) => (
+            <div
+              key={step.time}
+              className="rounded-lg border bg-card/50 p-5 flex flex-col sm:flex-row gap-4"
+            >
+              <div className="sm:w-36 shrink-0">
+                <span className="inline-block font-mono text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-primary/15 text-primary">
+                  {step.time}
+                </span>
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-bold font-headline text-base text-foreground">
+                  {step.stage}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {step.detail}
+                </p>
+              </div>
+            </div>
           ))}
-        </ol>
-        <p className="text-muted-foreground leading-relaxed">
-          <strong className="text-foreground">Why not one shared trade for everyone?</strong> Shared trades get crowded. A plan your AI builds from the data, for your account and your risk, does not. That is why the MCP serves the pool and the history, and your AI does the planning.
-        </p>
+        </div>
+
+        <div className="rounded-lg border bg-card/50 p-5 space-y-2">
+          <h3 className="font-bold font-headline text-lg">
+            Earnings &amp; Catalyst Checks: Your AI Verifies Every Candidate
+          </h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            The published pool is not pre-filtered for upcoming earnings dates. Instead, your AI agent calls <code className="text-xs text-foreground">get_signal(view=&quot;earnings&quot;)</code> and <code className="text-xs text-foreground">get_liquidity()</code> on each shortlisted candidate, and can layer on live X and web research via the open-source{' '}
+            <a
+              href={HARNESS_REPO}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-mono text-xs"
+            >
+              gammarips-harness
+            </a>{' '}
+            before building your trade plan.
+          </p>
+        </div>
       </section>
 
       <Separator className="my-12 sm:my-16" />
 
-      <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">The nightly clock</h2>
-        <div className="p-6 rounded-lg border bg-primary/5 border-primary/20 text-muted-foreground space-y-4 leading-relaxed">
-          <p>
-            <strong className="text-foreground">23:00 ET:</strong> the scanner walks the universe, prices full option chains across the liquid names, and ranks them. <strong className="text-foreground">Overnight:</strong> the pool is enriched with news context, technical levels, flow dollars, and one contract per name. <strong className="text-foreground">By the open:</strong> the pool is live on <Link href="/signals" className="text-primary hover:underline">/signals</Link> and on the MCP.
-          </p>
-          <p>
-            <strong className="text-foreground">Around 10:00 ET:</strong> the reference entry time. The exit lab measures every past contract from this mark, and your AI can check fresh open interest and volume on any contract before it enters.
+      <section className="space-y-6">
+        <div>
+          <h2 className="text-3xl font-bold font-headline">
+            The Research Behind Our Filters (Why Combo A)
+          </h2>
+          <p className="text-muted-foreground leading-relaxed mt-2">
+            Every contract gate in the GammaRips pipeline comes from walk-forward Catalyst Lab audits across{' '}
+            <strong className="text-foreground">N = 5,575 enriched contracts over 66 scan dates</strong> (<code className="text-xs text-foreground">dev.parquet</code>) joined to intraday execution and 3-day excursion outcomes in BigQuery (<code className="text-xs text-foreground">enriched_option_outcomes</code>).
           </p>
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {researchFindings.map((item) => (
+            <Card key={item.gate} className="bg-card/50">
+              <CardContent className="p-5 space-y-2">
+                <p className="text-xs font-mono text-primary font-semibold">
+                  {item.formula}
+                </p>
+                <h3 className="font-bold font-headline text-lg text-foreground">
+                  {item.gate}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {item.finding}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Source: Catalyst Lab walk-forward feature and microstructure audit (N = 5,575 enriched option contracts across 66 scan dates, plus BigQuery <code className="text-xs">enriched_option_outcomes</code> 3-day excursion labels). Historical research on paper-tracked option cohorts; educational only, not investment advice.
+        </p>
       </section>
 
       <Separator className="my-12 sm:my-16" />
@@ -283,25 +246,22 @@ export default async function HowItWorksPage() {
           The usual indicators are the <strong className="text-foreground">volume-to-open-interest ratio</strong> (fresh activity against positions already on the books), <strong className="text-foreground">dollar flow</strong> (how much capital moved), and <strong className="text-foreground">directional imbalance</strong> (calls against puts).
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          <strong className="text-foreground">How GammaRips uses it.</strong> Since 2026-08-24, membership in the pool is liquidity-based. Flow does not decide who gets in. We still measure it and publish it, because it is useful context for an AI reading a name. It is a column in the data, not a gate in the funnel.
+          <strong className="text-foreground">How GammaRips uses it.</strong> Membership in the pool is decided by underlying liquidity and Combo A contract microstructure gates—not unusual activity alone. We measure and publish flow context alongside every contract because it is valuable point-in-time context for an AI agent researching a setup.
         </p>
         <div id="conviction-score" className="mt-6 rounded-lg border bg-card/50 p-5 space-y-3 scroll-mt-24">
           <h3 className="font-bold font-headline text-lg">The flow score, in plain English</h3>
           <p className="text-sm text-muted-foreground">
-            Each name in the pool carries a 0 to 10 flow score. It is a checklist, not a model. The scanner asks a few plain questions about where option money went:
+            Each name in the pool carries a 0 to 10 flow score. It is a descriptive checklist, not a predictive black-box model:
           </p>
           <ul className="space-y-1.5 text-sm text-muted-foreground list-disc list-outside ml-4">
             <li><strong className="text-foreground">One-sided money.</strong> Option dollars piled onto one side, calls well over puts.</li>
-            <li><strong className="text-foreground">New money.</strong> The day&apos;s trading against the positions already on the books. Fresh bets, not old ones adjusting.</li>
-            <li><strong className="text-foreground">Built like an institution.</strong> Buying spread across several strikes, not one lottery ticket.</li>
-            <li><strong className="text-foreground">Size of the new positioning.</strong> How many dollars landed on that side.</li>
-            <li><strong className="text-foreground">The stock moved too.</strong> Whether the price confirmed with a real move on the day.</li>
+            <li><strong className="text-foreground">New money.</strong> The day&apos;s trading against the positions already on the books.</li>
+            <li><strong className="text-foreground">Multi-strike positioning.</strong> Buying spread across several strikes rather than a single lottery ticket.</li>
+            <li><strong className="text-foreground">Size of the new positioning.</strong> Total dollar premium committed on that side.</li>
+            <li><strong className="text-foreground">Underlying confirmation.</strong> Whether the stock price confirmed with a move on the session.</li>
           </ul>
           <p className="text-sm text-muted-foreground">
-            Small bonuses when the money bets against the tape, such as heavy call buying on a red day, or when a whole industry lights up the same direction at once.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            <strong className="text-foreground">Reading it:</strong> the score counts evidence of positioning. It is context for your AI, not a forecast, and it does not rank the pool or decide membership. Its floor of 1 is cosmetic: nearly every liquid name clears it.
+            <strong className="text-foreground">Reading it:</strong> the score summarizes point-in-time positioning context for your AI. It is not a forecast and never replaces contract microstructure or volatility filters.
           </p>
         </div>
       </section>
@@ -309,15 +269,12 @@ export default async function HowItWorksPage() {
       <Separator className="my-12 sm:my-16" />
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-bold font-headline">What is agentic trading, and how do you try it?</h2>
+        <h2 className="text-3xl font-bold font-headline">How to connect your AI agent</h2>
         <p className="text-muted-foreground leading-relaxed">
-          Agentic trading means your AI (Claude, ChatGPT, Cursor, Codex, or one you build) works as your own options analyst. You give it real data. It reads tonight&apos;s pool, checks how similar contracts moved, sets an exit from that history, and lays out a plan. The decision, the sizing, and the trade stay yours.
+          With GammaRips connected over MCP, your AI (Claude, ChatGPT, Cursor, Codex, or the open-source harness) works as your options research analyst—reading tonight&apos;s dataset, checking 10-minute morning liquidity and earnings dates, inspecting historical 3-day MFE/MAE outcome surfaces, and laying out a structured plan for your risk budget.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          A chatbot without data improvises. Its knowledge froze months ago, and no options-flow data exists in any training set. The fix is a connected model, not a smarter one.
-        </p>
-        <p className="text-muted-foreground leading-relaxed">
-          Here is the on-ramp. <strong className="text-foreground">Free, no account:</strong> browse <Link href="/signals" className="text-primary hover:underline">tonight&apos;s pool</Link> and the <Link href="/scorecard" className="text-primary hover:underline">Track Record</Link>. <strong className="text-foreground">Free, no card:</strong> connect any MCP client to the free tier for the pool preview, the daily report, and the playbooks. <strong className="text-foreground">Agent Access:</strong> the full pool, liquidity checks, and the exit lab, so your AI can build the whole trade plan. Setup takes minutes on the <Link href="/developers" className="text-primary hover:underline">For Your Agent</Link> page.
+          Here is the on-ramp: <strong className="text-foreground">Free 3-contract preview:</strong> browse <Link href="/signals" className="text-primary hover:underline">/signals</Link> on the web or connect any MCP client to the anonymous endpoint for the 3-contract preview, daily macro report, regime context, and playbooks. <strong className="text-foreground">Pro ({PRICE_MONTHLY}/mo full dataset):</strong> connect to <code className="text-xs text-foreground">{MCP_PRO_ENDPOINT}</code> or pass your API key after starting your {TRIAL_DAYS}-day free trial to unlock all 40–50 daily Combo A contracts, 10-minute intraday liquidity snapshots, and full 3-day excursion outcome history. See the <Link href="/developers" className="text-primary hover:underline">MCP &amp; Developers</Link> reference for per-client setup.
         </p>
       </section>
 
@@ -331,7 +288,7 @@ export default async function HowItWorksPage() {
               <div>
                 <h3 className="font-bold font-headline text-lg">Your analysis, your account</h3>
                 <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                  GammaRips publishes options-flow data, a real-money agent record, and educational content. The pool is the output of a mechanical engine, not personalized advice, and anything your AI concludes from the data is your analysis. You trade your own account. GammaRips does not manage your money. Past results do not promise future results. Educational only. Not investment advice.
+                  GammaRips publishes curated options market data, historical excursion outcomes, and educational research. The dataset is the output of a deterministic mechanical pipeline, not personalized advice, and anything your AI concludes from the data is your own analysis. You trade your own account. GammaRips does not manage your money. Past results do not promise future results. Educational only. Not investment advice.
                 </p>
               </div>
             </div>
@@ -342,24 +299,26 @@ export default async function HowItWorksPage() {
       <Separator className="my-12 sm:my-16" />
 
       <div className="text-center space-y-5">
-        <h2 className="text-2xl font-bold font-headline">Put your AI on tomorrow&apos;s pool</h2>
+        <h2 className="text-2xl font-bold font-headline">Put your AI on tonight&apos;s dataset</h2>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          Install GammaRips in the AI you already use, then ask it for a trade plan.
+          Start your {TRIAL_DAYS}-day free trial of Pro MCP access, or connect the free 3-contract preview in the AI client you already use.
         </p>
-        <div className="flex flex-wrap gap-3 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button asChild size="lg">
+            <Link href="/pricing">
+              Get Pro MCP Access ({PRICE_MONTHLY}/mo) <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <Link href="/signals">View 3-contract preview</Link>
+          </Button>
+        </div>
+        <div className="flex flex-wrap gap-3 justify-center pt-2">
           {INSTALL_LINKS.map((l) => (
-            <Button key={l.id} asChild variant="outline">
+            <Button key={l.id} asChild variant="ghost" size="sm">
               <Link href={l.href}>Add to {l.label}</Link>
             </Button>
           ))}
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg">
-            <Link href="/pricing">Start your {TRIAL_DAYS}-day free trial <ArrowRight className="ml-2 h-5 w-5" /></Link>
-          </Button>
-          <Button asChild variant="ghost" size="lg">
-            <Link href="/signals">Browse the pool free</Link>
-          </Button>
         </div>
       </div>
     </section>

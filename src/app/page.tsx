@@ -1,15 +1,12 @@
 import { Metadata } from "next";
 import { Hero } from "@/components/landing/hero";
-import { StartHere } from "@/components/landing/start-here";
 import { PoolPreview } from "@/components/landing/pool-preview";
 import { PoolRule } from "@/components/landing/pool-rule";
-import { Proof } from "@/components/landing/proof";
 import { InstallCta } from "@/components/landing/install-cta";
 import { ConnectTabs } from "@/components/landing/connect-tabs";
 import Faq, { buildFaqs } from "@/components/landing/faq";
 import { getReceipts } from "@/lib/receipts-server";
-import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
-import { getLatestOvernightSummary, getDailyReport, getOvernightSignals, getBlogPostsAdmin } from "@/lib/firebase-admin";
+import { getLatestOvernightSummary, getDailyReport, getOvernightSignals } from "@/lib/firebase-admin";
 
 export const revalidate = 60; // keep the daily pool summary fresh without a full static rebuild
 
@@ -30,7 +27,6 @@ export default async function LandingPage() {
   const summary = await getLatestOvernightSummary();
   const reportDate = summary ? (summary.report_date || summary.scan_date) : null;
   const report = reportDate ? await getDailyReport(reportDate) : null;
-  const blogPosts = await getBlogPostsAdmin();
   const faqs = buildFaqs(await getReceipts());
 
   // A sample of the pool, not a ranking. Nothing here may sort the names or
@@ -105,16 +101,9 @@ export default async function LandingPage() {
       />
 
       <main className="flex-1 container mx-auto px-4 py-8 space-y-14 max-w-5xl">
-        {/* The page sells one path: install GammaRips in your AI, then start
-            the trial. Order: the value and the headline numbers, the three
-            steps, the receipts, the latest pool, how the pool is built, then
-            per-client install detail as reference. It ends on the same
-            install-then-trial block the hero opens with. */}
+        {/* Streamlined dataset funnel: Hero -> PoolPreview -> PoolRule ->
+            ConnectTabs -> Faq -> closing CTA. */}
         <Hero />
-
-        <StartHere />
-
-        <Proof />
 
         <PoolPreview
           summary={summary}
@@ -127,17 +116,6 @@ export default async function LandingPage() {
 
         <ConnectTabs />
 
-        {/* Cross-link into /blog so posts get crawled and pick up link-equity
-            from the highest-traffic page. */}
-        {blogPosts.length > 0 && (
-          <BlogTeaserList
-            posts={blogPosts}
-            heading="From the Blog"
-            subheading="How the engine builds the pool: methodology, research, and plain-English explainers."
-            limit={3}
-          />
-        )}
-
         <section>
           <div className="text-center">
             <h2 className="text-3xl font-bold font-headline">Frequently Asked Questions</h2>
@@ -147,11 +125,12 @@ export default async function LandingPage() {
 
         <section className="rounded-2xl border border-primary/30 bg-card/60 px-4 py-10 md:p-12 text-center">
           <h2 className="text-2xl md:text-3xl font-bold font-headline text-balance mb-3">
-            Give your AI better contracts and a real trade plan.
+            Give your AI the nightly filtered options dataset.
           </h2>
           <p className="text-sm text-muted-foreground max-w-xl mx-auto mb-8">
-            Install GammaRips in the AI you already use, then start your free
-            trial. Ask for a plan before the next open.
+            Start your free trial of Pro MCP access, connect the AI client or
+            open-source harness you already use, and build your trade plan before
+            the next open.
           </p>
           <InstallCta />
         </section>

@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CONNECT_CLIENTS, PRO_STATUS_LABEL, type ConnectStep } from '@/lib/connect-clients';
-import { PRICE_MONTHLY, TOOL_COUNT, TRIAL_DAYS } from '@/lib/constants';
+import { HARNESS_REPO, MCP_PRO_ENDPOINT, PRICE_MONTHLY, TOOL_COUNT, TRIAL_DAYS } from '@/lib/constants';
 
 // The per-client reference block, below the three-step path (#start). This is
 // where every client gets its exact install steps, free first and then pro.
@@ -97,12 +97,28 @@ export function ConnectTabs() {
         ))}
       </Tabs>
 
-      <div className="mt-6 text-center space-y-2">
-        <Button asChild variant="outline" size="sm">
-          <Link href="/developers">See all {TOOL_COUNT} MCP tools &rarr;</Link>
-        </Button>
+      <div className="mt-6 text-center space-y-3">
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <Button asChild variant="outline" size="sm">
+            <Link href="/developers">See all {TOOL_COUNT} MCP tools &rarr;</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link href={HARNESS_REPO} target="_blank" rel="noopener noreferrer">
+              Clone open-source gammarips-harness on GitHub &rarr;
+            </Link>
+          </Button>
+        </div>
         <p className="text-xs text-muted-foreground">
-          The Python SDK connects the same way. Steps are on the developer docs.
+          Pro MCP endpoint: <code className="text-primary">{MCP_PRO_ENDPOINT}</code>. The open-source{' '}
+          <Link
+            href={HARNESS_REPO}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline font-mono"
+          >
+            gammarips-harness
+          </Link>{' '}
+          and the Python SDK connect the same way.
         </p>
       </div>
     </section>

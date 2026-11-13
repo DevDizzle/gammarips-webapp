@@ -6,10 +6,10 @@ GammaRips is an options-flow intelligence engine for AI agents. Every trading ni
 
 Ask your agent for a trade and it builds a plan with you: candidates that pass the liquidity and earnings checks, entry, a target and a stop set from what past pool contracts did, and a size that fits your maximum loss. There is no pick endpoint. Each user's agent builds its own plan, so subscribers do not crowd into one contract.
 
-The receipts, each with its N and window:
+The receipts as of 2026-10-02, each with its N and window. The live numbers update daily at https://gammarips.com/scorecard.
 
 - **Live record:** Claude Code trading the GammaRips pool with real money closed 11 of 14 trades at a profit, +$2,263 net realized (entries 2026-09-14 to 2026-10-02). Every trade is on https://gammarips.com/scorecard, and redacted day traces are public at https://github.com/DevDizzle/gammarips-harness.
-- **Pool hit rates:** of 1,150 pool contracts (scan dates 2026-08-24 to 2026-09-28), 52.8% hit +25%, 34.5% hit +50%, and 15.9% hit +100% within 3 trading days of the 10:00 ET entry. A hit is a touch of that level, not profit kept. Most contracts also move against you inside the window, so the exit plan decides the result: that is what the exit lab is for.
+- **Pool hit rates:** of 636 pool contracts that have expired (scan dates 2026-08-24 to 2026-09-18), 56.3% hit +50% and 73.6% hit +20% before expiration. Within 3 trading days of the 10:00 ET entry, 34.5% of 1,150 pool contracts hit +50%. A hit is a touch of that level, not profit kept. Contracts move both ways, so the exit plan decides the result: that is what the exit lab is for.
 - **Contract quality:** median open interest 4,664 vs 906 before the liquidity rule, median session volume 1,039 vs 232, and the thinnest 10% at 1,635 open interest vs 29 (1,300 pool contracts 2026-08-24 to 2026-10-01 vs the 60 scan days before). In a 60-session study ending 2026-08-14, no-fill at the 10:00 ET entry fell from 40.5% to 6.1%.
 
 Past results. Educational only. Not investment advice.

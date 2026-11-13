@@ -18,13 +18,11 @@ import {
   TRIAL_DAYS,
 } from '@/lib/constants';
 import {
-  LIVE_RECORD,
-  POOL_HIT_RATES,
-  CONTRACT_QUALITY,
   RECEIPTS_DISCLAIMER,
   int,
   pct,
   usd,
+  type Receipts,
 } from '@/lib/receipts';
 
 // Next inlines a NEXT_PUBLIC_ var at build time only where the full
@@ -56,7 +54,7 @@ const freeFeatures = [
 
 // The three approved headline numbers (src/lib/receipts.ts), each with its N
 // and window. The section that shows them carries RECEIPTS_DISCLAIMER.
-const proof = [
+const buildProof = ({ LIVE_RECORD, TO_EXPIRY, CONTRACT_QUALITY }: Receipts) => [
   {
     label: "Our agent's live record",
     value: `${LIVE_RECORD.wins} of ${LIVE_RECORD.trades}`,
@@ -65,9 +63,9 @@ const proof = [
   },
   {
     label: 'Pool hit rate',
-    value: pct(POOL_HIT_RATES.hit50, 1),
-    headline: `of pool contracts hit +50% within ${POOL_HIT_RATES.horizon}`,
-    detail: `N=${int(POOL_HIT_RATES.n)} pool contracts, ${POOL_HIT_RATES.windowLabel}. ${pct(POOL_HIT_RATES.hit25, 1)} hit +25% and ${pct(POOL_HIT_RATES.hit100, 1)} hit +100%. The exit lab gives your AI this history to set the target and the stop.`,
+    value: pct(TO_EXPIRY.hit50, 1),
+    headline: `of pool contracts hit +50% ${TO_EXPIRY.horizon}`,
+    detail: `N=${int(TO_EXPIRY.n)} ${TO_EXPIRY.windowLabel}. ${pct(TO_EXPIRY.hit20, 1)} hit +20% and ${pct(TO_EXPIRY.hit100, 1)} hit +100%. The exit lab gives your AI this history to set the target and the stop.`,
   },
   {
     label: 'Contract quality',
@@ -77,7 +75,7 @@ const proof = [
   },
 ];
 
-const unlocks = [
+const buildUnlocks = ({ POOL_HIT_RATES }: Receipts) => [
   {
     title: 'The full pool, every night',
     body: 'Roughly 40 to 50 calls, one per bullish name, each with its thesis, technicals, catalyst, and point-in-time features. Every contract is selected on liquidity, so your AI starts from contracts you can enter and exit near the quote.',
@@ -111,7 +109,10 @@ const steps = [
   },
 ];
 
-export function PricingClient() {
+export function PricingClient({ receipts }: { receipts: Receipts }) {
+  const { CONTRACT_QUALITY } = receipts;
+  const proof = buildProof(receipts);
+  const unlocks = buildUnlocks(receipts);
   const { user } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);

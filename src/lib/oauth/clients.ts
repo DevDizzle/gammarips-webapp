@@ -251,7 +251,15 @@ export function parseCimdDocument(clientId: string, doc: unknown): ClientRecord 
     ? (d.grant_types as unknown[]).filter((g): g is string => typeof g === 'string')
     : [GRANT_AUTH_CODE, GRANT_REFRESH];
   const authMethod = typeof d.token_endpoint_auth_method === 'string' ? d.token_endpoint_auth_method : 'none';
-  if (authMethod !== 'none') {
+  // A document may name private_key_jwt first and still list 'none' as a
+  // supported method. ChatGPT does (https://chatgpt.com/oauth/client.json,
+  // 2026-10-03). Our AS metadata advertises no private_key_jwt, so such a
+  // client authenticates with 'none'. The pinned redirect_uris plus PKCE
+  // protect the code exchange, as for every public client.
+  const supported = Array.isArray(d.token_endpoint_auth_methods_supported)
+    ? (d.token_endpoint_auth_methods_supported as unknown[])
+    : [];
+  if (authMethod !== 'none' && !supported.includes('none')) {
     // private_key_jwt / secrets are not supported for CIMD clients here; PKCE
     // protects the code exchange and these clients are public by nature.
     throw new OAuthError(

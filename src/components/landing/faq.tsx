@@ -13,19 +13,20 @@ import {
   TRIAL_DAYS,
 } from "@/lib/constants"
 import {
-  LIVE_RECORD,
-  POOL_HIT_RATES,
   RECEIPTS_DISCLAIMER,
   int,
   pct,
   usd,
+  type Receipts,
 } from "@/lib/receipts"
 
-// Positive, true answers. Numbers come from src/lib/receipts.ts and
-// src/lib/constants.ts only. An answer that shows a performance number ends
-// with RECEIPTS_DISCLAIMER (forbidden claim 5). The homepage FAQPage JSON-LD
-// derives from this array, so the schema always matches what renders.
-export const faqs = [
+// Positive, true answers. Numbers come from the daily receipts
+// (src/lib/receipts-server.ts) and src/lib/constants.ts only. An answer that
+// shows a performance number ends with RECEIPTS_DISCLAIMER. The homepage
+// FAQPage JSON-LD derives from the same list, so the schema matches what renders.
+export type FaqItem = { question: string; answer: string };
+
+export const buildFaqs = ({ LIVE_RECORD, TO_EXPIRY, POOL_HIT_RATES }: Receipts): FaqItem[] => [
   {
     question: "What do I get with Agent Access?",
     answer: `Your AI gets the full GammaRips pool every trading night: roughly 40 to 50 calls with deep books, one per bullish name among the 100 most liquid US stocks, each with its thesis, technicals, catalyst, and contract detail. It also gets fresh liquidity checks, earnings dates, the exit lab (how often past pool contracts hit each profit level and each stop, plus a score for any target and stop you choose), contract replay, regime context, and the methodology playbooks. That is ${TOOL_COUNT} tools, ${PRICE_MONTHLY}/mo after a ${TRIAL_DAYS}-day free trial. Everything human-readable on gammarips.com stays free.`
@@ -48,7 +49,7 @@ export const faqs = [
   },
   {
     question: "Where's the track record?",
-    answer: `On the scorecard. Claude Code trades the GammaRips pool with real money in an agent account: ${LIVE_RECORD.wins} of ${LIVE_RECORD.trades} trades closed at a profit, ${usd(LIVE_RECORD.netUsd)} net realized, every trade counted (entries ${LIVE_RECORD.windowLabel}). The pool history is public too. Of ${int(POOL_HIT_RATES.n)} pool contracts (${POOL_HIT_RATES.windowLabel}), ${pct(POOL_HIT_RATES.hit25, 1)} hit +25%, ${pct(POOL_HIT_RATES.hit50, 1)} hit +50%, and ${pct(POOL_HIT_RATES.hit100, 1)} hit +100% within ${POOL_HIT_RATES.horizon}. The Lab publishes the research behind the engine. ${RECEIPTS_DISCLAIMER}`
+    answer: `On the scorecard. Claude Code trades the GammaRips pool with real money in an agent account: ${LIVE_RECORD.wins} of ${LIVE_RECORD.trades} trades closed at a profit, ${usd(LIVE_RECORD.netUsd)} net realized, every trade counted (entries ${LIVE_RECORD.windowLabel}). The pool history is public too. Of ${int(TO_EXPIRY.n)} pool contracts that have expired (${TO_EXPIRY.windowLabel.replace('expired pool contracts, ', '')}), ${pct(TO_EXPIRY.hit20, 1)} hit +20%, ${pct(TO_EXPIRY.hit50, 1)} hit +50%, and ${pct(TO_EXPIRY.hit100, 1)} hit +100% before expiration. Within ${POOL_HIT_RATES.horizon}, ${pct(POOL_HIT_RATES.hit50, 1)} hit +50% (N=${int(POOL_HIT_RATES.n)}). Both update daily. ${RECEIPTS_DISCLAIMER}`
   },
   {
     question: "How is the pool curated?",
@@ -84,7 +85,7 @@ export const faqs = [
   },
 ];
 
-export default function Faq() {
+export default function Faq({ faqs }: { faqs: FaqItem[] }) {
     // FAQPage JSON-LD is emitted by the pages that render this component
     // (home, about), not here, to avoid duplicate FAQPage markup per page.
     return (

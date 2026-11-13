@@ -1,49 +1,17 @@
-import {
-  CONTRACT_QUALITY,
-  LIVE_RECORD,
-  POOL_HIT_RATES,
-  RECEIPTS_DISCLAIMER,
-  int,
-  pct,
-  usd,
-} from '@/lib/receipts';
+import Link from 'next/link';
+import { HARNESS_REPO, MCP_PRO_ENDPOINT } from '@/lib/constants';
 import { InstallCta } from '@/components/landing/install-cta';
 
-// The first screen sells the product: the value in one headline and one
-// subline, the three owner-approved headline numbers (each with its N and
-// window), then the one path: install in your AI, then start the trial. Every
-// number comes from src/lib/receipts.ts. This section shows performance
-// numbers, so the disclaimer sits here too (forbidden claim 5).
-
-// Derived from the constants, never typed: "about 1 in 3" and "5x".
-const HIT50_ONE_IN = Math.round(1 / POOL_HIT_RATES.hit50);
-const OI_MULTIPLE = Math.round(
-  CONTRACT_QUALITY.medianOi.after / CONTRACT_QUALITY.medianOi.before,
-);
-
-const STATS = [
-  {
-    value: `${LIVE_RECORD.wins} of ${LIVE_RECORD.trades}`,
-    label: `real-money trades closed at a profit, ${usd(LIVE_RECORD.netUsd)} net`,
-    meta: `Claude Code trading the GammaRips pool. Every trade, entries ${LIVE_RECORD.windowLabel}.`,
-  },
-  {
-    value: pct(POOL_HIT_RATES.hit50, 1),
-    label: `of pool contracts hit +50% within ${POOL_HIT_RATES.horizon}, about 1 in ${HIT50_ONE_IN}`,
-    meta: `N=${int(POOL_HIT_RATES.n)}, ${POOL_HIT_RATES.windowLabel}.`,
-  },
-  {
-    value: `${OI_MULTIPLE}x`,
-    label: `the open interest: median ${int(CONTRACT_QUALITY.medianOi.after)} per contract vs ${int(CONTRACT_QUALITY.medianOi.before)} before the liquidity rule`,
-    meta: `N=${int(CONTRACT_QUALITY.nAfter)} ${CONTRACT_QUALITY.afterLabel} vs N=${int(CONTRACT_QUALITY.nBefore)} over ${CONTRACT_QUALITY.beforeLabel}.`,
-  },
-];
+// The first screen sells the Nightly Filtered Options Dataset via MCP:
+// one clear headline, a concise subline, three factual capability pillars
+// describing what the Catalyst Lab filter enforces on every contract in the
+// dataset, and the primary subscription CTA ("Get Pro MCP Access").
 
 export function Hero() {
   return (
     <section className="pt-2 pb-6 md:pt-4 md:pb-8 text-center">
       <p className="text-xs md:text-sm font-semibold uppercase tracking-widest text-primary mb-3">
-        Options data for your AI agent
+        Nightly Filtered Options Dataset via MCP ({MCP_PRO_ENDPOINT.replace('https://', '')})
       </p>
       <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-headline tracking-tight text-balance mb-4">
         Better option contracts.
@@ -52,30 +20,67 @@ export function Hero() {
         </span>
       </h1>
       <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto mb-6 text-balance">
-        Every trading night, your AI gets fresh calls with deep books from the
-        100 most liquid US stocks, and the history to set the target and the
-        stop. It builds the plan with you. You decide.
+        Every trading night, GammaRips filters the most liquid US option chains
+        through strict liquidity, spread, convexity, and volatility gates and
+        serves the curated dataset to your AI agent over MCP.
       </p>
 
       <div className="grid gap-3 sm:grid-cols-3 max-w-4xl mx-auto mb-6 text-left">
-        {STATS.map((s) => (
-          <div key={s.value} className="rounded-xl border bg-card/60 p-4">
-            <p className="text-3xl md:text-4xl font-bold font-headline text-primary">
-              {s.value}
-            </p>
-            <p className="text-sm text-foreground mt-1 leading-snug">{s.label}</p>
-            <p className="text-[11px] text-muted-foreground mt-2 leading-snug">
-              {s.meta}
-            </p>
-          </div>
-        ))}
+        <div className="rounded-xl border bg-card/60 p-4">
+          <p className="text-xs font-mono uppercase tracking-wider text-primary mb-1">
+            Stage 1 · Execution Quality
+          </p>
+          <h2 className="text-base md:text-lg font-bold font-headline text-foreground">
+            Hard Liquidity &amp; Spread Gates
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1.5 leading-snug">
+            <code className="text-xs text-foreground">Mid &gt;= $1.00</code>,{' '}
+            <code className="text-xs text-foreground">OI &gt;= 500+</code>, and
+            Penny-Program tick-normalized spreads from the most liquid US option
+            chains.
+          </p>
+        </div>
+
+        <div className="rounded-xl border bg-card/60 p-4">
+          <p className="text-xs font-mono uppercase tracking-wider text-primary mb-1">
+            Stage 1 · Structure &amp; Vol
+          </p>
+          <h2 className="text-base md:text-lg font-bold font-headline text-foreground">
+            Convexity &amp; Volatility Filter
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1.5 leading-snug">
+            <code className="text-xs text-foreground">Delta 0.22–0.48</code>,{' '}
+            <code className="text-xs text-foreground">DTE 10–45</code>, and
+            Realized-vs-Implied Volatility (
+            <code className="text-xs text-foreground">RV/IV &gt;= 0.85</code>)
+            screening so your agent only reasons over tradable setups.
+          </p>
+        </div>
+
+        <div className="rounded-xl border bg-card/60 p-4">
+          <p className="text-xs font-mono uppercase tracking-wider text-primary mb-1">
+            Stage 2 · Agentic Workflow
+          </p>
+          <h2 className="text-base md:text-lg font-bold font-headline text-foreground">
+            Built for Your AI Agent &amp; Harness
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1.5 leading-snug">
+            Stream the dataset into Claude, ChatGPT, Grok, Cursor, or the
+            open-source{' '}
+            <Link
+              href={HARNESS_REPO}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-mono text-xs"
+            >
+              gammarips-harness
+            </Link>{' '}
+            to layer on live X/web research and build your trade plan.
+          </p>
+        </div>
       </div>
 
       <InstallCta />
-
-      <p className="text-[11px] text-muted-foreground mt-4 max-w-2xl mx-auto">
-        {RECEIPTS_DISCLAIMER}
-      </p>
     </section>
   );
 }

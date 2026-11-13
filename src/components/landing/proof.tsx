@@ -2,52 +2,20 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
-  CONTRACT_QUALITY,
-  LIVE_RECORD,
-  LIVE_TRADES,
-  POOL_HIT_RATES,
   RECEIPTS_DISCLAIMER,
   int,
   pct,
   signedPct,
   usd,
 } from '@/lib/receipts';
+import { getReceipts } from '@/lib/receipts-server';
 
 // The receipts: the live record, the pool hit rates, and contract quality.
-// Every number comes from src/lib/receipts.ts and carries its N and window.
+// Every number refreshes daily (src/lib/receipts-server.ts) and carries its N and window.
 // The live record is a complete cohort (forbidden claim 4): every trade in the
 // window renders, wins and losses. A hit rate is a touch of the level, never
 // profit kept (claim 1). This section shows performance numbers, so it carries
 // the disclaimer (claim 5).
-
-const HIT_LEVELS = [
-  { level: '+25%', rate: POOL_HIT_RATES.hit25 },
-  { level: '+50%', rate: POOL_HIT_RATES.hit50 },
-  { level: '+100%', rate: POOL_HIT_RATES.hit100 },
-];
-
-const QUALITY_ROWS = [
-  {
-    label: 'Median open interest',
-    now: int(CONTRACT_QUALITY.medianOi.after),
-    before: int(CONTRACT_QUALITY.medianOi.before),
-  },
-  {
-    label: 'Median session volume',
-    now: int(CONTRACT_QUALITY.medianVolume.after),
-    before: int(CONTRACT_QUALITY.medianVolume.before),
-  },
-  {
-    label: 'Open interest, thinnest 10%',
-    now: int(CONTRACT_QUALITY.p10Oi.after),
-    before: int(CONTRACT_QUALITY.p10Oi.before),
-  },
-  {
-    label: 'No fill at 10:00 ET (study)',
-    now: pct(CONTRACT_QUALITY.noFill.after, 1),
-    before: pct(CONTRACT_QUALITY.noFill.before, 1),
-  },
-];
 
 function ProofCard({ children }: { children: React.ReactNode }) {
   return (
@@ -55,7 +23,37 @@ function ProofCard({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Proof() {
+export async function Proof() {
+  const { LIVE_RECORD, LIVE_TRADES, POOL_HIT_RATES, TO_EXPIRY, CONTRACT_QUALITY } = await getReceipts();
+  const HIT_LEVELS = [
+    { level: '+20%', rate: TO_EXPIRY.hit20 },
+    { level: '+50%', rate: TO_EXPIRY.hit50 },
+    { level: '+100%', rate: TO_EXPIRY.hit100 },
+  ];
+
+  const QUALITY_ROWS = [
+    {
+      label: 'Median open interest',
+      now: int(CONTRACT_QUALITY.medianOi.after),
+      before: int(CONTRACT_QUALITY.medianOi.before),
+    },
+    {
+      label: 'Median session volume',
+      now: int(CONTRACT_QUALITY.medianVolume.after),
+      before: int(CONTRACT_QUALITY.medianVolume.before),
+    },
+    {
+      label: 'Open interest, thinnest 10%',
+      now: int(CONTRACT_QUALITY.p10Oi.after),
+      before: int(CONTRACT_QUALITY.p10Oi.before),
+    },
+    {
+      label: 'No fill at 10:00 ET (study)',
+      now: pct(CONTRACT_QUALITY.noFill.after, 1),
+      before: pct(CONTRACT_QUALITY.noFill.before, 1),
+    },
+  ];
+
   return (
     <section id="proof" className="scroll-mt-24">
       <h2 className="text-2xl md:text-3xl font-bold font-headline text-center text-balance mb-3">
@@ -131,7 +129,7 @@ export function Proof() {
               The exit lab
             </p>
             <h3 className="text-lg font-bold font-headline mb-4">
-              How far pool contracts ran within {POOL_HIT_RATES.horizon}
+              How far pool contracts ran {TO_EXPIRY.horizon}
             </h3>
             <div className="space-y-3 mb-4">
               {HIT_LEVELS.map((h) => (
@@ -152,15 +150,15 @@ export function Proof() {
               ))}
             </div>
             <p className="text-sm text-muted-foreground mb-3">
-              Median peak: {signedPct(POOL_HIT_RATES.medianPeak, 1)}. Contracts
-              swing both ways in that window ({pct(POOL_HIT_RATES.stopTouch30, 1)}{' '}
-              also touched −30%), so the exit plan decides the result. Your AI
-              sets the target and the stop from this history.
+              Fast moves too: within {POOL_HIT_RATES.horizon},{' '}
+              {pct(POOL_HIT_RATES.hit20, 1)} hit +20% and {pct(POOL_HIT_RATES.hit50, 1)}{' '}
+              hit +50%. Contracts swing both ways, so the exit plan decides the
+              result. Your AI sets the target and the stop from this history.
             </p>
             <p className="text-[11px] text-muted-foreground">
-              N={int(POOL_HIT_RATES.n)} pool contracts, {POOL_HIT_RATES.windowLabel},
-              closed {POOL_HIT_RATES.horizon} windows. A hit is a touch of the
-              level, not profit kept.
+              N={int(TO_EXPIRY.n)} {TO_EXPIRY.windowLabel}. {POOL_HIT_RATES.horizon}:
+              N={int(POOL_HIT_RATES.n)}, {POOL_HIT_RATES.windowLabel}. A hit is a
+              touch of the level, not profit kept.
             </p>
           </ProofCard>
 

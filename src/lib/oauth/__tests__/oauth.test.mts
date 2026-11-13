@@ -82,6 +82,7 @@ test('resource indicators: only our MCP origins and paths', () => {
   assert.equal(normalizeResource('https://mcp.gammarips.com/pro'), 'https://mcp.gammarips.com/pro');
   assert.equal(normalizeResource('https://MCP.gammarips.com/pro/'), 'https://mcp.gammarips.com/pro');
   assert.equal(normalizeResource('https://mcp.gammarips.com/mcp'), 'https://mcp.gammarips.com/mcp');
+  assert.equal(normalizeResource('https://mcp.gammarips.com/openai'), 'https://mcp.gammarips.com/openai');
   assert.equal(normalizeResource('https://mcp.gammarips.com'), 'https://mcp.gammarips.com');
   assert.equal(normalizeResource('https://mcp.gammarips.com/other'), null);
   assert.equal(normalizeResource('https://evil.example/pro'), null);
@@ -157,6 +158,32 @@ test('CIMD: Claude Code metadata document parses; mismatched client_id rejected'
   assert.throws(() => parseCimdDocument(id, { ...doc, client_id: 'https://claude.ai/other' }), OAuthError);
   assert.throws(() => parseCimdDocument(id, { ...doc, redirect_uris: ['http://evil.example/cb'] }), OAuthError);
   assert.throws(() => parseCimdDocument(id, { ...doc, token_endpoint_auth_method: 'private_key_jwt' }), OAuthError);
+});
+
+test('CIMD: ChatGPT document (private_key_jwt first, none supported) parses as a public client', () => {
+  // https://chatgpt.com/oauth/client.json as served on 2026-10-03.
+  const id = 'https://chatgpt.com/oauth/client.json';
+  const doc = {
+    client_id: id,
+    client_uri: 'https://chatgpt.com/',
+    redirect_uris: ['https://chatgpt.com/connector_platform_oauth_redirect'],
+    token_endpoint_auth_method: 'private_key_jwt',
+    token_endpoint_auth_methods_supported: ['none', 'private_key_jwt'],
+    grant_types: ['authorization_code', 'refresh_token'],
+    response_types: ['code'],
+    client_name: 'ChatGPT',
+    token_endpoint_auth_signing_alg: 'RS256',
+    jwks_uri: 'https://chatgpt.com/oauth/jwks.json',
+  };
+  const rec = parseCimdDocument(id, doc);
+  assert.equal(rec.client_name, 'ChatGPT');
+  assert.equal(rec.token_endpoint_auth_method, 'none');
+  assert.deepEqual(rec.redirect_uris, doc.redirect_uris);
+  // private_key_jwt alone (no 'none' listed) is still refused.
+  assert.throws(
+    () => parseCimdDocument(id, { ...doc, token_endpoint_auth_methods_supported: ['private_key_jwt'] }),
+    OAuthError
+  );
 });
 
 test('client credentials: Basic header wins, then body; none when absent', () => {

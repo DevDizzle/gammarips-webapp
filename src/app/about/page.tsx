@@ -7,13 +7,13 @@ import { Shield, Bot, User, CheckCircle2 } from 'lucide-react';
 import ContactForm from './contact-form';
 import { TOOL_COUNT, TRIAL_DAYS, OG_IMAGE, MCP_PRO_ENDPOINT, HARNESS_REPO } from '@/lib/constants';
 import {
-  LIVE_RECORD,
-  CONTRACT_QUALITY,
   RECEIPTS_DISCLAIMER,
   int,
   signedPct,
   usd,
 } from '@/lib/receipts';
+import { getReceipts } from '@/lib/receipts-server';
+
 export const metadata: Metadata = {
   title: 'About GammaRips: the engine, the builder, and the live record',
   description:
@@ -27,12 +27,6 @@ export const metadata: Metadata = {
   },
 };
 
-const recordStats = [
-  { value: `${LIVE_RECORD.wins} of ${LIVE_RECORD.trades}`, label: 'trades closed at a profit' },
-  { value: usd(LIVE_RECORD.netUsd), label: 'net realized' },
-  { value: `${LIVE_RECORD.atTarget} of ${LIVE_RECORD.trades}`, label: "closed at the agent's pre-set target" },
-  { value: signedPct(LIVE_RECORD.medianPct, 1), label: 'median trade, on premium' },
-];
 
 const engineSteps = [
   'After the close, the engine ranks about 3,500 optionable US stocks by liquidity.',
@@ -54,6 +48,13 @@ interface AboutPageProps {
 }
 
 export default async function AboutPage({ searchParams }: AboutPageProps) {
+  const { LIVE_RECORD, CONTRACT_QUALITY } = await getReceipts();
+  const recordStats = [
+    { value: `${LIVE_RECORD.wins} of ${LIVE_RECORD.trades}`, label: 'trades closed at a profit' },
+    { value: usd(LIVE_RECORD.netUsd), label: 'net realized' },
+    { value: `${LIVE_RECORD.atTarget} of ${LIVE_RECORD.trades}`, label: "closed at the agent's pre-set target" },
+    { value: signedPct(LIVE_RECORD.medianPct, 1), label: 'median trade, on premium' },
+  ];
   const { welcome, session_id } = await searchParams;
   const isWelcome = welcome === '1';
 

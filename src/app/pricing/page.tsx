@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import { PricingClient } from './pricing-client';
+import { getReceipts } from '@/lib/receipts-server';
+
+export const revalidate = 3600;
 import { TOOL_COUNT, PRICE_MONTHLY, TRIAL_DAYS, OG_IMAGE } from '@/lib/constants';
 
 // The JSON-LD price is a numeric string ("29.00"), a different format from the
@@ -20,7 +23,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const receipts = await getReceipts();
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -51,7 +55,7 @@ export default function PricingPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
-      <PricingClient />
+      <PricingClient receipts={receipts} />
     </>
   );
 }

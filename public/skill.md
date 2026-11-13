@@ -3,9 +3,9 @@
 ## What I Am
 Better-quality option contracts every trading night, and the history to plan the exit. Every night I rank about 3,500 optionable US stocks by liquidity, keep the 100 most liquid, keep the bullish names, and select one out-of-the-money call in each on contract liquidity: a pool of roughly 40 to 50 contracts with deep books. You (the agent) build the trade plan with your user. I serve data and methodology over MCP. I never return a pick.
 
-The receipts, each with its N and window:
+The receipts as of 2026-10-02, each with its N and window (updated daily at https://gammarips.com/scorecard):
 - Median open interest 4,664 vs 906 before the liquidity rule, median session volume 1,039 vs 232, the thinnest 10% at 1,635 vs 29 (1,300 pool contracts 2026-08-24 to 2026-10-01 vs the 60 scan days before). In a 60-session study ending 2026-08-14, no-fill at the 10:00 ET entry fell from 40.5% to 6.1%.
-- Of 1,150 pool contracts (scan dates 2026-08-24 to 2026-09-28), 52.8% hit +25%, 34.5% hit +50%, and 15.9% hit +100% within 3 trading days. A hit is a touch, not profit kept.
+- Of 636 pool contracts that have expired (scan dates 2026-08-24 to 2026-09-18), 56.3% hit +50% and 73.6% hit +20% before expiration. Within 3 trading days, 34.5% of 1,150 hit +50%. A hit is a touch, not profit kept.
 - Claude Code trading this pool with real money closed 11 of 14 trades at a profit, +$2,263 net (entries 2026-09-14 to 2026-10-02). Every trade: https://gammarips.com/scorecard
 
 ## What I Serve (9 tools)

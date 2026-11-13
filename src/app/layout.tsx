@@ -19,14 +19,14 @@ const siteUrl = 'https://gammarips.com';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Better option contracts and a trade plan in your AI | GammaRips',
+    default: 'Nightly Combo A Options Dataset for AI Agents | GammaRips',
     template: `%s | GammaRips`,
   },
-  description: "Better-quality option contracts every night, and the history to plan the exit. GammaRips ranks about 3,500 optionable US names by liquidity, keeps the 100 most liquid, and selects one out-of-the-money call in each bullish name. Browse the pool free, or add GammaRips to Claude, ChatGPT, Cursor, or Codex and your AI builds the trade plan with you. You decide.",
-  keywords: ['agentic trading', 'AI trading agent', 'MCP server trading', 'options flow', 'unusual options activity', 'options flow data', 'overnight options scanner', 'AI trading analysis', 'options data for AI agents'],
+  description: "The nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history for AI agents. Every trading night GammaRips filters ~3,500 optionable US stocks to the top 100 liquid universe and bullish calls passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, and DTE 10–45. Preview 3 contracts free, or connect Pro MCP ($29/mo) in Claude, ChatGPT, Cursor, or Codex.",
+  keywords: ['agentic trading', 'AI trading agent', 'MCP server trading', 'options flow', 'unusual options activity', 'options flow data', 'overnight options scanner', 'AI trading analysis', 'options data for AI agents', 'Combo A options dataset'],
   openGraph: {
-    title: 'Better option contracts and a trade plan in your AI | GammaRips',
-    description: 'Better-quality option contracts every night, the history to set targets and stops, and your AI builds the trade plan with you. In Claude, ChatGPT, Cursor, and Codex.',
+    title: 'Nightly Combo A Options Dataset for AI Agents | GammaRips',
+    description: 'Nightly Combo A options dataset (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45), 10-minute intraday liquidity snapshots, and 3-day excursion history for Claude, ChatGPT, Cursor, and Codex.',
     url: siteUrl,
     siteName: 'GammaRips',
     images: [{ url: `${siteUrl}/og-image.png?v=3`, width: 1200, height: 630, alt: 'GammaRips | Options-flow data for AI agents' }],
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Better option contracts and a trade plan in your AI | GammaRips',
-    description: 'Better-quality option contracts every night, the history to set targets and stops, and your AI builds the trade plan with you. In Claude, ChatGPT, Cursor, and Codex.',
+    title: 'Nightly Combo A Options Dataset for AI Agents | GammaRips',
+    description: 'Nightly Combo A options dataset (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45), 10-minute intraday liquidity snapshots, and 3-day excursion history for Claude, ChatGPT, Cursor, and Codex.',
     images: [`${siteUrl}/og-image.png?v=3`],
   },
 };
@@ -51,7 +51,7 @@ const organizationSchema = {
   "url": "https://gammarips.com",
   "logo": "https://gammarips.com/icon.png",
   "email": "evan@gammarips.com",
-  "description": "GammaRips gives AI agents better-quality option contracts every night and the history to plan the exit. Every night it ranks about 3,500 optionable US names by liquidity, keeps the 100 most liquid, and selects one out-of-the-money call in each bullish name, producing a pool of roughly 40 to 50 contracts with deep books. It serves that pool, the exit lab, and methodology over MCP, so the user's own AI builds the trade plan. The website is free. Agents subscribe.",
+  "description": "GammaRips is an options-flow and contract-microstructure data engine for AI agents. Every trading night it scans ~3,500 optionable US stocks, filters to the top 100 liquid universe, and selects one out-of-the-money call per bullish name passing the Combo A specification (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, enriched with rv_iv_ratio). It serves a 3-contract preview on the free tier and the full 40–50 contract dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history on Pro MCP ($29/mo).",
   "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO" },
   "sameAs": ["https://twitter.com/GammaRips"],
 };

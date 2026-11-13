@@ -88,20 +88,20 @@ export default async function ReportPage({ params }: Props) {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    "name": `GammaRips V7 enriched signals — ${report.scan_date}`,
-    "description": `Overnight options-flow scan for ${report.scan_date}. ${report.total_signals} signals detected.`,
+    "name": `GammaRips Combo A options dataset — ${report.scan_date}`,
+    "description": `Overnight Combo A options-flow scan for ${report.scan_date}. ${report.total_signals} signals enriched.`,
     "url": `https://gammarips.com/reports/${report.scan_date}`,
     "datePublished": `${report.scan_date}T08:00:00Z`,
     "creator": { "@type": "Organization", "name": "GammaRips" },
     "license": "https://gammarips.com/terms",
     "variableMeasured": [
-      "overnight_score",
+      "rv_iv_ratio",
+      "open_interest",
+      "delta",
+      "dte",
       "volume_oi_ratio",
-      "moneyness_pct",
       "VIX-VIX3M regime",
-      "tournament consensus",
-      "directional dollar volume",
-      "same-day bracket outcome",
+      "3-day MFE/MAE excursion",
     ],
   };
 

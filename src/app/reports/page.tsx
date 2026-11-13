@@ -6,9 +6,9 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Daily Reports — GammaRips V7",
+  title: "Daily Options-Flow Intelligence Reports",
   description:
-    "A daily options-flow briefing every trading day: the overnight scan and the curated bullish pool. Paper-trading data, educational only.",
+    "Daily options-flow intelligence briefings: macro regime context, overnight flow themes, and the Combo A bullish call pool. Educational market data only.",
   alternates: { canonical: 'https://gammarips.com/reports' },
 };
 

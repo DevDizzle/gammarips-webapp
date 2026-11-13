@@ -13,9 +13,9 @@ export const revalidate = 60; // keep the daily pool summary fresh without a ful
 // images included. If one is ever added it MUST carry images: [OG_IMAGE].
 // The description stays disclaimer-free (owner-settled 2026-08-08).
 export const metadata: Metadata = {
-  title: "Better option contracts and a trade plan in your AI | GammaRips",
+  title: "Nightly Combo A Options Dataset for AI Agents | GammaRips",
   description:
-    "GammaRips gives Claude, ChatGPT, Cursor, or Codex better option contracts every night and the history to set the target and the stop. Your AI builds the trade plan.",
+    "GammaRips streams a nightly filtered options dataset (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, RV/IV), 10-minute intraday liquidity snapshots, and 3-day excursion history to Claude, ChatGPT, Cursor, or Codex over MCP.",
   alternates: {
     canonical: '/',
   },
@@ -28,9 +28,7 @@ export default async function LandingPage() {
   const report = reportDate ? await getDailyReport(reportDate) : null;
   const faqs = buildFaqs();
 
-  // A sample of the pool, not a ranking. Nothing here may sort the names or
-  // present them as top choices. The selection research (2026-08-22) lives on
-  // /methodology and /lab.
+  // 3-contract preview sample matching get_pool(view="preview").
   const poolSample = summary ? await getOvernightSignals(summary.scan_date, 'bull', 0, 3) : [];
 
   const webSiteSchema = {
@@ -39,7 +37,7 @@ export default async function LandingPage() {
     "name": "GammaRips",
     "image": "https://gammarips.com/og-image.png?v=3",
     "url": "https://gammarips.com",
-    "description": summary?.market_narrative || "Better option contracts every trading night and the history to plan the exit, served to your AI over MCP. Your AI builds the trade plan.",
+    "description": summary?.market_narrative || "Nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history served to your AI agent over MCP.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://gammarips.com/reports?q={search_term_string}",
@@ -50,8 +48,8 @@ export default async function LandingPage() {
   const dynamicDailySchema = poolSample.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": report?.title || summary?.headline || "Today's curated options-flow pool",
-    "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "The overnight pool: liquidity-ranked bullish names, one out-of-the-money call each.",
+    "headline": report?.title || summary?.headline || "Today's Combo A options dataset preview",
+    "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "The overnight Combo A pool: top 100 liquid US stocks, bullish calls passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, and DTE 10–45.",
     "url": "https://gammarips.com",
     "publisher": {
       "@type": "Organization",
@@ -62,12 +60,12 @@ export default async function LandingPage() {
     "articleBody": report?.content?.substring(0, 800) || summary?.market_narrative,
     "mainEntity": {
       "@type": "ItemList",
-      "name": "A sample of today's pool",
+      "name": "Today's 3-contract pool preview",
       "itemListElement": poolSample.map((signal: any, index: number) => ({
         "@type": "ListItem",
         "position": index + 1,
         "name": `${signal.ticker} bullish call candidate`,
-        "description": signal.thesis || `${signal.ticker} pool candidate`
+        "description": signal.thesis || `${signal.ticker} Combo A pool candidate`
       }))
     }
   } : null;

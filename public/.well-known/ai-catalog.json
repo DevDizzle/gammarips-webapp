@@ -12,7 +12,7 @@
       "displayName": "GammaRips Options Intelligence",
       "type": "application/mcp-server-card+json",
       "url": "https://mcp.gammarips.com/.well-known/mcp/server-card.json",
-      "description": "Better-quality option contracts every trading night, and the history to plan the exit, for AI agents: a liquidity-ranked bullish pool, point-in-time features, the exit lab (opportunity surfaces, touch probabilities, bracket scoring), contract replay, and methodology playbooks. Your agent builds the trade plan with you. There is no pick endpoint. Educational only. Not investment advice.",
+      "description": "Nightly Combo A options dataset (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, rv_iv_ratio), 10-minute intraday liquidity snapshots, and 3-day excursion outcome surfaces for AI agents. Free 3-contract preview on /mcp; full 40–50 contract daily dataset and intraday tools on /pro ($29/mo founding price, 30-day free trial). Your agent builds the trade plan with you. Educational only. Not investment advice.",
       "version": "4.5.0",
       "tags": [
         "options",

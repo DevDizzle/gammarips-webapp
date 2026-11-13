@@ -200,18 +200,14 @@ Welcome to GammaRips. Your free account is live.
 
 What that gets you, free, forever:
 
-- gammarips.com/signals is today's curated pool: ~50 bullish setups from a nightly scan of about 3,500 optionable US stocks, with flow, technicals, and context.
-- gammarips.com/scorecard is the Track Record: every candidate tracked to its outcome, including the honest baseline (buying everything blindly loses, and we publish that).
-- gammarips.com/lab is the Lab: our research experiments, including the killed ideas.
-- gammarips.com/blog and @gammarips on X: methodology and research notes.
+- gammarips.com/signals is today's 3-contract pool preview from our nightly Combo A scan of ~3,500 optionable US stocks.
+- gammarips.com/how-it-works is Learn: the 4-stage overnight pipeline and Catalyst Lab microstructure research.
+- gammarips.com/lab is The Lab: our published walk-forward experiments, including the killed hypotheses.
+- gammarips.com/blog and @gammarips on X: methodology and daily research notes.
 
-The paid tier is for your AI agent. Agent Access (${PRICE_MONTHLY}/mo, ${TRIAL_DAYS}-day
-free trial) connects Claude Code, Codex, Cursor, Gemini CLI, or any agent that
-can send a bearer key to the full data layer over MCP: the structured pool, opportunity surfaces, outcome
-history, and the methodology as playbooks your agent can run. Your
-agent analyzes; you decide.
+The Pro tier (${PRICE_MONTHLY}/mo founding price, ${TRIAL_DAYS}-day free trial) unlocks the full daily 40–50 contract Combo A dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history over MCP in Claude, ChatGPT, Cursor, or Codex. Your agent analyzes; you decide.
 
-See how it works: https://gammarips.com/developers
+See how it works: https://gammarips.com/how-it-works
 
 Reply to this email if you have questions and it goes straight to me.
 
@@ -219,7 +215,7 @@ Evan Parra
 Founder, GammaRips
 evan@gammarips.com
 
-Data on a paper-trading basis, educational only. Not investment advice.
+Educational market data only. Not investment advice.
 `;
 
     const htmlContent = `<!DOCTYPE html>
@@ -242,19 +238,19 @@ Data on a paper-trading basis, educational only. Not investment advice.
                     <tr>
                         <td style="padding: 0 40px 40px;">
                             <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">Welcome to GammaRips. Your free account is live. Everything human-readable is free, forever:</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">Welcome to GammaRips. Your free account is live:</p>
                             <ul style="font-size: 15px; line-height: 1.8; color: #A0A0A0; padding-left: 20px;">
-                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">Today's Pool</a>: ~50 curated bullish setups from a nightly scan of about 3,500 optionable US stocks.</li>
-                                <li><a href="https://gammarips.com/scorecard" style="color: hsl(74, 80%, 50%);">Track Record</a>: every candidate tracked to its outcome, honest baseline included.</li>
-                                <li><a href="https://gammarips.com/lab" style="color: hsl(74, 80%, 50%);">The Lab</a>: our research experiments, including the killed ideas.</li>
-                                <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">Blog</a> + @gammarips on X: methodology and research notes.</li>
+                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">Today's Pool Preview</a>: the daily 3-contract preview from our nightly Combo A scan of ~3,500 optionable US stocks.</li>
+                                <li><a href="https://gammarips.com/how-it-works" style="color: hsl(74, 80%, 50%);">Learn</a>: how the 4-stage pipeline works and the Catalyst Lab research behind the Combo A gates.</li>
+                                <li><a href="https://gammarips.com/lab" style="color: hsl(74, 80%, 50%);">The Lab</a>: our walk-forward research experiments, including the killed ideas.</li>
+                                <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">Blog</a> + @gammarips on X: methodology and daily intelligence notes.</li>
                             </ul>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">The paid tier is for your <strong>AI agent</strong>: Agent Access (${PRICE_MONTHLY}/mo, ${TRIAL_DAYS}-day free trial) connects Claude Code, Codex, Cursor, Gemini CLI, or any agent that can send a bearer key to the full data layer over MCP: structured pool, opportunity surfaces, outcome history, and the methodology as playbooks. Your agent analyzes; you decide.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;"><strong>Pro MCP Access</strong> (${PRICE_MONTHLY}/mo founding price, ${TRIAL_DAYS}-day free trial) connects Claude, ChatGPT, Cursor, or Codex to the full 40–50 contract daily dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history over MCP. Your agent analyzes; you decide.</p>
                             <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding: 28px 0 8px;">
-                                <a href="https://gammarips.com/developers" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">See how Agent Access works →</a>
+                                <a href="https://gammarips.com/pricing" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Unlock Pro MCP Access →</a>
                             </td></tr></table>
                             <p style="font-size: 14px; line-height: 1.6; margin-top: 24px;">Reply to this email if you have questions and it goes straight to me.<br/>Evan Parra, Founder</p>
-                            <p style="font-size: 12px; line-height: 1.5; margin-top: 24px; color: #707070;">Data on a paper-trading basis, educational only. Not investment advice.</p>
+                            <p style="font-size: 12px; line-height: 1.5; margin-top: 24px; color: #707070;">Educational market data only. Not investment advice.</p>
                         </td>
                     </tr>
                 </table>
@@ -297,10 +293,10 @@ If it isn't for you:
 - Cancel anytime before ${chargeDate} and you won't be charged.
 - Manage subscription: https://gammarips.com/account
 
-What you keep with Agent Access:
-- All ${TOOL_COUNT} MCP tools on your key: the curated pool, opportunity surfaces, outcome history, exit-rule simulation, and methodology playbooks.
+What you keep with Pro MCP Access:
+- All ${TOOL_COUNT} MCP tools on your key: the full 40–50 contract daily Combo A dataset, 10-minute intraday liquidity snapshots, 3-day excursion outcome history, exit-rule simulation, and methodology playbooks.
 - Fresh pool data every trading day, leakage-checked, plus the full labeled history your agent reasons over.
-- The Track Record and Lab stay free either way; the subscription is the machine connection.
+- The 3-contract preview, daily reports, and Lab stay free either way; the subscription unlocks the full machine dataset.
 
 If anything's off or you have a question before the trial ends, reply to this email and it goes straight to me.
 
@@ -863,7 +859,7 @@ Good news! We've made a big change to our platform.
 
 GammaRips is now free for all early adopters. That includes you.
 
-You now have full access to the curated signals pool, the enriched signals list, the daily report, and the public Track Record. No strings attached.
+You now have full access to the curated signals pool, the enriched signals list, the daily report, and the methodology & Lab research. No strings attached.
 
 We're doing this to gather feedback from a core group of traders as we continue to build out the platform.
 
@@ -909,7 +905,7 @@ Founder, GammaRips
                                 </p>
                             </div>
 
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">You now have full access to the curated signals pool, the enriched signals list, the daily report, and the public Track Record. No strings attached.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 25px;">You now have full access to the curated signals pool, the enriched signals list, the daily report, and the methodology & Lab research. No strings attached.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">We're doing this to gather feedback from a core group of traders as we continue to build out the platform.</p>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Log in now to see today's top Call & Put contracts.</p>
                         </td>

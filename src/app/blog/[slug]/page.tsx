@@ -50,7 +50,7 @@ export default async function BlogPostPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": post.title,
-    "image": "https://gammarips.com/og-image.png?v=3",
+    "image": "https://gammarips.com/og-image.png?v=4",
     "datePublished": publishedISO,
     "dateModified": publishedISO,
     "description": post.description,
@@ -58,7 +58,7 @@ export default async function BlogPostPage({ params }: Props) {
     "publisher": {
       "@type": "Organization",
       "name": "GammaRips",
-      "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=3" },
+      "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=4" },
     },
     ...(post.keywords?.length ? { "keywords": post.keywords.join(", ") } : {}),
     // ISO 8601 duration (PT#M) — engine supplies readingTimeMin on blog_posts/{slug}.

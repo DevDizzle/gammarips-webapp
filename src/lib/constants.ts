@@ -49,7 +49,7 @@ export const TRIAL_DAYS = 30;
 // So: any page that declares `openGraph` MUST also set `images: [OG_IMAGE]`.
 // Once the block exists, inheritance is not an option.
 export const OG_IMAGE = {
-  url: 'https://gammarips.com/og-image.png?v=3',
+  url: 'https://gammarips.com/og-image.png?v=4',
   width: 1200,
   height: 630,
   alt: 'GammaRips | Options-flow data for AI agents',

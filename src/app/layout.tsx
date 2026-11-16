@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description: 'Nightly Combo A options dataset (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45), 10-minute intraday liquidity snapshots, and 3-day excursion history for Claude, ChatGPT, Cursor, and Codex.',
     url: siteUrl,
     siteName: 'GammaRips',
-    images: [{ url: `${siteUrl}/og-image.png?v=3`, width: 1200, height: 630, alt: 'GammaRips | Options-flow data for AI agents' }],
+    images: [{ url: `${siteUrl}/og-image.png?v=4`, width: 1200, height: 630, alt: 'GammaRips | Options-flow data for AI agents' }],
     locale: 'en_US',
     type: 'website',
   },
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Nightly Combo A Options Dataset for AI Agents | GammaRips',
     description: 'Nightly Combo A options dataset (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45), 10-minute intraday liquidity snapshots, and 3-day excursion history for Claude, ChatGPT, Cursor, and Codex.',
-    images: [`${siteUrl}/og-image.png?v=3`],
+    images: [`${siteUrl}/og-image.png?v=4`],
   },
 };
 

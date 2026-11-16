@@ -103,12 +103,12 @@ export default async function HowItWorksPage() {
     '@type': 'Article',
     headline: 'How GammaRips Works | Overnight Options Dataset & Catalyst Lab Research',
     description: DESCRIPTION,
-    image: 'https://gammarips.com/og-image.png?v=3',
+    image: 'https://gammarips.com/og-image.png?v=4',
     author: { '@type': 'Organization', name: 'GammaRips', url: 'https://gammarips.com' },
     publisher: {
       '@type': 'Organization',
       name: 'GammaRips',
-      logo: { '@type': 'ImageObject', url: 'https://gammarips.com/og-image.png?v=3' },
+      logo: { '@type': 'ImageObject', url: 'https://gammarips.com/og-image.png?v=4' },
     },
   };
 

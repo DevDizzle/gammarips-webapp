@@ -83,7 +83,7 @@ const disclosureSchema = {
   publisher: {
     '@type': 'Organization',
     name: 'GammaRips',
-    logo: { '@type': 'ImageObject', url: 'https://gammarips.com/og-image.png?v=3' },
+    logo: { '@type': 'ImageObject', url: 'https://gammarips.com/og-image.png?v=4' },
   },
 };
 

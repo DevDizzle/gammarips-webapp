@@ -35,7 +35,7 @@ export default async function LandingPage() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "GammaRips",
-    "image": "https://gammarips.com/og-image.png?v=3",
+    "image": "https://gammarips.com/og-image.png?v=4",
     "url": "https://gammarips.com",
     "description": summary?.market_narrative || "Nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history served to your AI agent over MCP.",
     "potentialAction": {

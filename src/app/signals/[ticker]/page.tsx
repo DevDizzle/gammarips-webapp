@@ -128,7 +128,7 @@ export default async function SignalPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": signal.seoMetadata?.seoTitle || `${signal.ticker} Options Flow Data, ${signal.scan_date}`,
-    "image": "https://gammarips.com/og-image.png?v=3",
+    "image": "https://gammarips.com/og-image.png?v=4",
     "datePublished": `${signal.scan_date}T08:00:00Z`,
     "dateModified": signal.updated_at ? new Date(signal.updated_at).toISOString() : `${signal.scan_date}T08:00:00Z`,
     "description": signal.seoMetadata?.seoDescription || signal.thesis || `Options analysis for ${ticker.toUpperCase()}`,

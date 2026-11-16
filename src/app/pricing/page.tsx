@@ -29,7 +29,7 @@ export default function PricingPage() {
     name: 'GammaRips Agent Access',
     description:
       `MCP access for AI agents: the full nightly Combo A pool of liquid option contracts (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45) with rv_iv_ratio, technicals, and grounded catalysts, 10-minute intraday liquidity snapshots, 3-day MFE/MAE outcome surfaces, price replay, regime context, and methodology playbooks. ${TOOL_COUNT} tools for Claude, ChatGPT, Cursor, Codex, or any MCP client, by OAuth sign-in or API key. Educational data, not investment advice.`,
-    image: 'https://gammarips.com/og-image.png?v=3',
+    image: 'https://gammarips.com/og-image.png?v=4',
     brand: { '@type': 'Brand', name: 'GammaRips' },
     offers: {
       '@type': 'Offer',

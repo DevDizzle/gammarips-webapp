@@ -7,7 +7,7 @@ import { ConsentClient, type ConsentSummary } from './consent-client';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Connect your agent | GammaRips',
+  title: 'Connect your agent',
   robots: { index: false, follow: false },
 };
 

@@ -16,6 +16,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
+import { TRIAL_DAYS } from '@/lib/constants';
+import type { AuthModalIntent } from './auth-modal-provider';
+
 const GoogleIcon = () => (
     <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
       <path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-69.5 69.5c-23.6-22.6-55.2-36.3-90.4-36.3-82.9 0-149.6 66.2-149.6 148.4s66.7 148.4 149.6 148.4c97.1 0 134.3-70.8 138.8-103.8H248v-85.3h236.1c2.3 12.7 3.9 26.9 3.9 41.4z"></path>
@@ -26,9 +29,10 @@ type AuthDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   defaultView?: 'signIn' | 'signUp';
+  intent?: AuthModalIntent;
 };
 
-export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthDialogProps) {
+export function AuthDialog({ open, onOpenChange, defaultView = 'signUp', intent = 'default' }: AuthDialogProps) {
   const { signInWithGoogle, signUpWithEmail, signInWithEmail } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -81,11 +85,21 @@ export function AuthDialog({ open, onOpenChange, defaultView = 'signUp' }: AuthD
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{isSignIn ? 'Sign in to GammaRips' : 'Join GammaRips'}</DialogTitle>
+          <DialogTitle>
+            {intent === 'trial'
+              ? isSignIn
+                ? `Sign in to start your ${TRIAL_DAYS}-day free trial`
+                : `Create account to start your ${TRIAL_DAYS}-day free trial`
+              : isSignIn
+                ? 'Sign in to GammaRips'
+                : 'Join GammaRips'}
+          </DialogTitle>
           <DialogDescription>
-             {isSignIn
-                ? 'Welcome back.'
-                : 'Sign up free to browse the curated pool, the daily reports, and the Lab. Add Agent Access anytime to connect your AI agent over MCP.'
+             {intent === 'trial'
+                ? `Step 1 of 2: Sign in with Google or email — you will go straight to Stripe checkout next ($0 due today, cancel anytime before day ${TRIAL_DAYS}).`
+                : isSignIn
+                  ? 'Welcome back.'
+                  : 'Sign up free to browse the 3-contract preview, daily reports, and the Lab. Add Pro MCP access anytime to connect your AI agent.'
              }
           </DialogDescription>
         </DialogHeader>

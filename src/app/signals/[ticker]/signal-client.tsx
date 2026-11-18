@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { TrendingUp, TrendingDown, ArrowRight, FileText } from "lucide-react";
 import Link from "next/link";
 import { Markdown } from "@/components/markdown";
-import { EmailCapture } from "@/components/email-capture";
+import { McpConversionCard } from "@/components/mcp-conversion-card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export default function SignalClientPage({
@@ -347,8 +347,12 @@ export default function SignalClientPage({
             </CardContent>
           </Card>
 
-          <div className="mt-8 max-w-xl mx-auto w-full">
-            <EmailCapture />
+          <div className="mt-8 w-full">
+            <McpConversionCard
+              source={`signal_${signal.ticker}`}
+              headline={`Query ${signal.ticker} & the full daily Combo A pool in your AI`}
+              subline="Stream tonight's 40–50 liquid bullish calls, 10-minute morning liquidity snapshots, earnings checks, and 3-day excursion history into Claude, ChatGPT, Cursor, or Codex over MCP."
+            />
           </div>
         </div>
       </main>

@@ -61,14 +61,14 @@ export function EmailCapture({ variant = 'default' }: { variant?: 'default' | 'm
             <>
                 {variant !== 'default' ? null : (
                     <>
-                        <div className="mb-4 rounded-full bg-blue-500/10 p-3">
-                            <Mail className="h-6 w-6 text-blue-400" />
+                        <div className="mb-4 rounded-full bg-primary/10 p-3">
+                            <Mail className="h-6 w-6 text-primary" />
                         </div>
                         <h3 className="mb-2 text-xl font-bold text-white">
-                          One email a week. Catch up in five minutes.
+                          Research notes &amp; dataset updates
                         </h3>
                         <p className="mb-6 max-w-md text-sm text-zinc-400">
-                          The GammaRips weekly briefing — engine state, the latest Lab experiment, and what the pool&apos;s outcome data showed. No firehose, no FOMO.
+                          Get Catalyst Lab walk-forward experiments, Combo A methodology updates, and new MCP workflow releases. No firehose, no FOMO.
                         </p>
                     </>
                 )}
@@ -78,7 +78,7 @@ export function EmailCapture({ variant = 'default' }: { variant?: 'default' | 'm
                     <Input
                       type="email"
                       placeholder="Enter your email"
-                      className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500/20"
+                      className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-500 focus-visible:ring-primary/20"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -86,7 +86,7 @@ export function EmailCapture({ variant = 'default' }: { variant?: 'default' | 'm
                     />
                     <Button 
                         type="submit" 
-                        className="bg-blue-600 hover:bg-blue-500 text-white font-medium whitespace-nowrap"
+                        className="font-medium whitespace-nowrap"
                         disabled={isLoading}
                     >
                       {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Join Free'}

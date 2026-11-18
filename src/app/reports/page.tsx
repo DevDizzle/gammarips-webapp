@@ -4,12 +4,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Metadata } from "next";
+import { OG_IMAGE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Daily Options-Flow Intelligence Reports",
   description:
     "Daily options-flow intelligence briefings: macro regime context, overnight flow themes, and the Combo A bullish call pool. Educational market data only.",
   alternates: { canonical: 'https://gammarips.com/reports' },
+  openGraph: {
+    images: [OG_IMAGE],
+    title: "Daily Options-Flow Intelligence Reports | GammaRips",
+    description:
+      "Daily options-flow intelligence briefings: macro regime context, overnight flow themes, and the Combo A bullish call pool.",
+    url: "https://gammarips.com/reports",
+  },
 };
 
 export default async function ReportsPage() {
@@ -18,7 +26,7 @@ export default async function ReportsPage() {
   const indexSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "GammaRips V7 Daily Reports",
+    "name": "GammaRips Daily Options & Regime Reports",
     "description": "Every trading day, GammaRips publishes a daily intelligence report — the overnight scan, the curated bullish pool, and market context.",
     "url": "https://gammarips.com/reports",
     "mainEntity": {

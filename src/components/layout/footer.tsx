@@ -11,26 +11,29 @@ const Footer = () => {
             <h3 className="text-xl font-bold font-headline">
                 <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
             </h3>
-            <p className="text-sm text-muted-foreground mt-2">The options-flow data layer for AI agents. Curated overnight, leakage-checked, served over MCP.</p>
+            <p className="text-sm text-muted-foreground mt-2">The nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day excursion history for AI agents over MCP.</p>
           </div>
           <div>
-            <h4 className="font-semibold text-foreground">Product</h4>
+            <h4 className="font-semibold text-foreground">Product &amp; MCP</h4>
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
-              <li><Link href="/signals" className="text-muted-foreground hover:text-primary">Signals</Link></li>
+              <li><Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing ($29/mo · 30-day trial)</Link></li>
+              <li><Link href="/developers" className="text-muted-foreground hover:text-primary">MCP &amp; API Docs</Link></li>
+              <li><Link href="/signals" className="text-muted-foreground hover:text-primary">3-Contract Pool Preview</Link></li>
               <li><Link href="/reports" className="text-muted-foreground hover:text-primary">Daily Reports</Link></li>
-              <li><Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing</Link></li>
-              <li><Link href="/developers" className="text-muted-foreground hover:text-primary">MCP / Developers</Link></li>
-              <li><Link href="/llms.txt" className="text-muted-foreground hover:text-primary">llms.txt</Link></li>
+              <li><Link href="/llms.txt" className="text-muted-foreground hover:text-primary">llms.txt</Link> · <Link href="/skill.md" className="text-muted-foreground hover:text-primary">skill.md</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-foreground">Company</h4>
+            <h4 className="font-semibold text-foreground">Research &amp; Guides</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="/about" className="text-muted-foreground hover:text-primary">About</Link></li>
               <li><Link href="/how-it-works" className="text-muted-foreground hover:text-primary">How It Works</Link></li>
-              <li><Link href="/blog" className="text-muted-foreground hover:text-primary">Blog</Link></li>
               <li><Link href="/methodology" className="text-muted-foreground hover:text-primary">Methodology</Link></li>
+              <li><Link href="/lab" className="text-muted-foreground hover:text-primary">Catalyst Lab</Link></li>
+              <li><Link href="/blog/best-mcp-servers-for-trading-and-finance" className="text-muted-foreground hover:text-primary">Best Trading MCP Servers</Link></li>
+              <li><Link href="/blog/how-to-build-a-trading-bot-with-claude" className="text-muted-foreground hover:text-primary">Claude Trading Agent Guide</Link></li>
+              <li><Link href="/blog" className="text-muted-foreground hover:text-primary">All Blog Posts</Link></li>
+              <li><Link href="/about" className="text-muted-foreground hover:text-primary">About</Link></li>
             </ul>
           </div>
           <div>

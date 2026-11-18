@@ -4,6 +4,7 @@ import { BlogTeaserList } from "@/components/blog/blog-teaser-list";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Metadata } from "next";
+import { OG_IMAGE } from "@/lib/constants";
 
 interface PageProps {
   params: Promise<{ ticker: string }>;
@@ -46,13 +47,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
-    // Canonical must be the UPPERCASE url regardless of the casing that arrived:
-    // the route resolves case-insensitively, and the case-preserving redirects in
-    // next.config.ts (/:ticker, /stocks/:ticker) feed lowercase variants in. A
-    // raw-casing canonical made /signals/aapl and /signals/AAPL compete as
-    // duplicates in GSC (48 pages). src/middleware.ts 308s non-uppercase paths
-    // before render — the component-level check below never fired in production.
     alternates: { canonical: `https://gammarips.com/signals/${T}` },
+    openGraph: {
+      images: [OG_IMAGE],
+      title,
+      description,
+      url: `https://gammarips.com/signals/${T}`,
+      type: "article",
+    },
   };
 }
 
@@ -124,6 +126,13 @@ export default async function SignalPage({ params }: PageProps) {
     getBlogPostsAdmin(),
   ]);
 
+  const prioritizedBlogPosts = [...blogPosts].sort((a, b) => {
+    const aMcp = a.cta === "pro_trial" ? 0 : 1;
+    const bMcp = b.cta === "pro_trial" ? 0 : 1;
+    if (aMcp !== bMcp) return aMcp - bMcp;
+    return (b.updatedAt || b.publishedAt).localeCompare(a.updatedAt || a.publishedAt);
+  });
+
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -132,19 +141,22 @@ export default async function SignalPage({ params }: PageProps) {
     "datePublished": `${signal.scan_date}T08:00:00Z`,
     "dateModified": signal.updated_at ? new Date(signal.updated_at).toISOString() : `${signal.scan_date}T08:00:00Z`,
     "description": signal.seoMetadata?.seoDescription || signal.thesis || `Options analysis for ${ticker.toUpperCase()}`,
-    "author": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
+    "author": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO", "url": "https://gammarips.com/about" },
     "publisher": { "@type": "Organization", "name": "GammaRips", "logo": { "@type": "ImageObject", "url": "https://gammarips.com/icon.png" } },
     ...(signal.seoMetadata?.keywords ? { "keywords": signal.seoMetadata.keywords.join(', ') } : {}),
     "articleBody": signal.thesis || `Overnight scan record for ${signal.ticker} on ${signal.scan_date}. Direction ${signal.direction}, with the flow breakdown, the contract the engine priced, and key levels. Data, not a recommendation.`,
-    // Dataset, not FinancialProduct: this page is a historical scan record, not
-    // an offer or a recommendation. Naming a strike and an expiration here made
-    // the structured data read as a pick, which the site does not publish.
     "mainEntity": {
       "@type": "Dataset",
       "name": `${signal.ticker} overnight options flow scan record, ${signal.scan_date}`,
       "description": `One row from the GammaRips overnight options flow scan for ${signal.ticker} on ${signal.scan_date}. Direction ${signal.direction}, with the flow breakdown, contract detail, and key levels as they stood at scan time. Historical record, not a recommendation.`,
       "creator": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
-      "isAccessibleForFree": true
+      "license": "https://gammarips.com/terms",
+      "isAccessibleForFree": true,
+      "isPartOf": {
+        "@type": "Dataset",
+        "@id": "https://gammarips.com/developers#combo-a-dataset",
+        "name": "GammaRips Combo A Nightly US Options Dataset"
+      }
     }
   };
 
@@ -176,12 +188,12 @@ export default async function SignalPage({ params }: PageProps) {
           </div>
         </section>
       )}
-      {blogPosts.length > 0 && (
+      {prioritizedBlogPosts.length > 0 && (
         <section className="container mx-auto px-4 pb-12 max-w-4xl">
           <BlogTeaserList
-            posts={blogPosts}
-            heading="How We Read This Flow"
-            subheading="Plain-English explainers on the methodology behind signals like this one."
+            posts={prioritizedBlogPosts}
+            heading="Agentic Trading &amp; MCP Guides"
+            subheading="Connect Claude, ChatGPT, Cursor, or Codex to the Combo A options dataset."
             limit={3}
           />
         </section>

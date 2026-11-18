@@ -21,6 +21,7 @@ export interface BlogPost {
   cta: string;
   readingTimeMin: number;
   publishedAt: string;
+  updatedAt?: string;
 }
 
 // Load environment variables from .env file (for local dev)
@@ -1219,6 +1220,15 @@ function mapBlogPost(id: string, data: FirebaseFirestore.DocumentData): BlogPost
   } else if (typeof ts === 'string') {
     publishedAt = ts;
   }
+
+  let updatedAt: string | undefined;
+  const uts = data.updated_at;
+  if (uts instanceof Timestamp) {
+    updatedAt = uts.toDate().toISOString();
+  } else if (typeof uts === 'string' && uts.length > 0) {
+    updatedAt = uts;
+  }
+
   return {
     slug: data.slug || id,
     title: data.title || 'Untitled',
@@ -1228,6 +1238,7 @@ function mapBlogPost(id: string, data: FirebaseFirestore.DocumentData): BlogPost
     cta: data.cta || 'webapp_visit',
     readingTimeMin: data.reading_time_min || 0,
     publishedAt,
+    ...(updatedAt ? { updatedAt } : {}),
   };
 }
 

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/hooks/use-auth';
+import { useAuthModal } from '@/components/auth/auth-modal-provider';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -101,23 +102,17 @@ const steps = [
   },
 ];
 
+const PENDING_CHECKOUT_KEY = 'gammarips_pending_checkout';
+
 export function PricingClient(_props: { receipts?: Receipts }) {
   const { user } = useAuth();
+  const { openAuthModal } = useAuthModal();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const autoCheckoutTriggered = useRef(false);
 
-  async function handleCheckout(interval: 'month' | 'year' = 'month') {
-    const displayPrice = interval === 'year' ? PRICE_ANNUAL : PRICE_MONTHLY;
-    trackEvent('begin_checkout', {
-      currency: 'USD',
-      value: Number(displayPrice.replace(/[^0-9.]/g, '')) || 0,
-      plan: 'pro',
-      authenticated: !!user,
-    });
-    if (!user) {
-      window.location.href = '/auth/action?mode=signUp&redirect=/pricing';
-      return;
-    }
+  const runStripeCheckout = useCallback(async (interval: 'month' | 'year' = 'month') => {
+    if (!user) return;
     setLoading(true);
     try {
       const token = await user.getIdToken();
@@ -153,6 +148,44 @@ export function PricingClient(_props: { receipts?: Receipts }) {
       });
       setLoading(false);
     }
+  }, [user, toast]);
+
+  // Automatically continue into Stripe Checkout right after Google/email auth
+  // completes on /pricing (or when arriving via ?checkout=month|year).
+  useEffect(() => {
+    if (!user || autoCheckoutTriggered.current) return;
+    if (typeof window === 'undefined') return;
+
+    const params = new URLSearchParams(window.location.search);
+    const urlCheckout = params.get('checkout');
+    const storedCheckout = sessionStorage.getItem(PENDING_CHECKOUT_KEY);
+    const pending = storedCheckout || urlCheckout;
+
+    if (pending === 'month' || pending === 'year') {
+      autoCheckoutTriggered.current = true;
+      sessionStorage.removeItem(PENDING_CHECKOUT_KEY);
+      void runStripeCheckout(pending);
+    }
+  }, [user, runStripeCheckout]);
+
+  async function handleCheckout(interval: 'month' | 'year' = 'month') {
+    const displayPrice = interval === 'year' ? PRICE_ANNUAL : PRICE_MONTHLY;
+    trackEvent('begin_checkout', {
+      currency: 'USD',
+      value: Number(displayPrice.replace(/[^0-9.]/g, '')) || 0,
+      plan: 'pro',
+      interval,
+      authenticated: !!user,
+    });
+    if (!user) {
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem(PENDING_CHECKOUT_KEY, interval);
+      }
+      autoCheckoutTriggered.current = false;
+      openAuthModal('signUp', 'trial');
+      return;
+    }
+    await runStripeCheckout(interval);
   }
 
   return (

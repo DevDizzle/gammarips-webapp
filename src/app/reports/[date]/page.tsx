@@ -5,6 +5,7 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { McpConversionCard } from "@/components/mcp-conversion-card";
 import { remarkTickerLinks } from "@/lib/remark-ticker-links";
 import { OG_IMAGE } from '@/lib/constants';
 
@@ -66,19 +67,21 @@ export default async function ReportPage({ params }: Props) {
     "datePublished": `${report.scan_date}T08:00:00Z`,
     "dateModified": `${report.scan_date}T08:00:00Z`,
     "author": {
-      "@type": "Organization",
-      "name": "GammaRips",
-      "url": "https://gammarips.com"
+      "@type": "Person",
+      "name": "Evan Parra",
+      "jobTitle": "Founder & CEO",
+      "url": "https://gammarips.com/about"
     },
     "publisher": {
       "@type": "Organization",
       "name": "GammaRips",
-      "logo": { "@type": "ImageObject", "url": "https://gammarips.com/og-image.png?v=4" }
+      "logo": { "@type": "ImageObject", "url": "https://gammarips.com/icon.png" }
     },
-    "description": report.seoMetadata?.seoDescription || `GammaRips daily intelligence report for ${date} — overnight scan, curated bullish pool, and market context. ${report.total_signals} signals scanned. ${report.bullish_count} bullish, ${report.bearish_count} bearish.`,
+    "description": report.seoMetadata?.seoDescription || `GammaRips daily intelligence report for ${date} — overnight scan, curated bullish pool, and market context. ${report.total_signals} signals scanned.`,
     "about": {
-      "@type": "Thing",
-      "name": "Overnight options-flow scan and curated bullish pool",
+      "@type": "Dataset",
+      "@id": "https://gammarips.com/developers#combo-a-dataset",
+      "name": "GammaRips Combo A Nightly US Options Dataset",
     },
     "disclaimer": "Paper-trading performance, educational only. Not investment advice.",
     ...(report.seoMetadata?.keywords ? { "keywords": report.seoMetadata.keywords.join(', ') } : {}),
@@ -92,8 +95,14 @@ export default async function ReportPage({ params }: Props) {
     "description": `Overnight Combo A options-flow scan for ${report.scan_date}. ${report.total_signals} signals enriched.`,
     "url": `https://gammarips.com/reports/${report.scan_date}`,
     "datePublished": `${report.scan_date}T08:00:00Z`,
-    "creator": { "@type": "Organization", "name": "GammaRips" },
+    "creator": { "@type": "Organization", "name": "GammaRips", "url": "https://gammarips.com" },
     "license": "https://gammarips.com/terms",
+    "isAccessibleForFree": true,
+    "isPartOf": {
+      "@type": "Dataset",
+      "@id": "https://gammarips.com/developers#combo-a-dataset",
+      "name": "GammaRips Combo A Nightly US Options Dataset"
+    },
     "variableMeasured": [
       "rv_iv_ratio",
       "open_interest",
@@ -153,7 +162,11 @@ export default async function ReportPage({ params }: Props) {
         </section>
       )}
 
-      {/* Prev/next report chain + back to the live pick. */}
+      <div className="mt-12">
+        <McpConversionCard source={`report_${report.scan_date}`} />
+      </div>
+
+      {/* Prev/next report chain + preview link. */}
       <nav className="mt-10 pt-6 border-t border-muted flex flex-wrap items-center justify-between gap-4 text-sm">
         <div className="flex flex-wrap gap-4">
           {newerReport && (
@@ -169,7 +182,7 @@ export default async function ReportPage({ params }: Props) {
         </div>
         <div className="flex flex-wrap gap-4">
           <Link href="/reports" className="text-muted-foreground hover:text-primary">All reports</Link>
-          <Link href="/signals" className="text-muted-foreground hover:text-primary">Browse today&apos;s full pool</Link>
+          <Link href="/signals" className="text-muted-foreground hover:text-primary">Today&apos;s 3-contract preview</Link>
         </div>
       </nav>
 

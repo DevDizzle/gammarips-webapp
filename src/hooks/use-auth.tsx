@@ -29,10 +29,13 @@ import { safeLocalPath } from '@/lib/safe-redirect';
 // because it forces the closest Suspense boundary to bail out of SSR — and
 // AuthProvider wraps the entire app, which would empty every page's HTML for
 // JS-disabled crawlers (ClaudeBot, GPTBot, link previews, etc.).
-function getRedirectFromLocation(): string {
-  if (typeof window === 'undefined') return '/';
+function getRedirectFromLocation(): string | null {
+  if (typeof window === 'undefined') return null;
   const params = new URLSearchParams(window.location.search);
-  return safeLocalPath(params.get('redirect'));
+  const explicit = params.get('redirect');
+  if (explicit) return safeLocalPath(explicit);
+  if (window.location.pathname.startsWith('/auth/action')) return '/';
+  return null;
 }
 
 
@@ -141,11 +144,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       trackEvent('sign_up', { method });
       
       toast({ title: "Welcome to GammaRips!", description: "Account created successfully." });
-      router.push(redirectUrl);
+      if (redirectUrl) router.push(redirectUrl);
 
     } else {
        toast({ title: "Successfully signed in." });
-       router.push(redirectUrl);
+       if (redirectUrl) router.push(redirectUrl);
     }
   };
 
@@ -183,7 +186,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       toast({ title: "Successfully signed in." });
       const redirectUrl = getRedirectFromLocation();
-      router.push(redirectUrl);
+      if (redirectUrl) router.push(redirectUrl);
 
     } catch (error) {
         console.error("Email sign-in error", error);

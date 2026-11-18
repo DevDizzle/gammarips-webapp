@@ -293,6 +293,47 @@ const toolGroups: {
   },
 ];
 
+const datasetSchema = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "@id": "https://gammarips.com/developers#combo-a-dataset",
+  name: "GammaRips Combo A Nightly US Options Dataset",
+  description:
+    "Nightly curated US options-flow and contract-microstructure dataset for AI agents. Scans ~3,500 optionable US stocks at 23:00 ET, filters to the top 100 liquid universe, and selects bullish calls passing Combo A gates (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45), enriched at 05:30 ET with Realized-vs-Implied Volatility (rv_iv_ratio = (ATR_14 / Price * sqrt(252)) / IV), technicals, and grounded news catalysts, plus 10-minute intraday liquidity snapshots (09:02–16:52 ET) and 3-day MFE/MAE outcome surfaces. Validated across N = 5,575 historical contracts in Catalyst Lab walk-forward audits. Educational market data only, not investment advice.",
+  url: "https://gammarips.com/developers",
+  license: "https://gammarips.com/terms",
+  isAccessibleForFree: true,
+  temporalCoverage: "2026-04-10/..",
+  creator: [
+    { "@type": "Organization", name: "GammaRips", url: "https://gammarips.com" },
+    { "@type": "Person", name: "Evan Parra", jobTitle: "Founder & CEO", url: "https://gammarips.com/about" },
+  ],
+  variableMeasured: [
+    "rv_iv_ratio",
+    "recommended_mid_price",
+    "recommended_oi",
+    "recommended_delta",
+    "recommended_dte",
+    "intraday_10m_open_interest",
+    "3_day_mfe_mae_excursion",
+    "vix_vix3m_regime",
+  ],
+  distribution: [
+    {
+      "@type": "DataDownload",
+      name: "GammaRips Free 3-Contract Preview MCP",
+      contentUrl: MCP_ENDPOINT,
+      encodingFormat: "application/json",
+    },
+    {
+      "@type": "DataDownload",
+      name: "GammaRips Pro Full Combo A Dataset MCP (OAuth 2.1 / Bearer)",
+      contentUrl: MCP_PRO_ENDPOINT,
+      encodingFormat: "application/json",
+    },
+  ],
+};
+
 export const revalidate = 3600;
 
 export default function DevelopersPage() {
@@ -301,6 +342,10 @@ export default function DevelopersPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webApiSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }}
       />
       <script
         type="application/ld+json"
@@ -604,35 +649,54 @@ async with Client(transport) as client:
             ))}
           </div>
         </section>
-      </main>
-
-      <footer className="py-8 border-t bg-muted/5">
-        <div className="container px-4 mx-auto text-center space-y-4">
-          <div className="flex justify-center gap-6 text-sm text-muted-foreground">
-            <Link href="/mcp.json" className="hover:text-primary">
-              mcp.json
+        {/* Guides & Discovery Files */}
+        <section id="guides" className="scroll-mt-24 border-t pt-12 space-y-6">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold font-headline">
+              Implementation guides &amp; agent discovery files
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Walkthroughs for wiring Claude, ChatGPT, Cursor, and Codex to the Combo A options dataset, plus machine-readable discovery manifests.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4 text-sm">
+            <Link
+              href="/blog/best-mcp-servers-for-trading-and-finance"
+              className="rounded-lg border p-4 hover:border-primary/50 hover:bg-muted/20 transition-colors"
+            >
+              <p className="font-semibold text-foreground">7 Best MCP Servers for Trading, Options &amp; Quant Research →</p>
+              <p className="text-muted-foreground mt-1">Compare data, charting, and brokerage execution MCP servers side by side.</p>
             </Link>
-            <Link href="/llms.txt" className="hover:text-primary">
-              llms.txt
+            <Link
+              href="/blog/how-to-build-a-trading-bot-with-claude"
+              className="rounded-lg border p-4 hover:border-primary/50 hover:bg-muted/20 transition-colors"
+            >
+              <p className="font-semibold text-foreground">How to Build an AI Options Trading Agent with Claude &amp; MCP →</p>
+              <p className="text-muted-foreground mt-1">3-step architecture using the open-source gammarips-harness and MFE/MAE exit brackets.</p>
             </Link>
-            <Link href="/.well-known/ai-plugin.json" className="hover:text-primary">
-              ai-plugin.json
+            <Link
+              href="/blog/connect-claude-to-live-options-data-mcp"
+              className="rounded-lg border p-4 hover:border-primary/50 hover:bg-muted/20 transition-colors"
+            >
+              <p className="font-semibold text-foreground">Connect Claude to Options &amp; Market Data via MCP →</p>
+              <p className="text-muted-foreground mt-1">10-second Streamable HTTP setup for Claude Code, Claude Desktop, and Claude.ai OAuth.</p>
+            </Link>
+            <Link
+              href="/blog/catalyst-lab-combo-a-options-microstructure-audit"
+              className="rounded-lg border p-4 hover:border-primary/50 hover:bg-muted/20 transition-colors"
+            >
+              <p className="font-semibold text-foreground">Catalyst Lab Audit: 5,575 Overnight Option Signals →</p>
+              <p className="text-muted-foreground mt-1">Walk-forward verification behind Mid &gt;= $1.00, OI &gt;= 500, Delta 0.22–0.48, and RV/IV &gt;= 0.85.</p>
             </Link>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Contact:{" "}
-            <a
-              href="mailto:evan@gammarips.com"
-              className="underline hover:text-foreground"
-            >
-              evan@gammarips.com
-            </a>
-          </p>
-          <p className="text-xs text-muted-foreground max-w-2xl mx-auto">
-            Educational market data only. Not investment advice. Past results do not guarantee future results.
-          </p>
-        </div>
-      </footer>
+          <div className="flex flex-wrap gap-6 text-xs font-mono text-muted-foreground pt-2">
+            <Link href="/mcp.json" className="hover:text-primary">mcp.json</Link>
+            <Link href="/llms.txt" className="hover:text-primary">llms.txt</Link>
+            <Link href="/skill.md" className="hover:text-primary">skill.md</Link>
+            <Link href="/.well-known/ai-plugin.json" className="hover:text-primary">ai-plugin.json</Link>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }

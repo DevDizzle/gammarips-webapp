@@ -3,6 +3,8 @@ import { MetadataRoute } from 'next';
 
 const BASE_URL = 'https://gammarips.com';
 
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
@@ -52,9 +54,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const posts = await getBlogPostsAdmin();
     blogPages = posts.map(post => ({
       url: `${BASE_URL}/blog/${post.slug}`,
-      lastModified: post.publishedAt || new Date().toISOString(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
+      lastModified: post.updatedAt || post.publishedAt || new Date().toISOString(),
+      changeFrequency: 'weekly' as const,
+      priority: post.cta === 'pro_trial' ? 0.8 : 0.7,
     }));
   } catch (e) {
     console.error('Sitemap: failed to fetch blog posts', e);

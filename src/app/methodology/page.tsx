@@ -125,10 +125,30 @@ const methodologySchema = {
   description:
     'The data sources, Combo A microstructure and volatility gates, point-in-time leakage wall, and 3-day excursion outcome labeling behind the GammaRips MCP dataset.',
   url: 'https://gammarips.com/methodology',
+  mainEntityOfPage: 'https://gammarips.com/methodology',
+  datePublished: '2026-08-24T00:00:00Z',
+  dateModified: '2026-11-16T00:00:00Z',
+  author: {
+    '@type': 'Person',
+    name: 'Evan Parra',
+    jobTitle: 'Founder & CEO',
+    url: 'https://gammarips.com/about',
+  },
   publisher: {
     '@type': 'Organization',
     name: 'GammaRips',
-    logo: { '@type': 'ImageObject', url: 'https://gammarips.com/og-image.png?v=4' },
+    url: 'https://gammarips.com',
+    logo: { '@type': 'ImageObject', url: 'https://gammarips.com/icon.png' },
+  },
+  about: {
+    '@type': 'Dataset',
+    '@id': 'https://gammarips.com/developers#combo-a-dataset',
+    name: 'GammaRips Combo A Nightly US Options Dataset',
+    description:
+      'Nightly US options dataset filtered on Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, and rv_iv_ratio >= 0.85 across the top 100 liquid US option chains, validated on N = 5,575 enriched contracts.',
+    url: 'https://gammarips.com/developers',
+    license: 'https://gammarips.com/terms',
+    isAccessibleForFree: true,
   },
 };
 

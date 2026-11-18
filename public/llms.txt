@@ -36,8 +36,10 @@ Historical walk-forward research on paper-tracked cohorts. Educational only. Not
 
 ## MCP Server (Free 3-Contract Preview vs. Pro Full Dataset)
 
+- **10-Second Free CLI Install (Claude Code):** `claude mcp add --transport http gammarips https://mcp.gammarips.com/mcp`
 - **Free Preview Endpoint:** `https://mcp.gammarips.com/mcp` (Streamable HTTP; no card, no key). Serves the 3-contract pool preview (`get_pool(view="preview")`), daily reports, VIX/VIX3M regime context, NYSE market calendar, and methodology playbooks.
 - **Pro Dataset Endpoint:** `https://mcp.gammarips.com/pro` (OAuth 2.1 sign-in) or `Authorization: Bearer gr_live_...` API key on `/mcp` or `/pro` ($29/mo founding price, 30-day free trial at https://gammarips.com/pricing). Unlocks all 9 tools: the full 40–50 contract daily Combo A dataset (`get_pool(view="enriched" | "raw" | "features")`), per-ticker detail and earnings checks (`get_signal`), 10-minute intraday liquidity snapshots (`get_liquidity`), 3-day excursion outcome surfaces (`query_outcomes`), and minute/daily option price replay (`replay_contract`).
+- **Open-Source Agentic Trading Harness:** https://github.com/DevDizzle/gammarips-harness (3-step morning workflow, exit rules, and evaluation ledger).
 - **All 9 tools:** `get_pool`, `get_signal`, `get_liquidity`, `query_outcomes`, `replay_contract`, `get_regime_context`, `get_market_calendar_status`, `get_playbook`, `get_daily_report`.
 
 ## Pricing

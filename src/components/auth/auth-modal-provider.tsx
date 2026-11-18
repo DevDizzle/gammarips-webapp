@@ -11,8 +11,10 @@ import { event as trackEvent } from '@/lib/gtag';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
+export type AuthModalIntent = 'default' | 'trial';
+
 interface AuthModalContextType {
-  openAuthModal: (view?: 'signIn' | 'signUp') => void;
+  openAuthModal: (view?: 'signIn' | 'signUp', intent?: AuthModalIntent) => void;
   closeAuthModal: () => void;
   openSubscriptionModal: () => void;
   closeSubscriptionModal: () => void;
@@ -24,6 +26,7 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
   // Auth Dialog State
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authView, setAuthView] = useState<'signIn' | 'signUp'>('signUp');
+  const [authIntent, setAuthIntent] = useState<AuthModalIntent>('default');
 
   // Subscription Dialog State
   const [isSubOpen, setIsSubOpen] = useState(false);
@@ -33,9 +36,13 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
 
   // Auth Handlers
-  const openAuthModal = (initialView: 'signIn' | 'signUp' = 'signUp') => {
-    trackEvent('auth_modal_open', { view: initialView });
+  const openAuthModal = (
+    initialView: 'signIn' | 'signUp' = 'signUp',
+    intent: AuthModalIntent = 'default'
+  ) => {
+    trackEvent('auth_modal_open', { view: initialView, intent });
     setAuthView(initialView);
+    setAuthIntent(intent);
     setIsAuthOpen(true);
   };
 
@@ -92,6 +99,7 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
         open={isAuthOpen} 
         onOpenChange={setIsAuthOpen} 
         defaultView={authView}
+        intent={authIntent}
       />
       <SubscriptionDialog
         open={isSubOpen}

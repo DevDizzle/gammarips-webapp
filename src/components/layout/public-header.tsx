@@ -19,9 +19,10 @@ export function PublicHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // Four clean top-level links: Today's Pool, Learn, Blog, Pricing.
+  // Five clean top-level links: Today's Pool, MCP, Learn, Blog, Pricing.
   const links = [
     { href: '/signals', label: "Today's Pool" },
+    { href: '/developers', label: 'MCP' },
     { href: '/how-it-works', label: 'Learn' },
     { href: '/blog', label: 'Blog' },
     { href: '/pricing', label: 'Pricing' },

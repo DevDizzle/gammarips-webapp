@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description:
     "GammaRips streams a nightly filtered options dataset (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, RV/IV), 10-minute intraday liquidity snapshots, and 3-day excursion history to Claude, ChatGPT, Cursor, or Codex over MCP.",
   alternates: {
-    canonical: '/',
+    canonical: 'https://gammarips.com',
   },
 };
 
@@ -38,11 +38,6 @@ export default async function LandingPage() {
     "image": "https://gammarips.com/og-image.png?v=4",
     "url": "https://gammarips.com",
     "description": summary?.market_narrative || "Nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history served to your AI agent over MCP.",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://gammarips.com/reports?q={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
   };
 
   const dynamicDailySchema = poolSample.length > 0 ? {
@@ -51,6 +46,12 @@ export default async function LandingPage() {
     "headline": report?.title || summary?.headline || "Today's Combo A options dataset preview",
     "description": report?.seoMetadata?.seoDescription || summary?.market_narrative || "The overnight Combo A pool: top 100 liquid US stocks, bullish calls passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, and DTE 10–45.",
     "url": "https://gammarips.com",
+    "author": {
+      "@type": "Person",
+      "name": "Evan Parra",
+      "jobTitle": "Founder & CEO",
+      "url": "https://gammarips.com/about"
+    },
     "publisher": {
       "@type": "Organization",
       "name": "GammaRips",
@@ -58,12 +59,18 @@ export default async function LandingPage() {
     },
     "datePublished": reportDate ? `${reportDate}T08:30:00Z` : (summary?.scan_date ? `${summary.scan_date}T08:30:00Z` : new Date().toISOString()),
     "articleBody": report?.content?.substring(0, 800) || summary?.market_narrative,
+    "about": {
+      "@type": "Dataset",
+      "@id": "https://gammarips.com/developers#combo-a-dataset",
+      "name": "GammaRips Combo A Nightly US Options Dataset"
+    },
     "mainEntity": {
       "@type": "ItemList",
       "name": "Today's 3-contract pool preview",
       "itemListElement": poolSample.map((signal: any, index: number) => ({
         "@type": "ListItem",
         "position": index + 1,
+        "url": `https://gammarips.com/signals/${signal.ticker}`,
         "name": `${signal.ticker} bullish call candidate`,
         "description": signal.thesis || `${signal.ticker} Combo A pool candidate`
       }))

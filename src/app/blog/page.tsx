@@ -9,14 +9,14 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   // Root layout applies the `%s | GammaRips` title template — no suffix here.
-  title: "Blog — Options Flow Methodology & Research",
+  title: "Blog — Agentic Options Trading, MCP Guides & Microstructure Research",
   description:
-    "How GammaRips reads institutional options flow: methodology, research, and plain-English explainers on unusual options activity, V/OI, and moneyness.",
+    "Walk-forward options microstructure research from Catalyst Lab (N = 5,575 contracts) and practical MCP guides for Claude, ChatGPT, Cursor, and Codex.",
   alternates: { canonical: "https://gammarips.com/blog" },
   openGraph: {
     images: [OG_IMAGE],
-    title: "GammaRips Blog — Options Flow Methodology & Research",
-    description: "Methodology, research, and plain-English explainers on overnight options flow.",
+    title: "GammaRips Blog — Agentic Options Trading, MCP Guides & Research",
+    description: "Catalyst Lab walk-forward research (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, RV/IV >= 0.85) and MCP implementation guides for AI trading agents.",
     type: "website",
     url: "https://gammarips.com/blog",
   },
@@ -36,7 +36,7 @@ export default async function BlogIndexPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "GammaRips Blog",
-    "description": "Methodology, research, and explainers on overnight institutional options flow.",
+    "description": "Walk-forward options microstructure research, Combo A dataset engineering, and MCP setup guides for AI trading agents.",
     "url": "https://gammarips.com/blog",
     "mainEntity": {
       "@type": "ItemList",
@@ -56,9 +56,9 @@ export default async function BlogIndexPage() {
       <Breadcrumbs className="mb-6" items={[{ name: "Home", href: "/" }, { name: "Blog" }]} />
 
       <header className="mb-10">
-        <h1 className="text-4xl font-bold font-headline tracking-tight mb-3">Blog</h1>
+        <h1 className="text-4xl font-bold font-headline tracking-tight mb-3">Research &amp; MCP Guides</h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
-          How the engine reads institutional options flow — methodology, the research we trade on, and plain-English explainers. No hype, no advice; the mechanics in the open.
+          Catalyst Lab walk-forward microstructure audits, Combo A contract gates, and step-by-step guides for connecting Claude, ChatGPT, Cursor, and Codex to real US options data over MCP.
         </p>
       </header>
 

@@ -1,6 +1,13 @@
 import type { Metadata } from 'next';
 import { PricingClient } from './pricing-client';
-import { TOOL_COUNT, PRICE_MONTHLY, TRIAL_DAYS, OG_IMAGE } from '@/lib/constants';
+import {
+  TOOL_COUNT,
+  PRICE_MONTHLY,
+  PRICE_STANDARD,
+  FOUNDING_CAP,
+  TRIAL_DAYS,
+  OG_IMAGE,
+} from '@/lib/constants';
 
 export const revalidate = 3600;
 
@@ -47,11 +54,52 @@ export default function PricingPage() {
     },
   };
 
+  const pricingFaqs = [
+    {
+      q: `How does the ${TRIAL_DAYS}-day trial work?`,
+      a: `Card on file, no charge for ${TRIAL_DAYS} days, full Pro MCP access from minute one. If you cancel before day ${TRIAL_DAYS} you pay nothing. After day ${TRIAL_DAYS} your card is charged ${PRICE_MONTHLY} and you're billed monthly until you cancel.`,
+    },
+    {
+      q: "Why don't you just tell me what to buy?",
+      a: 'Shared picks crowd everyone into the same contract at the open. Furthermore, our Catalyst Lab walk-forward audit showed that black-box composite scores fail out-of-sample, whereas transparent microstructure and volatility primitives (Combo A) hold up. Your AI uses the dataset and historical 3-day excursion surfaces to build a plan tailored to your risk budget.',
+    },
+    {
+      q: 'How are the Combo A filters validated?',
+      a: 'Every filter gate on this page comes from walk-forward Catalyst Lab audits across N = 5,575 enriched option contracts (66 scan dates) joined to BigQuery enriched_option_outcomes. Read the full walkthrough on Learn (/how-it-works) and Methodology (/methodology).',
+    },
+    {
+      q: 'What happens if I cancel?',
+      a: 'Pro MCP access stops at the end of your billing cycle. The 3-contract preview on the web and on the anonymous MCP endpoint stays free forever.',
+    },
+    {
+      q: "What's the refund policy?",
+      a: `The ${TRIAL_DAYS}-day trial gives you a full month to evaluate at no charge. After that, billing is monthly, with no pro-rated refunds mid-cycle. If something breaks, email evan@gammarips.com and we'll make it right.`,
+    },
+    {
+      q: 'Will the price go up?',
+      a: `${PRICE_MONTHLY}/mo is the founding price, for the first ${FOUNDING_CAP} subscribers. It stays at that rate as long as you stay subscribed. After the first ${FOUNDING_CAP}, the price is ${PRICE_STANDARD}/mo.`,
+    },
+  ];
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: pricingFaqs.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <PricingClient />
     </>

@@ -62,6 +62,9 @@ const nextConfig: NextConfig = {
       { source: '/blog/systems-problem-not-pick-problem', destination: '/how-it-works', permanent: true },
       { source: '/blog/one-trade-a-day-discipline', destination: '/how-it-works', permanent: true },
       { source: '/blog/gammarips-morning-90-seconds', destination: '/signals', permanent: true },
+      { source: '/blog/engine-post-mortem-first-30-days', destination: '/lab', permanent: true },
+      { source: '/blog/first-30-v53-trades', destination: '/lab', permanent: true },
+      { source: '/blog/moneyness-5-15-otm', destination: '/methodology', permanent: true },
 
       // Old top-level ticker pages (1-5 chars) -> canonical /signals/:ticker,
       // preserving the ticker. Excludes real page slugs in that length range.

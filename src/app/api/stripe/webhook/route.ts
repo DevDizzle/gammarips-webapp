@@ -102,24 +102,42 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
         // Without session_id + engagement_time_msec, GA4 records the purchase
         // against a phantom (not set) session and source attribution is lost.
         const gaSessionId = session.metadata?.ga_session_id;
-        const purchaseEvent = {
-            client_id: gaClientId,
-            events: [{
-                name: 'purchase',
+        const amountPaid = (session.amount_total || 0) / 100;
+        const unitAmount = (item?.price?.unit_amount ?? 2900) / 100;
+        const currency = session.currency?.toUpperCase() || 'USD';
+        const gaItem = {
+            item_id: (item?.price?.product as string) || 'gammarips_pro_mcp',
+            item_name: 'GammaRips Pro Subscription',
+            price: unitAmount,
+            quantity: 1,
+        };
+        const events: Record<string, unknown>[] = [{
+            name: 'purchase',
+            params: {
+                transaction_id: transactionId,
+                value: amountPaid,
+                currency,
+                ...(gaSessionId ? { session_id: gaSessionId } : {}),
+                engagement_time_msec: 1,
+                items: [gaItem],
+            },
+        }];
+        if (amountPaid === 0) {
+            events.push({
+                name: 'trial_start',
                 params: {
                     transaction_id: transactionId,
-                    value: (session.amount_total || 0) / 100,
-                    currency: session.currency?.toUpperCase() || 'USD',
+                    value: unitAmount,
+                    currency,
                     ...(gaSessionId ? { session_id: gaSessionId } : {}),
                     engagement_time_msec: 1,
-                    items: [{
-                        item_id: item.price?.product as string,
-                        item_name: 'GammaRips Pro Subscription',
-                        price: (item.price?.unit_amount || 0) / 100,
-                        quantity: 1,
-                    }]
+                    items: [gaItem],
                 },
-            }],
+            });
+        }
+        const purchaseEvent = {
+            client_id: gaClientId,
+            events,
         };
         if (!gaSessionId) {
             console.warn('Webhook: Missing ga_session_id in checkout session metadata; purchase event will land unattributed (not set).');
@@ -262,7 +280,7 @@ export async function POST(req: NextRequest) {
         const trialEndingUser = await getUserByStripeCustomerIdAdmin(trialEndingCustomerId);
         if (trialEndingUser?.email && trialEndingSub.trial_end) {
             const item = trialEndingSub.items.data[0];
-            const unitAmount = item?.price?.unit_amount ?? 3900;
+            const unitAmount = item?.price?.unit_amount ?? 2900;
             const currency = (item?.price?.currency ?? 'usd').toUpperCase();
             const amountDisplay = `${currency === 'USD' ? '$' : currency + ' '}${(unitAmount / 100).toFixed(2)}`;
             const chargeDateISO = new Date(trialEndingSub.trial_end * 1000).toISOString();

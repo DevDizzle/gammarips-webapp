@@ -62,6 +62,54 @@ export default async function BlogIndexPage() {
         </p>
       </header>
 
+      <section aria-label="Featured Guides and Research" className="mb-12">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-primary mb-4">
+          Featured Guides &amp; Walk-Forward Research
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Link
+            href="/blog/best-mcp-servers-for-trading-and-finance"
+            className="block rounded-lg border border-primary/30 bg-card/50 p-5 hover:bg-muted/40 transition-colors"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-1">2026 Comparison · CLI Setup</p>
+            <h3 className="text-lg font-bold font-headline text-foreground">7 Best MCP Servers for Stock &amp; Options Trading</h3>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              Compare GammaRips Options MCP, Alpaca, Robinhood, Massive/Polygon, TradingView, Postgres, and SEC EDGAR with 10-second install commands.
+            </p>
+          </Link>
+          <Link
+            href="/blog/catalyst-lab-combo-a-options-microstructure-audit"
+            className="block rounded-lg border border-primary/30 bg-card/50 p-5 hover:bg-muted/40 transition-colors"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-1">Catalyst Lab Audit · N = 5,575</p>
+            <h3 className="text-lg font-bold font-headline text-foreground">Auditing 5,575 Overnight Option Signals: Why RV/IV &amp; Book Depth Win</h3>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              Why we killed black-box XGBoost scores and rebuilt the dataset around RV/IV &gt;= 0.85, OI &gt;= 500, Mid &gt;= $1.00, and Delta 0.22–0.48.
+            </p>
+          </Link>
+          <Link
+            href="/blog/how-to-build-a-trading-bot-with-claude"
+            className="block rounded-lg border border-muted bg-card/30 p-5 hover:bg-muted/40 transition-colors"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Claude Code &amp; Desktop</p>
+            <h3 className="text-lg font-bold font-headline text-foreground">How to Build an Options Trading Agent with Claude &amp; MCP</h3>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              Wire Claude Code or Claude Desktop to the Combo A dataset, 10-minute morning liquidity snapshots, and 3-day MFE/MAE outcome surfaces.
+            </p>
+          </Link>
+          <Link
+            href="/blog/how-to-read-options-volume-vs-open-interest"
+            className="block rounded-lg border border-muted bg-card/30 p-5 hover:bg-muted/40 transition-colors"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Options Microstructure</p>
+            <h3 className="text-lg font-bold font-headline text-foreground">Options Volume vs. Open Interest: Reading V/OI &amp; Book Depth</h3>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              Why resting OI &gt;= 500 lifts 5-minute fills from 30.3% to 50.1% and how overnight sweeps settle through OCC clearing.
+            </p>
+          </Link>
+        </div>
+      </section>
+
       {posts.length === 0 ? (
         <p className="text-muted-foreground">No posts published yet — check back soon.</p>
       ) : (

@@ -241,7 +241,7 @@ export default async function HowItWorksPage() {
         </div>
 
         <p className="text-xs text-muted-foreground leading-relaxed">
-          Source: Catalyst Lab walk-forward feature and microstructure audit (N = 5,575 enriched option contracts across 66 scan dates, plus BigQuery <code className="text-xs">enriched_option_outcomes</code> 3-day excursion labels). Historical research on paper-tracked option cohorts; educational only, not investment advice.
+          Source: <Link href="/blog/catalyst-lab-combo-a-options-microstructure-audit" className="text-primary hover:underline">Catalyst Lab walk-forward feature and microstructure audit</Link> (N = 5,575 enriched option contracts across 66 scan dates, plus BigQuery <code className="text-xs">enriched_option_outcomes</code> 3-day excursion labels). Historical research on paper-tracked option cohorts; educational only, not investment advice.
         </p>
       </section>
 
@@ -253,7 +253,7 @@ export default async function HowItWorksPage() {
           Unusual options activity (UOA) is options volume that runs far above normal levels for a particular stock. It can mean institutional traders, such as hedge funds, pension funds, or large trading desks, are building new positions.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          The usual indicators are the <strong className="text-foreground">volume-to-open-interest ratio</strong> (fresh activity against positions already on the books), <strong className="text-foreground">dollar flow</strong> (how much capital moved), and <strong className="text-foreground">directional imbalance</strong> (calls against puts).
+          The usual indicators are the <Link href="/blog/how-to-read-options-volume-vs-open-interest" className="text-primary hover:underline font-medium">volume-to-open-interest ratio</Link> (fresh activity against positions already on the books), <strong className="text-foreground">dollar flow</strong> (how much capital moved), and <strong className="text-foreground">directional imbalance</strong> (calls against puts).
         </p>
         <p className="text-muted-foreground leading-relaxed">
           <strong className="text-foreground">How GammaRips uses it.</strong> Membership in the pool is decided by underlying liquidity and Combo A contract microstructure gates—not unusual activity alone. We measure and publish flow context alongside every contract because it is valuable point-in-time context for an AI agent researching a setup.

@@ -32,6 +32,8 @@ const Footer = () => {
               <li><Link href="/lab" className="text-muted-foreground hover:text-primary">Catalyst Lab</Link></li>
               <li><Link href="/blog/best-mcp-servers-for-trading-and-finance" className="text-muted-foreground hover:text-primary">Best Trading MCP Servers</Link></li>
               <li><Link href="/blog/how-to-build-a-trading-bot-with-claude" className="text-muted-foreground hover:text-primary">Claude Trading Agent Guide</Link></li>
+              <li><Link href="/blog/how-to-read-options-volume-vs-open-interest" className="text-muted-foreground hover:text-primary">Volume vs. Open Interest Guide</Link></li>
+              <li><Link href="/blog/catalyst-lab-combo-a-options-microstructure-audit" className="text-muted-foreground hover:text-primary">Catalyst Lab Audit (N = 5,575)</Link></li>
               <li><Link href="/blog" className="text-muted-foreground hover:text-primary">All Blog Posts</Link></li>
               <li><Link href="/about" className="text-muted-foreground hover:text-primary">About</Link></li>
             </ul>

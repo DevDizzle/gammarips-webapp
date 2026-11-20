@@ -55,7 +55,15 @@ export default function AccountPage() {
     if (!user || !isPro) return;
     try {
       const token = await user.getIdToken();
-      setKeyStatus(await getMcpApiKeyStatus(token));
+      const res = await fetch('/api/keys', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        setKeyStatus(await res.json());
+      } else {
+        const fallback = await getMcpApiKeyStatus(token);
+        if (fallback) setKeyStatus(fallback);
+      }
     } catch {
       // non-fatal: the section still renders a generate button
     }
@@ -70,14 +78,31 @@ export default function AccountPage() {
     setKeyBusy(true);
     try {
       const token = await user.getIdToken();
-      const { key } = await generateMcpApiKey(token);
-      setNewKey(key);
+      let generatedKey: string | undefined;
+      const res = await fetch('/api/keys', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        generatedKey = data?.key;
+      } else if (res.status === 404) {
+        const data = await generateMcpApiKey(token);
+        generatedKey = data?.key;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData?.error || 'Could not generate key.');
+      }
+      if (!generatedKey) {
+        throw new Error('A new version of the app just deployed. Please refresh this page and click Generate API key again.');
+      }
+      setNewKey(generatedKey);
       await refreshKeyStatus();
       toast({ title: 'API key generated', description: 'Copy it now; it is shown only once.' });
     } catch (error: any) {
       toast({
         title: 'Could not generate key',
-        description: error?.message || 'Please try again.',
+        description: error?.message || 'Please refresh the page and try again.',
         variant: 'destructive',
       });
     } finally {
@@ -91,7 +116,16 @@ export default function AccountPage() {
     setKeyBusy(true);
     try {
       const token = await user.getIdToken();
-      await revokeMcpApiKey(token);
+      const res = await fetch('/api/keys', {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok && res.status === 404) {
+        await revokeMcpApiKey(token);
+      } else if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData?.error || 'Could not revoke key.');
+      }
       setNewKey(null);
       await refreshKeyStatus();
       toast({ title: 'API key revoked' });

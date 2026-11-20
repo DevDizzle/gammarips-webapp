@@ -20,17 +20,26 @@ export async function createStripeCheckoutSession(
     const user = await getOrCreateUserAdmin(uid);
     let customerId = user.stripeCustomerId;
 
-    // Create a new Stripe customer if one doesn't exist
-    if (!customerId) {
-        const customer = await stripe.customers.create({
-            email: email ?? undefined,
-            metadata: {
-                firebaseUID: uid,
-            },
-        });
-        customerId = customer.id;
-        // Update user in Firebase with the new Stripe Customer ID
-        await getOrCreateUserAdmin(uid, user.isAnonymous, (user.displayName || undefined) as string | undefined, (user.email || undefined) as string | undefined, customerId);
+    const createAndPersistCustomer = async () => {
+      const customer = await stripe.customers.create({
+        email: email ?? undefined,
+        metadata: {
+          firebaseUID: uid,
+        },
+      });
+      await getOrCreateUserAdmin(
+        uid,
+        user.isAnonymous,
+        (user.displayName || undefined) as string | undefined,
+        (user.email || undefined) as string | undefined,
+        customer.id
+      );
+      return customer.id;
+    };
+
+    // Create a new Stripe customer if one doesn't exist or isn't a valid cus_ ID
+    if (!customerId || !customerId.startsWith('cus_')) {
+      customerId = await createAndPersistCustomer();
     }
 
     // firebaseUID on both the session and the subscription lets the webhook
@@ -38,10 +47,10 @@ export async function createStripeCheckoutSession(
     // users.stripeCustomerId mirror is missing or stale.
     const fullMetadata: { [key: string]: string } = { ...(metadata ?? {}), firebaseUID: uid };
 
-    const session = await stripe.checkout.sessions.create({
+    const buildSessionParams = (cid: string): Stripe.Checkout.SessionCreateParams => ({
       payment_method_types: ['card'],
       mode: 'subscription',
-      customer: customerId,
+      customer: cid,
       line_items: [
         {
           price: priceId,
@@ -56,6 +65,19 @@ export async function createStripeCheckoutSession(
       success_url: successUrl,
       cancel_url: cancelUrl,
     });
+
+    let session: Stripe.Checkout.Session;
+    try {
+      session = await stripe.checkout.sessions.create(buildSessionParams(customerId));
+    } catch (err: any) {
+      // Recover automatically if the stored customer ID was deleted or from test mode
+      if (err?.code === 'resource_missing' && err?.param === 'customer') {
+        customerId = await createAndPersistCustomer();
+        session = await stripe.checkout.sessions.create(buildSessionParams(customerId));
+      } else {
+        throw err;
+      }
+    }
 
     if (!session.id) {
         throw new Error('Could not create Stripe Checkout Session.');

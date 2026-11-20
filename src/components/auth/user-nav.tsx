@@ -19,7 +19,7 @@ import { AuthDialog } from './auth-dialog';
 import Link from 'next/link';
 
 export function UserNav() {
-  const { user, signOut, loading } = useAuth();
+  const { user, isPro, signOut, loading } = useAuth();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
 
   // Render the unauthenticated CTA in two cases:
@@ -56,6 +56,11 @@ export function UserNav() {
   return (
     <>
     <div className="flex items-center gap-2">
+      <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex">
+        <Link href={isPro ? "/account" : "/developers"}>
+          {isPro ? "Connect Your AI (Pro)" : "Connect Your Agent"}
+        </Link>
+      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -78,11 +83,19 @@ export function UserNav() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <Link href="/pricing">
-               <DropdownMenuItem>
-                    <span className="text-primary font-semibold">Subscribe</span>
+            {isPro ? (
+              <Link href="/account">
+                <DropdownMenuItem>
+                  <span className="text-primary font-semibold">Pro Active · Connect AI</span>
                 </DropdownMenuItem>
-            </Link>
+              </Link>
+            ) : (
+              <Link href="/pricing">
+                <DropdownMenuItem>
+                  <span className="text-primary font-semibold">Subscribe</span>
+                </DropdownMenuItem>
+              </Link>
+            )}
             <Link href="/">
                <DropdownMenuItem>
                     <LayoutDashboard className="mr-2 h-4 w-4" />

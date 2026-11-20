@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CONNECT_CLIENTS, PRO_STATUS_LABEL, type ConnectStep } from '@/lib/connect-clients';
 import { HARNESS_REPO, MCP_PRO_ENDPOINT, PRICE_MONTHLY, TOOL_COUNT, TRIAL_DAYS } from '@/lib/constants';
+import { AgentQuickConnect, ProAwareCta } from '@/components/account/agent-quick-connect';
 
 // The per-client reference block, below the three-step path (#start). This is
 // where every client gets its exact install steps, free first and then pro.
@@ -40,15 +41,15 @@ export function ConnectTabs() {
   return (
     <section id="connect" className="scroll-mt-24">
       <h2 className="text-2xl md:text-3xl font-bold font-headline text-center text-balance mb-3">
-        Install steps for every AI
+        Connect your AI in one step
       </h2>
-      <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto mb-8">
-        Pick your client. Start the {TRIAL_DAYS}-day free trial of Agent Access
-        ({PRICE_MONTHLY}/mo after), then paste your key, or add the pro endpoint
-        and sign in if your client cannot send one. Every tab reaches the same{' '}
-        {TOOL_COUNT} tools. Want to look first? The free tier needs no card and
-        no key.
+      <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto mb-6">
+        Copy one prompt to let your AI configure itself via <code className="text-primary">gammarips.com/install.md</code>, sign in with OAuth 2.1 at <code className="text-primary">{MCP_PRO_ENDPOINT}</code>, or inspect the manual client steps below.
       </p>
+
+      <div className="max-w-3xl mx-auto mb-8">
+        <AgentQuickConnect />
+      </div>
 
       <Tabs defaultValue={CONNECT_CLIENTS[0].id} className="max-w-3xl mx-auto">
         <TabsList className="flex h-auto flex-wrap justify-center gap-1 bg-muted/60 p-1">
@@ -83,13 +84,14 @@ export function ConnectTabs() {
                 <p className="text-sm text-muted-foreground">{c.pro.intro}</p>
                 <Steps steps={c.pro.steps} />
                 <div className="pt-1">
-                  <Button asChild size="sm">
-                    <Link href="/pricing">
-                      {c.pro.status === 'full'
+                  <ProAwareCta
+                    size="sm"
+                    freeLabel={
+                      c.pro.status === 'full'
                         ? `Start your ${TRIAL_DAYS}-day free trial, get your key`
-                        : `Start your ${TRIAL_DAYS}-day free trial, then sign in`}
-                    </Link>
-                  </Button>
+                        : `Start your ${TRIAL_DAYS}-day free trial, then sign in`
+                    }
+                  />
                 </div>
               </div>
             </div>

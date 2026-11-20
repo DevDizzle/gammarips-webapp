@@ -2,18 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check, Copy, Terminal } from 'lucide-react';
+import { Check, Copy, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   HARNESS_REPO,
   MCP_ENDPOINT,
   MCP_PRO_ENDPOINT,
-  PRICE_MONTHLY,
-  TRIAL_DAYS,
 } from '@/lib/constants';
 import { event as trackEvent } from '@/lib/gtag';
+import { ProAwareCta } from '@/components/account/agent-quick-connect';
 
-const FREE_INSTALL_CMD = `claude mcp add --transport http gammarips ${MCP_ENDPOINT}`;
+const AGENT_SETUP_PROMPT = `Read https://gammarips.com/install.md and connect the GammaRips MCP server (${MCP_ENDPOINT}), then call get_pool(view="preview") and summarize today's 3-contract preview.`;
 
 interface McpConversionCardProps {
   source?: string;
@@ -30,7 +29,7 @@ export function McpConversionCard({
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(FREE_INSTALL_CMD);
+      await navigator.clipboard.writeText(AGENT_SETUP_PROMPT);
       setCopied(true);
       trackEvent('copy_mcp_command', { source });
       setTimeout(() => setCopied(false), 2000);
@@ -56,8 +55,8 @@ export function McpConversionCard({
       <div className="rounded-lg border bg-background/90 p-3.5 space-y-2">
         <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5 font-mono">
-            <Terminal className="h-3.5 w-3.5 text-primary" />
-            Try today&apos;s 3-contract preview free in 10 seconds (no key, no card):
+            <Sparkles className="h-3.5 w-3.5 text-primary" />
+            Paste this prompt to your AI to connect automatically (no terminal required):
           </span>
           <button
             type="button"
@@ -70,28 +69,19 @@ export function McpConversionCard({
               </>
             ) : (
               <>
-                <Copy className="h-3.5 w-3.5" /> Copy
+                <Copy className="h-3.5 w-3.5" /> Copy Prompt
               </>
             )}
           </button>
         </div>
-        <pre className="overflow-x-auto text-xs sm:text-sm font-mono text-foreground select-all">
-          <code>{FREE_INSTALL_CMD}</code>
+        <pre className="overflow-x-auto text-xs sm:text-sm font-mono text-foreground whitespace-pre-wrap break-all select-all">
+          <code>{AGENT_SETUP_PROMPT}</code>
         </pre>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
         <div className="flex flex-wrap gap-3">
-          <Button
-            asChild
-            size="lg"
-            className="font-semibold"
-            onClick={() => trackEvent('cta_click', { source, destination: '/pricing' })}
-          >
-            <Link href="/pricing">
-              Start {TRIAL_DAYS}-Day Free Trial ({PRICE_MONTHLY}/mo) <ArrowRight className="ml-1.5 h-4 w-4" />
-            </Link>
-          </Button>
+          <ProAwareCta size="lg" className="font-semibold" />
           <Button
             asChild
             variant="outline"

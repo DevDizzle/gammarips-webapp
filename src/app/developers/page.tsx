@@ -15,6 +15,7 @@ import {
 } from '@/lib/constants';
 import { CONNECT_CLIENTS, type ClientId, type ConnectStep } from '@/lib/connect-clients';
 import { INSTALL_LINKS } from '@/lib/receipts';
+import { AgentQuickConnect, ProAwareCta } from '@/components/account/agent-quick-connect';
 
 export const metadata = {
   title: "GammaRips MCP: Options Dataset & API Reference for AI Agents",
@@ -371,9 +372,7 @@ export default function DevelopersPage() {
             test the 3-contract preview on <code className="text-base text-foreground">/mcp</code>.
           </p>
           <div className="flex justify-center">
-            <Button asChild size="lg">
-              <Link href="/pricing">Get Pro MCP Access ({PRICE_MONTHLY}/mo) &rarr;</Link>
-            </Button>
+            <ProAwareCta />
           </div>
           <div className="flex flex-wrap justify-center gap-3 pt-1">
             {INSTALL_LINKS.map((l) => (
@@ -392,9 +391,11 @@ export default function DevelopersPage() {
           <div className="text-center space-y-3">
             <h2 className="text-2xl md:text-3xl font-bold font-headline">Connect your AI client</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Use <code className="text-xs text-foreground">{MCP_ENDPOINT}</code> for the anonymous 3-contract preview, or unlock all {TOOL_COUNT} tools and the full daily pool via OAuth 2.1 at <code className="text-xs text-foreground">{MCP_PRO_ENDPOINT}</code> or a <code className="text-xs text-foreground">gr_live_</code> bearer API key.
+              Point your agent at <code className="text-xs text-foreground">gammarips.com/install.md</code> so it configures itself automatically, sign in with OAuth 2.1 at <code className="text-xs text-foreground">{MCP_PRO_ENDPOINT}</code>, or use the manual client configs below.
             </p>
           </div>
+
+          <AgentQuickConnect />
 
           {CLIENT_SECTIONS.map((s) => (
             <div
@@ -411,7 +412,7 @@ export default function DevelopersPage() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <h4 className="font-semibold font-headline">{b.title}</h4>
                     <Badge variant={b.pro ? "default" : "outline"} className="text-[10px]">
-                      {b.pro ? `Pro, ${PRICE_MONTHLY}/mo` : "Free 3-contract preview"}
+                      {b.pro ? "Pro Dataset" : "Free 3-contract preview"}
                     </Badge>
                   </div>
                   {b.intro && <p className="text-sm text-muted-foreground">{b.intro}</p>}
@@ -419,9 +420,7 @@ export default function DevelopersPage() {
                 </div>
               ))}
               <div className="border-t border-border/60 pt-5">
-                <Button asChild size="sm">
-                  <Link href="/pricing">Start your {TRIAL_DAYS}-day free trial &rarr;</Link>
-                </Button>
+                <ProAwareCta size="sm" />
               </div>
             </div>
           ))}
@@ -628,9 +627,9 @@ async with Client(transport) as client:
                 subscribers, locked as long as you stay subscribed.{' '}
                 {PRICE_STANDARD}/mo after that.
               </p>
-              <Link href="/pricing" className="block mt-4">
-                <Button className="w-full">Start your {TRIAL_DAYS}-day free trial &rarr;</Button>
-              </Link>
+              <div className="mt-4">
+                <ProAwareCta className="w-full" />
+              </div>
             </div>
           </div>
         </section>

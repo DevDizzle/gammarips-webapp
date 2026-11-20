@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input';
 import { FREE_MODE } from '@/lib/config';
 import { TOOL_COUNT, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
 import { MachineClientsSection } from '@/components/account/machine-clients';
+import { AgentQuickConnect } from '@/components/account/agent-quick-connect';
 
 const MCP_ENDPOINT = 'https://mcp.gammarips.com/mcp';
 
@@ -206,77 +207,60 @@ export default function AccountPage() {
         </Card>
 
         {/* API Access Section */}
-        <section className="p-6 rounded-lg border bg-card space-y-4">
-          <h2 className="text-xl font-bold">Agent Access: MCP API Key</h2>
+        <section className="p-6 rounded-lg border bg-card space-y-5">
+          <h2 className="text-xl font-bold">Connect Your AI Agent</h2>
           {isPro ? (
             <>
-              <p className="text-muted-foreground">
-                Your subscription includes full MCP Agent Access (all {TOOL_COUNT} tools).
-                Generate an API key and connect Claude Code, Codex, Cursor, Gemini CLI,
-                or any agent that can send a bearer key. Steps per client are in
-                the connect section on the homepage.
-              </p>
+              <AgentQuickConnect apiKey={newKey} />
 
-              {/* One-time reveal of a freshly generated key */}
-              {newKey && (
-                <div className="p-4 rounded border border-green-600 bg-green-500/10 space-y-2">
-                  <p className="text-sm font-semibold text-green-500">
-                    ⚠️ Copy this key now. You won&apos;t be able to see it again.
-                  </p>
-                  <code className="block p-2 bg-muted rounded text-sm font-mono break-all">
-                    {newKey}
-                  </code>
-                  <Button size="sm" variant="outline" onClick={() => copy(newKey)}>
-                    Copy key
-                  </Button>
-                </div>
-              )}
-
-              {/* Current key status + actions */}
-              {!newKey && (
-                <div className="space-y-2">
-                  {keyStatus?.hasActiveKey ? (
-                    <p className="text-sm text-muted-foreground">
-                      Active key: <code className="text-primary">{keyStatus.keyPrefix}…</code>
-                      {keyStatus.createdAtISO
-                        ? ` · created ${new Date(keyStatus.createdAtISO).toLocaleDateString()}`
-                        : ''}
-                      . For security the full key is only shown at creation.
-                    </p>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">No active API key yet.</p>
-                  )}
-                  <div className="flex flex-wrap gap-2">
-                    <Button onClick={handleGenerateKey} disabled={keyBusy}>
-                      {keyBusy && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                      {keyStatus?.hasActiveKey ? 'Regenerate key' : 'Generate API key'}
-                    </Button>
-                    {keyStatus?.hasActiveKey && (
-                      <Button variant="destructive" onClick={handleRevokeKey} disabled={keyBusy}>
-                        Revoke
-                      </Button>
-                    )}
-                  </div>
-                  {keyStatus?.hasActiveKey && (
-                    <p className="text-xs text-muted-foreground">
-                      Regenerating immediately invalidates your previous key.
-                    </p>
-                  )}
-                </div>
-              )}
-
-              <div>
-                <p className="text-sm font-semibold mb-2">MCP Endpoint:</p>
-                <code className="block p-2 bg-muted rounded text-sm font-mono break-all">
-                  {MCP_ENDPOINT}
-                </code>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Transport: Streamable HTTP • Auth: Authorization: Bearer &lt;your key&gt;
+              <div className="border-t pt-4 space-y-3">
+                <h3 className="text-base font-semibold">Optional: Generate an API Key (`gr_live_...`)</h3>
+                <p className="text-sm text-muted-foreground">
+                  If you use Claude Desktop, Claude Web, or ChatGPT, you can skip API keys completely and sign in with Option 2 above. If you use a CLI or code agent (Claude Code, Cursor, Codex, GrokBot), click below to generate a key—the setup prompt above will automatically update with your new key included.
                 </p>
-                <code className="block p-2 mt-2 bg-muted rounded text-xs font-mono break-all">
-                  claude mcp add --transport http gammarips {MCP_ENDPOINT} --header
-                  &quot;Authorization: Bearer &lt;your key&gt;&quot;
-                </code>
+
+                {/* One-time reveal of a freshly generated key */}
+                {newKey && (
+                  <div className="p-4 rounded border border-green-600 bg-green-500/10 space-y-2">
+                    <p className="text-sm font-semibold text-green-500">
+                      ✓ API key generated &amp; inserted into Option 1 above. Copy the prompt above or save the raw key below (shown once):
+                    </p>
+                    <code className="block p-2 bg-muted rounded text-sm font-mono break-all">
+                      {newKey}
+                    </code>
+                    <Button size="sm" variant="outline" onClick={() => copy(newKey)}>
+                      Copy raw key
+                    </Button>
+                  </div>
+                )}
+
+                {/* Current key status + actions */}
+                {!newKey && (
+                  <div className="space-y-2">
+                    {keyStatus?.hasActiveKey ? (
+                      <p className="text-sm text-muted-foreground">
+                        Active key: <code className="text-primary">{keyStatus.keyPrefix}…</code>
+                        {keyStatus.createdAtISO
+                          ? ` · created ${new Date(keyStatus.createdAtISO).toLocaleDateString()}`
+                          : ''}
+                        . Click Regenerate if you want a fresh one-click setup prompt with your key pre-filled.
+                      </p>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No active API key yet.</p>
+                    )}
+                    <div className="flex flex-wrap gap-2">
+                      <Button onClick={handleGenerateKey} disabled={keyBusy}>
+                        {keyBusy && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                        {keyStatus?.hasActiveKey ? 'Regenerate key & prompt' : 'Generate API key & setup prompt'}
+                      </Button>
+                      {keyStatus?.hasActiveKey && (
+                        <Button variant="destructive" onClick={handleRevokeKey} disabled={keyBusy}>
+                          Revoke
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </>
           ) : fromCheckout ? (

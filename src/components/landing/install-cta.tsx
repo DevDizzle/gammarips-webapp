@@ -1,23 +1,16 @@
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MCP_PRO_ENDPOINT, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
 import { INSTALL_LINKS } from '@/lib/receipts';
+import { ProAwareCta } from '@/components/account/agent-quick-connect';
 
-// Primary CTA hierarchy: subscription first ("Get Pro MCP Access" -> /pricing),
-// with client setup links ("Add to Claude", "ChatGPT", "Cursor", "Codex")
-// secondary below it so visitors aren't diverted away from subscribing.
 export function InstallCta() {
   return (
     <div className="flex flex-col items-center gap-4">
-      <Button asChild size="lg" className="w-full sm:w-auto font-semibold">
-        <Link href="/pricing">
-          Get Pro MCP Access <ArrowRight />
-        </Link>
-      </Button>
+      <ProAwareCta size="lg" className="w-full sm:w-auto font-semibold" />
 
       <p className="text-xs text-muted-foreground">
-        Start your {TRIAL_DAYS}-day free trial, then {PRICE_MONTHLY}/mo founding
+        {TRIAL_DAYS}-day free trial, then {PRICE_MONTHLY}/mo founding
         price ({MCP_PRO_ENDPOINT.replace('https://', '')}). Cancel anytime.
       </p>
 

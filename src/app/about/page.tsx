@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Shield, Bot, User, CheckCircle2 } from 'lucide-react';
 import ContactForm from './contact-form';
 import { TOOL_COUNT, TRIAL_DAYS, OG_IMAGE, MCP_PRO_ENDPOINT, HARNESS_REPO } from '@/lib/constants';
+import { AgentQuickConnect, ProAwareCta } from '@/components/account/agent-quick-connect';
 
 export const metadata: Metadata = {
   title: 'About GammaRips: The Options Dataset & Catalyst Lab Engine',
@@ -82,59 +83,21 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
                 Welcome to Agent Access
               </p>
               <CardTitle className="font-headline text-2xl sm:text-3xl">
-                You&apos;re in. Let&apos;s get your AI connected.
+                You&apos;re in. Tell your AI to connect itself.
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <ul className="space-y-3 text-sm text-foreground/90">
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Step 1: Add GammaRips to your AI.</strong> In Claude, ChatGPT, Cursor, or Codex, add{' '}
-                    <code className="text-primary break-all">{MCP_PRO_ENDPOINT}</code> and sign in with this account. Or create an API key on your{' '}
-                    <Link href="/account?welcome=1" className="text-primary hover:underline">
-                      account page
-                    </Link>{' '}
-                    (it is shown once, so copy it right then). Exact steps per client are on the{' '}
-                    <Link href="/developers#connect" className="text-primary hover:underline">
-                      developer page
-                    </Link>
-                    . Any trouble, email{' '}
-                    <a href="mailto:evan@gammarips.com" className="text-primary hover:underline">
-                      evan@gammarips.com
-                    </a>{' '}
-                    and we&apos;ll sort it immediately.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Step 2: Query the dataset and build a plan.</strong> Ask your AI to pull tonight&apos;s pool (<code className="text-primary">get_pool(view=&quot;enriched&quot;)</code>), check 10-minute morning liquidity and earnings, and evaluate targets and stops from the 3-day excursion history (<code className="text-primary">query_outcomes</code>).
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Step 3: You decide.</strong> The plan is your AI&apos;s analysis with you. You choose what to trade, in your own account.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span>
-                    Your trial is active for {TRIAL_DAYS} days. Cancel anytime from your account page. No charge if you cancel before day {TRIAL_DAYS}.
-                  </span>
-                </li>
-              </ul>
-              <div className="flex flex-wrap gap-3 pt-2">
-                <Button asChild variant="outline">
-                  <Link href="/developers#connect">Connect steps per client</Link>
+            <CardContent className="space-y-5">
+              <AgentQuickConnect forceProPrompt={true} />
+              <div className="flex flex-wrap gap-3 pt-1">
+                <Button asChild>
+                  <Link href="/account?welcome=1">Generate API Key &amp; Manage Account &rarr;</Link>
                 </Button>
                 <Button asChild variant="outline">
-                  <Link href="/account">Manage subscription</Link>
+                  <Link href="/developers#connect">View Manual Client Configs</Link>
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground pt-2 leading-relaxed">
-                Educational only. Not investment advice. What your AI concludes is its analysis with you, and you trade your own account.
+              <p className="text-xs text-muted-foreground pt-1 leading-relaxed">
+                Your {TRIAL_DAYS}-day free trial is active. Cancel anytime from your account page. Educational only, not investment advice.
               </p>
             </CardContent>
           </Card>
@@ -282,9 +245,7 @@ export default async function AboutPage({ searchParams }: AboutPageProps) {
             ))}
           </ul>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <Button asChild size="lg">
-              <Link href="/pricing">Start your {TRIAL_DAYS}-day free trial &rarr;</Link>
-            </Button>
+            <ProAwareCta />
             <Button asChild variant="outline" size="lg">
               <Link href="/signals">View 3-contract preview</Link>
             </Button>

@@ -105,7 +105,7 @@ const steps = [
 const PENDING_CHECKOUT_KEY = 'gammarips_pending_checkout';
 
 export function PricingClient(_props: { receipts?: Receipts }) {
-  const { user } = useAuth();
+  const { user, isPro } = useAuth();
   const { openAuthModal } = useAuthModal();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -297,33 +297,43 @@ export function PricingClient(_props: { receipts?: Receipts }) {
                 </li>
               ))}
             </ul>
-            <Button
-              size="lg"
-              className="w-full"
-              onClick={() => handleCheckout('month')}
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Starting checkout…
-                </>
-              ) : (
-                `Start Your ${TRIAL_DAYS}-Day Free Trial`
-              )}
-            </Button>
-            {ANNUAL_PRICE_ID ? (
-              <p className="text-xs text-center mt-3">
-                <button
-                  type="button"
-                  onClick={() => handleCheckout('year')}
+            {isPro ? (
+              <Button asChild size="lg" className="w-full">
+                <Link href="/account">
+                  Pro Subscription Active ✓ · Connect Your AI &rarr;
+                </Link>
+              </Button>
+            ) : (
+              <>
+                <Button
+                  size="lg"
+                  className="w-full"
+                  onClick={() => handleCheckout('month')}
                   disabled={loading}
-                  className="text-muted-foreground underline underline-offset-4 hover:text-foreground disabled:opacity-50"
                 >
-                  or {PRICE_ANNUAL}/yr
-                </button>
-              </p>
-            ) : null}
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Starting checkout…
+                    </>
+                  ) : (
+                    `Start Your ${TRIAL_DAYS}-Day Free Trial`
+                  )}
+                </Button>
+                {ANNUAL_PRICE_ID ? (
+                  <p className="text-xs text-center mt-3">
+                    <button
+                      type="button"
+                      onClick={() => handleCheckout('year')}
+                      disabled={loading}
+                      className="text-muted-foreground underline underline-offset-4 hover:text-foreground disabled:opacity-50"
+                    >
+                      or {PRICE_ANNUAL}/yr
+                    </button>
+                  </p>
+                ) : null}
+              </>
+            )}
             <p className="text-xs text-muted-foreground text-center mt-3">
               No charge during the trial. After checkout, sign in via OAuth at
               /pro from your AI client, or mint an API key on your account page.

@@ -1,11 +1,7 @@
 import Link from "next/link";
 import { getLatestOvernightSummary, getOvernightSignals, getRecentSignals } from "@/lib/firebase-admin";
-import { SignalsTable } from "@/components/overnight/signals-table";
+import { SignalsPoolClient } from "@/components/overnight/signals-pool-client";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Lock } from "lucide-react";
-import { PRICE_MONTHLY, TRIAL_DAYS } from "@/lib/constants";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -78,43 +74,11 @@ export default async function SignalsPage() {
           </div>
         </div>
 
-        <div className="grid gap-8">
-          <div>
-            <SignalsTable title="Today's Pool Preview (Top 3 Contracts)" signals={previewSignals} />
-            <p className="mt-3 text-xs text-muted-foreground max-w-3xl">
-              The preview table shows 3 contracts from today&apos;s scan. Descriptive scores are point-in-time context, not a forecast or recommendation.
-            </p>
-          </div>
-
-          <Card className="border-primary/40 bg-card/80">
-            <CardContent className="p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-              <div className="space-y-2 max-w-2xl">
-                <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
-                  <Lock className="h-3.5 w-3.5" />
-                  Pro MCP Dataset
-                </div>
-                <h2 className="text-xl md:text-2xl font-bold font-headline">
-                  Showing {previewSignals.length} of {bullSignals.length} contracts that passed today&apos;s Combo A filter
-                </h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Stream the full nightly pool—complete with exact contract specs, <code className="text-xs text-foreground">rv_iv_ratio</code>, grounded catalysts, 10-minute intraday liquidity snapshots, and 3-day MFE/MAE outcome surfaces—directly into Claude, ChatGPT, Cursor, or Codex. Start with a {TRIAL_DAYS}-day free trial.
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row md:flex-col gap-3 w-full md:w-auto shrink-0">
-                <Button asChild size="lg">
-                  <Link href="/pricing">
-                    Unlock Full Pool via Pro MCP ({PRICE_MONTHLY}/mo) <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg">
-                  <Link href="/#connect">
-                    Connect Free Preview
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <SignalsPoolClient
+          queryDate={queryDate}
+          previewSignals={previewSignals}
+          totalCount={bullSignals.length}
+        />
 
         {/* Recent Signals — keeps prior-day detail pages one click from this
             high-priority hub instead of going orphan the day after their scan. */}

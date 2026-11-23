@@ -171,6 +171,18 @@ export async function getXTraderSummary(): Promise<XTraderSummary | null> {
   }
 }
 
+export async function getXTraderSession(sessionDate: string): Promise<XTraderSession | null> {
+  noStore();
+  try {
+    const snap = await getDb().collection('xtrader_sessions').doc(sessionDate).get();
+    if (!snap.exists) return null;
+    return snap.data() as XTraderSession;
+  } catch (error) {
+    console.error(`Error fetching xtrader_sessions/${sessionDate}:`, error);
+    return null;
+  }
+}
+
 export async function getXTraderSessions(limit: number = 60): Promise<XTraderSession[]> {
   noStore();
   try {

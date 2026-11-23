@@ -20,6 +20,7 @@ const Footer = () => {
               <li><Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing ($29/mo · 30-day trial)</Link></li>
               <li><Link href="/developers" className="text-muted-foreground hover:text-primary">MCP &amp; API Docs</Link></li>
               <li><Link href="/signals" className="text-muted-foreground hover:text-primary">3-Contract Pool Preview</Link></li>
+              <li><Link href="/xtrader" className="text-muted-foreground hover:text-primary">X-Trader Live Log</Link></li>
               <li><Link href="/reports" className="text-muted-foreground hover:text-primary">Daily Reports</Link></li>
               <li><Link href="/llms.txt" className="text-muted-foreground hover:text-primary">llms.txt</Link> · <Link href="/skill.md" className="text-muted-foreground hover:text-primary">skill.md</Link></li>
             </ul>

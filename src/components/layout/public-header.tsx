@@ -19,11 +19,12 @@ export function PublicHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // Clean top-level links: Today's Pool, X-Trader, MCP, Learn, Blog, Pricing.
+  // Clean top-level links: Today's Pool, X-Trader, MCP, Build an Agent, Learn, Blog, Pricing.
   const links = [
     { href: '/signals', label: "Today's Pool" },
     { href: '/xtrader', label: 'X-Trader' },
     { href: '/developers', label: 'MCP' },
+    { href: '/build', label: 'Build an Agent' },
     { href: '/how-it-works', label: 'Learn' },
     { href: '/blog', label: 'Blog' },
     { href: '/pricing', label: 'Pricing' },

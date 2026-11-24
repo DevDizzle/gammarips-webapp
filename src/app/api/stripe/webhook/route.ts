@@ -5,7 +5,7 @@ import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { getUserByStripeCustomerIdAdmin, revokeMcpKeysForUserAdmin } from '@/lib/firebase-admin';
 import { syncSubscriptionToUser } from '@/lib/stripe-sync';
-import { sendWelcomeEmail, sendTrialEndingEmail } from '@/lib/mailgun';
+import { sendWelcomeEmail, sendTrialEndingEmail, sendBuildPaidKickoffEmails } from '@/lib/mailgun';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'; // Import direct firestore access
 
 // Trimmed: the Secret Manager value ends in a newline, and a newline in the
@@ -16,10 +16,14 @@ const gaApiSecret = process.env.GA_API_SECRET!;
 const PRO_PRICE_ID =
   process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID ||
   process.env.NEXT_PUBLIC_STRIPE_PRICE_ID;
+const ANNUAL_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID;
+const CARE_MCP_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_CARE_MCP_PRICE_ID;
 
-const PRICE_TO_PLAN: Record<string, 'pro'> = PRO_PRICE_ID
-  ? { [PRO_PRICE_ID]: 'pro' }
-  : {};
+const PRICE_TO_PLAN: Record<string, 'pro'> = {
+  ...(PRO_PRICE_ID ? { [PRO_PRICE_ID]: 'pro' as const } : {}),
+  ...(ANNUAL_PRICE_ID ? { [ANNUAL_PRICE_ID]: 'pro' as const } : {}),
+  ...(CARE_MCP_PRICE_ID ? { [CARE_MCP_PRICE_ID]: 'pro' as const } : {}),
+};
 
 // Terminal Stripe subscription statuses that revoke MCP key access. 'past_due'
 // is intentionally excluded (dunning grace, mirrors the 2-day proUntil grace);
@@ -105,9 +109,14 @@ async function sendPurchaseEventToGA(session: Stripe.Checkout.Session) {
         const amountPaid = (session.amount_total || 0) / 100;
         const unitAmount = (item?.price?.unit_amount ?? 2900) / 100;
         const currency = session.currency?.toUpperCase() || 'USD';
+        const isAgentBuild = session.metadata?.product_type === 'agent_build';
         const gaItem = {
-            item_id: (item?.price?.product as string) || 'gammarips_pro_mcp',
-            item_name: 'GammaRips Pro Subscription',
+            item_id:
+                (item?.price?.product as string) ||
+                (isAgentBuild ? 'gammarips_custom_agent_build' : 'gammarips_pro_mcp'),
+            item_name: isAgentBuild
+                ? 'GammaRips Custom Trading Agent Build'
+                : 'GammaRips Pro Subscription',
             price: unitAmount,
             quantity: 1,
         };
@@ -268,6 +277,53 @@ export async function POST(req: NextRequest) {
             } else {
                 console.warn('Webhook: Could not provision whatsapp_allowlist — user missing or no email');
             }
+        } else if (session.mode === 'payment' && session.metadata?.product_type === 'agent_build') {
+            const requestId = session.metadata?.request_id;
+            const customerEmail =
+                session.customer_details?.email || session.customer_email || '';
+            const customerName =
+                session.metadata?.customer_name ||
+                session.customer_details?.name ||
+                (customerEmail ? customerEmail.split('@')[0] : 'Builder');
+            const amountPaidUsd = (session.amount_total || 100000) / 100;
+            const amountDisplay = `$${amountPaidUsd.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            })}`;
+
+            const db = getFirestore();
+            let alreadyNotified = false;
+            if (requestId) {
+                const reqRef = db.collection('agent_build_requests').doc(requestId);
+                const snap = await reqRef.get();
+                alreadyNotified = Boolean(snap.data()?.kickoffEmailSentAt);
+                await reqRef.set(
+                    {
+                        status: 'paid',
+                        amountPaidUsd,
+                        stripeSessionId: session.id,
+                        stripeCustomerId: (session.customer as string) || null,
+                        stripePaymentIntentId: (session.payment_intent as string) || null,
+                        paidAt: FieldValue.serverTimestamp(),
+                        kickoffEmailSentAt: FieldValue.serverTimestamp(),
+                        updatedAt: FieldValue.serverTimestamp(),
+                    },
+                    { merge: true }
+                );
+            }
+
+            if (!alreadyNotified && customerEmail) {
+                await sendBuildPaidKickoffEmails({
+                    requestId: requestId || session.id,
+                    name: customerName,
+                    email: customerEmail,
+                    amountDisplay,
+                }).catch((err) => {
+                    console.error('Webhook: failed to send agent_build kickoff emails', err);
+                });
+            }
+
+            await sendPurchaseEventToGA(session);
         }
         break;
     case 'customer.subscription.trial_will_end':
@@ -282,6 +338,8 @@ export async function POST(req: NextRequest) {
             const item = trialEndingSub.items.data[0];
             const unitAmount = item?.price?.unit_amount ?? 2900;
             const currency = (item?.price?.currency ?? 'usd').toUpperCase();
+            const interval: 'month' | 'year' =
+                item?.price?.recurring?.interval === 'year' ? 'year' : 'month';
             const amountDisplay = `${currency === 'USD' ? '$' : currency + ' '}${(unitAmount / 100).toFixed(2)}`;
             const chargeDateISO = new Date(trialEndingSub.trial_end * 1000).toISOString();
             try {
@@ -290,6 +348,7 @@ export async function POST(req: NextRequest) {
                     name: trialEndingUser.displayName || trialEndingUser.email.split('@')[0],
                     chargeDateISO,
                     amountDisplay,
+                    interval,
                 });
                 console.log(`Webhook: trial_will_end reminder sent to ${trialEndingUser.email}`);
             } catch (err) {

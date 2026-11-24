@@ -3,6 +3,7 @@ import { PricingClient } from './pricing-client';
 import {
   TOOL_COUNT,
   PRICE_MONTHLY,
+  PRICE_ANNUAL,
   PRICE_STANDARD,
   FOUNDING_CAP,
   TRIAL_DAYS,
@@ -14,6 +15,7 @@ export const revalidate = 3600;
 // The JSON-LD price is a numeric string ("29.00"), a different format from the
 // display constant. Derive it so there is one number to change, not three.
 const PRICE_NUMERIC = (Number(PRICE_MONTHLY.replace(/[^0-9.]/g, '')) || 0).toFixed(2);
+const ANNUAL_PRICE_NUMERIC = (Number(PRICE_ANNUAL.replace(/[^0-9.]/g, '')) || 0).toFixed(2);
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -38,26 +40,42 @@ export default function PricingPage() {
       `MCP access for AI agents: the full nightly Combo A pool of liquid option contracts (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45) with rv_iv_ratio, technicals, and grounded catalysts, 10-minute intraday liquidity snapshots, 3-day MFE/MAE outcome surfaces, price replay, regime context, and methodology playbooks. ${TOOL_COUNT} tools for Claude, ChatGPT, Cursor, Codex, or any MCP client, by OAuth sign-in or API key. Educational data, not investment advice.`,
     image: 'https://gammarips.com/og-image.png?v=4',
     brand: { '@type': 'Brand', name: 'GammaRips' },
-    offers: {
-      '@type': 'Offer',
-      priceCurrency: 'USD',
-      price: PRICE_NUMERIC,
-      name: 'GammaRips Agent Access (monthly)',
-      availability: 'https://schema.org/InStock',
-      url: 'https://gammarips.com/pricing',
-      priceSpecification: {
-        '@type': 'UnitPriceSpecification',
-        price: PRICE_NUMERIC,
+    offers: [
+      {
+        '@type': 'Offer',
         priceCurrency: 'USD',
-        unitText: 'MONTH',
+        price: ANNUAL_PRICE_NUMERIC,
+        name: 'GammaRips Agent Access (annual)',
+        availability: 'https://schema.org/InStock',
+        url: 'https://gammarips.com/pricing',
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: ANNUAL_PRICE_NUMERIC,
+          priceCurrency: 'USD',
+          unitText: 'YEAR',
+        },
       },
-    },
+      {
+        '@type': 'Offer',
+        priceCurrency: 'USD',
+        price: PRICE_NUMERIC,
+        name: 'GammaRips Agent Access (monthly)',
+        availability: 'https://schema.org/InStock',
+        url: 'https://gammarips.com/pricing',
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: PRICE_NUMERIC,
+          priceCurrency: 'USD',
+          unitText: 'MONTH',
+        },
+      },
+    ],
   };
 
   const pricingFaqs = [
     {
       q: `How does the ${TRIAL_DAYS}-day trial work?`,
-      a: `Card on file, no charge for ${TRIAL_DAYS} days, full Pro MCP access from minute one. If you cancel before day ${TRIAL_DAYS} you pay nothing. After day ${TRIAL_DAYS} your card is charged ${PRICE_MONTHLY} and you're billed monthly until you cancel.`,
+      a: `Card on file, no charge for ${TRIAL_DAYS} days, full Pro MCP access from minute one. If you cancel before day ${TRIAL_DAYS} you pay nothing. After day ${TRIAL_DAYS} your card is charged ${PRICE_ANNUAL}/year (or ${PRICE_MONTHLY}/month on monthly billing) until you cancel.`,
     },
     {
       q: "Why don't you just tell me what to buy?",
@@ -73,7 +91,7 @@ export default function PricingPage() {
     },
     {
       q: "What's the refund policy?",
-      a: `The ${TRIAL_DAYS}-day trial gives you a full month to evaluate at no charge. After that, billing is monthly, with no pro-rated refunds mid-cycle. If something breaks, email evan@gammarips.com and we'll make it right.`,
+      a: `The ${TRIAL_DAYS}-day trial gives you a full week to evaluate at no charge. After that, billing renews on your selected plan cycle, with no pro-rated refunds mid-cycle. If something breaks, email evan@gammarips.com and we'll make it right.`,
     },
     {
       q: 'Will the price go up?',

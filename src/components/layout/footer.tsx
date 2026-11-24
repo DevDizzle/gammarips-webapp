@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { XIcon } from '@/components/icons/XIcon';
+import { PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
 
 const Footer = () => {
   return (
@@ -17,7 +18,7 @@ const Footer = () => {
             <h4 className="font-semibold text-foreground">Product &amp; MCP</h4>
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
-              <li><Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing ($29/mo · 30-day trial)</Link></li>
+              <li><Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing ({PRICE_MONTHLY}/mo · {TRIAL_DAYS}-day trial)</Link></li>
               <li><Link href="/developers" className="text-muted-foreground hover:text-primary">MCP &amp; API Docs</Link></li>
               <li><Link href="/signals" className="text-muted-foreground hover:text-primary">3-Contract Pool Preview</Link></li>
               <li><Link href="/xtrader" className="text-muted-foreground hover:text-primary">X-Trader Live Log</Link></li>

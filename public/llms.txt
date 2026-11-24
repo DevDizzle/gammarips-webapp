@@ -21,9 +21,11 @@ Historical walk-forward research on paper-tracked cohorts. Educational only. Not
 
 - [Learn: Pipeline & Catalyst Lab Research](https://gammarips.com/how-it-works)
 - [Today's Pool Preview (3-contract web preview)](https://gammarips.com/signals)
+- [X-Trader Live Benchmark (2x/Inverse ETFs vs. Options)](https://gammarips.com/xtrader)
+- [Custom Trading Agent Build ($1,000 Fixed Scope)](https://gammarips.com/build)
 - [Methodology: Combo A Filters & Leakage Wall](https://gammarips.com/methodology)
 - [The Lab: Published Experiments](https://gammarips.com/lab)
-- [Pricing: Free 3-contract preview / $29 Pro MCP Dataset](https://gammarips.com/pricing)
+- [Pricing: Free 3-contract preview / $299/yr Pro MCP / $1,000 Custom Build](https://gammarips.com/pricing)
 - [MCP & Developers: 9 tools](https://gammarips.com/developers)
 
 ## The Pipeline
@@ -38,14 +40,15 @@ Historical walk-forward research on paper-tracked cohorts. Educational only. Not
 
 - **10-Second Free CLI Install (Claude Code):** `claude mcp add --transport http gammarips https://mcp.gammarips.com/mcp`
 - **Free Preview Endpoint:** `https://mcp.gammarips.com/mcp` (Streamable HTTP; no card, no key). Serves the 3-contract pool preview (`get_pool(view="preview")`), daily reports, VIX/VIX3M regime context, NYSE market calendar, and methodology playbooks.
-- **Pro Dataset Endpoint:** `https://mcp.gammarips.com/pro` (OAuth 2.1 sign-in) or `Authorization: Bearer gr_live_...` API key on `/mcp` or `/pro` ($29/mo founding price, 30-day free trial at https://gammarips.com/pricing). Unlocks all 9 tools: the full 40–50 contract daily Combo A dataset (`get_pool(view="enriched" | "raw" | "features")`), per-ticker detail and earnings checks (`get_signal`), 10-minute intraday liquidity snapshots (`get_liquidity`), 3-day excursion outcome surfaces (`query_outcomes`), and minute/daily option price replay (`replay_contract`).
+- **Pro Dataset Endpoint:** `https://mcp.gammarips.com/pro` (OAuth 2.1 sign-in) or `Authorization: Bearer gr_live_...` API key on `/mcp` or `/pro` ($299/yr or $29/mo founding price, 7-day free trial at https://gammarips.com/pricing). Unlocks all 9 tools: the full 40–50 contract daily Combo A dataset (`get_pool(view="enriched" | "raw" | "features")`), per-ticker detail and earnings checks (`get_signal`), 10-minute intraday liquidity snapshots (`get_liquidity`), 3-day excursion outcome surfaces (`query_outcomes`), and minute/daily option price replay (`replay_contract`).
 - **Open-Source Agentic Trading Harness:** https://github.com/DevDizzle/gammarips-harness (3-step morning workflow, exit rules, and evaluation ledger).
 - **All 9 tools:** `get_pool`, `get_signal`, `get_liquidity`, `query_outcomes`, `replay_contract`, `get_regime_context`, `get_market_calendar_status`, `get_playbook`, `get_daily_report`.
 
 ## Pricing
 
-- **Free ($0 forever):** 3-contract daily pool preview on https://gammarips.com/signals and `https://mcp.gammarips.com/mcp`, daily macro reports, methodology, and free reference MCP tools.
-- **Pro MCP Access ($29/mo founding price, 30-day free trial):** full daily Combo A pool (40–50 contracts), 10-minute intraday liquidity snapshots, 3-day MFE/MAE outcome surfaces, and contract replay across all 9 MCP tools. $29/mo for the first 100 subscribers ($39/mo after). Cancel anytime.
+- **Free ($0 forever):** 3-contract daily pool preview on https://gammarips.com/signals and `https://mcp.gammarips.com/mcp` (including mapped `execution_vehicles`: `underlying_stock`, `long_2x_etfs`, `inverse_etfs`, and `option_contract`), daily macro reports, methodology, and free reference MCP tools.
+- **Pro MCP Access ($299/yr or $29/mo founding price, 7-day free trial):** full daily Combo A pool (40–50 setups with multi-instrument `execution_vehicles`), 10-minute intraday liquidity snapshots, 3-day MFE/MAE outcome surfaces, and contract replay across all 9 MCP tools. $29/mo ($299/yr) for the first 100 subscribers ($39/mo after). Cancel anytime.
+- **Done-For-You Custom Trading Agent Build ($1,000 one-time, https://gammarips.com/build):** fixed-scope work-for-hire Python/AI trading agent engineering across stocks, 2x/inverse ETFs, or options (Alpaca, Robinhood MCP, Tradier, IBKR) with limit-only orders, fill-derived stops, and restart-safe state, delivered in Paper Mode to the client's private GitHub repo in 5 business days (+ optional $50/mo Care or $75/mo Care + Pro MCP).
 
 ## Disclaimers
 

@@ -5,7 +5,7 @@
   "transport": "streamable-http",
   "auth": {
     "type": "bearer-or-oauth2",
-    "instructions": "Free tier (no key, no card): connect to https://mcp.gammarips.com/mcp for the 3-contract pool preview (matching https://gammarips.com/signals), daily reports, methodology playbooks, regime context, and market calendar. Pro tier ($29/mo founding price for the first 100 subscribers, $39/mo after, 30-day free trial at https://gammarips.com/pricing): unlocks the full 40–50 contract daily Combo A dataset, 10-minute intraday liquidity snapshots, and 3-day outcome history via (1) OAuth 2.1 at https://mcp.gammarips.com/pro or (2) 'Authorization: Bearer gr_live_...' API key generated at https://gammarips.com/account.",
+    "instructions": "Free tier (no key, no card): connect to https://mcp.gammarips.com/mcp for the 3-contract pool preview (matching https://gammarips.com/signals), daily reports, methodology playbooks, regime context, and market calendar. Pro tier ($299/yr or $29/mo founding price for the first 100 subscribers, $39/mo after, 7-day free trial at https://gammarips.com/pricing): unlocks the full 40–50 contract daily Combo A dataset, 10-minute intraday liquidity snapshots, and 3-day outcome history via (1) OAuth 2.1 at https://mcp.gammarips.com/pro or (2) 'Authorization: Bearer gr_live_...' API key generated at https://gammarips.com/account.",
     "oauth2": {
       "resource": "https://mcp.gammarips.com/pro",
       "authorization_server": "https://gammarips.com",

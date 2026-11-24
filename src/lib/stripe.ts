@@ -104,3 +104,35 @@ export async function createStripePortalSession(stripeCustomerId: string, return
 
     return portalSession.url;
 }
+
+export async function createOneTimeCheckoutSession(
+    email: string,
+    priceId: string,
+    successUrl: string,
+    cancelUrl: string,
+    metadata?: { [key: string]: string }
+): Promise<{ id: string; url: string }> {
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode: 'payment',
+        customer_email: email,
+        customer_creation: 'always',
+        invoice_creation: { enabled: true },
+        line_items: [
+            {
+                price: priceId,
+                quantity: 1,
+            },
+        ],
+        metadata: metadata ?? {},
+        allow_promotion_codes: true,
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+    });
+
+    if (!session.id || !session.url) {
+        throw new Error('Could not create one-time Stripe Checkout Session.');
+    }
+
+    return { id: session.id, url: session.url };
+}

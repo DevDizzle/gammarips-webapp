@@ -53,7 +53,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What data does the MCP server return?",
-    a: "On Pro, your AI agent gets the full nightly Combo A pool (roughly 40 to 50 liquid bullish call contracts passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45), point-in-time feature vectors including Realized-vs-Implied Volatility (rv_iv_ratio), grounded news catalysts, 10-minute intraday liquidity snapshots during market hours, 3-day MFE/MAE outcome surfaces, minute and daily contract price replay, VIX/VIX3M regime context, daily reports, and methodology playbooks.",
+    a: "On Pro, your AI agent gets the full nightly Combo A pool (roughly 40 to 50 liquid bullish call setups passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45), mapped multi-instrument execution_vehicles (underlying_stock, long_2x_etfs, inverse_etfs, and option_contract), point-in-time feature vectors including Realized-vs-Implied Volatility (rv_iv_ratio), grounded news catalysts, 10-minute intraday liquidity snapshots during market hours, 3-day MFE/MAE outcome surfaces, minute and daily contract price replay, VIX/VIX3M regime context, daily reports, and methodology playbooks.",
   },
   {
     q: "Is the dataset real-time or overnight?",

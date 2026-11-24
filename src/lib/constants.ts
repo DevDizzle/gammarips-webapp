@@ -36,7 +36,16 @@ export const FOUNDING_CAP = 100;
 // (src/app/api/checkout/route.ts and the createCheckoutSession server action).
 // Stripe fires trial_will_end 3 days before the end of a trial of ANY length, so
 // the "ends in 3 days" email stays correct at any value here.
-export const TRIAL_DAYS = 30;
+// Tightened from 30 -> 7 days on 2026-11-24 (paid-funnel unit economics & 7-day
+// ad attribution window; the /mcp 3-contract preview and /xtrader remain $0 forever).
+export const TRIAL_DAYS = 7;
+
+// Custom Trading Agent Build & Care Plan pricing literals (single source of truth).
+export const BUILD_STANDARD_PRICE = '$1,000';
+export const AGENT_CARE_PRICE = '$50';
+export const AGENT_CARE_MCP_PRICE = '$75';
+export const BUILD_CUSTOM_MIN_PRICE = '$2,500';
+export const BUILD_TURNAROUND_DAYS = 5;
 
 // OG_IMAGE: the social/link-preview card, in Next's openGraph image shape.
 //
@@ -52,7 +61,7 @@ export const OG_IMAGE = {
   url: 'https://gammarips.com/og-image.png?v=4',
   width: 1200,
   height: 630,
-  alt: 'GammaRips | Options-flow data for AI agents',
+  alt: 'GammaRips | Market & options-flow intelligence for AI trading agents',
 };
 
 // MCP_ENDPOINT: the public Streamable HTTP endpoint of the GammaRips MCP

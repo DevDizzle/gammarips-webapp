@@ -35,17 +35,23 @@ export interface XTraderCandidate {
 }
 
 export interface XTraderTrade {
+  book?: 'dual_etf' | 'options' | string;
   ticker: string;
+  symbol?: string;
   contract: string;
+  side?: 'BULL' | 'BEAR' | string | null;
+  instrument_type?: 'etf_2x' | 'etf_inverse' | 'stock_1x' | 'option' | string;
   live: boolean;
   status: 'open' | 'closed' | string;
   x_score: number | null;
+  shares?: number | null;
   contracts: number;
   entry_ts_et: string | null;
   entry_fill: number | null;
   cost_usd: number | null;
   stop_price: number | null;
   target_price: number | null;
+  exit_session_date?: string | null;
   flat_time_et: string | null;
   exit_ts_et: string | null;
   exit_fill: number | null;
@@ -56,7 +62,9 @@ export interface XTraderTrade {
 
 export interface XTraderLivePosition {
   contract?: string;
+  symbol?: string;
   ticker?: string;
+  instrument_type?: string;
   bid?: number | null;
   ask?: number | null;
   mark?: number | null;
@@ -86,6 +94,7 @@ export interface XTraderPoolStats {
 export interface XTraderSession {
   session_date: string;
   mode: 'PAPER' | 'LIVE' | string;
+  strategy_mode?: 'both' | 'dual_etf' | 'options' | string;
   stage: string;
   updated_at: string;
   decision: 'TRADE' | 'PASS' | 'PENDING' | 'CLOSED_HOLIDAY' | string;
@@ -101,6 +110,7 @@ export interface XTraderSession {
   pool_stats: XTraderPoolStats;
   headline: string;
   trade: XTraderTrade | null;
+  trades?: XTraderTrade[];
   live_position?: XTraderLivePosition | null;
   featured_analysis: XTraderCandidate | null;
   candidates: XTraderCandidate[];
@@ -140,9 +150,12 @@ export interface XTraderEquityPoint {
 export interface XTraderSummary {
   updated_at: string;
   active_mode: 'PAPER' | 'LIVE' | string;
+  strategy_mode?: 'both' | 'dual_etf' | 'options' | string;
   funded_cash_usd: number;
   min_x_score: number;
   per_trade_fraction: number;
+  max_concurrent?: number;
+  hold_sessions?: number;
   stop_pct: number;
   flat_time_et: string;
   total_sessions: number;
@@ -151,6 +164,8 @@ export interface XTraderSummary {
   cohorts: {
     paper: XTraderCohortStats;
     live: XTraderCohortStats;
+    paper_etf?: XTraderCohortStats;
+    paper_options?: XTraderCohortStats;
   };
   equity_curve: XTraderEquityPoint[];
 }

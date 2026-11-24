@@ -48,6 +48,13 @@ env:
   # $299/yr annual price. Renders the "or $299/yr" link on /pricing.
   - variable: NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID
     value: price_1U9VqV9rAjmDTproVmiKIc9N
+  # Custom Trading Agent Build ($1,000 one-time) + Agent Care ($50/mo & $75/mo Care+MCP)
+  - variable: NEXT_PUBLIC_STRIPE_BUILD_PRICE_ID
+    value: price_1UfRzR9rAjmDTproqsOge8HY
+  - variable: NEXT_PUBLIC_STRIPE_CARE_PRICE_ID
+    value: price_1UfRzS9rAjmDTproo77bap2O
+  - variable: NEXT_PUBLIC_STRIPE_CARE_MCP_PRICE_ID
+    value: price_1UfRzT9rAjmDTproudxNTlKH
   # Billing Portal (cancel/update card) — createStripePortalSession throws without it
   - variable: NEXT_PUBLIC_STRIPE_BILLING_PORTAL_CONFIG_ID
     value: bpc_1SMRaZ9rAjmDTproUFJHV3vW

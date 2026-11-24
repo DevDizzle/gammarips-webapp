@@ -17,6 +17,10 @@ import {
   PRICE_STANDARD,
   FOUNDING_CAP,
   TRIAL_DAYS,
+  BUILD_STANDARD_PRICE,
+  AGENT_CARE_PRICE,
+  AGENT_CARE_MCP_PRICE,
+  BUILD_TURNAROUND_DAYS,
 } from '@/lib/constants';
 import { type Receipts } from '@/lib/receipts';
 
@@ -29,7 +33,7 @@ const stripePromise = loadStripe(
 );
 
 const agentFeatures = [
-  'Full daily curated pool (40–50 Combo A contracts) with thesis, technicals, rv_iv_ratio, and grounded catalysts',
+  'Full daily curated pool (40–50 setups) with thesis, technicals, rv_iv_ratio, catalysts, and mapped execution_vehicles (stocks, 2x/inverse ETFs, options)',
   'Live 10-minute intraday liquidity snapshots (09:02–16:52 ET) and earnings date checks',
   'Historical 3-day MFE/MAE outcome surfaces & minute/daily contract price replay',
   `All ${TOOL_COUNT} MCP tools in Claude, ChatGPT, Cursor, Codex, or any MCP client`,
@@ -109,6 +113,9 @@ export function PricingClient(_props: { receipts?: Receipts }) {
   const { openAuthModal } = useAuthModal();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [billingInterval, setBillingInterval] = useState<'year' | 'month'>(
+    ANNUAL_PRICE_ID ? 'year' : 'month'
+  );
   const autoCheckoutTriggered = useRef(false);
 
   const runStripeCheckout = useCallback(async (interval: 'month' | 'year' = 'month') => {
@@ -273,9 +280,51 @@ export function PricingClient(_props: { receipts?: Receipts }) {
           </div>
           <CardHeader className="pb-4 border-b">
             <CardTitle className="text-2xl font-bold font-headline">Agent Access (Pro)</CardTitle>
-            <div className="mt-2">
-              <span className="text-4xl font-bold">{PRICE_MONTHLY}</span>
-              <span className="text-muted-foreground ml-2">/month</span>
+            {ANNUAL_PRICE_ID ? (
+              <div
+                role="group"
+                aria-label="Billing interval"
+                className="mt-3 inline-flex items-center rounded-lg border border-border bg-background/60 p-1 w-full"
+              >
+                <button
+                  type="button"
+                  onClick={() => setBillingInterval('year')}
+                  className={`flex-1 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+                    billingInterval === 'year'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Annual · Save $49/yr
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setBillingInterval('month')}
+                  className={`flex-1 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+                    billingInterval === 'month'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Monthly
+                </button>
+              </div>
+            ) : null}
+            <div className="mt-3">
+              {billingInterval === 'year' && ANNUAL_PRICE_ID ? (
+                <>
+                  <span className="text-4xl font-bold">{PRICE_ANNUAL}</span>
+                  <span className="text-muted-foreground ml-2">/year</span>
+                  <p className="text-xs text-primary font-medium mt-1">
+                    $24.92/mo effective · Save $49 vs. {PRICE_MONTHLY}/mo monthly
+                  </p>
+                </>
+              ) : (
+                <>
+                  <span className="text-4xl font-bold">{PRICE_MONTHLY}</span>
+                  <span className="text-muted-foreground ml-2">/month</span>
+                </>
+              )}
             </div>
             <p className="text-sm text-muted-foreground mt-2">
               The full daily Combo A dataset (40–50 contracts), 10-minute
@@ -283,7 +332,7 @@ export function PricingClient(_props: { receipts?: Receipts }) {
               in Claude, ChatGPT, Cursor, Codex, or any MCP client. {TRIAL_DAYS}-day free trial.
             </p>
             <p className="text-sm text-foreground mt-3">
-              Founding price: {PRICE_MONTHLY}/mo for the first {FOUNDING_CAP}{' '}
+              Founding price: {PRICE_MONTHLY}/mo{ANNUAL_PRICE_ID ? ` or ${PRICE_ANNUAL}/yr` : ''} for the first {FOUNDING_CAP}{' '}
               subscribers, locked as long as you stay subscribed.{' '}
               {PRICE_STANDARD}/mo after that.
             </p>
@@ -308,7 +357,7 @@ export function PricingClient(_props: { receipts?: Receipts }) {
                 <Button
                   size="lg"
                   className="w-full"
-                  onClick={() => handleCheckout('month')}
+                  onClick={() => handleCheckout(billingInterval)}
                   disabled={loading}
                 >
                   {loading ? (
@@ -316,19 +365,25 @@ export function PricingClient(_props: { receipts?: Receipts }) {
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Starting checkout…
                     </>
+                  ) : billingInterval === 'year' && ANNUAL_PRICE_ID ? (
+                    `Start ${TRIAL_DAYS}-Day Free Trial (${PRICE_ANNUAL}/yr)`
                   ) : (
-                    `Start Your ${TRIAL_DAYS}-Day Free Trial`
+                    `Start ${TRIAL_DAYS}-Day Free Trial (${PRICE_MONTHLY}/mo)`
                   )}
                 </Button>
                 {ANNUAL_PRICE_ID ? (
                   <p className="text-xs text-center mt-3">
                     <button
                       type="button"
-                      onClick={() => handleCheckout('year')}
+                      onClick={() =>
+                        handleCheckout(billingInterval === 'year' ? 'month' : 'year')
+                      }
                       disabled={loading}
                       className="text-muted-foreground underline underline-offset-4 hover:text-foreground disabled:opacity-50"
                     >
-                      or {PRICE_ANNUAL}/yr
+                      {billingInterval === 'year'
+                        ? `or start monthly at ${PRICE_MONTHLY}/mo`
+                        : `or save $49/yr with annual (${PRICE_ANNUAL}/yr)`}
                     </button>
                   </p>
                 ) : null}
@@ -339,6 +394,41 @@ export function PricingClient(_props: { receipts?: Receipts }) {
               /pro from your AI client, or mint an API key on your account page.
               Cancel anytime.
             </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Done-For-You Custom Agent Build Tier */}
+      <div className="mt-8 max-w-4xl mx-auto">
+        <Card className="bg-card/60 border-primary/40">
+          <CardContent className="p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2.5 max-w-2xl">
+              <p className="text-xs font-mono uppercase tracking-wider text-primary">
+                Done-For-You Engineering · {BUILD_TURNAROUND_DAYS}-Day Delivery
+              </p>
+              <h3 className="text-2xl font-bold font-headline text-foreground">
+                Custom Trading Agent Build — {BUILD_STANDARD_PRICE}{' '}
+                <span className="text-sm font-normal text-muted-foreground">one-time</span>
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Have a written strategy across <strong className="text-foreground">stocks</strong>,{' '}
+                <strong className="text-foreground">2x/inverse ETFs</strong>, or{' '}
+                <strong className="text-foreground">options</strong> and want us to build and harden
+                it for you? We engineer your Python trading daemon with limit-only execution,
+                fill-derived stops, and restart-safe state (Alpaca, Robinhood MCP, Tradier, or
+                IBKR), verify it in Paper Mode, and hand over 100% of the code in{' '}
+                {BUILD_TURNAROUND_DAYS} business days. Optional {AGENT_CARE_PRICE}/mo Care Plan (
+                {AGENT_CARE_MCP_PRICE}/mo bundled with Pro MCP) offered after handoff.
+              </p>
+            </div>
+            <div className="shrink-0 flex flex-col gap-2 sm:min-w-[220px]">
+              <Button asChild size="lg" className="w-full">
+                <Link href="/build">Submit Agent Spec &rarr;</Link>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="w-full">
+                <Link href="/xtrader">Inspect Live X-Trader &rarr;</Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -395,7 +485,10 @@ export function PricingClient(_props: { receipts?: Receipts }) {
               Card on file, no charge for {TRIAL_DAYS} days, full Pro MCP access
               from minute one. If you cancel before day {TRIAL_DAYS} you pay
               nothing. After day {TRIAL_DAYS} your card is charged{' '}
-              {PRICE_MONTHLY} and you&apos;re billed monthly until you cancel.
+              {ANNUAL_PRICE_ID
+                ? `${PRICE_ANNUAL}/year (or ${PRICE_MONTHLY}/month on monthly billing)`
+                : `${PRICE_MONTHLY}/month`}{' '}
+              until you cancel.
             </p>
           </div>
           <div>
@@ -445,10 +538,10 @@ export function PricingClient(_props: { receipts?: Receipts }) {
               What&apos;s the refund policy?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              The {TRIAL_DAYS}-day trial gives you a full month to evaluate at
-              no charge. After that, billing is monthly, with no pro-rated
-              refunds mid-cycle. If something breaks, email evan@gammarips.com
-              and we&apos;ll make it right.
+              The {TRIAL_DAYS}-day trial gives you a full week to evaluate at
+              no charge. After that, billing renews on your selected plan
+              cycle, with no pro-rated refunds mid-cycle. If something breaks,
+              email evan@gammarips.com and we&apos;ll make it right.
             </p>
           </div>
           <div>

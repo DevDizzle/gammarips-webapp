@@ -127,16 +127,21 @@ export default async function LandingPage() {
           <Faq faqs={faqs} />
         </section>
 
-        <section className="rounded-2xl border border-primary/30 bg-card/60 px-4 py-10 md:p-12 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold font-headline text-balance mb-3">
-            Give your AI the nightly filtered options dataset.
+        <section className="rounded-2xl border border-primary/30 bg-card/60 px-4 py-10 md:p-12 text-center space-y-4">
+          <h2 className="text-2xl md:text-3xl font-bold font-headline text-balance">
+            Power your own AI agent—or have us deploy one for your rules.
           </h2>
-          <p className="text-sm text-muted-foreground max-w-xl mx-auto mb-8">
-            Start your free trial of Pro MCP access, connect the AI client or
-            open-source harness you already use, and build your trade plan before
-            the next open.
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+            Connect Pro MCP in Claude, ChatGPT, Cursor, or Codex to trade stocks, 2x/inverse ETFs,
+            or options—or submit your written strategy on{' '}
+            <a href="/build" className="text-primary hover:underline font-medium">
+              Build an Agent
+            </a>{' '}
+            for a fixed-scope custom Python trading daemon in 5 business days.
           </p>
-          <InstallCta />
+          <div className="pt-2">
+            <InstallCta />
+          </div>
         </section>
       </main>
     </div>

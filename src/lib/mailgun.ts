@@ -4,7 +4,16 @@
 
 import { Buffer } from 'node:buffer';
 import type { Winner, PerformanceSignal, Stock } from '@/lib/firebase-admin';
-import { TOOL_COUNT, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
+import {
+  TOOL_COUNT,
+  PRICE_MONTHLY,
+  PRICE_ANNUAL,
+  TRIAL_DAYS,
+  BUILD_STANDARD_PRICE,
+  AGENT_CARE_PRICE,
+  AGENT_CARE_MCP_PRICE,
+  BUILD_TURNAROUND_DAYS,
+} from '@/lib/constants';
 
 
 // Node 18+ has global fetch. If you're on older Node, install `node-fetch`.
@@ -277,18 +286,28 @@ export async function buildTrialEndingEmailContent(
     name: string,
     chargeDateISO: string,
     amountDisplay: string,
+    interval: 'month' | 'year' = 'month',
 ): Promise<{ text: string; html: string }> {
     const chargeDate = new Date(chargeDateISO).toLocaleDateString('en-US', {
         weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/New_York',
     });
+    const periodLabel = interval === 'year' ? 'year' : 'month';
+    const annualUpgradeText =
+        interval === 'month'
+            ? `\nWant to save $49/yr and lock in the founding rate for 12 months?\n- Switch to annual (${PRICE_ANNUAL}/year): https://gammarips.com/pricing?checkout=year\n`
+            : '';
+    const annualUpgradeHtml =
+        interval === 'month'
+            ? `<p style="font-size: 15px; line-height: 1.6; margin-top: 16px; padding: 14px 16px; background-color: hsl(224, 20%, 12%); border-left: 3px solid hsl(74, 80%, 50%); border-radius: 4px;">Want to save $49/yr and lock in the founding rate for 12 months? <a href="https://gammarips.com/pricing?checkout=year" style="color: hsl(74, 80%, 50%); font-weight: 600;">Switch to the ${PRICE_ANNUAL}/year annual plan</a> before ${chargeDate}.</p>`
+            : '';
 
     const textContent = `
 Hi ${name},
 
 Quick heads-up: your GammaRips Pro ${TRIAL_DAYS}-day trial ends in 3 days.
 
-Your card will be charged ${amountDisplay} on ${chargeDate} and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if you want to continue; just keep using the data.
-
+Your card will be charged ${amountDisplay} on ${chargeDate} and you'll stay subscribed at ${amountDisplay}/${periodLabel} going forward. No action needed if you want to continue; just keep using the data.
+${annualUpgradeText}
 If it isn't for you:
 - Cancel anytime before ${chargeDate} and you won't be charged.
 - Manage subscription: https://gammarips.com/account
@@ -329,7 +348,8 @@ evan@gammarips.com
                         <td style="padding: 0 40px 20px;">
                             <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: #ffffff; margin: 0;">Your trial ends in 3 days.</h2>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 20px;">Hi ${name},</p>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Your card will be charged <strong style="color: #ffffff;">${amountDisplay}</strong> on <strong style="color: #ffffff;">${chargeDate}</strong> and you'll stay subscribed at ${amountDisplay}/month going forward. No action needed if the data's earning its keep.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">Your card will be charged <strong style="color: #ffffff;">${amountDisplay}</strong> on <strong style="color: #ffffff;">${chargeDate}</strong> and you'll stay subscribed at ${amountDisplay}/${periodLabel} going forward. No action needed if the data's earning its keep.</p>
+                            ${annualUpgradeHtml}
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;">If it's not for you, cancel anytime before the charge and you won't pay a cent.</p>
                         </td>
                     </tr>
@@ -371,13 +391,15 @@ export async function sendTrialEndingEmail({
     name,
     chargeDateISO,
     amountDisplay,
+    interval = 'month',
 }: {
     to: string;
     name: string;
     chargeDateISO: string;
     amountDisplay: string;
+    interval?: 'month' | 'year';
 }) {
-    const { text, html } = await buildTrialEndingEmailContent(name, chargeDateISO, amountDisplay);
+    const { text, html } = await buildTrialEndingEmailContent(name, chargeDateISO, amountDisplay, interval);
     const chargeDateShort = new Date(chargeDateISO).toLocaleDateString('en-US', {
         month: 'short', day: 'numeric', timeZone: 'America/New_York',
     });
@@ -1026,6 +1048,114 @@ export async function buildMidDayMoversEmailContent(movers: PerformanceSignal[])
 
     return { text: textContent, html: htmlContent };
 }
+
+export interface BuildIntakeEmailPayload {
+  requestId: string;
+  name: string;
+  email: string;
+  assetClasses: string[];
+  dataSource: string;
+  brokerTarget: string;
+  hostingTarget: string;
+  rulesSummary: string;
+  fastTrackCheckout: boolean;
+}
+
+export async function sendBuildIntakeEmails(payload: BuildIntakeEmailPayload) {
+  const modeLabel = payload.fastTrackCheckout
+    ? `DIRECT ${BUILD_STANDARD_PRICE} CHECKOUT INITIATED`
+    : 'FREE 24H SCOPE CHECK REQUESTED';
+
+  const ownerText = [
+    `New Custom Trading Agent Spec (${modeLabel})`,
+    `Request ID: ${payload.requestId}`,
+    `Name: ${payload.name}`,
+    `Email: ${payload.email}`,
+    `Instruments: ${payload.assetClasses.join(', ')}`,
+    `Data Feed: ${payload.dataSource}`,
+    `Broker Target: ${payload.brokerTarget}`,
+    `Hosting Target: ${payload.hostingTarget}`,
+    '',
+    'Written Strategy Rules:',
+    payload.rulesSummary,
+  ].join('\n');
+
+  await sendEmail({
+    to: 'Evan Parra <evan@gammarips.com>',
+    replyTo: payload.email,
+    subject: `[Agent Build] ${modeLabel} — ${payload.name} (${payload.assetClasses.join('/')})`,
+    text: ownerText,
+  });
+
+  const clientText = `Hi ${payload.name},
+
+Thanks for submitting your trading agent specification to GammaRips (Ref: ${payload.requestId}).
+
+What happens next:
+- Scope review: I review every written specification personally within 24 hours to confirm it fits our fixed ${BUILD_STANDARD_PRICE} standard scope (${BUILD_TURNAROUND_DAYS}-business-day delivery, Paper-first handoff to your private GitHub repository).
+- Stack submitted: ${payload.assetClasses.join(', ')} | Data: ${payload.dataSource} | Broker: ${payload.brokerTarget} | Hosting: ${payload.hostingTarget}.
+- Optional ongoing maintenance (${AGENT_CARE_PRICE}/mo Agent Care or ${AGENT_CARE_MCP_PRICE}/mo Agent Care + Pro MCP) is never billed during build week—only offered at Day-${BUILD_TURNAROUND_DAYS} handoff.
+
+If you want to add any extra rule details or API docs, just reply directly to this email.
+
+Evan Parra
+Founder, GammaRips
+evan@gammarips.com
+
+Work-for-hire software engineering only. Client owns strategy logic, repository, and broker credentials. Not investment advice.
+`;
+
+  return sendEmail({
+    to: `${payload.name} <${payload.email}>`,
+    subject: `We received your custom trading agent spec (Ref: ${payload.requestId.slice(0, 8)})`,
+    text: clientText,
+  });
+}
+
+export async function sendBuildPaidKickoffEmails({
+  requestId,
+  name,
+  email,
+  amountDisplay,
+}: {
+  requestId: string;
+  name: string;
+  email: string;
+  amountDisplay: string;
+}) {
+  await sendEmail({
+    to: 'Evan Parra <evan@gammarips.com>',
+    replyTo: email,
+    subject: `[PAID ${amountDisplay}] Custom Agent Build — ${name} (${requestId})`,
+    text: `PAID custom agent build order!\n\nRequest ID: ${requestId}\nClient: ${name} <${email}>\nAmount Paid: ${amountDisplay}\n\nCheck Firestore collection agent_build_requests/${requestId} for the full written spec.`,
+  });
+
+  const kickoffText = `Hi ${name},
+
+Your ${amountDisplay} GammaRips Custom Trading Agent Build slot is locked in (Order Ref: ${requestId}).
+
+Here is our ${BUILD_TURNAROUND_DAYS}-business-day fulfillment timeline:
+1. Day 0–1 (Spec Confirmation & Scaffold): I review your written rules from request ${requestId} and spin up your private Python 3.12 repository with limit-order-only execution, fill-derived hard stops, and restart-safe order-intent state. (If anything in your spec falls outside standard fixed scope, I'll flag it within 24 hours with a 100% immediate refund option.)
+2. Day 2–4 (Implementation & Live-Market Paper Verification): We implement your strategy adapter, unit-test stop/sizing/idempotency rails, and verify a live-market session in Paper Mode.
+3. Day ${BUILD_TURNAROUND_DAYS} (Private GitHub Handoff): Reply to this email with the GitHub username you'd like invited to your private repository. You'll receive the full source code, Docker + systemd deployment files, .env.example (we never hold your live broker keys), and walkthrough notes.
+
+Reply right here with your GitHub username and any extra edge cases you want covered.
+
+Let's build,
+Evan Parra
+Founder, GammaRips
+evan@gammarips.com
+
+Work-for-hire software engineering only; delivered in Paper Mode by default. Not investment advice.
+`;
+
+  return sendEmail({
+    to: `${name} <${email}>`,
+    subject: `Build slot confirmed (${amountDisplay}) — reply with your GitHub username`,
+    text: kickoffText,
+  });
+}
+
 
 
 

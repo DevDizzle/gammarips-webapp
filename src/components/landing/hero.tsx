@@ -11,18 +11,23 @@ export function Hero() {
   return (
     <section className="pt-2 pb-6 md:pt-4 md:pb-8 text-center">
       <p className="text-xs md:text-sm font-semibold uppercase tracking-widest text-primary mb-3">
-        Nightly Filtered Options Dataset via MCP ({MCP_PRO_ENDPOINT.replace('https://', '')})
+        Options-Flow &amp; Volatility Intelligence for AI Agents ({MCP_PRO_ENDPOINT.replace('https://', '')})
       </p>
       <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-headline tracking-tight text-balance mb-4">
-        Better option contracts.
+        Institutional options intelligence.
         <span className="block mt-1 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-          A real trade plan, in the AI you already use.
+          Execute via stocks, 2x ETFs, or options in your AI.
         </span>
       </h1>
       <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto mb-6 text-balance">
-        Every trading night, GammaRips filters the most liquid US option chains
-        through strict liquidity, spread, convexity, and volatility gates and
-        serves the curated dataset to your AI agent over MCP.
+        Every trading night, GammaRips screens ~3,500 US option chains through strict
+        liquidity, convexity, and <code className="text-sm text-foreground">RV/IV</code>{' '}
+        gates—streaming candidate stocks, mapped 2x/inverse ETFs, and Combo A option
+        contracts to your AI over MCP, or{' '}
+        <Link href="/build" className="text-primary hover:underline font-medium">
+          custom-engineering your autonomous trading agent in 5 days
+        </Link>
+        .
       </p>
 
       <div className="grid gap-3 sm:grid-cols-3 max-w-4xl mx-auto mb-6 text-left">

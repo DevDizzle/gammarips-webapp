@@ -9,7 +9,7 @@ Validated in Catalyst Lab walk-forward audits (`N = 5,575` enriched contracts ac
 - `Delta 0.22–0.48` and `DTE 10–45` lift 3-day Option MFE `>= +40%` from 27.6% baseline to 35.4%.
 
 ## What I Serve (9 tools)
-- **The Combo A pool**: `get_pool` with `view=preview` returns the 3-contract preview on the Free tier. Pro unlocks the full 40–50 contract daily dataset (`view=enriched`, `raw`, or `features`). `get_signal` provides single-ticker deep dives (`view=detail`) and earnings-window checks (`view=earnings`).
+- **The Combo A pool & multi-instrument vehicles**: `get_pool` with `view=preview` returns the 3-contract preview on the Free tier. Pro unlocks the full 40–50 setup daily dataset (`view=enriched`, `raw`, or `features`). Every candidate includes `execution_vehicles` (`underlying_stock`, `option_contract`, `long_2x_etfs`, `inverse_etfs`) so agents can express setups via equities, 2x/inverse ETFs, or options. `get_signal` provides single-ticker deep dives (`view=detail`) and earnings-window checks (`view=earnings`).
 - **10-minute intraday liquidity**: `get_liquidity` returns 10-minute intraday open interest, active session volume, last trade, and greeks (09:02–16:52 ET) for one contract or the whole pool.
 - **3-day excursion outcome history**: `query_outcomes` queries BigQuery `enriched_option_outcomes`: touch-probability curves (`view=harvest`), unclipped 3-day MFE/MAE surfaces (`view=surface`), and custom target/stop bracket scoring (`view=exit_rule`).
 - **Raw option price tape**: `replay_contract` returns minute or daily bars for any historical pool contract.
@@ -25,7 +25,8 @@ Validated in Catalyst Lab walk-forward audits (`N = 5,575` enriched contracts ac
 
 ## MCP Endpoints (Free Preview vs. Pro Dataset)
 - **Free 3-Contract Preview:** `https://mcp.gammarips.com/mcp` (Streamable HTTP; no card, no key). Serves the 3-contract preview (`get_pool(view="preview")` — matching the 3-contract web preview on https://gammarips.com/signals), daily reports, playbooks, regime context, and market calendar.
-- **Pro Full Dataset ($29/mo, 30-day free trial):** Subscribe at https://gammarips.com/pricing ($29/mo founding price for the first 100 subscribers, $39/mo after). Authenticate via OAuth 2.1 at `https://mcp.gammarips.com/pro` (PKCE S256, dynamic registration, scope `mcp:read`) or send `Authorization: Bearer gr_live_...` generated at https://gammarips.com/account.
+- **Pro Full Dataset ($299/yr or $29/mo, 7-day free trial):** Subscribe at https://gammarips.com/pricing ($299/yr or $29/mo founding price for the first 100 subscribers, $39/mo after). Authenticate via OAuth 2.1 at `https://mcp.gammarips.com/pro` (PKCE S256, dynamic registration, scope `mcp:read`) or send `Authorization: Bearer gr_live_...` generated at https://gammarips.com/account.
+- **Done-For-You Custom Agent Build ($1,000 one-time):** Fixed-scope work-for-hire Python trading agent engineering across stocks, 2x/inverse ETFs, or options at https://gammarips.com/build.
 
 ## Disclaimers
 Educational market data and historical research only. Not investment advice. Past performance is not a guarantee of future results.

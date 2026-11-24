@@ -25,6 +25,7 @@ import type {
   XTraderCohortStats,
   XTraderSession,
   XTraderSummary,
+  XTraderTrade,
 } from '@/lib/xtrader';
 
 interface XTraderDashboardProps {
@@ -322,23 +323,38 @@ function SessionCard({
     ? scoredCandidates
     : session.candidates || [];
 
-  const trade = session.trade;
+  const sessionTrades: XTraderTrade[] =
+    Array.isArray(session.trades) && session.trades.length > 0
+      ? session.trades
+      : session.trade
+      ? [session.trade]
+      : [];
+  const trade = session.trade || sessionTrades[0] || null;
   const livePos = session.live_position;
   const featured = session.featured_analysis;
-  const isLiveRunning =
-    session.decision === 'PENDING' || (trade && trade.status === 'open');
+  const hasOpenTrade = sessionTrades.some((t) => t.status === 'open');
+  const isLiveRunning = session.decision === 'PENDING' || hasOpenTrade;
+
+  const closedPnlSum = sessionTrades
+    .filter((t) => t.status === 'closed' && t.pnl_usd !== null && t.pnl_usd !== undefined)
+    .reduce((acc, t) => acc + (t.pnl_usd ?? 0), 0);
+  const closedCostSum = sessionTrades
+    .filter((t) => t.status === 'closed' && t.cost_usd !== null && t.cost_usd !== undefined)
+    .reduce((acc, t) => acc + (t.cost_usd ?? 0), 0);
 
   const displayPnlUsd =
-    trade?.status === 'closed'
-      ? trade.pnl_usd
-      : trade?.status === 'open'
-      ? livePos?.unrealized_pnl_usd ?? 0
+    sessionTrades.length > 0
+      ? hasOpenTrade && closedCostSum === 0
+        ? livePos?.unrealized_pnl_usd ?? 0
+        : closedPnlSum + (hasOpenTrade ? livePos?.unrealized_pnl_usd ?? 0 : 0)
       : null;
 
   const displayPnlPct =
-    trade?.status === 'closed'
+    sessionTrades.length === 1 && trade?.status === 'closed'
       ? trade.pnl_pct
-      : trade?.status === 'open'
+      : closedCostSum > 0
+      ? closedPnlSum / closedCostSum
+      : hasOpenTrade
       ? livePos?.unrealized_pnl_pct ?? 0
       : null;
 
@@ -411,85 +427,137 @@ function SessionCard({
 
       {expanded && (
         <CardContent className="space-y-6 border-t border-border/60 pt-5">
-          {/* 1. Trade Execution Box (when traded) */}
-          {trade && (
-            <div className="rounded-xl border border-primary/30 bg-background/60 p-4 space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  {displayPnlUsd !== null && displayPnlUsd >= 0 ? (
-                    <TrendingUp className="h-4 w-4 text-emerald-400" />
-                  ) : (
-                    <TrendingDown className="h-4 w-4 text-red-400" />
-                  )}
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-foreground">
-                    {trade.status === 'open' ? 'Active Position' : 'Executed Trade'}:{' '}
-                    <span className="font-mono text-primary">{trade.contract}</span>
-                  </h3>
-                </div>
-                <span className="text-xs font-mono text-muted-foreground">
-                  Score {trade.x_score}/100 · {trade.contracts} contract
-                  {trade.contracts === 1 ? '' : 's'}
-                </span>
-              </div>
+          {/* 1. Trade Execution Box(es) (when traded — supports multi-book / multi-slot) */}
+          {sessionTrades.map((tr, trIdx) => {
+            const isEquityOrEtf =
+              tr.instrument_type === 'etf_2x' ||
+              tr.instrument_type === 'etf_inverse' ||
+              tr.instrument_type === 'stock_1x' ||
+              tr.book === 'dual_etf';
+            const trSymbol = tr.symbol || tr.contract || tr.ticker;
+            const qty = isEquityOrEtf ? (tr.shares ?? tr.contracts) : tr.contracts;
+            const qtyUnit = isEquityOrEtf
+              ? `share${qty === 1 ? '' : 's'}`
+              : `contract${qty === 1 ? '' : 's'}`;
+            const trPnlUsd =
+              tr.status === 'closed'
+                ? tr.pnl_usd
+                : livePos?.symbol === trSymbol || livePos?.contract === tr.contract || sessionTrades.length === 1
+                ? livePos?.unrealized_pnl_usd ?? 0
+                : 0;
+            const trPnlPct =
+              tr.status === 'closed'
+                ? tr.pnl_pct
+                : livePos?.symbol === trSymbol || livePos?.contract === tr.contract || sessionTrades.length === 1
+                ? livePos?.unrealized_pnl_pct ?? 0
+                : 0;
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                <div className="rounded-lg bg-muted/30 p-2.5">
-                  <div className="text-muted-foreground">Entry Fill</div>
-                  <div className="font-mono font-semibold text-foreground text-sm mt-0.5">
-                    {formatUsd(trade.entry_fill)}
+            return (
+              <div
+                key={`${trSymbol}-${trIdx}`}
+                className="rounded-xl border border-primary/30 bg-background/60 p-4 space-y-3"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {trPnlUsd !== null && trPnlUsd !== undefined && trPnlUsd >= 0 ? (
+                      <TrendingUp className="h-4 w-4 text-emerald-400" />
+                    ) : (
+                      <TrendingDown className="h-4 w-4 text-red-400" />
+                    )}
+                    <Badge variant="outline" className="text-[10px] font-mono uppercase">
+                      {isEquityOrEtf ? 'Book A · 2x/Inv ETF' : 'Book B · Options'}
+                    </Badge>
+                    {tr.side && (
+                      <Badge
+                        className={
+                          tr.side === 'BEAR'
+                            ? 'bg-red-500/20 text-red-300 border-red-500/40 text-[10px]'
+                            : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 text-[10px]'
+                        }
+                      >
+                        {tr.side}
+                      </Badge>
+                    )}
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-foreground">
+                      {tr.status === 'open' ? 'Active Position' : 'Executed Trade'}:{' '}
+                      <span className="font-mono text-primary">
+                        {isEquityOrEtf && trSymbol !== tr.ticker
+                          ? `${tr.ticker} → ${trSymbol}`
+                          : trSymbol}
+                      </span>
+                    </h3>
                   </div>
-                  <div className="text-[11px] text-muted-foreground">
-                    Cost {formatUsd(trade.cost_usd)}
-                  </div>
+                  <span className="text-xs font-mono text-muted-foreground">
+                    {tr.x_score !== null && tr.x_score !== undefined ? `Score ${tr.x_score}/100 · ` : ''}
+                    {qty} {qtyUnit}
+                  </span>
                 </div>
-                <div className="rounded-lg bg-muted/30 p-2.5">
-                  <div className="text-muted-foreground">Stop / Flat Rule</div>
-                  <div className="font-mono font-semibold text-foreground text-sm mt-0.5">
-                    {formatUsd(trade.stop_price)}
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                  <div className="rounded-lg bg-muted/30 p-2.5">
+                    <div className="text-muted-foreground">Entry Fill</div>
+                    <div className="font-mono font-semibold text-foreground text-sm mt-0.5">
+                      {formatUsd(tr.entry_fill)}
+                    </div>
+                    <div className="text-[11px] text-muted-foreground">
+                      Cost {formatUsd(tr.cost_usd)}
+                    </div>
                   </div>
-                  <div className="text-[11px] text-muted-foreground">
-                    {trade.target_price
-                      ? `Target ${formatUsd(trade.target_price)}`
-                      : 'Uncapped to 15:45 ET'}
+                  <div className="rounded-lg bg-muted/30 p-2.5">
+                    <div className="text-muted-foreground">Stop / Hold Rule</div>
+                    <div className="font-mono font-semibold text-foreground text-sm mt-0.5">
+                      {formatUsd(tr.stop_price)}
+                    </div>
+                    <div className="text-[11px] text-muted-foreground">
+                      {tr.target_price
+                        ? `Target ${formatUsd(tr.target_price)}`
+                        : tr.exit_session_date && tr.exit_session_date !== session.session_date
+                        ? `2-Session → ${tr.exit_session_date} ${tr.flat_time_et || '15:45'} ET`
+                        : `Uncapped to ${tr.flat_time_et || '15:45'} ET`}
+                    </div>
                   </div>
-                </div>
-                <div className="rounded-lg bg-muted/30 p-2.5">
-                  <div className="text-muted-foreground">
-                    {trade.status === 'open' ? 'Live Bid / Mark' : 'Exit Fill'}
+                  <div className="rounded-lg bg-muted/30 p-2.5">
+                    <div className="text-muted-foreground">
+                      {tr.status === 'open' ? 'Live Bid / Mark' : 'Exit Fill'}
+                    </div>
+                    <div className="font-mono font-semibold text-foreground text-sm mt-0.5">
+                      {tr.status === 'open'
+                        ? `${formatUsd(livePos?.bid)} / ${formatUsd(livePos?.mark)}`
+                        : formatUsd(tr.exit_fill)}
+                    </div>
+                    <div className="text-[11px] text-muted-foreground">
+                      {tr.status === 'open'
+                        ? `As of ${formatEtTime(livePos?.updated_ts_et)}`
+                        : formatReasonLabel(tr.exit_reason)}
+                    </div>
                   </div>
-                  <div className="font-mono font-semibold text-foreground text-sm mt-0.5">
-                    {trade.status === 'open'
-                      ? `${formatUsd(livePos?.bid)} / ${formatUsd(livePos?.mark)}`
-                      : formatUsd(trade.exit_fill)}
-                  </div>
-                  <div className="text-[11px] text-muted-foreground">
-                    {trade.status === 'open'
-                      ? `As of ${formatEtTime(livePos?.updated_ts_et)}`
-                      : formatReasonLabel(trade.exit_reason)}
-                  </div>
-                </div>
-                <div className="rounded-lg bg-muted/30 p-2.5">
-                  <div className="text-muted-foreground">
-                    {trade.status === 'open' ? 'Unrealized P&L' : 'Realized P&L'}
-                  </div>
-                  <div
-                    className={`font-mono font-bold text-sm mt-0.5 ${
-                      (displayPnlUsd ?? 0) > 0
-                        ? 'text-emerald-400'
-                        : (displayPnlUsd ?? 0) < 0
-                        ? 'text-red-400'
-                        : 'text-foreground'
-                    }`}
-                  >
-                    {formatUsd(displayPnlUsd, true)} ({formatPct(displayPnlPct, true)})
-                  </div>
-                  <div className="text-[11px] text-muted-foreground">
-                    {trade.status === 'open' ? 'Live OPRA NBBO' : formatEtTime(trade.exit_ts_et)}
+                  <div className="rounded-lg bg-muted/30 p-2.5">
+                    <div className="text-muted-foreground">
+                      {tr.status === 'open' ? 'Unrealized P&L' : 'Realized P&L'}
+                    </div>
+                    <div
+                      className={`font-mono font-bold text-sm mt-0.5 ${
+                        (trPnlUsd ?? 0) > 0
+                          ? 'text-emerald-400'
+                          : (trPnlUsd ?? 0) < 0
+                          ? 'text-red-400'
+                          : 'text-foreground'
+                      }`}
+                    >
+                      {formatUsd(trPnlUsd, true)} ({formatPct(trPnlPct, true)})
+                    </div>
+                    <div className="text-[11px] text-muted-foreground">
+                      {tr.status === 'open'
+                        ? isEquityOrEtf
+                          ? 'Live Massive Quote'
+                          : 'Live OPRA NBBO'
+                        : formatEtTime(tr.exit_ts_et)}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })}
 
           {/* 2. Multi-Agent Reasoning Panel */}
           {featured && (
@@ -877,6 +945,77 @@ export function XTraderDashboard({ summary, sessions }: XTraderDashboardProps) {
           </div>
         </div>
 
+        {/* Dual-Book A/B Benchmark Split (Book A: 2x/Inverse ETFs vs Book B: Options) */}
+        {selectedCohort === 'paper' &&
+          (summary?.cohorts?.paper_etf || summary?.cohorts?.paper_options) && (
+            <div className="grid md:grid-cols-2 gap-4 pt-2 border-t border-border/60">
+              {[
+                {
+                  key: 'paper_etf',
+                  title: 'Book A · 2x Long / Inverse ETFs & Stocks',
+                  rules: '2 slots @ 50% · -8% stop · 2-session hold (15:45 ET Day 2)',
+                  stats: summary.cohorts.paper_etf,
+                },
+                {
+                  key: 'paper_options',
+                  title: 'Book B · Combo A Single-Leg Options',
+                  rules: '1 slot @ 25% · spread <= 6% · $1–$5 mark · -25% stop · same-day 15:45 ET',
+                  stats: summary.cohorts.paper_options,
+                },
+              ].map((b) => {
+                const st = b.stats;
+                if (!st) return null;
+                const bPnl = st.total_pnl_usd ?? 0;
+                const bRoi = st.account_roi_pct ?? 0;
+                return (
+                  <div
+                    key={b.key}
+                    className="rounded-xl border border-border/80 bg-background/70 p-4 space-y-2.5"
+                  >
+                    <div className="flex items-baseline justify-between gap-2">
+                      <h3 className="text-sm font-bold font-headline text-foreground">{b.title}</h3>
+                      <span className="text-xs font-mono text-muted-foreground">
+                        Equity: <strong className="text-foreground">{formatUsd(st.current_equity_usd)}</strong>
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground font-mono">{b.rules}</p>
+                    <div className="grid grid-cols-3 gap-2 pt-1 text-xs font-mono">
+                      <div className="rounded-lg bg-muted/30 p-2">
+                        <div className="text-[10px] text-muted-foreground uppercase">P&amp;L (ROI)</div>
+                        <div
+                          className={`font-bold mt-0.5 ${
+                            bPnl > 0
+                              ? 'text-emerald-400'
+                              : bPnl < 0
+                              ? 'text-red-400'
+                              : 'text-foreground'
+                          }`}
+                        >
+                          {formatUsd(bPnl, true)} ({formatPct(bRoi, true)})
+                        </div>
+                      </div>
+                      <div className="rounded-lg bg-muted/30 p-2">
+                        <div className="text-[10px] text-muted-foreground uppercase">Trades</div>
+                        <div className="font-bold text-foreground mt-0.5">
+                          {st.trades_closed} ({st.wins}W-{st.losses}L)
+                          {st.trades_open > 0 ? ` · ${st.trades_open} open` : ''}
+                        </div>
+                      </div>
+                      <div className="rounded-lg bg-muted/30 p-2">
+                        <div className="text-[10px] text-muted-foreground uppercase">Win Rate</div>
+                        <div className="font-bold text-foreground mt-0.5">
+                          {st.win_rate !== null && st.win_rate !== undefined
+                            ? formatPct(st.win_rate)
+                            : '--'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
         {/* Paper Trading & Compliance Disclaimer */}
         <div className="rounded-lg border border-amber-500/25 bg-amber-500/5 px-3.5 py-2.5 flex items-start gap-2.5 text-xs text-muted-foreground">
           <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
@@ -886,7 +1025,7 @@ export function XTraderDashboard({ summary, sessions }: XTraderDashboardProps) {
             </strong>{' '}
             {selectedCohort === 'live'
               ? 'These logs show real-money executions from the operator reference agent built on GammaRips MCP.'
-              : 'All figures above reflect simulated paper-trading fills against live Massive OPRA NBBO quotes on a $2,500 baseline until live capital deployment.'}{' '}
+              : 'All figures above reflect simulated paper-trading fills against live Massive equity/ETF & OPRA NBBO quotes across isolated $2,500 paper books (running head-to-head through January 2027).'}{' '}
             Complete cohort shown (every trade and pass). Educational market data and research
             observability only, not investment advice or a recommendation to copy trades.
           </p>

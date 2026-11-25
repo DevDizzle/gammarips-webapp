@@ -272,7 +272,7 @@ export async function GET(req: NextRequest) {
               {badgeText}
             </div>
             <div style={{ display: 'flex', fontSize: '18px', color: MUTED, fontWeight: 600 }}>
-              Gemini 4 Hydrogen -&gt; Neon · Combo A MCP
+              Gemini 4 AI Agent · Stocks, 2x ETFs &amp; Options
             </div>
           </div>
 
@@ -282,11 +282,11 @@ export async function GET(req: NextRequest) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div style={{ display: 'flex', fontSize: '58px', fontWeight: 800, lineHeight: 1.08 }}>
                   {morningPoolCount > 0
-                    ? `${morningPoolCount} Bullish Calls Passed Filter`
-                    : 'Pre-Market Combo A Pool Live'}
+                    ? `${morningPoolCount} Liquid Setups Passed Filter`
+                    : 'Pre-Market Liquid Setups Live'}
                 </div>
                 <div style={{ display: 'flex', fontSize: '24px', color: MUTED }}>
-                  Mid &gt;= $1.00 · OI &gt;= 500 · Delta 0.22-0.48 · DTE 10-45
+                  Stocks, 2x/Inverse ETFs &amp; Liquid Options · Mid &gt;= $1 · OI &gt;= 500
                 </div>
               </div>
 
@@ -300,10 +300,10 @@ export async function GET(req: NextRequest) {
                     letterSpacing: '0.08em',
                   }}
                 >
-                  TOP WATCHLIST BEFORE 10:05 ET X-ALPHA SCAN
+                  TOP WATCHLIST BEFORE 10:05 ET CATALYST SCAN
                 </div>
                 <div style={{ display: 'flex', gap: '18px', flexWrap: 'wrap' }}>
-                  {(morningTickers.length > 0 ? morningTickers : ['COMBO A']).map((tk) => (
+                  {(morningTickers.length > 0 ? morningTickers : ['LIVE SCAN']).map((tk) => (
                     <div
                       key={tk}
                       style={{
@@ -419,7 +419,7 @@ export async function GET(req: NextRequest) {
                   No Unpriced Catalyst Cleared the 60-Point Gate
                 </div>
                 <div style={{ display: 'flex', fontSize: '24px', color: MUTED }}>
-                  Screened {session?.pool_stats?.total_screened ?? 0} Combo A calls · Top score:{' '}
+                  Screened {session?.pool_stats?.total_screened ?? 0} liquid setups · Top score:{' '}
                   {session?.pool_stats?.top_ticker
                     ? `$${session.pool_stats.top_ticker} (${session.pool_stats.top_score}/100)`
                     : 'None'}

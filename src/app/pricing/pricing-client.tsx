@@ -10,7 +10,11 @@ import { Disclosure } from '@/components/ui/disclosure';
 import { Check, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
-import { event as trackEvent } from '@/lib/gtag';
+import {
+  generateEventId,
+  getAttributionPayload,
+  trackBeginCheckoutConversion,
+} from '@/lib/attribution';
 import {
   TOOL_COUNT,
   PRICE_MONTHLY,
@@ -116,6 +120,7 @@ export function PricingClient(_props: { receipts?: Receipts }) {
         typeof window !== 'undefined' ? localStorage.getItem('ga_client_id') : null;
       const gaSessionId =
         typeof window !== 'undefined' ? localStorage.getItem('ga_session_id') : null;
+      const attribution = getAttributionPayload();
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
@@ -125,6 +130,7 @@ export function PricingClient(_props: { receipts?: Receipts }) {
         body: JSON.stringify({
           plan: 'pro',
           interval,
+          attribution,
           ...(gaClientId ? { gaClientId } : {}),
           ...(gaSessionId ? { gaSessionId } : {}),
         }),
@@ -164,12 +170,14 @@ export function PricingClient(_props: { receipts?: Receipts }) {
 
   async function handleCheckout(interval: 'month' | 'year' = 'month') {
     const displayPrice = interval === 'year' ? PRICE_ANNUAL : PRICE_MONTHLY;
-    trackEvent('begin_checkout', {
-      currency: 'USD',
+    trackBeginCheckoutConversion({
+      eventId: generateEventId('pro_checkout'),
       value: Number(displayPrice.replace(/[^0-9.]/g, '')) || 0,
       plan: 'pro',
-      interval,
-      authenticated: !!user,
+      extra: {
+        interval,
+        authenticated: !!user,
+      },
     });
     if (!user) {
       if (typeof window !== 'undefined') {

@@ -80,9 +80,20 @@ function getStorage() {
     return getAdminStorage(getAdminApp());
 }
 
-export async function addEmailSubscriber(email: string): Promise<{ success: boolean; error?: string }> {
+export async function addEmailSubscriber(
+  email: string,
+  attribution?: Record<string, string>
+): Promise<{ success: boolean; error?: string }> {
   try {
     const subscribersRef = getDb().collection('email_subscribers');
+    const cleanAttribution =
+      attribution && typeof attribution === 'object'
+        ? Object.fromEntries(
+            Object.entries(attribution)
+              .filter(([, v]) => typeof v === 'string' && v.trim().length > 0)
+              .map(([k, v]) => [k.slice(0, 40), v.trim().slice(0, 200)])
+          )
+        : {};
     
     // Check for duplicate
     const existing = await subscribersRef.where('email', '==', email.toLowerCase()).limit(1).get();
@@ -94,6 +105,7 @@ export async function addEmailSubscriber(email: string): Promise<{ success: bool
       email: email.toLowerCase(),
       source: 'website',
       status: 'active',
+      ...(Object.keys(cleanAttribution).length > 0 ? { attribution: cleanAttribution } : {}),
       subscribedAt: FieldValue.serverTimestamp(),
       welcomeSent: false,
       drip1Sent: false,

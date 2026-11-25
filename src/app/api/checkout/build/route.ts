@@ -34,6 +34,23 @@ export async function POST(req: NextRequest) {
     };
     if (gaClientId) metadata.ga_client_id = gaClientId;
     if (gaSessionId) metadata.ga_session_id = gaSessionId;
+    if (body.attribution && typeof body.attribution === 'object') {
+      for (const key of [
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'gclid',
+        'fbclid',
+        'fbc',
+        'fbp',
+        'rdt_cid',
+      ]) {
+        const val = (body.attribution as Record<string, unknown>)[key];
+        if (typeof val === 'string' && val.trim().length > 0) {
+          metadata[key] = val.trim().slice(0, 200);
+        }
+      }
+    }
 
     const checkout = await createOneTimeCheckoutSession(
       email,

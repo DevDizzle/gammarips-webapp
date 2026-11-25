@@ -7,7 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { event as trackEvent } from '@/lib/gtag';
+import {
+  captureAttributionFromUrl,
+  generateEventId,
+  getAttributionPayload,
+  trackBeginCheckoutConversion,
+  trackLeadConversion,
+} from '@/lib/attribution';
 import {
   AGENT_CARE_MCP_PRICE,
   AGENT_CARE_PRICE,
@@ -67,22 +73,8 @@ export function BuildIntakeForm() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const params = new URLSearchParams(window.location.search);
-    const captured: Record<string, string> = {};
-    for (const key of [
-      'utm_source',
-      'utm_medium',
-      'utm_campaign',
-      'utm_term',
-      'utm_content',
-      'gclid',
-      'fbclid',
-      'rdt_cid',
-    ]) {
-      const val = params.get(key);
-      if (val) captured[key] = val;
-    }
-    setAttribution(captured);
+    captureAttributionFromUrl();
+    setAttribution(getAttributionPayload());
   }, []);
 
   const toggleAssetClass = (item: string) => {
@@ -125,6 +117,8 @@ export function BuildIntakeForm() {
 
     setSubmittingMode(mode);
     try {
+      const leadEventId = generateEventId('build_lead');
+      const liveAttribution = { ...attribution, ...getAttributionPayload() };
       const intakeRes = await fetch('/api/build-intake', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -138,7 +132,8 @@ export function BuildIntakeForm() {
           rulesSummary,
           complianceAccepted: true,
           fastTrackCheckout: mode === 'checkout',
-          attribution,
+          attribution: liveAttribution,
+          eventId: leadEventId,
         }),
       });
       const intakeJson = await intakeRes.json();
@@ -148,10 +143,10 @@ export function BuildIntakeForm() {
 
       const requestId: string = intakeJson.requestId;
 
-      trackEvent('generate_lead', {
-        currency: 'USD',
+      trackLeadConversion({
+        eventId: leadEventId,
         value: mode === 'checkout' ? 1000 : 250,
-        lead_type: mode === 'checkout' ? 'agent_build_fast_track' : 'agent_build_scope_check',
+        leadType: mode === 'checkout' ? 'agent_build_fast_track' : 'agent_build_scope_check',
       });
 
       if (mode === 'scope') {
@@ -165,8 +160,8 @@ export function BuildIntakeForm() {
       const gaSessionId =
         typeof window !== 'undefined' ? localStorage.getItem('ga_session_id') : null;
 
-      trackEvent('begin_checkout', {
-        currency: 'USD',
+      trackBeginCheckoutConversion({
+        eventId: generateEventId('build_checkout'),
         value: 1000,
         plan: 'agent_build_standard',
       });
@@ -178,6 +173,7 @@ export function BuildIntakeForm() {
           requestId,
           email,
           name,
+          attribution: liveAttribution,
           ...(gaClientId ? { gaClientId } : {}),
           ...(gaSessionId ? { gaSessionId } : {}),
         }),

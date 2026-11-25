@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getAdminApp } from '@/lib/firebase-admin';
 import { sendBuildIntakeEmails } from '@/lib/mailgun';
+import { sendServerAdConversions } from '@/lib/ad-conversions';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -87,6 +88,31 @@ export async function POST(req: NextRequest) {
       fastTrackCheckout,
     }).catch((err) => {
       console.error('build-intake: failed to send notification email', err);
+    });
+
+    const eventId =
+      typeof body.eventId === 'string' && body.eventId.trim()
+        ? body.eventId.trim().slice(0, 100)
+        : `build_lead_${requestId}`;
+    const clientIpAddress =
+      req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || undefined;
+    const clientUserAgent = req.headers.get('user-agent') || undefined;
+
+    await sendServerAdConversions({
+      eventName: 'Lead',
+      eventId,
+      eventSourceUrl: 'https://gammarips.com/build',
+      email,
+      value: fastTrackCheckout ? 1000 : 250,
+      currency: 'USD',
+      contentName: fastTrackCheckout
+        ? 'agent_build_fast_track'
+        : 'agent_build_scope_check',
+      fbc: attribution.fbc,
+      fbp: attribution.fbp,
+      rdtCid: attribution.rdt_cid,
+      clientIpAddress,
+      clientUserAgent,
     });
 
     return NextResponse.json({ ok: true, requestId });

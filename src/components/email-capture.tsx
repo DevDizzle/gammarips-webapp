@@ -6,6 +6,11 @@ import { Input } from '@/components/ui/input';
 import { subscribeEmail } from '@/app/email-actions';
 import { Loader2, Mail, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import {
+  generateEventId,
+  getAttributionPayload,
+  trackLeadConversion,
+} from '@/lib/attribution';
 
 export function EmailCapture({ variant = 'default' }: { variant?: 'default' | 'minimal' }) {
   const [email, setEmail] = useState('');
@@ -19,9 +24,16 @@ export function EmailCapture({ variant = 'default' }: { variant?: 'default' | 'm
 
     setIsLoading(true);
     try {
-      const result = await subscribeEmail(email);
+      const eventId = generateEventId('email_lead');
+      const attribution = getAttributionPayload();
+      const result = await subscribeEmail(email, attribution, eventId);
       if (result.success) {
         setIsSuccess(true);
+        trackLeadConversion({
+          eventId,
+          leadType: 'newsletter_signup',
+          value: 0,
+        });
         toast({
             title: "Welcome aboard!",
             description: "Check your inbox for your first update.",

@@ -6,6 +6,7 @@ import { stripe } from '@/lib/stripe';
 import { getUserByStripeCustomerIdAdmin, revokeMcpKeysForUserAdmin } from '@/lib/firebase-admin';
 import { syncSubscriptionToUser } from '@/lib/stripe-sync';
 import { sendWelcomeEmail, sendTrialEndingEmail, sendBuildPaidKickoffEmails } from '@/lib/mailgun';
+import { sendServerAdConversions } from '@/lib/ad-conversions';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'; // Import direct firestore access
 
 // Trimmed: the Secret Manager value ends in a newline, and a newline in the
@@ -221,6 +222,29 @@ export async function POST(req: NextRequest) {
         if (invSubId) {
             const renewedSub = await stripe.subscriptions.retrieve(invSubId);
             await handleSubscriptionChange(renewedSub, false);
+
+            // Fire server-side Meta/Reddit CAPI once per real cash invoice
+            // (strictly on invoice.paid, never twice on invoice.payment_succeeded).
+            const amountPaidUsd = (invoice.amount_paid || 0) / 100;
+            if (event.type === 'invoice.paid' && amountPaidUsd > 0) {
+                const subMeta = renewedSub.metadata || {};
+                const invoiceEmail =
+                    invoice.customer_email ||
+                    (await getUserByStripeCustomerIdAdmin(renewedSub.customer as string))?.email ||
+                    undefined;
+                await sendServerAdConversions({
+                    eventName: 'Subscribe',
+                    eventId: `inv_${invoice.id}`,
+                    eventSourceUrl: 'https://gammarips.com/pricing',
+                    email: invoiceEmail,
+                    value: amountPaidUsd,
+                    currency: (invoice.currency || 'usd').toUpperCase(),
+                    contentName: 'gammarips_pro_mcp',
+                    fbc: subMeta.fbc,
+                    fbp: subMeta.fbp,
+                    rdtCid: subMeta.rdt_cid,
+                });
+            }
         }
         break;
     }
@@ -255,6 +279,24 @@ export async function POST(req: NextRequest) {
 
             await handleSubscriptionChange(subscription, true, plan);
             await sendPurchaseEventToGA(session);
+
+            const sessionMeta = session.metadata || {};
+            const subUnitUsd = (subscription.items.data[0]?.price?.unit_amount ?? 2900) / 100;
+            const sessionPaidUsd = (session.amount_total || 0) / 100;
+            const sessionEmail =
+                session.customer_details?.email || session.customer_email || undefined;
+            await sendServerAdConversions({
+                eventName: sessionPaidUsd === 0 ? 'StartTrial' : 'Subscribe',
+                eventId: `${sessionPaidUsd === 0 ? 'trial' : 'sub'}_${session.id}`,
+                eventSourceUrl: 'https://gammarips.com/pricing',
+                email: sessionEmail,
+                value: sessionPaidUsd === 0 ? subUnitUsd : sessionPaidUsd,
+                currency: (session.currency || 'usd').toUpperCase(),
+                contentName: 'gammarips_pro_mcp',
+                fbc: sessionMeta.fbc,
+                fbp: sessionMeta.fbp,
+                rdtCid: sessionMeta.rdt_cid,
+            });
 
             // Provision WhatsApp access: write a Firestore doc the OpenClaw
             // paywall plugin will check before letting the chat agent reply.
@@ -324,6 +366,20 @@ export async function POST(req: NextRequest) {
             }
 
             await sendPurchaseEventToGA(session);
+
+            const buildMeta = session.metadata || {};
+            await sendServerAdConversions({
+                eventName: 'Purchase',
+                eventId: `build_${session.id}`,
+                eventSourceUrl: 'https://gammarips.com/build',
+                email: customerEmail || undefined,
+                value: amountPaidUsd,
+                currency: (session.currency || 'usd').toUpperCase(),
+                contentName: 'gammarips_custom_agent_build',
+                fbc: buildMeta.fbc,
+                fbp: buildMeta.fbp,
+                rdtCid: buildMeta.rdt_cid,
+            });
         }
         break;
     case 'customer.subscription.trial_will_end':

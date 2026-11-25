@@ -3,19 +3,25 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowRight, AlertTriangle, BookOpen, Eye, Clock, UserX } from 'lucide-react';
-import { PRICE_MONTHLY, OG_IMAGE } from '@/lib/constants';
+import { ArrowRight, AlertTriangle, BookOpen, Eye, Clock, UserX, Code2 } from 'lucide-react';
+import {
+  BUILD_STANDARD_PRICE,
+  OG_IMAGE,
+  PRICE_ANNUAL,
+  PRICE_MONTHLY,
+} from '@/lib/constants';
 
+// Root layout applies `%s | GammaRips` — never add `| GammaRips` here.
 export const metadata: Metadata = {
-  title: 'GammaRips Disclosures: What we are NOT',
+  title: 'Disclosures: What GammaRips Is and Is Not',
   description:
-    'What GammaRips is and is not: educational market data only, not investment advice, point-in-time historical outcome cohorts, no trading for you, and no registered investment advisor.',
+    'Six plain-English disclosures: educational market data & work-for-hire software only, not investment advice, no trade execution on your behalf.',
   alternates: { canonical: 'https://gammarips.com/disclosures' },
   openGraph: {
     images: [OG_IMAGE],
-    title: 'GammaRips Disclosures: What we are NOT',
+    title: 'Disclosures: What GammaRips Is and Is Not | GammaRips',
     description:
-      'Five explicit disclosures about what GammaRips is and is not.',
+      'Six explicit disclosures about what GammaRips is and is not across market data, leveraged ETFs, options, and custom agent builds.',
     url: 'https://gammarips.com/disclosures',
   },
 };
@@ -26,9 +32,9 @@ const disclosures = [
     number: '01',
     title: 'GammaRips does not trade for you.',
     body: [
-      'GammaRips is a financial data vendor. GammaRips never places an order for you or for any subscriber, and no subscriber order reaches an exchange through GammaRips. The nightly Combo A options pool, the 3-day excursion outcome surfaces, and the Catalyst Lab research cohorts are tracked on a historical and paper-trading basis.',
-      'The outcome pipeline ingests Polygon options data, applies deterministic tracking rules from the 10:00 ET morning reference window across the subsequent 3 trading days, and records Maximum Favorable Excursion (MFE) and Maximum Adverse Excursion (MAE) in BigQuery (enriched_option_outcomes).',
-      'If you act on anything you read here or over the MCP API in your own brokerage account, that is your decision, your capital, and your risk. We do not place trades for you, hold positions for you, or receive any commission tied to trades you place.',
+      'GammaRips is a market-data and software-engineering vendor. We never place orders for you, never hold custody of your capital, and never store your brokerage credentials on GammaRips servers.',
+      'Our nightly pool, 3-day historical move tracking, walk-forward Lab audits, and the live X-Trader benchmark all run on a historical or paper-trading basis for transparency and education.',
+      'Any trade you place in your own brokerage account — whether in US stocks, 2x/inverse ETFs, or options — is strictly your decision, your capital, and your risk.',
     ],
   },
   {
@@ -36,39 +42,45 @@ const disclosures = [
     number: '02',
     title: 'Educational market data only. Not investment advice.',
     body: [
-      "GammaRips publishes curated options market data, point-in-time feature vectors, methodology writeups, and Catalyst Lab research findings as educational and analytical content. Nothing on this site, in our emails, over the MCP API, on @GammaRips on X, or in any direct communication constitutes investment, financial, tax, accounting, or legal advice, and anything an AI agent concludes from our data is the user's own analysis, not a GammaRips recommendation.",
-      'We do not know your financial situation, risk tolerance, time horizon, or tax position. A trade that would be reasonable for one person can be ruinous for another. Consult a registered investment advisor before making any trading decision.',
-      "Options trading involves substantial risk and is not suitable for every investor. The seller of an uncovered short option faces theoretically unlimited loss. The buyer of an option faces total loss of premium. Read the OCC's Characteristics and Risks of Standardized Options before trading any option.",
+      "Nothing on gammarips.com, in our emails, over the MCP API, on @GammaRips on X, or in any custom software handoff constitutes investment, financial, tax, or legal advice. Anything your AI agent concludes from GammaRips data is your own analysis, not a GammaRips recommendation.",
+      'We do not know your financial situation, risk tolerance, or goals. Consult a licensed financial advisor before making investment decisions.',
+      "Options and leveraged/inverse single-stock ETFs carry substantial risk of loss. Option buyers can lose 100% of premium; 2x/inverse ETFs reset daily and experience compounding decay in choppy markets, making them unsuitable for passive buy-and-hold investing. Read the OCC's Characteristics and Risks of Standardized Options and each ETF's prospectus before trading.",
+    ],
+  },
+  {
+    icon: Code2,
+    number: '03',
+    title: 'Custom Agent Builds are work-for-hire software only.',
+    body: [
+      `When you commission a ${BUILD_STANDARD_PRICE} Custom Trading Agent Build (/build), you supply and own the written trading rules, risk limits, server environment, and brokerage API keys. GammaRips implements your rules as work-for-hire software engineering — we do not recommend strategies or promise profitability.`,
+      'Every custom build ships in Paper Mode by default with limit-only order guards and fill-derived stops. Switching a bot to live brokerage funds is entirely your choice and responsibility.',
     ],
   },
   {
     icon: Clock,
-    number: '03',
-    title: 'Complete cohorts only, with sample size (N) and window.',
+    number: '04',
+    title: 'Complete historical cohorts only, with sample size (N) and window.',
     body: [
-      'We publish complete research cohorts only. Every Catalyst Lab study and excursion metric covers every qualifying contract in its stated date window, with sample size (N) attached.',
-      'We never publish cherry-picked subsets or selected-positive blended returns. Every contract surfaced in the pool is logged to the outcome warehouse (enriched_option_outcomes) under the same deterministic rules. Full methodology details live on the Methodology and Learn pages.',
-      'Past historical outcomes do not promise future results. We never promise a return, win rate, or guaranteed edge for your own trades.',
+      'Every research audit and X-Trader benchmark record publishes the complete cohort for its stated date window, wins and losses alike, with sample size (N) attached.',
+      'We never cherry-pick subsets or show blended returns that omit losing sessions. Full details live on our Methodology and Research Lab pages.',
     ],
   },
   {
     icon: Eye,
-    number: '04',
+    number: '05',
     title: 'Past performance does not predict future results.',
     body: [
-      'Historical excursion and fill figures are measured against historical and intraday option tape data. Live brokerage execution introduces slippage, partial fills, queue priority, halt-and-pause behavior, and latency that historical tracking cannot fully replicate.',
-      'Market regimes change. A microstructure or volatility filter that performed well in one volatility environment can degrade in another.',
-      'There is no claim, express or implied, that any historical excursion or research finding is indicative of any future result.',
+      'Historical fill rates, 3-day move statistics, and paper-trading benchmarks cannot fully replicate live brokerage latency, partial fills, spreads, trading halts, or changing volatility regimes.',
+      'There is no claim, express or implied, that any historical metric or paper benchmark will repeat in live trading.',
     ],
   },
   {
     icon: UserX,
-    number: '05',
+    number: '06',
     title: 'Founder is not a registered investment advisor.',
     body: [
-      'GammaRips is built by Evan Parra. Evan is not a registered investment advisor, broker-dealer, securities lawyer, CFP, CFA, or licensed financial professional of any kind. GammaRips is not a registered investment advisory firm, broker-dealer, or money-management business.',
-      `We do not solicit, manage, or accept assets under management. We sell access to data and software tools: a pipeline that publishes curated options market data and historical excursion outcomes over MCP for subscribers' own AI agents. The ${PRICE_MONTHLY}/month Agent Access subscription is a data-and-tools subscription, not an advisory or management fee, and the service provides no personalized recommendation of any kind.`,
-      'If you require advice on options trading tailored to your situation, consult a licensed advisor in your jurisdiction.',
+      'GammaRips is built by Evan Parra. Evan is an ML engineer and software developer — not a registered investment advisor, broker-dealer, CFP, CFA, or licensed financial professional.',
+      `The ${PRICE_MONTHLY}/mo (${PRICE_ANNUAL}/yr) Pro MCP subscription pays for market data and API tools, and the ${BUILD_STANDARD_PRICE} Custom Build fee pays for software engineering. Neither is an advisory or money-management fee.`,
     ],
   },
 ];
@@ -78,7 +90,7 @@ const disclosureSchema = {
   '@type': 'WebPage',
   name: 'GammaRips Disclosures: What we are NOT',
   description:
-    'Five explicit disclosures about what GammaRips is and is not.',
+    'Six explicit disclosures about what GammaRips is and is not.',
   url: 'https://gammarips.com/disclosures',
   publisher: {
     '@type': 'Organization',
@@ -94,19 +106,19 @@ export default function DisclosuresPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(disclosureSchema) }}
       />
-      <main className="container mx-auto px-4 py-12 md:py-20 max-w-3xl">
+      <main className="container mx-auto px-4 py-12 md:py-16 max-w-3xl">
         <header className="mb-12">
           <p className="text-sm uppercase tracking-wider text-muted-foreground mb-3">Disclosures</p>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h1 className="text-3xl sm:text-5xl font-bold font-headline tracking-tight mb-4">
             What GammaRips is NOT.
           </h1>
-          <p className="text-lg text-muted-foreground">
-            Five explicit disclosures, written plainly. If you only have ninety seconds for this
+          <p className="text-base sm:text-lg text-muted-foreground">
+            Six explicit disclosures, written plainly. If you only have ninety seconds for this
             page, read the headlines below.
           </p>
         </header>
 
-        <div className="space-y-6 mb-16">
+        <div className="space-y-6 mb-14">
           {disclosures.map((d) => {
             const Icon = d.icon;
             return (
@@ -121,7 +133,7 @@ export default function DisclosuresPage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-3">
                         <Icon className="h-5 w-5 text-primary" />
-                        <h2 className="text-xl font-bold">{d.title}</h2>
+                        <h2 className="text-xl font-bold font-headline">{d.title}</h2>
                       </div>
                       {d.body.map((para, i) => (
                         <p key={i} className="text-sm text-muted-foreground mb-3 last:mb-0 leading-relaxed">
@@ -136,36 +148,36 @@ export default function DisclosuresPage() {
           })}
         </div>
 
-        <Separator className="my-12" />
+        <Separator className="my-10" />
 
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-4">Where to read more</h2>
+          <h2 className="text-2xl font-bold font-headline mb-4">Where to read more</h2>
           <ul className="space-y-3 text-sm">
             <li>
               <Link href="/how-it-works" className="text-primary underline underline-offset-2 hover:no-underline">
-                Learn (How It Works)
+                How It Works
               </Link>{' '}
-              covers the overnight pipeline, 10-minute intraday liquidity checks, and the Catalyst Lab walk-forward research behind Combo A.
+              explains our nightly pipeline, live morning liquidity checks, and walk-forward filter audits.
             </li>
             <li>
               <Link href="/methodology" className="text-primary underline underline-offset-2 hover:no-underline">
                 Methodology
               </Link>{' '}
-              covers every threshold, data source, point-in-time leakage wall, and 3-day excursion outcome labeling.
+              documents every threshold, data source, ETF mapping, and 3-day move tracking rule.
             </li>
             <li>
-              <Link href="/about" className="text-primary underline underline-offset-2 hover:no-underline">
-                About
+              <Link href="/build" className="text-primary underline underline-offset-2 hover:no-underline">
+                Custom Agent Build
               </Link>{' '}
-              covers the engine, the data architecture, and the builder behind it.
+              details our fixed-scope work-for-hire Python trading bot engineering and safety guardrails.
             </li>
             <li>
               <Link href="/terms" className="text-primary underline underline-offset-2 hover:no-underline">
-                Terms of service
+                Terms of Service
               </Link>{' '}
               and{' '}
               <Link href="/privacy" className="text-primary underline underline-offset-2 hover:no-underline">
-                Privacy policy
+                Privacy Policy
               </Link>
               .
             </li>
@@ -183,12 +195,12 @@ export default function DisclosuresPage() {
           </ul>
         </section>
 
-        <Separator className="my-12" />
+        <Separator className="my-10" />
 
         <section className="text-center">
-          <h2 className="text-2xl font-bold mb-3">Questions about a specific disclosure?</h2>
+          <h2 className="text-2xl font-bold font-headline mb-3">Questions about a specific disclosure?</h2>
           <p className="text-muted-foreground mb-6">
-            Reply to any GammaRips email. It goes straight to Evan.
+            Reply to any GammaRips email or send a note directly to Evan.
           </p>
           <Button asChild variant="outline">
             <Link href="/about#contact">
@@ -197,9 +209,9 @@ export default function DisclosuresPage() {
           </Button>
         </section>
 
-        <p className="text-xs text-muted-foreground text-center mt-16">
-          Last reviewed: November 2026. Disclosures may be updated as the engine, regulatory posture,
-          or business model changes; updates will be dated.
+        <p className="text-xs text-muted-foreground text-center mt-14">
+          Last reviewed: November 25, 2026. Disclosures are updated whenever our data pipeline,
+          offerings, or policies change.
         </p>
       </main>
     </>

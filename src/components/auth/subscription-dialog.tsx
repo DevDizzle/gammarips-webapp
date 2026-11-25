@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Loader2, Zap } from 'lucide-react';
-import { PRICE_MONTHLY, TOOL_COUNT, TRIAL_DAYS } from '@/lib/constants';
+import { PRICE_ANNUAL, PRICE_MONTHLY, TOOL_COUNT, TRIAL_DAYS } from '@/lib/constants';
 
 type SubscriptionDialogProps = {
   open: boolean;
@@ -21,20 +21,20 @@ type SubscriptionDialogProps = {
 
 const features = [
   {
-    title: 'Full Nightly Combo A Options Dataset (40–50 Contracts)',
-    description: 'Bullish calls passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, and RV/IV >= 0.85',
+    title: 'Full Nightly Market Pool (40–50 Setups)',
+    description: 'Pre-filtered for real liquidity and mapped to stocks, 2x/inverse ETFs, and liquid options with news catalysts',
   },
   {
-    title: '10-Minute Intraday Liquidity Snapshots (09:02–16:52 ET)',
-    description: 'Verify live morning open interest, active session volume, and earnings dates',
+    title: 'Live Morning Liquidity & Earnings Checks',
+    description: 'Updated every 10 minutes during market hours so your AI verifies active volume and avoids surprise earnings',
   },
   {
-    title: '3-Day MFE/MAE Outcome Surfaces & Contract Replay',
-    description: 'Calibrate targets and stops from historical excursion distributions in BigQuery',
+    title: '3-Day Historical Move Data & Price Replay',
+    description: 'See how far past setups ran up and pulled back so your AI can set realistic targets and stops',
   },
   {
-    title: `All ${TOOL_COUNT} MCP Tools via OAuth 2.1 or API Key`,
-    description: 'Connect Claude, ChatGPT, Cursor, Codex, or the open-source gammarips-harness',
+    title: `All ${TOOL_COUNT} MCP Tools in Your Preferred AI`,
+    description: 'One-click browser login or API key for Claude, ChatGPT, Cursor, Codex, or the open-source harness',
   },
 ];
 
@@ -48,7 +48,7 @@ export function SubscriptionDialog({ open, onOpenChange, onSubscribe, loading }:
             Get Pro MCP Access
           </DialogTitle>
           <DialogDescription>
-            Start your {TRIAL_DAYS}-day free trial ({PRICE_MONTHLY}/mo founding price after). Full dataset access from minute one; cancel anytime before day {TRIAL_DAYS} at $0.
+            Start your {TRIAL_DAYS}-day free trial ({PRICE_MONTHLY}/mo or {PRICE_ANNUAL}/yr after). Full access from minute one; cancel anytime before day {TRIAL_DAYS} at $0.
           </DialogDescription>
         </DialogHeader>
 

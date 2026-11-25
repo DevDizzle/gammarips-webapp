@@ -76,8 +76,8 @@ export function ConsentClient({ summary }: { summary: ConsentSummary }) {
           <div className="rounded-md border bg-muted/30 p-4 text-sm">
             <p className="font-medium">What it can do</p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
-              <li>Read the curated pool, the opportunity surfaces, and the methodology tools.</li>
-              <li>Nothing else. It cannot change your account, your key, or your billing.</li>
+              <li>Read the daily market pool (stocks, 2x/inverse ETFs, and options), live liquidity snapshots, 3-day move history, and methodology playbooks.</li>
+              <li>Nothing else. It cannot place trades, change your account, touch your key, or alter your billing.</li>
             </ul>
             <p className="mt-3 text-xs text-muted-foreground">Scope: {summary.scope}</p>
           </div>
@@ -104,7 +104,7 @@ export function ConsentClient({ summary }: { summary: ConsentSummary }) {
                   <p className="mt-1 text-muted-foreground">Your plan: Agent Access. The pro tools are included.</p>
                 ) : (
                   <p className="mt-1 text-muted-foreground">
-                    Your plan: Free. The free tools work now. The pro tools need Agent Access ({PRICE_MONTHLY}/mo,
+                    Your plan: Free. The free tools work now. The pro tools need Agent Access ({PRICE_MONTHLY}/mo,{' '}
                     {TRIAL_DAYS}-day trial).{' '}
                     <Link href="/pricing" target="_blank" className="underline">
                       See pricing

@@ -57,7 +57,9 @@ export default function SignalClientPage({
         <div className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center mb-8">
           <div>
             <div className="flex items-center gap-3 mb-2 flex-wrap">
-              <h1 className="text-4xl font-bold font-headline tracking-tight">{signal.ticker}</h1>
+              <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-tight">
+                {signal.ticker} Stock &amp; Options Flow Analysis
+              </h1>
               <Badge variant={isBullish ? "default" : "destructive"} className={isBullish ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}>
                 {isBullish ? 'BULL' : 'BEAR'}
               </Badge>
@@ -65,8 +67,8 @@ export default function SignalClientPage({
                 {signal.scan_date}
               </Badge>
             </div>
-            <p className="text-lg text-muted-foreground">
-              Overnight Scan Record
+            <p className="text-base sm:text-lg text-muted-foreground">
+              Nightly Market Scan Record
               {signal.sector ? <span className="text-muted-foreground/70"> · {signal.sector}</span> : null}
             </p>
             <Link
@@ -75,21 +77,19 @@ export default function SignalClientPage({
             >
               <FileText className="w-4 h-4" /> See the {signal.scan_date} Morning Briefing
             </Link>
-            <p className="mt-3 text-sm text-muted-foreground max-w-xl">
-              This is one row from the GammaRips nightly scan of about 3,500 optionable
-              US stocks, tracked to its outcome. What membership means depends on the
-              scan date. For scan dates from 2026-08-24, it is a liquidity rank: the 100
-              most liquid names, bullish only. For earlier scan dates, the scan selected
-              on unusual options activity and included bearish names. The two sets are
-              not one population.
-              Data, not a recommendation.{" "}
+            <p className="mt-3 text-sm text-muted-foreground max-w-xl leading-relaxed">
+              Pulled from our nightly scan of ~3,500 US stocks. Connect Pro MCP to inspect {signal.ticker}&apos;s
+              mapped stock, 2x/inverse ETF, and option vehicles alongside live morning liquidity and
+              3-day move history. Educational market data only — not investment advice.{" "}
               <Link href="/how-it-works" className="text-primary hover:underline">
-                New here? See how the pool is built →
-              </Link>{" "}
-              <Link href="/developers" className="text-primary hover:underline">
-                Or put your AI agent on this data →
+                How it works &rarr;
               </Link>
             </p>
+            {signal.scan_date && signal.scan_date < '2026-08-24' && (
+              <p className="mt-2 text-xs text-muted-foreground/80 max-w-xl">
+                Archive note: scans before 2026-08-24 used an earlier unusual-activity filter that included both bullish and bearish names.
+              </p>
+            )}
           </div>
 
           <div className="flex gap-4 text-center">
@@ -350,8 +350,8 @@ export default function SignalClientPage({
           <div className="mt-8 w-full">
             <McpConversionCard
               source={`signal_${signal.ticker}`}
-              headline={`Query ${signal.ticker} & the full daily Combo A pool in your AI`}
-              subline="Stream tonight's 40–50 liquid bullish calls, 10-minute morning liquidity snapshots, earnings checks, and 3-day excursion history into Claude, ChatGPT, Cursor, or Codex over MCP."
+              headline={`Analyze ${signal.ticker} & the full daily pool in your AI`}
+              subline={`Stream 40–50 nightly liquid setups mapped to stocks, 2x/inverse ETFs, and options—plus live 10-minute morning liquidity checks, earnings alerts, and 3-day move history into Claude, ChatGPT, Cursor, or Codex.`}
             />
           </div>
         </div>

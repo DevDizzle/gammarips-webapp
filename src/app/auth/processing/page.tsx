@@ -19,7 +19,7 @@ export default function ProcessingPage() {
         if (user) {
             toast({
                 title: "You're in.",
-                description: "Browse today's pick, the signals list, and the latest report. Upgrade to Pro anytime from /pricing.",
+                description: "Browse today's daily pool, morning briefings, or connect your AI agent. Upgrade to Pro anytime from /pricing.",
             });
         }
         router.replace('/');

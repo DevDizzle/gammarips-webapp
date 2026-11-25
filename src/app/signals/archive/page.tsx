@@ -2,13 +2,21 @@ import Link from "next/link";
 import { getSignalTickersForSitemap } from "@/lib/firebase-admin";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Metadata } from "next";
+import { OG_IMAGE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   // Root layout applies the `%s | GammaRips` title template — no suffix here.
-  title: "Signal Archive: Every Ticker in the Overnight Options Flow Scan",
+  title: "Signal Archive: Every Ticker Scanned Overnight",
   description:
-    "Every ticker that has appeared in a GammaRips overnight options flow scan, with the date of its most recent appearance. Each links to its flow breakdown.",
+    "Every US stock ticker scanned by GammaRips overnight, with its most recent appearance date and full stock & options-flow breakdown.",
   alternates: { canonical: "https://gammarips.com/signals/archive" },
+  openGraph: {
+    images: [OG_IMAGE],
+    title: "Signal Archive: Every Ticker Scanned Overnight | GammaRips",
+    description:
+      "Every US stock ticker scanned by GammaRips overnight, with its most recent date and full stock & options-flow breakdown.",
+    url: "https://gammarips.com/signals/archive",
+  },
 };
 
 /* The crawl-path backbone for our largest page inventory: the sitemap only

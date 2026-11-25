@@ -1,14 +1,25 @@
-export const metadata = {
+import type { Metadata } from 'next';
+import { OG_IMAGE } from '@/lib/constants';
+
+export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'Privacy policy for GammaRips and GammaRips Pro.',
+  description:
+    'Privacy policy for GammaRips: what data we collect across gammarips.com, MCP access, and Custom Agent Build specs, and how to control it.',
   alternates: { canonical: 'https://gammarips.com/privacy' },
+  openGraph: {
+    images: [OG_IMAGE],
+    title: 'Privacy Policy | GammaRips',
+    description:
+      'What personal data GammaRips collects across our website, MCP server, and Custom Agent Build intake, and how you control it.',
+    url: 'https://gammarips.com/privacy',
+  },
 };
 
 export default function PrivacyPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold mb-8">Privacy Policy</h1>
-      <p className="text-sm text-gray-400 mb-8">Last updated: October 1, 2026</p>
+      <h1 className="text-3xl font-bold font-headline mb-4">Privacy Policy</h1>
+      <p className="text-sm text-muted-foreground mb-8">Last updated: November 25, 2026</p>
 
       <div className="prose prose-invert max-w-none space-y-6">
         <p>
@@ -59,8 +70,11 @@ export default function PrivacyPage() {
             matched to the visit that started it.
           </li>
           <li>
-            <strong>Email and messages.</strong> Your email address if you join the newsletter,
-            plus the text and reply address of any feedback or cancellation reason you send us.
+            <strong>Email, messages, and Custom Build intake.</strong> Your email address if you
+            join the newsletter, any support or feedback messages you send us, and any project
+            specification details you submit on <code>/build</code> (name, email, asset preferences,
+            broker/hosting selections, written trading rules, and referral/UTM parameters). We never
+            ask for your live brokerage passwords or API secrets in the intake form.
           </li>
         </ul>
         <p>

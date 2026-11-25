@@ -65,10 +65,10 @@ export function EmailCapture({ variant = 'default' }: { variant?: 'default' | 'm
                             <Mail className="h-6 w-6 text-primary" />
                         </div>
                         <h3 className="mb-2 text-xl font-bold text-white">
-                          Research notes &amp; dataset updates
+                          Weekly Market &amp; AI Trading Notes
                         </h3>
                         <p className="mb-6 max-w-md text-sm text-zinc-400">
-                          Get Catalyst Lab walk-forward experiments, Combo A methodology updates, and new MCP workflow releases. No firehose, no FOMO.
+                          Real lessons from running live AI trading agents, weekly market flow themes across stocks, 2x ETFs, and options, and new MCP workflows. No spam.
                         </p>
                     </>
                 )}

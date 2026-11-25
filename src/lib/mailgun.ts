@@ -99,33 +99,31 @@ export async function buildWelcomeEmailContent(name: string): Promise<{ text: st
     const textContent = `
 Hi ${name},
 
-You're in. GammaRips Agent Access is live on your account.
+You're in. GammaRips Pro MCP Access is live on your account.
 
-Here's how to get your agent working the data:
+Here's how to connect your AI in under 2 minutes:
 
-1. Generate your API key.
-   Go to your account page (https://gammarips.com/account) and click
-   "Generate API key". The key is shown once, so copy it right then.
-   Any trouble, just reply to this email and we'll sort it
-   immediately.
+1. Connect automatically (easiest).
+   In Claude Desktop, Claude.ai, or ChatGPT, add https://mcp.gammarips.com/pro as a
+   custom connector and sign in with your GammaRips account — no API key required.
+   For Claude Code, Cursor, Codex, or Gemini CLI, copy the 1-click setup prompt on
+   your account page (https://gammarips.com/account) so your AI wires itself up via
+   https://gammarips.com/install.md.
 
-2. Connect your agent.
-   Claude Code, Cursor, or any MCP client that can send an
-   Authorization header. Copy-paste setup at
-   https://gammarips.com/developers
+2. Optional: Generate a Bearer API key.
+   If your agent needs a static key, click "Generate API key" on
+   https://gammarips.com/account. The key is shown once, so copy it right away.
 
-3. Run your first brief.
-   Ask your agent to run the morning_brief prompt, or say "pull the
-   GammaRips pool and tell me what's interesting." All ${TOOL_COUNT} tools
-   (the curated pool, opportunity surfaces, outcome history, exit-rule
-   simulation, and methodology playbooks) are live on your key.
+3. Run your first morning brief.
+   Ask your AI: "Pull today's GammaRips pool, skip names with upcoming earnings,
+   check live morning liquidity, and show stock, 2x ETF, and option choices for my
+   risk budget." All ${TOOL_COUNT} MCP tools are live on your account.
 
-Your ${TRIAL_DAYS}-day free trial started today. No charge if you cancel
-before day ${TRIAL_DAYS}. Manage anytime at https://gammarips.com/account.
+Your ${TRIAL_DAYS}-day free trial started today. Zero charge if you cancel before
+day ${TRIAL_DAYS}. Manage billing or cancel anytime at https://gammarips.com/account.
 
-One honest note, because it's the whole point: we sell data, not
-picks. The engine curates the pool and tracks every outcome in
-public; what your agent concludes from it is your analysis.
+Want a turnkey automated bot built around your own rules instead? See
+https://gammarips.com/build (${BUILD_STANDARD_PRICE} flat, ${BUILD_TURNAROUND_DAYS}-day delivery).
 
 Questions? Reply and it goes straight to me.
 
@@ -134,7 +132,7 @@ Evan Parra
 Founder, GammaRips
 evan@gammarips.com
 
-Data on a paper-trading basis, educational only. Not investment advice. Past performance is not a guarantee of future results.
+Educational market data and historical research only. Not investment advice. Past performance is not a guarantee of future results.
 `;
 
     const step = (n: string, title: string, body: string) => `
@@ -168,17 +166,17 @@ Data on a paper-trading basis, educational only. Not investment advice. Past per
                     <tr>
                         <td style="padding: 0 40px 40px;">
                             <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">You're in. <strong>GammaRips Agent Access</strong> is live on your account. Here's how to get your agent working the data:</p>
-                            ${step('1', 'Generate your API key', `Go to your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a> and click &ldquo;Generate API key&rdquo;. The key is shown once, so copy it right then. Any trouble, just reply to this email and we'll sort it immediately.`)}
-                            ${step('2', 'Connect your agent', `Claude Code, Cursor, or any MCP client that can send an Authorization header. Copy-paste setup on the <a href="https://gammarips.com/developers" style="color: hsl(74, 80%, 50%);">MCP docs page</a>.`)}
-                            ${step('3', 'Run your first brief', `Ask your agent to run the <code>morning_brief</code> prompt, or say &ldquo;pull the GammaRips pool and tell me what's interesting.&rdquo; All ${TOOL_COUNT} tools (the curated pool, opportunity surfaces, outcome history, exit-rule simulation, and methodology playbooks) are live on your key.`)}
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">You're in. <strong>GammaRips Pro MCP Access</strong> is live on your account. Here's how to connect your AI in under 2 minutes:</p>
+                            ${step('1', 'Connect via Browser Sign-In or 1-Click Prompt', `In Claude Desktop, Claude.ai, or ChatGPT, add <code>https://mcp.gammarips.com/pro</code> and sign in with your browser. For Claude Code, Cursor, Codex, or Gemini CLI, copy the 1-click setup prompt on your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>.`)}
+                            ${step('2', 'Optional: Generate an API Key', `Need a static key for scripts or headless agents? Click &ldquo;Generate API key&rdquo; on your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>.`)}
+                            ${step('3', 'Run Your First Morning Brief', `Ask your AI to pull today's pool, skip upcoming earnings, verify live morning liquidity, and compare stock, 2x ETF, and option choices for your risk budget across all ${TOOL_COUNT} MCP tools.`)}
                             <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding: 32px 0 8px;">
-                                <a href="https://gammarips.com/developers" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Set up your agent →</a>
+                                <a href="https://gammarips.com/account" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Connect Your AI →</a>
                             </td></tr></table>
-                            <p style="font-size: 14px; line-height: 1.6; margin-top: 24px; color: #A0A0A0;">Your ${TRIAL_DAYS}-day free trial started today. No charge if you cancel before day ${TRIAL_DAYS}; manage anytime from your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>.</p>
-                            <p style="font-size: 14px; line-height: 1.6; margin-top: 16px; color: #A0A0A0;">One honest note, because it's the whole point: we sell data, not picks. The engine curates the pool and tracks every outcome in public; what your agent concludes from it is your analysis.</p>
+                            <p style="font-size: 14px; line-height: 1.6; margin-top: 24px; color: #A0A0A0;">Your ${TRIAL_DAYS}-day free trial started today. Zero charge if you cancel before day ${TRIAL_DAYS}; manage billing or cancel anytime on your <a href="https://gammarips.com/account" style="color: hsl(74, 80%, 50%);">account page</a>.</p>
+                            <p style="font-size: 14px; line-height: 1.6; margin-top: 16px; color: #A0A0A0;">Want a turnkey automated bot built around your rules? Explore our <a href="https://gammarips.com/build" style="color: hsl(74, 80%, 50%);">${BUILD_STANDARD_PRICE} Custom Agent Build</a> (${BUILD_TURNAROUND_DAYS}-day Paper-first delivery).</p>
                             <p style="font-size: 14px; line-height: 1.6; margin-top: 16px;">Questions? Reply and it goes straight to me.<br/>Evan Parra, Founder</p>
-                            <p style="font-size: 12px; line-height: 1.5; margin-top: 24px; color: #707070;">Data on a paper-trading basis, educational only. Not investment advice. Past performance is not a guarantee of future results.</p>
+                            <p style="font-size: 12px; line-height: 1.5; margin-top: 24px; color: #707070;">Educational market data and historical research only. Not investment advice. Past performance is not a guarantee of future results.</p>
                         </td>
                     </tr>
                 </table>
@@ -207,16 +205,15 @@ Hi ${name},
 
 Welcome to GammaRips. Your free account is live.
 
-What that gets you, free, forever:
+What you can explore free, forever:
 
-- gammarips.com/signals is today's 3-contract pool preview from our nightly Combo A scan of ~3,500 optionable US stocks.
-- gammarips.com/how-it-works is Learn: the 4-stage overnight pipeline and Catalyst Lab microstructure research.
-- gammarips.com/lab is The Lab: our published walk-forward experiments, including the killed hypotheses.
-- gammarips.com/blog and @gammarips on X: methodology and daily research notes.
+- Daily Pool Preview (https://gammarips.com/signals): 3 pre-filtered setups from last night's scan across 3,500+ US stocks.
+- Live Agent Benchmark (https://gammarips.com/xtrader): watch our autonomous paper bot trade 2x/inverse ETFs vs. options head-to-head every morning.
+- Morning Briefings & Research Lab (https://gammarips.com/reports, https://gammarips.com/lab): daily market themes and published walk-forward audits.
 
-The Pro tier (${PRICE_MONTHLY}/mo founding price, ${TRIAL_DAYS}-day free trial) unlocks the full daily 40–50 contract Combo A dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history over MCP in Claude, ChatGPT, Cursor, or Codex. Your agent analyzes; you decide.
-
-See how it works: https://gammarips.com/how-it-works
+Ready to put your AI on the full nightly pool?
+- DIY Pro MCP (${PRICE_MONTHLY}/mo or ${PRICE_ANNUAL}/yr, ${TRIAL_DAYS}-day free trial): unlocks all 40–50 daily setups mapped to stocks, 2x/inverse ETFs, and options, plus live 10-minute morning liquidity checks and 3-day move history in Claude, ChatGPT, Cursor, or Codex.
+- Done-For-You Custom Agent Build (${BUILD_STANDARD_PRICE} flat, ${BUILD_TURNAROUND_DAYS} business days): bring your written rules and we engineer your safety-hardened Python trading bot at https://gammarips.com/build.
 
 Reply to this email if you have questions and it goes straight to me.
 
@@ -249,14 +246,14 @@ Educational market data only. Not investment advice.
                             <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Hi ${name},</h1>
                             <p style="font-size: 16px; line-height: 1.6; margin-top: 24px;">Welcome to GammaRips. Your free account is live:</p>
                             <ul style="font-size: 15px; line-height: 1.8; color: #A0A0A0; padding-left: 20px;">
-                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">Today's Pool Preview</a>: the daily 3-contract preview from our nightly Combo A scan of ~3,500 optionable US stocks.</li>
-                                <li><a href="https://gammarips.com/how-it-works" style="color: hsl(74, 80%, 50%);">Learn</a>: how the 4-stage pipeline works and the Catalyst Lab research behind the Combo A gates.</li>
-                                <li><a href="https://gammarips.com/lab" style="color: hsl(74, 80%, 50%);">The Lab</a>: our walk-forward research experiments, including the killed ideas.</li>
-                                <li><a href="https://gammarips.com/blog" style="color: hsl(74, 80%, 50%);">Blog</a> + @gammarips on X: methodology and daily intelligence notes.</li>
+                                <li><a href="https://gammarips.com/signals" style="color: hsl(74, 80%, 50%);">Daily Pool Preview</a>: 3 pre-filtered setups every morning from our nightly scan of 3,500+ US stocks.</li>
+                                <li><a href="https://gammarips.com/xtrader" style="color: hsl(74, 80%, 50%);">Live Agent Benchmark</a>: watch our paper bot trade 2x/inverse ETFs vs. options head-to-head.</li>
+                                <li><a href="https://gammarips.com/how-it-works" style="color: hsl(74, 80%, 50%);">How It Works</a> &amp; <a href="https://gammarips.com/lab" style="color: hsl(74, 80%, 50%);">Research Lab</a>: our daily pipeline and published walk-forward audits.</li>
                             </ul>
-                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;"><strong>Pro MCP Access</strong> (${PRICE_MONTHLY}/mo founding price, ${TRIAL_DAYS}-day free trial) connects Claude, ChatGPT, Cursor, or Codex to the full 40–50 contract daily dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history over MCP. Your agent analyzes; you decide.</p>
+                            <p style="font-size: 16px; line-height: 1.6; margin-top: 16px;"><strong>Pro MCP Access</strong> (${PRICE_MONTHLY}/mo or ${PRICE_ANNUAL}/yr, ${TRIAL_DAYS}-day free trial) connects Claude, ChatGPT, Cursor, or Codex to 40–50 nightly setups across US stocks, 2x/inverse ETFs, and options, plus live morning liquidity checks and 3-day move history.</p>
+                            <p style="font-size: 15px; line-height: 1.6; margin-top: 12px; color: #A0A0A0;">Want us to engineer a turnkey automated trading bot around your written rules? See <a href="https://gammarips.com/build" style="color: hsl(74, 80%, 50%);">Custom Agent Build (${BUILD_STANDARD_PRICE})</a>.</p>
                             <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding: 28px 0 8px;">
-                                <a href="https://gammarips.com/pricing" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Unlock Pro MCP Access →</a>
+                                <a href="https://gammarips.com/pricing" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Start ${TRIAL_DAYS}-Day Free Trial →</a>
                             </td></tr></table>
                             <p style="font-size: 14px; line-height: 1.6; margin-top: 24px;">Reply to this email if you have questions and it goes straight to me.<br/>Evan Parra, Founder</p>
                             <p style="font-size: 12px; line-height: 1.5; margin-top: 24px; color: #707070;">Educational market data only. Not investment advice.</p>
@@ -669,13 +666,12 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
             </tr>
         `).join('');
     
-    let textContent = `GammaRips: tomorrow’s pick at ~09:50 ET, right before the 10:00 entry.\n\n The session is over. Our engine has processed the day's volatility. Do your research now. Get your trade ideas locked in before tomorrow's opening bell. \n\n First, let's look at the scoreboard. Here are the top-performing contracts from our playbook today. This is the volatility we hunt.\n\n`;
+    let textContent = `GammaRips: tonight's filtered market pool is ready before tomorrow's open.\n\nOur scanner has processed today's liquidity and options flow. Review tonight's setups and connect your AI agent before the opening bell.\n\n`;
 
-    textContent += `The Scoreboard:\n${topGainers.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type?.toUpperCase()} | +${s.percent_gain.toFixed(2)}%`).join('\n')}\n\n`;
-    textContent += `Missed these? Don't chase yesterday's moves. We have identified the high-gamma contracts primed for tomorrow.\nReview these setups tonight. Check the AI breakdown. Have your plan locked in before the opening bell.\n\n`;
-    textContent += `Top 5 Bullish Call Contracts:\n${topBullish.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type.toUpperCase()} | Expires: ${new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })} | ${s.outlook_signal}`).join('\n')}\n\n`;
-    textContent += `Top 5 Bearish Put Contracts:\n${topBearish.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type.toUpperCase()} | Expires: ${new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })} | ${s.outlook_signal}`).join('\n')}\n\n`;
-    textContent += `See today’s pick: https://gammarips.com/`;
+    textContent += `Recent Historical Movers:\n${topGainers.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type?.toUpperCase()} | +${s.percent_gain.toFixed(2)}%`).join('\n')}\n\n`;
+    textContent += `Review tonight's pool across stocks, 2x/inverse ETFs, and options.\n\n`;
+    textContent += `Sample Bullish Setups:\n${topBullish.map(s => `${s.ticker} | $${s.strike_price.toFixed(2)} ${s.option_type.toUpperCase()} | Expires: ${new Date(s.expiration_date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })} | ${s.outlook_signal}`).join('\n')}\n\n`;
+    textContent += `Browse today's pool preview: https://gammarips.com/signals`;
 
     const htmlContent = `
 <!DOCTYPE html>
@@ -686,7 +682,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
-    <title>GammaRips: tomorrow’s pick at ~09:50 ET, right before the 10:00 entry.</title>
+    <title>GammaRips: Tonight's Market Pool Preview</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: hsl(224, 20%, 12%); font-family: 'Inter', sans-serif; color: #E0E0E0;">
     <div style="display: none; max-height: 0px; overflow: hidden;">&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌</div>
@@ -701,7 +697,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
                     </tr>
                     <tr>
                         <td align="center" style="padding: 10px 20px 30px;">
-                            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Tomorrow’s Pick</h2>
+                            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Tonight&apos;s Daily Pool Preview</h2>
                         </td>
                     </tr>
                     <tr>
@@ -758,7 +754,7 @@ export async function buildDailySetupsEmailContent(winners: Winner[], topGainers
                     </tr>
                     <tr>
                         <td align="center" style="padding: 40px;">
-                            <a href="https://gammarips.com/" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">See today’s pick</a>
+                            <a href="https://gammarips.com/signals" style="background-color: hsl(74, 80%, 50%); color: #000000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">Browse Daily Pool Preview</a>
                         </td>
                     </tr>
                      <tr>

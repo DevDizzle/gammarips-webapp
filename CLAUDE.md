@@ -5,134 +5,92 @@ The public Next.js 15 (App Router) site for GammaRips, deployed via Firebase App
 Hosting. **Pushing to `main` auto-deploys production** — do feature work on a
 branch and treat every merge as a ship.
 
-The backend engine lives in a separate repo (`gammarips-engine`); the MCP server
-in another (`gammarips-mcp`). This repo is presentation + Stripe + Firebase auth.
+The backend engine lives in `engine/` (`gammarips-engine`); the MCP server lives
+in `mcp/` (`gammarips-mcp`). This repo is presentation + Stripe + Firebase auth
++ OAuth 2.1 authorization server.
 
-## Positioning (owner-locked 2026-07-03, revised 2026-10-02) — every page must agree with this
-- **The human web UI is 100% free.** It is the SEO top-of-funnel. Nothing
-  human-readable is paywalled.
-- **The paid product is MCP access — $29/mo founding price ("Agent Access").** Bring-your-own-
-  agent traders connect Claude/ChatGPT/any MCP client to the GammaRips MCP
-  server (9 tools: curated pool, opportunity surfaces, outcome history,
-  methodology playbooks).
-- **What we sell (owner call 2026-10-02):** better-quality option contracts every
-  night, the history to set targets and stops (the exit lab), and the user's AI
-  builds the trade plan with them, in Claude, ChatGPT, Cursor, and Codex. "Data,
-  not advice" stays in the disclaimer and the FAQ. It is never a headline.
-- **There is no public daily pick.** The tournament pick is the operator's
-  private signal. The site shows the POOL. Never reintroduce a "today's pick"
-  card, push, or endpoint.
-- **The hero is the value and the receipts:** better contracts, 2 or 3 sourced
-  numbers, install buttons for each AI, and the trial CTA. The buyer already uses
-  an AI agent. Do not explain agents from zero.
-- **/lab and /methodology** keep the research record (hypothesis, method, N,
-  confirmed or killed), framed as rigor. Nothing on them becomes a homepage or
-  pricing headline.
+## Positioning (Revised 2026-11-25 — holistic multi-instrument + dual offering)
+Every public page, metadata tag, and email must agree with this:
+- **Core product:** GammaRips delivers nightly US market & options-flow
+  intelligence for AI trading agents — executable across **US stocks (1x),
+  2x/inverse single-stock ETFs, and liquid options** (`execution_vehicles`).
+  Never frame GammaRips as options-only on top-level marketing pages.
+- **Two offerings (clear dual-path routing):**
+  1. **DIY Pro MCP (`https://mcp.gammarips.com/pro` or Bearer API key):**
+     `$29/mo` or `$299/yr` founding price (first 100 subscribers; `$39/mo` after),
+     **7-day free trial**. Unlocks all 40–50 daily setups (`execution_vehicles`,
+     `rv_iv_ratio`, technicals, catalysts), 10-minute morning/intraday liquidity
+     snapshots (`09:02–16:52 ET`), 3-day move history (`query_outcomes`), and
+     price replay across all `TOOL_COUNT` (9) tools.
+  2. **Done-For-You Custom Trading Agent Build (`/build`):** **`$1,000` flat**
+     fixed-scope work-for-hire Python trading bot engineering across stocks,
+     2x/inverse ETFs, or options — safety-hardened (limit-only orders, fill-based
+     stops, duplicate-order guards), delivered in Paper Mode to the client's
+     private GitHub repo in **5 business days**, plus optional `$50/mo` Agent
+     Care (`$75/mo` Care + Pro MCP bundle).
+- **Free tier (`$0` forever):** Daily **3-setup preview** on `/signals` and
+  anonymous `https://mcp.gammarips.com/mcp`, morning briefings (`/reports`),
+  public dual-book agent log (`/xtrader`), VIX/VIX3M volatility regime, NYSE
+  calendar, and methodology/research pages (`/how-it-works`, `/methodology`,
+  `/lab`).
+- **There is no shared daily pick.** Never reintroduce "today's pick" copy or a
+  retired `/scorecard` link (`/scorecard` 301s to `/how-it-works`).
 
-## Forbidden claims (compliance — non-negotiable in ALL copy; revised 2026-10-02)
-Owner decision record: gammarips-engine
-`docs/DECISIONS/2026-10-02-web-revamp-positive-first-rules.md`.
-1. Never promise a return or a win rate for the user's own trades. Real results
-   may appear with N, window, and the disclaimer: the live agent record and the
-   pool hit rates. Write a touch as "hit +50% within 3 trading days", never as
-   profit kept.
-2. Never sell a pick, a signal to follow, or a trade to copy. The user's AI
-   builds the trade plan with them. (The MCP has no pick endpoint.)
-3. Never guarantee a result. No "insider", no guaranteed edge, no
-   timing-advantage claim.
-4. Show complete cohorts only: every trade in the window, wins and losses. Never
-   a cherry-picked subset or a selected-positive blended ROI. The whole-pool
-   fixed-exit composite lives on /methodology only. It is not a marketing duty.
-5. Every performance-adjacent surface carries: educational only, not investment
-   advice (plus "paper-trading" on paper results; the live record says
-   "real-money trades"). A page section that shows a performance number carries
-   the marker in that section, including the homepage hero.
-   **Scope, owner-ruled 2026-08-08:** "surface" means the
-   page. A `<meta name="description">` that makes no performance claim does not
-   need the marker, and must not be padded with one at the cost of the value
-   proposition — GammaRips is a data vendor, not an advisor, and the SERP snippet
-   is not where that line gets drawn. Markers stay on the descriptions for
-   /scorecard, /disclosures, /methodology, /about and /reports because those do
-   reference results. SETTLED: do not re-add a disclaimer to the homepage
-   description.
-6. (Deleted 2026-10-02, owner call.) The live record shows from trade 1, every
-   trade, with its N and window. /disclosures #03 says the same.
+## Copywriting & UX Standard ("Credible Jargon, Human Clarity")
+Enforce our **3-Layer Progressive Disclosure** model on every marketing page:
+- **Layer 1 (0–5 sec — Hero, Titles, Meta Descriptions, Cards):** Grade 6–8 plain
+  English, one idea per headline, problem-first framing. **Never put internal
+  jargon (`Combo A`, `rv_iv_ratio`, `MFE/MAE`, `dev.parquet`, `dbt`,
+  `enriched_option_outcomes`, `profitscout-fida8`) in `<title>`,
+  `<meta description>`, `og:*`, or hero headlines.** (Live GSC audit confirmed
+  0 of 6,152 impressions came from internal lab names.)
+- **Layer 2 (5–30 sec — Interactive Proof & Clear Choices):** Show concrete UI
+  previews (`ProductShowcase`, live 3-setup preview, X-Trader log), max 4–5
+  scannable bullets per pricing card, and clean 80/20 routing between DIY Pro
+  MCP and the `$1,000` Custom Build.
+- **Layer 3 (30s+ — Expandable Technical Authority):** Keep full quantitative
+  specs (`Mid >= $1.00`, `OI >= 500`, `Delta 0.22–0.48`, `DTE 10–45`,
+  `rv_iv_ratio`, RFCs) inside native `<Disclosure>` (`<details>`) components,
+  `<GlossaryTip>` `?` toggletips, `/methodology`, `/lab`, and `/developers`.
+- **Engine truth on `rv_iv_ratio`:** Nightly scanner (23:00 ET) enforces
+  `Mid >= $1.00`, `OI >= 500`, `Delta 0.22–0.48`, `DTE 10–45`. `rv_iv_ratio` is
+  computed at **05:30 ET enrichment** (with `>= 0.85` as the research benchmark
+  threshold agents filter on — never claim `rv_iv_ratio` is a hard 23:00 ET gate).
 
-## Voice
-Confident, positive, receipts-forward. Lead with what the product does and the
-numbers that show it. Every number carries its N and window. Research caveats go
-on research pages (/methodology, /lab). No rocket emojis, no "moon", no
-countdown urgency.
+## Compliance Rules (Non-Negotiable)
+1. Never promise a return or win rate for the user's own trades. Write touches
+   as "hit +40% / +50% within 3 trading days", never profit kept.
+2. Never sell a daily pick, signal to follow, or trade to copy.
+3. Show complete cohorts only (with N and date window).
+4. Carry clear non-advisory disclaimers on performance-adjacent pages, plus
+   daily-rebalancing risk for 2x/inverse ETFs and work-for-hire scope on `/build`.
+   Keep the homepage `<meta name="description">` disclaimer-free (owner-settled).
 
-## Site numbers (refresh daily since 2026-10-02)
-Pages read them with `getReceipts()` (`src/lib/receipts-server.ts`). Never type a
-number in a page. `src/lib/receipts.ts` holds the helpers and the 2026-10-02
-snapshot, which renders when a Firestore read fails.
-- `site_stats/pool`: engine job `site-stats-refresh` (forward-paper-trader
-  `/refresh_site_stats`, 18:00 ET weekdays). Pool touch rates before expiration
-  (the homepage headline: hit +50%, with +20% as support) and within 3 trading
-  days, plus contract quality (median OI, volume, p10 OI vs the fixed 60 scan
-  days before the liquidity rule).
-- `site_stats/live_record`: gammarips-trader `scripts/publish_record.py`, run by
-  the laptop export timer at 17:40 ET weekdays. Every closed LIVE trade, no
-  account, no size.
-- A hit is a touch: "hit +50% before expiration", never profit kept. The no-fill
-  study (40.5% to 6.1%) is static and labeled a study.
-- `public/llms.txt` and `public/skill.md` carry a dated snapshot and point to
-  /scorecard for the live numbers.
+## SEO & Metadata Guardrails
+- Root `src/app/layout.tsx` sets `title.template: "%s | GammaRips"`. **Never
+  append `| GammaRips` inside child route `metadata.title` strings** (causes
+  double `| GammaRips | GammaRips`). Keep rendered `<title>` ≤ 60 chars and
+  `<meta description>` 140–158 chars.
+- Any page declaring `openGraph` (and every indexable page) must explicitly
+  include `images: [OG_IMAGE]` from `src/lib/constants.ts`.
+- Never hardcode prices, trial days, or tool counts — import `PRICE_MONTHLY`,
+  `PRICE_ANNUAL`, `PRICE_STANDARD`, `FOUNDING_CAP`, `TRIAL_DAYS`, `TOOL_COUNT`,
+  `BUILD_STANDARD_PRICE`, `AGENT_CARE_PRICE`, `AGENT_CARE_MCP_PRICE`, and
+  `BUILD_TURNAROUND_DAYS` from `src/lib/constants.ts`.
+- Preserve ranking URL slugs, 301s in `next.config.ts`, and core `"options flow"`
+  / ticker terms on `/signals`, `/signals/[ticker]`, and `/reports/[date]`.
 
-## Key facts copy must get right
-- MCP endpoint: `https://mcp.gammarips.com/mcp`
-  (Streamable HTTP, primary) — legacy SSE at `/sse`. **9 tools** since the MCP v4
-  consolidation (2026-07-17, 29 → 9 arg-driven tools). Auth: bearer API key (Phase 2);
-  5 free tools, 4 pro. **Never hardcode the count in copy** — import `TOOL_COUNT` from
-  `src/lib/constants.ts`, which is the single source of truth and already propagates to
-  all 28 usages. The static `public/` agent-discovery files cannot import it and are
-  synced by hand; upstream truth is `gammarips-mcp/src/server.py` `_ALL_TOOLS`.
-- Engine mechanics (LIQUID-UNIVERSE funnel, live 2026-08-24): nightly scan of about 3,500 optionable US stocks (say "about 3,500";
-  the universe is refreshed weekly since 2026-08-05; it was 5,230 nominal before,
-  of which ~1,700 had no listed options; never write 5,230 again) → keep names with
-  3M+ session share volume and 25+ listed strikes → top 100 by combined liquidity
-  rank (z of chain dollar volume + z of share volume) → bullish names only → one
-  OTM call per name, chosen on contract liquidity → pool of roughly 40-50 (most
-  days MORE than 50 bullish names qualify and a deterministic edge rank — delta
-  band, mom_60, liquidity demotion — cuts to ENRICH_TOP_N=50. The cap DOES bind:
-  never write "the cap does not bind" or "no hidden ranking" (that was a dry-run
-  artifact, corrected 2026-08-26); overnight_score ≥ 1 is a cosmetic floor — the
-  ≥ 4 floor never ran in production, so never claim it) → the published pool is NOT
-  earnings-screened, and copy must never say it is (the earnings and VIX ≤ VIX3M
-  rails ran at the paper cohort's entry; that cohort was retired 2026-09-28).
-  The $500K UOA floor is GONE (dropped 2026-08-24). Never describe
-  the scan as unusual-activity-driven: flow gives context, liquidity decides
-  membership. Lead with better-quality contracts: deeper books, more volume,
-  fewer no-fills, with the approved numbers. Do not claim the pool returns more
-  than other contracts (the same rule as the MCP start-here). The 2026-08-22
-  selection research lives on /methodology and /lab. Spec:
-  gammarips-engine `docs/DECISIONS/2026-08-24-liquid-universe-funnel.md` +
-  `docs/DECISIONS/2026-10-02-web-revamp-positive-first-rules.md`.
-- Pricing: Free (whole webapp) / Agent Access $29/mo (MCP), 30-day trial, Stripe.
-  $29 is the FOUNDING price (owner call 2026-08-22): the first 100 subscribers keep
-  it as long as they stay subscribed, and the price is $39/mo after the cap. An
-  optional annual price is $299/yr. Never write a price or a trial length as a
-  literal: import `PRICE_MONTHLY`, `PRICE_ANNUAL`, `PRICE_STANDARD`, `FOUNDING_CAP`
-  and `TRIAL_DAYS` from `src/lib/constants.ts`. The annual option only renders when
-  `NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID` is set, so copy must not promise it
-  unconditionally. The founding offer carries no countdown and no urgency copy.
-
-## Repo landmines
-- `src/lib/config.ts` `FREE_MODE = true` — everyone is treated as Pro; UI
-  gating is retired. Don't reintroduce `<ProLock>` on human content.
-- Marketing copy is hardcoded in components/pages; blog + reports + signals are
-  Firestore-driven (`src/lib/firebase-admin.ts`), rendered with react-markdown.
-- `src/content/blog/*.mdx` is legacy seed content — NOT the live blog.
-- Stripe webhook (`src/app/api/stripe/webhook/route.ts`) provisions
-  entitlements in Firestore; MCP key issuance rides the same pattern.
-- App Hosting returns 200 for notFound pages (SEO landmine) — keep explicit
-  metadata + canonical on every page.
-- AI-discovery files (`public/llms.txt`, `public/mcp.json`,
-  `public/.well-known/ai-plugin.json`, `public/skill.md`) are product surfaces
-  read by agents — keep them in lockstep with the MCP server's real tool list.
+## Repo Landmines
+- `src/lib/config.ts` `FREE_MODE = false` — `/signals` shows a 3-setup preview
+  to free visitors and unlocks the full pool for Pro subscribers.
+- Billing & cancellation: `/account` calls `POST /api/billing-portal` (Stripe
+  Billing Portal) and `/api/keys` (avoiding Server Action deploy-skew).
+- Private routes (`/account`, `/auth/*`) emit `X-Robots-Tag: noindex, nofollow`
+  in `next.config.ts` and `robots: { index: false, follow: false }` in layouts.
+- Keep AI-discovery files (`public/llms.txt`, `public/mcp.json`,
+  `public/skill.md`, `public/install.md`, `public/.well-known/*`) synced with
+  stocks, 2x/inverse ETFs, options, `TOOL_COUNT`, current pricing, and `/build`.
 
 ## Subagent
-- `.claude/agents/gammarips-copywriter.md` — writes/edits marketing copy under
-  the messaging system above. Use it for any copy change beyond a typo.
+- `.claude/agents/gammarips-copywriter.md` — enforces the 7-criterion copy audit
+  rubric, plain-English translation rules, and compliance checklist above.

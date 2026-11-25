@@ -89,6 +89,98 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Balanced headings & orphan-free body wrapping (progressive enhancement) */
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+  p, blockquote {
+    text-wrap: pretty;
+  }
+  /* Keep in-page anchor targets clear of the compact sticky header */
+  :target {
+    scroll-margin-top: 5.5rem;
+  }
+}
+
+/* Native progressive disclosure (<details class="gr-disclosure">)
+ * Keeps hidden technical depth searchable via browser Find-in-Page & Googlebot. */
+details.gr-disclosure > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+}
+details.gr-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+details.gr-disclosure > summary::before {
+  content: "";
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  flex-shrink: 0;
+  border-inline-end: 2px solid currentColor;
+  border-block-end: 2px solid currentColor;
+  transform: rotate(-45deg);
+  margin-inline-start: 0.125rem;
+}
+details.gr-disclosure[open] > summary::before {
+  transform: rotate(45deg);
+}
+@media (prefers-reduced-motion: no-preference) {
+  details.gr-disclosure > summary::before {
+    transition: transform 0.2s ease;
+  }
+}
+details.gr-disclosure::details-content {
+  interpolate-size: allow-keywords;
+  overflow: clip;
+  contain: layout;
+}
+details.gr-disclosure:not([open])::details-content {
+  block-size: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  details.gr-disclosure::details-content {
+    transition: block-size 0.25s ease-in-out, content-visibility 0.25s ease-in-out;
+    transition-behavior: allow-discrete;
+  }
+}
+
+/* Glossary toggletip popover (progressive enhancement with @supports guard
+ * so browsers without CSS Anchor Positioning retain safe centered placement) */
+[popover].gr-toggletip {
+  max-inline-size: min(22rem, calc(100dvw - 2rem));
+}
+@supports (position-area: block-start) {
+  [popover].gr-toggletip {
+    inset: auto;
+    margin: 0 0 0.5rem 0;
+    position-area: block-start;
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  }
+}
+
+/* Tablist horizontal scroll without multi-row wrapping */
+.gr-tablist-scroll {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: inline proximity;
+}
+.gr-tablist-scroll::-webkit-scrollbar {
+  display: none;
+}
+.gr-tablist-scroll > [role="tab"] {
+  flex: none;
+  scroll-snap-align: start;
+  position: relative;
+}
+.gr-tablist-scroll > [role="tab"][aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 0.25rem 0;
+  border-block-end: 2px solid hsl(var(--primary));
 }
 
 /* Markdown Table Styles */

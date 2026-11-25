@@ -25,20 +25,19 @@ export function UserNav() {
   // Render the unauthenticated CTA in two cases:
   //  1) auth still resolving (loading=true) — true on SSR and pre-hydration
   //  2) auth resolved with no user
-  // A real link (crawlable) to the product page, not an era-2 trial button:
-  // the human site is free forever; the paid thing is agent access.
   if (loading || !user) {
     return (
       <div className="flex items-center gap-3">
         <AuthDialog open={showAuthDialog} onOpenChange={setShowAuthDialog} />
         <button
+          type="button"
           onClick={() => setShowAuthDialog(true)}
           className="text-sm text-muted-foreground hover:text-primary transition-colors hidden sm:inline"
         >
           Sign in
         </button>
-        <Button asChild>
-          <Link href="/developers">Connect Your Agent</Link>
+        <Button asChild size="sm">
+          <Link href="/pricing">Start Free Trial</Link>
         </Button>
       </div>
     );

@@ -35,10 +35,10 @@ export function AgentQuickConnect({
   const effectivePro = isPro || forceProPrompt || !!apiKey;
 
   const agentPrompt = apiKey
-    ? `Read ${INSTALL_URL} and connect my GammaRips Pro MCP server using API key ${apiKey}, then call get_pool(view="enriched") and summarize today's top 3 contracts.`
+    ? `Read ${INSTALL_URL} and connect my GammaRips Pro MCP server using API key ${apiKey}, then call get_pool(view="enriched") and summarize 3 liquid setups from today's pool with their stock, 2x ETF, and option choices.`
     : effectivePro
-      ? `Read ${INSTALL_URL} and connect my GammaRips Pro MCP server at ${MCP_PRO_ENDPOINT}, then call get_pool(view="enriched") and summarize today's top 3 contracts.`
-      : `Read ${INSTALL_URL} and connect the GammaRips MCP server (${MCP_ENDPOINT}), then call get_pool(view="preview") and summarize today's 3-contract preview.`;
+      ? `Read ${INSTALL_URL} and connect my GammaRips Pro MCP server at ${MCP_PRO_ENDPOINT}, then call get_pool(view="enriched") and summarize 3 liquid setups from today's pool with their stock, 2x ETF, and option choices.`
+      : `Read ${INSTALL_URL} and connect the GammaRips MCP server (${MCP_ENDPOINT}), then call get_pool(view="preview") and summarize today's 3-setup preview.`;
 
   const copyPrompt = async () => {
     try {
@@ -68,7 +68,7 @@ export function AgentQuickConnect({
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-primary shrink-0" />
           <h3 className="text-lg sm:text-xl font-bold font-headline text-foreground">
-            Zero-Bash Setup: Let Your AI Connect Itself
+            1-Minute Setup: Let Your AI Connect Itself
           </h3>
         </div>
         {effectivePro && (
@@ -79,9 +79,9 @@ export function AgentQuickConnect({
       </div>
 
       <p className="text-sm text-muted-foreground leading-relaxed">
-        No terminal commands required. Copy the sentence below and paste it directly into{' '}
-        <strong className="text-foreground">Claude Code, Cursor, Codex, Windsurf, or GrokBot</strong>
-        —your agent will read{' '}
+        No terminal commands required. Copy the sentence below and paste it into{' '}
+        <strong className="text-foreground">Claude Code, Cursor, Codex, Windsurf, or Gemini CLI</strong>
+        —your agent reads{' '}
         <a
           href="/install.md"
           target="_blank"
@@ -90,7 +90,7 @@ export function AgentQuickConnect({
         >
           gammarips.com/install.md
         </a>
-        , configure its own MCP connection, and pull your first pool summary automatically.
+        , wires up its own MCP connection, and pulls today&apos;s market pool automatically.
       </p>
 
       {/* Option 1: 1-Click Agent Prompt */}

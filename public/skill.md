@@ -1,7 +1,7 @@
-# GammaRips: Nightly Combo A Options Dataset for AI Agents
+# GammaRips: Nightly Market & Options Intelligence for AI Trading Agents
 
 ## What I Am
-The nightly filtered options dataset for AI agents. Every trading night at 23:00 ET I scan ~3,500 optionable US stocks, keep the top 100 liquid universe (3M+ session shares, 25+ listed strikes), and select one out-of-the-money call per bullish name passing Combo A microstructure and convexity gates (`Mid >= $1.00`, `OI >= 500`, `Delta 0.22–0.48`, `DTE 10–45`). At 05:30 ET each contract is enriched with Realized-vs-Implied Volatility (`rv_iv_ratio`), technicals, flow context, and grounded news catalysts. From 09:02 to 16:52 ET I capture 10-minute intraday liquidity snapshots. You (the agent) build the trade plan with your user. I never return a shared daily pick.
+The nightly market-intelligence and options-flow MCP server for AI trading agents — supporting **US stocks, 2x/inverse single-stock ETFs, and liquid options**. Every trading night at 23:00 ET I scan ~3,500 optionable US stocks, keep the top 100 liquid universe (3M+ session shares, 25+ listed strikes), and select bullish setups passing Combo A contract floors (`Mid >= $1.00`, `OI >= 500`, `Delta 0.22–0.48`, `DTE 10–45`). At 05:30 ET each setup is enriched with Realized-vs-Implied Volatility (`rv_iv_ratio`), mapped `execution_vehicles` (`underlying_stock`, `long_2x_etfs`, `inverse_etfs`, `option_contract`), technicals, flow context, and grounded news catalysts. From 09:02 to 16:52 ET I capture 10-minute intraday liquidity snapshots. You (the agent) build the trade plan with your user. I never return a shared daily pick.
 
 Validated in Catalyst Lab walk-forward audits (`N = 5,575` enriched contracts across 66 scan dates joined to BigQuery `enriched_option_outcomes`):
 - `rv_iv_ratio >= 0.85` (`(ATR_14 / Price * sqrt(252)) / IV`) is the #1 quantitative predictor of favorable 3-day option excursions.

@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   // NOTE: the root layout applies the `%s | GammaRips` title template, so titles
   // here must NOT include a "| GammaRips" suffix (that produced the duplicated
   // "... | GammaRips | GammaRips" titles). Engine seoTitle is brand-free too.
-  let title = `${T} Options Flow Data`;
-  let description = `${T} options flow data from the GammaRips overnight scan. Contract detail, flow breakdown, and key levels for the day it appeared.`;
+  let title = `${T} Stock & Options Flow Analysis`;
+  let description = `${T} overnight stock & options flow breakdown: key technical levels, catalysts, and liquid option contract details from the GammaRips nightly scan.`;
 
   try {
     const summary = await getLatestOvernightSummary();
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       // ticker page carries distinct metadata.
       const dir = (signal.direction || "").toUpperCase();
       const dirWord = dir === "BULLISH" ? "Bullish" : dir === "BEARISH" ? "Bearish" : "";
-      title = dirWord ? `${T} ${dirWord} Options Flow Data` : `${T} Options Flow Data`;
+      title = dirWord ? `${T} Stock & Options Flow Analysis (${dirWord})` : `${T} Stock & Options Flow Analysis`;
       description = buildSignalDescription(signal, T);
     }
   } catch (error) {
@@ -192,8 +192,8 @@ export default async function SignalPage({ params }: PageProps) {
         <section className="container mx-auto px-4 pb-12 max-w-4xl">
           <BlogTeaserList
             posts={prioritizedBlogPosts}
-            heading="Agentic Trading &amp; MCP Guides"
-            subheading="Connect Claude, ChatGPT, Cursor, or Codex to the Combo A options dataset."
+            heading="AI Trading Agent &amp; MCP Guides"
+            subheading="Connect Claude, ChatGPT, Cursor, or Codex to nightly stock, 2x ETF, and options intelligence."
             limit={3}
           />
         </section>

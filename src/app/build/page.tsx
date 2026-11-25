@@ -16,6 +16,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Disclosure } from '@/components/ui/disclosure';
 import { BuildIntakeForm } from '@/components/build/build-intake-form';
 import { getXTraderSummary } from '@/lib/xtrader';
 import {
@@ -30,16 +31,17 @@ import {
 
 export const dynamic = 'force-dynamic';
 
+const BUILD_PRICE_NUMERIC = (Number(BUILD_STANDARD_PRICE.replace(/[^0-9.]/g, '')) || 0).toFixed(2);
+
+// Root layout applies `%s | GammaRips` — never add `| GammaRips` here.
 export const metadata: Metadata = {
-  title: 'Custom AI Trading Agent Build ($1,000 Fixed Scope) | GammaRips',
-  description:
-    'Bring your written trading rules across stocks, 2x/inverse ETFs, or options. We engineer, safety-harden, and deliver your autonomous Python trading agent in 5 business days for $1,000 flat.',
+  title: `Custom AI Trading Agent Build (${BUILD_STANDARD_PRICE}, ${BUILD_TURNAROUND_DAYS} Days)`,
+  description: `Turn your rules for stocks, 2x ETFs, or options into a safety-hardened Python trading bot in ${BUILD_TURNAROUND_DAYS} days for ${BUILD_STANDARD_PRICE} flat. Paper-first, 100% your private repo.`,
   alternates: { canonical: 'https://gammarips.com/build' },
   openGraph: {
     images: [OG_IMAGE],
-    title: 'Custom AI Trading Agent Build ($1,000 Fixed Scope) | GammaRips',
-    description:
-      'Work-for-hire Python & AI trading agent engineering across stocks, 2x/inverse ETFs, and options. Hard limit-order & stop guardrails, Paper-first handoff, 5-day delivery.',
+    title: `Custom AI Trading Agent Build (${BUILD_STANDARD_PRICE}, ${BUILD_TURNAROUND_DAYS} Days) | GammaRips`,
+    description: `Work-for-hire Python & AI trading bot engineering across stocks, 2x/inverse ETFs, and options. Limit-only orders, automatic stops, Paper-first handoff, ${BUILD_TURNAROUND_DAYS}-day delivery.`,
     url: 'https://gammarips.com/build',
   },
 };
@@ -47,82 +49,105 @@ export const metadata: Metadata = {
 const safetyRails = [
   {
     icon: Lock,
-    title: 'Limit-Orders Only (Zero Market Orders)',
-    body: 'Every equity, 2x/inverse ETF, and option adapter enforces tick-rounded limit prices with configurable spread gates so wide books never slip a fill.',
+    title: 'No Bad Market-Order Fills',
+    body: 'Limit orders only — zero blind market orders. Every stock, 2x ETF, and option order checks the live bid-ask spread before submitting.',
   },
   {
     icon: ShieldAlert,
-    title: 'Fill-Derived Stops & Flat-by-Close',
-    body: 'Hard percentage stops, max daily loss breakers, and NYSE holiday/early-close exit timers derive automatically from actual broker fill prices.',
+    title: 'Automatic Stops & Flat-by-Close',
+    body: 'Hard stop-losses, daily max-loss breakers, and automatic end-of-day exits (including NYSE holidays and half-days) calculate straight from your real fill price.',
   },
   {
     icon: FileCheck2,
-    title: 'Restart-Safe Order-Intent Ledger',
-    body: 'Idempotent order-intent state files ensure a daemon restart or network timeout reconciles open orders instead of ever double-buying.',
+    title: 'Crash-Safe Duplicate-Order Protection',
+    body: 'If your internet drops or your server restarts mid-session, our order ledger reconciles open positions so your bot never double-buys by mistake.',
   },
   {
     icon: GitBranch,
-    title: '100% Your Private Repo & API Keys',
-    body: 'Delivered to your private GitHub repo with Docker + systemd unit + unit tests in Paper Mode. You hold your own broker keys on your own machine or VPS.',
+    title: '100% Your Private Code & Broker Keys',
+    body: 'Delivered to your own private GitHub repo with ready-to-run server files and unit tests in Paper Mode. You hold your broker keys on your own machine or cloud server.',
   },
 ];
 
 const standardIncluded = [
-  '1 written deterministic or LLM-assisted entry, sizing, stop, and exit rule set in Python 3.12',
-  'Multi-instrument support: US stocks (1x), 2x long / inverse single-stock ETFs, or single-leg US options',
-  '1 market-data adapter: GammaRips Pro MCP, Polygon/Massive, Alpaca, TradingView webhook, or your REST feed',
-  '1 broker adapter: Robinhood MCP, Alpaca, Tradier, Interactive Brokers (IBKR Gateway), + mandatory PaperBroker',
-  'Hardened x-trader safety architecture: limit-only orders, fill-derived stops, idempotent intent ledger, JSONL decision traces',
-  `${BUILD_TURNAROUND_DAYS}-business-day delivery to your private GitHub repo + Docker/systemd setup + 1 revision round`,
+  'Your written entry, sizing, stop, and exit rules built cleanly in Python 3.12 (rule-based or AI-assisted)',
+  'Trade US stocks (1x), 2x long / inverse single-stock ETFs, or single-leg US options',
+  '1 market-data feed: GammaRips Pro MCP, Polygon/Massive, Alpaca, TradingView webhooks, or your own API',
+  '1 broker connection: Robinhood MCP, Alpaca, Tradier, or Interactive Brokers — plus a built-in Paper Mode simulator',
+  'Full production safety suite: limit-only orders, fill-based stops, duplicate-order protection, and clear daily decision logs',
+  `${BUILD_TURNAROUND_DAYS}-business-day delivery to your private GitHub repo + server startup files + 1 revision round`,
 ];
 
 const outOfScope = [
-  'Recommending trading strategies, alpha discovery, or promising returns (you supply the rules)',
-  'Holding custody of your capital or storing your live broker credentials on GammaRips servers',
-  `Multi-leg options structures (iron condors/calendars), custom web UIs, or multi-broker routing (quoted at ${BUILD_CUSTOM_MIN_PRICE}+)`,
+  'Recommending strategies, picking trades for you, or promising returns (you supply and own the rules)',
+  'Holding custody of your money or storing your live brokerage credentials on GammaRips servers',
+  `Multi-leg option spreads (iron condors/calendars), custom web dashboards, or multi-broker routing (quoted at ${BUILD_CUSTOM_MIN_PRICE}+)`,
 ];
 
 export default async function BuildAgentPage() {
   const xtraderSummary = await getXTraderSummary().catch(() => null);
 
+  const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'GammaRips Custom AI Trading Agent Build',
+    description: `Fixed-scope custom Python trading bot engineering for stocks, 2x/inverse ETFs, or options delivered in Paper Mode in ${BUILD_TURNAROUND_DAYS} business days.`,
+    provider: {
+      '@type': 'Organization',
+      name: 'GammaRips',
+      url: 'https://gammarips.com',
+    },
+    url: 'https://gammarips.com/build',
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'USD',
+      price: BUILD_PRICE_NUMERIC,
+      url: 'https://gammarips.com/build',
+    },
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
       <main className="flex-1 container mx-auto px-4 py-8 sm:py-12 max-w-5xl space-y-14">
         <Breadcrumbs
           items={[
             { name: 'Home', href: '/' },
-            { name: 'Build an Agent' },
+            { name: 'Custom Build' },
           ]}
         />
 
-        {/* Hero */}
+        {/* Hero — Problem-First Framing */}
         <section className="space-y-5 text-center max-w-4xl mx-auto">
           <Badge className="bg-primary/20 text-primary border-primary/40 uppercase tracking-wider text-xs">
-            Done-For-You Trading Agent Engineering · {BUILD_STANDARD_PRICE} Fixed Scope
+            Done-For-You Trading Bot Engineering · {BUILD_STANDARD_PRICE} Flat
           </Badge>
-          <h1 className="text-3xl sm:text-5xl font-bold font-headline tracking-tight text-balance">
+          <h1 className="text-3xl sm:text-5xl font-bold font-headline tracking-tight">
             Bring your trading rules.
             <span className="block mt-2 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              We engineer &amp; deploy your autonomous agent in {BUILD_TURNAROUND_DAYS} days.
+              We build your safety-hardened bot in {BUILD_TURNAROUND_DAYS} days.
             </span>
           </h1>
           <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Whether your system trades <strong className="text-foreground">US stocks</strong>,{' '}
-            <strong className="text-foreground">2x long &amp; inverse ETFs</strong>, or{' '}
-            <strong className="text-foreground">options</strong>, we turn your written strategy into
-            a production-hardened Python daemon using{' '}
+            Most DIY trading scripts blow up on bad market orders, crash loops, or missed early
+            closes. Whether you trade <strong className="text-foreground">US stocks</strong>,{' '}
+            <strong className="text-foreground">2x/inverse ETFs</strong>, or{' '}
+            <strong className="text-foreground">options</strong>, we turn your written rules into a
+            reliable Python bot wired to{' '}
             <Link href="/developers" className="text-primary hover:underline">
-              GammaRips MCP intelligence
+              GammaRips MCP
             </Link>{' '}
-            or your own market-data feed. {BUILD_STANDARD_PRICE} one-time build, optional{' '}
-            {AGENT_CARE_PRICE}/mo maintenance, Paper-first handoff, and 100% code ownership.
+            or your own data feed — delivered in Paper Mode with 100% code ownership.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <Button asChild size="lg">
-              <a href="#spec-intake">Submit Spec &amp; Lock {BUILD_STANDARD_PRICE} Slot &rarr;</a>
+            <Button asChild size="lg" className="font-semibold">
+              <a href="#spec-intake">Submit Rules &amp; Lock {BUILD_STANDARD_PRICE} Slot &rarr;</a>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="/xtrader">Inspect Our Live X-Trader Agent &rarr;</Link>
+              <Link href="/xtrader">Watch Our Live Benchmark Bot &rarr;</Link>
             </Button>
           </div>
         </section>
@@ -132,24 +157,24 @@ export default async function BuildAgentPage() {
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-primary">
               <Terminal className="h-4 w-4" />
-              <span>Live Reference Architecture — Not Pitchware</span>
+              <span>Proven In Public — Not Slideware</span>
             </div>
             <h2 className="text-lg sm:text-xl font-bold font-headline text-foreground">
-              Built on the same core daemon powering GammaRips X-Trader
+              Built on the same engine running our live X-Trader benchmark
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl leading-relaxed">
-              Every morning at 10:05 ET, our autonomous multi-agent system ingests the GammaRips
-              Combo A dataset, runs Gemini catalyst scoring, and executes isolated paper books across{' '}
-              <strong className="text-foreground">2x/inverse ETFs &amp; stocks</strong> and{' '}
-              <strong className="text-foreground">OPRA options</strong>{' '}
+              Every market morning at 10:05 ET, our own automated agent reads the GammaRips nightly
+              pool, checks live news catalysts, and runs two isolated paper accounts side by side:{' '}
+              <strong className="text-foreground">2x/inverse ETFs &amp; stocks</strong> vs.{' '}
+              <strong className="text-foreground">options</strong>{' '}
               {xtraderSummary?.total_sessions
-                ? `(${xtraderSummary.total_sessions} published sessions logged in public)`
-                : '(streaming live session logs in public)'}
+                ? `(${xtraderSummary.total_sessions} public sessions logged)`
+                : '(live daily decision logs open to inspect)'}
               .
             </p>
           </div>
           <Button asChild variant="secondary" className="shrink-0">
-            <Link href="/xtrader">View Live Telemetry Log &rarr;</Link>
+            <Link href="/xtrader">Inspect Live Daily Log &rarr;</Link>
           </Button>
         </section>
 
@@ -157,11 +182,11 @@ export default async function BuildAgentPage() {
         <section className="space-y-6">
           <div className="text-center space-y-2">
             <h2 className="text-2xl sm:text-3xl font-bold font-headline">
-              Production Safety Guardrails Included in Every Build
+              Four Safety Guardrails Built Into Every Bot
             </h2>
             <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-              Most DIY trading scripts blow up on market orders, crash loops, or missed early-close
-              calendars. Every standard build ships on our battle-tested risk kernel.
+              You focus on your trading rules; we make sure the software handles real-world broker
+              edge cases safely from day one.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -186,6 +211,22 @@ export default async function BuildAgentPage() {
               );
             })}
           </div>
+          <div className="max-w-3xl mx-auto">
+            <Disclosure
+              label="Under the hood: architecture & deployment details for developers"
+              hint="Docker, systemd, idempotent intent ledger & JSONL logs"
+            >
+              <p className="leading-relaxed">
+                Every standard build ships as a clean Python 3.12 repository containing your
+                strategy module, broker adapter + mandatory <code className="text-foreground">PaperBroker</code>,
+                idempotent order-intent state files, tick-rounded limit-price helpers, NYSE holiday
+                &amp; early-close calendar guards, structured JSONL decision traces, pytest unit
+                tests, a <code className="text-foreground">Dockerfile</code>, and a{' '}
+                <code className="text-foreground">systemd</code> service unit for hands-off VPS or
+                local hosting.
+              </p>
+            </Disclosure>
+          </div>
         </section>
 
         {/* Transparent Scope & Pricing */}
@@ -195,8 +236,8 @@ export default async function BuildAgentPage() {
               Clear Fixed Scope &amp; Optional Ongoing Care
             </h2>
             <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-              One flat engineering fee to ship your agent, plus optional post-handoff maintenance so
-              broker or API changes never stall your workflow.
+              One flat engineering fee to ship your bot, plus optional monthly maintenance if you
+              want us to handle broker or API updates after handoff.
             </p>
           </div>
 
@@ -229,7 +270,7 @@ export default async function BuildAgentPage() {
 
                 <div className="border-t border-border/70 pt-4 space-y-2">
                   <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Explicitly Outside {BUILD_STANDARD_PRICE} Standard Scope
+                    Outside {BUILD_STANDARD_PRICE} Standard Scope
                   </p>
                   <ul className="space-y-1.5">
                     {outOfScope.map((item) => (
@@ -263,8 +304,8 @@ export default async function BuildAgentPage() {
                 </CardHeader>
                 <CardContent className="text-xs text-muted-foreground space-y-2.5 leading-relaxed">
                   <p>
-                    Covers broker/data API drift patches, Python dependency updates, bug fixes, and
-                    small parameter adjustments (up to 2 hrs/mo, 24–48h business response).
+                    Covers broker or data API changes, dependency updates, bug fixes, and small rule
+                    tweaks (up to 2 hrs/mo, 24–48h business-day response).
                   </p>
                   <p className="text-foreground font-medium">
                     Bundle option: {AGENT_CARE_MCP_PRICE}/mo includes Agent Care + full{' '}
@@ -283,7 +324,7 @@ export default async function BuildAgentPage() {
                     <span>Multi-Agent / Multi-Leg</span>
                   </div>
                   <CardTitle className="text-lg font-bold font-headline mt-1">
-                    Custom Scope SOW
+                    Custom Scope Project
                   </CardTitle>
                   <div className="pt-1">
                     <span className="text-2xl font-bold">{BUILD_CUSTOM_MIN_PRICE}+</span>
@@ -291,8 +332,8 @@ export default async function BuildAgentPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="text-xs text-muted-foreground leading-relaxed">
-                  Need multi-leg spreads, custom web dashboards, multiple broker accounts, or custom
-                  research pipelines? Submit your spec using the free 24-hour scope check below.
+                  Need multi-leg option spreads, custom web dashboards, multiple broker accounts, or
+                  custom research pipelines? Submit your idea for a free 24-hour scope check below.
                 </CardContent>
               </Card>
             </div>

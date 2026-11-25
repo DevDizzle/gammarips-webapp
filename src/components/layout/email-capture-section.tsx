@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { EmailCapture } from '@/components/email-capture';
 
-const SUPPRESSED_PREFIXES = ['/pricing', '/oauth', '/account', '/auth'];
+const SUPPRESSED_PREFIXES = ['/pricing', '/build', '/oauth', '/account', '/auth'];
 
 export default function EmailCaptureSection() {
   const pathname = usePathname();

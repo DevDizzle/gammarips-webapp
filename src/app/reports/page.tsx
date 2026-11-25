@@ -7,15 +7,15 @@ import { Metadata } from "next";
 import { OG_IMAGE } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Daily Options-Flow Intelligence Reports",
+  title: "Daily Options Flow & Market Intelligence Reports",
   description:
-    "Daily options-flow intelligence briefings: macro regime context, overnight flow themes, and the Combo A bullish call pool. Educational market data only.",
+    "Daily pre-market options-flow briefings: volatility regime context, overnight sector themes, and liquid bullish setups for stocks, 2x ETFs, and options.",
   alternates: { canonical: 'https://gammarips.com/reports' },
   openGraph: {
     images: [OG_IMAGE],
-    title: "Daily Options-Flow Intelligence Reports | GammaRips",
+    title: "Daily Options Flow & Market Intelligence Reports | GammaRips",
     description:
-      "Daily options-flow intelligence briefings: macro regime context, overnight flow themes, and the Combo A bullish call pool.",
+      "Daily pre-market options-flow briefings: volatility regime context, overnight themes, and liquid setups mapped to stocks, 2x ETFs, and options.",
     url: "https://gammarips.com/reports",
   },
 };
@@ -52,13 +52,15 @@ export default async function ReportsPage() {
       <main className="flex-1 container mx-auto px-4 py-8">
         <Breadcrumbs className="mb-6" items={[{ name: "Home", href: "/" }, { name: "Daily Reports" }]} />
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold font-headline mb-4">The Morning Briefing</h1>
-          <p className="text-muted-foreground text-lg max-w-2xl">
-            Every trading day, we publish what institutional money did overnight. Pick a date. See what happened.
+          <h1 className="text-3xl md:text-4xl font-bold font-headline mb-3">
+            Daily Options Flow &amp; Morning Briefings
+          </h1>
+          <p className="text-muted-foreground text-base sm:text-lg max-w-2xl">
+            Every trading morning before the bell, we summarize market volatility regime, overnight
+            flow themes, and the liquid US stocks passing our daily scan.
           </p>
           <p className="text-sm text-muted-foreground mt-3">
-            This page shows the most recent briefings. Every report we have ever published is in
-            the{" "}
+            Showing the most recent briefings. Browse every date ever published in the{" "}
             <Link href="/reports/archive" className="text-primary hover:underline">
               full report archive
             </Link>
@@ -82,11 +84,15 @@ export default async function ReportsPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                     <span className="font-semibold text-foreground">{summary.total_signals || 0}</span> Signals
+                     <span className="font-semibold text-foreground">{summary.total_signals || 0}</span> Setups
                      <span>•</span>
-                     <span className="text-green-500">{summary.bullish_count || 0} Bull</span>
-                     <span>•</span>
-                     <span className="text-red-500">{summary.bearish_count || 0} Bear</span>
+                     <span className="text-green-500">{summary.bullish_count || 0} Bullish</span>
+                     {(summary.bearish_count || 0) > 0 && (
+                       <>
+                         <span>•</span>
+                         <span className="text-red-500">{summary.bearish_count} Bearish</span>
+                       </>
+                     )}
                   </div>
                   
                   {summary.top_themes && (

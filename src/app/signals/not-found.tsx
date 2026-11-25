@@ -12,14 +12,20 @@ import Link from 'next/link'
 export default function SignalNotFound() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <main className="flex-1 flex flex-col items-center justify-center p-4 text-center">
-        <h2 className="text-4xl font-bold mb-4">Signal Not Found</h2>
-        <p className="text-muted-foreground mb-8">
-          We don&apos;t have an options-flow signal for that ticker.
+      <main className="flex-1 flex flex-col items-center justify-center p-4 text-center space-y-4">
+        <h1 className="text-3xl sm:text-4xl font-bold font-headline">Ticker Not Found</h1>
+        <p className="text-muted-foreground max-w-md">
+          We don&apos;t have a recent overnight scan record for that symbol. Only highly liquid US
+          stocks enter the nightly pool.
         </p>
-        <Link href="/signals" className="text-primary hover:underline">
-          Browse recent signals
-        </Link>
+        <div className="flex flex-wrap gap-4 text-sm pt-2">
+          <Link href="/signals" className="text-primary hover:underline font-medium">
+            Browse Today&apos;s Daily Pool &rarr;
+          </Link>
+          <Link href="/signals/archive" className="text-muted-foreground hover:text-primary">
+            Search Full Archive &rarr;
+          </Link>
+        </div>
       </main>
     </div>
   )

@@ -23,7 +23,7 @@ const ASSET_OPTIONS = [
 ];
 
 const DATA_SOURCES = [
-  'GammaRips Pro MCP (Combo A + RV/IV + Liquidity)',
+  'GammaRips Pro MCP (Daily Pool + Liquidity + Move History)',
   'Polygon / Massive Real-Time Quotes',
   'Alpaca Market Data API',
   'TradingView Alert Webhooks',
@@ -372,14 +372,14 @@ export function BuildIntakeForm() {
 
         <div className="space-y-1.5">
           <label htmlFor="build-rules" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            5. Written Entry, Sizing, Stop &amp; Exit Rules
+            5. Your Written Trading Rules (Plain English Is Fine)
           </label>
           <textarea
             id="build-rules"
             rows={5}
             value={rulesSummary}
             onChange={(e) => setRulesSummary(e.target.value)}
-            placeholder="Example: At 10:05 ET each market day, pull the GammaRips Combo A pool + execution_vehicles, filter for RV/IV >= 0.90 and no earnings in window, enter the mapped 2x long ETF (or 1x shares fallback) via limit order at 50% slot size across 2 max positions, enforce a -8% hard stop, and flatten on Day 2 at 15:45 ET."
+            placeholder="Example: At 10:05 ET each market day, check today's GammaRips pool, skip any stock with earnings within 7 days, buy the mapped 2x long ETF (or regular stock shares) using a limit order sized at $1,000 per trade (max 2 open positions), place a -8% stop loss, and close any open position on Day 2 at 3:45 PM ET."
             className="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-foreground leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
         </div>

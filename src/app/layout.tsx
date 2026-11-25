@@ -19,24 +19,24 @@ const siteUrl = 'https://gammarips.com';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Nightly Combo A Options Dataset for AI Agents | GammaRips',
+    default: 'Market & Options Intelligence for AI Trading Agents | GammaRips',
     template: `%s | GammaRips`,
   },
-  description: "The nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history for AI agents. Every trading night GammaRips filters ~3,500 optionable US stocks to the top 100 liquid universe and bullish calls passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, and DTE 10–45. Preview 3 contracts free, or connect Pro MCP ($29/mo) in Claude, ChatGPT, Cursor, or Codex.",
-  keywords: ['agentic trading', 'AI trading agent', 'MCP server trading', 'options flow', 'unusual options activity', 'options flow data', 'overnight options scanner', 'AI trading analysis', 'options data for AI agents', 'Combo A options dataset'],
+  description: "Nightly options-flow & volatility intelligence for AI trading agents—trade US stocks, 2x ETFs, or options over MCP. Free preview, Pro $29/mo, or custom builds.",
+  keywords: ['AI trading agent', 'trading MCP server', 'stock market data MCP', 'options flow scanner', '2x single stock ETFs', 'Claude trading bot', 'ChatGPT trading agent', 'overnight market scanner', 'custom Python trading agent'],
   openGraph: {
-    title: 'Nightly Combo A Options Dataset for AI Agents | GammaRips',
-    description: 'Nightly Combo A options dataset (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45), 10-minute intraday liquidity snapshots, and 3-day excursion history for Claude, ChatGPT, Cursor, and Codex.',
+    title: 'Market & Options Intelligence for AI Trading Agents | GammaRips',
+    description: 'Nightly institutional flow & volatility data for US stocks, 2x/inverse ETFs, and options—streamed into Claude, ChatGPT, or Cursor via MCP, or built into your own custom trading bot in 5 days.',
     url: siteUrl,
     siteName: 'GammaRips',
-    images: [{ url: `${siteUrl}/og-image.png?v=4`, width: 1200, height: 630, alt: 'GammaRips | Options-flow data for AI agents' }],
+    images: [{ url: `${siteUrl}/og-image.png?v=4`, width: 1200, height: 630, alt: 'GammaRips | Market & options-flow intelligence for AI trading agents' }],
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nightly Combo A Options Dataset for AI Agents | GammaRips',
-    description: 'Nightly Combo A options dataset (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45), 10-minute intraday liquidity snapshots, and 3-day excursion history for Claude, ChatGPT, Cursor, and Codex.',
+    title: 'Market & Options Intelligence for AI Trading Agents | GammaRips',
+    description: 'Nightly institutional flow & volatility data for US stocks, 2x/inverse ETFs, and options—streamed into Claude, ChatGPT, or Cursor via MCP, or custom-built for your rules in 5 days.',
     images: [`${siteUrl}/og-image.png?v=4`],
   },
 };
@@ -51,7 +51,7 @@ const organizationSchema = {
   "url": "https://gammarips.com",
   "logo": "https://gammarips.com/icon.png",
   "email": "evan@gammarips.com",
-  "description": "GammaRips is an options-flow and contract-microstructure data engine for AI agents. Every trading night it scans ~3,500 optionable US stocks, filters to the top 100 liquid universe, and selects one out-of-the-money call per bullish name passing the Combo A specification (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, enriched with rv_iv_ratio). It serves a 3-contract preview on the free tier and the full 40–50 contract dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history on Pro MCP ($29/mo).",
+  "description": "GammaRips delivers nightly institutional options-flow and volatility intelligence for AI trading agents—mapped to US stocks, 2x/inverse single-stock ETFs, and liquid options over MCP—plus fixed-scope ($1,000) custom Python trading agent engineering delivered in 5 business days.",
   "founder": { "@type": "Person", "name": "Evan Parra", "jobTitle": "Founder & CEO" },
   "sameAs": ["https://twitter.com/GammaRips"],
 };

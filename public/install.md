@@ -1,7 +1,7 @@
 # GammaRips MCP — Autonomous Agent Setup Instructions (`install.md`)
 
 > **Instructions for the AI Agent reading this file:**
-> Your user wants you to connect the **GammaRips MCP Server** so you can query the nightly Combo A US options dataset (`get_pool`), 10-minute intraday liquidity snapshots (`get_liquidity`), 3-day MFE/MAE outcome surfaces (`query_outcomes`), contract price replay (`replay_contract`), volatility regime context (`get_regime_context`), daily macro reports (`get_daily_report`), and methodology playbooks (`get_playbook`).
+> Your user wants you to connect the **GammaRips MCP Server** so you can query nightly pre-filtered US market setups mapped to **stocks, 2x/inverse ETFs, and liquid options** (`get_pool` with `execution_vehicles`), live 10-minute intraday liquidity snapshots (`get_liquidity`), 3-day MFE/MAE move history (`query_outcomes`), contract price replay (`replay_contract`), volatility regime context (`get_regime_context`), daily morning briefings (`get_daily_report`), and methodology playbooks (`get_playbook`).
 >
 > **Do not ask the user to run complex terminal commands if you have tool access to configure this yourself.** Follow the steps below for your specific runtime environment, verify the connection, and run the initial check.
 

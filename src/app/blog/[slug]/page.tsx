@@ -40,24 +40,73 @@ function extractMarkdownFaqs(md: string): { q: string; a: string }[] {
   return faqs;
 }
 
+// High-ROI SERP title/description overrides for top-ranking Firestore blog
+// posts (backed by live GSC audit: keeps rendered `<title>` <= 62 chars, fixes
+// truncated 88-97 char titles, removes stale "30-day trial", restores "Trading Bot",
+// and broadens beyond options-only).
+const BLOG_SEO_OVERRIDES: Record<
+  string,
+  { title: string; description: string; h1?: string }
+> = {
+  "best-mcp-servers-for-trading-and-finance": {
+    title: "Best Trading & Stock Market MCP Servers (2026)",
+    description:
+      "Compare top MCP servers for stock trading, options flow, 2x ETFs & hedge fund research. Free tier + Pro ($29/mo, 7-day trial) with 10-second Claude setup.",
+  },
+  "how-to-build-a-trading-bot-with-claude": {
+    title: "How to Build a Trading Bot with Claude & MCP (2026)",
+    h1: "How to Build a Trading Bot with Claude & MCP (2026 Guide)",
+    description:
+      "Build an AI trading bot with Claude Desktop or Claude Code over MCP across stocks, 2x ETFs, and options — with live liquidity checks, risk sizing, and stops.",
+  },
+  "how-to-read-options-volume-vs-open-interest": {
+    title: "Options Volume vs. Open Interest Explained (2026)",
+    description:
+      "Learn what options volume vs. open interest (V/OI) means, how to spot fresh institutional money vs. closing trades, and why book depth improves order fills.",
+  },
+  "filtering-0dte-options-flow": {
+    title: "0DTE vs. Swing Options Flow: Cut Noise & Bad Fills",
+    description:
+      "Why intraday option orders get rejected, how to avoid 0DTE decay traps, and simple liquidity filters that separate institutional flow from retail noise.",
+  },
+  "how-to-analyze-options-flow": {
+    title: "How to Analyze Options Flow: Plain-English Guide",
+    description:
+      "Step-by-step guide to reading options flow: volume vs. open interest, sweeps vs. hedges, book depth, and realized-vs-implied volatility checks.",
+  },
+  "options-block-trade-vs-sweep": {
+    title: "Options Block Trade vs. Sweep: Spot Smart Money",
+    description:
+      "Learn the difference between block trades and sweeps across stocks and options, where to track them, and how to tell institutional conviction from hedging.",
+  },
+  "options-flow-scanner-free-vs-paid": {
+    title: "Free vs. Paid Options Flow Scanners: What to Watch",
+    description:
+      "Compare free and paid options flow scanners in 2026: what free tools show, where delayed quotes and thin books hurt fills, and what AI agents actually need.",
+  },
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPostAdmin(slug);
   if (!post) {
     return { title: "Post not found" };
   }
+  const override = BLOG_SEO_OVERRIDES[post.slug];
+  const seoTitle = override?.title || post.title;
+  const seoDescription = override?.description || post.description;
   return {
     // Root layout applies the `%s | GammaRips` title template — do NOT add the
     // suffix here or it doubles ("… | GammaRips | GammaRips").
-    title: post.title,
-    description: post.description,
+    title: seoTitle,
+    description: seoDescription,
     keywords: post.keywords,
     authors: [{ name: "Evan Parra", url: "https://gammarips.com/about" }],
     alternates: { canonical: `https://gammarips.com/blog/${post.slug}` },
     openGraph: {
       images: [OG_IMAGE],
-      title: post.title,
-      description: post.description,
+      title: seoTitle,
+      description: seoDescription,
       type: "article",
       publishedTime: post.publishedAt || undefined,
       modifiedTime: post.updatedAt || post.publishedAt || undefined,
@@ -72,6 +121,9 @@ export default async function BlogPostPage({ params }: Props) {
   const post = await getBlogPostAdmin(slug);
   if (!post) return notFound();
 
+  const override = BLOG_SEO_OVERRIDES[post.slug];
+  const displayTitle = override?.h1 || post.title;
+  const displayDescription = override?.description || post.description;
   const publishedISO = post.publishedAt || new Date().toISOString();
   const modifiedISO = post.updatedAt || publishedISO;
   const cleanMarkdown = stripLeadingH1(post.markdown || '');
@@ -81,11 +133,11 @@ export default async function BlogPostPage({ params }: Props) {
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": post.title,
+    "headline": displayTitle,
     "image": "https://gammarips.com/og-image.png?v=4",
     "datePublished": publishedISO,
     "dateModified": modifiedISO,
-    "description": post.description,
+    "description": displayDescription,
     "author": {
       "@type": "Person",
       "name": "Evan Parra",
@@ -143,7 +195,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       <header className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-tight text-balance mb-3">
-          {post.title}
+          {displayTitle}
         </h1>
         <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1">
           <span>
@@ -193,10 +245,10 @@ export default async function BlogPostPage({ params }: Props) {
               Best Trading MCP Servers →
             </Link>
             <Link href="/blog/how-to-build-a-trading-bot-with-claude" className="text-muted-foreground hover:text-primary">
-              Claude Trading Agent Guide →
+              Claude Trading Bot Guide →
             </Link>
-            <Link href="/blog/catalyst-lab-combo-a-options-microstructure-audit" className="text-muted-foreground hover:text-primary">
-              Catalyst Lab Audit (N = 5,575) →
+            <Link href="/build" className="text-muted-foreground hover:text-primary">
+              Custom Agent Build ($1,000) →
             </Link>
           </div>
           <Link href="/blog" className="text-primary hover:underline font-medium">

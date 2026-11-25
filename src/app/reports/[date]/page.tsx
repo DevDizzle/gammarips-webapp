@@ -181,15 +181,15 @@ export default async function ReportPage({ params }: Props) {
           )}
         </div>
         <div className="flex flex-wrap gap-4">
-          <Link href="/reports" className="text-muted-foreground hover:text-primary">All reports</Link>
-          <Link href="/signals" className="text-muted-foreground hover:text-primary">Today&apos;s 3-contract preview</Link>
+          <Link href="/reports" className="text-muted-foreground hover:text-primary">All briefings</Link>
+          <Link href="/signals" className="text-muted-foreground hover:text-primary">Today&apos;s Daily Pool</Link>
         </div>
       </nav>
 
       <p className="mt-12 pt-6 border-t border-muted text-xs text-muted-foreground leading-relaxed">
-        Paper-trading performance, educational content only. Not investment advice.
-        Past performance is not a guarantee of future results. Options trading
-        involves substantial risk of loss.
+        Educational market data and research only. Not investment advice. Past performance is not a
+        guarantee of future results. Trading stocks, leveraged ETFs, and options involves
+        substantial risk of loss.
       </p>
     </div>
   );

@@ -1,6 +1,6 @@
 {
   "name": "GammaRips",
-  "description": "Nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day excursion outcome surfaces for AI agents. 9 MCP tools over the GammaRips pipeline: the curated 40–50 contract bullish call pool (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, rv_iv_ratio) with a free 3-contract preview, point-in-time feature vectors, 10-minute intraday liquidity snapshots, 3-day MFE/MAE outcome surfaces, minute/daily option price replay, VIX/VIX3M regime context, and methodology playbooks. Your agent builds the trade plan with you. No shared pick endpoint. Educational only. Not investment advice.",
+  "description": "Nightly US market & options-flow intelligence MCP server for AI trading agents across US stocks, 2x/inverse single-stock ETFs, and liquid options. 9 MCP tools: 40–50 daily setups with mapped execution_vehicles (underlying_stock, long_2x_etfs, inverse_etfs, option_contract) and rv_iv_ratio (free 3-setup preview on /mcp), live 10-minute intraday liquidity snapshots, 3-day MFE/MAE move history, minute/daily price replay, VIX/VIX3M regime context, and playbooks. Also offers $1,000 5-day custom Python trading agent builds at https://gammarips.com/build. No shared daily pick endpoint. Educational market data only, not investment advice.",
   "url": "https://mcp.gammarips.com/mcp",
   "transport": "streamable-http",
   "auth": {
@@ -49,18 +49,21 @@
   ],
   "universe": "about 3,500 optionable US stocks, filtered nightly to the top 100 liquid universe and bullish calls passing Combo A gates (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45)",
   "tags": [
+    "stocks",
+    "leveraged-etfs",
     "options",
     "options-flow",
-    "unusual-options-activity",
     "agentic-trading",
     "ai-agents",
     "mcp",
-    "data-vendor",
+    "market-data",
     "trade-plan"
   ],
   "links": {
     "home": "https://gammarips.com",
     "signals": "https://gammarips.com/signals",
+    "xtrader": "https://gammarips.com/xtrader",
+    "build": "https://gammarips.com/build",
     "how_it_works": "https://gammarips.com/how-it-works",
     "methodology": "https://gammarips.com/methodology",
     "pricing": "https://gammarips.com/pricing",

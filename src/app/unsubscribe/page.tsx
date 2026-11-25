@@ -51,7 +51,13 @@ function UnsubscribeContent() {
           <div className="flex flex-col items-center">
             <XCircle className="h-10 w-10 text-red-500 mb-4" />
             <h1 className="text-xl font-bold text-white mb-2">Something went wrong</h1>
-            <p className="text-zinc-400">We couldn't process your request. Please try again or contact support.</p>
+            <p className="text-zinc-400">
+              We couldn&apos;t process your request. Please try again or email{' '}
+              <a href="mailto:evan@gammarips.com" className="text-primary underline">
+                evan@gammarips.com
+              </a>
+              .
+            </p>
           </div>
         )}
       </div>

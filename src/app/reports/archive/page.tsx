@@ -2,13 +2,21 @@ import Link from "next/link";
 import { getAllDailyReports } from "@/lib/firebase-admin";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Metadata } from "next";
+import { OG_IMAGE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   // Root layout applies the `%s | GammaRips` title template — no suffix here.
-  title: "Report Archive — Every Daily Options-Flow Briefing",
+  title: "Report Archive — Daily Market & Options Briefings",
   description:
-    "The complete archive of GammaRips daily options-flow reports, every trading day since the scan went live. Each entry links to that morning's institutional flow breakdown.",
+    "Complete archive of GammaRips daily options-flow and market briefings for every trading day since launch, with macro themes and scanned setups.",
   alternates: { canonical: "https://gammarips.com/reports/archive" },
+  openGraph: {
+    images: [OG_IMAGE],
+    title: "Report Archive — Daily Market & Options Briefings | GammaRips",
+    description:
+      "Complete archive of GammaRips daily options-flow and market briefings for every trading day since launch.",
+    url: "https://gammarips.com/reports/archive",
+  },
 };
 
 /* The crawl-path backbone for the report inventory.
@@ -67,20 +75,18 @@ export default async function ReportArchivePage() {
         <div className="mb-8 max-w-3xl">
           <h1 className="text-3xl font-bold font-headline mb-2">Report Archive</h1>
           <p className="text-muted-foreground leading-relaxed">
-            Every daily options-flow briefing GammaRips has published, oldest kept and newest
-            first. Each report is the record of what the overnight scan saw that morning across
-            about 3,500 optionable US stocks: the bull/bear split, the themes institutional money leaned into, and
-            the pool that cleared the{" "}
+            Every morning briefing GammaRips has published, newest first. Each briefing summarizes
+            what our overnight scan across ~3,500 US stocks saw before the bell: volatility regime,
+            leading market themes, and the setups clearing our{" "}
             <Link href="/methodology" className="text-primary hover:underline">
-              enrichment bar
+              liquidity &amp; volatility filters
             </Link>
-            . These are historical records of observed flow, not recommendations, and the
-            numbers in them describe paper-traded results only.
+            . Historical market data for educational research only — not investment advice.
           </p>
           <p className="text-sm text-muted-foreground mt-3">
-            Looking for the latest? See the{" "}
+            Looking for today&apos;s edition? See the{" "}
             <Link href="/reports" className="text-primary hover:underline">
-              morning briefing
+              latest morning briefing
             </Link>
             .
           </p>

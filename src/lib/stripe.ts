@@ -87,15 +87,11 @@ export async function createStripeCheckoutSession(
 }
 
 export async function createStripePortalSession(stripeCustomerId: string, returnUrl: string) {
-    const portalConfigurationId = process.env.NEXT_PUBLIC_STRIPE_BILLING_PORTAL_CONFIG_ID;
-    if (!portalConfigurationId) {
-        throw new Error('Stripe Billing Portal Configuration ID is not set in environment variables.');
-    }
-    
+    const portalConfigurationId = process.env.NEXT_PUBLIC_STRIPE_BILLING_PORTAL_CONFIG_ID?.trim();
     const portalSession = await stripe.billingPortal.sessions.create({
         customer: stripeCustomerId,
         return_url: returnUrl,
-        configuration: portalConfigurationId,
+        ...(portalConfigurationId ? { configuration: portalConfigurationId } : {}),
     });
 
     if (!portalSession.url) {

@@ -5,10 +5,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import {
+  AGENT_CARE_PRICE,
+  BUILD_STANDARD_PRICE,
+  BUILD_TURNAROUND_DAYS,
   FOUNDING_CAP,
-  HARNESS_REPO,
   MCP_ENDPOINT,
   MCP_PRO_ENDPOINT,
+  PRICE_ANNUAL,
   PRICE_MONTHLY,
   TOOL_COUNT,
   TRIAL_DAYS,
@@ -19,50 +22,56 @@ export type FaqItem = { question: string; answer: string };
 
 export const buildFaqs = (_receipts?: Receipts): FaqItem[] => [
   {
+    question: "Do I have to trade options to use GammaRips?",
+    answer:
+      "No. Even though our nightly scan uses institutional options flow and volatility to find high-conviction market setups, every candidate includes mapped execution vehicles: the underlying US stock (1x), mapped 2x long or inverse single-stock ETFs, and a liquid option contract. You choose whichever instrument fits your account and risk rules.",
+  },
+  {
     question: "What do I get with Pro MCP Access?",
-    answer: `Your AI agent gets the full GammaRips Combo A options dataset every trading night: roughly 40 to 50 liquid bullish call contracts (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45) from the 100 most liquid optionable US stocks, complete with point-in-time Realized-vs-Implied Volatility (rv_iv_ratio), technicals, flow context, and grounded news catalysts. Pro also unlocks 10-minute intraday liquidity snapshots during market hours, earnings checks, 3-day MFE/MAE outcome surfaces, and contract replay across all ${TOOL_COUNT} MCP tools (${PRICE_MONTHLY}/mo after a ${TRIAL_DAYS}-day free trial).`,
+    answer: `Your AI gets our full nightly pool of roughly 40 to 50 pre-filtered US setups (stocks, 2x/inverse ETFs, and liquid call contracts), enriched every morning with volatility value (realized vs. implied vol), technical levels, and news catalysts. Pro also unlocks live 10-minute morning liquidity checks, earnings alerts, 3-day historical move data, and price replay across all ${TOOL_COUNT} MCP tools (${PRICE_MONTHLY}/mo or ${PRICE_ANNUAL}/yr after a ${TRIAL_DAYS}-day free trial).`,
+  },
+  {
+    question: "Can you build a custom automated trading agent for my strategy?",
+    answer: `Yes. On our Build an Agent page (/build), you submit your written entry, sizing, stop, and exit rules for stocks, 2x/inverse ETFs, or options. For ${BUILD_STANDARD_PRICE} flat, we engineer and safety-harden your Python trading bot (limit-only orders, fill-based stops, crash-safe duplicate guards) and deliver 100% of the code to your private GitHub repo in ${BUILD_TURNAROUND_DAYS} business days in Paper Mode. Optional maintenance is ${AGENT_CARE_PRICE}/mo after handoff.`,
   },
   {
     question: "What is included on the Free tier?",
-    answer: `The Free tier on ${MCP_ENDPOINT} and gammarips.com/signals gives you a daily 3-contract pool preview (get_pool(view="preview")), the daily macro and options-flow intelligence report, VIX/VIX3M regime context, the NYSE market calendar, and methodology playbooks—with no card and no API key required.`,
+    answer: `The Free tier on ${MCP_ENDPOINT} and gammarips.com/signals gives you a daily 3-setup preview, our daily morning briefing, market volatility regime context (VIX vs. VIX3M), the NYSE holiday calendar, and our full methodology playbooks — no card and no API key required.`,
   },
   {
-    question: "Which AI clients work with GammaRips?",
-    answer: `Claude (Claude Code, Claude Desktop, and claude.ai), ChatGPT, Cursor, Codex, Gemini CLI, Grok, and any client that speaks MCP (Model Context Protocol). CLI and IDE clients can send your gr_live_ bearer API key or use OAuth 2.1. Chat clients such as ChatGPT, claude.ai, and Grok connect directly to ${MCP_PRO_ENDPOINT} and sign in with OAuth 2.1. Both routes reach the same ${TOOL_COUNT} tools.`,
+    question: "Which AI apps work with GammaRips?",
+    answer: `Claude (Claude Desktop, Claude.ai, and Claude Code), ChatGPT, Cursor, Codex, Gemini CLI, Grok, and any tool that supports MCP (Model Context Protocol). Chat apps like Claude and ChatGPT connect in three clicks with browser sign-in at ${MCP_PRO_ENDPOINT}; CLI and coding agents can sign in or paste an API key.`,
   },
   {
-    question: "What does the Combo A filter enforce?",
-    answer: "Every trading night at 23:00 ET, the engine scans ~3,500 optionable US stocks, keeps the top 100 liquid universe (3M+ session shares and 25+ listed strikes), and selects one bullish call per name passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, and DTE 10–45. At 05:30 ET each contract is enriched with rv_iv_ratio ((ATR_14/Price * sqrt(252)) / IV) and grounded news catalysts. In walk-forward Catalyst Lab audits across N = 5,575 enriched contracts (66 scan dates), OI >= 500 lifted 5-minute open fill rates from 30.3% to 50.1%, and Delta 0.22–0.48 with DTE 10–45 lifted 3-day MFE >= +40% from 27.6% to 35.4%.",
+    question: "How are the daily setups filtered?",
+    answer:
+      "Every trading night at 23:00 ET, we scan ~3,500 optionable US stocks, narrow to the 100 most liquid names, and keep setups whose contracts clear strict liquidity and pricing floors (Mid >= $1.00, Open Interest >= 500, Delta 0.22–0.48, 10–45 days to expiration). At 05:30 ET we enrich each setup with realized-vs-implied volatility, mapped 2x/inverse ETFs, and grounded news catalysts. In walk-forward audits across 5,575 historical contracts, those liquidity floors lifted 5-minute open fill rates from 30.3% to 50.1%.",
   },
   {
-    question: "What does the free trial include?",
-    answer: `Full Pro MCP access for ${TRIAL_DAYS} days: all ${TOOL_COUNT} tools, the full 40–50 contract daily dataset, 10-minute intraday liquidity snapshots, and 3-day outcome history from minute one. Card on file, no charge during the trial. Cancel before day ${TRIAL_DAYS} and you pay nothing. After that it is ${PRICE_MONTHLY}/mo, the founding price, which the first ${FOUNDING_CAP} subscribers keep for as long as they stay subscribed.`,
+    question: "Why don't you just send one daily pick?",
+    answer:
+      "Two reasons. First, pushing one shared trade to every subscriber crowds everyone into the same price at the open, worsening fills. Second, our own walk-forward research showed that black-box single-pick scores fail out-of-sample, whereas transparent liquidity and volatility data holds up. Your AI builds a plan sized to your own risk budget.",
   },
   {
-    question: "Why don't you sell a single daily pick?",
-    answer: "Two reasons. First, pushing one shared contract to every subscriber crowds everyone into the same option strike at the open, degrading fills. Second, our Catalyst Lab walk-forward XGBoost audit showed that black-box composite scores fail out-of-sample once schema missingness is stripped, whereas transparent microstructure and volatility primitives (Combo A) hold up cleanly. Your AI uses the dataset to build a trade plan tailored to your own risk budget.",
+    question: "How do the free trial and cancellation work?",
+    answer: `You get full Pro MCP access for ${TRIAL_DAYS} days with zero charge if you cancel before day ${TRIAL_DAYS}. After the trial, billing is ${PRICE_MONTHLY}/mo (or ${PRICE_ANNUAL}/yr) — our founding rate locked for the first ${FOUNDING_CAP} subscribers as long as you stay active. You can cancel anytime directly from your account page with one click.`,
   },
   {
-    question: "Do I need the open-source harness?",
-    answer: `No. Any MCP client can call the tools directly in Claude, ChatGPT, Cursor, or Codex. The open-source gammarips-harness (${HARNESS_REPO.replace('https://', '')}) is an optional daily workflow repo that pairs the Pro MCP dataset with live X/web catalyst research and structured trade logging.`,
-  },
-  {
-    question: "Is this financial advice?",
-    answer: "No. GammaRips is a financial data vendor. We publish curated market data, point-in-time feature vectors, historical excursion outcomes, and methodology research. We never see your brokerage account, never manage money, and never make personalized recommendations. Any trade plan your AI builds is your own analysis of GammaRips data, and you decide.",
-  },
-  {
-    question: "What happens if I cancel?",
-    answer: "Your Pro MCP access ends at the close of your billing cycle with no retention hurdles. The 3-contract preview on /signals and /mcp, daily macro reports, and methodology pages remain free.",
+    question: "Is GammaRips financial advice?",
+    answer:
+      "No. GammaRips is a market-data and software-engineering vendor. We publish filtered market data, historical move statistics, and work-for-hire trading software for educational and analytical use. We never manage money, never hold your broker keys, and never tell you what to buy or sell.",
   },
 ];
 
 export default function Faq({ faqs }: { faqs: FaqItem[] }) {
   return (
-    <Accordion type="single" collapsible className="w-full mt-12">
+    <Accordion type="multiple" className="w-full mt-10">
       {faqs.map((faq, i) => (
         <AccordionItem key={i} value={`item-${i}`}>
-          <AccordionTrigger>{faq.question}</AccordionTrigger>
-          <AccordionContent>{faq.answer}</AccordionContent>
+          <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">
+            {faq.answer}
+          </AccordionContent>
         </AccordionItem>
       ))}
     </Accordion>

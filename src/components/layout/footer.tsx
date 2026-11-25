@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { XIcon } from '@/components/icons/XIcon';
-import { PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
+import { BUILD_STANDARD_PRICE, PRICE_ANNUAL, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
 
 const Footer = () => {
   return (
@@ -12,17 +12,20 @@ const Footer = () => {
             <h3 className="text-xl font-bold font-headline">
                 <span className="text-foreground">Gamma</span><span className="text-primary">Rips</span>
             </h3>
-            <p className="text-sm text-muted-foreground mt-2">The nightly Combo A options dataset, 10-minute intraday liquidity snapshots, and 3-day excursion history for AI agents over MCP.</p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Nightly US market and options-flow intelligence for AI trading agents—across stocks, 2x/inverse ETFs, and options—plus 5-day custom agent builds.
+            </p>
           </div>
           <div>
             <h4 className="font-semibold text-foreground">Product &amp; MCP</h4>
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/" className="text-muted-foreground hover:text-primary">Home</Link></li>
-              <li><Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing ({PRICE_MONTHLY}/mo · {TRIAL_DAYS}-day trial)</Link></li>
+              <li><Link href="/pricing" className="text-muted-foreground hover:text-primary">Pricing ({PRICE_MONTHLY}/mo · {PRICE_ANNUAL}/yr · {TRIAL_DAYS}-day trial)</Link></li>
+              <li><Link href="/build" className="text-muted-foreground hover:text-primary font-medium text-foreground">Custom Agent Build ({BUILD_STANDARD_PRICE})</Link></li>
               <li><Link href="/developers" className="text-muted-foreground hover:text-primary">MCP &amp; API Docs</Link></li>
-              <li><Link href="/signals" className="text-muted-foreground hover:text-primary">3-Contract Pool Preview</Link></li>
-              <li><Link href="/xtrader" className="text-muted-foreground hover:text-primary">X-Trader Live Log</Link></li>
-              <li><Link href="/reports" className="text-muted-foreground hover:text-primary">Daily Reports</Link></li>
+              <li><Link href="/signals" className="text-muted-foreground hover:text-primary">Daily Pool Preview</Link></li>
+              <li><Link href="/xtrader" className="text-muted-foreground hover:text-primary">Live Agent Benchmark</Link></li>
+              <li><Link href="/reports" className="text-muted-foreground hover:text-primary">Morning Briefings</Link></li>
               <li><Link href="/llms.txt" className="text-muted-foreground hover:text-primary">llms.txt</Link> · <Link href="/skill.md" className="text-muted-foreground hover:text-primary">skill.md</Link></li>
             </ul>
           </div>
@@ -31,11 +34,11 @@ const Footer = () => {
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/how-it-works" className="text-muted-foreground hover:text-primary">How It Works</Link></li>
               <li><Link href="/methodology" className="text-muted-foreground hover:text-primary">Methodology</Link></li>
-              <li><Link href="/lab" className="text-muted-foreground hover:text-primary">Catalyst Lab</Link></li>
+              <li><Link href="/lab" className="text-muted-foreground hover:text-primary">Research Lab</Link></li>
               <li><Link href="/blog/best-mcp-servers-for-trading-and-finance" className="text-muted-foreground hover:text-primary">Best Trading MCP Servers</Link></li>
-              <li><Link href="/blog/how-to-build-a-trading-bot-with-claude" className="text-muted-foreground hover:text-primary">Claude Trading Agent Guide</Link></li>
+              <li><Link href="/blog/how-to-build-a-trading-bot-with-claude" className="text-muted-foreground hover:text-primary">Claude Trading Bot Guide</Link></li>
               <li><Link href="/blog/how-to-read-options-volume-vs-open-interest" className="text-muted-foreground hover:text-primary">Volume vs. Open Interest Guide</Link></li>
-              <li><Link href="/blog/catalyst-lab-combo-a-options-microstructure-audit" className="text-muted-foreground hover:text-primary">Catalyst Lab Audit (N = 5,575)</Link></li>
+              <li><Link href="/blog/catalyst-lab-combo-a-options-microstructure-audit" className="text-muted-foreground hover:text-primary">Walk-Forward Filter Audit (N = 5,575)</Link></li>
               <li><Link href="/blog" className="text-muted-foreground hover:text-primary">All Blog Posts</Link></li>
               <li><Link href="/about" className="text-muted-foreground hover:text-primary">About</Link></li>
             </ul>

@@ -14,17 +14,13 @@ import {
   getMcpApiKeyStatus,
   revokeMcpApiKey,
 } from '@/app/actions';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CreditCard } from 'lucide-react';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { FREE_MODE } from '@/lib/config';
-import { TOOL_COUNT, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
+import { PRICE_ANNUAL, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
 import { MachineClientsSection } from '@/components/account/machine-clients';
 import { AgentQuickConnect } from '@/components/account/agent-quick-connect';
-
-const MCP_ENDPOINT = 'https://mcp.gammarips.com/mcp';
-
 
 export default function AccountPage() {
   const { user, dbUser, loading: authLoading, isPro } = useAuth();
@@ -39,6 +35,7 @@ export default function AccountPage() {
   } | null>(null);
   const [newKey, setNewKey] = useState<string | null>(null); // shown once
   const [keyBusy, setKeyBusy] = useState(false);
+  const [portalBusy, setPortalBusy] = useState(false);
 
   // Arrived from checkout (?welcome=1)? If entitlement hasn't landed yet,
   // show a finalizing state instead of the upsell — the Firestore snapshot in
@@ -146,6 +143,30 @@ export default function AccountPage() {
     toast({ title: 'Copied to clipboard' });
   };
 
+  const handleOpenBillingPortal = async () => {
+    if (!user) return;
+    setPortalBusy(true);
+    try {
+      const token = await user.getIdToken();
+      const res = await fetch('/api/billing-portal', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data?.url) {
+        throw new Error(data?.error || 'Could not open billing portal.');
+      }
+      window.location.href = data.url;
+    } catch (error: any) {
+      toast({
+        title: 'Could not open billing portal',
+        description: error?.message || 'Please try again or email evan@gammarips.com.',
+        variant: 'destructive',
+      });
+      setPortalBusy(false);
+    }
+  };
+
   const handlePasswordReset = async () => {
     if (!user?.email) return;
     try {
@@ -206,6 +227,35 @@ export default function AccountPage() {
           </CardContent>
         </Card>
 
+        <Card>
+          <CardHeader>
+            <CardTitle>Subscription &amp; Billing</CardTitle>
+            <CardDescription>
+              {isPro
+                ? 'Your Pro MCP subscription is active. Update your card, switch between monthly and annual billing, or cancel anytime in Stripe.'
+                : 'You are currently on the free preview tier.'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap items-center gap-3">
+            {isPro || dbUser?.stripeCustomerId ? (
+              <Button onClick={handleOpenBillingPortal} variant="outline" disabled={portalBusy}>
+                {portalBusy ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <CreditCard className="h-4 w-4 mr-2" />
+                )}
+                Manage Billing / Cancel Subscription
+              </Button>
+            ) : (
+              <Button asChild>
+                <Link href="/pricing">
+                  Start {TRIAL_DAYS}-Day Free Trial ({PRICE_MONTHLY}/mo or {PRICE_ANNUAL}/yr) &rarr;
+                </Link>
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+
         {/* API Access Section */}
         <section className="p-6 rounded-lg border bg-card space-y-5">
           <h2 className="text-xl font-bold">Connect Your AI Agent</h2>
@@ -214,9 +264,11 @@ export default function AccountPage() {
               <AgentQuickConnect apiKey={newKey} />
 
               <div className="border-t pt-4 space-y-3">
-                <h3 className="text-base font-semibold">Optional: Generate an API Key (`gr_live_...`)</h3>
+                <h3 className="text-base font-semibold">
+                  Optional: Generate an API Key (<code className="text-xs font-mono text-primary">gr_live_...</code>)
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  If you use Claude Desktop, Claude Web, or ChatGPT, you can skip API keys completely and sign in with Option 2 above. If you use a CLI or code agent (Claude Code, Cursor, Codex, GrokBot), click below to generate a key—the setup prompt above will automatically update with your new key included.
+                  If you use Claude Desktop, Claude Web, or ChatGPT, you can skip API keys completely and sign in with Option 2 above. If you use a CLI or code agent (Claude Code, Cursor, Codex, or Gemini CLI), click below to generate a key—the setup prompt above will automatically update with your new key included.
                 </p>
 
                 {/* One-time reveal of a freshly generated key */}
@@ -276,12 +328,10 @@ export default function AccountPage() {
           ) : (
             <>
               <p className="text-muted-foreground">
-                Connect Claude Code, Codex, Cursor, Gemini CLI, or any agent that
-                can send a bearer key to the GammaRips data layer: the curated pool, opportunity surfaces, outcome
-                history, and methodology playbooks. {PRICE_MONTHLY}/mo, {TRIAL_DAYS}-day free trial.
+                Connect Claude, ChatGPT, Cursor, Codex, or Gemini CLI to the full nightly market pool (40–50 setups mapped to US stocks, 2x/inverse ETFs, and liquid options), live 10-minute morning liquidity checks, and 3-day move history. {PRICE_MONTHLY}/mo or {PRICE_ANNUAL}/yr after a {TRIAL_DAYS}-day free trial.
               </p>
               <Button asChild>
-                <Link href="/pricing">Get Agent Access &rarr;</Link>
+                <Link href="/pricing">Start {TRIAL_DAYS}-Day Free Trial &rarr;</Link>
               </Button>
             </>
           )}

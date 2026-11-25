@@ -9,19 +9,19 @@
   "entries": [
     {
       "identifier": "urn:air:gammarips.com:server:gammarips",
-      "displayName": "GammaRips Options Intelligence",
+      "displayName": "GammaRips Market & Options Intelligence",
       "type": "application/mcp-server-card+json",
       "url": "https://mcp.gammarips.com/.well-known/mcp/server-card.json",
-      "description": "Nightly Combo A options dataset (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, rv_iv_ratio), 10-minute intraday liquidity snapshots, and 3-day excursion outcome surfaces for AI agents. Free 3-contract preview on /mcp; full 40–50 contract daily dataset and intraday tools on /pro ($299/yr or $29/mo founding price, 7-day free trial). Your agent builds the trade plan with you. Educational only. Not investment advice.",
+      "description": "Nightly US market & options-flow intelligence for AI trading agents — mapped to US stocks, 2x/inverse single-stock ETFs, and liquid options (execution_vehicles), plus live 10-minute liquidity snapshots and 3-day move history. Free 3-setup preview on /mcp; full 40–50 setup dataset on /pro ($299/yr or $29/mo founding price, 7-day trial). Educational only. Not investment advice.",
       "version": "4.5.0",
       "tags": [
+        "stocks",
+        "leveraged-etfs",
         "options",
         "finance",
         "market-data",
-        "unusual-options-activity",
         "options-flow",
         "trading-research",
-        "data-vendor",
         "mcp"
       ],
       "capabilities": [

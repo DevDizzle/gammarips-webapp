@@ -25,6 +25,12 @@ const nextConfig: NextConfig = {
         source: '/oauth/consent:path*',
         headers: [{ key: 'Cache-Control', value: 'no-store' }],
       },
+      {
+        // Private account & auth routes: emit HTTP X-Robots-Tag so search
+        // engines drop any previously indexed URLs cleanly.
+        source: '/(account|auth)/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
     ];
   },
   async redirects() {

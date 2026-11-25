@@ -4,16 +4,10 @@ import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Disclosure } from '@/components/ui/disclosure';
 import { CONNECT_CLIENTS, PRO_STATUS_LABEL, type ConnectStep } from '@/lib/connect-clients';
 import { HARNESS_REPO, MCP_PRO_ENDPOINT, PRICE_MONTHLY, TOOL_COUNT, TRIAL_DAYS } from '@/lib/constants';
 import { AgentQuickConnect, ProAwareCta } from '@/components/account/agent-quick-connect';
-
-// The per-client reference block, below the three-step path (#start). This is
-// where every client gets its exact install steps, free first and then pro.
-// /about, /developers and /account all link here (#connect) for that detail,
-// so keep the anchor and keep both blocks. Facts come from src/lib/connect-clients.ts (checked against vendor
-// docs); this component only renders them. Order: the four clients that can
-// send the key today come first, the chat clients after.
 
 function Steps({ steps }: { steps: ConnectStep[] }) {
   return (
@@ -40,64 +34,73 @@ function Steps({ steps }: { steps: ConnectStep[] }) {
 export function ConnectTabs() {
   return (
     <section id="connect" className="scroll-mt-24">
-      <h2 className="text-2xl md:text-3xl font-bold font-headline text-center text-balance mb-3">
+      <h2 className="text-2xl md:text-3xl font-bold font-headline text-center mb-3">
         Connect your AI in one step
       </h2>
       <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto mb-6">
-        Copy one prompt to let your AI configure itself via <code className="text-primary">gammarips.com/install.md</code>, sign in with OAuth 2.1 at <code className="text-primary">{MCP_PRO_ENDPOINT}</code>, or inspect the manual client steps below.
+        Copy one prompt to let your AI wire itself up, or paste our server URL into Claude or ChatGPT and sign in with your browser.
       </p>
 
-      <div className="max-w-3xl mx-auto mb-8">
+      <div className="max-w-3xl mx-auto mb-5">
         <AgentQuickConnect />
       </div>
 
-      <Tabs defaultValue={CONNECT_CLIENTS[0].id} className="max-w-3xl mx-auto">
-        <TabsList className="flex h-auto flex-wrap justify-center gap-1 bg-muted/60 p-1">
-          {CONNECT_CLIENTS.map((c) => (
-            <TabsTrigger key={c.id} value={c.id} className="px-3 py-1.5 text-xs md:text-sm">
-              {c.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      {/* Progressive disclosure: keeps manual CLI/IDE configs searchable via Ctrl+F
+          without overwhelming non-technical visitors on the homepage. */}
+      <div className="max-w-3xl mx-auto">
+        <Disclosure
+          label="Manual setup steps by AI client"
+          hint="Claude Code, Cursor, Codex, Gemini CLI, ChatGPT, Claude App"
+        >
+          <Tabs defaultValue={CONNECT_CLIENTS[0].id} className="pt-2">
+            <TabsList className="flex h-auto flex-nowrap overflow-x-auto justify-start gap-1 bg-muted/60 p-1">
+              {CONNECT_CLIENTS.map((c) => (
+                <TabsTrigger key={c.id} value={c.id} className="px-3 py-1.5 text-xs md:text-sm shrink-0">
+                  {c.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-        {CONNECT_CLIENTS.map((c) => (
-          <TabsContent key={c.id} value={c.id} className="mt-4">
-            <div className="rounded-xl border bg-card/60 p-5 md:p-6 space-y-6 text-left">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-bold font-headline">Free</h3>
-                  <Badge variant="outline" className="text-[10px]">
-                    no card, no key
-                  </Badge>
-                </div>
-                <p className="text-sm text-muted-foreground">{c.free.intro}</p>
-                <Steps steps={c.free.steps} />
-              </div>
+            {CONNECT_CLIENTS.map((c) => (
+              <TabsContent key={c.id} value={c.id} className="mt-4">
+                <div className="rounded-xl border bg-background/80 p-5 space-y-6 text-left">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold font-headline text-foreground">Free 3-Setup Preview</h3>
+                      <Badge variant="outline" className="text-[10px]">
+                        no card, no key
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{c.free.intro}</p>
+                    <Steps steps={c.free.steps} />
+                  </div>
 
-              <div className="space-y-3 border-t border-border/60 pt-5">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-bold font-headline">Pro, {PRICE_MONTHLY}/mo</h3>
-                  <Badge variant="default" className="text-[10px]">
-                    {PRO_STATUS_LABEL[c.pro.status]}
-                  </Badge>
+                  <div className="space-y-3 border-t border-border/60 pt-5">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-bold font-headline text-foreground">Pro, {PRICE_MONTHLY}/mo</h3>
+                      <Badge variant="default" className="text-[10px]">
+                        {PRO_STATUS_LABEL[c.pro.status]}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{c.pro.intro}</p>
+                    <Steps steps={c.pro.steps} />
+                    <div className="pt-1">
+                      <ProAwareCta
+                        size="sm"
+                        freeLabel={
+                          c.pro.status === 'full'
+                            ? `Start your ${TRIAL_DAYS}-day free trial, get your key`
+                            : `Start your ${TRIAL_DAYS}-day free trial, then sign in`
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
-                <p className="text-sm text-muted-foreground">{c.pro.intro}</p>
-                <Steps steps={c.pro.steps} />
-                <div className="pt-1">
-                  <ProAwareCta
-                    size="sm"
-                    freeLabel={
-                      c.pro.status === 'full'
-                        ? `Start your ${TRIAL_DAYS}-day free trial, get your key`
-                        : `Start your ${TRIAL_DAYS}-day free trial, then sign in`
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-        ))}
-      </Tabs>
+              </TabsContent>
+            ))}
+          </Tabs>
+        </Disclosure>
+      </div>
 
       <div className="mt-6 text-center space-y-3">
         <div className="flex flex-wrap items-center justify-center gap-3">
@@ -106,21 +109,12 @@ export function ConnectTabs() {
           </Button>
           <Button asChild variant="outline" size="sm">
             <Link href={HARNESS_REPO} target="_blank" rel="noopener noreferrer">
-              Clone open-source gammarips-harness on GitHub &rarr;
+              Explore open-source agent harness on GitHub &rarr;
             </Link>
           </Button>
         </div>
         <p className="text-xs text-muted-foreground">
-          Pro MCP endpoint: <code className="text-primary">{MCP_PRO_ENDPOINT}</code>. The open-source{' '}
-          <Link
-            href={HARNESS_REPO}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary hover:underline font-mono"
-          >
-            gammarips-harness
-          </Link>{' '}
-          and the Python SDK connect the same way.
+          Pro OAuth URL: <code className="text-primary">{MCP_PRO_ENDPOINT}</code>
         </p>
       </div>
     </section>

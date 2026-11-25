@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, CheckCircle2, Loader2, Lock } from 'lucide-react';
-import { PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
+import { BUILD_STANDARD_PRICE, PRICE_ANNUAL, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
 import { AgentQuickConnect } from '@/components/account/agent-quick-connect';
 
 interface SignalsPoolClientProps {
@@ -71,7 +71,7 @@ export function SignalsPoolClient({
           <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
             <Badge variant="default" className="gap-1.5">
               <CheckCircle2 className="h-3.5 w-3.5" />
-              Pro Subscription Active · Full Pool Unlocked ({displayed.length} of {totalCount} Contracts)
+              Pro Active · Full Pool Unlocked ({displayed.length} of {totalCount} Setups)
             </Badge>
             {fetchingFull && (
               <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -80,11 +80,14 @@ export function SignalsPoolClient({
             )}
           </div>
           <SignalsTable
-            title={`Today's Full Combo A Pool (${displayed.length} Contracts)`}
+            title={`Today's Full Daily Pool (${displayed.length} Liquid Setups)`}
             signals={displayed}
           />
           <p className="mt-3 text-xs text-muted-foreground max-w-3xl">
-            Showing all {displayed.length} bullish call candidates passing today&apos;s Combo A filter (<code className="text-foreground">Mid &gt;= $1.00</code>, <code className="text-foreground">OI &gt;= 500</code>, <code className="text-foreground">Delta 0.22–0.48</code>, <code className="text-foreground">DTE 10–45</code>). Descriptive scores are point-in-time context, not a forecast or recommendation.
+            Showing all {displayed.length} setups passing today&apos;s liquidity and pricing filters.
+            Connect your AI over MCP to inspect mapped 2x/inverse ETFs, volatility value, live
+            morning liquidity, and 3-day move history. Descriptive scores are context only, not a
+            recommendation.
           </p>
         </div>
 
@@ -97,11 +100,12 @@ export function SignalsPoolClient({
     <div className="grid gap-8">
       <div>
         <SignalsTable
-          title="Today's Pool Preview (Top 3 Contracts)"
+          title="Today's Free Preview (3 Setups)"
           signals={previewSignals}
         />
         <p className="mt-3 text-xs text-muted-foreground max-w-3xl">
-          The preview table shows 3 contracts from today&apos;s scan. Descriptive scores are point-in-time context, not a forecast or recommendation.
+          Free preview shows 3 setups from today&apos;s scan. Descriptive scores are context only,
+          not a forecast or recommendation. Educational market data only.
         </p>
       </div>
 
@@ -111,19 +115,28 @@ export function SignalsPoolClient({
             <div className="space-y-2 max-w-2xl">
               <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
                 <Lock className="h-3.5 w-3.5" />
-                Pro MCP Dataset
+                Pro MCP Access
               </div>
               <h2 className="text-xl md:text-2xl font-bold font-headline">
-                Showing {previewSignals.length} of {totalCount} contracts that passed today&apos;s Combo A filter
+                Showing {previewSignals.length} of {totalCount} liquid setups from last night&apos;s scan
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Unlock the full nightly pool on the web and in your AI agent—complete with exact contract specs, <code className="text-xs text-foreground">rv_iv_ratio</code>, grounded catalysts, 10-minute intraday liquidity snapshots, and 3-day MFE/MAE outcome surfaces. Start with a {TRIAL_DAYS}-day free trial.
+                Unlock the full nightly pool on the web and inside Claude, ChatGPT, Cursor, or
+                Codex — complete with mapped stocks, 2x/inverse ETFs, liquid option specs, live
+                10-minute morning liquidity checks, and 3-day historical move data. Starts with a{' '}
+                {TRIAL_DAYS}-day free trial ({PRICE_MONTHLY}/mo or {PRICE_ANNUAL}/yr after).
+              </p>
+              <p className="text-xs text-muted-foreground pt-1">
+                Prefer a turnkey automated bot?{' '}
+                <Link href="/build" className="text-primary hover:underline font-medium">
+                  Have us build your custom agent in 5 days ({BUILD_STANDARD_PRICE}) &rarr;
+                </Link>
               </p>
             </div>
             <div className="flex flex-col sm:flex-row md:flex-col gap-3 w-full md:w-auto shrink-0">
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="font-semibold">
                 <Link href="/pricing">
-                  Unlock Full Pool ({PRICE_MONTHLY}/mo) <ArrowRight className="ml-2 h-4 w-4" />
+                  Start {TRIAL_DAYS}-Day Free Trial <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">

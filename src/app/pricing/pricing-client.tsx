@@ -6,6 +6,7 @@ import { useAuthModal } from '@/components/auth/auth-modal-provider';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Disclosure } from '@/components/ui/disclosure';
 import { Check, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
@@ -32,77 +33,65 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''
 );
 
-const agentFeatures = [
-  'Full daily curated pool (40–50 setups) with thesis, technicals, rv_iv_ratio, catalysts, and mapped execution_vehicles (stocks, 2x/inverse ETFs, options)',
-  'Live 10-minute intraday liquidity snapshots (09:02–16:52 ET) and earnings date checks',
-  'Historical 3-day MFE/MAE outcome surfaces & minute/daily contract price replay',
-  `All ${TOOL_COUNT} MCP tools in Claude, ChatGPT, Cursor, Codex, or any MCP client`,
-  'Sign in with OAuth 2.1 (/pro), or use a gr_live_ bearer API key',
-  `${TRIAL_DAYS}-day free trial · cancel anytime`,
-];
-
 const freeFeatures = [
-  'Daily 3-contract pool preview on web (/signals) and MCP (get_pool(view="preview"))',
-  'Daily macro & options-flow intelligence reports and per-ticker archive',
-  'Free MCP tools: 3-contract preview, daily report, VIX/VIX3M regime context, market calendar, playbooks',
-  'Methodology, Catalyst Lab research, blog, FAQ, and disclosures',
+  'Daily 3-setup preview on the web and over free MCP',
+  'Morning market & options-flow briefings',
+  'Market volatility regime (VIX vs. VIX3M) & NYSE calendar',
+  'Full methodology, Research Lab & plain-English guides',
 ];
 
-const catalystResearchProof = [
+const proFeatures = [
+  'Full nightly pool (40–50 liquid setups) mapped to stocks, 2x/inverse ETFs & options',
+  'Live 10-minute morning liquidity checks & earnings date alerts',
+  '3-day historical move data & minute-by-minute price replay',
+  `All ${TOOL_COUNT} MCP tools in Claude, ChatGPT, Cursor, Codex, or Gemini CLI`,
+  `One-click browser sign-in (OAuth) or API key · ${TRIAL_DAYS}-day free trial`,
+];
+
+const buildFeatures = [
+  'Your written entry, sizing, stop & exit rules coded in Python 3.12',
+  'Trade US stocks, 2x/inverse single-stock ETFs, or single-leg options',
+  'Safety-hardened: limit-only orders, fill-based stops & duplicate-order guards',
+  'Connects to Alpaca, Robinhood MCP, Tradier, or Interactive Brokers',
+  `Paper-first handoff to your private GitHub repo in ${BUILD_TURNAROUND_DAYS} business days`,
+];
+
+const researchProof = [
   {
-    label: 'Intraday Execution Fills',
-    value: '50.1%',
-    headline: '5-minute fast fill rate at the open, vs 30.3% baseline',
+    label: 'Faster Morning Fills',
+    value: '50.1% vs 30.3%',
+    headline: '5-minute open fill rate with deep resting liquidity',
     detail:
-      'Enforcing resting Open Interest >= 500 lifts 5-minute fast execution fills from 30.3% to 50.1% (and 56.5% at OI >= 1,000), audited across BigQuery enriched_option_outcomes.',
+      'Filtering out thin books (requiring Open Interest >= 500) raised 5-minute opening fill rates from 30.3% to 50.1% across audited historical sessions.',
   },
   {
-    label: 'Convexity & Volatility Filter',
-    value: '35.4%',
-    headline: '3-day MFE >= +40%, vs 27.6% baseline',
+    label: 'Cleaner Upside Moves',
+    value: '35.4% vs 27.6%',
+    headline: '3-day +40% upside touch rate inside our pricing band',
     detail:
-      'Screening for the gamma/theta sweet spot (Delta 0.22–0.48, DTE 10–45) and Realized-vs-Implied Volatility (rv_iv_ratio >= 0.85) across N = 5,575 enriched contracts (66 scan dates).',
+      'Cutting far-out-of-the-money lottery tickets and short decay traps raised 3-day +40% touch rates across 5,575 historical contracts (66 scan dates).',
   },
   {
-    label: 'Combo A Contract Floors',
+    label: 'No Penny-Option Friction',
     value: '$1.00+ / 500+ OI',
-    headline: 'Hard minimum mid price and resting open interest gates',
+    headline: 'Hard minimum price & open-interest floors every night',
     detail:
-      'Eliminates sub-dollar $0.05 tick-size friction and thin order books across the top 100 most liquid optionable US stocks before your AI agent ever evaluates a candidate.',
-  },
-];
-
-const unlocks = [
-  {
-    title: 'Full daily curated pool (40–50 Combo A contracts)',
-    body: 'Every trading night, the top 100 most liquid US option chains are filtered to bullish calls passing Mid >= $1.00, OI >= 500, Delta 0.22–0.48, and DTE 10–45—delivered with point-in-time rv_iv_ratio, technicals, flow context, and grounded news catalysts.',
-  },
-  {
-    title: 'Live 10-minute intraday liquidity snapshots',
-    body: 'Overnight scan numbers freeze at the close. From 09:02 to 16:52 ET, Pro MCP streams 10-minute intraday contract snapshots so your AI verifies morning open interest, active session volume, and earnings dates before planning an entry.',
-  },
-  {
-    title: 'Historical 3-day MFE/MAE outcome surfaces & replay',
-    body: 'Query BigQuery enriched_option_outcomes across historical pool cohorts to inspect unclipped 3-day Maximum Favorable and Adverse Excursions, touch probabilities, and minute-by-minute contract price replay.',
-  },
-  {
-    title: 'Built for your AI agent and open-source harness',
-    body: 'Connect Claude, ChatGPT, Cursor, Codex, or the open-source gammarips-harness via OAuth 2.1 (/pro) or a bearer API key. Your AI synthesizes the dataset and builds a structured plan for your risk budget; you decide.',
+      'Eliminates sub-dollar $0.05 tick-size drag across the 100 most liquid US names before your AI ever reviews a setup.',
   },
 ];
 
 const steps = [
   {
-    title: `Start your ${TRIAL_DAYS}-day trial`,
-    body: `Full Pro MCP access from minute one. No charge if you cancel before day ${TRIAL_DAYS}.`,
+    title: `Start your ${TRIAL_DAYS}-day free trial`,
+    body: `Unlock full Pro MCP access immediately. Cancel anytime from your account page before day ${TRIAL_DAYS} at $0.`,
   },
   {
-    title: 'Connect your AI client',
-    body: 'Sign in with OAuth 2.1 from Claude, ChatGPT, Cursor, or Codex, or paste your gr_live_ API key.',
+    title: 'Connect in 1 minute',
+    body: 'Sign in with your browser inside Claude or ChatGPT, or copy one prompt so Claude Code, Cursor, or Codex connects itself.',
   },
   {
-    title: 'Query the dataset & build your plan',
-    body: 'Your AI reads the full Combo A pool, verifies 10-minute morning liquidity and earnings, checks 3-day excursion history, and lays out your trade plan.',
+    title: 'Build your risk-sized plan',
+    body: 'Your AI checks morning liquidity, skips surprise earnings, compares stock, 2x ETF, and option choices, and lays out entries, targets, and stops.',
   },
 ];
 
@@ -157,8 +146,6 @@ export function PricingClient(_props: { receipts?: Receipts }) {
     }
   }, [user, toast]);
 
-  // Automatically continue into Stripe Checkout right after Google/email auth
-  // completes on /pricing (or when arriving via ?checkout=month|year).
   useEffect(() => {
     if (!user || autoCheckoutTriggered.current) return;
     if (typeof window === 'undefined') return;
@@ -196,90 +183,59 @@ export function PricingClient(_props: { receipts?: Receipts }) {
   }
 
   return (
-    <section className="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-      <header className="text-center mb-12">
+    <section className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <header className="text-center mb-10 max-w-3xl mx-auto">
         <p className="text-sm font-semibold uppercase tracking-wider text-primary">
           Pricing
         </p>
-        <h1 className="mt-2 text-4xl sm:text-5xl font-bold font-headline tracking-tight">
-          Unlock the full nightly options dataset.
-          <span className="block mt-2 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Streamed directly into your AI agent over MCP.
+        <h1 className="mt-2 text-3xl sm:text-5xl font-bold font-headline tracking-tight">
+          Simple pricing for DIY AI agents
+          <span className="block mt-1.5 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            &amp; custom trading bots.
           </span>
         </h1>
-        <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Pro opens all {TOOL_COUNT} GammaRips MCP tools in Claude, ChatGPT,
-          Cursor, or Codex: the full daily Combo A pool (40–50 liquid calls),
-          10-minute intraday liquidity snapshots, and 3-day MFE/MAE outcome
-          surfaces. {PRICE_MONTHLY}/month founding price, {TRIAL_DAYS}-day free
-          trial, cancel anytime.
+        <p className="mt-4 text-base sm:text-lg text-muted-foreground">
+          Start free with 3 daily setups, plug the full nightly feed for stocks, 2x ETFs, and
+          options into your AI, or have us engineer a turnkey Python bot around your own rules.
         </p>
       </header>
 
-      {/* Catalyst Lab Research Metrics */}
-      <section aria-label="Catalyst Lab research metrics" className="mb-16 max-w-4xl mx-auto">
-        <div className="grid md:grid-cols-3 gap-4">
-          {catalystResearchProof.map((p) => (
-            <Card key={p.label} className="bg-card/50">
-              <CardContent className="p-5 space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
-                  {p.label}
-                </p>
-                <div className="text-3xl font-bold">{p.value}</div>
-                <p className="text-sm text-foreground leading-snug">{p.headline}</p>
-                <p className="text-xs text-muted-foreground leading-relaxed">{p.detail}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        <p className="mt-4 text-xs text-muted-foreground text-center">
-          Walk-forward Catalyst Lab research (N = 5,575 enriched contracts across 66 scan dates). Educational only, not investment advice.{' '}
-          <Link href="/how-it-works" className="text-primary hover:underline">
-            Read the research &rarr;
-          </Link>
-        </p>
-      </section>
-
-      <h2 className="text-center text-xl sm:text-2xl font-bold font-headline mb-8">
-        Free 3-contract preview. Full dataset on Pro MCP.
-      </h2>
-
-      <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        {/* Free card */}
-        <Card className="bg-card/50">
+      {/* 3-Column Pricing Table IMMEDIATELY Above the Fold */}
+      <div className="grid lg:grid-cols-3 gap-6 items-stretch">
+        {/* Tier 1: Free Preview */}
+        <Card className="bg-card/50 flex flex-col">
           <CardHeader className="pb-4 border-b">
-            <CardTitle className="text-2xl font-bold font-headline">Free Preview</CardTitle>
+            <CardTitle className="text-xl font-bold font-headline">Free Preview</CardTitle>
             <div className="mt-2">
               <span className="text-4xl font-bold">$0</span>
               <span className="text-muted-foreground ml-2">forever</span>
             </div>
             <p className="text-sm text-muted-foreground mt-2">
-              Daily 3-contract pool preview on web and MCP, daily macro reports,
-              and methodology playbooks. No card, no account required.
+              Test the workflow before subscribing. No card and no account required.
             </p>
           </CardHeader>
-          <CardContent className="pt-6">
-            <ul className="space-y-3 mb-6">
+          <CardContent className="pt-6 flex-1 flex flex-col justify-between gap-6">
+            <ul className="space-y-3">
               {freeFeatures.map((f) => (
-                <li key={f} className="flex items-start gap-3 text-sm">
-                  <Check className="h-5 w-5 text-muted-foreground shrink-0" />
-                  <span className="text-foreground leading-tight">{f}</span>
+                <li key={f} className="flex items-start gap-2.5 text-sm">
+                  <Check className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                  <span className="text-foreground/90 leading-snug">{f}</span>
                 </li>
               ))}
             </ul>
             <Button asChild variant="outline" size="lg" className="w-full">
-              <Link href="/signals">View 3-contract preview &rarr;</Link>
+              <Link href="/signals">View 3-Setup Preview &rarr;</Link>
             </Button>
           </CardContent>
         </Card>
 
-        {/* Agent Access card */}
-        <Card className="bg-card/50 border-primary/50 ring-1 ring-primary/20 relative">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
-            Pro MCP Dataset
+        {/* Tier 2: Pro MCP Access (Primary Recommended) */}
+        <Card className="bg-card/70 border-primary/60 ring-1 ring-primary/25 relative flex flex-col">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full whitespace-nowrap">
+            Most Popular · DIY AI Data
           </div>
           <CardHeader className="pb-4 border-b">
-            <CardTitle className="text-2xl font-bold font-headline">Agent Access (Pro)</CardTitle>
+            <CardTitle className="text-xl font-bold font-headline">Pro MCP Access</CardTitle>
             {ANNUAL_PRICE_ID ? (
               <div
                 role="group"
@@ -314,149 +270,128 @@ export function PricingClient(_props: { receipts?: Receipts }) {
               {billingInterval === 'year' && ANNUAL_PRICE_ID ? (
                 <>
                   <span className="text-4xl font-bold">{PRICE_ANNUAL}</span>
-                  <span className="text-muted-foreground ml-2">/year</span>
+                  <span className="text-muted-foreground ml-1.5">/year</span>
                   <p className="text-xs text-primary font-medium mt-1">
-                    $24.92/mo effective · Save $49 vs. {PRICE_MONTHLY}/mo monthly
+                    $24.92/mo effective · Save $49 vs. monthly
                   </p>
                 </>
               ) : (
                 <>
                   <span className="text-4xl font-bold">{PRICE_MONTHLY}</span>
-                  <span className="text-muted-foreground ml-2">/month</span>
+                  <span className="text-muted-foreground ml-1.5">/month</span>
                 </>
               )}
             </div>
-            <p className="text-sm text-muted-foreground mt-2">
-              The full daily Combo A dataset (40–50 contracts), 10-minute
-              intraday liquidity snapshots, and 3-day excursion outcome surfaces
-              in Claude, ChatGPT, Cursor, Codex, or any MCP client. {TRIAL_DAYS}-day free trial.
-            </p>
-            <p className="text-sm text-foreground mt-3">
-              Founding price: {PRICE_MONTHLY}/mo{ANNUAL_PRICE_ID ? ` or ${PRICE_ANNUAL}/yr` : ''} for the first {FOUNDING_CAP}{' '}
-              subscribers, locked as long as you stay subscribed.{' '}
-              {PRICE_STANDARD}/mo after that.
+            <p className="text-xs text-muted-foreground mt-2">
+              Founding price locked for the first {FOUNDING_CAP} subscribers ({PRICE_STANDARD}/mo after). {TRIAL_DAYS}-day free trial.
             </p>
           </CardHeader>
-          <CardContent className="pt-6">
-            <ul className="space-y-3 mb-6">
-              {agentFeatures.map((f) => (
-                <li key={f} className="flex items-start gap-3 text-sm">
-                  <Check className="h-5 w-5 text-primary shrink-0" />
-                  <span className="text-foreground leading-tight">{f}</span>
+          <CardContent className="pt-6 flex-1 flex flex-col justify-between gap-6">
+            <ul className="space-y-3">
+              {proFeatures.map((f) => (
+                <li key={f} className="flex items-start gap-2.5 text-sm">
+                  <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                  <span className="text-foreground leading-snug">{f}</span>
                 </li>
               ))}
             </ul>
-            {isPro ? (
-              <Button asChild size="lg" className="w-full">
-                <Link href="/account">
-                  Pro Subscription Active ✓ · Connect Your AI &rarr;
-                </Link>
-              </Button>
-            ) : (
-              <>
-                <Button
-                  size="lg"
-                  className="w-full"
-                  onClick={() => handleCheckout(billingInterval)}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Starting checkout…
-                    </>
-                  ) : billingInterval === 'year' && ANNUAL_PRICE_ID ? (
-                    `Start ${TRIAL_DAYS}-Day Free Trial (${PRICE_ANNUAL}/yr)`
-                  ) : (
-                    `Start ${TRIAL_DAYS}-Day Free Trial (${PRICE_MONTHLY}/mo)`
-                  )}
+            <div>
+              {isPro ? (
+                <Button asChild size="lg" className="w-full">
+                  <Link href="/account">
+                    Pro Active ✓ · Connect Your AI &rarr;
+                  </Link>
                 </Button>
-                {ANNUAL_PRICE_ID ? (
-                  <p className="text-xs text-center mt-3">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleCheckout(billingInterval === 'year' ? 'month' : 'year')
-                      }
-                      disabled={loading}
-                      className="text-muted-foreground underline underline-offset-4 hover:text-foreground disabled:opacity-50"
-                    >
-                      {billingInterval === 'year'
-                        ? `or start monthly at ${PRICE_MONTHLY}/mo`
-                        : `or save $49/yr with annual (${PRICE_ANNUAL}/yr)`}
-                    </button>
-                  </p>
-                ) : null}
-              </>
-            )}
-            <p className="text-xs text-muted-foreground text-center mt-3">
-              No charge during the trial. After checkout, sign in via OAuth at
-              /pro from your AI client, or mint an API key on your account page.
-              Cancel anytime.
+              ) : (
+                <>
+                  <Button
+                    size="lg"
+                    className="w-full font-semibold"
+                    onClick={() => handleCheckout(billingInterval)}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Starting checkout…
+                      </>
+                    ) : billingInterval === 'year' && ANNUAL_PRICE_ID ? (
+                      `Start ${TRIAL_DAYS}-Day Free Trial (${PRICE_ANNUAL}/yr)`
+                    ) : (
+                      `Start ${TRIAL_DAYS}-Day Free Trial (${PRICE_MONTHLY}/mo)`
+                    )}
+                  </Button>
+                  {ANNUAL_PRICE_ID ? (
+                    <p className="text-xs text-center mt-2.5">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleCheckout(billingInterval === 'year' ? 'month' : 'year')
+                        }
+                        disabled={loading}
+                        className="text-muted-foreground underline underline-offset-4 hover:text-foreground disabled:opacity-50"
+                      >
+                        {billingInterval === 'year'
+                          ? `or start monthly at ${PRICE_MONTHLY}/mo`
+                          : `or save $49/yr with annual (${PRICE_ANNUAL}/yr)`}
+                      </button>
+                    </p>
+                  ) : null}
+                </>
+              )}
+              <p className="text-[11px] text-muted-foreground text-center mt-2.5">
+                $0 charged during trial · Cancel in 1 click on your account page.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Tier 3: Done-For-You Custom Agent Build */}
+        <Card className="bg-card/50 border-border flex flex-col">
+          <CardHeader className="pb-4 border-b">
+            <CardTitle className="text-xl font-bold font-headline">Custom Agent Build</CardTitle>
+            <div className="mt-2">
+              <span className="text-4xl font-bold">{BUILD_STANDARD_PRICE}</span>
+              <span className="text-muted-foreground ml-2">one-time</span>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              Done-for-you Python trading bot engineered around your written rules in{' '}
+              {BUILD_TURNAROUND_DAYS} business days.
             </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Done-For-You Custom Agent Build Tier */}
-      <div className="mt-8 max-w-4xl mx-auto">
-        <Card className="bg-card/60 border-primary/40">
-          <CardContent className="p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-2.5 max-w-2xl">
-              <p className="text-xs font-mono uppercase tracking-wider text-primary">
-                Done-For-You Engineering · {BUILD_TURNAROUND_DAYS}-Day Delivery
-              </p>
-              <h3 className="text-2xl font-bold font-headline text-foreground">
-                Custom Trading Agent Build — {BUILD_STANDARD_PRICE}{' '}
-                <span className="text-sm font-normal text-muted-foreground">one-time</span>
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Have a written strategy across <strong className="text-foreground">stocks</strong>,{' '}
-                <strong className="text-foreground">2x/inverse ETFs</strong>, or{' '}
-                <strong className="text-foreground">options</strong> and want us to build and harden
-                it for you? We engineer your Python trading daemon with limit-only execution,
-                fill-derived stops, and restart-safe state (Alpaca, Robinhood MCP, Tradier, or
-                IBKR), verify it in Paper Mode, and hand over 100% of the code in{' '}
-                {BUILD_TURNAROUND_DAYS} business days. Optional {AGENT_CARE_PRICE}/mo Care Plan (
-                {AGENT_CARE_MCP_PRICE}/mo bundled with Pro MCP) offered after handoff.
-              </p>
-            </div>
-            <div className="shrink-0 flex flex-col gap-2 sm:min-w-[220px]">
-              <Button asChild size="lg" className="w-full">
-                <Link href="/build">Submit Agent Spec &rarr;</Link>
+          </CardHeader>
+          <CardContent className="pt-6 flex-1 flex flex-col justify-between gap-6">
+            <ul className="space-y-3">
+              {buildFeatures.map((f) => (
+                <li key={f} className="flex items-start gap-2.5 text-sm">
+                  <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                  <span className="text-foreground/90 leading-snug">{f}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="space-y-2.5">
+              <Button asChild variant="outline" size="lg" className="w-full font-semibold">
+                <Link href="/build">Submit Rules / Free 24h Scope Check &rarr;</Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="w-full">
-                <Link href="/xtrader">Inspect Live X-Trader &rarr;</Link>
-              </Button>
+              <p className="text-[11px] text-muted-foreground text-center">
+                Optional {AGENT_CARE_PRICE}/mo maintenance ({AGENT_CARE_MCP_PRICE}/mo with Pro MCP) after delivery.{' '}
+                <Link href="/xtrader" className="text-primary hover:underline">
+                  See live bot &rarr;
+                </Link>
+              </p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* What Pro unlocks */}
+      {/* 3-Step Workflow Strip */}
       <section className="mt-16 max-w-4xl mx-auto">
         <h2 className="text-2xl font-bold font-headline text-center mb-8">
-          What {PRICE_MONTHLY} a month gives your AI
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          {unlocks.map((u) => (
-            <div key={u.title} className="space-y-2">
-              <h3 className="font-semibold text-foreground">{u.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{u.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section className="mt-16 max-w-4xl mx-auto">
-        <h2 className="text-2xl font-bold font-headline text-center mb-8">
-          Three steps to your first trade plan
+          How Pro MCP works in three steps
         </h2>
         <ol className="grid md:grid-cols-3 gap-6">
           {steps.map((s, i) => (
-            <li key={s.title} className="space-y-2">
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+            <li key={s.title} className="rounded-xl border bg-card/40 p-5 space-y-2">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary/15 text-sm font-bold text-primary">
                 {i + 1}
               </span>
               <h3 className="font-semibold text-foreground">{s.title}</h3>
@@ -466,8 +401,50 @@ export function PricingClient(_props: { receipts?: Receipts }) {
         </ol>
         <p className="mt-6 text-center text-sm">
           <Link href="/developers#connect" className="text-primary hover:underline">
-            See the connect steps for your AI &rarr;
+            See setup instructions for Claude, ChatGPT, Cursor &amp; Codex &rarr;
           </Link>
+        </p>
+      </section>
+
+      {/* Walk-Forward Research Proof (Moved Below Pricing for Clean Hierarchy) */}
+      <section aria-label="Walk-forward filter research" className="mt-16 max-w-5xl mx-auto">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold font-headline">
+            Why our nightly filter beats raw scanners
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Audited across 5,575 historical contracts (66 scan dates) so your AI starts from clean, tradable setups.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-4">
+          {researchProof.map((p) => (
+            <Card key={p.label} className="bg-card/50">
+              <CardContent className="p-5 space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+                  {p.label}
+                </p>
+                <div className="text-2xl sm:text-3xl font-bold">{p.value}</div>
+                <p className="text-sm text-foreground font-medium leading-snug">{p.headline}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{p.detail}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="mt-4 max-w-3xl mx-auto">
+          <Disclosure
+            label="See exact technical filter specifications"
+            hint="Combo A liquidity floors, volatility value enrichment & methodology"
+          >
+            <p className="leading-relaxed">
+              Every trading night at 23:00 ET, the scanner screens ~3,500 optionable US stocks to the top 100 most liquid names (3M+ session shares, 25+ strikes) and keeps bullish call setups passing <code className="text-foreground">Mid &gt;= $1.00</code>, <code className="text-foreground">OI &gt;= 500</code>, <code className="text-foreground">Delta 0.22–0.48</code>, and <code className="text-foreground">DTE 10–45</code>. At 05:30 ET each setup is enriched with Realized-vs-Implied Volatility (<code className="text-foreground">rv_iv_ratio</code>), mapped stock &amp; 2x/inverse ETF vehicles, and grounded news catalysts.{' '}
+              <Link href="/methodology" className="text-primary hover:underline font-medium">
+                Read the full methodology &rarr;
+              </Link>
+            </p>
+          </Disclosure>
+        </div>
+        <p className="mt-4 text-xs text-muted-foreground text-center">
+          Walk-forward historical research on paper-tracked cohorts (N = 5,575 across 66 scan dates). Educational only, not investment advice.
         </p>
       </section>
 
@@ -479,12 +456,12 @@ export function PricingClient(_props: { receipts?: Receipts }) {
         <div className="space-y-6">
           <div>
             <h3 className="font-semibold text-foreground mb-1">
-              How does the {TRIAL_DAYS}-day trial work?
+              How does the {TRIAL_DAYS}-day free trial work?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Card on file, no charge for {TRIAL_DAYS} days, full Pro MCP access
-              from minute one. If you cancel before day {TRIAL_DAYS} you pay
-              nothing. After day {TRIAL_DAYS} your card is charged{' '}
+              Card on file, zero charge for {TRIAL_DAYS} days, and full Pro MCP access from minute
+              one. Cancel in one click on your account page before day {TRIAL_DAYS} and you pay
+              nothing. After day {TRIAL_DAYS}, your plan renews at{' '}
               {ANNUAL_PRICE_ID
                 ? `${PRICE_ANNUAL}/year (or ${PRICE_MONTHLY}/month on monthly billing)`
                 : `${PRICE_MONTHLY}/month`}{' '}
@@ -493,34 +470,39 @@ export function PricingClient(_props: { receipts?: Receipts }) {
           </div>
           <div>
             <h3 className="font-semibold text-foreground mb-1">
-              Why don&apos;t you just tell me what to buy?
+              Do I have to trade options to use GammaRips?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Shared picks crowd everyone into the same contract at the open.
-              Furthermore, our Catalyst Lab walk-forward audit showed that
-              black-box composite scores fail out-of-sample, whereas transparent
-              microstructure and volatility primitives (Combo A) hold up. Your
-              AI uses the dataset and historical 3-day excursion surfaces to
-              build a plan tailored to your risk budget.
+              No. Every setup in the nightly pool maps directly to the underlying US stock (1x),
+              2x long or inverse single-stock ETFs, and a liquid call option. You can use
+              institutional options flow to research ideas and execute in stocks or 2x ETFs with
+              zero option expiration risk.
             </p>
           </div>
           <div>
             <h3 className="font-semibold text-foreground mb-1">
-              How are the Combo A filters validated?
+              How does the {BUILD_STANDARD_PRICE} Custom Agent Build work?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Every filter gate on this page comes from walk-forward Catalyst
-              Lab audits across N = 5,575 enriched option contracts (66 scan
-              dates) joined to BigQuery{' '}
-              <code className="text-xs text-foreground">enriched_option_outcomes</code>. Read the full walkthrough on{' '}
-              <Link href="/how-it-works" className="text-primary hover:underline">
-                Learn
-              </Link>{' '}
-              and{' '}
-              <Link href="/methodology" className="text-primary hover:underline">
-                Methodology
+              Submit your written trading rules for stocks, 2x/inverse ETFs, or options on{' '}
+              <Link href="/build" className="text-primary hover:underline">
+                /build
               </Link>
-              .
+              . We code and safety-harden your bot (limit-only orders, fill-based stops, duplicate
+              order protection) and deliver 100% of the code to your private GitHub repo in{' '}
+              {BUILD_TURNAROUND_DAYS} business days in Paper Mode. Optional maintenance is{' '}
+              {AGENT_CARE_PRICE}/mo ({AGENT_CARE_MCP_PRICE}/mo with Pro MCP) after handoff.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground mb-1">
+              Why don&apos;t you just tell me one trade to buy?
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Shared daily picks crowd every subscriber into the same strike at the open, hurting
+              fills. Our walk-forward audits also proved black-box composite pick scores fail
+              out-of-sample, whereas clean liquidity and volatility data holds up. Your AI builds a
+              plan tailored to your own risk rules.
             </p>
           </div>
           <div>
@@ -528,41 +510,27 @@ export function PricingClient(_props: { receipts?: Receipts }) {
               What happens if I cancel?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Pro MCP access stops at the end of your billing cycle. The
-              3-contract preview on the web and on the anonymous MCP endpoint
-              stays free forever.
+              Pro MCP access stays active until the end of your billing cycle, then switches back
+              to the free 3-setup preview automatically. No lock-in, no cancellation hoops.
             </p>
           </div>
           <div>
             <h3 className="font-semibold text-foreground mb-1">
-              What&apos;s the refund policy?
+              Will the founding price go up?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              The {TRIAL_DAYS}-day trial gives you a full week to evaluate at
-              no charge. After that, billing renews on your selected plan
-              cycle, with no pro-rated refunds mid-cycle. If something breaks,
-              email evan@gammarips.com and we&apos;ll make it right.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-foreground mb-1">
-              Will the price go up?
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {PRICE_MONTHLY}/mo is the founding price, for the first{' '}
-              {FOUNDING_CAP} subscribers. It stays at that rate as long as you
-              stay subscribed. After the first {FOUNDING_CAP}, the price is{' '}
-              {PRICE_STANDARD}/mo.
+              {PRICE_MONTHLY}/mo (or {PRICE_ANNUAL}/yr) is our founding rate for the first{' '}
+              {FOUNDING_CAP} subscribers. You keep that price for as long as you remain subscribed.
+              After the first {FOUNDING_CAP} spots fill, the standard price is {PRICE_STANDARD}/mo.
             </p>
           </div>
         </div>
       </section>
 
       <p className="mt-16 text-xs text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
-        Educational market data and historical research only. Not investment
-        advice. You trade your own account. GammaRips does not manage your money
-        or place trades for you. Past performance is not a guarantee of future
-        results.
+        Educational market data, historical research, and work-for-hire software engineering only.
+        Not investment advice. You trade your own account. GammaRips does not manage your money or
+        place trades for you. Past performance is not a guarantee of future results.
       </p>
     </section>
   );

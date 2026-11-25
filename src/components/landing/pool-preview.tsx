@@ -4,13 +4,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
 
-// Proof that the data is real and current. Data comes from the page (Firestore
-// via firebase-admin); this component only renders it.
-//
-// Two deliberate omissions. The pool is bullish-only by design, so a "bear: 0"
-// counter is noise. And no per-name score is shown: this is a sample of the
-// pool, never a ranking, and nothing here may present names as top choices.
-// The selection research (2026-08-22) lives on /methodology and /lab.
+// Live proof that the pipeline ran overnight. Data comes from Firestore via
+// firebase-admin on the server; this component renders a clean 3-setup preview.
 
 type Props = {
   summary: any;
@@ -30,7 +25,7 @@ export function PoolPreview({ summary, report, reportDate, signals }: Props) {
     <section>
       <Card className="border-primary/30 bg-card/80">
         <CardContent className="p-6 md:p-8">
-          <div className="flex items-start justify-between gap-4 mb-4">
+          <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
             <div>
               <p className="text-sm text-muted-foreground">
                 {new Date(dateKey).toLocaleDateString('en-US', {
@@ -42,12 +37,12 @@ export function PoolPreview({ summary, report, reportDate, signals }: Props) {
                 })}
               </p>
               <h2 className="text-2xl md:text-3xl font-bold font-headline mt-1">
-                {report?.title || summary.headline || "Today's pool"}
+                {report?.title || summary.headline || "Today's Daily Pool"}
               </h2>
             </div>
             <Link href={`/reports/${dateKey}`} className="shrink-0">
               <Button variant="outline" size="sm">
-                Full report <ArrowRight className="ml-2 h-4 w-4" />
+                Full morning briefing <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>
@@ -56,13 +51,13 @@ export function PoolPreview({ summary, report, reportDate, signals }: Props) {
             <div>
               <span className="text-3xl font-bold">{enriched}</span>
               <span className="text-sm text-muted-foreground ml-2">
-                contracts in the pool
+                liquid setups in today&apos;s pool
               </span>
             </div>
             <div>
               <span className="text-3xl font-bold text-green-500">{bullish}</span>
               <span className="text-sm text-muted-foreground ml-2">
-                bullish names, one call each
+                bullish stocks mapped to ETFs &amp; options
               </span>
             </div>
           </div>
@@ -86,30 +81,30 @@ export function PoolPreview({ summary, report, reportDate, signals }: Props) {
           {signals.length > 0 && (
             <div className="mt-6 border-t border-border/60 pt-5">
               <div className="flex items-center justify-between mb-1">
-                <h3 className="font-bold font-headline">Today&apos;s 3-contract preview</h3>
+                <h3 className="font-bold font-headline">Today&apos;s 3-Setup Free Preview</h3>
                 <Link
                   href="/signals"
                   className="text-sm text-primary hover:underline"
                 >
-                  Open pool preview &rarr;
+                  Open Daily Pool &rarr;
                 </Link>
               </div>
               <p className="text-xs text-muted-foreground mb-3">
-                A 3-contract preview from the latest Combo A scan. Your AI gets
-                the full nightly dataset of roughly 40 to 50 contracts, 10-minute
-                intraday liquidity snapshots, and 3-day outcome history on Pro
-                MCP. Nothing here is a recommendation.
+                A 3-setup preview from last night&apos;s scan. Pro unlocks all 40–50 setups across
+                stocks, 2x/inverse ETFs, and options, plus live morning liquidity and 3-day move
+                history. Educational data only — not investment advice.
               </p>
               <div className="grid gap-2">
                 {signals.map((signal: any) => (
-                  <div
+                  <Link
                     key={signal.id}
-                    className="rounded-lg border bg-card/50 p-3 flex items-center gap-4"
+                    href={`/signals/${signal.ticker}`}
+                    className="rounded-lg border bg-card/50 p-3 flex items-center gap-4 hover:border-primary/50 transition-colors"
                   >
                     <span className="text-xs font-bold px-2 py-1 rounded bg-green-500/20 text-green-500 shrink-0">
                       BULL
                     </span>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <span className="font-bold font-headline">
                         {signal.ticker}
                       </span>
@@ -119,7 +114,8 @@ export function PoolPreview({ summary, report, reportDate, signals }: Props) {
                         </p>
                       )}
                     </div>
-                  </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                  </Link>
                 ))}
               </div>
             </div>

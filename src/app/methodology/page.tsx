@@ -3,131 +3,135 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowRight, Database, Filter, Calculator, GitBranch, ShieldCheck, Code } from 'lucide-react';
-import { OG_IMAGE, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
+import { ArrowRight, Database, Filter, Calculator, GitBranch, ShieldCheck, Code, Layers } from 'lucide-react';
+import { BUILD_STANDARD_PRICE, OG_IMAGE, PRICE_ANNUAL, PRICE_MONTHLY, TRIAL_DAYS } from '@/lib/constants';
 
+// Root layout applies `%s | GammaRips` — never add `| GammaRips` here.
 export const metadata: Metadata = {
-  title: 'GammaRips Methodology: Combo A Microstructure Filters & Point-in-Time Audit',
+  title: 'Methodology: Liquidity, Volatility & Audit Rules',
   description:
-    'How the GammaRips nightly dataset is built: ~3,500 optionable US stocks filtered to the top 100 liquid universe and bullish calls passing Combo A gates (Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, rv_iv_ratio). Educational only. Not investment advice.',
+    'Transparent data sources, liquidity & volatility filters, point-in-time leakage walls, and 3-day historical outcome tracking behind the GammaRips dataset.',
   alternates: { canonical: 'https://gammarips.com/methodology' },
   openGraph: {
     images: [OG_IMAGE],
-    title: 'GammaRips Methodology: Combo A Microstructure Filters & Point-in-Time Audit',
+    title: 'Methodology: Liquidity, Volatility & Audit Rules | GammaRips',
     description:
-      'The data sources, Combo A microstructure and volatility gates, point-in-time leakage wall, and 3-day excursion outcome labeling behind the GammaRips MCP dataset.',
+      'Data sources, liquidity & volatility filters, multi-instrument ETF mapping, point-in-time leakage controls, and 3-day move tracking.',
     url: 'https://gammarips.com/methodology',
   },
 };
 
 const dataSources = [
   {
-    name: 'Polygon.io',
+    name: 'Polygon / Massive Market Data',
     purpose:
-      'End-of-day options chains, contract quotes, open interest, session volume, greeks, and intraday 10-minute contract liquidity snapshots across ~3,500 optionable US stocks.',
+      'End-of-day option chains, contract quotes, open interest, session volume, greeks, and 10-minute intraday liquidity snapshots across ~3,500 optionable US stocks.',
     cadence:
-      'Pulled at 23:00 ET nightly by overnight-scanner and every 10 minutes (09:02–16:52 ET) during market hours.',
+      'Scanned nightly at 23:00 ET and refreshed every 10 minutes (09:02–16:52 ET) during market hours.',
   },
   {
     name: 'FRED (Federal Reserve Economic Data)',
     purpose:
-      'VIX and VIX3M daily close, used for the point-in-time term-structure volatility regime context.',
-    cadence:
-      'Recorded point-in-time per scan date and exposed via get_regime_context.',
+      'Daily VIX and VIX3M closes used to compute point-in-time volatility term-structure regime context.',
+    cadence: 'Recorded point-in-time per scan date and exposed via get_regime_context.',
   },
   {
-    name: 'BigQuery (`profitscout-fida8.profit_scout`)',
+    name: 'Point-in-Time Analytical Warehouse',
     purpose:
-      'Canonical storage for overnight signals, leakage-checked enriched feature views (enriched_features_v1), intraday liquidity snapshots, and 3-day excursion outcomes (enriched_option_outcomes).',
-    cadence:
-      'Written by every stage of the pipeline; every table carries strict as-of timestamps.',
+      'Cloud SQL warehouse storing nightly scan outputs, leakage-checked feature views, intraday liquidity snapshots, and 3-day historical excursion outcomes.',
+    cadence: 'Every row carries strict as-of timestamps so backtests match live agent queries.',
   },
 ];
 
 const filters = [
   {
-    name: 'Liquid Universe: 3M+ session shares, 25+ listed strikes, top 100 by z(chain $ volume) + z(share volume)',
-    where: 'overnight-scanner (23:00 ET)',
-    why: 'Starts from ~3,500 optionable US stocks and requires 3M+ session share volume and 25+ listed option strikes. The surviving names are ranked by combined chain dollar volume and share volume, keeping the top 100 liquid underlyings.',
+    name: 'Top-100 Liquid US Stock Universe',
+    spec: '3M+ session shares, 25+ listed strikes, top 100 by z(chain $ volume) + z(share volume)',
+    where: 'Nightly Scanner (23:00 ET)',
+    why: 'Starts from ~3,500 optionable US stocks and drops thinly traded names before contract selection. Ranking by combined stock share volume and options dollar volume keeps the pool focused on deep, active underlyings.',
   },
   {
-    name: 'Combo A Contract Microstructure Floor: Mid >= $1.00 & OI >= 500 (log-saturated to 5,000)',
-    where: 'overnight-scanner · contract selection',
-    why: 'Sub-dollar options suffer a 5%–15% minimum tick-size friction tax ($0.05 tick increments). Requiring Mid >= $1.00 and resting Open Interest >= 500 eliminates illiquid chains and lifts 5-minute fast execution fills at the open from 30.3% to 50.1% (56.5% at OI >= 1,000) across our walk-forward microstructure study.',
+    name: 'Hard Contract Liquidity Floors (Combo A)',
+    spec: 'Mid >= $1.00 & Open Interest >= 500 (log-saturated at 5,000)',
+    where: 'Nightly Scanner · Contract Selection (23:00 ET)',
+    why: 'Sub-dollar options suffer a 5%–15% minimum tick-size friction tax ($0.05 increments). Requiring Mid >= $1.00 and Open Interest >= 500 eliminates thin books and lifted 5-minute open fill rates from 30.3% to 50.1% (56.5% at OI >= 1,000) in our walk-forward audit.',
   },
   {
-    name: 'Combo A Convexity & Decay Band: Bullish calls, Delta 0.22–0.48, DTE 10–45',
-    where: 'overnight-scanner · contract selection',
-    why: 'Selects one out-of-the-money call per bullish name inside the gamma/theta sweet spot (Delta 0.22–0.48, DTE 10–45). Filtering out far-OTM lottery tickets (Delta < 0.20) and ultra-short decay traps (DTE < 10) lifts 3-day Option Maximum Favorable Excursion (MFE >= +40%) from 27.6% to 35.4% (N = 5,575 contracts across 66 scan dates).',
+    name: 'Balanced Pricing & Expiration Band (Combo A)',
+    spec: 'Bullish calls · Delta 0.22–0.48 · DTE 10–45',
+    where: 'Nightly Scanner · Contract Selection (23:00 ET)',
+    why: 'Selects one call per bullish setup inside the gamma/theta sweet spot — cutting far-OTM lottery tickets (Delta < 0.22) and rapid short-term decay traps (< 10 days). Lifted 3-day +40% touch rates from 27.6% to 35.4% across N = 5,575 historical setups.',
   },
   {
-    name: 'Realized-to-Implied Volatility Ratio (rv_iv_ratio >= 0.85)',
-    where: 'enrichment pipeline (05:30 ET) & enriched_features_v1 (06:30 ET)',
-    why: 'Computes rv_iv_ratio = (ATR_14 / Price * sqrt(252)) / IV for every candidate. In walk-forward feature audits on dev.parquet (N = 5,575), rv_iv_ratio is the #1 quantitative predictor of favorable option excursions—separating underpriced volatility from overpriced implied vol.',
+    name: 'Realized-vs-Implied Volatility & Multi-Instrument Enrichment',
+    spec: 'rv_iv_ratio = (ATR_14 / Price × √252) / IV + mapped execution_vehicles',
+    where: 'Morning Enrichment Pipeline (05:30 ET)',
+    why: 'Computes rv_iv_ratio for every pool candidate (the #1 historical predictor of favorable 3-day moves in our walk-forward study, with >= 0.85 as the benchmark threshold agents screen on), maps 1x stocks and 2x/inverse single-stock ETFs, and attaches grounded news catalysts.',
   },
   {
-    name: '10-Minute Intraday Liquidity Snapshots (09:02–16:52 ET)',
-    where: 'intraday liquidity collector · get_liquidity',
-    why: 'Overnight scan snapshots freeze after the close. Every 10 minutes during regular market hours, the pipeline snapshots resting open interest, active session volume, and greeks across the pool so agents verify live morning tradability before planning an entry.',
+    name: 'Live 10-Minute Morning & Intraday Liquidity Checks',
+    spec: '09:02–16:52 ET live open interest, session volume & greeks',
+    where: 'Intraday Collector · get_liquidity',
+    why: 'Overnight scan figures freeze at the close. Snapshotting the active pool every 10 minutes during trading hours lets your AI confirm real morning depth before building a trade plan.',
   },
 ];
 
 const outcomePillars = [
   {
     label: 'Reference Horizon',
-    value: '3 Trading Days from 10:00 ET Entry',
-    why: 'Every surfaced pool contract is tracked from the 10:00 ET morning reference mark across the subsequent 3 trading sessions in BigQuery (enriched_option_outcomes), recording unclipped excursion paths regardless of any single exit bracket.',
+    value: '3 Trading Days from 10:00 ET',
+    why: 'Every pool contract is tracked from the 10:00 ET reference mark across the next 3 trading sessions, recording full intraday price paths regardless of any single fixed exit.',
   },
   {
     label: 'Maximum Favorable Excursion (MFE)',
-    value: 'Peak Option Return (+20%, +40%, +50%, +100%)',
-    why: 'Measures the highest intraday contract mark reached within the 3-day window and before expiration. Used by agents via query_outcomes(view="surface") and view="harvest" to calibrate realistic profit targets.',
+    value: 'Peak Upside Move (+20%, +40%, +50%, +100%)',
+    why: 'Tracks the highest upside mark reached within 3 days and before expiration so your AI can set realistic profit targets via query_outcomes(view="surface") and view="harvest".',
   },
   {
     label: 'Maximum Adverse Excursion (MAE)',
-    value: 'Drawdown Path & Stop Touches',
-    why: 'Measures the deepest adverse drawdown along the same path so agents can evaluate stop placement and position sizing against historical contract volatility.',
+    value: 'Deepest Drawdown Path',
+    why: 'Tracks the deepest pullback along the same window so your AI can calibrate stop losses and position sizing against historical contract swings.',
   },
   {
-    label: 'Fast Execution Fill Audit',
-    value: '5-Minute Open Print Verification',
-    why: 'Tracks whether real option prints occurred within 5 minutes of the reference entry window, quantifying real-world execution liquidity across Open Interest and spread buckets.',
+    label: 'Opening Fill Audit',
+    value: '5-Minute Open Print Check',
+    why: 'Measures whether real market prints traded within 5 minutes of the reference window, quantifying fill reliability across Open Interest and spread buckets.',
   },
 ];
 
 const datasetPrinciples = [
   {
-    label: 'Point-in-Time Leakage Wall (enriched_features_v1)',
+    label: 'Point-in-Time Leakage Wall',
     detail:
-      'Every column exposed to your AI agent is governed by a strict dbt schema contract (get_playbook(name="schema")). Post-entry outcomes, forward returns, and future price marks are physically walled off from scan-time feature vectors so backtests and live agent prompts see the exact same information boundary.',
+      'Every column exposed over MCP is governed by a strict schema contract (inspectable via get_playbook(name="schema")). Forward prices and outcomes are physically walled off from scan-time features so backtests and live agent prompts see the exact same information boundary.',
   },
   {
-    label: 'Why We Sell Primitives Instead of Black-Box Picks',
+    label: 'Transparent Data Over Black-Box Pick Scores',
     detail:
-      'In our Catalyst Lab walk-forward XGBoost audit across N = 5,575 contracts (66 scan dates), black-box composite models appeared predictive in naive splits only by exploiting late-schema missingness artifacts—and failed out-of-sample once missingness was stripped. Transparent microstructure and volatility primitives (rv_iv_ratio, Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45) held up cleanly out-of-sample.',
+      'In walk-forward XGBoost audits across N = 5,575 setups (66 scan dates), black-box composite scores only looked predictive in naive splits by exploiting schema missingness — and failed out-of-sample once cleaned. Simple liquidity and volatility primitives held up cleanly.',
   },
   {
     label: 'No Shared Daily Pick Endpoint',
     detail:
-      'Pushing one shared contract to every subscriber crowds retail order flow into the same strike at the open, degrading fills for everyone. GammaRips serves the curated 40–50 contract dataset and historical excursion surfaces over MCP so your AI agent builds a plan tailored to your own thesis and risk budget.',
+      'Pushing one shared contract to every subscriber crowds retail order flow into the same strike at the open, hurting fills for everyone. Serving the 40–50 setup pool + historical move ranges lets your AI build a plan sized to your own risk rules.',
   },
   {
-    label: 'Agentic Catalyst Verification (Stage 2)',
+    label: 'Agentic Catalyst & Earnings Verification',
     detail:
-      'Deterministic Stage 1 filters enforce liquidity, spread, convexity, and volatility gates. Stage 2 belongs to your AI agent or the open-source gammarips-harness: checking earnings dates (get_signal(view="earnings")), verifying 10-minute morning liquidity (get_liquidity), and layering on live X/web catalyst research.',
+      'Our nightly filter enforces clean liquidity and pricing floors; your AI agent handles earnings verification (get_signal(view="earnings")), live morning volume checks (get_liquidity), and breaking news/X catalyst research.',
   },
 ];
 
 const methodologySchema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  headline: 'GammaRips Methodology: Combo A Microstructure Filters & Point-in-Time Audit',
+  headline: 'GammaRips Methodology: Liquidity, Volatility & Point-in-Time Audit Rules',
   description:
-    'The data sources, Combo A microstructure and volatility gates, point-in-time leakage wall, and 3-day excursion outcome labeling behind the GammaRips MCP dataset.',
+    'Transparent data sources, Combo A liquidity & volatility filters, multi-instrument ETF mapping, point-in-time leakage walls, and 3-day excursion tracking.',
   url: 'https://gammarips.com/methodology',
   mainEntityOfPage: 'https://gammarips.com/methodology',
   datePublished: '2026-08-24T00:00:00Z',
-  dateModified: '2026-11-16T00:00:00Z',
+  dateModified: '2026-11-25T00:00:00Z',
   author: {
     '@type': 'Person',
     name: 'Evan Parra',
@@ -143,9 +147,9 @@ const methodologySchema = {
   about: {
     '@type': 'Dataset',
     '@id': 'https://gammarips.com/developers#combo-a-dataset',
-    name: 'GammaRips Combo A Nightly US Options Dataset',
+    name: 'GammaRips Nightly US Market & Options Intelligence Dataset',
     description:
-      'Nightly US options dataset filtered on Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45, and rv_iv_ratio >= 0.85 across the top 100 liquid US option chains, validated on N = 5,575 enriched contracts.',
+      'Nightly US stock, 2x/inverse ETF, and options dataset filtered on Mid >= $1.00, OI >= 500, Delta 0.22–0.48, DTE 10–45 and enriched with rv_iv_ratio across the top 100 liquid US stocks.',
     url: 'https://gammarips.com/developers',
     license: 'https://gammarips.com/terms',
     isAccessibleForFree: true,
@@ -159,26 +163,29 @@ export default function MethodologyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(methodologySchema) }}
       />
-      <main className="container mx-auto px-4 py-12 md:py-20 max-w-4xl">
+      <main className="container mx-auto px-4 py-12 md:py-16 max-w-4xl">
         <header className="mb-12">
           <p className="text-sm uppercase tracking-wider text-primary font-semibold mb-3">
-            Methodology
+            Methodology · Technical Reference
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight mb-4">
-            Where every contract and feature in the dataset comes from.
+          <h1 className="text-3xl sm:text-5xl font-bold font-headline tracking-tight mb-4">
+            Where every setup and number in the dataset comes from.
           </h1>
-          <p className="text-lg text-muted-foreground">
-            Every threshold, data source, and pipeline stage is deterministic and logged. Pool membership is governed by the <strong className="text-foreground">Combo A</strong> liquidity, convexity, and volatility specification—never a black-box score or human pick. Every feature vector is point-in-time and leakage-checked.
+          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+            Every threshold, data source, and pipeline timestamp is deterministic and verifiable.
+            Pool membership is governed by transparent liquidity and pricing floors (our{' '}
+            <strong className="text-foreground">Combo A</strong> spec) — never a black-box score or
+            human pick — and every setup maps to stocks, 2x/inverse ETFs, and liquid options.
           </p>
         </header>
 
-        <section className="mb-16">
-          <div className="flex items-center gap-2 mb-6">
+        <section className="mb-14">
+          <div className="flex items-center gap-2 mb-5">
             <Database className="h-5 w-5 text-primary" />
-            <h2 className="text-2xl font-bold font-headline">Data sources</h2>
+            <h2 className="text-2xl font-bold font-headline">1. Data Sources</h2>
           </div>
-          <p className="text-muted-foreground mb-6">
-            Three systems power the nightly scan, morning enrichment, intraday liquidity snapshots, and outcome labeling:
+          <p className="text-sm sm:text-base text-muted-foreground mb-5">
+            In plain English: three systems power the nightly scan, morning enrichment, live 10-minute liquidity checks, and historical move database.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {dataSources.map((src) => (
@@ -195,32 +202,31 @@ export default function MethodologyPage() {
           </div>
         </section>
 
-        <Separator className="my-12" />
+        <Separator className="my-10" />
 
-        <section className="mb-16">
-          <div className="flex items-center gap-2 mb-6">
+        <section className="mb-14">
+          <div className="flex items-center gap-2 mb-5">
             <Filter className="h-5 w-5 text-primary" />
             <h2 className="text-2xl font-bold font-headline">
-              Combo A Microstructure &amp; Volatility Filters
+              2. Nightly Liquidity &amp; Volatility Filters (Combo A)
             </h2>
           </div>
-          <p className="text-muted-foreground mb-6">
-            The nightly pipeline filters ~3,500 optionable US stocks down to roughly 40 to 50 liquid bullish call contracts. Every gate is derived from walk-forward Catalyst Lab audits across <strong className="text-foreground">N = 5,575 enriched contracts (66 scan dates)</strong>:
+          <p className="text-sm sm:text-base text-muted-foreground mb-6">
+            In plain English: we cut illiquid tickers, wide bid-ask spreads, and lottery-ticket expirations upfront, then score realized-vs-implied volatility each morning. Derived from walk-forward audits across <strong className="text-foreground">N = 5,575 setups (66 scan dates)</strong>:
           </p>
           <div className="space-y-4">
             {filters.map((filter, i) => (
               <Card key={filter.name}>
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
-                    <span className="text-2xl font-bold text-primary shrink-0 w-8">
+                    <span className="text-2xl font-bold text-primary shrink-0 w-7">
                       {i + 1}.
                     </span>
-                    <div className="flex-1">
-                      <h3 className="font-mono text-sm font-bold mb-1">{filter.name}</h3>
-                      <p className="text-xs text-muted-foreground mb-2">
-                        Applied in <code className="text-xs">{filter.where}</code>
-                      </p>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
+                    <div className="flex-1 space-y-1.5">
+                      <h3 className="font-bold font-headline text-base text-foreground">{filter.name}</h3>
+                      <p className="font-mono text-xs text-primary">{filter.spec}</p>
+                      <p className="text-xs text-muted-foreground">{filter.where}</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed pt-1">
                         {filter.why}
                       </p>
                     </div>
@@ -231,23 +237,52 @@ export default function MethodologyPage() {
           </div>
         </section>
 
-        <Separator className="my-12" />
+        <Separator className="my-10" />
 
-        <section className="mb-16">
-          <div className="flex items-center gap-2 mb-6">
-            <Calculator className="h-5 w-5 text-primary" />
+        <section className="mb-14">
+          <div className="flex items-center gap-2 mb-5">
+            <Layers className="h-5 w-5 text-primary" />
             <h2 className="text-2xl font-bold font-headline">
-              3-Day Excursion Outcome Labeling (<code className="text-lg">enriched_option_outcomes</code>)
+              3. Multi-Instrument Mapping (<code className="text-lg font-mono">execution_vehicles</code>)
             </h2>
           </div>
-          <p className="text-muted-foreground mb-6">
-            Rather than locking the dataset to a single arbitrary day-trade exit, the outcome pipeline labels the full excursion surface of every pool contract so your AI agent can evaluate targets and stops from historical distributions:
+          <Card>
+            <CardContent className="pt-6 space-y-3 text-sm text-muted-foreground leading-relaxed">
+              <p>
+                Options flow and volatility pricing are powerful signals even if you prefer not to hold expiring option contracts. Every pool candidate served via <code className="text-xs text-foreground">get_pool</code> and <code className="text-xs text-foreground">get_signal</code> includes a structured <code className="text-xs text-foreground">execution_vehicles</code> object mapping:
+              </p>
+              <ul className="list-disc pl-5 space-y-1.5">
+                <li><strong className="text-foreground">Underlying Stock (1x):</strong> direct equity ticker for clean directional exposure with zero theta decay.</li>
+                <li><strong className="text-foreground">2x Long &amp; Inverse Single-Stock ETFs:</strong> verified leveraged single-stock ETFs (where listed) for amplified stock-like execution with standard limit stops.</li>
+                <li><strong className="text-foreground">Liquid Call Option:</strong> the specific contract passing our Combo A liquidity and delta/DTE rules.</li>
+              </ul>
+              <p className="text-xs">
+                Watch how 2x/inverse ETFs compare head-to-head against options on identical nightly setups in our{' '}
+                <Link href="/xtrader" className="text-primary hover:underline font-medium">
+                  live X-Trader benchmark &rarr;
+                </Link>
+              </p>
+            </CardContent>
+          </Card>
+        </section>
+
+        <Separator className="my-10" />
+
+        <section className="mb-14">
+          <div className="flex items-center gap-2 mb-5">
+            <Calculator className="h-5 w-5 text-primary" />
+            <h2 className="text-2xl font-bold font-headline">
+              4. 3-Day Move History (MFE &amp; MAE Outcome Tracking)
+            </h2>
+          </div>
+          <p className="text-sm sm:text-base text-muted-foreground mb-6">
+            In plain English: rather than assuming one rigid exit rule, we track how far every past setup ran up (MFE) and pulled back (MAE) across 3 trading days so your AI can calibrate realistic targets and stops.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {outcomePillars.map((rule) => (
               <Card key={rule.label}>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xs uppercase tracking-wide text-muted-foreground">
                     {rule.label}
                   </CardTitle>
                 </CardHeader>
@@ -260,13 +295,13 @@ export default function MethodologyPage() {
           </div>
         </section>
 
-        <Separator className="my-12" />
+        <Separator className="my-10" />
 
-        <section className="mb-16">
-          <div className="flex items-center gap-2 mb-6">
+        <section className="mb-14">
+          <div className="flex items-center gap-2 mb-5">
             <ShieldCheck className="h-5 w-5 text-primary" />
             <h2 className="text-2xl font-bold font-headline">
-              Point-in-Time Leakage Wall &amp; Why We Sell Primitives
+              5. Point-in-Time Leakage Controls &amp; Research Integrity
             </h2>
           </div>
           <div className="space-y-4">
@@ -283,65 +318,67 @@ export default function MethodologyPage() {
           </div>
         </section>
 
-        <Separator className="my-12" />
+        <Separator className="my-10" />
 
-        <section className="mb-16">
-          <div className="flex items-center gap-2 mb-6">
+        <section className="mb-14">
+          <div className="flex items-center gap-2 mb-4">
             <GitBranch className="h-5 w-5 text-primary" />
-            <h2 className="text-2xl font-headline font-bold">Reproducibility over MCP</h2>
+            <h2 className="text-2xl font-headline font-bold">6. Verify It Directly Over MCP</h2>
           </div>
-          <p className="text-muted-foreground mb-4">
-            Every table and feature definition is inspectable directly by your AI agent:
-          </p>
           <ul className="space-y-3 text-sm text-muted-foreground">
             <li className="flex gap-3">
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong className="text-foreground">Schema &amp; Leakage Contract:</strong> call{' '}
-                <code className="text-xs text-foreground">get_playbook(name=&quot;schema&quot;)</code> to inspect every column&apos;s point-in-time boundary and leakage classification.
+                <strong className="text-foreground">Schema &amp; Timestamp Contract:</strong> call{' '}
+                <code className="text-xs text-foreground">get_playbook(name=&quot;schema&quot;)</code> to inspect every field&apos;s point-in-time boundary.
               </span>
             </li>
             <li className="flex gap-3">
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
-                <strong className="text-foreground">Historical Excursion Surfaces:</strong> call{' '}
+                <strong className="text-foreground">Historical Move Distributions:</strong> call{' '}
                 <code className="text-xs text-foreground">query_outcomes(view=&quot;surface&quot;)</code> and{' '}
-                <code className="text-xs text-foreground">query_outcomes(view=&quot;harvest&quot;)</code> to query realized 3-day MFE/MAE distributions across delta, DTE, and volatility buckets.
+                <code className="text-xs text-foreground">query_outcomes(view=&quot;harvest&quot;)</code> to query 3-day MFE/MAE distributions.
               </span>
             </li>
             <li className="flex gap-3">
               <Code className="h-4 w-4 text-primary shrink-0 mt-1" />
               <span>
                 <strong className="text-foreground">Published Lab Verdicts:</strong> read{' '}
-                <Link href="/lab" className="text-primary hover:underline">/lab</Link> for the full record of confirmed and killed hypotheses on the dataset.
+                <Link href="/lab" className="text-primary hover:underline">Research Lab (/lab)</Link> for both confirmed and killed experiments.
               </span>
             </li>
           </ul>
         </section>
 
-        <Separator className="my-12" />
+        <Separator className="my-10" />
 
         <section className="text-center">
           <h2 className="text-2xl font-bold font-headline mb-3">
-            Connect your AI agent to the dataset
+            Connect your AI — or let us engineer your custom bot
           </h2>
-          <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Start with the {TRIAL_DAYS}-day free trial of Pro MCP access ({PRICE_MONTHLY}/mo founding price) to unlock the full daily Combo A pool, 10-minute intraday liquidity snapshots, and 3-day excursion outcome history, or test the 3-contract preview free.
+          <p className="text-muted-foreground mb-6 max-w-2xl mx-auto text-sm sm:text-base">
+            Start a {TRIAL_DAYS}-day free trial of Pro MCP ({PRICE_MONTHLY}/mo or {PRICE_ANNUAL}/yr)
+            to unlock all 40–50 nightly setups across stocks, 2x ETFs, and options — or submit your
+            written rules on <Link href="/build" className="text-primary hover:underline">/build</Link> ({BUILD_STANDARD_PRICE}).
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
-            <Button asChild size="lg">
+            <Button asChild size="lg" className="font-semibold">
               <Link href="/pricing">
-                Get Pro MCP Access <ArrowRight className="ml-2 h-4 w-4" />
+                Start {TRIAL_DAYS}-Day Free Trial <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="/developers">MCP API &amp; Tool Reference</Link>
+              <Link href="/developers">MCP API Reference</Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/build">Custom Agent Build</Link>
             </Button>
           </div>
         </section>
 
-        <p className="text-xs text-muted-foreground text-center mt-16">
-          Historical options research and paper-tracked outcome data, educational only. Not investment advice. Past performance is not a guarantee of future results.
+        <p className="text-xs text-muted-foreground text-center mt-14">
+          Historical market research and paper-tracked outcome data; educational only, not investment advice. Past performance is not a guarantee of future results.
         </p>
       </main>
     </>

@@ -64,18 +64,20 @@ env:
     value: G-ZF0DQVQEKJ
 
   # Paid-funnel Pixels & Server-Side Conversions API (Meta + Reddit).
-  # Code is env-gated and safely no-ops until uncommented. After completing
-  # engine/docs/AD-ACCOUNT-SETUP-CHECKLIST.md (Secrets + grantaccess), uncomment:
-  # - variable: NEXT_PUBLIC_META_PIXEL_ID
-  #   value: "<META_PIXEL_ID>"
+  # Meta Pixel + CAPI enabled (Dataset ID 476402659566149). Reddit stays gated
+  # until REDDIT_PIXEL_ID / REDDIT_CAPI_TOKEN are stored and granted.
+  - variable: NEXT_PUBLIC_META_PIXEL_ID
+    value: "476402659566149"
+  - variable: META_PIXEL_ID
+    secret: META_PIXEL_ID
+    availability:
+      - RUNTIME
+  - variable: META_CAPI_TOKEN
+    secret: META_CAPI_TOKEN
+    availability:
+      - RUNTIME
   # - variable: NEXT_PUBLIC_REDDIT_PIXEL_ID
   #   value: "<REDDIT_PIXEL_ID>"
-  # - variable: META_PIXEL_ID
-  #   secret: META_PIXEL_ID
-  #   availability: [RUNTIME]
-  # - variable: META_CAPI_TOKEN
-  #   secret: META_CAPI_TOKEN
-  #   availability: [RUNTIME]
   # - variable: REDDIT_PIXEL_ID
   #   secret: REDDIT_PIXEL_ID
   #   availability: [RUNTIME]

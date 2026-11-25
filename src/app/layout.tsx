@@ -65,6 +65,7 @@ export default async function RootLayout({
     <html lang="en" className="dark">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="facebook-domain-verification" content="x8z9gn94lxwtw8g8eheqkvz4bbuo5s" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
